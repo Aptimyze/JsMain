@@ -99,6 +99,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -166,6 +167,7 @@ class ContactDetailsV2Action extends sfAction
 								$responseArray["footerbutton"]["value"] = "";
 								$responseArray["footerbutton"]["action"] = "EDITPROFILE";
 								$responseArray["footerbutton"]["text"] = "";
+								$responseArray["footerbutton"]["enable"] = true;
 								$responseArray["contact1"]["value"]      = "blur";
 								$responseArray["contact1"]["label"]      = "Phone No.";
 								$responseArray["contact1"]["action"]     = null;
@@ -304,6 +306,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "Renew membership";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -320,10 +323,11 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerButton"]["label"]  = "complete your profile";
 					$responseArray["footerButton"]["value"]  = "";
 					$responseArray["footerButton"]["action"] = "COMPLETEPROFILE";
+					$responseArray["footerbutton"]["enable"] = true;
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				} elseif ($errorArr["DELETED"] == 2)
-				{	
+				{
 					$responseArray["headerLabel"] = "Deleted Profile";
 					$responseArray["errMsgLabel"] = "You can not see the contact details of this profile as this profile is Deleted.";
 					$responseArray["errMsgIconId"]           = "13";
@@ -372,6 +376,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -430,8 +435,10 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
 					$responseArray["footerbutton"]["action"] = "CONTACT_DETAIL";
+					$responseArray["footerbutton"]["enable"] = true;
+
 				}
-			} 
+			}
 			else {
 				$memHandlerObj = new MembershipHandler();
 				$data2 = $memHandlerObj->fetchHamburgerMessage($request);
@@ -443,6 +450,7 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+				$responseArray["footerbutton"]["enable"] = true;
 				$responseArray["footerbutton"]["text"] = $MembershipMessage;
 				$responseArray["contact1"]["value"]      = "blur";
 				$responseArray["contact1"]["label"]      = "Phone No.";

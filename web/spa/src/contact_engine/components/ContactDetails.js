@@ -7,8 +7,9 @@ export default class ContactDetails extends React.Component{
     this.state=this.getContactDetails(this.props.actionDetails);
   }
 
-componentWillMount(){
-
+componentWillReceiveProps(nextProps){console.log(nextProps,'next');
+var newState = this.getContactDetails(nextProps.actionDetails);
+this.setState({...newState});
 }
 render(){
 
@@ -32,18 +33,19 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
         <div className="pt20 white f18 fontthin" id="errorMsgHead">
         </div>
     </div>
-<div className={"fullwid fontlig pad1 " + this.state.cdOvlayShow} id="contactDetailOverlay" style={{overflowY: 'auto', height:this.state.cdOHeight}}>
-  {this.state.primaryMob}
+<div className={"fullwid fontlig pad1 pt30 " + this.state.cdOvlayShow} id="contactDetailOverlay" style={{overflowY: 'auto', height:this.state.cdOHeight}}>
+  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.'})}
   <div className={"pt15 " + this.state.vCPreLayerShow} id="ViewContactPreLayer" style={{paddingTop: '20%'}}>
-<p id="ViewContactPreLayerText" style={{color: '#fff',textAlign: 'center'}}>{[this.state.preLayerText]}</p>
+<p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 
   <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerTextNoNumber" style={{color: '#fff',textAlign: 'center'}}>{this.state.vCNoNumber}</p>
   </div>
+{this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline'})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.'})}
+{this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:true,label:'Email'})}
 
-  {this.state.landLine}
-  {this.state.alternateMob}
   {this.state.emailInfo}
 
   <div className="txtc"><a href="#" className=" pb20 white fontlig f16  opa50 " id="bottomMsg2" style={{...this.state.bottomMsgShow2, margin:'20px 9px'}}>{this.state.bottomMsgText2}</a></div>
@@ -52,7 +54,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
 <div className="posfix btmo fullwid" id="bottomElement">
   <div className="pt15">
       <div className="txtc"><a href="#" className={"pb20 white fontlig f16 "+this.state.bottomMsgShow} id="bottomMsg">{this.state.bottomMsgText}</a></div>
-      <div className={"brdr22 white txtc f16 pad2 fontlig "+this.statecloseLyrShow} id="closeLayer" onClick={()=>this.props.closeCDLayer()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+      <div className={"brdr22 white txtc f16 pad2 fontlig "+this.state.closeLyrShow} id="closeLayer" onClick={()=>this.props.closeCDLayer()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
         <a href="#" className="white txtc f16 pad2 fontlig " id="neverMindLayer" onClick={this.props.closeCDLayer} style={this.state.nevMindStyle} >Never Mind</a>
         <a href="javascript:void(0);" className={"brdr23_contact dispbl color2 txtc f16 pad2 fontlig "+this.state.memShow} id="membershipMessageCE" >{this.state.memText}</a>
         <div onClick={()=>this.props.bindAction(this.props.actionDetails.footerbutton)}  className={"bg7 white txtc f16 pad2 fontlig "+this.state.footerBShow} id="footerButton">{this.state.footerBText}</div>
@@ -108,15 +110,17 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
       else if(displayProps.contact_message)
       {
         mobileValShow = '';
+        contactShow = '';
         //$("#mobileVal,#mobile").show();
-        mobileVal = actiondetails.contact1_message;
+        mobileVal = displayProps.contact_message;
+        mobileValBlur='';
 //        $("#mobileVal").html(result.actiondetails.contact1_message);
       }
 
 return (
-  <div className={"pt15 "+ mobileValShow} >
+  <div className={"pt15 "+ contactShow} >
     <div className="fl white">
-      <div className=" f14 lh30 opa50">{displayProps.contact ? displayProps.contact.label : ''}</div>
+      <div className=" f14 lh30 opa50">{displayProps.contact ? (displayProps.contact.label ? displayProps.contact.label : displayProps.label) : displayProps.label}</div>
       <span className={"f16 "+mobileValShow}>{mobileVal}</span>
       {reportInvalid}
       <div className={"pb20 "+mobileValBlur} id="mobileValBlur" ><div className="fontreg" style={{textShadow: '0 0 12px white',color:'transparent',fontSize:'26px'}}>+91 987654321</div> </div>
@@ -202,7 +206,7 @@ getMembershipOvlay(){
 }
 
 footerBFunction(){
-this.props.bindAction()
+this.props.bindAction();
 //  this.props.bindAction
 
 }
@@ -293,10 +297,10 @@ else
 //     $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
 //   }
 
-    primaryMob = this.getPhoneSection({contact:actiondetails.contact1,contact_message:actiondetails.contact1_message,showReportInvalid:true});
-    landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true});
-    alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false});
-    emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false});
+    // primaryMob = this.getPhoneSection({contact:actiondetails.contact1,contact_message:actiondetails.contact1_message,showReportInvalid:true,label:'Phone No.'});
+    // landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true,label:'Landline'});
+    // alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false,label:'Alternate No.'});
+    // emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false,label:'Email'});
     if(actiondetails.contact1 && actiondetails.contact1.value=="blur")
       nevMindStyle = {display:'block'};
     //$("#footerButton").html(result.actiondetails.footerbutton.label);

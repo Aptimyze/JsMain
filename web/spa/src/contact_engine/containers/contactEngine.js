@@ -6,12 +6,13 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 
 export const performAction = (profilechecksum,callBFun,button) =>
 {
+    if(!button.enable)return;
     var params = button.params ? button.params : "";
     var url = `&${params}&profilechecksum=${profilechecksum}`;
     return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[button.action],url,'','POST').then((response)=>{if(typeof callBFun=='function') callBFun(response);});
 }
 
-export const cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
+export const cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'mainsp bellicon','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
 export default class contactEngine extends React.Component{
   constructor(props){
     super();
