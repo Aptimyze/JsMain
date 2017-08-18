@@ -58,7 +58,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
         },
       }).then( (response) => {
-        console.log("response.data",response.data);
         switch(response.data.responseStatusCode)
         {
           case "9":
