@@ -223,7 +223,8 @@ class VariableDiscount
         if(!$vdObj1->getProfileidWithDiscount($profileid))
         {
 	    $vdObj = new billing_VARIABLE_DISCOUNT();
-            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS,$type);
+
+            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS,false,$type);
             $durationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
             $params = array("PROFILEID"=>$profileid,"SERVICE"=>$serviceArr,"DISC1"=>$discountDetails["DISC1"],"DISC2"=>$discountDetails["DISC2"],"DISC3"=>$discountDetails["DISC3"],"DISC6"=>$discountDetails["DISC6"],"DISC12"=>$discountDetails["DISC12"],"DISCL"=>$discountDetails["DISCL"]);
             $durationObj->addVDOfferDurationServiceWise($params);
