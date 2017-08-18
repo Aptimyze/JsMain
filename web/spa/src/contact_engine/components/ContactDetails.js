@@ -236,7 +236,6 @@ getContactDetails(actiondetails){
           memShow = 'dispnone';
 
         }
-      contact1_style=contact2_style = {display:'block'};
     //  $("#membershipMessageCE").text(actiondetails.footerbutton.text).show();else $("#membershipMessageCE").hide();
       commonOverlayShow : ''
 
