@@ -201,7 +201,7 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $this->client = $request['client'];
 
-        //$this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
+        $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
         if($request["submit"]){
