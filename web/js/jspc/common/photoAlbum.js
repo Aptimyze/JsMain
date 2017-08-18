@@ -294,6 +294,7 @@ function ajaxCallForAlbum(username,profilechecksum){
             {
                // alert("SHOW LAYER :"+result.showLayer);
                 $("#commonOverlay").css('display','block');
+                $("#commonOverlay").css('background-color','rgba(0, 0, 0, 0.94)');
                 $("#conditionalPhotoLayer").css('display','block');
             }
             else

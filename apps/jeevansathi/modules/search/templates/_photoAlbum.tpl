@@ -38,8 +38,10 @@
 
   <div class="pos_fix layersZ fontlig setshare  wid1000">
     <div class="f17 fontlig colrw">
+    <div class="txtc f15">
       <p class="pb15">It has been a while since you registered on Jeevansathi, hence we require you to add a photo to be able to see other members' album.</p>
       <p>If you have privacy concerns, you can make your photo visible on only on acceptance through privacy settings.</p>
+      </div>
       <a id="uploadPhoto" class="cursp mt20 fullwid hoverPink bg_pink lh63 txtc f18 fontlig colrw brdr-0 wid300 mauto disp_b" href="/social/addPhotos?uploadType=C" onclick="trackJsEventGA('conditional Photo Access', 'Upload Photo','PC','');">Upload Photo</a>
     </div>
   </div>
