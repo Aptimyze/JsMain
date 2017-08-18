@@ -82,13 +82,19 @@ export class contactEnginePD extends React.Component{
   }
   postAction(actionButton,responseButtons,index)
   {
-    switch(actionButton.action){
+    if ( responseButtons.responseStatusCode == 4) 
+    {
+      this.props.showError(responseButtons.responseMessage)
+    }
+    else
+    {
+      switch(actionButton.action){
 
-      case 'SHORTLIST':
+        case 'SHORTLIST':
         var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
         this.props.replaceSingleButton(newButtons);
-      break;
-      case 'IGNORE':
+        break;
+        case 'IGNORE':
         if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
         {
           this.props.replaceOldButtons(getNewButtons(jsonOb.response.button_after_action.buttons.others[jsonOb.index],jsonOb.index));
@@ -100,26 +106,23 @@ export class contactEnginePD extends React.Component{
           this.showIgnoreLayer(jsonOb.response.message,jsonOb.response.button_after_action.buttons.primary[0]);
         }
 
-      break;
+        break;
 
-      case 'CONTACT_DETAIL':
+        case 'CONTACT_DETAIL':
         this.showHideCommon({contactDetailData:responseButtons.actiondetails,showContactDetail:true});
-      break;
+        break;
 
-      default:
+        default:
         this.props.replaceOldButtons(responseButtons);
-      break;
-
-
-
+        break;
+      }
     }
-
-
-
   }
   render(){
+   
     return (
-    <div>{[this.getFrontButton(),
+    <div>
+    {[this.getFrontButton(),
     this.getOverLayDataDisplay()]
   }</div>
   );
