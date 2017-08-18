@@ -2261,6 +2261,9 @@ class TopSearchBandPopulate
 
 			if(strpos($this->selectedMtongue,",")>0)
 			{
+                                $selectedMtonguearr = array_unique(explode(",",$this->selectedMtongue));
+                                $this->selectedMtongue = implode(",",$selectedMtonguearr);
+                                
 				$mstatusArr = FieldMap::getFieldLabel('mtongue_region','',1);
                                 $forlabelArr = array();
                                 $oMtongue = $this->selectedMtongue;

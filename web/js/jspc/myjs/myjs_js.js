@@ -584,6 +584,11 @@ catch(e){
                             else{
 								$("#email"+count).html("Email id: "+contactDetails.contact4.value);
 							}
+              if(contactDetails.contact9==null)
+                              $("#relationshipManager"+count).html("");
+                            else{
+                $("#relationshipManager"+count).html( contactDetails.contact9.label+": "+contactDetails.contact9.value);
+              }
 
               if(contactDetails.contact6==null)
                               $("#postedBy"+count).html(contactDetails.errmsglabel);

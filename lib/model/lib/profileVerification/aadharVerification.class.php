@@ -155,7 +155,7 @@ class aadharVerification
 
     public function preVerification($aadharId)
     {
-        $resultArr = self::$aadharObj->checkIfaadharVerified($aadharId,aadharVerificationEnums::VERIFIED);
+        $resultArr = self::$aadharObj->checkIfAadharVerified($aadharId,aadharVerificationEnums::VERIFIED);
         if(is_array($resultArr) && !empty($resultArr))
         {
             return 1;

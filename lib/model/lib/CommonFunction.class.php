@@ -1037,7 +1037,7 @@ class CommonFunction
     
     public static function showAndBeyondPixel($profileId)
     {
-    	if($profileId)
+    	if($profileId && JsConstants::$whichMachine=="prod")
     	{
                 $loggedInObj = LoggedInProfile::getInstance();
                 $subscription = $loggedInObj->getSUBSCRIPTION();
@@ -1045,7 +1045,7 @@ class CommonFunction
                 $verifyDateFlag=true;
                 if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
 				{
-					$verifyDate = $loginProfile->getENTRY_DT();
+					$verifyDate = $loggedInObj->getENTRY_DT();
 				}
                 	$datetime1 = new DateTime();
 					$datetime2 = new DateTime($verifyDate);

@@ -87,7 +87,7 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
 
     }
 
-    public function checkIfaadharVerified($aadharId,$verifyValue)
+    public function checkIfAadharVerified($aadharId,$verifyValue)
     {
         $sql = "SELECT AADHAR_NO,VERIFY_STATUS FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE AADHAR_NO = :AADHARID AND VERIFY_STATUS = :VERIFY";
         $res = $this->db->prepare($sql);

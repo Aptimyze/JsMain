@@ -27,10 +27,6 @@ class jsexclusiveActions extends sfActions {
 		if($this->name && $this->module=="jsexclusive" && in_array($this->action, array("screenRBInterests","menu"))){
 			$exclusiveObj = new billing_EXCLUSIVE_SERVICING();
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
-                        //Get Count for each option 
-                        $agent = $request['name'];
-                        //Counter for welcome calls
-                        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
 				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
@@ -165,7 +161,29 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeMenu(sfWebRequest $request) {
+        //Get Count for welcome calls module on menu page 
+        $agent = $request['name'];
+        $notFound = $request['notFound'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        //Counter for welcome calls
+        $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
+        $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
+        if(is_array($todaysClient)){
+            $this->todaysClientCount = $todaysClient[strtoupper(date('D'))]?$todaysClient[strtoupper(date('D'))]:0;
+        }
+        else{
+            $this->todaysClientCount = 0;
+        }
+        unset($exclusiveObj);
         
+        //To get count for pending con calls for menu page
+        $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $date = date('Y-m-d');
+        $this->pendingConcallsCount = $exclFollowupsObj->getPendingConcallsCount($date,$agent);
+        unset($exclFollowupsObj);
+        if($notFound==true){
+            $this->notFound=1;
+        }
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
@@ -182,9 +200,57 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $this->cid = $request['cid'];
         $this->client = $request['client'];
-        $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
+
+        //$this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        if($request["submit"]){
+            $username = $request->getParameter("clientUserid");
+            $username = preg_replace('/\s+/', '', $username);
+            if($username == ""){
+                $this->message = "Please enter a username";
+                $this->error = 1;
+            }
+            else{
+                $jprofileObj = new JPROFILE("newjs_slave");
+                $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+                if(is_array($details)){
+                    $exclusiveLib = new ExclusiveFunctions();
+                    $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
+                    $this->message = "Follow up added successfully. Proposal mail sent to $username. Please DO NOT add the same ID again.";
+                }
+                else{
+                    $this->message = "Invalid Username: ".$username;
+                }
+            }
+        }
+
+        $from = $request['from'];
+        
+        //check if user is eligible for new handling
+        if($from == 'search'){
+            $username = $request['username'];
+            $jprofileObj = new JPROFILE("newjs_slave");
+            $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+            if(!details){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
+            if(!$userDetails){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $this->client=$details['PROFILEID'];
+        }
+        
     }
     
     public function executeSetClientServiceDay(sfWebRequest $request) {
@@ -321,6 +387,266 @@ class jsexclusiveActions extends sfActions {
                 }
             }
         }
+    }
+    
+    public function executeTodaysClients($request){
+        $this->cid = $request['cid'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        $this->todaysClientProfiles = $exclusiveObj->getDayWiseAssignedAgent($request['name'],  strtoupper(date('D')));
+    }
+    
+    public function executeAddFollowUpFromMatchMail($request){
+        $this->cid = $request['cid'];
+        $this->client = $request->getParameter('client');
+        $this->agent = $request->getParameter('name');
+        $formArr = $request->getParameter('followupForm');
+        $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
+        $exclusiveLib = new ExclusiveFunctions();
+        if($request->getParameter('submit')){
+            foreach($formArr as $profileid => $val){
+                if($val == 'Y'){
+                    $yesArr[] = $profileid;
+                }
+                else if ($val == 'N'){
+                    $noArr[] = $profileid;
+                }
+            }
+            if(is_array($yesArr)){
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent);
+            }
+            if(is_array($noArr)){
+                $followupObj->updateStatusForClientId(implode(",", $noArr),'N');
+            }
+        }
+        
+        $undecidedData = $followupObj->getDataDateWise($this->client, 'U');
+        
+        
+        $acceptanceIdArr = $exclusiveLib->returnAcceptanceIdArr($undecidedData);
+        
+        if($request->getParameter('declined')){
+            $noData = $followupObj->getDataDateWise($this->client, 'N');
+            $noIdArr = $exclusiveLib->returnAcceptanceIdArr($noData);
+
+            if(is_array($noIdArr)){
+                $jprofileObj = new JPROFILE('newjs_masterRep');
+                $this->declinedArr = $jprofileObj->getAllSubscriptionsArr($noIdArr);
+            }
+        }
+        else{
+        
+            $matchMailData = $exclusiveLib->formatScreenRBInterestsData($this->clientData,$acceptanceIdArr);        
+            $this->matchMailFollowUpData = $exclusiveLib->formatDataForMatchMail($undecidedData,$matchMailData);
+        }
+        
+        unset($exclusiveLib);
+    }
+
+
+    public function executePendingConcalls(sfWebRequest $request) {
+        $agent = $request['name'];
+        $executedFor = $request['executedFor'];
+        //This if statement will be true if the concall executed button is pressed and the row id of the row to be deleted will be passed
+        if ($executedFor) {
+            $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+            $date = date('Y-m-d H:i:s');
+            $status = 'Y';
+            $exclFollowupsObj->markConcallStatusForId($executedFor, $status, $date);
+        }
+        $date = date('Y-m-d');
+        $exclFollowupsObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $dataArray = $exclFollowupsObj->getPendingConcallsEntries($date, $agent);
+        $count = count($dataArray);
+        
+        //Start: Code to Group data array to keep same client ID together
+        $this->array_sort_by_column($dataArray, 'CONCALL_SCH_DT',SORT_DESC);
+        $perClientArray = array();
+        for($i=0;$i<$count;$i++){
+            $perClientArray[$dataArray[$i]['CLIENT_ID']][]=$dataArray[$i];
+        }
+        foreach ($perClientArray as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $sortedDataArray[] = $value2;
+            }
+        }
+        $dataArray = $sortedDataArray;
+        //End: Code to Group data array to keep same client ID together
+        $this->columnNamesArr = array("S.No.", "DateAdded", "Client ID", "Client Name", "Client Number 1", "Client Number 2", "Member ID", "Member Name", "Member Phone No 1", "Member Phone No 2", "Action");
+        $clientIdArr = array();
+        $memberIdArr = array();
+        
+        if ($count > 0) {
+            for ($i = 0; $i < $count; $i++) {
+                $clientIdArr[$i] = $dataArray[$i]['CLIENT_ID'];
+                $memberIdArr[$i] = $dataArray[$i]['MEMBER_ID'];
+            }
+            $combinedIdArr = array_merge($clientIdArr, $memberIdArr);
+            $combinedIdArr = array_unique($combinedIdArr);
+            $combinedIdArr = array_values($combinedIdArr);
+            //Getting information for all ids
+            $jprofileObj = new JPROFILE("newjs_slave");
+            $contactObj = new ProfileContact("newjs_slave");
+            $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+
+            //Start:fetch primary mobile num and username of all ids 
+            $combinedIdStr = implode($combinedIdArr, ",");
+            $phoneDetails = $jprofileObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,USERNAME,PHONE_MOB,PHONE_WITH_STD");//phonewithstd
+            $n = count($phoneDetails);
+            $noPhoneWithStd=array();
+            for ($i = 0; $i < $n; $i++) {
+                $phoneDetailsAltered[$phoneDetails[$i]['PROFILEID']] = $phoneDetails[$i];
+                if($phoneDetails[$i]['PHONE_WITH_STD']==""){
+                    $noPhoneWithStdArr[]=$phoneDetails[$i]['PROFILEID'];
+                }
+            }
+            unset($phoneDetails);
+            $phoneDetails = $phoneDetailsAltered;
+            unset($phoneDetailsAltered);
+            unset($i);
+            unset($n);
+            //End:fetch primary mobile num and username of all ids 
+            //Start:fetch alternate mobile number for ids where phone_with_std was blank
+            $noPhoneWithStdStr = implode($noPhoneWithStdArr, ",");
+            $altPhoneDetails = $contactObj->getArray(array("PROFILEID" => $noPhoneWithStdStr), "", "", "PROFILEID,ALT_MOBILE");
+            $n = count($altPhoneDetails);
+            for ($i = 0; $i < $n; $i++) {
+                $altPhoneDetailsAltered[$altPhoneDetails[$i]['PROFILEID']] = $altPhoneDetails[$i];
+            }
+            unset($altPhoneDetails);
+            $altPhoneDetails = $altPhoneDetailsAltered;
+            unset($phoneDetailsAltered);
+            unset($i);
+            unset($n);
+            //End:fetch alternate mobile num for all ids
+            //Start: fetch name of all ids
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            $n = count($clientNameArr);
+            for ($i = 0; $i < $n; $i++) {
+                $clientNameArrAltered[$clientNameArr[$i]['PROFILEID']] = $clientNameArr[$i];
+            }
+            unset($clientNameArr);
+            $clientNameArr = $clientNameArrAltered;
+            unset($clientNameArrAltered);
+            unset($i);
+            unset($n);
+            //End: Fetch name of all ids
+            //Start:Putting all details in a single array for displaying
+            for ($i = 0; $i < count($combinedIdArr); $i++) {
+                $detailsArray[$combinedIdArr[$i]]['USERNAME'] = $phoneDetails[$combinedIdArr[$i]]['USERNAME'];
+                $detailsArray[$combinedIdArr[$i]]['PHONE_MOB'] = $phoneDetails[$combinedIdArr[$i]]['PHONE_MOB'];
+                if($altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'])
+                    $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $altPhoneDetails[$combinedIdArr[$i]]['ALT_MOBILE'];
+                else
+                    $detailsArray[$combinedIdArr[$i]]['ALT_MOBILE'] = $phoneDetails[$combinedIdArr[$i]]['PHONE_WITH_STD'];
+                if ($clientNameArr[$combinedIdArr[$i]]['DISPLAY'] == 'Y') {
+                    $detailsArray[$combinedIdArr[$i]]['NAME'] = $clientNameArr[$combinedIdArr[$i]]['NAME'];
+                }
+            }
+            $count = count($dataArray);
+            for ($i = 0; $i < $count; $i++) {
+                $dataArray[$i]['CLIENT_USERNAME'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['USERNAME'];
+                $dataArray[$i]['CLIENT_NAME'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['NAME'];
+                $dataArray[$i]['CLIENT_PH1'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['PHONE_MOB'];
+                $dataArray[$i]['CLIENT_PH2'] = $detailsArray[$dataArray[$i]['CLIENT_ID']]['ALT_MOBILE'];
+                $dataArray[$i]['MEMBER_USERNAME'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['USERNAME'];
+                $dataArray[$i]['MEMBER_NAME'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['NAME'];
+                $dataArray[$i]['MEMBER_PH1'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['PHONE_MOB'];
+                $dataArray[$i]['MEMBER_PH2'] = $detailsArray[$dataArray[$i]['MEMBER_ID']]['ALT_MOBILE'];
+                $dataArray[$i]['SNO'] = $i + 1;
+            }
+            $this->displayData = $dataArray;
+            $this->totalCount = $i;
+        }
+        else{//Case where no profiles exist for particular agent.
+            $this->infoMsg="No Profiles exist for you today!";
+        }
+        unset($dataArray);
+        unset($detailsArray);
+        //End:Putting all details in a single array for displaying
+    }
+
+    /**
+    * Executes followupCaller action
+    * follow ups of all exclusive clients done by all RM's
+    * @param sfRequest $request A request object
+    */
+    public function executeFollowupCaller(sfWebRequest $request){
+        //columns list for interface
+        $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
+        $currentDt = date("Y-m-d");
+
+        $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
+        unset($followUpObj);
+
+        if($this->followUpsCount == 0){
+           $this->infoMsg = "No followUps found.."; 
+        }
+        else{
+            $this->infoMsg = $request->getParameter("infoMsg");
+            $exclusiveLib = new ExclusiveFunctions();
+            $this->finalFollowUpsPool = $exclusiveLib->formatFollowUpsData($this->followUpsCount);
+            unset($exclusiveLib);
+        }
+        //print_r($this->finalFollowUpsPool);die;
+    }
+
+    public function executeSubmitFollowupStatus(sfWebRequest $request){
+        $formArr = $request->getParameterHolder()->getAll();
+
+        if(is_array($formArr)){
+            $this->ifollowUpId = intval($formArr["ifollowUpId"]);
+            $this->istatus = $formArr["istatus"];
+
+            //submit of followup form
+            if(isset($formArr["submit"])){
+                if($formArr["submit"]=="Submit"){
+
+                    //fetch follow up details corresponding to follow up id
+                    $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
+                    $followUpDetails = $followUpObj->getFollowUpEntry($this->ifollowUpId);
+                    unset($followUpObj);
+
+                    //update followup
+                    if(is_array($followUpDetails) && $followUpDetails["STATUS"]==$this->istatus){
+                        $exclusiveLib = new ExclusiveFunctions();
+                        if($formArr["yearValue"] && $formArr["monthValue"] && $formArr["dayValue"]){
+                            $formArr["date1"] = $formArr["yearValue"]."-".$formArr["monthValue"]."-".$formArr["dayValue"];
+                        }
+                        $exclusiveLib->updateFollowUpDetails(array("operator"=>$this->name,"followupStatus"=>$formArr["followupStatus"],"ifollowUpId"=>$this->ifollowUpId,"followUpDetails"=>$followUpDetails,"reason"=>$formArr["reason"],"reasonText"=>$formArr["reasonText"],"date1"=>$formArr["date1"]));
+                        unset($exclusiveLib);
+                    }
+                    else{
+                        $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit !"));
+                    }
+                }
+                $this->forwardTo("jsexclusive","followupCaller");
+            }
+            else{
+                $this->clientUsername = $formArr["iclient"];
+                $this->memberUsername = $formArr["imember"];
+                
+                $this->todayDay = date('d',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayMonth   = date('m',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayYear  = date('Y',strtotime(date("Y-m-d") . "+1 day"));
+                $this->dayArr = GetDateArrays::getDayArray();
+                $this->monthArr   = GetDateArrays::getMonthArray();
+                $this->yearArr    = array();
+                $dateArr      = GetDateArrays::generateDateDataForRange($this->todayYear,$this->todayYear+1);
+                foreach(array_keys($dateArr) as $key=>$value){
+                    $this->yearArr[] = array('NAME'=>$value, 'VALUE'=>$value);
+                }
+
+            }
+        }
+    }
+    function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+        $sort_col = array();
+        foreach ($arr as $key=> $row) {
+            $sort_col[$key] = $row[$col];
+        }
+
+        array_multisort($sort_col, $dir, $arr);
     }
 
 }
