@@ -55,7 +55,7 @@ export default class HamMain extends React.Component {
         this.setState({showLoader:true});
         this.hideHam(); 
 
-        axios.get(CONSTANTS.API_SERVER+"/api/v1/api/logout?AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM") )
+        axios.get(CONSTANTS.API_SERVER+"/static/logoutPage")
         .then(function(response){
             removeCookie("AUTHCHECKSUM");
             localStorage.clear();
