@@ -13,6 +13,9 @@ class Visitors
 	private $profile;
 	private $skipProfile;
 	private $visitorsProfile;
+        private $filteredPrivacy = 'F';
+        private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID,STATE";
+        
 	public function __construct($profile)
 	{
 		if (!isset($profile))
@@ -46,13 +49,13 @@ class Visitors
 				$multipleProfileObj         = new ProfileArray;
 				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,OCCUPATION,EDU_LEVEL_NEW,CITY_RES";
 				$profileIdArr1["PROFILEID"] = implode(",", $profileIdArr);
-				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, '', '', $fieldList, "JPROFILE", "", "");
+				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, array("INCOMPLETE"=>"'Y'","ACTIVATED"=>"'D'"), '', $fieldList, "JPROFILE", "", "");
                             if($infoTypenav["matchedOrAll"]!="A")
                                 $this->passInVisitors();
                             
 			}
 			if ($infoTypenav["matchedOrAll"]=="A") 
-                            $this->filterCheck();
+                            $this->forwardFilterCheck();
                         
                         $this->reverseFilterCheck();
 		}
@@ -65,23 +68,24 @@ class Visitors
 		$returnProfiles = $this->sortArray($returnProfiles);
                 
                 if($memcacheObjToSetAllVisitorsKey)
-                    $memcacheObjToSetAllVisitorsKey->setVISITORS_ALL(count($returnProfiles));
-                
+                    $memcacheObjToSetAllVisitorsKey->set('VISITORS_ALL',count($returnProfiles));
+                $profileMemcacheObj = new ProfileMemcacheService($this->profile);
+
 		if(($page || $profileCount) && is_array($returnProfiles))
 		{
 			$count = count($returnProfiles);
-			$profileMemcacheObj = new ProfileMemcacheService($this->profile);
 			$memcacheCount = $profileMemcacheObj->get("VISITOR_ALERT");
 			$diff = $count-$memcacheCount;
 			if($diff!=0)
 			{
 				$profileMemcacheObj->update("VISITOR_ALERT",$diff);
-				$profileMemcacheObj->updateMemcache();
 
 			}
 			$offset = $page*$profileCount;
 			$returnProfiles = array_slice($returnProfiles,$offset,$profileCount,true);
 		}
+                $profileMemcacheObj->updateMemcache();
+
 		return $returnProfiles;
 	}
 	public function passInVisitors()
@@ -189,7 +193,7 @@ class Visitors
 			}
 		return 1;
 	}
-	public function filterCheck()
+        public function filterCheck()
 	{
                 if(is_array($this->visitorsProfile))
 		foreach ($this->visitorsProfile as $key=>$profile) {
@@ -198,18 +202,139 @@ class Visitors
 				unset($this->visitorsProfile[$key]);
 		}
         }
+        
+        
+        /**
+        * function checks the forward filters and removes those profiles who do not match with users filters
+        * @access Public
+        * @return Void
+        * <p>
+        * </p>
+        */
+	public function forwardFilterCheck()
+	{
+            //get profile of logged in user
+            $profilesWithPrivacySet[]=$this->profile->getPROFILEID();
+            
+            $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
+            
+            //get logged in profile's DPP
+            $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
+            
+            //get filters for Logged In profile
+            $viewedFilterParametersTemp = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet);
+            
+            //only two filters to be applied for now
+            $viewedFilterParameters[$this->profile->getPROFILEID()]['MSTATUS'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['MSTATUS'];
+            $viewedFilterParameters[$this->profile->getPROFILEID()]['RELIGION'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['RELIGION'];
+            
+            if(is_array($this->visitorsProfile))
+                foreach ($this->visitorsProfile as $key=>$profile) {
+                
+                    if($profile && $profilesWithPrivacySet && is_array($viewedDppArr))
+                    {
+                            //Viewer profile's dpp values for user's filter set values
+                            $viewerParameters = $profile->getFilterParameters();
+                            
+                            $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $profile->getPROFILEID(), $profilesWithPrivacySet);
+                            //check if filters are satisfied
+                            $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
+                    }
+                    else if ($profile && $profilesWithPrivacySet)
+                    {
+                            foreach($profilesWithPrivacySet as $profile1)
+                                    $profilesPassingFilters[$profile1] = 1;
+                    }
+                    
+                    //unset those profiles which do not satisfy forward filters
+                    if($profilesPassingFilters[$this->profile->getPROFILEID()] != 1)
+                        unset($this->visitorsProfile[$key]);
+                }
+            
+        } 
+        
+        /**
+        * function checks the revers filters and removes those viewer profiles where user's profile does not match their filters
+        * @access Public
+        * @return Void
+        * <p>
+        * </p>
+        */
         public function reverseFilterCheck()
 	{
+                //get those viewer profiles who have set privacy as F
                 if(is_array($this->visitorsProfile))
                 foreach ($this->visitorsProfile as $key=>$profile) {
-                    if($profile->getPRIVACY()=='F'){
-			$filtercheck = UserFilterCheck::getInstance($this->profile,$profile);
-			if ($filtercheck->getFilteredContact($action = "VISIT"))
-				unset($this->visitorsProfile[$key]);
-                        }
+                    if($profile->getPRIVACY() == $this->filteredPrivacy)
+                    {
+                        $profilesWithPrivacySet[]=$profile->getPROFILEID();
                     }
-		}
-	
+                }
+                    
+                if(is_array($profilesWithPrivacySet))
+                            $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
+                
+                //get their DPP in a single In query
+                $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
+                
+                if($this->profile && $profilesWithPrivacySet && is_array($viewedDppArr))
+                {
+                        $viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet,$dbname);
+                        // Get logged In user's filters dpp criteria
+                        $viewerParameters = $this->profile->getFilterParameters();
+                        $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $this->profile->getPROFILEID(), $profilesWithPrivacySet);
+                        $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
+                }
+                else if ($this->profile && $profilesWithPrivacySet)
+                {
+                        foreach($profilesWithPrivacySet as $profile1)
+                                $profilesPassingFilters[$profile1] = 1;
+                }
+                
+                if(is_array($this->visitorsProfile))
+                foreach ($this->visitorsProfile as $key=>$profile) {
+                    //unset those profiles for which logged in user's criteria do not match filter criteria and they have privacy as F
+                    if($profilesPassingFilters[$profile->getPROFILEID()] != 1 && in_array($profile->getPROFILEID(), $profilesWithPrivacySet))
+                        unset($this->visitorsProfile[$key]);
+                }
+        }
+        
+        /**
+        * function checks the forward filters and removes those profiles who do not match with users filters
+        * @access Public
+        * @arguments array of viewer profiles with shards
+        * @return array of dpp of viewer profiles
+        * <p>
+        * </p>
+        */
+        private function getViewedDpp($viewedProfilesWithShards){
+            if(is_array($viewedProfilesWithShards))
+                {
+                        $jpartnerObj = new PartnerProfileArray();
+                        foreach($viewedProfilesWithShards as $shardDbName => $profileArr)
+                        {
+                                if(is_array($profileArr) && sizeof($profileArr)>0)
+                                {
+                                        $pidArr = array_keys($profileArr);
+                                        $dppArr = $jpartnerObj->getDppForMultipleProfiles($pidArr,$shardDbName,$this->viewedPartnerProfilesRequiredDetails);
+                                        if(is_array($dppArr))
+                                        {
+                                                foreach($dppArr as $profileid => $dpp)
+                                                {
+                                                        foreach($dpp as $key=>$dpp2)
+                                                        {
+                                                                if($key != 'PROFILEID')
+                                                                        $viewedDppArr[$profileid][str_replace("PARTNER_","",$key)]=explode(",",str_replace("'","",$dpp2));
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+                
+                return $viewedDppArr;
+        }
+        
 	public function sortArray($returnProfiles)
 	{
 		if(is_array($returnProfiles))

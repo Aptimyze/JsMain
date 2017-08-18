@@ -1,12 +1,33 @@
 <div class="disp-none" id="memebershipPageContent" class='disp-none'>
     <!--start:close view-->
     <div class="mempad30 js-closeview">
-        <div class="wid63p mem_bgwh clearfix mem_pad13 fontmed colrw disp_ib">
-            <div class="fl pl30" id="bannerTextMinimize">
-                <span class="f24 disp_ib">
-                </span>
+        <div class="wid63p mem_bgwh clearfix mem_pad13 fontmed colrw disp_ib" id='memMsgParent'>
+            <div id='memMsgContent'>
+                <div class="fl pl30" id="bannerTextMinimize">
+                    <span class="f24 disp_ib">
+                    </span>
+                </div>
+                <div class="fr f20 timer pr30" id="bannerMinimizedTimer">
+                </div>
             </div>
-            <div class="fr f20 timer pr30" id="bannerMinimizedTimer">
+            <div id='lightningContent'>
+                <div class="disp-tbl fullwid">
+                    <div class="disp-cell wid63p">
+                        <div class="padall-10">
+                            <p class="f16">FLASH DEAL</p>
+                            <p class="pt7"><span class="f30 disp_ib" id='lightDisc'></span><span class="disp_ib f15 pl10">ON ALL MEMBERSHIPS</span></p>
+                            <p class="pt7 f15">PLAN STARTS @ <span class="color12 strike"><span id='lightStrikePrice'></span></span>&nbsp;<span id='lightDiscPrice'><span></p>
+                        </div>
+                    </div>
+                    <div class="disp-cell vmid wid20p">
+                        <div class="fontlig f14 pb10">Offer Valid for
+                        </div>
+                        <ul class="time">
+                            <li class="inscol"><span id='jspcLandingM' style="font-size: 20px"></span><span style="font-size: 15px">M</span></li>
+                            <li class="padl10"><span id='jspcLandingS' style="font-size: 20px"></span><span style="font-size: 15px">S</span></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="wid36p disp_ib vtop">
@@ -107,13 +128,79 @@
             <ul id="paidBenefits" class="clearfix hor_list memfealist colrw fontlig f15">
             </ul>
             <div class="mem_pad22">
-                <div class="pt5 colrw mem-brd10 clearfix">
+                <div class="pt5 colrw mem-brd10 clearfix" id = "discBanner">
                     <div class="fl">
                         <div id="bannerTextVas" class="mt10 f20"></div>
                         <div class="pt17 f20" id="bannerTimerVas"></div>
                     </div>
                 </div>
             </div>
+            
+            <div id='lightningContentRenew' class = "colrw mem-brd10">
+                <div class="disp-tbl fullwid">
+                    <div class="disp-cell wid63p pt15">
+                        <div>
+                            <p class="f16">
+                                FLASH DEAL
+                            </p>
+                            <p class="pt7">
+                                <span class="f30 disp_ib" id='lightDiscRenew'>
+                                </span>
+                                <span class="disp_ib f15 pl10">
+                                    ON ALL MEMBERSHIPS
+                                </span>
+                            </p>
+                            <p class="pt7 f15">
+                                PLAN STARTS @ 
+                                <span class="color12 strike">
+                                    <span id='lightStrikePriceRenew'>
+                                    </span>
+                                </span>
+                                &nbsp;
+                                <span id='lightDiscPriceRenew'>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="disp-cell vmid wid20p">
+                        <div class="fontlig f14 pb10">
+                            Offer Valid for
+                        </div>
+                        <ul class="time">
+                            <li class="inscol">
+                                <span id='jspcLandingMRenew' style="font-size: 20px">
+                                </span>
+                                <span style="font-size: 15px">
+                                    M
+                                </span>
+                            </li>
+                            <li class="padl10">
+                                <span id='jspcLandingSRenew' style="font-size: 20px">
+                                </span>
+                                <span style="font-size: 15px">
+                                    S
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>            
+            
+            
+            
+        </div>
+        <div class="fl mem-widp12 disp-none" id="UpgradeMembershipDiv">
+            <!--div class="f19 color12 pb15" id ="messageDiv"></div>
+            <ul id="paidBenefits" class="clearfix hor_list memfealist colrw fontlig f15">
+            </ul>
+            <div class="mem_pad22">
+                <div class="pt5 colrw mem-brd10 clearfix">
+                    <div class="fl">
+                        <div id="bannerTextVas" class="mt10 f20"></div>
+                        <div class="pt17 f20" id="bannerTimerVas"></div>
+                    </div>
+                </div>
+            </div-->
         </div>
         <div class="fl mem-widp12 disp-none" id="ConditionsBasedDivVasPaid">
             <div class="f19 color12 pb15">Benefits of your membership; for more benefits choose from value added services</div>
@@ -143,7 +230,7 @@
         </div>
         <!--end:left-->
         <!--start:right-->
-        <div class="fr fontlig mem-widp5 colrw">
+        <div class="fr fontlig mem-widp5 colrw" id="memExpiryContent">
             <div id="topBlockTitleMsg" class="txtc fontlig f15"></div>
             <!--start:timer-->
             <div id="unlimitedTimer" class="mauto wid89p pt16 disp-none">
@@ -236,48 +323,7 @@
         </div>
     </div>
 </div>
-<div id="cartPageContent" class='disp-none'>
-    <div class="pt30 mauto mem-wid13 pb30">
-        <!--start:list-->
-        <div class="pb10">
-            <ul class="hor_list clearfix fontlig colrw f20">
-                <li class="opa80 wid33p_1 txtc">Membership Plan</li>
-                <li class="opa80 wid33p_1 txtc">Value Added Services</li>
-                <li class="wid33p_1 txtc">Payment</li>
-            </ul>
-        </div>
-        <!--end:list-->
-        <!--start:progress bar-->
-        <div class="pos-rel mem-wid13 mem-hgt1">
-            <!--start:opaque line-->
-            <div class="pos-abs fullwid mem-pos2">
-                <div class="opa30 mem-brd2"></div>
-            </div>
-            <!--end:opaque line-->
-            <!--start:dark line-->
-            <div class="pos-abs mem-progline mem-pos2">
-                <div class="mem-brd2"></div>
-            </div>
-            <!--end:dark line-->
-            <!--start:div-->
-            <div class="clearfix">
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-check1 z2 pos-rel"></i> </div>
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-check1 z2 pos-rel"></i> </div>
-                <div class="wid33p_1 txtc fl"> <i class="mem-sprite mem-notcheck1 z2 pos-rel"></i> </div>
-            </div>
-            <!--end:div-->
-        </div>
-        <!--end:progress bar-->
-        <!--start:list-->
-        <div class="pt12">
-            <ul class="hor_list clearfix fontlig colrw f13">
-                <li class="opa80 wid33p_1 txtc">Done</li>
-                <li class="opa80 wid33p_1 txtc">Done</li>
-                <li class="wid33p_1 txtc">Pending</li>
-            </ul>
-        </div>
-        <!--end:list-->
-    </div>
+<div id="cartPageContent" class='disp-none pt35'>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -290,6 +336,11 @@ $(document).ready(function() {
     else if(pageType == 'ConditionsBasedHeader'){
         $("#messageDiv").html(message);
         $("#ConditionsBasedDiv,#vasPagePaidMemberContent").show();
+    }
+
+    else if(pageType == 'upgradeMembershipPage'){
+        $("#UpgradeMembershipDiv,#vasPagePaidMemberContent").show();
+        $("#memExpiryContent").hide();
     }
 
     else if (pageType == 'vasPage'){
@@ -433,6 +484,25 @@ $(document).ready(function() {
             insertText += "<li>"+item+"</li>";
         });
         $("#paidBenefits").html(insertText);
+    }
+    if(lightDiscText){
+        $("#memMsgContent").hide();
+        if(lightningRenew == "1"){
+            $("#discBanner").addClass("disp-none");
+        }
+        $("#lightDisc").html(lightDiscText);
+        $("#lightStrikePrice").html(priceStrike);
+        $("#lightDiscPrice").html(discPrice);
+        $("#memMsgParent").removeClass("mem_pad13");
+        $("#lightDiscRenew").html(lightDiscText);
+        $("#lightStrikePriceRenew").html(priceStrike);
+        $("#lightDiscPriceRenew").html(discPrice);
+        $("#memMsgParent").removeClass("mem_pad13");
+        showTimerForLightningMemberShipPlan("jspcLanding","renew");
+    }
+    else{
+        $("#lightningContent").hide();
+        $("#lightningContentRenew").hide();
     }
 });
 </script>

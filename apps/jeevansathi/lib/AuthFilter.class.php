@@ -12,14 +12,25 @@
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
 
-	if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll/repeatAlarm"))
-	{
-		$notifCheck =NotificationFunctions::notificationCheck();
-        	if($notifCheck){echo $notifCheck;die;}
-	}
-
 	$context = $this->getContext();
-		$request = $context->getRequest();
+	$request = $context->getRequest();
+	if(!$request->getParameter("startScriptTime"))
+			$request->setParameter("startScriptTime",microtime(true));
+        // Notification filter
+	$requestUri =$_SERVER["REQUEST_URI"];
+        if(strstr($requestUri,"api/v1/notification/poll/repeatAlarm"))
+                $repeatAlarm =true;
+        elseif(strstr($requestUri,"api/v1/notification/poll"))
+                $pollReq =true;
+        if($pollReq || $repeatAlarm){
+                $notifCheck =NotificationFunctions::notificationCheck($request,$pollReq);
+                if($pollReq && $notifCheck){
+                        echo $notifCheck;die;
+                }
+                elseif($repeatAlarm && $notifCheck){
+                        echo $notifCheck;die;
+                }
+        }
 
 		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
 		if($request->getcookie('JS_MOBILE')=='Y'){
@@ -70,7 +81,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll"))
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore") || HandlingCommonReqDatabaseId::isMasterMasterDone())
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -84,6 +95,12 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('FirstCall', 1);
 				
 				// Code to execute after the action execution, before the rendering
+				//Stopping from going to oldMobileSite
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop() && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
+					$context->getController()->forward("static", "oldMobileSite");
+					die;
+				}
+
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -135,9 +152,8 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('currency', $currency);
 				///////// check for currency and ip address ends here
 
-
 				//App promotion need to be off for Login Profiles already have app installed
-				$AppLoggedInUser=$this->LoggedInAppPromo($data[PROFILEID]);
+				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
 				
@@ -183,7 +199,6 @@ class AuthFilter extends sfFilter {
 							
 							if(!$phoneVerified)
 							{
-								include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
 								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
 							}
@@ -220,7 +235,7 @@ class AuthFilter extends sfFilter {
 						}
 					}
 				}
-					
+                                
 					
 				if ($_COOKIE['SULEKHACO'] == "yes") $request->setAttribute("SULEKHACO", 1);
 				$mob_cookie_arr = explode(",", $_COOKIE['JS_MOBILE']);
@@ -236,9 +251,10 @@ class AuthFilter extends sfFilter {
 				if($login)
 				{
 					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					if(JsMemcache::getInstance()->get($key))
+					$kundliData=JsMemcache::getInstance()->get($key);
+					if($kundliData)
                                         {
-                                                $kundli_link = JsMemcache::getInstance()->get($key);
+                                                $kundli_link = $kundliData;
                                         }
 					else
 					{
@@ -352,7 +368,7 @@ class AuthFilter extends sfFilter {
 		}
 		if($data[PROFILEID])
 		{
-			if(!strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(!strstr($requestUri,"api/v1/notification") && !strstr($requestUri,"api/v3/notification")){
 				$profileObj= LoggedInProfile::getInstance();
 				if($profileObj->getPROFILEID()!='')
 				{
@@ -360,6 +376,8 @@ class AuthFilter extends sfFilter {
 					$request->setParameter('showKundliList', 1);
 				}
 			}
+                        if(MobileCommon::isNewMobileSite())
+                            $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
 		}
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();
@@ -369,15 +387,38 @@ class AuthFilter extends sfFilter {
 		$filterChain->execute();
 	}
 	
-	public function LoggedInAppPromo($profileid){
+	public function LoggedInAppPromo($data){
+		$profileid=$data[PROFILEID];
+		$lastLoginDt=$data['LAST_LOGIN_DT'];
+		if($lastLoginDt)
+		{
+			$ContactTime = strtotime($lastLoginDt);
+      		$time = time();
+      		$daysDiff  = floor(($time - $ContactTime)/(3600*24));
+      		if($daysDiff>6)
+      			$lastDayFlag=true;
+      		else
+      			$lastDayFlag=false;
+      	}
+      	else
+      		$lastDayFlag=false;
+
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null)
+			$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
+			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
 				if($appProfileIdFlag){
-					JsMemcache::getInstance()->set($profileid."_appPromo",0);
-					return 0;
+
+					if(!$lastDayFlag){
+						JsMemcache::getInstance()->set($profileid."_appPromo",0);
+						return 0;
+					}
+					else{
+						JsMemcache::getInstance()->set($profileid."_appPromo",1);
+						return 1;
+					}
 				}
 				else{
 					JsMemcache::getInstance()->set($profileid."_appPromo",1);
@@ -386,7 +427,7 @@ class AuthFilter extends sfFilter {
 			}
 			else
 			{
-				return JsMemcache::getInstance()->get($profileid."_appPromo");
+				return $appPromo;
 			}
 		}
 		else

@@ -246,9 +246,14 @@ class dppAction extends sfAction {
             $this->toggleMatchalerts = "new";
      
      if(isset($this->fromReg)){
-      $name_pdo = new incentive_NAME_OF_USER();
-      $this->name        = $name_pdo->getName($this->profileId);
-      unset($name_pdo);   
+     	//added this for caching
+        $nameOfUserOb=new NameOfUser();        
+        $nameOfUserArr = $nameOfUserOb->getNameData($this->profileId);
+        $this->name = $nameOfUserArr[$this->profileId]["NAME"];
+        
+      /*$name_pdo = new incentive_NAME_OF_USER();
+      $this->name        = $name_pdo->getName($this->profileId);*/
+      unset($nameOfUserOb);   
      }
      
      $this->setTemplate("_jspcDpp/jspcDpp");
@@ -262,11 +267,12 @@ class dppAction extends sfAction {
 		 */
 	private function getDropDowns($request){
 		$this->fetchingData = array();
-		$request->setParameter("l",'height_json,p_mstatus,dpp_country,p_religion,p_mtongue,p_mtongue,p_manglik,p_education,p_occupation,p_diet,p_smoke,p_drink,p_complexion,p_btype,p_challenged,p_nchallenged,dpp_city');
+		$request->setParameter("l",'height_json,p_mstatus,dpp_country,p_religion,p_mtongue,p_mtongue,p_manglik,p_education,p_occupation_grouping,p_diet,p_smoke,p_drink,p_complexion,p_btype,p_challenged,p_nchallenged,dpp_city');
 		$request->setParameter("actionCall","1");
 		ob_start();
 		$fieldValues = sfContext::getInstance()->getController()->getPresentationFor("static","getFieldData");
-		$this->staticFields = json_decode(ob_get_contents(),true);
+		
+		$this->staticFields = json_decode(ob_get_contents(),true);		
 		ob_end_clean();
 		foreach(DPPConstants::$alterFeildDataStructureArray as $key=>$val){
 			$this->fetchingData=FieldMap::getFieldLabel($val,'',1);
@@ -277,10 +283,10 @@ class dppAction extends sfAction {
 		}
 		$this->staticFields["age"] = $this->alterAgeArray();
 		$this->staticFields["height_json"] = $this->orderHeightValues();
-                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);
+                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);		
 		foreach($this->staticFields as $k=>$v)
 		{
-			if($v[0][0][0]=="Select")
+			if($v[0][0][0]=="Select" || $v[0][0]["S0"]=="Select")
 			{
 				unset($this->staticFields[$k][0][0]);
 			}
@@ -333,7 +339,15 @@ class dppAction extends sfAction {
           $fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
           $this->dppData = json_decode(ob_get_contents(),true);
           ob_end_clean();
-          //print_r($this->dppData); die;
+	  foreach($this->dppData as $k=>$v)
+	  {
+		if($v['key']=="P_CASTE")
+		{
+			if($v['value']=="DM")
+				$this->dppData[$k]['label_val']="Doesn't Matter";
+			break;
+		}
+	  }          
           return $this->dppData;
         }
         /*

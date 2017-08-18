@@ -50,6 +50,7 @@ class PhotoFaceDetection
 	
 	public function cropPicture($pic,$faceCoord,$pictureType,$savePicUrl,$imageFormatType)
 	{
+		PictureFunctions::setHeaders();
 		// Constants as per product reqirements
 		$sizes = $this->getSizesToCrop($pictureType);
 		$MAX_FACE = $sizes["MAX_FACE"];
@@ -163,7 +164,10 @@ class PhotoFaceDetection
 			}
 			$output["APP"]["height"]=$output["APP"]["width"]/$RATIO_REQUIRED;
 		$image_p = imagecreatetruecolor($output["APP"]["width"],$output["APP"]["height"]);
-        $imageCreated =imagecopyresampled($image_p, $image, 0,0,$output["MAIN"]["x"],$output["MAIN"]["y"],$output["APP"]["width"],$output["APP"]["height"], $output["MAIN"]["width"],$output["MAIN"]["height"]);
+		if($image)
+		{
+			$imageCreated =imagecopyresampled($image_p, $image, 0,0,$output["MAIN"]["x"],$output["MAIN"]["y"],$output["APP"]["width"],$output["APP"]["height"], $output["MAIN"]["width"],$output["MAIN"]["height"]);	
+		}        
 		if($imageFormatType=="gif")
                 	imagegif($image_p, $savePicUrl);
                 else
@@ -179,6 +183,7 @@ class PhotoFaceDetection
 	*/
 	public function getPictureCoordinates($picturePath)
 	{
+		PictureFunctions::setHeaders();
 		$logicPath = JsConstants::$faceDetectionFile."/facedetect";
 		$cascadePath = JsConstants::$faceDetectionCascadePath."/haarcascades/haarcascade_frontalface_alt.xml";
 

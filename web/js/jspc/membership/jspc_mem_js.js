@@ -2,6 +2,7 @@ function dropdown() {
     $(".dropdown dt").click(function () {
         $(".dropdown dd ul").toggle();
     });
+    
     $(".dropdown dd ul li").click(function () {
         var text = $(this).html();
         $(".dropdown dt span").html(text);
@@ -391,10 +392,24 @@ function checkEmptyOrNull(item) {
 }
 
 function managePriceStrike(m, d) {
+    vas = readCookie('selectedVas');
+    var vasActualPrice = $("#" + m + vas + "_price").text().trim().replace(',', ''),
+        vasStrikePrice = $("#" + m + vas + "_price_strike").text().trim().replace(',', '');
     var strikePrice = $("#" + m + d + "_price_strike").text().trim().replace(',', ''),
-        actualPrice = $("#" + m + d + "_price").text().trim().replace(',', ''),
-        difference = (strikePrice - actualPrice);
-    if (strikePrice.length != 0) {
+        actualPrice = $("#" + m + d + "_price").text().trim().replace(',', '');
+
+    var vasDifference = (vasStrikePrice - vasActualPrice);
+    var difference = (strikePrice - actualPrice);
+    if(vasDifference > 0)
+        difference = difference + vasDifference;
+    
+    if(typeof vasActualPrice != undefined)
+        actualPrice=+vasActualPrice + +actualPrice;
+    if(typeof vasStrikePrice != undefined)
+        strikePrice=+vasStrikePrice+ +strikePrice;
+    if(strikePrice<=0)
+        strikePrice = '';
+    if (difference > 0) {
         $('.overflowPinkRipple').css('margin-top', '0px');
         $('#' + m + "_savings_container").show();
         $('#' + m + "_savings").html(removeZeroInDecimal(difference.toFixed(2)));
@@ -414,6 +429,8 @@ function managePriceStrike(m, d) {
             $(".list-main_" + m + " #finalMemPrice_" + m).html($("#tab_" + m + "_startingPrice").html());
         }
     }
+    actualPrice = actualPrice.toFixed(2);
+    actualPrice = actualPrice.toString();
     $('#' + m + "_final_price").html(removeZeroInDecimal(commaSeparateNumber(actualPrice)));
 }
 
@@ -893,6 +910,143 @@ function checkLogoutCase(profileid) {
     } else {
         createCookie('vasppid', computedVasppid);
     }
+}
+
+function evaluateVasToBeClicked(){
+    preSelectedVasId = readCookie('selectedVas');
+    var duration;
+    if(typeof preSelectLandingVas != "undefined"){
+        if(checkEmptyOrNull(preSelectLandingVas) || checkEmptyOrNull(readCookie('selectedVas'))){
+	    mainMemTabSel = readCookie('mainMemTab');
+	    if(!checkEmptyOrNull(mainMemTabSel) || mainMemTabSel == "X"){
+                    currentMainMemSel = $(".planlist li.active").attr('mainMemTab'),
+		    mainMemTabSel = currentMainMemSel,
+		    d = $('#tab_'+currentMainMemSel+' .durSel.plansel').attr("mainMemDur");
+		    createCookie('mainMemTab',mainMemTabSel);
+		    createCookie('mainMemDur',d);
+		    duration= d=='L'?'12':d;
+	    }
+	    else{
+            if(!checkEmptyOrNull(readCookie('mainMemDur'))){
+                d = $('#tab_'+readCookie('mainMemTab')+' .durSel.plansel').attr("mainMemDur");
+                createCookie('mainMemDur',d);
+            }
+            d = readCookie('mainMemDur');
+            duration= d=='L'?'12':d;
+	    }
+        duration= selectClosestAddonDuration(duration,astroDurations);
+        manageAstroForDiscount(duration);
+            if(!$("#"+mainMemTabSel+"A"+duration).is(':checked')){
+                $("#"+mainMemTabSel+"A"+duration).trigger('click');
+            }
+            else{
+                createCookie('selectedVas',$("#"+mainMemTabSel+"A"+duration).attr("astroAddon"));
+                var m = readCookie('mainMemTab'),
+                dd = readCookie('mainMemDur');
+                managePriceStrike(m, dd);
+            }
+        }
+        else{
+            mainMemTabSel = readCookie('mainMemTab');
+            if(!checkEmptyOrNull(mainMemTabSel) || mainMemTabSel == "X"){
+                        currentMainMemSel = $(".planlist li.active").attr('mainMemTab'),
+                mainMemTabSel = currentMainMemSel,
+                d = $('#tab_'+currentMainMemSel+' .durSel.plansel').attr("mainMemDur");
+                createCookie('mainMemTab',mainMemTabSel);
+                createCookie('mainMemDur',d);
+                duration= d=='L'?'12':d;
+            }
+            else{
+                if(!checkEmptyOrNull(readCookie('mainMemDur'))){
+                    d = $('#tab_'+readCookie('mainMemTab')+' .durSel.plansel').attr("mainMemDur");
+                    createCookie('mainMemDur',d);
+                }
+                d = readCookie('mainMemDur');
+                duration= d=='L'?'12':d;
+            }
+            duration= selectClosestAddonDuration(duration,astroDurations);
+            manageAstroForDiscount(duration);
+        }
+    }
+}
+
+function manageAstroForDiscount(addonDuration){
+    if(alreadyVasDiscount == "0"){
+        var memebership = readCookie('mainMemTab'),
+            time = readCookie('mainMemDur');
+        var sP = $("#" + memebership + time + "_price_strike").text().trim().replace(',', ''),
+            aP = $("#" + memebership + time + "_price").text().trim().replace(',', '');
+        if(sP.length != 0){
+            var disc = ((sP-aP)*100)/sP;
+        }
+        for (var key in vasPrice) {
+            var originalVasPrice = vasPrice[key];
+            if(typeof disc != "undefined"){
+                var discountedVasPrice = (originalVasPrice*(100-disc))/100;
+                discountedVasPrice = discountedVasPrice.toFixed(2);
+                $("#" + memebership + key + "_price_strike").removeClass("disp-none");
+                $("#" + memebership + key + "_price_strike").text(removeZeroInDecimal(commaSeparateNumber(originalVasPrice)));
+                $("#" + memebership + key + "_price").text(removeZeroInDecimal(commaSeparateNumber(discountedVasPrice))+" ");
+            }
+            else{
+                $("#" + memebership + key + "_price_strike").addClass("disp-none");
+                $("#" + memebership + key + "_price").text(removeZeroInDecimal(commaSeparateNumber(originalVasPrice)));
+            }
+        }
+    }
+}
+
+function selectClosestAddonDuration(num,arr){
+    var curr = arr[0];
+    var diff = Math.abs (num - curr);
+    for (var val = 0; val < arr.length; val++) {
+        var newdiff = Math.abs (num - arr[val]);
+        if (newdiff < diff) {
+            diff = newdiff;
+            curr = arr[val];
+        }
+    }
+    return curr;
+}
+
+function clickCheckbox(checkBox){
+    $(checkBox).click(function() { 
+        if( $(this).is(':checked'))
+        {
+            $(checkBox).each(function() {     
+
+                $(this).parent().removeClass("selected");  
+                $(this).prop('checked', false);             
+            });
+             $(this).parent().addClass("selected");
+             $(this).prop('checked', true);  
+            createCookie('selectedVas',$(this).attr("astroAddon"));
+        }
+        else
+        {
+             $(this).parent().removeClass("selected");   
+             eraseCookie('selectedVas');
+        }
+
+        var m = readCookie('mainMemTab'),
+            d = readCookie('mainMemDur');
+        managePriceStrike(m, d);
+    })
+}
+
+function customCheckboxAstro(checkboxName) {
+
+    var checkBox = $('input[name="' + checkboxName + '"]');
+
+    $(checkBox).each(function() {         
+          $(this).wrap("<span class='customMem-checkbox'></span>");
+          if ($(this).is(':checked')) {
+              $(this).parent().addClass("selected");
+          }
+      });
+
+    clickCheckbox(checkBox);
+         
 }
 $.extend({
     redirectPost: function (location, args) {

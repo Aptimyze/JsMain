@@ -254,11 +254,19 @@ class newjs_JPARTNER extends TABLE
                 }
 	}	
 
-	public function getDppDataForProfiles($limit,$offset)
+	public function getDppDataForProfiles($limit,$offset,$whereCheck=array())
 	{
 		try
 		{
-			$sql = "SELECT PROFILEID,GENDER,LINCOME,HINCOME from newjs.JPARTNER LIMIT :OFFSETVAL, :LIMITVAL";
+                        $whrC = "";
+                        if(!empty($whereCheck)){
+                                $whr = array();
+                                foreach($whereCheck as $k=>$val){
+                                        $whr[] = $k.$val['op'].$val['val'];
+                                }
+                                $whrC = " WHERE ".implode(" AND ",$whr);
+                        }
+			$sql = "SELECT PROFILEID,GENDER,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,PARTNER_INCOME from newjs.JPARTNER $whrC LIMIT :OFFSETVAL, :LIMITVAL";
 			$prep = $this->db->prepare($sql);
 			$prep->bindParam(":LIMITVAL", $limit, PDO::PARAM_INT);
 			$prep->bindParam(":OFFSETVAL", $offset, PDO::PARAM_INT);
@@ -291,6 +299,21 @@ class newjs_JPARTNER extends TABLE
 			throw new jsException($e);
 		}
 	}
-		
+	public function updateIncomeDollarValueForProfile($profileId,$lincomeDol,$partnerIncome,$oldValue)
+	{
+		try
+		{
+			$sql = "UPDATE newjs.JPARTNER set LINCOME_DOL = :LINCOME_DOL , PARTNER_INCOME = :PARTNERINCOME WHERE PROFILEID = :PROFILEID AND HINCOME = :OLDVALUE";
+			$prep = $this->db->prepare($sql);
+			$prep->bindParam(":LINCOME_DOL", $lincomeDol, PDO::PARAM_INT);
+			$prep->bindParam(":PROFILEID", $profileId, PDO::PARAM_INT);
+			$prep->bindParam(":OLDVALUE", $oldValue, PDO::PARAM_INT);
+			$prep->bindParam(":PARTNERINCOME", $partnerIncome, PDO::PARAM_STR);
+			$prep->execute();
+		}
+		catch (Exception $e){
+			throw new jsException($e);
+		}
+	}	
 }
 ?>

@@ -77,6 +77,7 @@ Abstract class ApiAuthentication
 					{
 						$profileObj= LoggedInProfile::getInstance();
 						$profileObj->getDetail($this->loginData[PROFILEID],"PROFILEID","*");
+						$this->setLoginTrackingCookie($this->loginData);
 						if(IncompleteLib::isProfileIncomplete($profileObj) && $profileObj->getINCOMPLETE()!="Y")
 						{
 							$this->loginData[INCOMPLETE]="Y";
@@ -175,7 +176,7 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification") || strstr($_SERVER["REQUEST_URI"],"api/v3/notification")){
 				$this->loginData =$loginData;
 				$this->loginData[AUTHCHECKSUM]=$authChecksum;
 				return $this->loginData;
@@ -221,9 +222,9 @@ Abstract class ApiAuthentication
 		//need to check the DOB,GENDER,ACTIVATION,INCOMPLETE fields
 		//Get the Login Data from JProfile -->call Store
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_masterRep");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		else
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
 		//If any changes Found then logout user
 		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
@@ -247,9 +248,9 @@ Abstract class ApiAuthentication
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		else
-			$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		
 		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
@@ -285,6 +286,7 @@ Abstract class ApiAuthentication
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
             $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
             $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
+            $loginData["LAST_LOGIN_DT"]=$loggedInProfileObj->getLAST_LOGIN_DT();
 			return $loginData;
 		}
                 
@@ -293,6 +295,7 @@ Abstract class ApiAuthentication
      
     public function CommonLoginTracking()
 	{
+		if($this->loginData['ACTIVATED']=='D') return ;
 		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
 		$profileId=$this->loginData["PROFILEID"];
 		$ip=CommonFunction::getIP();
@@ -347,6 +350,8 @@ Abstract class ApiAuthentication
 			$queueArr['websiteVersion']=$websiteVersion;
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
+                        $queueArr['whichChannel'] = MobileCommon::getChannel();
+
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -411,14 +416,17 @@ Abstract class ApiAuthentication
 				$dbJprofile=new JPROFILE("newjs_masterRep");
 			else
 				$dbJprofile=new JPROFILE("newjs_master");
-			
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-			$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
-			$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
-			$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
-			if(!PasswordHashFunctions::slowEquals($pwd,$password))
+			if($username){
+				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+				$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
+				$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
+				$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
+				if(!PasswordHashFunctions::slowEquals($pwd,$password))
+					return NULL;
+				$time=36*60;
+			}
+			else
 				return NULL;
-			$time=36*60;
 		}
 		else
 		{
@@ -446,12 +454,16 @@ Abstract class ApiAuthentication
 					return NULL;
 			}
 			$id=$temp[PR];
-			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-				$dbJprofile=new JPROFILE("newjs_masterRep");
+			if($id){
+				if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+					$dbJprofile=new JPROFILE("newjs_masterRep");
+				else
+					$dbJprofile=new JPROFILE("newjs_master");
+				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+				$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
+			}
 			else
-				$dbJprofile=new JPROFILE("newjs_master");
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-			$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
+				return NULL;
 		}
 
 		return $this->encryptAppendTime($this->createAuthChecksum($time));
@@ -810,6 +822,10 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
+                        $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
+                        LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);  
+
+                        
 		}
 		if($trackingData[logLoginHistoryTracking])
 		{
@@ -833,10 +849,13 @@ Abstract class ApiAuthentication
 			$dbJprofile=new JPROFILE("newjs_master");
 			$dbJprofile->updateLoginSortDate($profileId,$currentTime);
 		}
-		if($trackingData["appLoginProfileTracking"])
+
+		if($trackingData["appLoginProfileTracking"] || ($trackingData[misLoginTracking] && ($trackingData["websiteVersion"] == 'A' ||$trackingData["websiteVersion"] == 'I') ) )
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+			$appType = $trackingData["websiteVersion"];
+			$date = $trackingData["currentTime"];
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
 		}
 		if($trackingData["logLogoutTracking"])
 		{
@@ -851,5 +870,38 @@ Abstract class ApiAuthentication
 
 	}
 
+	/*
+	* @function: setLoginTrackingCookie
+	* @param array - login data
+	*/ 
+    public function setLoginTrackingCookie($loginData)
+	{
+		if(MobileCommon::isApp())
+			return ;
+
+		$username = $loginData["USERNAME"];
+		$cookieName = "loginTracking";
+		$expiryTime = 31536000; // Approx 1 year
+
+		if(!isset($_COOKIE[$cookieName]))
+		{
+			@setcookie($cookieName, json_encode(array($username)), time() + $expiryTime, "/", $this->domain);
+			// send mail
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
+			CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
+		}
+		else
+		{
+			$cookieData = json_decode($_COOKIE[$cookieName], true);
+			if(!in_array($username, $cookieData))
+			{
+				array_push($cookieData, $username);
+				@setcookie($cookieName, json_encode($cookieData), time() + $expiryTime, "/", $this->domain);
+				// send mail
+				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
+				CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
+			}
+		}
+	}
 }
 ?>

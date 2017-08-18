@@ -110,7 +110,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 					$caller = $trace[0];
 				}
 				$file = $caller['file'];
-				LoggingManager::getInstance(LoggingEnums::JPC)->logThis(LoggingEnums::LOG_INFO, new Exception(""), array(LoggingEnums::MESSAGE => "Called by {$caller['function']} in $file", LoggingEnums::MODULE_NAME => LoggingEnums::JPC));
         $this->logFunctionCalling(__FUNCTION__);
 				if($pid)
 				{ 

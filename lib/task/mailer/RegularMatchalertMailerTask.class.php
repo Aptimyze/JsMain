@@ -61,7 +61,8 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>false,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true,"sortSubscriptionFlag"=>true);
+
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
@@ -73,7 +74,8 @@ EOF;
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
 				$data["stypeMatch"] =$stypeMatch."&clicksource=".$clicksource;
-				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);                           
+                                $dppLink = $mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic;
+				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid,$dppLink);                           
                                 $data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
                                 
@@ -88,7 +90,7 @@ EOF;
                                 }
                                 
                                 if(($values["LOGIC_USED"] == self::COMMUNITY_MODEL)){
-                                    $data["body"].="<a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>click here</a>";
+                                    $data["body"].="<a href='".$dppLink."'>click here</a>";
                                 }
                                 
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
@@ -97,7 +99,7 @@ EOF;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
-				
+                $this->setMatchAlertNotificationCache($data);
 			}
 			else
 				$flag = "I"; // Invalid users given in database
@@ -131,6 +133,9 @@ EOF;
       case 5 : 
         return SearchTypesEnums::MatchAlertMailer5;
         break;
+      case 7 : 
+        return SearchTypesEnums::MatchAlertMailer7;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -144,7 +149,7 @@ EOF;
   *@param $profileId : Receiver profile Id
   *@return $subject : subject of the mail
   */
-  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId)
+  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId,$dppLink="")
   {
 	$subject = array();
 	$today = date("d M");
@@ -185,6 +190,11 @@ EOF;
 			$subject["body"]="Shown below are matches based on your broader Desired Partner Profile. We have broadened some of your preferences as your Desired Partner Profile may be very strict. To get matches as per Desired Partner Profile, please ";
                         $subject["showDpp"]= 1;
                         break;
+                case "7"://relaxed dpp trends case
+                        $subject["subject"]= $count.$matchStr." based on your latest search";
+			$subject["body"]="To get more matches strictly based on your Desired Partner Profile, please broaden your <a href='$dppLink'>Desired Partner Profile</a>. Meanwhile, please go through these matches from your latest search, which we have added to your Recommendations.";
+                        $subject["showDpp"]= 1;
+                        break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");
 			
@@ -214,6 +224,54 @@ EOF;
         }
         $subject="Shown below are $outOf added to your account today, based on your Desired Partner Profile. You may send interest to them.";
         return $subject;
+  }
+  
+  public function setMatchAlertNotificationCache($data){
+   
+      $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
+      $count = $data["COUNT"];
+      $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
+      $otherProfileid = $data["USERS"][0]->getPROFILEID();
+      $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
+      $otherPicIosUrl = $this->getValidImage($data["USERS"][0]->getProfilePic450Url());
+      $cacheKey = "MA_NOTIFICATION_".$receiver;
+      $seperator = "#";
+      $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+      if($preSetCache){
+          $explodedVal = explode($seperator,$preSetCache);
+          $count = $count+$explodedVal[0];
+          if($this->getValidImage($otherPicUrl) == "D"){
+            $otherPicUrl = $explodedVal[2];
+            $otherProfileid = $explodedVal[1];
+          }
+          if($this->getValidImage($otherPicIosUrl) == "D"){
+              $otherPicIosUrl = $explodedVal[4];
+              $otherProfileid = $explodedVal[1];
+          }
+      }
+      else{
+          $body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
+          $type = "MA_NOTIFICATION";
+          $queueData = array('process' =>'MA_NOTIFICATION',
+                            'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                          );
+          $producerObj = new JsNotificationProduce();
+          $producerObj->sendMessage($queueData);
+      }
+      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
+      $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
+      $monitoringKey = "MA_N_".date('Y-m-d');
+      if(!JsMemcache::getInstance()->get($monitoringKey)){
+          JsMemcache::getInstance()->set($monitoringKey,date('Y-m-d H:i:s'),79200);
+      }
+      JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
+  }
+  
+  public function getValidImage($url){
+    $photo = "D";
+    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request') || strstr($url, 'photo_coming')) )
+        $photo = $url;
+    return $photo;
   }
 
 }

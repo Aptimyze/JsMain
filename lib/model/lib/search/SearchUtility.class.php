@@ -119,10 +119,14 @@ class SearchUtility
 					{
 						$showArrCluster=1;
 						$showArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
+						if($showArr=="")
+						{
+							$showArr = '0 0';
+						}											
 					}
 					elseif($SearchParamtersObj->getVIEWED()==$this->notViewed)
-						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
-				}
+						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);					
+				}			
 				if( ($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER() || $SearchParamtersObj->getKUNDLI_DATE_CLUSTER())&& $pid)
 				{
 					$alreadyInShowStr = $SearchParamtersObj->getProfilesToShow();
@@ -192,8 +196,9 @@ class SearchUtility
 								$showArr= implode(" ",$matArr);
 						}
 					}
-					else
+					else{
 						$showArr = '0 0';
+					}
 				}
                                 //remove profiles for AP cron
                                 if($notInArray)
@@ -230,7 +235,7 @@ class SearchUtility
         */
 	public function getSearchCriteriaAfterClusterApplication($request,$addRemoveCluster,$SearchParamtersObj)
 	{
-		
+            
 		$searchParamsSetter['SEARCH_TYPE']= $this->stypeCluster;
 
 		if($request->getParameter("appCluster"))
@@ -239,7 +244,7 @@ class SearchUtility
 			$cluster = $solr_labels[$request->getParameter("appCluster")];
 			if($request->getParameter("dollar")==1)
 				$cluster=$cluster."_DOL";
-			$clusterVal = $request->getParameter("appClusterVal");
+			$clusterVal = $request->getParameter("appClusterVal");		
 			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
                             if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
@@ -277,7 +282,7 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
-                
+                $searchParamsSetter['CURRENT_CLUSTER'] = $cluster;
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')
@@ -301,15 +306,12 @@ class SearchUtility
 				{
 					$searchParamsSetter['COUNTRY_RES']='';
 					$searchParamsSetter['STATE']='';
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
 				}
                                 elseif($cluster == 'COUNTRY_RES'){
 					$searchParamsSetter['STATE']='';
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster == 'STATE'){
-					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster=='OCCUPATION_GROUPING')
 					$searchParamsSetter['OCCUPATION']='';
@@ -331,12 +333,16 @@ class SearchUtility
 				}
 			}
 		}
+                else if($clusterVal == 'Any' && $cluster=='KNOWN_COLLEGE'){
+                    $searchParamsSetter['KNOWN_COLLEGE'] = '';
+                    $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = '000';
+                }
 		else
 		{
 			if(!is_array($list_of_clusters) || (is_array($list_of_clusters) && !in_array($cluster,$list_of_clusters)) )
 				$list_of_clusters[] = $cluster;
 			$searchParamsSetter['NEWSEARCH_CLUSTERING'] = implode(",",$list_of_clusters);
-
+                        
 			if(strstr($clusterVal,'$'))
 			{
 				$temp = explode("$",$clusterVal);
@@ -350,6 +356,7 @@ class SearchUtility
 					$searchParamsSetter["L".$cluster]=$temp[0];
 					$searchParamsSetter["H".$cluster]=$temp[1];
 				}
+                                
 				if($cluster == "INCOME")
 				{
 					if($temp[0]=="-" && $temp[1]=="-")	//If Rupee checkbox is unclicked i.e. dont use Rupee parameter
@@ -452,14 +459,14 @@ class SearchUtility
 					$ncrS = FieldMap::getFieldLabel('delhiNcrStates','',1);
 					$temp = implode(",",$ncrS);
 					$clusterVal = str_replace("NCR","NCR,".$temp,$clusterVal);
-					$city = $SearchParamtersObj->getCITY_INDIA();
+					$city = $SearchParamtersObj->getCITY_RES();
 					if($city && $city!='DONT_MATTER')
 						$city = $city.",".implode(",",$ncrC);
 					else
 						$city = implode(",",$ncrC);
 
 					$city = $this->str_to_array_unique($city);
-					$searchParamsSetter['CITY_INDIA']=$city;
+					$searchParamsSetter['CITY_RES']=$city;
 				}
 				if($cluster=='HANDICAPPED')
 				{
@@ -468,7 +475,7 @@ class SearchUtility
 				/**
 				* If METRO is choosen in state then we need to map all city correspoinding to it
 				*/
-				if(strstr($clusterVal,'METRO') && $cluster=='CITY_INDIA')
+				if(strstr($clusterVal,'METRO') && $cluster=='CITY_RES')
 				{
 					$delmetro = FieldMap::getFieldLabel('allMetros','',1);									     
 					$temp = implode(",",$delmetro);	
@@ -564,16 +571,22 @@ class SearchUtility
                                         $selectedVAl = explode(",",$clusterVal);
                                         if(!in_array(51, $selectedVAl)){
                                                 $searchParamsSetter['STATE']='';
-                                                $searchParamsSetter['CITY_INDIA']='';
                                                 $searchParamsSetter['CITY_RES']='';
                                         }
+                                }
+                                if($cluster=='STATE'){
+                                        $searchParamsSetter['CITY_RES']='';
                                 }
 				$searchParamsSetter[$cluster]=$clusterVal;
 			}
 		}
 		//print_r($searchParamsSetter); die;
 //die;
-		$SearchParamtersObj->setter($searchParamsSetter);
+                if($cluster == "CITY_RES"){
+                        $SearchParamtersObj->setter($searchParamsSetter,2);
+                }else{
+                        $SearchParamtersObj->setter($searchParamsSetter);
+                }
 		//return $SearchParamtersObj;
 	}
 	
@@ -881,7 +894,7 @@ class SearchUtility
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
         {  
                 $caching = $request->getParameter("caching");
-                if($caching)
+                if($caching || $type=="del")
                 {       
 			if(!$pid)
 			{
@@ -979,9 +992,17 @@ class SearchUtility
                elseif($request->getParameter("searchBasedParam")=='matchalerts')
                         {	
                                 if($type=='set')
-                                {	
-                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
-                                        JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+                                {
+					if($request->getParameter("androidMyjsNew"))
+					{
+						JsMemcache::getInstance()->set("cachedDMAS$pid",serialize($statusArr));
+                                                JsMemcache::getInstance()->set("cachedDMAR$pid",serialize($resultArr));
+					}
+					else
+					{	
+	                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
+        	                                JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+					}
                                         $profileIdPoolArray = array();
                                         if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
@@ -995,8 +1016,16 @@ class SearchUtility
                                 }
                                 elseif($type=='get')
                                 {	
-                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
-                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+					if($request->getParameter("androidMyjsNew"))
+                                        {
+	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMAS$pid");
+	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMAR$pid");
+                                        }       
+                                        else
+                                        {
+	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
+	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+					}
                                         if($statusArr && $resultArr)
                                         {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
@@ -1049,10 +1078,13 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
                 JsMemcache::getInstance()->set("cachedPMR$pid","");
                 JsMemcache::getInstance()->set("cachedDMS$pid","");
+                JsMemcache::getInstance()->set("cachedDMAS$pid","");
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
+                JsMemcache::getInstance()->set("cachedDMAR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
-                JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$pid);
+                // delete data Match of the day
+                JsMemcache::getInstance()->set("cachedMM24$pid","");
 			}	
                 }
                 return 0;

@@ -281,10 +281,12 @@ class CommonUtility
 			return $can_url;
 	}
 
+        
+       
         /**
         * General Utility function to send post curl request.
         */
-        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
+        public static function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="",$cookieValue='')
         {
 	        if(!$timeout)
 		        $timeout = 50000;
@@ -296,12 +298,17 @@ $postParams1.="&fl=*,".$y[0];
 echo "<br><br><br>".$urlToHit."?".$postParams1;echo "<br><br>\n\n";
 die;
 */
-//echo "<br><br><br>".$urlToHit."?".$postParams;echo "<br><br>\n\n";//die;
-                $ch = curl_init($urlToHit);
+//echo "<br><br><br>".$urlToHit."?".$postParams;echo "<br><br>\n\n";die;
+        $ch = curl_init($urlToHit);
 		if($headerArr)
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-		else
-                	curl_setopt($ch, CURLOPT_HEADER, 0);
+	else{
+				$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+				curl_setopt($ch, CURLOPT_HEADER, $header);
+        }
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		
 		if($postParams)
 	                curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -311,7 +318,20 @@ die;
 	        curl_setopt($ch,CURLOPT_NOSIGNAL,1);
                 curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		if($cookieValue!=''){
+				curl_setopt($ch, CURLOPT_COOKIEJAR, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIEFILE, '/tmp/cookies.txt');
+				curl_setopt($ch, CURLOPT_COOKIE, 'pconnid='.$cookieValue);
+        }
+
                 $output = curl_exec($ch);
+           if(!$headerArr)
+           {
+		        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+				$headerStr = substr($output, 0, $header_size);
+				$output = substr($output, $header_size);
+			}
+				
 	    return $output;
                 /*
                 header('Content-Type: text/xml');
@@ -324,12 +344,22 @@ die;
         /**
         * General Utility function to send 'get' curl request.
         */
-        public static function sendCurlGetRequest($urlToHit,$timeout='')
+        public static function sendCurlGetRequest($urlToHit,$timeout='',$headerArr='')
         {
+			
 	        if(!$timeout)
 		        $timeout = 50000;
-                $ch = curl_init($urlToHit);
-                curl_setopt($ch, CURLOPT_HEADER, 0);
+		     $ch = curl_init($urlToHit);
+		    if($headerArr)
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+			else{
+				$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+				curl_setopt($ch, CURLOPT_HEADER, $header);
+			}
+        
+			curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+               
+                
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
@@ -338,6 +368,13 @@ die;
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
+             
+               if(!$headerArr)
+               {
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+				$headerStr = substr($output, 0, $header_size);
+				$output = substr($output, $header_size);
+			}
 		return $output;
 	}
 
@@ -430,6 +467,7 @@ die;
 	}
 	public static function UploadImageCheck($fname)
 	{
+		PictureFunctions::setHeaders();
 		if (isset($_FILES[$fname]) )
 		{
 			$file = $_FILES[$fname]['tmp_name'];
@@ -483,7 +521,7 @@ die;
 	}
 	public static function UploadPic($id,$where,$photoContent)
 	{
-
+			PictureFunctions::setHeaders();
 			$site_url=sfConfig::get("app_site_url");
 			$web_dir=sfConfig::get("sf_web_dir");
 			$symRoot=
@@ -518,6 +556,12 @@ die;
 	public static function isUrlExistsUsingCurl($url)
 	{
 		$handle = curl_init($url);
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.5";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+             
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		
 		curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
 		$response = curl_exec($handle);
 
@@ -764,9 +808,13 @@ die;
 			$timeout = 10000;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
+		$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
+		$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.5";
+		curl_setopt($ch, CURLOPT_HEADER, $header);
+                
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
@@ -774,6 +822,9 @@ die;
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 		$result = curl_exec($ch);
+		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$headerStr = substr($result, 0, $header_size);
+		$result = substr($result, $header_size);
 		$result = json_decode($result);
 		curl_close($ch);
 
@@ -786,8 +837,8 @@ die;
 	* @return: $showChat
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
-		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
-        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings","promotions","contactus","faq","successStory"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
 		$showChat = 1;
 		if(!$loggedIn){
 			$showChat = 0;
@@ -818,7 +869,7 @@ die;
 			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
-		//error_log("ankita-".$getName);
+		
 		return $userName;
 	}
 
@@ -935,7 +986,6 @@ die;
 	}
 
 	public static function hideFeaturesForUptime(){
-		
 		if(in_array(date('H'),array("10","11","12","13")))
 		{
 			return 1;
@@ -952,11 +1002,7 @@ die;
 		$redirectUrl = "";
 		$loginData = $request->getAttribute("loginData");
         $authchecksum = $request->getcookie('AUTHCHECKSUM');
-        if($loginData["PROFILEID"] == 13766629 || $loginData["PROFILEID"] == 11238186){
-        	error_log("ankita jeevansathi_hindi_site_new= ".$request->getcookie("jeevansathi_hindi_site_new"));
-        	error_log("ankita redirected_hindi_new= ".$request->getcookie("redirected_hindi_new"));
-        	//error_log("ankita redirect= ".$request->getParameter('newRedirect'));
-        }
+       
 		if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
 			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
 				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
@@ -1002,5 +1048,65 @@ die;
 		}
 		return $redirectUrl;
 	}
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
+  public static function runFeatureAtNonPeak(){
+		
+		if(in_array(date('H'),array("17","18","19","20","21")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
+        public static function runFeatureInDaytime($after = 10,$before = 22){
+                $datetime = new DateTime; // current time = server time
+                $otherTZ  = new DateTimeZone('Asia/Kolkata');
+                $datetime->setTimezone($otherTZ); // Indian Time
+		$timeNow = $datetime->format('H');
+		if($timeNow>=$after && $timeNow<=$before)
+		{
+			return 1;
+		}
+		return 0;
+	}
+          public static function getSplitName($str){
+		return explode(" ",$str)[1];
+	}
+        /**
+         * This function will post message to slack on the basis of identifier
+         * @param type $message slack message
+         * @param type $identifier identifier for url as per SlackMessagesEnums class
+         */
+	public static function sendSlackmessage($message,$identifier = "default")
+	{
+		$url = SlackMessagesEnums::$slackModuleArray[$identifier];
+		$breaks = array("<br />","<br>","<br/>");
+		$message = str_ireplace($breaks, "\n", $message);
+		$data = array("text" => $message );
+		$ch=curl_init($url);
+		$data_string = json_encode($data);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,
+		array("Content-type: application/json"));
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result;
+	}
+    
+    public static function sendAlertMail($to,$msgBody,$subject){
+        $from = "info@jeevansathi.com";
+        $from_name = "Jeevansathi Info";
+        SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
+    }
 }
 ?>

@@ -3,18 +3,24 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
+    <head>
+        ~if $sf_request->getParameter('showAndBeyond')`
+        <script type="text/javascript" src="//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js" async></script>
+        ~/if`
 	<script>
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
 	}
-	if (window.location.protocol == "https:")
-            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 	</script>
 	~include_http_metas`
 	~include_metas`
-  ~include_partial('global/jsmsCommonHeader')`
+        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
+        ~if $ampurl|strstr:"amp"`
+            <link rel="amphtml" href="~$ampurl`"/>
+        ~/if`
+	~include_canurl`
+        ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
@@ -27,7 +33,7 @@
 	<meta name="theme-color" content="#415765">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+        <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
 	<link rel="apple-touch-icon" href="/apple-touch-icon_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
@@ -36,7 +42,6 @@
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
-    ~include_canurl`
     ~use helper = SfMinify`
 
     <script  src="~JsConstants::$jquery`"></script>
@@ -58,6 +63,9 @@
 		~/if`
 		var appPromoPerspective=0;
 		var DualHamburger=1;
+                ~if $sf_request->getAttribute('messageListAppPromo')`
+                    var messageListAppPromo=~$sf_request->getAttribute('messageListAppPromo')`;
+                ~/if`
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
@@ -140,7 +148,7 @@ var domainCode={};
   </body>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`
-	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
+	~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
  ~/if`
   ~if JsConstants::$boomerjs eq 1`
 					<script type="text/javascript" src="~sfconfig::get("app_img_url")`/min/?f=/js/modernizr_js.js"></script>

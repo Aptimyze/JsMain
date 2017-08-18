@@ -2,7 +2,7 @@
 
 var t1=null;
 var profileCompletionCount=pc_temp1=limit=pc_temp2=0;
-var memTimer,memTimerTime,memTimerExtraDays=0;
+var memTimer,memTimerTime,memTimerExtraDays=0,calTimerTime,calTimer;
          
 var timeI=""; var timeE=""; var timeD="";
 var MyjsRequestCounter=0;
@@ -13,7 +13,7 @@ var PageSrc = 0;
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1&caching=1","DAILYMATCHES":"/api/v1/search/perform?searchBasedParam=matchalerts&caching=1&myjs=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1 ","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/api/v2/inbox/perform?infoTypeId=23&pageNo=1&myjs=1&caching=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1&caching=1&lastsearch=1", "MATCHOFTHEDAY":"/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1&caching=1","DAILYMATCHES":"/api/v1/search/perform?searchBasedParam=matchalerts&caching=1&myjs=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1 ","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/api/v2/inbox/perform?infoTypeId=23&pageNo=1&myjs=1&caching=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1&caching=1&lastsearch=1", "MATCHOFTHEDAY":"/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1&caching=1"};
 
 var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20, 'EXPIRINGINTEREST':20, "MATCHOFTHEDAY" : 7};
 
@@ -21,7 +21,7 @@ var noResultMessagesArray={
 	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
 };
 
-var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&matchedOrAll=A&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
+var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/search/visitors?matchedOrAll=A","SHORTLIST":"/search/shortlisted","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/inbox/9/1",
 "VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults","EXPIRINGINTEREST":"/inbox/23/1"};
 
 
@@ -140,7 +140,7 @@ component.prototype.request = function() {
 				jsLoadFlag = 1;
 				timeE = new Date().getTime();
 				timeD = (timeE - timeI)/3600;
-				jsb9init_fourth(timeD,true,2,'http://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
+				jsb9init_fourth(timeD,true,2,'https://track.99acres.com/images/zero.gif','AJAXMYJSPAGEURL');
 			}
           },
           beforeSend : function(data){
@@ -601,18 +601,29 @@ engagementCounts.prototype.noResultCase = function() {
 
 function CriticalActionLayer(){
 var CALayerShow=$("#CALayerShow").val();
-if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || getCookie("calShown") ) return;
+if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || (getCookie("calShown") && (CALayerShow!='19')) ) return;
 if(CALayerShow!='0')
   {
       
     var layer=$("#CALayerShow").val();
+    var discount_percentage=$("#DiscountPercentage").val();
+    var discount_subtitle=$("#DiscountSubtitle").val();
+    var start_date=$("#StartDate").val();
+    var old_price=$("#OldPrice").val();
+    var new_price=$("#NewPrice").val();
+    var time = $("#TimeForLightning").val();
+    var symbol = $("#Symbol").val();
     var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer};
+ var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time,'symbol':symbol};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
+      if(CALayerShow==19)
+{        var time = $("#TimeForLightning").val();
+  showTimerForLightningCal(time);
+}
   if(CALayerShow==9) 
       $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
   else
@@ -782,6 +793,31 @@ function videoLinkRequest()
 
 }
 
+function modifyMemMsgForLightningDeal(){
+    var flag = false;
+    if($('#jspcMemMsg span:first').html() == "FLASH DEAL"){
+        $('#jspcMemMsg span:first').addClass('f16').removeClass('f26');
+        var txt = $("#memExtraDiv").html();
+        $("#memExtraDiv").html('');
+        var memText = txt.split(" ");
+        $("#memExtraDiv").append("<span class=''></span><span class=''></span>");
+        var s1 = '';var s2='';
+        for(var i=0;i<3;i++){
+            s1+=memText[i]+" ";
+        }
+        for(var i=3;i<memText.length;i++){
+            s2+=memText[i]+" ";
+        }
+        $("#memExtraDiv span:nth-child(1)").html(s1);
+        $("#memExtraDiv span:nth-child(2)").html(s2);
+        $("#memExtraDiv span:nth-child(1)").addClass('f30 fontmed');
+        flag = true;
+        $("#lightningTimer").show();
+        showTimerForLightningMemberShipPlan("jspcMyjs");
+    }
+    return flag;
+}
+
 
 $(document).ready(function() {
 if($("#showConsentMsgId").val()=='Y')
@@ -806,9 +842,12 @@ else {
   {
     videoLinkRequest(profileid);
   });
-
+    
+    var responseFlag = modifyMemMsgForLightningDeal();
+    if(!responseFlag)
       showTimerForMemberShipPlan();
 	profile_completion(iPCS);
+    
 	if(showFTU){
 		var desiredPartnersObj = new desiredPartnerMatches();
 		desiredPartnersObj.pre();
@@ -963,12 +1002,14 @@ var buttonClicked=0;
         }
        return true;
      
-    }    function criticalLayerButtonsAction(clickAction,button) {
+    }    
+    
+function criticalLayerButtonsAction(clickAction,button) {
 
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
-                
+                var calTracking = '';
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -988,16 +1029,26 @@ var buttonClicked=0;
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    if(layerId==18)
+                    {   
+                        calTracking  +=( '&occupText=' + $(".js-otheroccInp input").val().trim());
+                        
+                      }
+
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
-                    var URL="/common/criticalActionLayerTracking";
+                    var URL="/common/criticalActionLayerTracking?"+calTracking;
                     $.ajax({
                         url: URL,
                         type: "POST",
                         data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
-
-                    closeCurrentLayerCommon();
+                    if(layerId!=13 || button!='B1')
+                        closeCurrentLayerCommon();
+                    if(layerId == 14)
+                    {
+                      $("#alternateEmailSentLayer").hide();
+                    }
                     if(clickAction=='RCB')
                     {
                         toggleRequestCallBackOverlay(1, 'RCB_CAL');
@@ -1105,13 +1156,27 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             
             jObject.find('.sendInterest').attr('onClick', postAction);
 
-            jObject.find('.profileName').html(profiles[i].username);
+            var username = '';
+            if(typeof profiles[i].name_of_user != 'undefined' && profiles[i].name_of_user != '')
+            {
+              username = profiles[i].name_of_user;
+            }
+            else
+            {
+              username = profiles[i].username;
+            }
+            jObject.find('.profileName').html(username);
+            if(typeof profiles[i].subscription_text != 'undefined')
+            {
+              jObject.find('.subscription').html(profiles[i].subscription_text);
+            }           
+
             jObject.find('.profileName').attr('profileChecksum',profileChecksum);
             jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);
             jObject.find('.gunascore').html(profiles[i].gunascore);
             
             // set image url
-            jObject.find('.mod_img').html(profiles[i].profilepic120url);
+            jObject.find('.mod_img').attr("src",profiles[i].profilepic120url);
             // set age height
             jObject.find('.age_height').html(profiles[i].age + ' yr,  ' + profiles[i].height);
             
@@ -1207,3 +1272,24 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 				}
 			});
     }
+
+   function sendAltVerifyMail()
+   {
+                showCommonLoader();
+                var ajaxData={'emailType':'2'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {   
+                      msg ="A link has been sent to your email Id "+altEmail+', click on the link to verify your email';
+                        $("#altEmailConfirmText").text(msg);
+                        $("#criticalAction-layer").hide();
+                        $("#alternateEmailSentLayer").show();
+                        hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+
+   }
+

@@ -8,6 +8,7 @@
  */
 var retryAttempt = 0;
 var EditApp = {};
+var callBlur = 0;
 EditApp = function(){
 
   try{
@@ -30,14 +31,23 @@ EditApp = function(){
     var INT_PHONE_MAX_LEN = 15;
     var Url               = '/api/v1/profile/editprofile?sectionFlag=all'
     var editAppObject     = {needToUpdate:true}; 
-    var responseKeyArray  = ["Details","Education","Career","Family","Lifestyle","Contact","Kundli"];
-    var viewResponseKeyArray =["about","dpp","family","lifestyle","contact"];
+    var responseKeyArray  = ["Critical","Details","Education","Career","Family","Lifestyle","Contact","Kundli"];
+    var viewResponseKeyArray =["Critical","about","dpp","family","lifestyle","contact"];
     var viewResponseSubSection =["hobbies","sibling"];
     var fieldObject       = function(){return {"key":"","type":"","isEditable":"true","label":"","decValue":"","isUnderScreen":"false","value":""}};
     var editedFields      = {};
+    var hideEditFor = [];
     var staticTables      = new SessionStorage;
     var chosenUpdateEvent = "chosen:updated";
-    
+    var dataMonthArray = {1: "Jan", 2: "Feb", 3: "Mar", 4: "April", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
+    var dateTypeArr =[];
+      dateTypeArr[0] = {"D":"Day"};
+      dateTypeArr[1] = {"M":"Month"};
+      dateTypeArr[2] = {"Y":"Year"};
+      var dateDataArray = [dateTypeArr];
+      var removeDepField = {"m_status":"havechild"};
+      var removeDepFieldOn = {"m_status":"Never Married"};
+    var inputData = {};
     //Error Map
     var errorMap          = {
                               "RELATION":"Please choose who posted this profile",
@@ -59,9 +69,11 @@ EditApp = function(){
                               "ADDR_PROOF_TYPE":"Required",
                               "ID_PROOF_TYPE":"Required",
                               "SAME_EMAIL":"Same Email",
+                              "MSTATUS_PROOF":"Please attach Divorced Decree",
                             };
     //Section List
     var BASIC             = "basic";
+    var CRITICAL          = "critical";
     var LIKES             = "likes";
     var LIFE_STYLE        = "lifestyle";
     var FAMILY            = "family";
@@ -71,7 +83,8 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var criticalSectionArray   = ["MSTATUS","MSTATUS_PROOF","DTOFBIRTH"];
+    var basicSectionArray   = ["NAME","GENDER","HAVECHILD","HEIGHT","RELIGION","MTONGUE","CASTE","JAMAAT","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -82,7 +95,8 @@ EditApp = function(){
     var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
-                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
+                                "critical" : 'mstatus',
+                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,,relationship,income,degree_pg,degree_ug,jamaat',
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
@@ -93,18 +107,18 @@ EditApp = function(){
                               }; 
     
     
-    var storeTogetherFields         ={"CITY_RES":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE"} 
-    var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
+    var storeTogetherFields         ={"CITY_RES":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","MSTATUS_PROOF":"MSTATUS"} 
+    var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER","MSTATUS_PROOF":"MSTATUS"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type","MSTATUS":"mstatus_edit,mstatus_muslim_edit","MSTATUS_EDIT":"mstatus_edit","MSTATUS_MUSLIM_EDIT":"mstatus_muslim_edit","MSTATUS_PROOF":"mstatus_proof","JAMAAT":"jamaat"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100','ALT_EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
     //Type of Fields By Default All are 'S' Type means single select
     
     var SINGLE_SELECT_TYPE        = "S";
-    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","STATE_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE"];
+    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","STATE_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE","JAMAAT"];
     var NON_EDITABLE_TYPE         = "N";
     
     var OPEN_TEXT_TYPE            = "O";
@@ -113,6 +127,8 @@ EditApp = function(){
     var unCookedFields = ['DISPLAYNAME'];
     var autoSuggestFields         = ["SUBCASTE","GOTHRA","GOTHRA_MATERNAL","SCHOOL","COLLEGE","PG_COLLEGE","COMPANY_NAME"]; 
     
+    var DATE_TYPE                  = "D";
+    var dateTypeFields             = ["DTOFBIRTH"];
     var BOX_TYPE                  = "B";
     var boxTypeFields             = ["RELATION","DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","BLOOD_GROUP","HIV","THALASSEMIA","BTYPE","PARENT_CITY_SAME","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","T_SISTER","T_BROTHER","FAMILY_TYPE","FAMILY_STATUS","FAMILY_VALUES","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","HIJAB","WORKING_MARRIAGE","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","MARRIED_WORKING","GOING_ABROAD","HIJAB_MARRIAGE","HAVECHILD"];
     var boxTypeMaxAllowed         = {"RELATION":3};
@@ -130,7 +146,7 @@ EditApp = function(){
     var phoneTypeFields           = ["PHONE_MOB","ALT_MOBILE","PHONE_RES"];
     
     var FILE_TYPE            = "FT";
-    var fileTypeFields        = ["ID_PROOF_VAL","ADDR_PROOF_VAL"];
+    var fileTypeFields        = ["ID_PROOF_VAL","ADDR_PROOF_VAL","MSTATUS_PROOF"];
     
     var PRIVACY_TYPE              = "PR";
     var privacyTypeFields          = ["SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","SHOWADDRESS","SHOW_PARENTS_CONTACT"]
@@ -146,7 +162,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city","MSTATUS":"js-mstatus","MSTATUS_PROOF":"js-mstatus_proof","CASTE":"js-caste"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -164,13 +180,14 @@ EditApp = function(){
 	// array to show top label for a section
     var sectionTopLabelMap        = {"verification":"Upload at least one document"};
     var sectionTopLabelRequired   = ["verification"];
-    var duplicateFieldMap         = ['education','income','occupation'];
+    var duplicateFieldMap         = ['income'];
     
     var duplicateEditFieldMap     = {};
     var ugDegreeMap               = [];
     var pgDegreeMap               = [];
     var stdCodesMap               = [];
     var isdIndianAllowedCodes = ["0", "91","+91"];
+    var fileTypePostArray   = ["verification","critical"];
     /*
      * Get Edit Data
      */
@@ -237,6 +254,7 @@ EditApp = function(){
       if(typeof data == "string")
         data = JSON.parse(data);
       
+      hideEditFor = data.cannot_edit_section;
       var profileCompData = data.profileCompletion;
       completeProfileCompletionBlock(profileCompData);
       updateProfileCompletionScore(profileCompData.PCS);
@@ -253,8 +271,14 @@ EditApp = function(){
             for(var j=0;j<sectionArr.length;j++){
               var inAnySection = false;
               var sectionNameArr = [];
+              
               if(sectionArr[j].key == "RELIGION")
                   userReligion = sectionArr[j].value;
+          
+              if(criticalSectionArray.indexOf(sectionArr[j].key) !== -1){
+                sectionNameArr.push(CRITICAL);
+                inAnySection = true;
+              }
               if(basicSectionArray.indexOf(sectionArr[j].key) !== -1){
                 sectionNameArr.push(BASIC);
                 inAnySection = true;
@@ -313,7 +337,6 @@ EditApp = function(){
               field.isEditable      = sectionArr[j].edit      === "N" ? false : true;
               field.isUnderScreen   = sectionArr[j].screenBit === "1" ? true  : false;
               field.type            = SINGLE_SELECT_TYPE;/*Single Select Type*/
-
               if((field.value === null || field.value.length === 0) && field.isUnderScreen ){
                 field.isUnderScreen = false;
               }
@@ -330,6 +353,10 @@ EditApp = function(){
 
               if(boxTypeFields.indexOf(field.key) !== -1){
                 field.type          = BOX_TYPE;/*Box Type*/
+              }
+              
+              if(dateTypeFields.indexOf(field.key) !== -1){
+                field.type          = DATE_TYPE;/*Box Type*/
               }
 
               if(multipleSelectTypeFields.indexOf(field.key) !== -1){
@@ -389,12 +416,18 @@ EditApp = function(){
                   field.key = orgKey;
                 }
               }
-
+              
+              
+//              if(sectionArr[j].key == "MSTATUS" && sectionArr[j].value == "N"){
+//                        if(editAppObject.hasOwnProperty("basic") !== false && editAppObject["basic"].hasOwnProperty("HAVECHILD")!== false){
+//                                delete editAppObject["basic"]["HAVECHILD"];
+//                        }
+//              }
 
             }
         }   
       }
-      
+      showHideEditLink();
       editAppObject.needToUpdate = false;
       isInitialized = true;
       setGlobalVariables();
@@ -412,7 +445,9 @@ EditApp = function(){
      * @returns {Array} Array of Section 
      */
     getSectionArray = function(sectionId){
-                  
+      if(sectionId === CRITICAL){
+        return criticalSectionArray;
+      }
       if(sectionId === BASIC){
         return basicSectionArray;
       }
@@ -570,7 +605,11 @@ EditApp = function(){
       //Privacy Type Field 
       if(fieldObject.type === PRIVACY_TYPE && fieldObject.value.length){ 
         var fieldIdParent = '#'+fieldObject.key.toLowerCase()+'Parent';
-        fieldDOM.find(fieldIdParent).find(' ul li[value="'+ fieldObject.value +'"]').addClass('activeopt');
+        //Added this check to remove show no to all option in mobile case.
+        if ( !(fieldObject.value == "N"))
+        {
+          fieldDOM.find(fieldIdParent).find(' ul li[value="'+ fieldObject.value +'"]').addClass('activeopt');
+        }
       }
       
       //Range Type Field
@@ -602,7 +641,21 @@ EditApp = function(){
         fieldDOM.find('.js-endAmPm ul li[value="'+endAmPm+'"]').addClass('activeopt');
       }
     }
-    
+    cookNoteTextBeforeSubmitButton = function(domElement,sectionId,configObject){
+                var parentAttr    = {class:"clearfix pt30",id:sectionId+'section-bottom'};
+                var labelAttr     = {class:"fl pt11 edpcolr3 ",text:''};
+                var spanAttr     = {class:"",text:'We will not allow any change in Date of Birth and Marital Status after you submit this form. So please reconfirm the details carefully before submitting.'};
+                var divAttr     = {class:"outline-none js-bottomText fl edpwid3 edpbrad1 f13 pos-rel",text:''};
+                
+                var parentDiv = $("<div />",parentAttr);
+                var labelDOM  = $("<label />",labelAttr);
+                var divDOM  = $("<div />",divAttr);
+                
+                divDOM.append($("<span />",spanAttr));
+                parentDiv.append(labelDOM);
+                parentDiv.append(divDOM);
+                domElement.append(parentDiv);
+    };
     /*
      * cookSaveCancelButton
      * @param {type} domElement
@@ -802,7 +855,9 @@ EditApp = function(){
       var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
       var fieldDivAttr  = {class:"fl edpbrd3 edpwid3 edpbrad1 cursp pos-rel outline-none js-boxField",id:fieldObject.key.toLowerCase(),tabindex:"0"};
       var decValAttr    = {class:"fl lh40 edpwid3 edpbrad1 js-decVal"};
-      
+      if(fieldObject.key.toLowerCase() == "mstatus"){
+              var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
+      }
       if(typeof configObject != "undefined"){
         /*Loop and replace in default One*/
       }
@@ -848,7 +903,12 @@ EditApp = function(){
       var boxContentDOM = $("<div />",{class:"js-boxContent"});      
       boxContentDOM.append(optionString)
       fieldDivDom.append(boxContentDOM);
-      
+      if(fieldObject.key.toLowerCase() == "mstatus"){
+        if(fieldObject.isUnderScreen === false){
+            underScreenAttr.class += " disp-none";
+          }   
+          fieldDivDom.append($("<p />",underScreenAttr));
+  }
       //Add Some Sides UI Element
       if(sidesUIMap.indexOf(fieldObject.key) != -1){
         cookoutSidesUIElement(fieldObject,fieldDivDom);
@@ -859,6 +919,90 @@ EditApp = function(){
       domElement.append(parentDiv);
       //Bind Box Common Events 
       bindBoxCommonEvents(fieldObject,maxAllowedEle);
+      
+      if(hideTheField){
+        showHideField(fieldObject,"hide");
+      }
+    }
+    
+    /*
+     * cookDateBoxTypeField
+     * @param {type} domElement
+     * @param {type} fieldObject
+     * @returns {undefined}
+     */
+    cookDateBoxTypeField = function(domElement,fieldObject,configObject){
+      
+      var parentAttr    = {class:"clearfix pt30",id:fieldObject.key.toLowerCase()+'Parent'};
+      var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
+      var fieldDivAttr  = {class:"fl edpbrd3 edpwid3 edpbrad1 cursp pos-rel outline-none js-boxField",id:fieldObject.key.toLowerCase(),tabindex:"0"};
+      var decValAttr    = {class:"fl lh40 edpwid3 edpbrad1 js-decVal"};
+      
+      if(typeof configObject != "undefined"){
+        /*Loop and replace in default One*/
+      }
+        
+      var parentDiv = $("<div />",parentAttr);
+      var labelDOM  = $("<label />",labelAttr);
+      
+      parentDiv.append(labelDOM);
+      
+      var fieldDivDom = $("<div />",fieldDivAttr);
+      var decValDom  = $("<div />",decValAttr);
+      
+      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel errorTop f13 colr5 disp-none",text:errorMap[fieldObject.key]}));
+           
+      var decText = fieldObject.decValue;
+      var filledClass= "";
+      if(fieldObject.decValue.length == 0){
+        decText = notFilledText;
+        filledClass = " color12";
+      }
+      
+      decValDom.append($("<span />",{class:"ml10 js-decVal"+filledClass,text:decText}));
+      fieldDivDom.append(decValDom);
+      
+      var optionString = "";
+      var hideTheField = false;
+      optionString =  prepareDateBoxOptionDropDown(fieldObject,3,fieldObject.value.split("-"));
+      var boxContentDOM = $("<div />",{class:"js-boxContent"});      
+      boxContentDOM.append(optionString);
+      var i = 0;
+        $.each(dateDataArray,function(key1,data1)
+        {
+          $.each(data1,function(key2,data2)
+          {
+                $.each(data2,function(value,label)
+                { 
+                        var ClassName = "reg-pos10";
+                        if(i ==0){
+                             var ClassName = "reg-pos5";   
+                        }
+                        var parentAttr2    = {class:"js-"+label.toLowerCase()+" sub-mainlist pos_abs "+ClassName+" reg-zi1 regdropbox boxshadow reg-wid12 disp-none"};
+                        var parentDOM2  = $("<div />",parentAttr2);
+                        var dateAttr    = {id:label.toLowerCase()+'sub',rel:fieldObject.key.toLowerCase()};
+                        var dateDOM  = $("<ul />",dateAttr);
+                        parentDOM2.append(dateDOM);
+                        boxContentDOM.append(parentDOM2);
+                        i++;
+                })
+          })
+        })
+        
+  //return false;
+      
+      
+      fieldDivDom.append(boxContentDOM);
+      
+      //Add Some Sides UI Element
+      if(sidesUIMap.indexOf(fieldObject.key) != -1){
+        cookoutSidesUIElement(fieldObject,fieldDivDom);
+      }
+      parentDiv.append(fieldDivDom);
+      domElement.append(parentDiv);
+
+      //Bind Box Common Events 
+      bindDateBoxCommonEvents(fieldObject,3);
       
       if(hideTheField){
         showHideField(fieldObject,"hide");
@@ -967,7 +1111,15 @@ EditApp = function(){
      
       //Add Chosen DropDown and options
       var chosenField = $("<select />",chosenAttr);
-      var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+        var ky = fieldObject.key;
+        if(fieldObject.key == "MSTATUS"){
+                  if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                          var ky = "MSTATUS_MUSLIM_EDIT";
+                  }else{
+                          var ky = "MSTATUS_EDIT";
+                  }
+        }
+      var data = JSON.parse(getDataFromStaticTables(ky));
       data = getDependantData(fieldObject,data);
       
       if(debugInfo)
@@ -1153,17 +1305,24 @@ EditApp = function(){
      * cookTextAreaField
      * @param {type} domElement
      * @param {type} fieldObject
-     * @param {type} configObject
+     * @param {type} sectionId
      * @returns {undefined}
      */
-    cookFileField = function(domElement,fieldObject,configObject){
+    cookFileField = function(domElement,fieldObject,sectionId){
+      if(sectionId == CRITICAL){
+              var parentAttr    = {class:"clearfix fontlig pt30",id:fieldObject.key.toLowerCase()+'Parent'};
+              var labelAttr     = {class:"fl pt11 edpcolr3",text:fieldObject.label};
+              var btnAttr     = {class:"bg_pink lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Divorce Decree',id:'idBtn_'+fieldObject.key.toLowerCase()};
+              var fieldDivAttr  = {class:"fl edpwid3 edpbrad1 pos-rel outline-none"}
+      }else{
+                var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
+                var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
+                var fieldDivAttr  = {class:"js-fileBox pos-rel"}
+                var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
+      }
       
-      var parentAttr    = {class:"clearfix fontlig pt10",id:fieldObject.key.toLowerCase()+'Parent'};
-      var labelAttr     = {class:"f17 fontlig color12",text:fieldObject.label};
-      var fieldDivAttr  = {class:"js-fileBox pos-rel"}
       var textAreaAttr     = {class:"color11 fontlig f15 brdr-0 bgnone outline-none wh0 disp-none",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",value:fieldObject.value}
-       var btnAttr     = {class:"bg_pink mt20 lh30 f14 colrw txtc brdr-0 cursp disp_ib fullwid pos-rel wid50p dispib",type:"file",text:fieldObject.value,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off",text:'Attach',id:'idBtn_'+fieldObject.key.toLowerCase()}
-       var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase()}
+       var labelAttr2     = {class:"f14 disp_ib color5 padl15 vertM dispib textTru wid40p",id:fieldObject.key.toLowerCase(),text:'jpg/pdf only',id:'idlabel_'+fieldObject.key.toLowerCase(),style:"cursor:text"}
       
       if(debugInfo){
         var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
@@ -1181,9 +1340,12 @@ EditApp = function(){
       }
             
       var fieldDivDom = $("<div />",fieldDivAttr);
-      
       var errorText   = errorMap.hasOwnProperty(fieldObject.key) ? errorMap[fieldObject.key] : "Please provide valid value for " + fieldObject.label;
-      fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
+      if(sectionId == CRITICAL){
+                fieldDivDom.append($("<p />",{class:"pos-rel js-errorLabel f13 colr5 disp-none",text:errorText}));
+      }else{
+                fieldDivDom.append($("<p />",{class:"pos-abs js-errorLabel f13 colr5 disp-none",text:errorText}));
+      }
       
       fieldDivDom.append($("<div />",btnAttr));
       fieldDivDom.append($("<div />",labelAttr2));
@@ -1254,7 +1416,8 @@ EditApp = function(){
       
       var privacyParentAttr   = {class:"fl mt8 pos-rel showset cursp",id:'show'+fieldObject.key.toLowerCase()+'Parent'};
       var privacyImgAttr      = {class:"vicons edpic9 ",id:'show'+fieldObject.key.toLowerCase()};
-      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li><li value="N">Don\'t show to anybody</li> </ul> </div></div>';
+      // this string doesn't contain don't show to anybody
+      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li></ul> </div></div>';
       
       if(typeof configObject != "undefined"){
         /*Loop and replace in default One*/
@@ -1605,6 +1768,206 @@ EditApp = function(){
       //MyBlur
       fieldDOM.on('boxBlur',onBlur);
 
+    }
+    /*
+     * bindBoxCommonEvents : Click and blur Events
+     * @param {type} fieldObject
+     * @param {type} maxAllowedEle
+     * @returns {undefined}
+     */
+    bindDateBoxCommonEvents = function(fieldObject,maxAllowedEle){
+      var fieldDOM = $('#' + fieldObject.key.toLowerCase());
+      var removeActiveFromMore = false;
+      var activeClass = 'activeopt';
+      var inputData = [];
+      var onClick = function(event){
+        fieldDOM.find('.js-errorLabel').addClass(dispNone);
+        if(event.target && (event.target.tagName === "LI" || (event.target.tagName === "SPAN" && event.target.getAttribute("class") == "dropdown_span") || (event.target.tagName === "I" && (event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2")))){
+                if(event.target.tagName == "SPAN" || event.target.tagName == "I"){
+                        var valID = event.target.getAttribute("id");
+                        var val = $("#"+valID).parent().attr("value");
+                }else{
+                        var val = event.target.getAttribute("value");
+                }
+                hideShowList(event,fieldObject.key.toLowerCase());
+                if(val == "D"){
+                       highlightLI(fieldObject.key.toLowerCase(),"day","S");
+                }else{
+                        if(val == "M"){
+                                highlightLI(fieldObject.key.toLowerCase(),"month","S");
+                        
+                        }else{
+                                if(val == "Y"){
+                                        highlightLI(fieldObject.key.toLowerCase(),"year","S");
+                                }
+                        }
+                }
+                fieldDOM.trigger("box-change");
+        }
+        fieldDOM.find('.js-decVal').addClass(dispNone);
+        fieldDOM.find('.boxType').removeClass(dispNone);
+        //Show and hide Main Option 
+        if(event.target && $(event.target).hasClass('js-decVal') === true || 
+           event.target.id==fieldObject.key.toLowerCase()){
+          fieldDOM.find('.js-decVal').addClass(dispNone);
+          fieldDOM.find('.boxType').removeClass(dispNone);
+        }
+      }
+        var createDateList = function () {
+                dateHtml = generateList(2, 31, "date", 1);
+                $("#daysub").html(dateHtml);
+        }
+        var createMonthList = function () {
+                monthHtml = generateList(2, 12, "month", "Jan");
+                $("#monthsub").html(monthHtml);
+        }
+        var createYearList = function () {
+                var d = new Date();
+                var n = d.getFullYear();
+                var sub = 19;
+                var subStart = 18;
+                if(editAppObject[BASIC]['GENDER'].value == "M"){
+                        sub = 22;
+                        subStart = 21;
+                }
+                yearHtml = generateList(n - sub, n - 70, "year", n - subStart);
+                $("#yearsub").html(yearHtml);
+        }
+        var generateList = function(l, h, c, d){
+                var dropHtml = '<li id="{{cusId}}">{{customValue}}</li>{{newLi}}';
+                dropHtml = dropHtml.replace(/{{customValue}}/g, d);
+                if (c == "month")
+                  dropHtml = dropHtml.replace(/{{cusId}}/g, c + "li1");
+                else
+                  dropHtml = dropHtml.replace(/{{cusId}}/g, c + "li" + d);
+          
+                var firstLi = '<li id="{{cusId}}">{{customValue}}</li>{{newLi}}';;
+                //for year the list is in reverse order
+                if (c == "year") {
+                  for (i = l; i >= h; i--) {
+                    tempHtml = firstLi.replace(/{{customValue}}/g, i);
+                    tempHtml = tempHtml.replace(/{{cusId}}/g, c + "li" + i);
+                    dropHtml = dropHtml.replace(/{{newLi}}/g, tempHtml);
+                  }
+                }
+                else {
+                  for (i = l; i <= h; i++) {
+                    if (c == "month")
+                      tempHtml = firstLi.replace(/{{customValue}}/g, dataMonthArray[i]);
+                    else
+                      tempHtml = firstLi.replace(/{{customValue}}/g, i);
+                    tempHtml = tempHtml.replace(/{{cusId}}/g, c + "li" + i);
+                    dropHtml = dropHtml.replace(/{{newLi}}/g, tempHtml);
+                  }
+                }
+                dropHtml = dropHtml.replace(/{{newLi}}/g, "");
+                return(dropHtml);
+      }
+      var onBlur  = function(event){
+              if(callBlur == 0){
+                      return true;
+              }
+        var dayVal = parseInt($("#day_value").attr("rel"));
+        var monthVal = $("#month_value").attr("rel");
+        var yearVal = parseInt($("#year_value").attr("rel"));
+        var dateSelected = "";
+        if(!isNaN(dayVal) && typeof dayVal != undefined && dayVal != "Day" && isNaN(monthVal) && typeof monthVal != undefined && monthVal != "Month" && !isNaN(yearVal) && typeof yearVal != undefined && yearVal != "Year" ){
+                var dateString = "";
+                dateString += dayVal;
+                if(dayVal == 2 || dayVal == 22){
+                        dateString +="nd ";
+                }else{
+                        if(dayVal == 1 || dayVal == 21 || dayVal == 31){
+                                dateString +="st ";
+                        }else{
+                                if(dayVal == 3 || dayVal == 23){
+                                        dateString +="rd ";
+                                }else{
+                                        dateString +="th ";
+                                }
+                        }
+                }
+                
+                dateString += " "+monthVal.substring(0,3)+" "+yearVal;
+                
+                var monthIntVal =""
+                for (i = 1; i <= 12; i++) {
+                        if(dataMonthArray[i] == monthVal){
+                                if(i<10){
+                                        monthIntVal = "0"+i;
+                                }else{
+                                        monthIntVal = i;
+                                }
+                        }
+                }
+                if(dayVal<10){
+                        dayVal = "0"+dayVal;
+                }
+                dateSelected = yearVal+"-"+monthIntVal+"-"+dayVal;
+                if(fieldObject.value != dateSelected){
+                        storeFieldChangeValue(fieldObject,dateSelected);
+                        var bInValidDate = false;
+                        var correspondingDate = new Date(yearVal,parseInt(monthIntVal)-1,dayVal);
+                        if(correspondingDate.getDate() !== parseInt(dayVal))
+                                bInValidDate = true;
+
+                        var M = parseInt(correspondingDate.getMonth())+1;
+                        if(M !== parseInt(monthIntVal))
+                                bInValidDate = true;
+
+                        if(correspondingDate.getFullYear() !== parseInt(yearVal))
+                                bInValidDate = true;
+                        
+                        if(bInValidDate){
+                                var dtOfBirthObj = editAppObject[CRITICAL]["DTOFBIRTH"];
+                                var errorMsg = "Please provide a valid date of birth";
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').text(errorMsg);
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').removeClass(dispNone);
+                                requiredFieldStore.add(dtOfBirthObj);       
+                        }else{
+                                var dtOfBirthObj = editAppObject[CRITICAL]["DTOFBIRTH"];
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').text("");
+                                $('#'+fieldObject.key.toLowerCase()+'Parent').find('.js-errorLabel').addClass(dispNone);
+                                requiredFieldStore.remove(dtOfBirthObj);  
+                        }
+                        
+                }else{
+                        if(editedFields.hasOwnProperty(CRITICAL) === true && editedFields[CRITICAL].hasOwnProperty(fieldObject.key.toUpperCase()) === true){
+                                delete editedFields[CRITICAL][fieldObject.key.toUpperCase()];
+                        }
+                }
+                fieldDOM.find('span.js-decVal').html(dateString);
+        }
+                fieldDOM.find('.js-decVal').removeClass(dispNone);
+                fieldDOM.find('.boxType').addClass(dispNone);
+                fieldDOM.find('.js-subBoxList').addClass(dispNone);
+                $("#daysub").parent().attr("style","display:none");
+                $("#monthsub").parent().attr("style","display:none");
+                $("#yearsub").parent().attr("style","display:none");
+      }
+      
+      var onClick2 = function(event){
+                highlightLI(fieldObject.key.toLowerCase(),"day","S");
+                fieldDOM.find('.js-decVal').addClass(dispNone);
+                fieldDOM.find('.boxType').removeClass(dispNone);
+                fieldDOM.find('.boxType').removeClass(dispNone);
+      }
+      var clickFn = onClick;
+      var clickFn2 = onClick2;
+      
+      //focus
+      fieldDOM.find('div.js-decVal').on('focus',clickFn2);
+      fieldDOM.find('div.js-decVal').on('click',clickFn2);
+      fieldDOM.find('.js-boxContent .boxType').on('focus',clickFn);
+      
+      //Main Click Event
+      fieldDOM.find('.js-boxContent .boxType').on('click',clickFn);
+      
+      //MyBlur
+      fieldDOM.on('blur',onBlur);
+        createDateList();
+        createMonthList();
+        createYearList();
     }
     
     /*
@@ -2497,6 +2860,79 @@ EditApp = function(){
      * @param {type} fieldObject
      * @returns {String}
      */
+    prepareDateBoxOptionDropDown = function(fieldObject,maxAllowed,LiValues){
+        var optionString = '<ul class="hor_list lh40 boxType disp-none">';
+        var cssClassOnLI = "";/*Class on LI DOM*/
+        var subOptionString = '<ul class="rlist" >';
+        var maxElement = 0, maxWidth   = 490, maxWidthPerEle = 40;
+        var styleAttr = "",styleSubList = "";
+      
+      var calcWidth = function(length){
+        maxElement = parseInt(length);
+        maxWidthPerEle = maxWidth/maxElement;
+        //maxWidthPerEle = Math.floor(maxWidthPerEle);
+        styleAttr = " style=\"width:"+(maxWidthPerEle-1)+"px\"";        
+      };
+      var data = dateDataArray
+      try{
+        var i=0;
+        //Loop the data section 
+        $.each(data,function(key1,data1)
+        {
+          if( typeof(Object.keys(data1).length) != "undefined" && Object.keys(data1).length !== 1){
+            calcWidth(Object.keys(data1).length);
+          }
+          $.each(data1,function(key2,data2)
+          {
+            if( typeof(Object.keys(data2).length) != "undefined" && Object.keys(data2).length !== 1){
+            calcWidth(Object.keys(data2).length);
+          }
+            
+            $.each(data2,function(value,label)
+            { 
+              cssClassOnLI += "pos-rel option_" + i;
+              
+              if( value == fieldObject.value )
+              {
+                cssClassOnLI+=" activeopt";
+              }
+              
+              //Adjust Width for last element
+              if(i==maxElement-1){
+                //var lastWidth = maxWidth - ((maxWidthPerEle-1)*(maxElement-1));
+                styleAttr = " style=\"width:"+(maxWidthPerEle)+"px\"";
+              }
+              var elementIndex = 2-i;
+              if(elementIndex == 1){
+                      LiValues[elementIndex] = LiValues[elementIndex].replace(/^0+/, '');
+                      LiValues[elementIndex] = dataMonthArray[LiValues[elementIndex]];
+              }
+              var spanId = label.toLowerCase();
+              if(i < maxAllowed){
+                optionString+='<li class="'+cssClassOnLI+'" value='+value + styleAttr +'><span id = "'+spanId+'_value" rel="'+LiValues[elementIndex]+'" class = "dropdown_span">'+label+'</span><i id="'+spanId+'Arrow1" class="reg-sprtie reg-droparrow pos_abs reg-pos12 reg-zi100" style="display: none;"></i><i id="'+spanId+'Arrow2" class="icons rarrwdob reg-pos11 pos_abs disp-none" style="display: inline-block;"></i></li>';
+                cssClassOnLI = ""
+              }
+              
+              ++i;
+              
+            });
+          });
+        });
+        
+        optionString+='</ul>'
+        if(i>maxAllowed){
+          var subDivString = '<i class="reg-sprtie reg-droparrow pos_abs epdpos12 z2 disp-none js-subBoxList"></i> <div class="pos_abs sub-mainlist epdpos11 z1 edpdbox boxshadow js-subBoxList disp-none">';
+          subOptionString= subDivString + subOptionString+'</ul></div>';
+          
+          optionString+=subOptionString;
+        }
+      }
+      catch(e){
+        optionString = "";
+        console.log(e);
+      }
+      return optionString;
+    }
     prepareBoxOptionDropDown = function(data,fieldObject,maxAllowed){
             
       var optionString = '<ul class="hor_list lh40 boxType disp-none">';
@@ -2714,7 +3150,6 @@ EditApp = function(){
       //Get DOM element
       var editSectionDOM = $(editSectionId);
       $(editSectionDOM).addClass(dispNone);
-      
       //Add Form Tag
       $(editSectionDOM).append("<form id=\"" +editSectionFormName+ "\"></form>");
       var editSectionFormDOM = $('#'+editSectionFormName);
@@ -2759,7 +3194,7 @@ EditApp = function(){
         }
         if( fieldObject.type === FILE_TYPE)
         {
-          cookFileField(editSectionFormDOM,fieldObject);
+          cookFileField(editSectionFormDOM,fieldObject,sectionId);
         }
         
         if(fieldObject.type === OPEN_TEXT_TYPE && rightAlignedFields.indexOf(fieldObject.key) !== -1){
@@ -2779,6 +3214,10 @@ EditApp = function(){
         
         if(fieldObject.type === BOX_TYPE){
           cookBoxTypeField(editSectionFormDOM,fieldObject);
+        }
+        
+        if(fieldObject.type === DATE_TYPE){
+          cookDateBoxTypeField(editSectionFormDOM,fieldObject);
         }
         
         if(fieldObject.type === NON_EDITABLE_TYPE){
@@ -2842,8 +3281,15 @@ EditApp = function(){
         if(behaviourMap.hasOwnProperty(fieldMapKey)){
           $('#'+fieldObject.key.toLowerCase()).addClass(behaviourMap[fieldMapKey]);
         }
+        if(fieldKey == "HAVECHILD"){
+                if( false !== editAppObject["critical"].hasOwnProperty("MSTATUS")  && editAppObject["critical"]["MSTATUS"].value =="N"){
+                        $("#havechildParent").hide();
+                }
+        }
       }
-      
+      if(sectionId == CRITICAL){
+        cookNoteTextBeforeSubmitButton(editSectionFormDOM,sectionId);
+      }
       //Add Save and Cancel Button
       if(rightAlignedSections.indexOf(sectionId) !== -1){
         var parentAttr    = {class:"clearfix pt20"};
@@ -2937,14 +3383,18 @@ EditApp = function(){
         bakeSection(sectionId);
         $(viewName).addClass(dispNone);
         bindBehaviour();
+        if(sectionId == CRITICAL){
+          initMstatusDocumentMap();
+        }
         if(sectionId == BASIC){
-          initUGAndPGDegreeMap();
+	  initJamaat();
         }
         if(sectionId == FAMILY){
           initNativeFields();
           initSiblings();
         }
         if(sectionId == EDU_CAREER){
+          initUGAndPGDegreeMap();
           initEducationFields();
         }
         if(sectionId == CONTACT){
@@ -3145,6 +3595,54 @@ EditApp = function(){
      * @param {type} sectionId
      * @returns {undefined}
      */
+updateEduLevelChanges =function(eduLevelVal)
+{
+      var gradDeg = editAppObject[EDU_CAREER]["DEGREE_UG"];
+      var gradCollg = editAppObject[EDU_CAREER]["COLLEGE"];
+
+      var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
+      var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
+      var gradDegID = '#'+gradDeg.key.toLowerCase();
+      var postGradDegID = '#'+postGradDeg.key.toLowerCase();
+      var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
+      var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
+	if(eduLevelVal!='')
+	{
+		if( $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 &&
+		  $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
+		)
+		{
+			editedFields["career"]["DEGREE_PG"]=''
+			editedFields["career"]["PG_COLLEGE"]=''
+			editedFields["career"]["OTHER_PG_DEGREE"]=''
+			
+			if(gradDeg.value=='')
+			{
+				editedFields["career"]["DEGREE_UG"]= eduLevelVal;
+			}
+		}
+		else if($(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 &&
+		  $(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
+		  )
+		{
+			if(eduLevelVal != 42 && eduLevelVal != 21 && postGradDeg.value=='')
+			{
+				editedFields["career"]["DEGREE_PG"]= eduLevelVal;
+			}
+			
+		}
+		else
+		{
+			editedFields["career"]["DEGREE_UG"]='';
+			editedFields["career"]["COLLEGE"]='';
+			editedFields["career"]["OTHER_UG_DEGREE"]='';
+			editedFields["career"]["DEGREE_PG"]='';
+			editedFields["career"]["PG_COLLEGE"]='';
+			editedFields["career"]["OTHER_PG_DEGREE"]='';
+		}
+	}
+}
+
     onSectionSave = function(sectionId,showLoader){
       //If no editing happens, then gracefully hide :D
       if(editedFields.hasOwnProperty(sectionId) === false){
@@ -3159,10 +3657,23 @@ EditApp = function(){
           $('#alt_mobileParent').trigger('onSave');
         }
       }
+	var eduLevelVal='';
+	if(sectionId==EDU_CAREER)
+	{
+		if(editedFields["career"].hasOwnProperty("EDU_LEVEL_NEW"))
+		{
+			eduLevelVal = editedFields["career"]['EDU_LEVEL_NEW'];
+		}
+	}
+	if(eduLevelVal!='')
+	{
+		updateEduLevelChanges(eduLevelVal);
+	}
       for(var key in requiredArray[sectionId]){
         var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
         parentDOM.find('.js-errorLabel').removeClass(dispNone);
       }
+            
       
       //Check Any Error Lable is visible or not
       var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)';   
@@ -3329,14 +3840,14 @@ EditApp = function(){
       var eData = {};
       eData.editFieldArr = editFieldArr;
       $.myObj.ajax({
-        url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
+        url: fileTypePostArray.indexOf(sectionId) !== -1?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
-        datatype: 'json',       
+        datatype: 'json',
         cache: false,
         async: true,
-        contentType: sectionId == 'verification'?false:"application/x-www-form-urlencoded",
-        data: sectionId == 'verification'?editData:eData,
-        processData: sectionId == 'verification'?false:true,
+        contentType: fileTypePostArray.indexOf(sectionId) !== -1?false:"application/x-www-form-urlencoded",
+        data: fileTypePostArray.indexOf(sectionId) !== -1?editData:eData,
+        processData: fileTypePostArray.indexOf(sectionId) !== -1?false:true,
         success: function (result) {
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
@@ -3348,6 +3859,9 @@ EditApp = function(){
             editAppObject.needToUpdate = true;
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
+            if(sectionId == "critical" && editedFields[sectionId].hasOwnProperty("MSTATUS") && editedFields[sectionId]["MSTATUS"] == "D"){
+                    $(".mstatusUndScnMsg").removeClass("disp-none");
+            }
             delete editedFields[sectionId];
             //update self name in chat header
             if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
@@ -3355,6 +3869,9 @@ EditApp = function(){
                 setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");
               }
             }
+            if(sectionId == "critical"){
+                showHideCriticalSection(sectionId);
+                }       
           }
           else if(statusCode === 1 &&  result.hasOwnProperty('error'))
           {
@@ -3369,9 +3886,9 @@ EditApp = function(){
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (result.viewApi.contact && editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
               showAlternateConfirmLayer($("#my_alt_emailView"));
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (result.viewApi.contact && editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
               showAlternateConfirmLayer($("#my_emailView"));
               
         },
@@ -3392,10 +3909,12 @@ EditApp = function(){
     onSectionCancel = function(sectionId){
       fillSection(sectionId);
       if(sectionId == BASIC){
-        var eduField = editAppObject[BASIC]["EDU_LEVEL_NEW"+"_"+BASIC];
-        onHighestEducationChange(eduField.value,eduField.key);
 	var displayNameField = editAppObject[BASIC]["DISPLAYNAME"];
 	showDisplayNameSettingFirstTime(displayNameField);
+      }
+      if(sectionId==EDU_CAREER){
+        var eduField = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
+        onHighestEducationChange(eduField.value,eduField.key);
       }
       delete editedFields[sectionId];
       requiredFieldStore.removeAll(sectionId);
@@ -3430,7 +3949,14 @@ EditApp = function(){
         }
       }
     }
-    
+    showHideEditLink = function(){
+                for(var i=0;i<viewResponseKeyArray.length;i++){
+                        var section = viewResponseKeyArray[i];
+                        if($.inArray( section, hideEditFor) != '-1'){
+                                $('#section-'+section.toLowerCase()).find('.js-editBtn').removeClass(dispNone);
+                        }
+                }
+        }
     /*
      * showHideEditSection
      * @param {type} sectionId
@@ -3458,7 +3984,9 @@ EditApp = function(){
         $(document).scrollTop($(mainSection).offset().top);
       }
     }
-    
+    showHideCriticalSection= function(sectionId){
+            $('#section-'+sectionId).find('.js-editBtn').addClass(dispNone);
+    }
     /*
      * updateFieldUI
      * @param {type} fieldObject
@@ -3469,7 +3997,15 @@ EditApp = function(){
     updateFieldUI = function(fieldObject,data){
       
       if(typeof data == "undefined"){
-        var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+              var ky = fieldObject.key;
+                if(fieldObject.key == "MSTATUS"){
+                          if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                                  var ky = "MSTATUS_MUSLIM_EDIT";
+                          }else{
+                                  var ky = "MSTATUS_EDIT";
+                          }
+                }
+        var data = JSON.parse(getDataFromStaticTables(ky));
         data = getDependantData(fieldObject,data);
       }
       
@@ -3482,6 +4018,9 @@ EditApp = function(){
       }
       else if ( fieldObject.type === BOX_TYPE ){
         optionString = prepareBoxOptionDropDown(data,fieldObject);
+      }
+      else if ( fieldObject.type === DATE_TYPE ){
+        optionString = prepareDateBoxOptionDropDown(fieldObject,3,fieldObject.value);
       }
       
       fieldObject.value=tempValue;
@@ -3500,8 +4039,31 @@ EditApp = function(){
         $(fieldId).find('.js-boxContent').html(optionString);
         $(fieldId).find('span').text(notFilledText).addClass('color12');
       }
+      else if ( fieldObject.type === DATE_TYPE ){
+        $(fieldId).find('.js-boxContent').html("");
+        $(fieldId).find('.js-boxContent').html(optionString);
+        $(fieldId).find('span').text(notFilledText).addClass('color12');
+      }
     }
-    
+    onCasteChange = function(casteVal){
+	var religionFieldObject  = editAppObject[BASIC]["RELIGION"];
+	var jamaatFieldObject = editAppObject[BASIC]["JAMAAT"];
+	if(religionFieldObject.value==2)
+	{
+		if(casteVal==152)
+		{
+			showHideField(jamaatFieldObject,"show",false);
+		}
+		else
+		{
+			showHideField(jamaatFieldObject,"hide",true);
+		}
+	}
+	else
+	{
+			showHideField(jamaatFieldObject,"hide",true);
+	}
+    }
     /*
      * onCountryChange
      * @param {type} countryVal
@@ -3712,23 +4274,41 @@ EditApp = function(){
         showHideUnderScreeningMsg(ancestralOrigin,"hide");
       }
     }
-    
+    onMstatusChange = function(mstatusVal,fieldID){
+            var mstatusProofField = editAppObject[CRITICAL]['MSTATUS_PROOF'];
+            var mstatusField = editAppObject[CRITICAL]['MSTATUS'];
+            var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
+            if(prevMstatus != mstatusVal){
+                storeFieldChangeValue(mstatusField,mstatusVal);
+            }else{
+                delete editedFields[CRITICAL][mstatusField.key];
+            }
+            $('#mstatus_proofParent').find('.js-errorLabel').addClass(dispNone);
+            if(mstatusVal == "D" && editAppObject[CRITICAL]['MSTATUS'].value != "D"){
+                        $('#mstatus_proof').val("");
+                        $("#idlabel_mstatus_proof").html('jpg/pdf only');
+                        $('#mstatus_proofParent').removeClass(dispNone);
+                        requiredFieldStore.add(mstatusProofField);
+            }else{
+                        $('#mstatus_proofParent').addClass(dispNone);
+                        requiredFieldStore.remove(mstatusProofField);
+            }
+    }
     /*
      * onHighestEducationChange
      * @param {type} eduLevelVal
      * @returns {undefined}
      */
     onHighestEducationChange = function(eduLevelVal,fieldID){
+//      if(fieldID.indexOf(EDU_CAREER) !==-1)
+      {
       var gradDeg = editAppObject[EDU_CAREER]["DEGREE_UG"];
       var gradCollg = editAppObject[EDU_CAREER]["COLLEGE"];
       
       var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
       var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
       
-      if(fieldID.indexOf(EDU_CAREER) !==-1)
-        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+EDU_CAREER];
-      else
-        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+BASIC];
+        var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
       
       var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
       var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
@@ -3736,8 +4316,7 @@ EditApp = function(){
       var gradDegID = '#'+gradDeg.key.toLowerCase();
       var postGradDegID = '#'+postGradDeg.key.toLowerCase();
       
-      //For education Section
-      if(fieldID.indexOf(EDU_CAREER) !==-1){
+// highest education is bachelor degree
         if( $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 && 
           $(gradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
         )
@@ -3749,9 +4328,9 @@ EditApp = function(){
           $('#'+postGradCollg.key.toLowerCase()).val("");
           $('#'+other_pgDeg.key.toLowerCase()).val("");
 
-          showHideField(postGradDeg,"hide",true);
-          showHideField(postGradCollg,"hide",true);
-          showHideField(other_pgDeg,"hide",true);
+          showHideField(postGradDeg,"hide");
+          showHideField(postGradCollg,"hide");
+          showHideField(other_pgDeg,"hide");
           
           if(gradDeg.isUnderScreen){
             showHideUnderScreeningMsg(gradDeg,"show");
@@ -3770,6 +4349,7 @@ EditApp = function(){
           showHideUnderScreeningMsg(other_pgDeg,"hide");
 
         }
+//highest education is master degree
         else if($(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').length === 1 && 
           $(postGradDegID+' option[value=\"'+parseInt(eduLevelVal)+'\"]').hasClass('activeopt') === false
           )
@@ -3777,11 +4357,11 @@ EditApp = function(){
           showHideField(gradDeg,"show");
           showHideField(gradCollg,"show");
           showHideField(other_ugDeg,"show");
-          if(eduLevelVal == 42 || eduLevelVal == 21)
+//PhD or MPhil values: 21 and 42 respectively
             showHideField(postGradDeg,"show");
-          else{
+          if(eduLevelVal != 42 && eduLevelVal != 21 && postGradDeg.value=='')
+	{
             editedFields["career"]["DEGREE_PG"]= eduLevelVal;
-            showHideField(postGradDeg,"hide");  
           }
           showHideField(postGradCollg,"show");
           showHideField(other_pgDeg,"show");
@@ -3811,13 +4391,13 @@ EditApp = function(){
           }   
         }
         else{
-          showHideField(gradDeg,"hide",true);
-          showHideField(gradCollg,"hide",true);
-          showHideField(other_ugDeg,"hide",true);
+          showHideField(gradDeg,"hide");
+          showHideField(gradCollg,"hide");
+          showHideField(other_ugDeg,"hide");
 
-          showHideField(postGradDeg,"hide",true);
-          showHideField(postGradCollg,"hide",true);
-          showHideField(other_pgDeg,"hide",true);
+          showHideField(postGradDeg,"hide");
+          showHideField(postGradCollg,"hide");
+          showHideField(other_pgDeg,"hide");
 
           $('#'+gradCollg.key.toLowerCase()).val("");
           $('#'+other_ugDeg.key.toLowerCase()).val("");
@@ -3836,6 +4416,7 @@ EditApp = function(){
         }
     
       }
+/*
       else if(fieldID.indexOf(BASIC) !==-1){
         if( ugDegreeMap.indexOf(eduLevelVal) != -1 )
         { 
@@ -3924,6 +4505,7 @@ EditApp = function(){
           showHideUnderScreeningMsg(other_ugDeg,"hide");
         }
       }
+*/
     }
     
     /*
@@ -4363,10 +4945,12 @@ EditApp = function(){
     }
     validateImage = function(fieldId,fieldKey){
         if(typeof $('#' + fieldId)[0].files[0] == 'undefined' || $('#' + fieldId)[0].files[0] == null){
-                return true;
+                return false;
         }
         var file = $('#'+fieldId)[0].files[0];
-        if (file && file.name.split(".")[1] == "jpg" || file.name.split(".")[1] == "JPG" || file.name.split(".")[1] == "jpeg" || file.name.split(".")[1] == "JPEG" || file.name.split(".")[1] == "PDF" || file.name.split(".")[1] == "pdf") {
+        var nameArr = file.name.split(".");
+        var fileExt = nameArr[nameArr.length-1];
+        if (file && fileExt == "jpg" || fileExt == "JPG" || fileExt == "jpeg" || fileExt == "JPEG" || fileExt == "PDF" || fileExt == "pdf") {
         } else {
             $("#idlabel_" + fieldId).html('jpg/pdf only');
             setError(fieldKey,'Invalid file format',1);
@@ -4417,6 +5001,19 @@ EditApp = function(){
         $('#addr_proof_val').attr("value",'');
         $('#addr_proof_val').val("");
     }
+    
+    onMstatusProofValChange = function(){
+        var mstatusProofTypeField = editAppObject[CRITICAL]["MSTATUS_PROOF"];
+        var uploadStatus = validateImage('mstatus_proof',mstatusProofTypeField);
+        if(uploadStatus === false){
+                return false;
+        }else{
+                if(mstatusProofTypeField.value !== '' && typeof editedFields[CRITICAL]["MSTATUS_PROOF"] == 'undefined'){
+                        storeFieldChangeValue(mstatusProofTypeField,mstatusProofTypeField.value);
+                }
+        }
+    }
+    
     geteditedValue = function(fieldKey,fieldtype){
         var fieldObj = editAppObject["verification"][fieldKey];
         if(fieldtype != "VALUE" && fieldObj.value != '' && typeof editedFields[VERIFICATION][fieldKey] == 'undefined'){
@@ -4613,6 +5210,9 @@ EditApp = function(){
       $('.js-country').on('change',function(event){
         onCountryChange($('#country_res').val());
       });
+      $('.js-caste').on('change',function(event){
+	onCasteChange($("#caste").val());
+      });
       
       //OnState Change
       $('.js-state').on('change',function(event){
@@ -4648,7 +5248,13 @@ EditApp = function(){
       $('.js-educationChange').on('change',function(event){
         onHighestEducationChange($(this).val(),$(this).attr("id"));
       });
-      
+      $('.js-mstatus').on('change',function(event){
+        onMstatusChange($(this).val(),$(this).attr("id"));
+      });
+      $('.js-mstatus_proof').on('change',onMstatusProofValChange);
+      $('#idBtn_mstatus_proof').unbind('click').on('click',function(event){
+        $('.js-mstatus_proof').click();
+      });
       //About me field
       $('.js-aboutMe').on('keydown',function(event){
         if(false == whiteListingKeys(event,"forAbout")){
@@ -4698,7 +5304,74 @@ EditApp = function(){
       
       //Save Btn
       $('.js-save').unbind('click').on('click',function(event){
-        onSectionSave(this.id.split('saveBtn')[1]);
+                var currId = $(this).attr("id");
+                if(currId =="saveBtncritical"){
+                                for(var key in requiredArray['critical']){
+                                        var parentDOM = $('#'+key.toLowerCase()+'Parent'); 
+                                        parentDOM.find('.js-errorLabel').removeClass(dispNone);
+                                      }
+
+
+                                //Check Any Error Lable is visible or not
+                                var validationCheck = '#criticalEditForm' +' .js-errorLabel:not(.disp-none)';   
+                                if($(validationCheck).length !== 0 && $(validationCheck).length !== "0"){
+                                  $(document).scrollTop($(validationCheck).offset().top);
+                                  return;
+                                }
+                                // condition to show msg on the popup 
+                                var diffDays = 0;
+                                if(editAppObject[CRITICAL]['DTOFBIRTH'] && editedFields.hasOwnProperty(CRITICAL) && editedFields[CRITICAL].hasOwnProperty("DTOFBIRTH")){
+                                        var prevDob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
+                                        var Dob = editedFields[CRITICAL]['DTOFBIRTH'].split("-");
+                                        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                                        var firstDate = new Date(parseInt(Dob[0]),parseInt(Dob[1])-1,parseInt(Dob[2]));
+                                        var secondDate = new Date(parseInt(prevDob[0]),parseInt(prevDob[1])-1,parseInt(prevDob[2]));
+                                        var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+                                }
+                                
+                                var showClass = "msg2";
+                                var hideClass = "msg1";
+                                if(diffDays > 730){
+                                        showClass = "msg1";
+                                        hideClass = "msg2";
+                                }     
+                                if(hideClass != "msg2" && editedFields.hasOwnProperty(CRITICAL) && editedFields[CRITICAL].hasOwnProperty("MSTATUS") ){
+                                        var prevMstatus = editAppObject[CRITICAL]['MSTATUS'].value;
+                                        var Mstatus = editedFields[CRITICAL]['MSTATUS'];
+                                        if((prevMstatus == "N" && Mstatus != "N") || prevMstatus != "N" && Mstatus == "N"){
+                                                showClass = "msg1";
+                                                hideClass = "msg2";
+                                        }
+                                }
+                                if(editedFields.hasOwnProperty("critical") === false || (editedFields.hasOwnProperty("critical") === true && !editedFields[CRITICAL].hasOwnProperty("DTOFBIRTH") && !editedFields[CRITICAL].hasOwnProperty("MSTATUS"))){
+                                        showHideEditSection("critical","hide");
+                                        return;
+                                      }
+                                // condition to show msg on the popup end
+                                $("#commonOverlay").fadeIn("fast",function(){
+                                $("#commonOverlay").on('click',function(){
+                                    $(".confirmationBox").fadeOut("fast",function(){
+                                        $("#commonOverlay").fadeOut("fast"); 
+                                    });
+                                }); 
+                                $(".btn-popup-cnfrm").on('click',function(){
+                                        onSectionSave("critical");
+                                        $(".confirmationBox").fadeOut("fast",function(){
+                                            $("#commonOverlay").fadeOut("fast"); 
+                                        });
+                                });
+                                $(".btn-popup-cancel").on('click',function(){
+                                        $(".confirmationBox").fadeOut("fast",function(){
+                                            $("#commonOverlay").fadeOut("fast"); 
+                                        });
+                                });
+                                $(".confirmationBox").fadeIn("fast"); 
+                                $("."+showClass).removeClass("disp-none"); 
+                                $("."+hideClass).addClass("disp-none"); 
+                        });
+                }else{
+                        onSectionSave(this.id.split('saveBtn')[1]);
+                }
       });
       
       //Save Btn Keydown
@@ -4804,8 +5477,126 @@ EditApp = function(){
       $('.js-forAbout').unbind('keydown').on('keydown',function(event){
         whiteListingKeys(event,"forAbout")
       });
+      $('#daysub').on('click',function(event){
+              clickCallBack("day",event,$(this).attr("rel"));
+      });
+      $('#cancelBtncritical').on('click',function(event){
+                inputData = {};
+                var dob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
+                $("#day_value").html("Day");
+                $("#month_value").html("Month");
+                $("#year_value").html("Year");
+                $("#day_value").attr("rel",dob[2]);
+                dob[1] = dob[1].replace(/^0+/, '');
+                dob[1] = dataMonthArray[dob[1]];
+                $("#month_value").attr("rel",dob[1]);
+                $("#year_value").attr("rel",dob[0]);
+                $.each(criticalSectionArray,function(key,data)
+                {
+                        if(dateTypeFields.indexOf(data) !== -1){
+                                hideShowList(event,data.toLowerCase());
+                                $("#"+data.toLowerCase()).find("#daysub").find(".activeopt").removeClass("activeopt");
+                                $("#"+data.toLowerCase()).find("#monthsub").find(".activeopt").removeClass("activeopt");
+                                $("#"+data.toLowerCase()).find("#yearsub").find(".activeopt").removeClass("activeopt");
+                        }
+                });
+      });
+      $('#monthsub').on('click',function(event){
+              clickCallBack("month",event,$(this).attr("rel"));
+      });
+      $('#yearsub').on('click',function(event){
+              clickCallBack("year",event,$(this).attr("rel"));
+              callBlur = 1; 
+             $("#dtofbirth").trigger("blur");
+      });
     }
-    
+    function clickCallBack (selectField,eve,sectionId) {
+        eve.stopPropagation();
+        var target = $(eve.target);
+        //check if the target of click in whole of the sublist is a li
+        if (target.is("li")) {
+          $("#"+sectionId).find("#" + selectField + "_value").html(target.html());
+          //for month values are replaced by month numbers
+          if (selectField == "month"){
+            $("#"+sectionId).find("#" + selectField + "_value").val(eve.target.id.substr(7, eve.target.id.length));
+           }else{
+            $("#"+sectionId).find("#" + selectField + "_value").val(target.html());
+                }
+                $("#"+sectionId).find("#" + selectField + "_value").attr("rel",target.html());
+          $("#"+sectionId).find("#" + selectField + "sub").find(".activeopt").removeClass("activeopt");
+          target.addClass("activeopt");
+          $(this).parent().hide();
+          hideShowList(eve,sectionId);
+          highlightLI(sectionId,selectField,"I");
+        }
+    }
+    hideShowList = function(con,sectionId) {
+                $.each(dateDataArray,function(key1,data1)
+                {
+                        $.each(data1,function(key2,data2)
+                        {
+                              $.each(data2,function(value,label)
+                              {
+                                    $("#"+sectionId).find(".js-"+label.toLowerCase()).attr("style","display:none");
+                                    $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow1").attr("style","display:none");
+                                    if (con == "blur") {
+                                        $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow2").attr("style","display:block");
+                                    }
+                              })
+                        })
+                })
+    }
+    highlightLI = function(sectionId,clickedField,INITIAL) { // INITIAL value to show next or currnet li
+                var activeClass = 'activeopt';
+                var arrSelectedEle = $("#"+sectionId).find(".js-boxContent").find(".boxType").find('li.'+activeClass);
+                for(var i=0;i<arrSelectedEle.length;i++){
+                        $(arrSelectedEle[i]).removeClass(activeClass);
+                }
+                if(INITIAL == "S"){
+                        $.each(dateDataArray,function(key1,data1)
+                        {
+                                $.each(data1,function(key2,data2)
+                                {
+                                      $.each(data2,function(value,label)
+                                      {
+                                                var display = "display:none";
+                                                var display2 = "display:none";
+                                                if(label.toLowerCase() == clickedField){
+                                                        var display = "display:block";
+                                                }else{
+                                                        var display2 = "display:block";
+                                                }
+                                                $("#"+sectionId).find(".js-"+label.toLowerCase()).attr("style",display);
+                                                $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow1").attr("style",display);
+                                                $("#"+sectionId).find("#"+label.toLowerCase()+"Arrow2").attr("style",display2);
+
+                                      })
+                              })
+                        })
+                        $("#"+sectionId).find('ul li span[id="'+clickedField+'_value"]').parent("li").addClass(activeClass);
+                }else{
+                        if(INITIAL == "I"){
+                                if (clickedField == "day") {
+                                        $("#"+sectionId).find(".js-month").attr("style","display:block");
+                                        $("#"+sectionId).find("#monthArrow1").attr("style","display:block");
+                                        $("#"+sectionId).find("#monthArrow2").attr("style","display:none");
+                                        $("#"+sectionId).find("#dayArrow2").attr("style","display:block");
+                                        $("#"+sectionId).find('ul li span[id="month_value"]').parent("li").addClass(activeClass);
+                                }
+                                //open year sublist on month list click
+                                if (clickedField == "month") {
+                                        $("#"+sectionId).find(".js-year").attr("style","display:block");
+                                        $("#"+sectionId).find("#yearArrow1").attr("style","display:block");
+                                        $("#"+sectionId).find("#yearArrow2").attr("style","display:none");
+                                        $("#"+sectionId).find("#monthArrow2").attr("style","display:block");
+                                        $("#"+sectionId).find('ul li span[id="year_value"]').parent("li").addClass(activeClass);
+                                }
+                                if (clickedField == "year") {
+                                        $("#"+sectionId).find("#yearArrow2").attr("style","display:block");
+                                }
+                        }
+                }
+    }
     /*
      * BakeEditAppObject
      * @returns {undefined}
@@ -4859,8 +5650,11 @@ EditApp = function(){
         
         var errorBorderClass = 'brdr-1';
         var normalBorderClass = 'edpbrd3';
-        
         //For Open Text Field
+        if(fieldObject.type === DATE_TYPE){
+                
+                $(fieldId).find(".js-errorLabel").addClass(dispNone);
+        }
         if(fieldObject.type === OPEN_TEXT_TYPE){
           var value = fieldObject.decValue;
           
@@ -4939,10 +5733,36 @@ EditApp = function(){
           $(fieldId).trigger("boxBlur");
         }
         
+        //For Date Type Field
+        if(fieldObject.type === DATE_TYPE){          
+          $(fieldId).find('.js-decVal').removeClass(dispNone);
+          $(fieldId).find('.boxType').addClass(dispNone);
+          $(fieldId).find('.js-subBoxList').addClass(dispNone);
+          if(fieldObject.decValue.length){
+            $(fieldId).find('span.js-decVal').text(fieldObject.decValue);
+            $(fieldId).find('span.js-decVal').html(fieldObject.decValue);
+          }
+          else{//Not filled in case
+            $(fieldId+' span').text(notFilledText).addClass('color12');
+            var arrSelected = $(fieldId+' ul li.activeopt');
+            for(var j=0;j<arrSelected.length;j++){
+              $(arrSelected[j]).removeClass('activeopt');
+            }
+          }
+          $(fieldId).trigger("boxBlur");
+        }
+        
         //For Chosen Single Select
         if(fieldObject.type === SINGLE_SELECT_TYPE){
-
-          var data = JSON.parse(getDataFromStaticTables(fieldObject.key));
+                var ky = fieldObject.key;
+                if(fieldObject.key == "MSTATUS"){
+                          if(editAppObject[BASIC]['RELIGION'].value == "2" && editAppObject[BASIC]['GENDER'].value == "M"){
+                                  var ky = "MSTATUS_MUSLIM_EDIT";
+                          }else{
+                                  var ky = "MSTATUS_EDIT";
+                          }
+                }
+          var data = JSON.parse(getDataFromStaticTables(ky));
           data = getDependantData(fieldObject,data);
           var hideField = false;
           var optionString = "";
@@ -5157,6 +5977,28 @@ EditApp = function(){
       updateLastUpdated(viewApiResponse);
       var iterateOnResponse = function(section){
         for(var key in section){
+        if(key=="jamaat")
+        {
+                if(section['caste_val']=="152")
+                {
+                        $("#jamaatlistitem").show();
+                }
+                else
+                {
+                        $("#jamaatlistitem").hide();
+                }
+        }
+        if(key=="m_status")
+        {
+                if(section['m_status'].toLowerCase()=="never married")
+                {
+                        $("#havechildParent").hide();
+                }
+                else
+                {
+                        $("#havechildParent").show();
+                }
+        }
           var viewId = '#'+key.toLowerCase()+'View';
           
           if($(viewId).length === 0 && typeof section[key] == "string"){
@@ -5185,10 +6027,9 @@ EditApp = function(){
               $(duplicateID).addClass(notFilledInClass).removeClass(colorClass);
             }
           }
-          else if(typeof section[key] == "string" )//&& section[key].length)
+          else if(typeof section[key] == "string" || key == "age")//&& section[key].length)
           { 
-            var value = $('<textarea />').html(section[key]).text();      
-            
+            var value = $('<textarea />').html(section[key]).text();
             $(viewId).text(value);
             $(viewId).addClass(colorClass).removeClass(notFilledInClass);
             if(duplicateID && isDomElementVisible(duplicateID)){
@@ -5196,7 +6037,15 @@ EditApp = function(){
               $(duplicateID).addClass(colorClass).removeClass(notFilledInClass);
             }
           }
-          
+          if(removeDepField.hasOwnProperty(key) == true){
+                  var depId = "#li-"+removeDepField[key];
+                  if(removeDepFieldOn[key] == section[key]){
+                          $(depId).addClass(dispNone);
+                  }else{
+                          $(depId).removeClass(dispNone);
+                  }
+                  
+          }
           if(multiFieldViewMap.indexOf(key.toLowerCase()) !== -1){
             updateMultiFieldsView(viewId,$(viewId).text());
           }
@@ -5208,6 +6057,7 @@ EditApp = function(){
           if(phoneDescriptionMap.indexOf(key.toLowerCase()) !== -1){
             updatePhoneDescView(viewId,$(viewId).text());
           }
+
         }
       };
       
@@ -5483,7 +6333,7 @@ EditApp = function(){
       var postGradDeg = editAppObject[EDU_CAREER]["DEGREE_PG"];
       var postGradCollg = editAppObject[EDU_CAREER]["PG_COLLEGE"];
       
-      var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"+'_'+EDU_CAREER];
+      var maxEducation = editAppObject[EDU_CAREER]["EDU_LEVEL_NEW"];
       
       var other_ugDeg = editAppObject[EDU_CAREER]["OTHER_UG_DEGREE"];
       var other_pgDeg = editAppObject[EDU_CAREER]["OTHER_PG_DEGREE"];
@@ -5505,10 +6355,7 @@ EditApp = function(){
         showHideField(gradCollg,"show");
         showHideField(other_ugDeg,"show");
         
-        if(maxEducation.value == '21' || maxEducation.value == '42')
-            showHideField(postGradDeg,"show");
-        else
-            showHideField(postGradDeg,"hide");
+	showHideField(postGradDeg,"show");
         showHideField(postGradCollg,"show");
         showHideField(other_pgDeg,"show");
       }
@@ -5524,7 +6371,23 @@ EditApp = function(){
       
       
     }
-    
+    initMstatusDocumentMap = function(){
+            $('#mstatus_proofParent').addClass(dispNone);
+    }
+    initJamaat = function()
+    {
+	var caste = editAppObject[BASIC]["CASTE"];
+	if(caste!=undefined && caste!='' && caste.hasOwnProperty("value"))
+	{
+		onCasteChange(caste.value);
+	}
+	else
+	{
+		var jamaatFieldObject = editAppObject[BASIC]["JAMAAT"];
+		showHideField(jamaatFieldObject,"hide",true);
+	}
+
+    }
     /*
      * initUGAndPGDegreeMap
      * @returns {}
@@ -6074,7 +6937,7 @@ function onViewHoroscope(){
     $(".js-viewHoro").on('click',function(){
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1",
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&from_jspcEdit=1&showDownload=1",
           async:true,
           timeout:20000,
           beforeSend: function(){
@@ -6082,9 +6945,9 @@ function onViewHoroscope(){
           },
           success:function(response){
           		hideCommonLoader();
-              $("#putHoroscope").html(response);
+              $("#putHoroscope").html(response);              
               $(".js-hideThisDiv").hide();
-              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
+              $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});            
           }
         }); 
     });
@@ -6119,12 +6982,20 @@ function setViewHoroscopeDiv(){
 
 function resetCreateHoroscope(){
     $("#createHoroDiv").empty();
-    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
+    $("#createHoroDiv").append('<iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID='+id+'&js_year='+yy+'&js_month='+mm+'&js_day='+dd+'"></iframe>');
 }
 
 $(document).ready(function() {
   updateProfileCompletionScore(profileCompletionValue);
   EditApp.init();
+  $('body').on('click',function(event){
+        if($(event.target).hasClass("js-boxContent") || $(event.target).hasClass("js-decVal") || $(event.target).parent().hasClass("boxType") || $(event.target).parent().attr("rel") == "dtofbirth" || $(event.target).hasClass("dropdown_span") || event.target.getAttribute("id") == "dayArrow2" || event.target.getAttribute("id") == "monthArrow2" || event.target.getAttribute("id") == "yearArrow2" || event.target.getAttribute("id") == "dtofbirth"){
+                callBlur = 0;
+        }else{
+                callBlur = 1;
+                $("#dtofbirth").trigger("blur");
+        }
+  });
   $('body').on('focus', '.chosen-container-single input', function(event) {
     if (!$(this).closest('.chosen-container').hasClass('chosen-container-active')){
       $(this).closest('.chosen-container').trigger('mousedown');
@@ -6556,7 +7427,6 @@ $('.js-previewAlbum').click(function(){
         $("#"+fieldId).focus();
     }
   }
-
   /**
    * function is used to get url get parameters
    * @return {String}      get parameter

@@ -105,6 +105,13 @@
 .rv2_pad17 {
   padding:0px 13px 15px 13px
 }
+.rv2_pad18 {
+  padding:10px 15px
+}
+.rv2_pad19 {
+  padding: 24px;
+}
+
 .rv2_mrt10 {
   margin-top:10px
 }
@@ -364,3 +371,14 @@
 .rv2_paypal{background-position: -48px -444px;
   width: 89px;
   height: 57px;}
+.mem_coma{background-position: -3px -238px;
+width: 28px;
+height: 44px;
+}
+.setoffbr{right:0;top:50%; transform:translateY(-50%);}
+.setoffbl{left:0;top:50%; transform:translateY(-50%);}
+ul.time{list-style-type:none;}
+ul.time li{display:inline-block;font-size:16px}
+ul.time li span{font-size:11px}
+ul.time li span:nth-child(1){font-size:16px}
+.inscol:after{ content:":"; padding-left:6px}

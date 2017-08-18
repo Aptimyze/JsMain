@@ -44,8 +44,8 @@ class BrowserNotificationEnums
     public static $landingIdToUrl = array(
             "1" => "/search/perform?justJoinedMatches=1",
             "2"=>"2",
-            "3" => "/profile/contacts_made_received.php?page=eoi&filter=R",
-            "4" => "/profile/contacts_made_received.php?page=visitors&filter=R",
+            "3" => "/inbox/1/1",
+            "4" => "/search/visitors",
             "5" => "/profile/mem_comparison.php",
             "6" => "/profile/viewprofile.php",
             "7" => "/inbox/4/1"
@@ -57,7 +57,7 @@ class BrowserNotificationEnums
     public static $addNotificationLog = false;  //add published and transferred msg keys in logs
     public static $notificationChannelType = array("BROWSER_NOTIFICATION","FSOAPP_NOTIFICATION");
     public static $instantNotifications = array("AGENT_ONLINE_PROFILE","AGENT_FP_PROFILE", "PROFILE_VISITOR","EOI","MESSAGE_RECEIVED","EOI_REMINDER");
-    public static $renewalReminderNotification = array("MEM_EXPIRE_A5", "MEM_EXPIRE_A10", "MEM_EXPIRE_A15", "MEM_EXPIRE_B1", "MEM_EXPIRE_B5");
+    //public static $renewalReminderNotification = array("MEM_EXPIRE_A5", "MEM_EXPIRE_A10", "MEM_EXPIRE_A15", "MEM_EXPIRE_B1", "MEM_EXPIRE_B5");
     //count of notifications picked from BROWSER_NOTIFICATION and backed up at a time
     public static $backupNotificationsCountLimit = 1000;
     //login history channel wise criteria for notifications(instant/scheduled)

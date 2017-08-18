@@ -25,6 +25,7 @@ class ProfileCacheConstants
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     const NOT_FILLED = "-NF-";
     const DUPLICATE_FIELD_DELIMITER = "-d-";
+    const GETARRAY_PROFILEID_LIMIT = 50;
     
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
@@ -270,7 +271,24 @@ class ProfileCacheConstants
                                         "FAV_BOOK",
                                         "FAV_VAC_DEST",
                                         "YOUR_INFO_OLD",
+                                        
+                                        //Key for Filters
+                                        'FILTERID',
+                                        'AGE',
+                                        'MSTATUS',
+                                        'RELIGION',
+                                        'CASTE',
+                                        'COUNTRY_RES',
+                                        'CITY_RES',
+                                        'MTONGUE',
+                                        'INCOME',
+                                        'COUNT',
+                                        'HARDSOFT',
 
+                                        //keys for aadhar
+                                        'AADHAR_NO',
+                                        'REQUEST_ID',
+                                        'VERIFY_STATUS',
                                     );
     
     public static $arrJProfileColumns = array(
@@ -474,9 +492,16 @@ class ProfileCacheConstants
                                     );
     
     public static $arrDuplicateFieldsMap = array(
-                                        //'BTIME',
                                         'COUNTRY_BIRTH',
                                         'SHOW_HOROSCOPE',
+                                        'AGE',
+                                        'MSTATUS',
+                                        'RELIGION',
+                                        'CASTE',
+                                        'COUNTRY_RES',
+                                        'CITY_RES',
+                                        'MTONGUE',
+                                        'INCOME',
                                     );
 
     public static $arrFSOColumns = array(
@@ -557,5 +582,31 @@ class ProfileCacheConstants
                                    'PROFILEID',
                                    "YOUR_INFO_OLD",
                                    );
+    public static $arrAutoExpiry = array(
+                                   'PROFILEID',
+                                   "AUTO_EXPIRY_DATE",
+                                   );
+    
+    public static $arrProfileFilter = array(
+                                    'PROFILEID',
+                                    'FILTERID',
+                                    'AGE',
+                                    'MSTATUS',
+                                    'RELIGION',
+                                    'CASTE',
+                                    'COUNTRY_RES',
+                                    'CITY_RES',
+                                    'MTONGUE',
+                                    'INCOME',
+                                    'COUNT',
+                                    'HARDSOFT',
+                                    );
+
+    public static $arrAadharVerifyColumns = array(
+                                        'PROFILEID',
+                                        'AADHAR_ID',
+                                        'REQUEST_ID',
+                                        'VERIFY_STATUS',
+                                    );
 }
 ?>

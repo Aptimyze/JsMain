@@ -90,13 +90,29 @@ EOF;
 				       	$type = array("archive"=>1);
 								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
 				}
+				elseif($module=="VERIFICATION_DOCUMENTS_BYUSER" || $module=="VERIFICATION_DOCUMENTS" || $module=="CRITICAL_INFO_DIVORCED_DOC")
+				{
+					$url = trim($v[$whichImage]);
+                                        $serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
+					$urlOri = PictureFunctions::getCloudOrApplicationCompleteUrl($url,true);
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					foreach (glob($urlOri) as $filename) 
+					{
+						if(finfo_file($finfo, $filename) === 'application/pdf') 
+						{
+							$contentType = "application/pdf";
+							$type="";
+						} 
+					}
+					finfo_close($finfo);
+				}
         else
 				{
 					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$type="";
 				}
 			
-				$url = $this->callImageServerApi($v["AUTOID"],trim($v[$whichImage]),$type);
+				$url = $this->callImageServerApi($v["AUTOID"],trim($v[$whichImage]),$type,$contentType);
 				if($url)
 				{
 					if($this->updateUrls($url,$v,$module))
@@ -125,14 +141,14 @@ EOF;
 	@param - auto increment id, url of image, type is array of type of image (image/jpeg,image/gif) and if archieve is required for the image (optional)
 	@return - relative url on image server
 	*/
-	private function callImageServerApi($id,$url,$type='')
+	private function callImageServerApi($id,$url,$type='',$contentType='')
 	{
 		if($url)
 		{
 			$url = PictureFunctions::getCloudOrApplicationCompleteUrl($url);
 			$isaObj = new ImageServerApi;
 			
-			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type);
+			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type,$contentType);
 			if($serverOutput && is_array($serverOutput))
 			{
 				if($serverOutput["urlFile"])
@@ -194,6 +210,8 @@ EOF;
 			$status = $modObj->edit($paramArr,$dataArr["MODULE_ID"],$dataArr["PROFILEID"]);
 			unset($modObj);
 		}
+		if($module == "PICTURE")
+			   PictureNewCacheLib::getInstance()->removeCache($dataArr['PROFILEID']);
 		return $status;
 	}
 

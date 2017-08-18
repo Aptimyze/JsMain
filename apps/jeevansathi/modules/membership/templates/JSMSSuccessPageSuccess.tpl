@@ -88,6 +88,7 @@
     var winHeight = $(window).height();
     var continueHeight = $("#continueBtn").height();
     $('.rv2_bg1').css('height',(winHeight-continueHeight));
+    eraseCookie('backendLink');
     eraseCookie('backState');
     eraseCookie('mainMem');
     eraseCookie('mainMemDur');
@@ -96,6 +97,10 @@
   });
   var username = "~$data.userDetails.USERNAME`";
   var email = "~$data.userDetails.EMAIL`";
+  if("~$data.device eq 'Android_app'`"){
+      var host = window.location.hostname;
+      $("#continueBtn a").attr('href','http://'+host+'/profile/mainmenu.php');
+    }
   setTimeout(function(){
     autoPopupFreshdesk(username,email);
   }, 90000);

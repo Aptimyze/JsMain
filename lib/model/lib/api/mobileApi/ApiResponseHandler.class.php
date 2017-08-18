@@ -16,8 +16,14 @@ class ApiResponseHandler
 	private $cache_flag=true;
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
+	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
-	private $androidChatflag ;
+	private $androidChat;
+	private $membershipSubscription;
+	private $webserviceCachingCap;
+	private $androidChatLocalStorage;
+	private $xmppBackgroundConnectionTimeout;
+
 	//Constructor
 	private function __construct()
 	{
@@ -45,14 +51,88 @@ class ApiResponseHandler
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
-	public function getAndroidChatFlag(){
-		return JsConstants::$androidChat["flag"];
+	public function getAndroidChatFlag($key="new"){
+		if($key == "new"){
+			$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+			
+		}
+		else{
+			if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
+				$this->androidChat = 1;
+			}
+			else{
+				$this->androidChat = 2;
+			}
+		}
+		
+		return $this->androidChat;
 	}
-	public function setAndroidChatFlag(){
-		$this->androidChatflag = JsConstants::$androidChat["flag"];
+
+	//getter for xmppBackgroundConnectionTimeout flag
+	public function getXmppBackgroundConnectionTimeout(){
+		$this->xmppBackgroundConnectionTimeout = JsConstants::$androidChatNew["xmppBackgroundConnectionTimeout"];
+		return $this->xmppBackgroundConnectionTimeout;
 	}
+
+	//getter for androidChatLocalStorage flag
+	public function getAndroidChatLocalStorageFlag(){
+		$this->androidChatLocalStorage = JsConstants::$androidChatNew["flushLocalStorage"];
+		/**/
+		$memcacheInstance = JsMemcache::getInstance();
+		$specificProfile = $memcacheInstance->get("flushAndChatProfiles",null,0,0);
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		if(!empty($profileObj)){
+			$pid=$profileObj->getPROFILEID();
+			unset($profileObj);
+			
+			if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
+
+				if(strpos($specificProfile, ",".$pid.",")!==false){
+					$this->androidChatLocalStorage = true;
+					$specificProfile = str_replace( ",".$pid.",",",", $specificProfile);
+					if($specificProfile==","){
+						$memcacheInstance->remove("flushAndChatProfiles");
+					}
+					else{
+						$memcacheInstance->set("flushAndChatProfiles",$specificProfile,86400,0,'X');
+					}
+				}
+			}
+		}
+		/**/
+		return $this->androidChatLocalStorage;
+	}
+
+	//getter for webserviceCachingGap based on subscription of logged in user
+	public function getWebserviceCachingCap($subscription="Free"){
+		$this->webserviceCachingCap = 600000;
+		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
+			$this->webserviceCachingCap = JsConstants::$nonRosterRefreshUpdateNew["dpp"][$subscription];
+		}
+		return $this->webserviceCachingCap;
+	}
+
+	//setter for membershipSubscription of logged in user for android app
+	public function setSelfSubscription(){
+		$this->membershipSubscription = "Free";
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$pid=$profileObj->getPROFILEID();
+		unset($profileObj);
+		if($pid && !empty($pid)){
+			$this->membershipSubscription = CommonFunction::getMembershipName($pid);
+			if($this->membershipSubscription && $this->membershipSubscription!= "Free"){
+		        $this->membershipSubscription = "Paid";
+		    }
+		    else{
+		        $this->membershipSubscription = "Free";
+		    }
+		}
+	}
+
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
+	public function setUserActionState($userActionState){$this->userActionState = $userActionState;}
+	public function getUserActionState(){return $this->userActionState;}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -120,8 +200,26 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
-		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
+		$output["userActionState"]=$this->userActionState;
+		$output["apiTimeTracking"]=floatval((microtime(true)-sfContext::getInstance()->getRequest()->getParameter("startScriptTime")));
+
+		//android chat on/off flag
+		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");
+		$output["androidChat"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
+
+		//flag for android chat localstorage flushing
+		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag();
+
+		//set membershipSubscription
+		$this->setSelfSubscription();
+                $output["isPaid"] = $this->membershipSubscription ==  "Free" ? 'N' : 'Y';
+		//set webservice caching flag for android
+		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
+
+		//set flag for android xmppBackgroundConnectionTimeout
+		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
+
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))
@@ -131,7 +229,12 @@ class ApiResponseHandler
 		$output["phoneDetails"]=$this->phoneDetails;
 		$loggedIn=LoggedInProfile::getInstance();
 		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+		{
 			$output["userReligion"] = $loggedIn->getRELIGION();
+			$output["userActivation"] = $loggedIn->getACTIVATED();
+		}
+
+
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 

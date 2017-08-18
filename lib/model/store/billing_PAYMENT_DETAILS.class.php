@@ -77,7 +77,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     
     public function getPaidProfiles($receiptId) {
         try {
-            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND RECEIPTID>:RECEIPTID";
+            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,if(TYPE='DOL',APPLE_COMMISSION*DOL_CONV_RATE,APPLE_COMMISSION) AS APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND RECEIPTID>:RECEIPTID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":RECEIPTID", $receiptId, PDO::PARAM_INT);
             $prep->execute();
@@ -94,7 +94,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     public function getPaymentDetails($profileid, $entryDate) {
         try {
             $profilesArr = array();
-            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND PROFILEID=:PROFILEID AND ENTRY_DT>=:ENTRY_DT";
+            $sql = "SELECT PROFILEID,RECEIPTID,BILLID,if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT,ENTRY_DT,MODE,if(TYPE='DOL',APPLE_COMMISSION*DOL_CONV_RATE,APPLE_COMMISSION) AS APPLE_COMMISSION FROM billing.PAYMENT_DETAIL WHERE STATUS='DONE' AND AMOUNT>0 AND PROFILEID=:PROFILEID AND ENTRY_DT>=:ENTRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":ENTRY_DT", $entryDate, PDO::PARAM_STR);
@@ -162,8 +162,25 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function getZeroAmountBillings($start_dt, $end_dt) {
+        try {
+            $sql = "SELECT BILLID FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND AMOUNT=0";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+            $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result["BILLID"];
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
     
-    public function updateComissions($profileid, $billid, $apple, $franchisee) {
+    public function updateComissions($profileid, $billid, $apple, $franchisee,$appleFlag=0, $newAmount) {
         
         try {
             if (empty($apple)) {
@@ -172,13 +189,24 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             if (empty($franchisee)) {
                 $franchisee = 0;
             }
-            
-            $sql = "UPDATE billing.PAYMENT_DETAIL SET APPLE_COMMISSION=:APPLE, FRANCHISEE_COMMISSION=:FRANCHISEE WHERE PROFILEID=:PROFILEID AND BILLID=:BILLID";
+            $sql = "UPDATE billing.PAYMENT_DETAIL SET FRANCHISEE_COMMISSION=:FRANCHISEE";
+            //Start: JSC-2668: Apple Commission fix to calculate correct net amount in case billing is from apple device
+            if($appleFlag==1){
+                 $sql.= ", AMOUNT=:AMT, APPLE_COMMISSION=:APPLE";
+            }
+            $sql.=" WHERE PROFILEID=:PROFILEID AND BILLID=:BILLID";
+//            if($appleFlag==1){
+//                 $sql.= " AND APPLE_COMMISSION IS NULL";
+//            }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-            $prep->bindValue(":APPLE", $apple, PDO::PARAM_INT);
             $prep->bindValue(":FRANCHISEE", $franchisee, PDO::PARAM_INT);
+            if($appleFlag==1){
+                $prep->bindValue(":APPLE", $apple, PDO::PARAM_INT);
+                $prep->bindValue(":AMT", $newAmount, PDO::PARAM_INT);
+            }
+            //End: JSC-2668: Apple Commission fix to calculate correct net amount in case billing is from apple device
             $prep->execute();
         }
         catch(PDOException $e) {
@@ -320,10 +348,16 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function getAllDetailsForBillidArr($billidArr) {
+    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="") {
         try {
         	$billidStr = implode(",", $billidArr);
             $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
+            if($orderBy != ""){
+                $sql .= " ORDER BY ".$orderBy." DESC";
+            }
+            if($limit != ""){
+                $sql .= " LIMIT ".$limit;
+            }
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
@@ -336,14 +370,14 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr) {
+    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr,$net_off_tax_ratio) {
         try {
             $billidStr = implode(",", $billidArr);
             $sql = "SELECT if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT, BILLID FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr) AND STATUS='DONE' AND AMOUNT>0";
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $output += $result['AMOUNT']*(1-billingVariables::NET_OFF_TAX_RATE);
+                $output += $result['AMOUNT']*(1-$net_off_tax_ratio);
             }
             return round($output,2);
         }

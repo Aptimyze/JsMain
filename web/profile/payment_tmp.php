@@ -808,7 +808,7 @@ function getServices($type,$ser_main)
 	else
 		$sql .= "PRICE_RS_TAX as PRICE";
 											 
-	$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' and SERVICEID like '".$ser_main."%' and SHOW_ONLINE='Y' order by ID DESC";
+	$sql .= " from billing.SERVICES where PACKAGE='Y' and ADDON ='N' and SERVICEID like '".$ser_main."%' and SHOW_ONLINE_NEW LIKE '%,-1,%' order by ID DESC";
 	$result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	while($myrow=mysql_fetch_array($result))
 	{

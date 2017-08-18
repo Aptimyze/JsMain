@@ -1,7 +1,7 @@
 <div class="pos-abs fullwid z5 disp-none" id="prfDay" style="top:-25px">
         <div class="clearfix">
             <div class="fl fontreg f16 colrw uppercase">
-                profile of the day
+                match of the day
             </div>
             <i class="fr sprite2 stk_cls cursp"></i>
         </div>
@@ -11,13 +11,14 @@
         
              <div class="card pos-abs stk mod_shd" data-matchID="" id="matchOfDaySubSection">
                 <div class="padall-10 clearfix" id = "cardsForMatchOfDay"> 
-                    <a href="DETAILED_PROFILE_LINK" class="profileLink"><img src="srch_image1.jpg" class="mod_dim1 vtop fl mod_img"/></a>
+                    <a href="DETAILED_PROFILE_LINK" class="profileLink"><img class="mod_dim1 vtop fl mod_img"/></a>
                     <!--start:info-->
                     <a href="DETAILED_PROFILE_LINK" class="profileLink colrb">
                     <div  class="fl mod_wid1 mod_p2 pt5 fontlig" >            
                         <div class="disp-tbl">
                             <div class="disp-cell f24 profileName"></div>
                             <div class="disp-cell f14 opa50 pl10 userLoginStatus"></div>
+                            <div class="disp-cell f14 colr5 pl10 subscription"></div>
                             <div class="disp-cell f18 mod_p1 gunascore"></div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">

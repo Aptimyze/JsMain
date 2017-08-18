@@ -121,7 +121,16 @@ if(authenticated($cid))
 				}
 				else
 				{
-					$del_scr="N";	
+          $sql_sel="SELECT ID from newjs.PROFILE_DEL_REASON where PROFILEID=$Profileid order by ID DESC LIMIT 1";
+          $result_sel = mysql_query_decide($sql_sel) or die("$sql_sel" . mysql_error_js());
+          $bExist = mysql_num_rows($result_sel)? true : false;
+          
+          if($bExist) {
+            $del_scr = "N";
+          } else {
+            $del_scr = "N2";
+          }        
+					
 				}
                 $sql_negative = "select PROFILEID from incentive.NEGATIVE_LIST where PROFILEID = $Profileid";
                 $result_negaive=mysql_query_decide($sql_negative) or die("$sql_negative".mysql_error_js());
@@ -230,30 +239,6 @@ if(authenticated($cid))
 		}
 		$smarty->display("search_page.tpl");
 		//echo $date1."kush".$date2."kush".$username."kush".$email;
-	}
-	elseif($Delete)
-	{
-                $c=0;
-                foreach( $_POST as $key => $value )
-                {
-                        if( substr($key, 0, 2) == "cb" )
-                        {
-                                $c=$c+1;
-                                $proid[]=ltrim($key, "cb");
-                        }
-                }
-		if(count($proid)>0)
-			$pid=implode($proid,",");
-			
-		$smarty->assign("profiles",$pid);
-		$smarty->assign("c",$c);
-		$smarty->assign("submit","Y");
-		$smarty->assign("count",1);
-		$smarty->assign("cid",$cid);
-	        $smarty->assign("name",$user);
-		$smarty->assign("Handicapped","All");
-
-		$smarty->display("del_profile_bulk.htm");
 	}
 	else
 	{

@@ -88,6 +88,15 @@ class MultipleUserFilter
 					return 1;
 			}
 		}
+                
+                elseif($fieldName == "CITY_RES"){
+                        if($this->viewedDppArr[$viewedId]['STATE'][0] != "" && $this->viewerParameters['COUNTRY_RES']=='51'){
+                            $citiesOfState = CommonFunction::getCitiesForStates($this->viewedDppArr[$viewedId]['STATE']);
+                        }
+                        $countryOtherThanIndia = $this->checkIfCountryOtherThanIndia($this->viewedDppArr[$viewedId]['COUNTRY_RES']);
+                        if($this->viewedFilterParameters[$viewedId][$fieldName] == 'N' || $this->viewedFilterParameters[$viewedId][$fieldName] == '' || (!is_array($this->viewedDppArr[$viewedId][$fieldName]) && !$citiesOfState) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y'  && is_array($this->viewedDppArr[$viewedId][$fieldName])  && (in_array($this->viewerParameters[$fieldName],$this->viewedDppArr[$viewedId][$fieldName]) || ($citiesOfState && in_array($this->viewerParameters[$fieldName],$citiesOfState)))) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y' && $this->viewedDppArr[$viewedId][$fieldName][0] == '' && !$citiesOfState) || (($countryOtherThanIndia || $this->viewedFilterParameters[$viewedId][$COUNTRY_RES] != 'Y') && $this->viewerParameters['COUNTRY_RES']!=51))
+                          return 1;
+                }
 		else
 		{
 //			 if($this->viewedFilterParameters[$viewedId][$fieldName] == 'N' || $this->viewedFilterParameters[$viewedId][$fieldName] == '' || $this->viewedDppArr[$viewedId][$fieldName] == '' || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y'  && in_array($this->viewerParameters[$fieldName],explode(",",str_replace("'","",$this->viewedDppArr[$viewedId][$fieldName])))))
@@ -107,7 +116,7 @@ class MultipleUserFilter
 
 	public static function getFilterParameters($profileIdArr,$dbname="")
 	{
-		$filterObj=new NEWJS_FILTER($dbname);
+		$filterObj=new ProfileFilter($dbname);
 		$results = $filterObj->fetchFilterDetailsForMultipleProfiles($profileIdArr);
 		if(is_array($results))
 		{
@@ -143,25 +152,30 @@ class MultipleUserFilter
 					if($v["TYPE"]=="RUPEES")
 					{
 						if($i==0){
-							$minRupee=$val;
+							$minRupee=$v["MIN_VALUE"];
 							$i++;
 						}
-						if($val<$minRupee)
-							$minRupee=$val;
+						if($income_data[$val]["MIN_VALUE"]<$minRupee)
+                                                        $minRupee=$v["MIN_VALUE"];
 					}
 					else
 					{
 						if($j==0){
-							$minDollar=$val;
+							$minDollar=$v["MIN_VALUE"];
 							$j++;
 						}
-						if($val<$minDollar)
-							$minDollar=$val;
+						if($income_data[$val]["MIN_VALUE"]<$minDollar)
+							$minDollar=$v["MIN_VALUE"];
 					}
 				}
 			}
 		}
-			if($minRupee)
+                        if($minRupee && $minDollar){
+                                $rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
+                                $doArray=array('minID'=>$minDollar,'maxID'=>19);
+				$incomeMapping= new IncomeMapping($rsArray,$doArray);
+                        }
+			else if($minRupee)
 			{
 				$rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
 				$incomeMapping= new IncomeMapping($rsArray);
@@ -178,5 +192,13 @@ class MultipleUserFilter
 			return array_unique($incomeArr);
 		
 	}
+        
+        private function checkIfCountryOtherThanIndia($countryArr) {
+            foreach ($countryArr as $key=>$val){
+                if($val != 51)
+                    return true;
+            }
+            return false;
+        }
 }
 ?>

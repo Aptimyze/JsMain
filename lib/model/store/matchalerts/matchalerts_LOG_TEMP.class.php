@@ -186,6 +186,27 @@ GROUP BY LOGICLEVEL, RecCount";
       jsException::nonCriticalError($e);
     }
   }
+  public function getDatesRowsForTracking()
+  {
+    try
+    {
+      $sql = "SELECT count( * ) , DATE FROM matchalerts.`LOG_TEMP` WHERE RECEIVER NOT IN ( SELECT PROFILEID FROM matchalerts.`MATCHALERTS_TO_BE_SENT` WHERE FROM_REG =1) GROUP BY DATE";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      $resultArr = array();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr[] = $row;          
+      }              
+      return $resultArr; 
+
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
 }
 ?>
 

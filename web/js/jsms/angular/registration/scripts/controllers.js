@@ -18,6 +18,9 @@
         
 		$scope.MaxHeight = Constants.getWindowHeight();
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getHeaderHeight() - /*Top Header Height*/72;
+
+		localStorage.setItem($scope.screenName,new Date().getTime());
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myNext = function()
 		{
@@ -140,6 +143,15 @@
 		$scope.dob	  = $scope.fields[1];
         
 		$scope.hamOn = false;
+
+		var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -303,7 +315,6 @@
 			var countryField = $scope.fields[3];
 			var stateField = $scope.fields[4];
 			var cityField = $scope.fields[5];
-console.log(stateField.userDecision);
                         if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
                         {
                                 cityField.show=true;
@@ -396,6 +407,14 @@ console.log(stateField.userDecision);
 		
     $scope.degreeGroupMap = {};
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -467,11 +486,11 @@ console.log(stateField.userDecision);
       
       var pgDegree = $scope.fields[1];
       var pgCollege = $scope.fields[2];
-      var otherPgDegree = $scope.fields[3];
+  //    var otherPgDegree = $scope.fields[3];
       
-      var ugDegree = $scope.fields[4];
-      var ugCollege = $scope.fields[5];
-      var otherUgDegree = $scope.fields[6];
+      var ugDegree = $scope.fields[3];
+      var ugCollege = $scope.fields[4];
+//      var otherUgDegree = $scope.fields[6];
       
       var bUGDegree = false;
       var bPGDegree = false;
@@ -502,10 +521,10 @@ console.log(stateField.userDecision);
         }
         ugDegree.show = true;
         ugCollege.show = true;
-        otherUgDegree.show = true;
+//        otherUgDegree.show = true;
         
         pgCollege.show = true;
-        otherPgDegree.show = true;
+//        otherPgDegree.show = true;
       } else if (true == bUGDegree) {
         //PreFilled Ug_Degree With same value and hide it
         var output = {};
@@ -514,28 +533,28 @@ console.log(stateField.userDecision);
         ugDegree.show = false;
         
         ugCollege.show = true;
-        otherUgDegree.show = true;
+//        otherUgDegree.show = true;
         
         pgDegree.show = false;
         pgCollege.show = false;
-        otherPgDegree.show = false;
+//        otherPgDegree.show = false;
         Gui.resetField('s3','dindex',pgDegree.dindex);
         Gui.resetField('s3','dindex',pgCollege.dindex);
-        Gui.resetField('s3','dindex',otherPgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherPgDegree.dindex);
       } else {
         ugDegree.show = false;
         ugCollege.show = false;
-        otherUgDegree.show = false;
+//        otherUgDegree.show = false;
         Gui.resetField('s3','dindex',ugDegree.dindex);
         Gui.resetField('s3','dindex',ugCollege.dindex);
-        Gui.resetField('s3','dindex',otherUgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherUgDegree.dindex);
         
         pgDegree.show = false;
         pgCollege.show = false;
-        otherPgDegree.show = false;
+//        otherPgDegree.show = false;
         Gui.resetField('s3','dindex',pgDegree.dindex);
         Gui.resetField('s3','dindex',pgCollege.dindex);
-        Gui.resetField('s3','dindex',otherPgDegree.dindex);
+//        Gui.resetField('s3','dindex',otherPgDegree.dindex);
       }
      
     }
@@ -565,7 +584,7 @@ console.log(stateField.userDecision);
 	});
 	
 	//Social Details Controller
-	app.controller("SocialDetailsController",function($scope,$location,Gui,Validate,$timeout,Constants,TrackParams,$route){
+	app.controller("SocialDetailsController",function($scope,$location,Gui,Validate,$timeout,Constants,TrackParams,$route,Storage){
 
 		$scope.slideDir = Gui.getSlideDir();
 		
@@ -586,6 +605,14 @@ console.log(stateField.userDecision);
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getNextBtnHeight() - Constants.getHeaderHeight();
 		
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -633,9 +660,11 @@ console.log(stateField.userDecision);
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
       
-      if($scope.screenName=='s4' && indexPos==2)
+			if($scope.screenName=='s4' && indexPos==2)
 			{
-        $scope.initHoroscope();
+				$scope.initMuslimCaste();
+				$scope.initHoroscope();
+				$scope.initCasteNoBar();
 			}
 			$scope.hamOn = false;
 			$scope.enableNextBtn();
@@ -662,7 +691,7 @@ console.log(stateField.userDecision);
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 3;
+      var horoscopeFieldIndex = 6;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -670,9 +699,63 @@ console.log(stateField.userDecision);
         $scope.fields[horoscopeFieldIndex].show = false;
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
+	var sectIndex = 4;
+      if($scope.fields[religionFieldIndex].userDecision == 2)
+	{
+	$scope.fields[sectIndex].required = "false";
+	}
+	else
+	{
+	$scope.fields[sectIndex].required = "true";
+	}
     }
-    $scope.initHoroscope();
-		$scope.enableNextBtn();
+    $scope.initMuslimCaste =function()
+    {
+                                var origUD=Storage.getUserData("UD");
+	var allowedReligion = 2;
+	var religionFieldIndex= 2;
+	var muslimCasteFieldIndex=4;
+	var jamaatIndex = 3;
+	var sunniCaste = 152;
+	if($scope.fields[religionFieldIndex].userDecision==allowedReligion)
+	{
+		$scope.fields[muslimCasteFieldIndex].show = true;
+	}
+	else
+	{
+		$scope.fields[muslimCasteFieldIndex].show = false;
+		Gui.resetField('s4','dindex',muslimCasteFieldIndex);
+	}
+	if(origUD.caste==sunniCaste)
+	{
+		$scope.fields[jamaatIndex].show = true;
+	}
+	else
+	{
+		$scope.fields[jamaatIndex].show = false;
+		Gui.resetField('s4','dindex',jamaatIndex);
+	}
+    }
+	$scope.initCasteNoBar = function()    
+	{
+	        var allowedReligion = ['1','4','9'];
+		var religionFieldIndex= 2;
+		var casteNoBarFieldIndex = 5;
+
+	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = true;
+		} 
+		else 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = false;
+		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
+		}     
+	 }
+	$scope.initMuslimCaste();
+	$scope.initHoroscope();
+	$scope.initCasteNoBar();
+	$scope.enableNextBtn();
         //TrackParams.trackClientInfo($scope.screenName);
 	});
 
@@ -703,6 +786,13 @@ console.log(stateField.userDecision);
 		$scope.field_phone = $scope.fields[3];
     $scope.field_name = $scope.fields[0];
 		
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myBack = function()
 		{
@@ -945,6 +1035,7 @@ console.log(stateField.userDecision);
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1425,6 +1516,8 @@ console.log(stateField.userDecision);
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&AUTHCHECKSUM=&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },       
+
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},

@@ -304,6 +304,12 @@ Class ButtonResponseJSMS
 				$buttonPrimary = self::getUploadPhotoButton();
 				$responseArray["buttons"]["primary"][0] = $buttonPrimary;
 			}
+                        
+                        if(is_array($responseArray["buttons"]["others"]))
+                        foreach ($responseArray["buttons"]["others"] as $key => $value) {
+                            if($key!=0)
+                                $responseArray["buttons"]["others"][$key]['secondary'] = 'true';
+                        }
 		}
 		else
 		{
@@ -516,9 +522,8 @@ Class ButtonResponseJSMS
 			//var_dump($viewer);
 			//var_dump($type);die;
 
-			
+                        $params["isIgnored"] = $params["IGNORED"];
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
-
 			if($params["IGNORED"] == 1){
 			
 			$buttons["buttons"]["3"]["label"]="Unblock";
@@ -706,6 +711,7 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
+                
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -722,6 +728,9 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
+                if($page['primary'])  
+                    $button["primary"] = 'true';
+
 		$button = self::buttonMerge($button);
 		return $button;
 	}

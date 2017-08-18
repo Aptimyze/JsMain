@@ -19,6 +19,7 @@ class MobileCommon{
 	public static function isMobile()
 	{
 		//return true;
+
 		if(!sfContext::getInstance()->getRequest()->getAttribute("JS_MOBILE"))
 		{
 			if (JsConstants::$whichMachine != 'matchAlert') {
@@ -94,6 +95,16 @@ class MobileCommon{
 			return null;
 	}
 
+	public static function isCron()
+	{
+		$userAgent=$_SERVER[HTTP_USER_AGENT];
+		if(strpos($userAgent,"JsCli")!==FALSE)
+			return "C";
+		else
+			return null;
+	}
+
+
 	//checks if it is crm app
 	public static function isCrmApp()
 	{
@@ -130,8 +141,8 @@ class MobileCommon{
 	{
 		$bc=new BrowserCheck;
 		$k=$bc->IsHtml5Browser();
-		if(sfContext::getInstance()->getRequest()->getCookie("TO_OLD_JSMS")==1)
-			$k=0;
+//		if(sfContext::getInstance()->getRequest()->getCookie("TO_OLD_JSMS")==1)
+//			$k=0;
 		if(MobileCommon::isMobile() && !MobileCommon::isApp())
 		{
 			if($k)
@@ -321,8 +332,8 @@ class MobileCommon{
   }
   public static function getHttpsUrl()
   {
-	if(MobileCommon::isApp()=="I")
-		return true;
-	return false;
+        if(MobileCommon::isApp()=="A")
+                return false;
+        return true;
   }
 }

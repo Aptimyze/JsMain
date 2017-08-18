@@ -19,7 +19,8 @@
   {
 	foreach($this->notifications as $k=>$v)
 	{
-		if($v['SENT']=="P"||$v['SENT']=="N")
+    //error_log("ankita -".$v['NOTIFICATION_KEY']);
+		if(!in_array($v['NOTIFICATION_KEY'], NotificationEnums::$notEligibleForPolling) && ($v['SENT']=="P"||$v['SENT']=="N"))
 			$notifications[]=$v;
 		else
 			$this->countSent++;

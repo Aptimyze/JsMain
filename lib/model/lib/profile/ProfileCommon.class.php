@@ -114,7 +114,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$jpartnerObj=new JPartnerDecorated('',$page_source);
 		$mysqlObj=new Mysql;
 		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
+		$myDb=$mysqlObj->connect("$myDbName");		
 		$jpartnerObj->setPartnerDetails($profileid,$myDb,$mysqlObj);
 		$request=sfContext::getInstance()->getRequest();
 		if($jpartnerObj instanceof JPartnerDecorated && !$request->getAttribute("loginData"))
@@ -596,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                $ProfilePic120Url = $album[0]->getProfilePic120Url();
 				$ALBUM_CNT=count($album);
 			}		
 		}
@@ -623,6 +625,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		$ret[1]=$ALBUM_CNT;
 		$ret[2]=$stopAlbumView;
     $ret['THUMB_URL']=$szThumbnailURL;
+    $ret['PIC120_URL']=$ProfilePic120Url;
         return $ret;
 
 	}
@@ -1240,6 +1243,38 @@ public static function getAnnulled($profileid,$mstatus)
             }
         }
         return $result;
+    }
+    
+    
+    //performs actions as received from mailer and outputs the button array.
+    public static function performContactEngineAction($request,$pageSource=''){
+        
+        $request->setParameter("actionName","postAccept");
+        $request->setParameter("moduleName",'contacts');
+        $request->setParameter("pageSource",$pageSource);
+        ob_start();
+        sfContext::getInstance()->getController()->getPresentationFor("contacts", "postAcceptv2");
+        ob_end_clean();
+       
+    }
+    
+    
+    public static function getEduDegreesToRemove($highestEdu){
+        $arrPG_Degree = FieldMap::getFieldLabel("degree_grouping",'',1);
+        $arrPG_Group = $arrPG_Degree['PG'];
+        $arrUG_Group = $arrPG_Degree['UG'];
+        $arrPG_Group = explode(" , ",$arrPG_Group);
+        $arrUG_Group = explode(" , ",$arrUG_Group);
+        
+        if(in_array($highestEdu,$arrUG_Group))
+	{
+            return array('PG_DEGREE'=>'','PG_COLLEGE'=>'');
+        }
+        else{
+            return array();
+        }
+            
+       
     }
 }
 ?>

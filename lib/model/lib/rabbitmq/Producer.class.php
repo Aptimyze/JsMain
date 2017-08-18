@@ -71,10 +71,34 @@ class Producer
 	private function serverConnection($serverId)
 	{
 		try {
+			$startLogTime = microtime(true);
 			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
+			$endLogTime = microtime(true);
+
+			if(MQ::$logConnectionTime == 1){
+				$diff = $endLogTime-$startLogTime;
+				$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
+				if(file_exists($errorLogPath)==false)
+	      			exec("touch"." ".$logPath,$output);
+				error_log(round($diff,4)."\n",3,$logPath);
+			}
 			$this->setRabbitMQServerConnected(1);
 			return true;
 		} catch (Exception $e) {
+			//logging the counter for rabbitmq connection timeout in redis
+			if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
+				$memcacheObj = JsMemcache::getInstance();
+				if($memcacheObj){
+					$cachekey = "rmqtimeout_".date("Y-m-d");
+					$cacheValue = $memcacheObj->get($cachekey,null,0,0);
+					if(empty($cacheValue)==false){
+						$memcacheObj->incrCount($cachekey);
+					}
+					else{
+						$memcacheObj->set($cachekey,1,86400,0,'X');
+					}
+				}
+			}
 			return false;
 		}
 	}
@@ -120,8 +144,16 @@ class Producer
 			$this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
+			$this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
 			$this->channel->queue_declare(MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
+			$this->channel->queue_declare(MQ::UPDATE_CRITICAL_INFO_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        $this->channel->queue_declare(MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        $this->channel->queue_declare(MQ::UPDATE_JUSTJOINED_LAST_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        
 			$this->channel->queue_declare(MQ::CHAT_MESSAGE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
 			$this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
@@ -130,9 +162,14 @@ class Producer
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+            $this->channel->queue_declare(MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::INSTANT_EOI_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
       $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
-			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+			
+      $this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+       			$this->channel->queue_declare(MQ::PRODUCT_METRIC_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
 			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
@@ -141,8 +178,30 @@ class Producer
 						"x-message-ttl" => array("I", MQ::DELAY_WRITEMSG*1000))
 					);
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-			$this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
+      $this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
+      
+      //For Instant Mail
+      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array(
+            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
+            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
+						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
+					);
+      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
+      
+      //OutBound Event Queue
+      $this->channel->queue_declare(MQ::OUTBOUND_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
+      //RB interests queue
+      $this->channel->queue_declare(MQ::RB_INTERESTS_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      
+      //After Welcome call email for exclusive members delayed queue 
+      $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array("x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
+                                              "x-message-ttl" => array("I", MQ::EXCLUSIVE_MAIL_DELAY_UNIT*60*60*1000),
+                                              "x-dead-letter-routing-key"=>array("S",MQ::EXCLUSIVE_MAIL_SENDING_QUEUE)
+                                              ));
+      $this->channel->queue_declare(MQ::EXCLUSIVE_MAIL_SENDING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");
@@ -192,6 +251,20 @@ class Producer
 					break;
 				case "UPDATE_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "UPDATE_SEEN_PROFILE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_PROFILE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "MATCHALERTS_REG":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_REG_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+				case "UPDATE_CRITICAL_INFO_PROFILE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_CRITICAL_INFO_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "MATCHALERTS_LAST_SEEN":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_MATCHALERTS_LAST_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+				case "JUSTJOINED_LAST_SEEN":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_JUSTJOINED_LAST_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
 				case "UPDATE_FEATURED_PROFILE":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
@@ -253,10 +326,33 @@ class Producer
                 case 'DISCOUNT_HISTORY':
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DISC_HISTORY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                     break;
+                case 'COMMUNITY_DISCOUNT':
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                    break;
         case MQ::SCRIPT_PROFILER_PROCESS:
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCRIPT_PROFILER_Q,MQ::MANDATORY,MQ::IMMEDIATE);
           break;
+				case MQ::INSTANT_EOI_PROCESS:
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::INSTANT_EOI_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+        case MQ::DELAYED_MAIL_PROCESS:
+          $this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min,MQ::DELAYED_INSTANT_MAIL);
+          break;
 
+        case MQ::PRODUCT_METRICS:
+                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PRODUCT_METRIC_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+        break;
+        case MQ::OUTBOUND_EVENT:
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::OUTBOUND_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+
+        case "RBSendInterests":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::RB_INTERESTS_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+          break;
+      
+        case "EXCLUSIVE_DELAYED_EMAIL":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+        break;
+                                    
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

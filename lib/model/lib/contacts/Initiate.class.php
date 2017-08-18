@@ -22,6 +22,8 @@
  * @author Ankit Garg <ankit.garg@jeevansathi.com>
  * @extends ContactEvent
  */
+use MessageQueues as MQ; //MessageQueues-having values defined for constants used in this class.
+
 class Initiate extends ContactEvent{
 
   /**#@+
@@ -82,6 +84,17 @@ class Initiate extends ContactEvent{
    * @var string
    */
   private $stype;
+
+  /**
+   * This variable holds if RabbitMQ needs to be used or not
+   * @var bool
+   */
+  private $tasksThruQueue;
+
+  private $producerObj;
+
+
+
   /**#@-*/
 
   /**
@@ -107,6 +120,13 @@ class Initiate extends ContactEvent{
     $this->viewerMemcacheObject = new ProfileMemcacheService($this->viewer->getPROFILEID());
     $this->viewedMemcacheObject = new ProfileMemcacheService($this->viewed->getPROFILEID());
     $this->_sendMail=null;
+    $this->tasksThruQueue = true;
+
+    if($this->tasksThruQueue)
+    {
+		$this->producerObj = new Producer();
+    }
+
         if ($this->contactHandler->getPageSource() == "AP")
     $this->optionalFlag = true;
     }
@@ -157,7 +177,7 @@ class Initiate extends ContactEvent{
       $this->component->drafts = $this->component->eoiDrafts = $draftArray;
       $this->setPostDrafts($this->component->drafts);
     }
-    if ($this->contactHandler->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()=="Y" && FTOLiveFlags::IS_FTO_LIVE != 1)
+    if ($this->viewer->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()=="Y" && FTOLiveFlags::IS_FTO_LIVE != 1)
     {
       $this->component->innerTpl = 'profile_eoi_iuni_post';
     }
@@ -226,8 +246,30 @@ class Initiate extends ContactEvent{
   
         try
         {
-                $instantNotificationObj = new InstantAppNotification("EOI");
-                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+            $msg = $this->contactHandler->getElements("MESSAGE");
+            $splitArr = explode("--",$msg);
+            $correctedSplit = CommonUtility::correctSplitOnBasisDate($splitArr,1);
+            if($msg && $correctedSplit){
+                $id = $splitArr[3];
+                $body = array("otherUserId" => $this->viewed->getPROFILEID(), "selfUserId" => $this->viewer->getPROFILEID(), "message" => $splitArr[0],"exUrl" => '',"extraParams" => array('CHAT_ID'=>$id));
+                if(!$this->sendDataOfQueue(MQ::INSTANT_EOI_PROCESS, 'INSTANT_CHAT_EOI_MSG', $body))
+                {  
+                  $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+                  $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
+                }
+                unset($body);
+            }
+            else
+            {
+                if(!$this->sendDataOfQueue(
+                  MQ::INSTANT_EOI_PROCESS,
+                  'INSTANT_EOI',
+                  array("otherUserId" => $this->viewed->getPROFILEID(),"selfUserId" => $this->viewer->getPROFILEID())))
+                {
+                  $instantNotificationObj = new InstantAppNotification("EOI");
+                  $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
+                }
+            }
         }
         catch(Exception $e)
         {
@@ -239,7 +281,7 @@ class Initiate extends ContactEvent{
           $producerObj = new Producer();
           if($producerObj->getRabbitMQServerConnected())
           {
-            $notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID()); 
+            $notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->viewed->getPROFILEID(),"otherUserId" => $this->viewer->getPROFILEID());
             $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
           }
           unset($producerObj);
@@ -279,7 +321,7 @@ class Initiate extends ContactEvent{
         $this->contactHandler->getContactObj()->setPageSource($pageSource);
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
-        $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
+        $this->viewer->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
         
       }
                 $requestTimeOut = 300;
@@ -315,23 +357,49 @@ class Initiate extends ContactEvent{
       $isFiltered = $this->_makeEntryInContactsOnce();
 
 
-      try {
-        //send instant JSPC/JSMS notification
-        $producerObj = new Producer();
-        if ($producerObj->getRabbitMQServerConnected()) {
-          //Add for contact roster
-          $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N")), 'redeliveryCount' => 0);
-          $producerObj->sendMessage($chatData);
-        }
-        unset($producerObj);
-      } catch (Exception $e) {
-        throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-      }
+	    try {
+		    //send instant JSPC/JSMS notification
+		    if(JsConstants::$directRosterUpdate) {
+			    if($this->checkAndCreateOFUser($this->viewer->getPROFILEID()))
+			    {
+				    $this->updateRoster($this->viewer, $this->viewed, "intsent");
+			    }
+			    if ($this->contactHandler->getContactObj()->getFILTERED() == "Y")
+				    $roster = "NOTINUSE";
+			    else
+				    $roster = "intrec";
+			    if($this->checkAndCreateOFUser($this->viewed->getPROFILEID()))
+			    {
+				    $this->updateRoster($this->viewed, $this->viewer, $roster);
+			    }
+		    }
+		    else
+		    {
+			    $this->sendDataOfQueue(
+				    'CHATROSTERS', 'INITIATE',
+				    array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N"));
+		    }
+	    } catch (Exception $e) {
+		    throw new jsException("Something went wrong while creating Roster -" . $e);
+	    }
 
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
-      
+      else {
+             try {
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $this->sendDataOfQueue(
+            'MAIL', 'INITIATECONTACT',
+				array('type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>1 ));
+      } catch (Exception $e) {
+        
+      }
+
+          
+      }
+       
        $viewedEntryDate = $this->viewed->getENTRY_DT();
        $now = date("Y-m-d");
        $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
@@ -347,40 +415,42 @@ class Initiate extends ContactEvent{
     catch (Exception $e) {
       throw new jsException($e);
     }
-
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
-
+    // delete data of Match of the day
+    JsMemcache::getInstance()->set("cachedMM24".$this->viewed->getPROFILEID(),"");
+    JsMemcache::getInstance()->set("cachedMM24".$this->viewer->getPROFILEID(),"");
+    /** caching unset **/
+    sfContext::getInstance()->getRequest()->setParameter("caching",1);
+    SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$this->viewed->getPROFILEID());
+    SearchUtility::cachedSearchApi('del',sfContext::getInstance()->getRequest(),$this->viewer->getPROFILEID());
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->viewed->getPROFILEID());
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->viewer->getPROFILEID());
+    /** caching unset **/
   }
 
-  public function sendMail() {
+	public function sendMail()
+	{
+		$sender = $this->viewer;
+		$receiver = $this->viewed;
+		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
+                $channel =  MobileCommon::getChannel();
+                $date = date('Y-m-d H:i:s');
+                // the variable only logging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
+		if(! $this->sendDataOfQueue(
+            'MAIL', 'INITIATECONTACT',
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus,'type'=>'EOI','whichChannel' =>$channel,'currentTime'=>$date,'onlyLogging'=>0 ))
+		)
+		{
+			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
+		}
 
-    $viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-    $producerObj=new Producer();
-    if($producerObj->getRabbitMQServerConnected())
-      {
-        $sender = $this->contactHandler->getViewer();
-        $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'INITIATECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($sendMailData);
-    }
-    else
-    {
-
-    ContactMailer::InstantEOIMailer($this->viewed->getPROFILEID(), $this->viewer->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
-    }
-    //Update in CONTACTS_ONCE
-    
-             $this->_contactsOnceObj->insert(
-                $this->contactHandler->getContactObj()->getCONTACTID(),
-                $this->viewer->getPROFILEID(),
-                $this->viewed->getPROFILEID(),
-                $this->_getEOIMailerDraft(),
-                "Y");
-
-        
-        
-  }
+		//Update in CONTACTS_ONCE
+		$this->_contactsOnceObj->insert(
+			$this->contactHandler->getContactObj()->getCONTACTID(),
+			$this->viewer->getPROFILEID(),
+			$this->viewed->getPROFILEID(),
+			$this->_getEOIMailerDraft(),
+			"Y");
+	}
 
   /**#@+
    * @access private
@@ -584,12 +654,15 @@ class Initiate extends ContactEvent{
       }
       else{
                 if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
+                {
+                    
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
                 $this->viewed->getPROFILEID(),
                 $this->_getEOIMailerDraft(),
                 "N");
+                }
         return false;
       }
     }
@@ -634,8 +707,8 @@ class Initiate extends ContactEvent{
   }
 public function getNegativeScoreForUser()
   {
-    $senderRow=$this->contactHandler->getViewer();
-    $receiverRow=$this->contactHandler->getViewed();
+    $senderRow=$this->viewer;
+    $receiverRow=$this->viewed;
     $receiverDPP = UserFilterCheck::getInstance($senderRow, $receiverRow)->getDppParameters();
     $receiverProfileId=$receiverRow->getPROFILEID();
     $score=array('R'=>0,'A'=>0,'M'=>0);
@@ -686,5 +759,122 @@ public function getNegativeScoreForUser()
         
     }
     }
+
+    public function sendDataOfQueue($process, $type, $body)
+    {
+	    if($this->tasksThruQueue && $this->producerObj->getRabbitMQServerConnected())
+      {
+          $trackingData = array('process' => $process,
+                                  'data' =>
+                                  array(
+                                  'body' => $body,
+                                  'type' => $type,
+                                  'redeliveryCount' => 0)
+                                  );
+          $this->producerObj->sendMessage($trackingData);
+          return true;
+		  }
+      return false;
+    }
+
+	private function updateRoster($profile,$otherprofile,$roster)
+	{
+		$profileid = $profile->getPROFILEID();
+		$otherprofileid = $otherprofile->getPROFILEID();
+		$otherusername = $otherprofile->getUSERNAME();
+		$md5 = JsAuthentication::jsEncryptProfilechecksum($otherprofileid);
+		$uname = $otherusername."|".$md5;
+		$string = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+			<rosterItem>
+ 			<jid>".$otherprofileid."@".JsConstants::$openfireConfigInternal['SERVER_NAME']."</jid>
+ 			<nickname>".$uname."</nickname>
+ 			<subscriptionType>3</subscriptionType>
+ 			<groups>  
+ 				<group>".$roster."</group>
+ 			</groups>
+ 			</rosterItem>";
+		$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $profileid ."/roster";
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$headers = array();
+		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+		$headers[] = 'Content-Type: application/xml';
+        $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch,CURLOPT_POST,true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
+		curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		if($httpcode == 201)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	private function checkAndCreateOFUser($profileid)
+	{
+		$pass = md5($profileid);
+		$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $profileid;
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$headers = array();
+		$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+		$headers[] = 'Content-Type: application/json';
+        $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if ($httpcode == 200) {
+			return true;
+		} else {
+			$string = "{\"username\": \"" . $profileid . "\",\"password\": \"" . $pass . "\",\"properties\": {\"property\": [{\"@key\": \"createroster\",\"@value\": \"true\"}]}}";
+			$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users";
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
+
+			$headers = array();
+			$headers[] = 'Authorization: ' . JsConstants::$openfireRestAPIKey;
+			$headers[] = 'Content-Type: application/json';
+            $headers[] =  "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+            
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+			curl_exec($ch);
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			if($httpcode == 201 || $httpcode == 200)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+	}
+
+
 
 } // end of Initiate Class.

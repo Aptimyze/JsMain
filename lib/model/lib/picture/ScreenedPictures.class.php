@@ -271,6 +271,8 @@ class ScreenedPicture extends Picture
 	{
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->ins($paramArr);
+		if(array_key_exists("PROFILEID",$paramArr))
+			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 		return $status;
 	}
 	/**
@@ -280,12 +282,53 @@ class ScreenedPicture extends Picture
         **/
         public function get($paramArr=array(),$getFromMasterR='')
         {
-		if($getFromMasterR=='1')
-			 $photoObj=new PICTURE_NEW("newjs_masterRep");
+		if (PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__)) 
+		{
+			if(PictureNewCacheLib::getInstance()->isCached($paramArr,__CLASS__))
+			{
+				$result = PictureNewCacheLib::getInstance()->get($paramArr, __CLASS__);
+				if (false !== $result) 
+				{
+					$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+				}
+				$this->logCacheConsumed();
+			}
+			else
+			{
+				$photoObj=new PICTURE_NEW;
+				$result=$photoObj->get(array("PROFILEID"=>$paramArr['PROFILEID']));
+				foreach($result  as $k=>$v)
+					$encodedData[$v['ORDERING']] = json_encode($v);
+				PictureNewCacheLib::getInstance()->cacheThis($paramArr['PROFILEID'],$encodedData);
+				$this->logTableConsumed();
+			}
+			$result = PictureNewCacheLib::getInstance()->processWhere($result,$paramArr);
+		}
 		else
-			$photoObj=new PICTURE_NEW;
-                $detailArr=$photoObj->get($paramArr);
-                return $detailArr;
+		{
+			if($getFromMasterR=='1')
+				 $photoObj=new PICTURE_NEW("newjs_masterRep");
+			else
+				$photoObj=new PICTURE_NEW;
+			$result=$photoObj->get($paramArr);
+		}
+		return $result;
+	}
+	public function logCacheConsumed()
+	{
+		return;
+		$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
+		$funName  = "PIC_NEW";
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+	}
+	public function logTableConsumed()
+	{
+		return;
+		$redisKey = 'picNewFromTable' . '_' . date('Y-m-d');
+		$funName  = "PIC_NEW";
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
 	}
 	 /**
          Wrapper for PICTURE_NEW->edit()
@@ -297,6 +340,7 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->edit($paramArr,$pictureId,$profileId);
+		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 	
@@ -304,6 +348,8 @@ class ScreenedPicture extends Picture
         {
     		$photoObj=new PICTURE_NEW;
                 $count=$photoObj->del($paramArr);
+		if(array_key_exists("PROFILEID",$paramArr))
+			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
                 return $count;
 
         }
@@ -312,6 +358,8 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateOrdering($paramArr);
+		if(array_key_exists("PROFILEID",$paramArr))
+			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 	}
 	
 	public function getMaxOrdering($profileId)
@@ -338,12 +386,14 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateScreenedPhotosOrdering($profileid);
+		PictureNewCacheLib::getInstance()->removeCache($profileid);
 	}
 
 	public function insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl='',$ProfilePic120Url='',$ProfilePic235Url='',$ProfilePic450Url='',$OriginalPicUrl='',$SearchPicUrl,$PicFormat)
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl,$ProfilePic120Url,$ProfilePic235Url,$ProfilePic450Url,$OriginalPicUrl,$SearchPicUrl,$PicFormat);
+		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 
@@ -367,18 +417,104 @@ class ScreenedPicture extends Picture
                 $status=$photoObj->hasUnscreenedTitle($profileId);
                 return $status;
 	}
-	
 	public function getMultipleUserProfilePics($whereCondition)
-        {
-		$photoObj=new PICTURE_NEW("newjs_masterRep");
-                $profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
-                return $profilePicsArr;
+	{
+		if( array_key_exists("PROFILEID",$whereCondition))
+		{
+			$allPics = $this->getMultipleUserPics($whereCondition);
+			foreach($allPics as $profileid=>$pic)
+			{
+				$final[$profileid]=$pic[0];
+			}
+			return $final;
+		}
+		else
+		{
+			$photoObj=new PICTURE_NEW("newjs_masterRep");
+			$profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
+			return $profilePicsArr;
+		}
 	}
-
+	public function getMultipleUserPics($whereCondition)
+        {
+		$final = array();
+		if(array_key_exists("PROFILEID",$whereCondition))
+		{
+			$paramArr = $whereCondition;
+			if(is_array($whereCondition['PROFILEID']))
+			{
+				unset($paramArr['PROFILEID']);
+				$paramArr['PROFILEID']=current($whereCondition['PROFILEID']);
+				if ( PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__))
+				{
+					foreach($whereCondition['PROFILEID'] as $k=>$pid)
+					{
+						$paramArr['PROFILEID']= $pid;
+						if(PictureNewCacheLib::getInstance()->isCached($paramArr,__CLASS__))
+						{
+							$result = PictureNewCacheLib::getInstance()->get($paramArr, __CLASS__);
+							if (false !== $result)
+							{
+								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+							}							
+							$this->logCacheConsumed();
+						}
+						else
+						{
+							$queryProfiles[]=$pid;
+						}
+						if(is_array($result))
+							$final[$pid]=$result;
+						unset($result);
+					}
+					if(is_array($queryProfiles))
+					{
+						$photoObj=new PICTURE_NEW();
+						$data  = $photoObj->getMultiProfilesData($queryProfiles);
+						foreach($data  as $cProfileid=>$cData)
+						{
+							//$final[$cProfileid] = $cData;
+							unset($encodedData);
+							foreach($cData as $cOrdering=>$cPicArr)
+								$encodedData[$cOrdering] = json_encode($cPicArr);
+							PictureNewCacheLib::getInstance()->cacheThis($cProfileid,$encodedData);
+							$paramArr['PROFILEID'] = $cProfileid;
+							if(is_array($cData))
+								$final[$cProfileid]=$cData;
+							unset($result);
+						}
+						$this->logTableConsumed();
+					}
+					return $final;
+				}
+				else
+				{
+					$photoObj=new PICTURE_NEW("newjs_masterRep");
+					$profilePicsArr=$photoObj->getMultiProfilesData($whereCondition['PROFILEID']);
+					return $profilePicsArr;
+				}
+			}
+			else
+			{
+				return $this->get($whereCondition);
+			}
+		}
+	}
 	public function getMultipleUserPicsCount($whereCondition)
         {
-                $photoObj=new PICTURE_NEW("newjs_masterRep");
-                $profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
+		if( is_array($whereCondition) && array_key_exists("PROFILEID",$whereCondition) && count($whereCondition)==1)
+		{
+			$profilesData = $this->getMultipleUserPics($whereCondition);
+			foreach($profilesData as $profileid=>$pics)
+			{
+				$profilePicsCountArr[$profileid]=count($pics);
+			}
+		}
+		else
+		{
+			$photoObj=new PICTURE_NEW("newjs_masterRep");
+			$profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
+		}
                 return $profilePicsCountArr;
         }
 

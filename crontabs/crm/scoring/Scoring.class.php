@@ -89,6 +89,10 @@ class Scoring
         $this->newmodel[SHOW_HOROSCOPE]     = $this->SHOW_HOROSCOPE;
         $this->newmodel[MTONGUE]            = $this->MTONGUE;
         $this->newmodel[DOB]                = $this->DTOFBIRTH;
+	if($this->LAST_LOGIN_DT){
+		$lastLoginDt =explode(" ", $this->LAST_LOGIN_DT);
+		$this->LAST_LOGIN_DT =$lastLoginDt[0];
+	}
         $this->newmodel[LAST_LOGIN_DT]      = $this->LAST_LOGIN_DT;
         $this->newmodel[ENTRY_DT]           = $this->ENTRY_DT;
 
@@ -113,6 +117,15 @@ class Scoring
                 $this->newmodel[CUR_TYPE]                = $rowpd['CUR_TYPE'];
             }
         }
+
+        // Adding Channel Code
+	$channel ='Offline';
+        $sqlCh = "SELECT CHANNEL from MIS.REG_TRACK_CHANNEL WHERE PROFILEID='$this->PROFILEID' AND PAGE_TYPE='Page1' ORDER BY ID DESC LIMIT 1";
+        $resCh = mysql_query($sqlCh, $myDb) or die($sqlCh . mysql_error($myDb));
+        if($rowCh = mysql_fetch_array($resCh)) {
+                $channel = $rowCh['CHANNEL'];
+        }
+	$this->newmodel[CHANNEL]  = trim($channel);
 
         //Activity Data
         $this->newmodel[Search_In14Days] = "";

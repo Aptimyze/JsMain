@@ -687,14 +687,25 @@ class commonActions extends sfActions
             
         }
         
+        if($layerToShow==18)
+        {
+            $occupText = $request->getParameter("occupText");
+            if($occupText)
+            {
+                (new MIS_CAL_OCCUPATION_TRACK())->insert($loginData['PROFILEID'],$occupText);
+            }
+
+        }        
+
         if($layerToShow==15)
         {
             $namePrivacy = $button=='B1' ? 'Y' : 'N';
             
             
             $nameArr=array('DISPLAY'=>$namePrivacy);
-            $name_pdo = new incentive_NAME_OF_USER();
-            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            //lib has been used in case of direct call to store. Lib ensures that caching functionality is also implemented.
+            $name_pdo = new NameOfUser();
+            $name_pdo->updateName($loginData['PROFILEID'],$nameArr);
             
         }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
@@ -727,11 +738,31 @@ class commonActions extends sfActions
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
         }
+
+        if($calObject['LAYERID']== 14)
+       {  
+        $profileObject = LoggedInProfile::getInstance('newjs_master');
+                            $contactNumOb=new ProfileContact();
+                            $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+        $this->altEmailUser = $numArray['0']['ALT_EMAIL'];
+       }
                 
 		if($calObject['LAYERID']==1)
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
+        $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;         
+        $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+        if($calObject['LAYERID']==19)
+        {
+        $this->discountPercentage = $request->getParameter('DISCOUNT_PERCENTAGE');
+        $this->discountSubtitle  = $request->getParameter('DISCOUNT_SUBTITLE');
+        $this->startDate  = $request->getParameter('START_DATE');
+        $this->oldPrice = $request->getParameter('OLD_PRICE');
+        $this->newPrice = $request->getParameter('NEW_PRICE');
+        $this->time = floor($request->getParameter('LIGHTNING_CAL_TIME')/60);
+        $this->symbol = $request->getParameter('SYMBOL');
+        }
         $this->setTemplate('CALJSMS');
 
     }
@@ -936,4 +967,71 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
 
 
         }
+    public function executeCheckPasswordV1(sfWebRequest $request)
+    {
+        $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+        $password =  rawurldecode( json_decode($request->getParameter('data') , true)['pswrd'] );
+        if(PasswordHashFunctions::validatePassword($password, $loggedInProfileObj->getPassword()))
+        {
+            $response = array('success' => 1);
+        }
+        else
+        {
+            $response = array('success' => 0);
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
+
+    public function executeLogOtherUrlV1(sfWebRequest $request)
+    {
+        $data = json_decode($request->getParameter('data'), true);
+        if(isset($data['url']))
+        {
+            $url = $data['url'];
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(
+                LoggingEnums::PHISHING_URL => $url,
+                LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
+    public function executeUploadDocumentProof(sfWebRequest $request)
+    {
+            $this->done = false;
+            $this->msg = "";
+                if ($request->getParameter("submitForm")) {
+                        $editFieldNameArr["MSTATUS"] = $_POST["MSTATUS"];
+                        $editFieldNameArr["MSTATUS_PROOF"] = $_FILES["MSTATUS_PROOF"];
+                        $request->setParameter("editFieldArr",$editFieldNameArr);
+                        $request->setParameter("docOnly",true);
+                        $request->setParameter("internally",true);
+                        $_SERVER["HTTP_X_REQUESTED_BY"] = true;
+                        ob_start();
+                        sfContext::getInstance()->getController()->getPresentationFor('profile','ApiEditSubmitV1');
+                        $returnDocumentUpload = ob_get_contents(); 
+                        ob_end_clean();
+                        $a = json_decode($returnDocumentUpload,true);
+                        if($a["responseStatusCode"] != 0){
+                                $this->msg = $a["error"];
+                                $this->done = false;
+                        }else{
+                                $this->msg = "Document Uploaded successfully";
+                                $this->done = true;
+                        }
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }else{
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }
+    }
 }

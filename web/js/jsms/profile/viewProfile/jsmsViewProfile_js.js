@@ -442,18 +442,26 @@ handleBackButton = function()
     if(typeof getProfileBackLink != "function")
         return;
 	var backBtnHtml = getProfileBackLink();
-    
+   
 	var backLocation = "";
 	if(backBtnHtml && backBtnHtml.length && backBtnHtml.indexOf('href') !=-1)		
 	{
 		var dummy = document.createElement('div');
 		dummy.innerHTML = backBtnHtml;
 		backBtnAnchor = dummy.children[0];
-		if(backBtnAnchor.href.indexOf('search')!=-1)
+		if(backBtnAnchor.href.indexOf('search')!=-1 && backBtnAnchor.href.indexOf('page=idd')<0 && getProfileOffset()!='')
+		{
 			backLocation = backBtnAnchor.href + '&page=idd' + getProfileOffset();
+		}
+		else if(backBtnAnchor.href.indexOf('page=idd')!=-1 && getProfileOffset()!=''){
+			pattern = /idd\d*/;
+			backLocation = backBtnAnchor.href.replace(pattern,'idd'+getProfileOffset());
+		}
 		else
 			backLocation = backBtnAnchor.href ;
+		
 	}
+	
 	
 	if(backLocation.length)
 	{
@@ -538,13 +546,18 @@ $(document).ready(function()
 	
     handleBackButton();
     handlePreviousNext();	
-    initGunnaScore();    
-    
+    initGunnaScore();
+
+    getMatchingCount();
+	
+	astroCompatibility();    
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
 	if($(errorContent).length)
 	{
 		setTimeout(function(){disableLoader();},300);
 	}
+
+	shortContentVP();
     
 });
 getCommHistory = function()
@@ -560,7 +573,7 @@ getCommHistory = function()
 getGunnaScore = function()
 {
     return $.ajax({
-				url : '/api/v1/profile/gunascore?oprofile='+getProfileCheckSum(),
+				url : '/api/v1/profile/gunascore?oprofile='+getProfileCheckSum()+"&sameGender="+sameGender,
 				data : ({dataType:"json"}),
 				async:true,
 				timeout:30000,
@@ -575,8 +588,8 @@ initGunnaScore = function()
     {
         if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
-        //Show Guna Score String
-        if(data.responseStatusCode==0 && data.SCORE)
+        //Show Guna Score String        
+        if(data.responseStatusCode==0 && (data.SCORE != 0 && data.SCORE !=null && data.SCORE != "null"))
         {
             var col = "green";
             if(parseInt(data.SCORE)<18)
@@ -636,4 +649,110 @@ getViewProfileBackLocation = function()
     return viewBackLocation;
 }
 
+astroCompatibility = function()
+{
+	$(".js-astroCompMem,.js-freeAstroComp").click(function(){		
+		$.ajax({
+			method: "POST",
+			url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1&username="+username,			
+			async:true,
+			timeout:20000,
+			success:function(response){
+			}
+		});
+		if($(this).hasClass('js-astroCompMem')){
+			$(".js-buttonAstro").html("Buy Astro Compatibility");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();				
+		}
+		else{
+			$(".js-buttonAstro").html("Upgrade Membership");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();		
+		}
+		
+	});
+	var clickedElem = false;
+	$(".js-astroMem").click(function(){
+
+		if(astroSent == 1 && clickedElem == false)
+		{
+			clickedElem = true;
+			window.location = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username;
+		}
+		
+		//removing ajax call in this case as ajax doesnt let us download the pdf	
+		// $.ajax({
+		// 	method: "POST",
+		// 	url:"/api/v1/profile/astroCompatibility?otherProfilechecksum="+otherProfilechecksum+"&sendMail=1&username="+username,
+		// 	async:true,
+		// 	timeout:20000,
+		// 	success:function(response){
+		// 	}
+		// });
+		$(".js-buttonAstro").html("OK");
+			$(".js-textAstro").html("Astro compatibility report with this member has been sent to your registered Email ID");
+			$(".js-buttonAstro").click(function(){
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");
+			});
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");
+			closeAstroLayer();
+
+	});
+}
+
+function closeAstroLayer()
+{
+	$('#astroReportLayer').on('touchstart', function(e) {   
+			e.stopPropagation(); //stops propagation
+			if(e.target.id == "astroReportLayer")
+			{
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");	
+			}
+			e.stopPropagation(); 
+			e.preventDefault();
+			return false;
+		});
+}
+
+getMatchingCount = function()
+{
+	var totalFields = $(".js-countFields").length;
+	$(".js-total").html(totalFields);
+	$(".js-matching").html($(".checkmarkVP").length);
+}
+
 setTimeout(enableLoader,50);
+
+shortContentVP = function(){
+	
+	
+	$('.js-cut').each(function(){
+		if($(this).html().length>60)
+		{
+			
+			var content = $(this).html();
+			var c = content.substr(0, 50);
+            var h = content.substr(50, content.length - 50);           
+			var newText = c +'<span class=\"js-moreVP color1\">...more</span><div class="\dispnone\">'+ h +'</div>';
+			$(this).html(newText);
+		}
+	})
+
+	$('.js-moreVP ').click(function(){
+
+		$(this).css('display','none').next().css('display','inline');
+	})
+
+
+
+
+
+}
+
+
+

@@ -84,6 +84,13 @@ class jsValidatorMail extends sfValidatorBase
       throw new sfValidatorError($this, 'err_email_duplicate', array('value' => $value, 'err_email_duplicate' => $this->getOption('err_email_duplicate')));
     }
     
+    $negativeProfileListObj = new incentive_NEGATIVE_LIST;
+    $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
+    if($negativeEmail)
+    {
+      file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$value."\t".date("Y-m-d H:i:s")."\t".$source."\n",FILE_APPEND);
+	    throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
+    }
     if ($this->_emailDeleted($value,$activatedFlag))
     {
 	  $this->_trackDuplicateEmail($value,'Y',1);
@@ -98,13 +105,6 @@ class jsValidatorMail extends sfValidatorBase
       throw new sfValidatorError($this, 'err_email_same', array('value' => $value, 'err_email_same' => $this->getOption('err_email_same')));
     }
 	$this->_trackDuplicateEmail($value,'N');
-    $negativeProfileListObj = new incentive_NEGATIVE_LIST;
-    $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
-    if($negativeEmail)
-    {
-      file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$value."\t".date("Y-m-d H:i:s")."\t".$source."\n",FILE_APPEND);
-	    throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
-    }
     return $value;
   }
   

@@ -154,6 +154,12 @@ jsmsprivacypolicySuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [-*]
    layout: jsmsMobLayout
+jsmsprivacypolicyampSuccess:
+   metas:
+    title: Jeevansathi Matrimonials- Privacy Policy
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [-*]
+   layout: jsmsMobAmpLayout
 jsmsfraudalertSuccess:
    metas:
     title: Jeevansathi Matrimonials- Fraud Alert
@@ -232,6 +238,31 @@ deleteOptionSuccess:
    javascripts: []
    layout: jsmsMobLayout 
 
+hideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout 
+
+unHideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [jsms/settings/mobHideProfile_js]
+   layout: jsmsMobLayout
+
+unHideResultSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout 
+
+hideCheckPasswordSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [jsms/settings/mobHideProfile_js]
+   layout: jsmsMobLayout 
+
+hideDurationSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout
+
 deleteReasonSuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [jsms/settings/mobDeleteProfile_js]
@@ -247,3 +278,16 @@ jsmsVerificationStaticPageSuccess:
    javascripts: [jsms/common/verificationIcon_js]
    layout: jsmsMobLayout
 
+oldMobileSiteSuccess:
+  metas:
+    title:        Jeevansathi Matrimonials- Login
+  stylesheets:    [jsms/oldMobileSite/oldMobileSitePage]
+  javascripts: []
+  layout: jsmsMobLayout
+
+privacySettingsSuccess:
+    metas:
+      title: Privacy Settings-Jeevansathi
+    stylesheets: [-*,jsms/settings/settings_css]
+    javascripts: [-*,jsms/settings/privacySettings_js]
+    layout: jsmsMobLayout

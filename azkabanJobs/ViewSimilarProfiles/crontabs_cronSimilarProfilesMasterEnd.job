@@ -1,0 +1,3 @@
+type=command
+dependencies=crontabs_cronSimilarProfilesShard1,crontabs_cronSimilarProfilesShard2,crontabs_cronSimilarProfilesShard3
+command=${php5} ${docRoot}/crontabs/cronSimilarProfilesMasterEnd.php

@@ -182,7 +182,6 @@ class negativeTreatment
         // print "Original Email Arr ---  ";
         // print_r($emailArr);
         // print "End Original Email Arr ---  ";
-
         if (!empty($emailArr) && is_array($emailArr)) {
             // get compherensive list of email numbers for profiles
             $fullDetEmailArr    = $this->oldEmailObj->getEmailProfilesAndEmail($emailArr);
@@ -315,12 +314,14 @@ class negativeTreatment
             $delete_reason    = 'Other reasons';
             $specify_reason   = 'Negative List';
             foreach ($this->profileArr as $key => $profileid) {
-                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED');
+                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED,EMAIL');
                 $profileid = $jProfile['PROFILEID'];
                 $activated = $jProfile['ACTIVATED'];
                 $username  = $jProfile['USERNAME'];
+                $email     = $jProfile['EMAIL'];
                 if ($profileid && $activated != 'D') {
                     // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
+                    $this->sendEmailOnDelete($profileid,$username,$email);
                     $this->deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username);
                     $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
@@ -364,6 +365,19 @@ class negativeTreatment
 
     public function deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username)
     {
+        //Start:JSC-2551:Log before pushing to RabbitMQ for deletion 
+        $profileDeleteObj = new PROFILE_DELETE_LOGS();
+        $startTime = date('Y-m-d H:i:s');
+        $arrDeleteLogs = array(
+            'PROFILEID' => $profileid,
+            'DELETE_REASON' => $delete_reason,
+            'SPECIFY_REASON' => $specify_reason,
+            'USERNAME'  => $username,
+            'CHANNEL' => CommonFunction::getChannel(),
+            'START_TIME' => $startTime,
+        );
+        $profileDeleteObj->insertRecord($arrDeleteLogs);
+        //End:JSC-2551:Log before pushing to RabbitMQ for deletion 
         $jprofileObj         = new JPROFILE;
         $markDelObj          = new JSADMIN_MARK_DELETE;
         $ProfileDelReasonObj = new NEWJS_PROFILE_DEL_REASON;
@@ -379,6 +393,29 @@ class negativeTreatment
         $AP_ProfileInfo->Delete($profileid);
         $AP_MissedServiceLog->Update($profileid);
         $AP_CallHistory->UpdateDeleteProfile($profileid);
+        
+        //Start: JSC-2551: Push to RabbitMQ
+        $producerObj=new Producer();
+	if($producerObj->getRabbitMQServerConnected()){
+            $sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+            $producerObj->sendMessage($sendMailData);
+            $sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+            $producerObj->sendMessage($sendMailData);
+        }else{
+            $path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+            $cmd = JsConstants::$php5path." -q ".$path;
+            passthru($cmd);
+        }
+        //End:JSC-2551:Push to RabbitMQ
+        
+        //Start:JSC-2551: Mark Completion in logs
+        $arrDeleteLogs = array(
+            'END_TIME' => date('Y-m-d H:i:s'),
+            'COMPLETE_STATUS' => 'Y',
+            'INTERFACE' =>'B',
+        );
+        $profileDeleteObj->updateRecord($profileid, $startTime, $arrDeleteLogs);
+        //End:JSC-2551: Mark Completion in logs
     }
     
     public function checkEmail($email)
@@ -407,8 +444,13 @@ class negativeTreatment
     public function fetchProfileDetailsFromNegative($negType, $negativeVal)
     {
         $negativeListObj        =new incentive_NEGATIVE_LIST('newjs_slave');
-
-        $dataArr =$negativeListObj->getProfileData($negType,$negativeVal);
+        //add 91 code if agent has submitted 10 digit phone number to fetch negative profile details
+        $inClause = false;
+        if($negType == "PHONE_NUM" && strlen($negativeVal) == 10){
+            $negativeVal = array($negativeVal,"91".$negativeVal);
+            $inClause = true;
+        }
+        $dataArr =$negativeListObj->getProfileData($negType,$negativeVal,$inClause);
 	if(is_array($dataArr)){
 		$id =$dataArr['SUBMISSION_ID'];
 		$submissionListObj =new incentive_NEGATIVE_SUBMISSION_LIST('newjs_slave');
@@ -439,6 +481,16 @@ class negativeTreatment
 	if($status1>=1 || $status2>=1)
 		return true;
 	return;
-    }	
-
+    }
+    public function sendEmailOnDelete($profileid, $username, $email) {
+        $subject = "Your Profile $username has been deleted due to terms of use violation";
+        //print_r("\nUsername : $username\nEmail: $email\nProfile: $profileid\n<br>Subject: $subject<br>\n");
+        $top8Mailer = new EmailSender(MailerGroup::TOP8, '1858');
+        $tpl = $top8Mailer->setProfileId($profileid);
+        $tpl->getSmarty()->assign("toName", $username);
+        $tpl->setSubject($subject);
+        $top8Mailer->send();
+        $emailLoggerObg = new incentive_NEGATIVE_DELETE_EMAIL_LOG();
+        $emailLoggerObg->insertNegativeDeleteLogEntry($profileid);
+    }
 }

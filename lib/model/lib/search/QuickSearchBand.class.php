@@ -55,16 +55,31 @@ class QuickSearchBand extends SearchParamters
 
 		if(isset($jsonArr["LINCOME"]) && isset($jsonArr["HINCOME"]))
                 {
-                        $rArr["minIR"] = $jsonArr["LINCOME"];
-                        $rArr["maxIR"] = $jsonArr["HINCOME"];
+                        $rArr["minIR"] = 0;
+                        $rArr["maxIR"] = 19;
+                        if($jsonArr["LINCOME"] != ""){
+                                $rArr["minIR"] = $jsonArr["LINCOME"];
+                        }
+                        if($jsonArr["HINCOME"] != ''){
+                                $rArr["maxIR"] = $jsonArr["HINCOME"];
+                        }
                 
                         $dArr = '';
                         $incomeType = "R";
                         $typeOfI='';
+                        /*if($formArr["partner_country_arr"]==51 && $jsonArr["LINCOME"] && $jsonArr["LINCOME"]!='0' && $jsonArr["LINCOME_DOL"]=='0'){
+                                        $jsonArr["LINCOME_DOL"] = 12;
+                        }*/
                         if(isset($jsonArr["LINCOME_DOL"]) && isset($jsonArr["HINCOME_DOL"]))
                         {
-                                $dArr["minID"] = $jsonArr["LINCOME_DOL"];
-                                $dArr["maxID"] = $jsonArr["HINCOME_DOL"];
+                                $dArr["minID"] = 0;
+                                $dArr["maxID"] = 19;
+                                if($jsonArr["LINCOME_DOL"] != ''){
+                                        $dArr["minID"] = $jsonArr["LINCOME_DOL"];
+                                }
+                                if($jsonArr["HINCOME_DOL"] != ''){
+                                        $dArr["maxID"] = $jsonArr["HINCOME_DOL"];
+                                }
                                 $incomeType = "B";
                                 $typeOfI=1;
                         }       
@@ -147,7 +162,7 @@ class QuickSearchBand extends SearchParamters
 			if($tempCity)
 			{
 				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
-				$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+				//$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
                                 $tempCountry[] = 51;
 				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}

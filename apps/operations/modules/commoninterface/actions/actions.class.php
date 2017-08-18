@@ -69,6 +69,7 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
+			$this->profileid = $this->profile->getPROFILEID();
 			//global $protect;
 			//JsCommon::oldIncludes();
 			//$protect = new protect();
@@ -229,7 +230,19 @@ class commoninterfaceActions extends sfActions
 		else
 			$cityName = "";
 		$membershipObj = new Membership;
-		$membership_details["serviceid"] = $activeServiceDetails["SERVICEID"];
+		
+		//auto bill RB for dummy profile with Js Exclusive and Js Boost
+		$servicesObj = new billing_SERVICES("newjs_slave");
+		$RBServiceID = "T".$mainServiceDuration;
+		$RBDetails = $servicesObj->fetchServiceDetails(array($RBServiceID));
+		if(is_array($RBDetails) && is_array($RBDetails[$RBServiceID]) && $RBDetails[$RBServiceID]['ACTIVE'] == 'Y'){
+			$autoActivateServices = $activeServiceDetails["SERVICEID"].",".$RBServiceID;
+		}
+		else{
+			$autoActivateServices = $activeServiceDetails["SERVICEID"];
+		}
+		
+		$membership_details["serviceid"] = $autoActivateServices;
 		$membership_details["profileid"] = $dummyProfileID;
         $membership_details["custname"] = $dummyUsername;
 		$membership_details["username"] = $dummyUsername;
@@ -244,9 +257,15 @@ class commoninterfaceActions extends sfActions
 		$membership_details["curtype"] = "RS";
 		$membership_details["deposit_date"] = date('Y-m-d');
 		$serviceObj = new billing_SERVICES("newjs_slave");
-		$priceRes= $serviceObj->fetchServiceDetailForRupeesTrxn($membership_details["serviceid"], 'desktop');
+		$priceRsDetails= $serviceObj->fetchServiceDetailForRupeesTrxn(explode(",",$membership_details["serviceid"]), 'desktop');
+		
+		$totalActualAmount = 0;
+		foreach ($priceRsDetails as $k1 => $v1) {
+			$totalActualAmount += $v1['PRICE'];
+		}
 		$membership_details["deposit_branch"] = "NOIDA";
-		$membership_details["discount"] = $priceRes["PRICE"];
+		$membership_details["discount"] = $totalActualAmount;
+		$membership_details["amount"] = 0;
 		$membership_details["discount_type"] = "2";
 		$membership_details["discount_reason"] = "100% disount for dummy profile";
 		$membership_details["entry_from"] = "N";
@@ -267,14 +286,14 @@ class commoninterfaceActions extends sfActions
     else
     	return false;
   }
-  /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
+  /*Transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
   * @param: $params
-  * MINI-VD 
+  * MINI-VD Function
   */
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_master');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
@@ -297,7 +316,7 @@ class commoninterfaceActions extends sfActions
 
   /* function executeUploadVD
   * @param: request Object
-  * MINI-VD STEP-1 
+ * MINI-VD STEP-0 
   */
   public function executeUploadVD(sfWebRequest $request)
   {
@@ -326,7 +345,7 @@ class commoninterfaceActions extends sfActions
   /* function executeUpdateVDRecords
   * uploads data from table to VD tables
   * @param: request Object
-  * MINI-VD STEP-2
+  * MINI-VD STEP-1
   */
   public function executeUpdateVDRecords(sfWebRequest $request)
   {
@@ -335,7 +354,8 @@ class commoninterfaceActions extends sfActions
 	if(in_array("IA",$privilage))
 	{
 		//Start -transfer records from client table to temp table
-		$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
+		//$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
+		$params["limit"] =1000000;
 		$this->transferVDRecords($params);
 		//End -transfer records        
 

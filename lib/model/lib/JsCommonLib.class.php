@@ -133,7 +133,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $dncOb= new dnc_DNC_LIST();
 
                 if ($loggedInProfileObj->getPHONE_MOB()||$loggedInProfileObj->getPHONE_RES()){
-                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_RES()));
+                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_WITH_STD()));
                 if (is_array($resultArray)) return true;
                 	}
 
@@ -524,13 +524,15 @@ public static function insertConsentMessageFlag($profileid) {
 				$CODE['COUNTRYRES']='gnf';
 			}
 			$ARR=array_filter(explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_INCOME())));
+                        $inc = IncomeCommonFunction::getIncomeDppFilterArray(implode(",",$ARR));
+                        /*
                         $incomeObj = new IncomeMapping;
-                        $ARR = $incomeObj->removeNoIncome($ARR);
-                        $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
-                        $result = array_intersect($ARR, $incomeArray);
-                        
-			if(is_array($ARR) && !empty($ARR)){
-                                if(in_array($profile->getINCOME(),$ARR) || !empty($result))
+-                       $ARR = $incomeObj->removeNoIncome($ARR);
+-                       $incomeArray = $incomeObj->getLowerIncomes($profile->getINCOME());
+-                       $result = array_intersect($ARR, $incomeArray);
+                         */
+			if(is_array($inc) && !empty($inc)){
+                                if(in_array($profile->getINCOME(),$inc))
                                 {
                                         $CODE['INCOME']='gnf';
                                         $CODE['Income']='gnf';
@@ -666,22 +668,24 @@ public static function insertConsentMessageFlag($profileid) {
 	 * @throws jsException of profileid not present
 	 * @return true/false
 	 */
-	public static function gtalkOnline($profile)
-	{
-		if($profile)
-		{
-			$onlineObj=new USER_ONLINE();
-			if($onlineObj->isOnline($profile)==true)
-			{
-				return true;
-			}
+
+	// public static function gtalkOnline($profile)   //COMMENTING THIS CODE SINCE IT IS NO LONGER USED
+	// {
+	// 	if($profile)
+	// 	{
+	// 		$onlineObj=new USER_ONLINE();
+	// 		if($onlineObj->isOnline($profile)==true)
+	// 		{
+	// 			return true;
+	// 		}
 			
-		}
-		else
-			throw new jsException("online status of user gtalk: Profileid missing.");
+	// 	}
+	// 	else
+	// 		throw new jsException("online status of user gtalk: Profileid missing.");
 		
-		return false;
-	}
+	// 	return false;
+	// }
+	
 	/**
 	 * returns online status of user on jeevansathi
 	 * @param $profile int profileid of user
@@ -981,8 +985,7 @@ public static function insertConsentMessageFlag($profileid) {
 		$isPhoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
 		if(!$isPhoneVerified)
 		{
-			include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-			$isPhoneVerified = hidePhoneLayer($profileid);
+			$isPhoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$isPhoneVerified);
 		}
                 if($profileid && $isPhoneVerified!='Y'&& $moduleName!="register" && $moduleName!="static" && $moduleName!="phone")
@@ -1114,7 +1117,7 @@ public static function insertConsentMessageFlag($profileid) {
             $key = $className.'_'.date('Y-m-d');
             JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+            //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
         public static function setAutoScreenFlag($screenVal,$editArr)
         {

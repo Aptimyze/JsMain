@@ -71,7 +71,7 @@ class Inbox implements Module
                         $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
 			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
-				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
+				$memcacheServiceObj->unsetKey('CONTACTED_ME');
                             
 			}
                         
@@ -300,7 +300,8 @@ class Inbox implements Module
 						}
 						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED"))
 						{
-							$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
+							if(is_array($skipArray))
+								$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
 						}
 						$conditionArray = $this->getCondition($infoType, $page); 
                                                 if($infoType == "MY_MESSAGE"){
@@ -534,21 +535,21 @@ class Inbox implements Module
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			} //$infoType == "INTEREST_RECEIVED"
 
 			if ($infoType == "INTEREST_ARCHIVED") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["LESS_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			}
 
 			if($infoType == "INTEREST_RECEIVED_FILTER")
 			{
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 				if($this->totalCount>=20)
@@ -560,8 +561,8 @@ class Inbox implements Module
 			}
 			if ($infoType == "INTEREST_EXPIRING") {
 				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
-				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - (CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT - 1), date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$back_83_days                                     = date("Y-m-d", $bday);
 				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
@@ -570,7 +571,7 @@ class Inbox implements Module
 
 
 		if ($infoType == "FILTERED_INTEREST") {
-				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			}

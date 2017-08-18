@@ -54,7 +54,6 @@ class newJsmsRegAction extends sfAction
 
                 //Assign GroupName/pixel code
                 $this->assignGroupName();
-
                 //canonical URL:
 	        $can_url="/register/page1";
                 $this->getResponse()->setCanonical(sfConfig::get("app_site_url").$can_url);

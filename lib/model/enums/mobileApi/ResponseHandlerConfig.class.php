@@ -13,6 +13,10 @@ class ResponseHandlerConfig
 	//search
 	public static $MATCHALERT_TOGGLE = array("message" => "Successfull", "statusCode" => '0');
 
+	// access_token
+	public static $NO_ACCESS_TOKEN = array("message" => "No access_token provided.", "statusCode" => '1');
+	public static $INVALID_ACCESS_TOKEN = array("message" => "Invalid access_token provided.", "statusCode" => '3');
+
 	//picture
 	public static $PICTURE_NO_PHOTO = array("message" => "No photo present.", "statusCode" => '1');
 
@@ -128,7 +132,10 @@ class ResponseHandlerConfig
 
 	// Report Abuse
 	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot report abuse against the same person more than twice.","statusCode"=>'1');
+	//Report Invalid
 
+	 public static $SAME_NUMBER_INVALID_TWICE = array("message"=>"You cannot report the same number Invalid again.","statusCode" => '1');
+	 public static $CONSENT_MESSAGE = array("message"=>"Consent Required","statusCode" => '5');
 }
 
 ?>

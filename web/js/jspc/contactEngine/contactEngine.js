@@ -542,10 +542,59 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 		FinalHtml=FinalHtml.replace(/\{\{paramData\}\}/g,null);
 		FinalHtml=FinalHtml.replace(/\{\{ACTION_ID\}\}/g,'ActionButton'+profileChecksum+"-"+this.name);
 	}
+
+	if(typeof(Obj.actiondetails.newerrmsglabel) != "undefined" && Obj.actiondetails.newerrmsglabel != null)
+	{
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'disp-none');
+		
+		FinalHtml = FinalHtml.replace(/\{\{ErrorMsglabel\}\}/g,Obj.actiondetails.newerrmsglabel);
+		FinalHtml = FinalHtml.replace(/\{\{MembershipMsgHeader\}\}/g,Obj.actiondetails.membershipmsgheading);
+
+		FinalHtml = FinalHtml.replace(/\{\{subheading1\}\}/g,Obj.actiondetails.membershipmsg.subheading1);
+		FinalHtml = FinalHtml.replace(/\{\{subheading2\}\}/g,Obj.actiondetails.membershipmsg.subheading2);
+		FinalHtml = FinalHtml.replace(/\{\{subheading3\}\}/g,Obj.actiondetails.membershipmsg.subheading3);
+
+		if(typeof(Obj.actiondetails.offer) != "undefined" && Obj.actiondetails.offer != null)
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOffer\}\}/g,Obj.actiondetails.offer.membershipOfferMsg1 + " " + Obj.actiondetails.offer.membershipOfferMsg2);
+			FinalHtml = FinalHtml.replace(/\{\{currency\}\}/g,Obj.actiondetails.membershipoffercurrency);
+
+			if(typeof(Obj.actiondetails.strikedprice) != "undefined" && Obj.actiondetails.strikedprice != null)
+			{
+				FinalHtml = FinalHtml.replace(/\{\{oldPrice\}\}/g,Obj.actiondetails.strikedprice);
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'');
+			}
+			else
+			{
+				FinalHtml = FinalHtml.replace(/\{\{strikedPriceDisp\}\}/g,'disp-none');
+			}
+
+			FinalHtml = FinalHtml.replace(/\{\{newPrice\}\}/g,Obj.actiondetails.discountedprice);
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
+		}
+		else if(typeof(Obj.actiondetails.lowestoffer) != "undefined" && Obj.actiondetails.lowestoffer != null)
+		{
+			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'');
+		}
+		else
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
+		}
+		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.action+"-"+profileChecksum+"-"+this.name);
+		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);
+	}
+	else
+	{
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'disp-none');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'');
+	}
 	
-	
-	
-	
+
 	return FinalHtml;
 
 }
@@ -602,6 +651,13 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 
 	if(actionDetails.contact4)
 		viewContactElement.find('.js-emailContactCC').removeClass('disp-none').find('.js-emailValueCC').html(actionDetails.contact4.value);
+
+	if(actionDetails.contact9){
+		viewContactElement.find('.js-relationshipPhoneCC').removeClass('disp-none').find('.js-relationshipPhoneCC').html(actionDetails.contact9.value);
+		if(actionDetails.contact4){
+			viewContactElement.find('.js-emailContactCC').removeClass('pt10').addClass('pt6');
+		}
+	}
 
 	if(actionDetails.leftviewvalue){
 	viewContactElement.find('.js-leftToView1').removeClass('disp-none').html(actionDetails.leftviewvalue);
@@ -672,6 +728,11 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	if(Obj.actiondetails.contact8!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact8,false);
+	}
+
+	if(Obj.actiondetails.contact9!=null)
+	{
+		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact9,true,'L','',profileChecksum);
 	}
 	
 	viewContactElement.find("#cEViewContactListing").html(liFinalHtml);
@@ -1015,13 +1076,14 @@ function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
 
 
 function reportInvalidReason(ele,profileChecksum,username,photoUrl){
-if(!profileChecksum || !ele) return;
+if(!profileChecksum || !ele) return; 
 var reason;
 var Otherreason='';
 var layerObj=$("#reportInvalidReason-layer");
 if(layerObj.find("#otherOptionBtn").is(':checked')) {
  reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
-	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
+	if(!reason) {layerObj.find('#errorText').removeClass('disp-none').html('Please Enter The Comments');return;}
+	
 	Otherreason = reason;
 }
 $('.js-overlay').unbind('click');
@@ -1043,6 +1105,18 @@ ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
 ajaxConfig.success=function(response){
+
+	if(response.responseStatusCode == '1')
+	{	
+		if(typeof response.heading != 'undefined'){
+		$('#headingReportInvalid').html(response.heading);
+		}
+	}
+	else if(response.responseStatusCode == '0')
+	{	
+		$('#headingReportInvalid').html('Phone no. reported as invalid');
+	}
+	$('#invalidConfirmMessage').html(response.message);
 	$('#reportInvalidReason-layer').fadeOut(300,"linear");
 	hideCommonLoader();
 	var jObject=$("#reportInvalidConfirmLayer");
@@ -1104,6 +1178,7 @@ $('#reportInvalidCross').unbind().bind('click',closeReportInvalidLayer);
 
 
 function customOptionButton(optionBtnName) {
+
        var checkBox = $('input[name="' + optionBtnName + '"]');
        $(checkBox).each(function() {
                $(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
@@ -1112,9 +1187,17 @@ function customOptionButton(optionBtnName) {
                        }
                        else $(this).closest('li').removeClass("selected"); 
                });
-               $(checkBox).click(function() {
+                $(checkBox).click(function() {
+                $(".otherOptionMsgBox").each(function() {
+                $(this).addClass("disp-none");
+                })
                        $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
                        $(this).closest('li').addClass("selected");
+            
+                       if($(this).attr("id") == "openBox") {
+                        $(this).closest("li").find(".otherOptionMsgBox").removeClass("disp-none");
+                       } else {
+                        $(this).closest("li").find(".otherOptionMsgBox").addClass("disp-none");
+                       }
                });
-
 }

@@ -15,7 +15,7 @@
                 		 <!--start:top header hamburger-->
           <div id="HamMenu" class="fontlig padHamburger">
             <div class="fl fullwid pt7">
-              <div class="dispibl txtc  newham_wid32p"> <a  bind-slide=1 href="/profile/contacts_made_received.php?page=eoi&filter=R" class="dispbl white f12"> <i class="newham_icons1 int_rec posrel"> <!--start:count-->
+              <div class="dispibl txtc  newham_wid32p"> <a  bind-slide=1 href="/inbox/1/1" class="dispbl white f12"> <i class="newham_icons1 int_rec posrel"> <!--start:count-->
                 ~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')`
 					<div class="posabs newham_pos1">
 					  <div class="bg7 disptbl newham_count txtc" >
@@ -33,7 +33,7 @@
                 <div>Interests <br/>
                   Received</div>
                 </a> </div>
-              <div class="dispibl txtc newham_wid32p"> <a  bind-slide=1 href="/profile/contacts_made_received.php?page=accept&filter=R" class="dispbl white f12"> <i class="newham_icons1 acc_mem posrel"><!--start:count-->
+              <div class="dispibl txtc newham_wid32p"> <a  bind-slide=1 href="/inbox/2/1" class="dispbl white f12"> <i class="newham_icons1 acc_mem posrel"><!--start:count-->
                 ~if $profileMemcacheObj->get('ACC_ME_NEW')`
 					<div class="posabs newham_pos1">
 					  <div class="bg7 disptbl white f12 newham_count txtc" >
@@ -110,7 +110,7 @@
                     <li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 class="white">Just Joined Matches ~if $profileMemcacheObj->get('JUST_JOINED_MATCHES')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('JUST_JOINED_MATCHES')`</span> ~/if`</a></li>
                     <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches </a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Daily Recommendations ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
+                    <li><a href="/inbox/7/1" bind-slide=1 class="white">Daily Recommendations ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
                     
                     <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches </a></li>
                     
@@ -123,7 +123,7 @@
                     <li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li>
                    
                     
-                    <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITORS_ALL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITORS_ALL')`</span> ~/if`</a></li>
+                    <li><a href="/search/visitors?matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITORS_ALL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITORS_ALL')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Kundli Matches</a></li>-->
                     
@@ -135,30 +135,30 @@
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
                     <li class="white fb1 ham_opa fontrobbold">My Contacts</li>
-                    
-                    <li><a href="/profile/contacts_made_received.php?page=eoi&filter=R" bind-slide=1 class="white">Interests Received ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
+                   
+                    <li><a href="/inbox/1/1" bind-slide=1 class="white">Interests Received ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Filtered Interests </a></li>-->
-                    <li><a href="/profile/contacts_made_received.php?page=filtered_eoi&filter=R" bind-slide=1 class="white">Filtered Interests ~if $profileMemcacheObj->get('FILTERED')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('FILTERED')`</span> ~/if`</a></li>
+                    <li><a href="/inbox/12/1" bind-slide=1 class="white">Filtered Interests ~if $profileMemcacheObj->get('FILTERED')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('FILTERED')`</span> ~/if`</a></li>
 
 
-                    <li><a href="/profile/contacts_made_received.php?page=accept&filter=R" bind-slide=1 class="white">All Acceptances ~if $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`</span> ~/if`</a></li>
+                    <li><a href="/inbox/2/1" bind-slide=1 class="white">All Acceptances ~if $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Contacts Viewed</a></li>-->
-                    <li><a href="/profile/contacts_made_received.php?page=phonebook_contacts_viewed&filter=M" bind-slide=1 class="white">Phonebook</a></li>
+                    <li><a href="/inbox/16/1" bind-slide=1 class="white">Phonebook</a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=contact_viewers" bind-slide=1 class="white">Who Viewed My Contacts</a></li>
+                    <li><a href="/inbox/17/1" bind-slide=1 class="white">Who Viewed My Contacts</a></li>
                     
 
 
-                    <li><a href="/profile/contacts_made_received.php?page=favorite" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
+                    <li><a href="/search/shortlisted" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=messages" bind-slide=1 class="white">Messages</a></li>
+                    <li><a href="/inbox/4/1" bind-slide=1 class="white">Messages</a></li>
                     <!--~if $profileMemcacheObj->get('MESSAGE_NEW')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MESSAGE_NEW')`</span> ~/if`</a></li>-->
                     
-                   <li><a href="/profile/contacts_made_received.php?page=decline&filter=M" bind-slide=1 class="white">Declined Members</a></li>
+                   <li><a href="/inbox/11/1" bind-slide=1 class="white">Declined Members</a></li>
                     
-                   <!-- <li><a href="#" bind-slide=1 class="white">Ignored Members</a></li>-->
+                    <li><a href="/inbox/20/1" bind-slide=1 class="white">Blocked/Ignored Members</a></li>
                     
                     
                   </ul>
@@ -200,7 +200,7 @@
 				<div id ="hamProfile" class="dn posfix ham_pos3">
 					<a bind-slide=1 href="/profile/viewprofile.php?ownview=1" class="dispbl fontlig f12 ham_color2">
 						<i class="icons1 posabs ham_icon3 ham_pos4"></i> 
-						<div class="pt10 txtc"><img src=~$ProfilePicUrl` style="height:50px; width:50px;" class="ham_imgbrdr brdr18"/></div>
+						<div class="pt10 txtc"><img src="~$ProfilePicUrl`" style="height:50px; width:50px;" class="ham_imgbrdr brdr18"/></div>
 						<div class="lh25">Edit Profile</div>
 					</a>
 				</div>        

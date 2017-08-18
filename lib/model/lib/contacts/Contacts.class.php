@@ -134,8 +134,9 @@ class Contacts {
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
 	const CONTACT_TYPE_CACHE_EXPIRY = 86400; //seconds
-	const EXPIRING_INTEREST_UPPER_LIMIT = 90;
-	const EXPIRING_INTEREST_LOWER_LIMIT = 84;
+	const EXPIRING_INTEREST_UPPER_LIMIT = 45;
+	const EXPIRING_INTEREST_LOWER_LIMIT = 38;
+	const INTEREST_RECEIVED_UPPER_LIMIT = 45;
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class
@@ -419,9 +420,12 @@ class Contacts {
 			else
 				$this->setSEEN(Contacts::NOTSEEN);
 		}
-		else
+		else    
 			$this->setTYPE(Contacts::TYPEDEFAULT);
+                        
+                self::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());
 
+                        
 	}
 
 	/****************************************************************************************************/
@@ -711,7 +715,7 @@ class Contacts {
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
             $smallIsWho = $sortedArray[0] == $profileId1 ? 'S' : 'R';
             $result = $type."_".$smallIsWho;
-            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
+            JsMemcache::getInstance()->setRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
             return $result;
             
         }
@@ -726,16 +730,17 @@ class Contacts {
         {
             if(!$profileId1 || !$profileId2)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            $result = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            $result = JsMemcache::getInstance()->getRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType');
             
             if(!$result)
                 {
 				$ignoreObj = new IgnoredProfiles();
-				if($ignoreObj->ifIgnored($profileId1,$profileId2) || $ignoreObj->ifIgnored($profileId2,$profileId1))
+                                $whoignored = $ignoreObj->ifIgnored($profileId1,$profileId2,ignoredProfileCacheConstants::BYME)? 1 :($ignoreObj->ifIgnored($profileId2,$profileId1,ignoredProfileCacheConstants::BYME) ? 2 : 0);
+				if($whoignored)
                                 {
                                        $type='B';
-                                       $result = self::setContactsTypeCache($profileId1, $profileId2, $type);
-                                }                
+                                       $result = ($whoIgnored == 1) ? self::setContactsTypeCache($profileId1, $profileId2, $type) : self::setContactsTypeCache($profileId1, $profileId2, $type);
+                                }
 				else
 				{	 
                                 $shardNo = JsDbSharding::getShardNo($profileId1);

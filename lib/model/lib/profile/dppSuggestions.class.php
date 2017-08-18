@@ -3,9 +3,11 @@
 class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
-	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
-	{				
-		$loggedInProfileObj = LoggedInProfile::getInstance();
+	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="",$loggedInProfileObj = "")
+	{				//echo "<pre>";print_R($trendsArr);print_R($type);print_R($valArr);
+                if($loggedInProfileObj == ""){
+                        $loggedInProfileObj = LoggedInProfile::getInstance();
+                }
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
@@ -27,7 +29,7 @@ class dppSuggestions
 		{
 			$valueArr["data"] = $this->getHindiAllSuggestions($valArr);
 		}
-		if(is_array($trendsArr))
+		if(is_array($trendsArr) && !empty($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
@@ -40,10 +42,14 @@ class dppSuggestions
 		if($type == "INCOME")
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
+		}
+		if($type == "RELIGION")
+		{
+			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
-			if ($type == "EDUCATION" || $type == "OCCUPATION")
+			if ($type == "EDUCATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
@@ -72,7 +78,7 @@ class dppSuggestions
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
 		}	
-
+		
 		return $valueArr;
 	}
 
@@ -263,12 +269,15 @@ class dppSuggestions
 		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);	
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{			
-			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);			
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);		
+			if(!is_array($trendsArr))
+				$trendsArr= Array('0'=>'0');
 			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
-		{        		
+		{      
+			unset($trendsArr['0']);  		
 			return $trendsArr;        		
 		}
 	}
@@ -407,10 +416,10 @@ class dppSuggestions
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$eduGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$eduGrouping,'',1);
 		}
-		if($type == "OCCUPATION")
+		/*if($type == "OCCUPATION")
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$occupationGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$occupationGrouping,'',1);
-		}
+		}*/
 		foreach($GroupingArr as $groupingKey => $stringVal)
 		{
 			$GroupingArr[$groupingKey] = explode(",",$stringVal);
@@ -420,7 +429,7 @@ class dppSuggestions
 	}
 
 	public function getSuggestionForAge($type,$valArr)
-	{		
+        {
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
 		if($this->gender == "F")
 		{
@@ -564,6 +573,37 @@ class dppSuggestions
 			}			
 		}
 		return $mtongueArr;
+	}
+
+	public function getSuggestionsForReligion($type,$valArr)
+	{
+		$religionArr = array();
+		$religionValues = FieldMap::getFieldLabel("religion","",1);		
+		$religionValuesArr = array_flip($religionValues);
+
+		if(is_array($valArr))
+		{
+			if(in_array($religionValuesArr["Hindu"],$valArr))
+			{
+				$religionArr[] = $religionValuesArr["Sikh"];
+				$religionArr[] = $religionValuesArr["Jain"];				
+			}
+			if(in_array($religionValuesArr["Sikh"],$valArr) || in_array($religionValuesArr["Jain"],$valArr))
+			{
+				$religionArr[]=$religionValuesArr["Hindu"];				
+			}
+			unset($religionValuesArr);
+			if(is_array($religionArr) && !empty($religionArr))
+			{
+				$result = array_diff($religionArr, $valArr);
+			}
+			foreach($result as $k=>$v)
+			{
+				$finalArr[$v] = $religionValues[$v];
+			}
+			unset($religionValues);
+		}	
+		return $finalArr;
 	}
 }
 ?>

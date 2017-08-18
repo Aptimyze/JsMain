@@ -10,7 +10,7 @@ class AzkabanCronsReportTask extends sfBaseTask
 {
  	protected function configure()
   	{
-		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72");
+		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72",82=>"azkaban3",63=>"azkaban63");
 		$this->reportType = array(1=>"failed",2=>"longPreparing",3=>"executing");
 		$this->addArguments(array(
         		new sfCommandArgument('server', sfCommandArgument::REQUIRED, 'My argument'),
@@ -42,7 +42,7 @@ EOF;
 			$reportName= $arguments["reportType"]; // reportType
 			if(!$reportName || !$server)
 				SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com","No reportname or server given in cron:AzkabanCronsReport","Azkaban Crons Report ".date('y-m-d h:i:s'));
-			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS();
+			$azkabanExecutionFlows = new AZKABAN_EXECUTION_FLOWS("crm_slave");
 			$db = $this->serverDb[$server];
 			$response = $azkabanExecutionFlows->getExecutionStatus($db, $this->reportType[$reportName]);
 			if(is_array($response))
@@ -62,11 +62,11 @@ EOF;
 				}
 				if($reportName==1)
 				{
-					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
+					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
 				}
 				elseif($reportName==2)
 				{
-					SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
+					SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
 					include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 					$mobile         = "9818424749";
 					$date = date("Y-m-d h");
@@ -89,7 +89,7 @@ EOF;
 			{
 				$mailContent = "\n<br>Report of ". $this->reportType[$reportName]." Crons not executing on Server ".$server ;
 				
-				SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
+				SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'));
                                 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
                                 $mobile         = "9818424749";
                                 $date = date("Y-m-d h");
@@ -131,7 +131,7 @@ EOF;
 			passthru("cd /usr/local/azkaban/azkaban-executor-server-2.1; sh bin/azkaban-executor-shutdown.sh");
 			passthru("cd /usr/local/azkaban/azkaban-executor-server-2.1; sh bin/azkaban-executor-start.sh > azkaban-access.log");
 			passthru("cd /usr/local/azkaban/azkaban-web-server-2.1; sh bin/azkaban-web-start.sh > azkaban-access.log");
-			SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com","restarted azkaban","Azkaban Restarted ".date('y-m-d h:i:s'));
+			SendMail::send_email("lavesh.rawat@gmail.com,reshu.rajput@gmail.com,reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitesh.s@jeevansathi.com,kunal.verma@jeevansathi.com","restarted azkaban","Azkaban Restarted ".date('y-m-d h:i:s'));
                                 
 			$count=0;
 		}

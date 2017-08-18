@@ -30,7 +30,7 @@ function loaderTop()
 function getDim()
 {
   var hgt = $(window).height();
-  hgt = hgt+"px";
+  hgt = (hgt+50)+"px";
   var wid = $(window).width();
   wid = wid+"px";
   var dim={hgt:hgt,wid:wid};
@@ -50,7 +50,13 @@ function hideReportAbuse(){
 }
 
 function reportAbuse(index) {
-$("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    if(typeof(buttonSt)!='undefined' )
+        $("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    else {
+        var tempPhoto = $("#idd"+index+ " a img").attr('src');
+        $("#photoReportAbuse").attr("src", tempPhoto);
+
+            }
 $('.RAcorrectImg,#commonOverlayTop').hide();
 //$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
@@ -78,27 +84,23 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 
 selectedReportAbuse="";
 RAOtherReasons=0;
-
+mainReasonAbuse = "";
 
 $(".reportAbuseOption").unbind().bind('click',function () {
 
-if($(this).attr('id')=='js-otherReasons')
+if($(this).attr('id')=='js-otherReasons' || $(this).attr('id')!='notOpen')
 {
 el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
+$("#js-otherReasonsLayer").removeClass('dispnone').val('');
 }
-else 
-{
-	selectedReportAbuse=$(this).text();RAOtherReasons=0;
-}
+
+mainReasonAbuse=$(this).text();
 $('.RAcorrectImg').hide();
 $(this).find('.RAcorrectImg').show();
 });
-
-
-
 
 
 $("#reportAbuseSubmit").unbind().bind('click',function() {
@@ -107,19 +109,20 @@ var reason="";
 
 if(RAOtherReasons)
 {
-	reason=$("#js-otherReasonsLayer").val();
+	reason=$("#js-otherReasonsLayer").val().trim();
    
-	if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
 }
 else {
-	reason=selectedReportAbuse;
-if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+	if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
 }
 
 var feed={};
 reason=$.trim(reason);
+mainReasonAbuse = $.trim(mainReasonAbuse);
 //feed.message:as sdf sd f
 feed.category='Abuse';
+feed.mainReason = mainReasonAbuse;
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
@@ -316,14 +319,33 @@ params["profilechecksum"] =input.val();
     }   
     
 function bindPrimeButtonClick(index)
-{      
+{
 	if(disablePrimary[index]==false)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
-          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
+      else  if(params["actionName"]=="IGNORE")
+      {
+          if(!profile_index[index] || !profile_index[index]['IGNORE']) {
+            if(!profile_index[index]) 
+              profile_index[index] = [];
+            var paramstr = $("#tracking"+index).val();
+            profile_index[index]['IGNORE'] = paramstr.split('=')[1];
+          }
+           
+
+          var paramsArr = {
+            blockArr: {
+              profilechecksum : $("#buttonInput"+index).val(),
+              action          : profile_index[index]['IGNORE']
+            }
+          };
+          disableOthers[index] = false;
+          performAction("IGNORE", paramsArr, index,true,1);
+          return false;
+      }
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
@@ -356,7 +378,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 		if(action=="REPORT_ABUSE"){
 		$('#'+action+"_"+index).bind("click",function(){
 				
-			reportAbuse();
+			reportAbuse(index);
 			
 			});
 		return;
@@ -469,7 +491,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
                 tempParams["stype"]='WMM';
         if(tempParams["fromJSMS_MOD"] == 1)
         { 
-          tempParams["stype"]='MODJSMS';
+          tempParams["stype"]='WMOD';
           $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
         }
         else
@@ -488,6 +510,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
 			$("#loaderOverlay").show();
 		}
 		stopTouchEvents();
+                $(window).scrollTop('0px');
                 $("#contactLoader").show();
   }
     
@@ -520,7 +543,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       {                     
                             
                             if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
-                            else afterAction(result,action,index);
+                            else afterAction(result,action,index,isPrime);
       }
     }
   });
@@ -561,19 +584,26 @@ function afterActionMyjs(index,action,Params){
 }
 
 
-function afterAction(result,action, index){
+function afterAction(result,action, index,isPrime){
 	$("#selIndexId").val(index);
 	if($("#mainContent").length){
 		if(action!='MESSAGE')
 			scrollOff();
 	}
         $("#ce_photo").attr("src", photo[index]);
-        
+        $("#profilePhoto").attr("src", photo[index]);
     if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
-	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
+        historyStoreObj.push(browserBackCommonOverlay,"#pushce");  
+    var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
+    if(ignoreFromPrime)
+    {
+        result.button_after_action.buttons = result.button_after_action.buttons.others;
+        result.buttondetails.button = result.buttondetails.buttons.primary[0];
+        
+    }
+    if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
-		if(result.actiondetails.errmsglabel!=null)
+		if(typeof result.actiondetails !='undefined' && result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
       var headerLabel = result.actiondetails.headerlabel;
@@ -733,6 +763,22 @@ function bindFooterButtons(result){
 	else
 	    $("#closeLayer").show();
 }
+
+function bindFooterButtonswithId(result, id){
+  $("#"+id).html(result.actiondetails.footerbutton.newlabel).show().bind( "click", {
+    action: result.actiondetails.footerbutton.action
+  }, function( event ) {
+  historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
+    window.location=actionUrl[event.data.action];
+    return false;
+  });
+  // if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  {
+      $("#skipLayer").show();
+  }
+}
+
 
 function acceptInterest(result,action,index)
 {
@@ -1103,7 +1149,7 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer,#footerButtonNew,#skipLayer").hide();
       //$("#footerButton").hide();
       //$("#ViewContactPreLayer").hide();
       //$("#ViewContactPreLayerNoNumber").hide();
@@ -1226,6 +1272,18 @@ if(result.actiondetails.bottommsg2){
             $("#msgIcon").show();
                 }
         }
+         if(result.actiondetails.contact9){
+    $("#relationshipManageVal").hide();
+               // $("#alternateVal").hide();
+                $("#relationshipManager").show();
+                 $("#relationshipManagerVal").show();$("#relationshipManagerVal").html(result.actiondetails.contact9.value);
+        if (result.actiondetails.contact9.iconid){ 
+                   $("#relationshipManagerIcon > a").attr('href','tel:'+result.actiondetails.contact9.value.toString());
+            $("#relationshipManagerIcon").show();
+        }
+    
+    
+    }
     }
     
     
@@ -1239,7 +1297,41 @@ if(result.actiondetails.bottommsg2){
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
-    if(result.actiondetails.errmsglabel)
+    if(result.actiondetails.newerrmsglabel)
+    {
+      $("#commonOverlay").hide();
+      $("#newErrMsg").html(result.actiondetails.newerrmsglabel);
+      $("#membershipheading").html(result.actiondetails.membershipmsgheading);
+      $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
+      $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
+      $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
+      
+      if(typeof(result.actiondetails.offer) != "undefined" && result.actiondetails.offer != null)
+      {
+        $("#MembershipOfferExists").show();
+        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
+        $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
+        if(typeof(result.actiondetails.strikedprice) != "undefined" && result.actiondetails.strikedprice != null)
+        {
+          $("#oldPrice").html(result.actiondetails.strikedprice);
+          $("#oldPrice").show();
+        }
+        $("#currency").html(result.actiondetails.membershipoffercurrency);
+        $("#newPrice").html(result.actiondetails.discountedprice);
+        $("#LowestOffer").show();
+      }
+      else if(typeof(result.actiondetails.lowestoffer) != "undefined" && result.actiondetails.lowestoffer != null)
+      {
+        $("#LowestOffer").html(result.actiondetails.lowestoffer);
+        $("#LowestOffer").addClass("mt60");
+        $("#LowestOffer").show();
+      }
+
+      bindFooterButtonswithId(result,'footerButtonNew');
+      $("#membershipOverlay").show();
+
+    }
+    else if(result.actiondetails.errmsglabel)
     {
       $("#topMsg2,#landline").hide();
       //$("#landline").hide();
@@ -1536,7 +1628,7 @@ function resetLayerButtons()
 }
   
 function browserBackCommonOverlay() {
-  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible')) {
+  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible') || $("#membershipOverlay").is(':visible')) {
     hideForHide();
     layerClose();
     return true;
@@ -1667,9 +1759,9 @@ $.ajax({
     success: function(result){
          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
          $("#js-otherInvalidReasonsLayer").val('');
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
-          ShowTopDownError([result.message],10000);
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y')) 
+                    { 
+          ShowTopDownError([result.message],5000);
           $("#commonOverlayTop").show();
                     }
 }

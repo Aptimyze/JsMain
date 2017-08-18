@@ -44,7 +44,7 @@ class WriteMessageConsumer
 	catch (Exception $exception) 
 	{
 	  $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-	  RabbitmqHelper::sendAlert($str,"default");
+	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	}
 	try
 	{
@@ -54,7 +54,7 @@ class WriteMessageConsumer
 	catch (Exception $exception) 
 	{
 	  $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-	  RabbitmqHelper::sendAlert($str,"default");
+	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	  return;
 	}
   }
@@ -80,7 +80,7 @@ class WriteMessageConsumer
 	catch (Exception $exception) 
 	{
 	  $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-	  RabbitmqHelper::sendAlert($str,"default");
+	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	  return;
 	}  
 	try
@@ -90,7 +90,7 @@ class WriteMessageConsumer
 	catch (Exception $exception) 
 	{
 	  $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-	  RabbitmqHelper::sendAlert($str,"default");
+	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	  return;
 	}  
 	if($this->serverid=='FIRST_SERVER')
@@ -130,66 +130,67 @@ class WriteMessageConsumer
 	$body=$msgdata['data']['body'];
 	try
 	{
-	  $handlerObj=new ProcessHandler();
+
 	  switch($process)
 	  {
 		case MQ::WRITE_MSG_Q :
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
-			
-            $orgTZ = date_default_timezone_get();
-            date_default_timezone_set("Asia/Calcutta");
-
-			// print_r($data);die;
-			$timeDiff = floor( (time() - $data['time'])/60 );
-			$senderid=$body['senderid'];
-			$receiverid=$body['receiverid'];
-			
-			if($timeDiff >= MQ::DELAY_MINUTE)
+			if(!empty($data))
 			{
-				// delete key data
-				JsMemcache::getInstance()->delete($key);
-				// Sender Receiver objects
-				$senderObj = new Profile('',$senderid);   
-				$senderObj->getDetail("","","*");
-				$receiverObj = new Profile('',$receiverid);
-				$receiverObj->getDetail("","","*");
-				// send mail
-				$conversation = $data['message'];
-				if($data['sendToBoth'])
-				{
-					// send this mail both to sender and receiver
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$senderEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $senderEmailMsg);
-					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
-					
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
-					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
-				}
-				else
-				{
-					// send only to receiver
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
-					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
-				}
+	            $orgTZ = date_default_timezone_get();
+	            date_default_timezone_set("Asia/Calcutta");
 
+				$timeDiff = floor( (time() - $data['time'])/60 );
+				$senderid=$body['senderid'];
+				$receiverid=$body['receiverid'];
+				
+				if($timeDiff >= MQ::DELAY_MINUTE)
+				{
+					// delete key data
+					JsMemcache::getInstance()->delete($key);
+					// Sender Receiver objects
+					$senderObj = new Profile('',$senderid);   
+					$senderObj->getDetail("","","*");
+					$receiverObj = new Profile('',$receiverid);
+					$receiverObj->getDetail("","","*");
+					// send mail
+					$conversation = $data['message'];
+					if($data['sendToBoth'])
+					{
+						// send this mail both to sender and receiver
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$senderEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $senderEmailMsg);
+						$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
+
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
+						$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
+					}
+					else
+					{
+						// send only to receiver
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
+						$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
+					}
+
+				}
+	            date_default_timezone_set($orgTZ);
 			}
-            date_default_timezone_set($orgTZ);
-			break;
+		break;
 	  }
 	}
 	catch (Exception $exception) 
 	{
 	  $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-	  RabbitmqHelper::sendAlert($str,"default");
+	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	  //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
 	  /*
 	   * The message due to which error is caused is reframed into a new message and the original message is dropped.

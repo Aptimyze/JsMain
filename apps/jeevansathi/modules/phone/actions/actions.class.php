@@ -99,7 +99,9 @@ class phoneActions extends sfActions
 
 	$isd = phoneKnowlarity::removeAllSpecialChars($isd);
 	$number = phoneKnowlarity::removeAllSpecialChars($number);
-	
+        $profileObj = LoggedInProfile::getInstance('newjs_master');
+        $profileid = $profileObj->getPROFILEID();
+        
 	$phoneType=NULL;
 	if($type=="PHONE1")
 		$phoneType = "M";
@@ -132,7 +134,13 @@ class phoneActions extends sfActions
     if($data->responseStatusCode != 0)
     {
 	$data->responseMessage=$errorArr[$arrKeys[0]];
-	}
+        
+    }
+        $memObject=JsMemcache::getInstance();
+        $memObject->delete('showConsentMsg_'.$profileid);		
+        $memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+        $knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
+        $data->DIAL_NUMBER =$knowlarityObj->getVirtualNumber();
 	$data = json_encode($data);
 	echo $data;
 	die;
@@ -152,13 +160,12 @@ class phoneActions extends sfActions
                          $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_JUNK);
 		else
 		{
-			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$phoneVerObject=new PhoneVerification($profileObj,$phoneType);
 			$phoneVerObject->savePhone($number,'',$isd);
-			
-			$memObject=JsMemcache::getInstance();
+                        $memObject=JsMemcache::getInstance();
 			$memObject->delete('showConsentMsg_'.$profileid);		
 			$memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+ 			
 			$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
 			$response[DIAL_NUMBER] =$knowlarityObj->getVirtualNumber();
@@ -191,7 +198,7 @@ class phoneActions extends sfActions
 		}
 
 		}
-	
+	$result['fromReg'] =  'N';
 	$result['FLAG']=$phoneVerified;
 	$result['PHOTO']= null;
 	if($phoneVerified=="Y")
@@ -201,6 +208,11 @@ class phoneActions extends sfActions
 		$result['PHOTO']=$pictureServiceObj->isProfilePhotoPresent();
 		if($result['PHOTO']!='Y')
 			$result['PHOTO']= "N";
+                        $verifiedLogObj= new PHONE_VERIFIED_LOG();
+                        $row=$verifiedLogObj->getNoOfTimesVerified($profileid);
+                        $noOfTimesVerified=$row['COUNT'];
+			$result['fromReg'] = ($noOfTimesVerified == 1) ? 'Y' : 'N';
+
 	}
 
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -224,23 +236,39 @@ class phoneActions extends sfActions
    		
    		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
-  }
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
+        }
      	if(!$reasonNumber)
      	{
      			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
      	}
 
-   		$profile2=new Profile();
-		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
-   		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
-		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
+     	$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
+     	$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
+     	$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
+     	$ReportInvalidLibObj = new ReportInvalid();
+
+     	$anotherMarkInvalid = $ReportInvalidLibObj->entryAlreadyExists($selfProfileID,$profileid,$phone,$mobile);
+
+     	if($anotherMarkInvalid)
+     	{
+     		$respObj->setHttpArray(ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE);
+     		$result['message'] = ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE['message'];
+     		$result['heading'] = "Cannot report invalid";
+			$respObj->setResponseBody($result);
+			$respObj->generateResponse();
+			die;
+     	}
+
+        
+   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
+        ReportInvalid::markNumberUnverified($profileid, $phone, $mobile);
 
 		if($reasonNumber == 3)
 			{  
@@ -250,8 +278,16 @@ class phoneActions extends sfActions
                 $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
 			}
 
+			$ReportInvalidLibObj->sendExtraNotification($selfProfileID,$profileid,$reasonNumber);
+			
+	if($increaseQuotaImmediate == true)
+	{
+		$result['message']='Thanks for helping us make Jeevansathi better matchmaking platform. We have credited one contact to your quota, and will investigate this further';
+	}
+	else { 
 
-    $result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';	
+    	$result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';
+	}
     $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
@@ -283,12 +319,28 @@ class phoneActions extends sfActions
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);
+       	$respObj = ApiResponseHandler::getInstance();
+       	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->setResponseBody($result);
+		$respObj->generateResponse();
         die();
 		}
 
+    public function executeDNCConsent(sfWebRequest $request)
+  	{
 
 
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
+    $arr['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+    $arr['apiHit'] = CommonConstants::$CONSENT_MSG_API;
+    $arr['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
+    $sendingDetails['consentData'] = $arr;
+    $respObj->setResponseBody($sendingDetails);
+    $respObj->generateResponse();
+    die;
 
+  }
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {
@@ -534,6 +586,7 @@ public function executeMatchOtp(sfWebRequest $request)
 		case 'Y':	
 		$response['matched']='true';
 		$response['trialsOver']='N';
+		$response['fromReg'] = $request->getParameter('fromReg')=='Y' ? 'Y' : 'N';
 		break;
 
 		case 'N':

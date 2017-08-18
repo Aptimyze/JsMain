@@ -122,6 +122,10 @@ class DetailedViewApi
 		$this->m_arrOut = array();
 		$this->getDecorated_MoreInfo();
 		$arrMoreInfo = $this->m_arrOut;
+                
+		$this->m_arrOut = array();
+		$this->getDecorated_CriticalInfo();
+		$arrCriticalInfo = $this->m_arrOut;
 		
         if($originalProflie)
             $this->m_objProfile = $originalProflie;
@@ -138,11 +142,17 @@ class DetailedViewApi
 							'dpp'		=>	$arrLookingFor,
 							'pic'		=>	$arrPicSection,
 							'page_info' =>	$arrMoreInfo,
+							'Critical' =>	$arrCriticalInfo,
 							);
 							
 		return $this->m_arrSectionOut;
 	}
-	
+	protected function getDecorated_CriticalInfo(){
+                $objProfile = $this->m_objProfile;
+                $this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();                
+                $this->m_arrOut['age'] = $objProfile->getAGE();
+                $this->m_arrOut['dtofbirth'] = "(".date("jS M Y", strtotime($objProfile->getDTOFBIRTH())).")";
+        }
 	/**
 	 * getDecorated_AboutMe
 	 * 
@@ -239,7 +249,8 @@ class DetailedViewApi
 	protected function getDecorated_PrimaryInfo()
 	{
 		$objProfile = $this->m_objProfile;
-		
+		$viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
+		$viewedProfile = $this->m_objProfile->getPROFILEID();
 		$this->m_arrOut['username'] = $objProfile->getUSERNAME();
 		$this->m_arrOut['age'] = $objProfile->getAGE();
 		$this->m_arrOut['height'] = html_entity_decode($objProfile->getDecoratedHeight());
@@ -256,23 +267,48 @@ class DetailedViewApi
                         $this->m_arrOut['name_of_user'] = null;
                 }
                 unset($nameOfUserObj);
-                
+        if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
+        	$this->m_arrOut['sameGender']=1;        
+    	else
+        	$this->m_arrOut['sameGender']=0;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
-		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
+		
+		//COMMENTED THE PRVIOUS CODE AS A COMMON FUNCTION IS BEING USED NOW
+
+		// if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
+		// {
+		// 	if(substr($objProfile->getCITY_RES(),2)=="OT")
+		//         {
+		// 		$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
+		// 		$szLocation = $stateLabel."-"."Others";
+		// 	}
+		// 	else
+		// 		$szLocation=$objProfile->getDecoratedCity();
+		// }
+		// else
+		// 	$szLocation = $objProfile->getDecoratedCountry();
+
+		//This is the part which was done to make Location on PD summary same as that on Search
+		$city = $objProfile->getCITY_RES();
+		$state = "";
+		if($city != "")
 		{
-			if(substr($objProfile->getCITY_RES(),2)=="OT")
-		        {
-				$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
-				$szLocation = $stateLabel."-"."Others";
-			}
-			else
-				$szLocation=$objProfile->getDecoratedCity();
-		}
-		else
-			$szLocation = $objProfile->getDecoratedCountry();
+			$state = substr($city,0,2);	
+		}		
+		$nativePlaceObj = new JProfile_NativePlace($objProfile);
+		$nativeArr = $nativePlaceObj->getInfo();		
+		if(is_array($nativeArr))
+		{
+			if($nativeArr["NATIVE_STATE"] != "")
+				$state = $state.",".$nativeArr["NATIVE_STATE"];
+			if($nativeArr["NATIVE_CITY"] != "")
+				$city = $city.",".$nativeArr["NATIVE_CITY"];
+		}		
+		$szLocation = CommonFunction::getResLabel($objProfile->getCOUNTRY_RES(),$state,$city,$objProfile->getANCESTRAL_ORIGIN(),"city");	
 		$this->m_arrOut['location'] = $szLocation;
 		//Caste
+                $this->m_arrOut['religionId'] = $objProfile->getReligion();
 		if(stripos($objProfile->getDecoratedCaste(),": ")!=false)
 		{
 			$this->m_arrOut['caste'] = substr($objProfile->getDecoratedCaste(),stripos($objProfile->getDecoratedCaste(),": ") + 2);
@@ -285,8 +321,17 @@ class DetailedViewApi
 		{
 			$this->m_arrOut['caste'] = $objProfile->getDecoratedCaste();
 		}
+                
+                if($objProfile->getReligion() == 2 && $objProfile->getCaste() == 152){
+                    $religionInfo = (array)$objProfile->getReligionInfo();
+                    if($religionInfo["JAMAAT"])
+                        $this->m_arrOut['caste'] = $this->m_arrOut['caste'].", ".$religionInfo["JAMAAT"];
+                }
 		//Caste End Here
-		$this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
+                if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())
+                    $this->m_arrOut['last_active'] = "Online now";
+                else
+                    $this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
         
         $mtongue = $objProfile->getMTONGUE();
         $communityLabel = FieldMap::getFieldLabel("community_small",$mtongue);
@@ -296,6 +341,90 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
+
+		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
+    if($bHoroScope === 'D'){
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;     
+    }
+    else{
+        $astroArr = (array)$this->m_arrAstro;
+        $this->m_arrOut['astro_date'] = $astroArr['dateOfBirth'];
+        $this->m_arrOut['astro_time'] = $astroArr['birthTimeHour']." hrs:".$astroArr['birthTimeMin']." mins";
+        $this->m_arrOut['astro_sunsign'] = $astroArr['sunsign'];
+        $this->m_arrOut['astro_time_check'] = $astroArr['birthTimeHour'];
+        $this->m_arrOut['rashi'] = $astroArr['rashi'];
+        $cManglik = CommonFunction::setManglikWithoutDontKnow($this->m_objProfile->getMANGLIK());
+        $szManglik = ApiViewConstants::getManglikLabel($cManglik);
+        $this->m_arrOut['astro_manglik'] = $szManglik;
+        $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+        $horoscope = new Horoscope;
+        if($viewerProfile){
+          $this->m_arrOut['myHoroscope'] = $horoscope->ifHoroscopePresent($viewerProfile);
+          $this->m_arrOut['requestedHoroscope'] = $horoscope->ifHoroscopeRequested((array)$viewerProfile,$viewedProfile,1)[$viewerProfile];
+        }
+        $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
+    }
+     $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
+
+        //condition change for astro report to be shown
+        if($bHoroScope === 'D' && $this->m_arrOut['NO_ASTRO'] == 1)
+        {
+            $this->m_arrOut['NO_ASTRO']=0;
+        }
+        if(MobileCommon::isAndroidApp())
+        { 
+            $this->m_arrOut['thumbnailPic'] = null;
+            $havePhoto=$this->m_objProfile->getHAVEPHOTO();
+            if($havePhoto=='Y')
+            {
+            	if($this->m_actionObject->THUMB_URL)
+            	{
+            		$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+            		$this->m_arrOut['thumbnailPic'] = $thumbNailArray['url'];
+            	}
+            	if($this->m_actionObject->PIC120_URL)
+            	{
+            		$pic120Array = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->PIC120_URL,'ProfilePic120Url','',$this->m_objProfile->getGender());
+            		$this->m_arrOut['profilePic120Url'] = $pic120Array['url'];
+            	}
+            }
+
+            //thumbnail for self
+            if($viewerProfile)
+            {
+            	$selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();            	
+            	if($selfHavePhoto != "N")
+            	{
+            		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
+            		$ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+            		$this->ProfilePicUrl='';
+            		if (is_subclass_of($ProfilePicUrlObj, 'Picture'))
+            		{
+            			$this->profilePicPictureId = $ProfilePicUrlObj->getPICTUREID();               
+            			$this->thumbnailPic = $ProfilePicUrlObj->getThumbailUrl();                             
+            		}
+            	}      
+            	else
+            	{
+            		$this->thumbnailPic = PictureService::getRequestOrNoPhotoUrl('noPhoto', "ThumbailUrl", $this->m_actionObject->loginProfile->getGENDER());
+            	}
+            	$this->m_arrOut["selfThumbail"] = $this->thumbnailPic;
+            }
+        }
 	}
 	
 	/**
@@ -405,7 +534,22 @@ class DetailedViewApi
 		$verificationSealObj=new VerificationSealLib($objProfile,'1');
    		$this->m_arrOut['verification_status']=$verificationSealObj->getFsoStatus();
    		unset($verificationSealObj);
-    
+   		
+   		//adding aadhar verification part
+   		if(MobileCommon::isApp() == "A")
+   		{
+   			$aadharObj = new aadharVerification();
+   			$aadharArr = $aadharObj->getAadharDetails($this->m_actionObject->profile->getPROFILEID());
+   			unset($aadharObj);
+   			if($this->m_arrOut['verification_status'] && $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+   			{
+   				$this->m_arrOut['verification_status'] = 3; //this indicates that both are verified.
+   			}
+   			elseif($aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+        	{
+        		$this->m_arrOut['verification_status'] = 2; //this indicates aadhar is verified.
+        	}   			
+   		}   	    
 	}
 	
 	/**
@@ -1160,6 +1304,12 @@ class DetailedViewApi
 			elseif($this->m_arrOut['dpp_state'])
 				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
                 }
+        $this->m_arrOut['dpp_diet'] = $jPartnerObj->getDecoratedPARTNER_DIET();
+       $this->m_arrOut['dpp_smoke'] = $jPartnerObj->getDecoratedPARTNER_SMOKE();
+       $this->m_arrOut['dpp_drink'] = $jPartnerObj->getDecoratedPARTNER_DRINK();
+       $this->m_arrOut['dpp_complexion']=$jPartnerObj->getDecoratedPARTNER_COMP();
+       $this->m_arrOut['dpp_btype'] = $jPartnerObj->getDecoratedPARTNER_BTYPE();
+       $this->m_arrOut['dpp_handi'] = $jPartnerObj->getDecoratedHANDICAPPED();
 	}
 	/**
 	 * getDecorated_Photo
@@ -1294,9 +1444,9 @@ class DetailedViewApi
 		
 		//Response Tracking
 		$this->m_arrOut['responseTracking'] = $actObj->responseTracking;
-		$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
+		//$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
     	$isOnline = $this->m_actionObject->ISONLINE;
-    	if($gtalkOnline || $isOnline)
+    	if($isOnline) // this part was removed -> $gtalkOnline || 
     		$this->m_arrOut["userloginstatus"] = "Online now";
     
     
@@ -1326,7 +1476,11 @@ class DetailedViewApi
 		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
 		{
-		    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        if(MObileCommon::isApp()=="A")
+                                    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+                        else
+                                    $this->m_arrOut['guna_api_url'] = 'https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+
 		}
 	}
 	}
@@ -1449,5 +1603,5 @@ class DetailedViewApi
         $otherProfile = $this->m_objProfile;
         
         return ProfileCommon::getGunaApiParams($loginProfile, $otherProfile);
-    }
+    }       
 }

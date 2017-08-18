@@ -812,9 +812,14 @@ class successStoryActions extends sfActions
             }
             
             if(empty($this->NAME)){
-            	$objNameStore = new incentive_NAME_OF_USER;
+                $nameOfUserOb=new NameOfUser();
+                $loginProfile=LoggedInProfile::getInstance();        
+                $nameOfUserArr = $nameOfUserOb->getNameData($loginProfile->getPROFILEID());
+                $this->NAME = $nameOfUserArr[$loginProfile->getPROFILEID()]["NAME"];
+            	unset($nameOfUserOb);
+                /*$objNameStore = new incentive_NAME_OF_USER;
 		        $loginProfile=LoggedInProfile::getInstance();
-				$this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());
+				$this->NAME = $objNameStore->getName($loginProfile->getPROFILEID());*/
             }
 
             $W_DATE = $row["WEDDING_DATE"];
@@ -974,8 +979,12 @@ class successStoryActions extends sfActions
             }
             
             if(empty($this->NAME)){
-            	$objNameStore = new incentive_NAME_OF_USER('newjs_slave');
-				$this->NAME = $objNameStore->getName($this->profileid);
+                $nameOfUserOb=new NameOfUser();                
+                $nameOfUserArr = $nameOfUserOb->getNameData($this->profileid);
+                $this->NAME = $nameOfUserArr[$this->profileid]["NAME"];
+                unset($nameOfUserOb);
+            	/*$objNameStore = new incentive_NAME_OF_USER('newjs_slave');
+				$this->NAME = $objNameStore->getName($this->profileid);*/
             }
 
             $W_DATE = $row["WEDDING_DATE"];

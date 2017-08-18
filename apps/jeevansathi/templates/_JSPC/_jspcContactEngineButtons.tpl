@@ -122,22 +122,53 @@
  <!--end:content-->
 </div>
 <div id="postCommonDisplayLayer">
-					<div id='contactEngineLayerDiv' class="pos-abs fullwid celyr1 z3 fontlig cepos1 cehgt1">
-                    <div class="clearfix cebrd1" style="height:50px">
-						<p class="txtc color11 f13 {{VisibilityClass_header}}">{{header}}<span class="color5 pl5 ">{{ViewSimiarProfile}}</span></p>
-                    	<i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
-                    </div>
-                    <div class="disp-tbl fullwid">
-							<div class="disp-cell vmid txtc color11 f15" style="height:144px">
-						<p class="color11 ptm25 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
-                        <p class="color5 {{VisibilityClass_Info}}">{{InfoMsg}}</p>
-                        <button id={{ACTION_ID}} class=" cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon  {{ButtonClass}} {{VisibilityClass_Button}}" data="{{paramData}}">{{ButtonLabel}}</button>
-                        <div class="colr5 pt10 ">{{ButtonLabelText}}</div>
-						</div>
-						</div>
-                    
-                    	
-                     </div>
+  <div id="contactEngineLayerDiv" class="pos-abs fullwid celyr1 z3 fontlig cepos1 cehgt1">
+  <div id="freeMemberCase" class="{{VisibilityClass_freeMember}}">
+    
+    <i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
+    <div class="dispbl mauto fullwid">
+        <div class="ptm25 txtc f14" style="height:144px">
+            <div class="color11">{{ErrorMsglabel}}</div>
+            <div class="color11 mt15 f13">{{MembershipMsgHeader}}</div>
+            <ul class="color11 mt3 f13 disp_ib mt10">
+                <li class="disp_ib">
+                    <div class="color11 disp_ib" style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;">●</div> {{subheading1}}
+                </li>
+                <li class="disp_ib">
+                    <div  style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;" class="color11 disp_ib">●</div>
+                    {{subheading2}}
+                </li>
+                <li class="disp_ib">
+                    <div style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;" class="color11 disp_ib">●</div>
+                    {{subheading3}}
+                </li>
+            </ul>
+            <div id="noMembershipOffer" class="color5 mt20 f13 {{LowestOfferDisp}}">{{LowestOffer}}</div>
+            <div id="MembershipOfferExists" class="color5 mt20 f13 {{MembershipOfferDisp}}">
+              {{MembershipOffer}} Plans start @ <del id="oldPrice" class="{{strikedPriceDisp}}">{{oldPrice}}</del>&nbsp;<span id="Currency">{{currency}}</span>&nbsp;<span id="newPrice">{{newPrice}}</span>
+            </div>
+            <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt10 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
+              <div class="colr5 pt10 "></div>
+    </div>
+  </div>
+  </div>
+
+    <div id="OtherCase" class="{{VisibilityClass_Othercase}}"> 
+     <!-- class="disp-none"> -->
+      <div class="clearfix cebrd1" style="height:50px">
+      <p class="txtc color11 f13 {{VisibilityClass_header}}">{{header}}<span class="color5 pl5 ">{{ViewSimiarProfile}}</span></p>
+      <i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
+      </div>
+      <div class="disp-tbl fullwid">
+      <div class="disp-cell vmid txtc color11 f15" style="height:144px">
+      <p class="color11 ptm25 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
+      <p class="color5 {{VisibilityClass_Info}}">{{InfoMsg}}</p>
+      <button id={{ACTION_ID}} class=" cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon  {{ButtonClass}} {{VisibilityClass_Button}}" data="{{paramData}}">{{ButtonLabel}}</button>
+      <div class="colr5 pt10 ">{{ButtonLabelText}}</div>
+      </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="postCommonMessageLayer">
 <!--start:layer 1-->
@@ -229,7 +260,8 @@
 
 
                      <!--start:layer 1-->
-                    <div id ="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
+  <div id="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
+
                       <div class="disp-tbl fullwid cch2n">
                       <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close"></span>
                         <div class="disp-cell vmid {{ButtonLabelShiftClass}}">
@@ -247,7 +279,7 @@
                            
                         </div>
                       </div>
-                    </div>
+                  </div>
                     <!--end:layer 1--> 
 
 
@@ -299,6 +331,7 @@
                     			</div>
                                  <p style='white-space:pre;' class="pt6 txtl js-phoneContactCC disp-none"><span>Phone </span><span class='js-timeToCallCC'></span> :  <span class='js-phoneValuesCC'></span></p>
                     			<p class="pt10 txtl js-emailContactCC disp-none"><span>Email id:     </span>    <span class='js-emailValueCC'></span></p>
+                          <p class="pt6 txtl js-relationshipPhoneCC disp-none"><span>Relationship Manager's phone no:     </span>    <span class='js-relationshipPhoneCC'></span></p>
                             </div>                          
                        		<!--end:view contact-->                       
                         </div>
@@ -347,14 +380,16 @@
                 <div class="pl12 pt20">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
                     <ul id ="reasonCode" class="listnone reportlist fontlig f15 pt10 color2">
+                    <li>
+                          <input type="radio"  name="report_profile" value = '6'>The number does not exist</li>
                       <li>
                           <input type="radio"  name="report_profile" value = '1'>Switched off / Not reachable</li>
                           <li>
                           <input type="radio"   name="report_profile" value = '2'>Not an account holder's phone</li>
                            <li>
-                          <input type="radio"   name="report_profile" value = '3'>Already married / engaged</li>
+                          <input type="radio"   name="report_profile" value = '4'>Not picking up</li>
                             <li>
-                          <input type="radio"  name="report_profile" value = '4'>Not picking up</li>
+                          <input type="radio"  name="report_profile" value = '3'>Already married / engaged</li>
                              <li>
                           <input id='otherOptionBtn' type="radio"  name="report_profile" value = '5'>Others
                         <div id='otherOptionMsgBox' class='disp-none' >
@@ -396,12 +431,12 @@
 <div class="clearfix reportInv2">
 <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
 <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2">Phone no. reported as invalid</span>
+<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2" id = 'headingReportInvalid'>Phone no. reported as invalid</span>
 </div>
 </div>
 
 <div class="f13 reportInv1 txtc">
-<p class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation. </p>
+<p id = "invalidConfirmMessage"class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation. </p>
 </div>
 </div>
 </div>

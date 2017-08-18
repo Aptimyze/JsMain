@@ -364,7 +364,7 @@ public function fetchProfiles($processObj)
 			}
                 }
 		else{
-			$loginDtEnd =date("Y-m-d",time()-2*24*60*60);	
+			$loginDtEnd =date("Y-m-d",time()-1*24*60*60);	
 			$profiles=$preAllocationTempPoolObj->fetchProfilesWithCities($cities,$lowerScoreLimit,$loginDtEnd);	
 		}
 			
@@ -448,8 +448,8 @@ public function fetchProfiles($processObj)
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
-					$processObj->setEndDate($screenedTimeEndSet);
+					//$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
+					$processObj->setEndDate($screenedTimeEnd);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
@@ -2227,6 +2227,11 @@ public function getMyDisposedProfiles($profiles)
 	}
 	return $myDisposedProfiles;
 }
+/*
+ * This function take the profileid of the user as input parameter
+ * It returns 1 if the user is paid, 
+ * It returns nothing if the user is free.
+ */
 public function checkPaidProfile($profileid)
 {
 	$jprofileObj =new JPROFILE();
@@ -2235,6 +2240,24 @@ public function checkPaidProfile($profileid)
 		return 1;
 	return;
 }
+/*
+ * This functions checks if the user's service expiry date is within E-30,E. 
+ * It takes profile id of the user as input
+ * It returns 1 if the expiry is outside of (E-30, E)
+ * It returns nothing if the expiry is with (E-30, E)
+ */
+public function checkExpiry($profileid) {
+        include_once (JsConstants::$docRoot . "/classes/Services.class.php");
+        $serviceObj = new Services();
+        $expiry_date = $serviceObj->getPreviousExpiryDate($profileid, "F");
+        $expiry_date = $expiry_date['EXPIRY_DATE'];
+        $date = date("Y-m-d");
+        $diff = date_diff(date_create($expiry_date), date_create($date))->format("%a");
+        if ($diff > 30) {
+            return 1;
+        }
+    }
+
 public function fetchAllocationLimit()
 {
 	$agentAllocationObj     =new AgentAllocation();

@@ -17,7 +17,7 @@ class ApiCommon
 	*/
 	public function getStaticTablesData($param)
 	{
-		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW");
+		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW","jamaat"=>"JAMAAT");
 		$gsObj = new GeneralStore;
 		$tableInfo = $gsObj->getTablesInformation("newjs",$tableMapping,1);
 		unset($gsObj);
@@ -53,6 +53,31 @@ class ApiCommon
 					$output[$k]["data"] = null;
 				}
 			}
+                elseif($k=="jamaat")
+                {
+                                if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
+                                {
+                                        $output[$k]["result"] = "yes";
+                                        $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+					$jamaatArr = FieldMap::getFieldLabel("jamaat",'',1);
+					$i=0;
+					foreach($jamaatArr as $kk=>$vv)
+					{
+						$tempArr[$i]['label']=$vv;
+						$tempArr[$i]['value']=$kk;
+						$i++;
+					}
+					$output[$k]['data']=$tempArr;
+					unset($tempArr);
+                                }
+				else
+				{
+                                        $output[$k]["result"] = "no";
+                                        $output[$k]["uptime"] = $v;
+                                        $output[$k]["data"] = null;
+				}
+                }
+
 			elseif($k=="caste")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
@@ -318,6 +343,39 @@ class ApiCommon
 					$output[$k]["data"] = null;
                                 }
 			}
+			//occupation grouping being added 
+			elseif($k=="occupation_grouping")
+			{
+				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]) || strtotime($v)<strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
+                                {
+                                        $output[$k]["result"] = "yes";
+                                        if(strtotime($tableInfo[$tableMapping[$k]]) < strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
+                                                $output[$k]["uptime"] = $tableInfo[$tableMapping["occupation_grouping"]];
+                                        else
+                                                $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+                                        $noObj = new NEWJS_OCCUPATION_GROUPING;
+                                        $occArr = $noObj->getFullTable();
+                                        
+                                        unset($noObj);
+                                        $i=0;
+                                        foreach($occArr as $kk=>$vv)
+                                        {                                                
+                                                $tempArr[$i]["label"] = trim($vv["LABEL"]);
+                                                $tempArr[$i]["value"] = $vv["VALUE"];                                                
+                                                $i++;
+                                        }
+                                        $output[$k]["data"] = $tempArr;                                        
+                                        unset($occArr);
+                                        unset($tempArr);
+                                }
+                                else
+                                {
+                                	$output[$k]["result"] = "no";
+                                	$output[$k]["uptime"] = $v;
+                                	$output[$k]["data"] = null;
+                                }
+			}
+			//occupation grouping code ends here
 			elseif($k=="height")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
@@ -468,6 +526,7 @@ class ApiCommon
 			{
 				return null;
 			}
+
 		}
 
 		foreach($output as $k=>$v)

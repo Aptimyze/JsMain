@@ -22,8 +22,10 @@ class crmMailer {
 	        $SMS_MESSAGE = "Rate your experience with Jeevansathi customer service. Take this short survey: ".$surveyLink;
 	        include_once(JsConstants::$docRoot."/classes/SmsVendorFactory.class.php");
 	    	$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
-			foreach($alertArr as $key=>$val){
-				$xmlData1 = $xmlData1 . $smsVendorObj->generateXml($profileid,$phoneMob,$SMS_MESSAGE);
+			if(is_array($alertArr)){
+				foreach($alertArr as $key=>$val){
+					$xmlData1 = $xmlData1 . $smsVendorObj->generateXml($profileid,$phoneMob,$SMS_MESSAGE);
+				}
 			}
 			if($xmlData1){
 				$smsVendorObj->send($xmlData1,"transaction");
@@ -35,7 +37,7 @@ class crmMailer {
     }
     public function getProfileForFeedbackMailer()
     {
-        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS('newjs_slave');
+        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS();
         $profiles = $salesCampaignObj->getProfiles();
         return $profiles;
     }

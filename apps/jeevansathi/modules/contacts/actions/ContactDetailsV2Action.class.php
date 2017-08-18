@@ -90,6 +90,8 @@ class ContactDetailsV2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
+					$dataPlan = $data2["startingPlan"];
 					unset($responseArray);
 					$responseArray["errmsglabel"] 			= "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 					$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -103,7 +105,44 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["contact4"]["value"]      = "blur";
 					$responseArray["contact4"]["label"]      = "Email";
 					$responseArray["contact4"]["action"]     = null;
+					$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
+					$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
+					$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
+					$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
+					$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages to members you like";
+					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
+
+					$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+					if($dataPlan)
+					{
+						$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+						if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+						{
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+						else
+						{
+							$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+					}
+
+					if($MembershipMessage)
+					{
+						$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
+						$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
+					}
+					else if($dataPlan)
+					{
+						// in case of no offer
+						$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
+					}
+
 					VCDTracking::insertTracking($this->contactHandlerObj);
+                    
+                    //Generate Event
+                    $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 				}
 				else
 				{
@@ -144,6 +183,7 @@ class ContactDetailsV2Action extends sfAction
 						$memHandlerObj = new MembershipHandler();
 						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 						$MembershipMessage = $data2['hamburger_message']['top'];
+                        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				
 						$responseArray["bottommsg2"]       = "Upgrade to eValue to make your phone/email visible to all matching profiles";
 						$responseArray["bottommsg"]       = "View Membership Plans";
@@ -344,14 +384,15 @@ class ContactDetailsV2Action extends sfAction
 				}
 			}
 			 elseif ($priArr[0]["CALL_DIRECT"]["ALLOWED"] == "Y") {
-			 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
+			 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop() || (MobileCommon::isApp()=='I' && ($request->getParameter('API_APP_VERSION')>=5.1)))
 			 	{
 			 		$DeskMob=1;
 			 	}
 			 	else
 			 		$DeskMob=0;
-			 	if($request->getParameter("VIEWCONTACT") == 1 || $DeskMob==0)
-			 	{
+			 
+			if($request->getParameter("VIEWCONTACT") == 1 || $DeskMob==0)
+					{
 
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 
@@ -394,7 +435,9 @@ class ContactDetailsV2Action extends sfAction
 			else {
 				$memHandlerObj = new MembershipHandler();
 				$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+				$dataPlan = $data2["startingPlan"];
 				$MembershipMessage = $data2['hamburger_message']['top'];
+                $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				$responseArray["errmsglabel"]     = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
@@ -409,8 +452,45 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["contact4"]["action"]     = null;
 				$responseArray["headerThumbnailURL"]     = $thumbNail;
 				$responseArray["headerLabel"]            = $this->contactHandlerObj->getViewed()->getUSERNAME();
-				VCDTracking::insertTracking($this->contactHandlerObj);
 
+				$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
+				$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
+				$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
+				$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
+				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages to members you like";
+				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
+
+				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+				if($dataPlan)
+				{
+					$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+					if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+					{
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+					else
+					{
+						$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+				}
+
+				if($MembershipMessage)
+				{
+					$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
+					$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
+				}
+				else if($dataPlan)
+				{
+					// in case of no offer
+					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
+				}
+
+				VCDTracking::insertTracking($this->contactHandlerObj);
+                
+                //Generate Event
+                $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 			}
 		}
 		if (is_array($responseArray["contact1"]))
@@ -503,6 +583,13 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["contact8"]["action"] = "MAIL";
 				$responseArray["contact8"]["iconid"] = IdToAppImagesMapping::PHONEICON;	
 			}
+						if (strstr($value["LABEL"], "Relationship manager")) {
+				$responseArray["contact9"]["value"]  = $value["VALUE"];
+				$responseArray["contact9"]["label"]  = $value['LABEL'];
+				$responseArray["contact9"]["action"] = "CALL";
+				$responseArray["contact9"]["iconid"] = IdToAppImagesMapping::PHONEICON;
+			}
+
 
 		}
 		return $responseArray;

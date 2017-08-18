@@ -7,7 +7,7 @@ class CriticalActionLayerTracking
 
   const ANALYTIC_SCORE_THRESHOLD=70;
   const RCB_LAYER_REF_DATE='2011-01-01';
-
+  public static $independentCALS = array(19); // cals that are highly important and surpass the normal CAL Logic
   /* this function will select entries for today
    *@param- profile id, layer on which user gives response,button the user presses
    */
@@ -24,14 +24,14 @@ class CriticalActionLayerTracking
    *@param- profile id
    */
   
-  public static function satisfiesDateCondition($profileId)
+  public static function satisfiesDateCondition($profileId,$mod)
   {
-     $now = time(); // or your date as well
-     $your_date = strtotime(self::RCB_LAYER_REF_DATE);
-     $datediff = $now - $your_date;
-     $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%5;
-     if($remainder==$profileId%5)return true;
+     $now = new DateTime(); // or your date as well
+     $your_date = new DateTime(self::RCB_LAYER_REF_DATE);
+     $days = $now->diff($your_date);
+     $dayDiff=$days->days;
+     $remainder=$dayDiff%$mod;
+     if($remainder==$profileId%$mod)return true;
      else return false;
   }
 
@@ -75,9 +75,6 @@ class CriticalActionLayerTracking
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
     $profileId = $profileObj->getPROFILEID();
-    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1)
-              return 0;
-
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
@@ -97,27 +94,42 @@ class CriticalActionLayerTracking
 
     }
 
+    foreach (self::$independentCALS as $key => $value) {
+      # code...
+      if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
+        return $value;
+    }
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
+              return 0;
+
   
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
 
         if($maxEntryDt)
-        {
+        {  
           if ( (time() - strtotime($maxEntryDt)) <= 60*60*24) 
           {
             return 0;
           }
           
         }
+  
 // in the order of priority
         for ($i=1;;$i++)
         { 
 
-      $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
+      $layer = CriticalActionLayerDataDisplay::getLAYERFromPriority($i);
+
       if (!$layer) 
-          return 0;
+        { 
+            JsMemcache::getInstance()->set($profileId.'_NOCAL_DAY_FLAG',1,21600);
+            return 0;
+        }
       else if (self::checkFinalLayerConditions($profileObj,$layer,$interestsPending,$getTotalLayers))
-          return $layer;
+      {   
+           return $layer;
+      }
 
         }
 
@@ -131,7 +143,7 @@ return 0;
    * @return- layerid to display layer 
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
-  { 
+  {
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -139,21 +151,26 @@ return 0;
          /*check for diffTime then check whether it is the same layer that was shown last or next layer
          *for both, same or changed layer compare diffTime with their respective values in table if diffTime is less than any of them return null
          */
+
     $compareTime=$layerInfo['MINIMUM_INTERVAL'];
     if($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])
-    if( (time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
-          return false;
-            
+    if((time() -strtotime($getTotalLayers[$layerToShow]["MAX_ENTRY_DT"])) <=  60*60*$compareTime) 
+         return false;
+       
     $profileid = $profileObj->getPROFILEID();
     $show=0;
     $request=sfContext::getInstance()->getRequest();
     $isApp=MobileCommon::isApp();
+
         switch ($layerToShow) {
           case '1': 
+            if(strtotime('-30 days') < strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
                     $picObj= new PictureService($profileObj);
                     $havePhoto= $picObj->isProfilePhotoPresent();
                     if ($havePhoto == null)
                       $show=1;
+                    }
                     break;
           case '2': if ($profileObj->getFAMILYINFO()=='')
                       $show=1;
@@ -180,7 +197,7 @@ return 0;
                       if(!($gender == 'M' && $age >= 24) && !($gender == 'F' && $age >=22) )break;
 
                       $loggedInUser=LoggedInProfile::getInstance();
-                      if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
+                      if(self::satisfiesDateCondition($profileid,5) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
                       {
 
   
@@ -254,7 +271,8 @@ return 0;
                       
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                          {        
+                          {
+                              
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
                             {    
@@ -315,15 +333,18 @@ return 0;
                     
                     break; 
                     case '15': 
+                    //This variable is introduced as we had to switch off this CAL for some duration (due to low numbers)
+                      $switchForCAL = 0;
+                      if($switchForCAL){
                       $screening=$profileObj->getSCREENING();
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
+                      }
                     break;  
 
                     case '16':                      
-                          $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          if(MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))) )
                           {
                             
                               ob_start();
@@ -347,12 +368,144 @@ return 0;
                           } 
                     break;
 
+                    case '17': 
+                       
+                     // $profileId=$profileObj->getPROFILEID();
+                        $picture_new = new ScreenedPicture;
+                        $ordering = $picture_new->getMaxOrdering($profileid);
+                        $oneTwoPhotos;
+                        if($ordering == null)
+                        {
+                          $oneTwoPhotos = 0;
+                        }
+                        else if ($ordering === "0" || $ordering === "1")
+                        {
+                          $oneTwoPhotos = 1;
+                        }
+                      $entryDate = $profileObj->getENTRY_DT();
+                      if(((time() - strtotime($entryDate)) > 15*24*60*60 ) && $oneTwoPhotos)
+                      {
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
+                    case '18': 
+                      
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('18',$request->getParameter('API_APP_VERSION')))) 
+                      if($profileObj->getOCCUPATION()==43)
+                      {
+                          $show=1;
+                           
+                      }
+                      break;
+                    case '19': 
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
+                      $lightningCALObj = new LightningDeal();
+                      $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);   
+                      if($lightningCALData != false){
+                        $request->setParameter('DISCOUNT_PERCENTAGE',$lightningCALData['line2']);
+                        $request->setParameter('DISCOUNT_SUBTITLE',$lightningCALData['line3']);
+                        $request->setParameter('START_DATE','Plan starts @');
+                        $request->setParameter('OLD_PRICE',$lightningCALData['strikeoutPrice']);
+                        $request->setParameter('NEW_PRICE',$lightningCALData['discountedPrice']);
+                        $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
+                        $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
+                        $show=1;                      
+                        self::flushCALCacheData($profileid);
+                      }
+                      }                      
+                    break;
+
+                     case '21': 
+        if($isApp=='I' && self::CALAppVersionCheck('21',$request->getParameter('API_APP_VERSION')))
+        {
+                     $jpartnerObj=ProfileCommon::getDpp($profileid,"decorated",$page_source);
+                    $strDPPCaste = $jpartnerObj->getDecoratedPARTNER_CASTE();
+                    if($strDPPCaste != '' && $strDPPCaste != NULL && $strDPPCaste!="Doesn't Matter")
+                    {
+                      $layerDppCaste = explode(',',$strDPPCaste);
+      foreach ($layerDppCaste as $key => $value) {
+        $tempArr[$key] = explode(':', $value)[1]; 
+      }
+      $layerDppCaste = implode(',', $tempArr);
+      $layerDppCaste = trim($layerDppCaste);
+      $request->setParameter('DPP_CASTE_BAR',$layerDppCaste);
+                      $show=1;
+                    }
+                    }      
+                      break;
+
+                    case '22': 
+                    if(strtotime('-30 days') >= strtotime($profileObj->getVERIFY_ACTIVATED_DT()) )
+                    {
+                    $picObj= new PictureService($profileObj);
+                    $havePhoto= $picObj->isProfilePhotoPresent();
+                    if ($havePhoto == null)
+                      $show=1;
+                    }
+                    break;
+
+
+                    case '23' :
+                        if(!MobileCommon::isApp() || self::CALAppVersionCheck('23',$request->getParameter('API_APP_VERSION')))
+                  {
+                    $familyBasedOutOfObj= new JProfile_NativePlace($profileObj);
+                    if(!$familyBasedOutOfObj->getCompletionStatus())
+                    {
+                      $show=1;
+                    }
+
+                  }  
+                     break;
+
+
+                  case '20':
+
+                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
+                      {  
+                          $show=1;
+                           
+                      }
+                      
+                      
+                    break;
+                  case '25':
+                    if(!MobileCommon::isApp()){
+                      if(in_array($profileObj->getRELIGION(), 
+                        array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
+                        if(!($profileObj->getMANGLIK())) {
+                          $show=1;
+                        }
+                      }
+                    }
+                  break;
+
+                  case '24':
+
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION'))) 
+                      {
+                          $nameData=(new NameOfUser())->getNameData($profileid);
+                          $nameOfUser=$nameData[$profileid]['NAME'];
+                          if($nameOfUser)
+                          {
+                            $aadhaarObj = new aadharVerification();
+                            $details = $aadhaarObj->getAadharDetails($profileid)[$profileid];
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
+                              $show=1;
+                          }
+                      }
+                      
+                      
+                    break;
 
           default : return false;
         }
         /*check if this layer is to be displayed
          * and then check no. of times the layer has been shown and then compare it with value of max times in the table
          */
+        
         if($show)
           return true;
         else 
@@ -373,6 +526,7 @@ return 0;
   case in_array($highestDegree, explode(',',$fieldArray['ug'])):
     return false;
   break;
+  
 
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
@@ -414,14 +568,61 @@ break;
                 '16' => array(
                     
                     'A' => '84',
-                    'I' => '4.5'
+                    'I' => '10.5'
                     
-                        )
+                        ),
+
+                '19' => array(
+                  'A' => '97',
+                  ),
+
+                          '18' => array(
+                    
+                    'A' => '96',
+                   'I' => '5.5'
+                        ),
+                    '21' => array(
+                    
+                    'A' => '99',
+                    'I' => '5.3'
+                        ),
+
+                    '23' => array(
+                    'A' => '99',  
+                    'I' => '5.4'
+                        ),
+
+                  '20' => array(  
+                    'A' => '99',
+                    'I' => '5.4'
+                        ),
+
+                  '24' => array(  
+                    'A' => '107'
+                        )        
+
           );
-      if($appVersion >= $versionArray[$calID][$isApp])
+      if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
           return true;
        return false;
       
       
+  }
+
+    public static function checkConditionForCityCAL($profileObj){
+   
+      $cityRes =$profileObj->getCITY_RES();
+      if($profileObj->getCOUNTRY_RES() == 51 && $cityRes == '0'){
+        return true;
+       } 
+       return false;
+      
+  }
+
+
+  public static  function flushCALCacheData($profileid)
+  {
+    $redis = JsMemcache::getInstance();
+    $redis->delete($profileid.'_CAL_DAY_FLAG');
   }
 }

@@ -62,6 +62,10 @@ class ErrorHandler
 	const LIMIT = 'LIMIT';
 	const PAID_FILTERED_INTEREST_NOT_SENT = 'PAID_FILTERED_INTEREST_NOT_SENT';
 	const PAID_FILTERED_INTEREST_SENT = 'PAID_FILTERED_INTEREST_SENT';
+	const FREE_FILTERED_INTEREST_NOT_SENT = 'FREE_FILTERED_INTEREST_NOT_SENT';
+	const FREE_FILTERED_INTEREST_SENT = 'FREE_FILTERED_INTEREST_SENT';
+	const REMINDER_SENT_BEFORE_TIME = 'REMINDER_SENT_BEFORE_TIME';
+	const SECOND_REMINDER_BEFORE_TIME ='SECOND_REMINDER_BEFORE_TIME';
 	/**
 	 * 
 	 * Used to initialize object of ErrorHandler class.
@@ -75,7 +79,7 @@ class ErrorHandler
 		Messages::setViewerChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewer()->getPROFILEID()));
 		Messages::setViewedChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewed()->getPROFILEID()));
 		$this->contactHandlerObj = $contactHandlerObj;
-		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0); 
+		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0,ErrorHandler::REMINDER_SENT_BEFORE_TIME=>1,ErrorHandler::SECOND_REMINDER_BEFORE_TIME=>1); 
 		$this->updateErrorBits();
 		
 	}
@@ -257,10 +261,13 @@ class ErrorHandler
 				
 		//4. Contact limit		
 		$error = $this->checkContactlimit();
-		if($error)
+		if($error['MSG'])
 		{
-			$this->setErrorMessage($error);
+			$this->setErrorMessage($error['MSG']);
 			$this->setErrorType(ErrorHandler::EOI_CONTACT_LIMIT,ErrorHandler::ERROR_FOUND);
+			if(array_key_exists('E_COUNT', $error)){
+			$this->logEOIBreach($error['E_COUNT']);
+		}
 			return false;
 		}
 		
@@ -314,11 +321,11 @@ class ErrorHandler
 		{
 				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
 				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-				{					
+				{				
+
+					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();								
 					if($this->checkPaid())
-					{	
-							$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
-							
+					{								
 							if($this->interestNotSent())
 							{
 								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
@@ -337,9 +344,29 @@ class ErrorHandler
 							}
 
 					}
-					$error = Messages::FILTERED;
+					else
+					{
+							if($this->interestNotSent())
+							{
+								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::FREE_FILTERED_INTEREST_NOT_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);	
+								return false;
+							}
+							else
+							{ 
+								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::FREE_FILTERED_INTEREST_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
+
+					}
+					/*$error = Messages::FILTERED;
 					$this->setErrorMessage($error);
-					return false;
+					return false;*/
 				}			
 		}
 		
@@ -376,6 +403,18 @@ class ErrorHandler
 		{
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PHONE_NOT_VERIFIED,ErrorHandler::ERROR_FOUND);
+			return false;
+		}
+
+		//11. Check if the reminder was sent before 24 hours or not.
+		$error = $this->checkReminderSentBeforeDay();
+		if($error)
+		{
+			$this->setErrorMessage($error);
+			if($error['ID'] == 1)
+			$this->setErrorType(ErrorHandler::REMINDER_SENT_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
+			else
+				$this->setErrorType(ErrorHandler::SECOND_REMINDER_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
 
@@ -688,16 +727,17 @@ class ErrorHandler
 	 */	
 	function checkContactlimit()
 	{
-		$error ='';
+		$error['MSG'] ='';
 		
 		//Not to be checked for AP users.
 		if($this->contactHandlerObj->getPageSource()=='AP')
 					return $error;
-					
-		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
 		
     	if($this->errorTypeArr[ErrorHandler::EOI_CONTACT_LIMIT] && $this->contactHandlerObj->getAction()==ContactHandler::POST)
 		{
+
+		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
+
 			$limitArr = CommonFunction::getContactLimits($this->contactHandlerObj->getViewer()->getSUBSCRIPTION(),$this->contactHandlerObj->getViewer()->getPROFILEID());
 			
 			$today_initiated = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
@@ -708,40 +748,47 @@ class ErrorHandler
 			
 			if(($limitArr['DAY_LIMIT']-$today_initiated) <= 0)
 			{
-				$error = Messages::DAY_LIMIT;
+				$error['MSG'] = Messages::DAY_LIMIT;
 				$this->setErrorType('LIMIT','DAY');
+				$error['E_COUNT'] = $today_initiated;
 			}
 			else if($limitArr['WEEKLY_LIMIT']-$weekly_initiated<=0)
 			{
-				$error = Messages::WEEK_LIMIT;
+				$error['MSG'] = Messages::WEEK_LIMIT;
 				$this->setErrorType('LIMIT','WEEK');
+				$error['E_COUNT'] = $weekly_initiated;
 			}
 			else if($limitArr['MONTH_LIMIT']-$monthly_initiated<=0)
 			{	
-				$error = Messages::MON_LIMIT;
+				$error['MSG'] = Messages::MON_LIMIT;
 				$this->setErrorType('LIMIT','MONTH');
+				$error['E_COUNT'] = $monthly_initiated;
 			}
 			else if($limitArr['OVERALL_LIMIT']-$total_contacts<=0)
 			{ 
-				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID())
-					$error = Messages::PAID_OVERALL_LIMIT;
-			    else
-					$error = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
+				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID()){
+					$error['MSG'] = Messages::PAID_OVERALL_LIMIT;
+					$error['E_COUNT'] = $total_contacts;
+				}
+			    else{
+					$error['MSG'] = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
+					$error['E_COUNT'] = $total_contacts;
+			    }
 				$this->setErrorType('LIMIT','TOTAL');
 			}
-			else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
+		/*	else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
-				
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));
 				if($this->contactHandlerObj->getPageSource()=='Search')
 				
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
 					
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::EOI)				
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
 				
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
-			}
+					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
+			}*/
 		}
 		return $error;		
 	}
@@ -899,9 +946,9 @@ class ErrorHandler
 	{
 		$error ="";
 		$ignoreObj = new IgnoredProfiles();
-		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID()))
+		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
 			$error = Messages::getMessage(Messages::I_IGNORE_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewed()->getUSERNAME()));
-		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID()))
+		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
 			$error = Messages::getMessage(Messages::IGNORED_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewer()->getUSERNAME()));
 		return $error;
 	}
@@ -921,6 +968,66 @@ class ErrorHandler
 	}	
 
 
+	private function checkReminderSentBeforeDay()
+	{  
+		$error = '';
+
+		$contactObj = $this->contactHandlerObj->getContactObj();
+
+		if($this->errorTypeArr[ErrorHandler::REMINDER_SENT_BEFORE_TIME] && $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 1 )
+		{		
+ 		
+		$timeOfLastContact = strtotime($contactObj->getTIME());
+		$timeDayAgo = (time() - (3600*24));
+
+		if($timeDayAgo < $timeOfLastContact){
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+		$error['ID'] = 1;
+		}
+		
+		}
+		else if($this->errorTypeArr[ErrorHandler::SECOND_REMINDER_BEFORE_TIME] &&
+$this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
+		{	
+
+		$timeOfLastContact = strtotime($contactObj->getTIME());
+		$timeDayAgo = (time() - (3600*24));
+
+		if($timeDayAgo < $timeOfLastContact){
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+		$error['ID'] =2;
+		}
+		
+		}
+		return $error;
+	}
+
+	private function logEOIBreach($EOIDone)
+	{	
+			$viewerLogObj = $this->contactHandlerObj->getViewer();
+			$viewedLogObj = $this->contactHandlerObj->getViewed();
+			$viewerGender = $viewerLogObj->getGENDER();
+			$viewerPfid = $viewerLogObj->getPROFILEID();
+			$viewedPfid = $viewedLogObj->getPROFILEID();
+			$typeBreached = $this->errorTypeArr['LIMIT'];
+			$subscription = $viewerLogObj->getSUBSCRIPTION();
+
+			$check = CommonFunction::isPaid($subscription);
+			if($check == true)
+			{
+				$typeOfUser = "PAID";
+				if(CommonFunction::isOfflineMember($subscription))
+				{
+					$typeOfUser = "RB";
+				}	
+			}
+			else
+			{
+				$typeOfUser = "FREE";
+			}
+			$loggingObj = new MIS_EOI_DENIED_LOG();
+			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser,$EOIDone);
+	}
 
 
 }

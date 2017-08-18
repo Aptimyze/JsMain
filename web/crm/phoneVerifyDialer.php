@@ -1,6 +1,6 @@
 <?php
 	include_once("connect.inc");
-	$SITE_URL ='http://crm.jeevansathi.com';
+	$SITE_URL ='https://crm.jeevansathi.com';
 	if($from_dialer_phone=='Y')
 	{
 		if(isset($_COOKIE["CRM_LOGIN"]))
@@ -27,8 +27,18 @@
                 curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
 	    	curl_setopt($tuCurl, CURLOPT_TIMEOUT, 20);
     		curl_setopt($tuCurl, CURLOPT_CONNECTTIMEOUT, 20);
-                //curl_setopt($tuCurl, CURLOPT_GET, 1);
+
+                // add header in curl Request
+                $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+                curl_setopt($tuCurl, CURLOPT_HEADER, $header);
+                curl_setopt($tuCurl, CURLOPT_USERAGENT,"JsInternal");
+
                 $tuData = curl_exec($tuCurl);
+
+                // remove header from curl Response 
+                $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
+                $tuData = substr($tuData, $header_size);
+
                 curl_close($tuCurl);
                 return $tuData;
         }

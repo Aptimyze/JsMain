@@ -164,8 +164,8 @@ class AdvanceSearch extends SearchParamters
                                 
                                 //Setting Keys
                                 $this->setCITY_RES(implode(",",$city_arr));
-				if($india!=1)
-					$this->setCITY_INDIA(implode(",",$city_arr));
+				//if($india!=1)
+				//	$this->setCITY_INDIA(implode(",",$city_arr));
                                 if(count($state_arr)>0)
 					$this->setSTATE(implode(",",$state_arr));
 			}
@@ -379,12 +379,12 @@ class AdvanceSearch extends SearchParamters
 								$this->setSTATE($state_arr);
 							if(is_array($city_arr))
 							{
-								$this->setCITY_INDIA(implode(",",array_unique($city_arr)));
+								//$this->setCITY_INDIA(implode(",",array_unique($city_arr)));
 								$this->setCITY_RES(implode(",",array_unique($city_arr)));
 							}
 							else
 							{
-								$this->setCITY_INDIA($city_arr);
+								//$this->setCITY_INDIA($city_arr);
 								$this->setCITY_RES($city_arr);
 							}
 							

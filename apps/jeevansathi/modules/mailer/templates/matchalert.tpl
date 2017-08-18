@@ -79,7 +79,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerSurvey",[surveyLink=>$data.surveyLink])`
+                        	~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
                         </td>
                     </tr>
                     <tr>
@@ -87,7 +87,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks])`
+                        	~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks,fromMatchAlertMailer=>1])`
                         </td>
                     </tr>
                     <tr>

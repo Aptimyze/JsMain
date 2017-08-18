@@ -4,8 +4,8 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 65;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 80;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 104;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 101;
 	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
@@ -19,7 +19,7 @@ class ApiRequestHandler
 		if ($this->responseFlag) {
 			$this->AuthenticateDevice($request);
 		}
-		$this->app = array("android" => array('APILEVEL' => '11', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
+		$this->app = array("android" => array('APILEVEL' => '16', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
 	}
 
 	/*
@@ -174,6 +174,35 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
+				else if($output["moduleName"] != "phone" )
+				{
+					$isApp = MobileCommon::isApp();
+					if($isApp)
+					{
+						$versionArr = array('A'=>107,'I'=>5.9);
+						$showConsentMsg = '';
+						$appVersion = $request->getParameter("API_APP_VERSION"); 
+						if ( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid)
+						{
+							$memObject=JsMemcache::getInstance();
+							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
+							if(!$showConsentMsg) 
+							{
+								$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
+								$memObject->set('showConsentMsg_'.$profileid,$showConsentMsg);
+							}
+
+						}
+						if($showConsentMsg=='Y')
+						{	
+							$output["moduleName"] = "phone";
+							$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
+						}	
+					}
+
+				}
+
+
 			}
 
 		}
@@ -209,7 +238,8 @@ class ApiRequestHandler
 					else
 						$defaultArray[FORCEUPGRADE] = "N";
 				} else {
-					$defaultArray[UPGRADE] = "Y";
+                                        if($apiLevel >= $Device[APILEVEL]  && ($request->getParameter(KEY)!='android' || $this->checkForRandomNess()))
+                                            $defaultArray[UPGRADE] = "Y";
 					if ($this->forceUpgrade || ($apiappVersion < $Device[FORCE_API_APP_VERSION]))
 						$defaultArray[FORCEUPGRADE] = "Y";
 				}
@@ -224,9 +254,19 @@ class ApiRequestHandler
 			if ($defaultArray[FORCEUPGRADE] == "Y")
 				$defaultArray["forceupgrade_message"] = "This version of your Jeevansathi App has expired please upgrade";
 		} else
-			$defaultArray["message"] = "This version of your Jeevansathi App has expired please upgrade";
+			$defaultArray["message"] = "This version of your Jeevansathi App has expired. Please upgrade";
 		return $defaultArray;
 	}
+// if for 50% set divisor =2, 25 % set to 4
+        
+        public function  checkForRandomNess(){
+        	return true;
+            $Divisor = 10;
+            $randNum = rand(1,$Divisor);
+            if($randNum % $Divisor  == 0 )return true;
+            else return false;
+            
+        }
 }
 
 ?>

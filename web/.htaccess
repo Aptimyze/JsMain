@@ -107,6 +107,8 @@ RewriteCond %{REQUEST_URI} \/P\/edit_profile.php [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 RewriteCond %{REQUEST_URI} \/profile\/edit_dpp.php [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/profile\/downloadHoroscope [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
 RewriteCond %{REQUEST_URI} \/P\/edit_dpp.php [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 RewriteCond %{REQUEST_URI} \/profile\/editProfile [NC]
@@ -140,6 +142,9 @@ RewriteCond %{REQUEST_URI} \/membership\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 
 RewriteCond %{REQUEST_URI} \/settings\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+
+RewriteCond %{REQUEST_URI} \/sathiForLife\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 
 RewriteRule profile\/layer_photocheck.php symfony_index.php/social/album 
@@ -210,5 +215,7 @@ RewriteRule ^(.*)$ /symfony_index.php/static/logoutPage [L]
 RewriteCond %{REQUEST_URI} \/homepage\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 RewriteCond %{REQUEST_URI} \/help\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/jaagteRahoo\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 </IfModule>

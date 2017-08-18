@@ -67,7 +67,7 @@ class postSendReminderv2Action extends sfAction
 	
 	
 	private function getContactArray($request)
-	{
+	{  
 		$pictureServiceObj=new PictureService($this->Profile);
 		$profilePicObj = $pictureServiceObj->getProfilePic();
 		
@@ -111,6 +111,7 @@ class postSendReminderv2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
@@ -167,6 +168,7 @@ class postSendReminderv2Action extends sfAction
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top']; 
+                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
 					$responseArray["footerbutton"]["label"]  = "View Memebrship Plans";
 					$responseArray["footerbutton"]["value"] = "";
@@ -202,6 +204,22 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 				$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
+			{	
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = "Reminder cannot be sent";
+				//$responseArray["redirect"] = true;
+			}
+			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
+			{  
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["headerlabel"] = "Second Reminder cannot be sent";
+				//$responseArray["redirect"] = true;
 			}
 			else
 			{

@@ -14,13 +14,16 @@ class search_JUST_JOINED_LAST_USED extends TABLE
 	* log records
 	* Store last time just joined search is run for a user.
         */
-	public function ins($pid)
+	public function ins($pid,$date=NULL)
 	{
 		try
 		{
 			if(!$pid)
 				throw new jsException("","PROFILEID IS BLANK IN ins() of search.JUST_JOINED_LAST_USED");
 			$dt = date("Y-m-d h:i:s");
+                        if($date != NULL){
+                                $dt = $date;
+                        }
 			$sql = "REPLACE INTO search.JUST_JOINED_LAST_USED(PROFILEID,LAST_USED_DT) VALUES (:PID,:DT)";
 			$res = $this->db->prepare($sql);
 			$res->bindParam(":PID", $pid, PDO::PARAM_INT);

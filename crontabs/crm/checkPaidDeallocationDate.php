@@ -25,8 +25,10 @@ $res_crm = mysql_query($sql_crm,$db_slave) or logError($sql_crm);
 while($row_crm = mysql_fetch_array($res_crm))
 {
 	$allotedTo =$row_crm['ALLOTED_TO'];
-	if(in_array("$allotedTo", $agentArr))
-		continue;
+	if(is_array($agentArr)){
+		if(in_array("$allotedTo", $agentArr))
+			continue;
+	}
 
         $profileid =$row_crm['PROFILEID'];
         $sql1 ="SELECT EXPIRY_DT from billing.SERVICE_STATUS where PROFILEID='$profileid' AND SERVEFOR LIKE '%F%' order by ID DESC LIMIT 1";

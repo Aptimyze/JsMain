@@ -281,3 +281,7 @@ background-image: url(IMG_URL/images/jsms/commonImg/loader.gif);
 background-repeat: no-repeat;
 background-position: center;
 }
+.padd3015 {padding:30px 15px;}
+.vpro_sprite{background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png); background-repeat:no-repeat}
+.vpro_correct{background-position: -195px -202px;width: 28px;height: 27px;}
+.bgTransGrey{background: rgba(45,60,70,0.5);}

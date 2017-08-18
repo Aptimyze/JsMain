@@ -39,9 +39,26 @@ class getFieldValues {
       break;
       case "mtongue" : $fieldArr = $this->getMtongueValues();
       break;
-      case "religion" : $fieldArr = $this->staticFields["religion"];
+      case "religion" : 
+      $fieldArr = $this->staticFields["religion"];
+       //removing "others" from  religion on registration
+      foreach($fieldArr as $key=>$value)
+      {
+        foreach($value as $k1=>$v1)
+        {
+          if($v1[8] == RegistrationEnums::$otherText)
+          {            
+            unset($fieldArr[$key][$k1]);
+          }
+        }
+      }
+      
       break;
       case "caste" : $fieldArr[0] = $this->religionBasedCaste();
+      break;
+      case "casteMuslim" : $fieldArr[0] = $this->muslimCaste();
+      break;
+      case "jamaat" : $fieldArr[0] = $this->getJamaat();
       break;
       case "subcaste" : $fieldArr = $this->getMtongueValues();
       break;
@@ -310,6 +327,8 @@ private function orderForLabelGrid($label)
                 else {
                   $newJson = $this->getAlphabeticalList($newJson["alpha"]);  
                 }
+                if($szKey == 'reg_caste_2_')
+                    unset($newJson['Others']);
                 return $newJson;
         }
   }
@@ -332,6 +351,30 @@ private function orderForLabelGrid($label)
     $arr["Christian"] = $this->getCasteValues("reg_caste_3_");
     $arr["Sikh"] = $this->getCasteValues("reg_caste_4_");
     $arr["Jain"] = $this->getCasteValues("reg_caste_9_");
+    return $arr;
+  }
+  
+  /*
+   * Function to get values of fields for muslim caste values
+   */
+  private function muslimCaste() {
+    $casteArr=FieldMap::getFieldLabel("sect_muslim",'',1);
+    $k=0;
+    foreach($casteArr as $kk=>$v)
+            $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));
+    
+    return $arr;
+  }
+  
+  /*
+   * Function to get values of fields for jamaat values
+   */
+  private function getJamaat() {
+    $casteArr=FieldMap::getFieldLabel("jamaat",'',1);
+    $k=0;
+    foreach($casteArr as $kk=>$v)
+            $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));
+    
     return $arr;
   }
 
@@ -365,7 +408,7 @@ private function orderFamilyCity($addUsa='')
 		{
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
-                if($addUsa)
+                //if($addUsa)
                     $returnArr[$k][0][] = array('0'=>'Others');
 	}
         if($addUsa){

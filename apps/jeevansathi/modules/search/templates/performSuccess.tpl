@@ -27,11 +27,11 @@ CurrentDate : '~$GR_DATE`',
 var google_remarketing_only = true;
 /* ]]> */
 </script>
-<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
 </script>
 <noscript>
 <div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
+<img height="1" width="1" style="border-style:none;" alt="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
 <!-- Google Remarketing Ends -->
@@ -246,23 +246,25 @@ var google_remarketing_only = true;
 			</div>
 		</div>
 	</div>
-
-	 <div class="fl mrg20pxleft">
-	   <i class="fl blue_arrw_dwn"></i>    <a class="b fs12 blink" onclick="saveAsDpp('show',1); return false;"> Email me matches like these</a>
-		<div class="div_interactions fl position4 fs12" id="saved_as_desired" style="display:none">
-			<div class="fl divHeading lh19 white b"><i class = "fl wht_arw"></i> Email me matches like these</div>
-			<div class="divlinks fl w240" onclick="javascript:check_window('saveAsDpp(\'hide\',1)');">
-				<div id = "saveDppMsg2">You will recieve matches on your email based on this search criteria
-				<div class="sp12"></div>
-				<span class="width100 fl txt_center"><input type="button"  value="Save" class="btn_view b" style="width:64px;cursor:pointer" id = "saveBtn1" /></span>
-				</div>
-				<div style="text-align:center; display:none" id="saveDppLoader"><img src="~sfConfig::get('app_img_url')`/profile/images/ajax-loader.gif"></div>
-				<span class="width100 fl" style="font-size:14px; display:none" id = "saveDppMsg1"><div class="sp12"></div><i class="ico_right_1 fl">&nbsp;</i>Saved Successfully</span>
-				<div class="separator fl width100">&nbsp; </div>
-				<div class="fr b"><a href="#" onclick="saveAsDpp('hide',1); return false;">Close [x]</a></div>
-			</div>
-		</div>
-	</div>
+        
+                ~if $loggedIn eq 1 and $premiumDummyUser eq 1`
+                        <div class="fl mrg20pxleft">
+                          <i class="fl blue_arrw_dwn"></i>    <a class="b fs12 blink" onclick="saveAsDpp('show',1); return false;"> Email me matches like these</a>
+                               <div class="div_interactions fl position4 fs12" id="saved_as_desired" style="display:none">
+                                       <div class="fl divHeading lh19 white b"><i class = "fl wht_arw"></i> Email me matches like these</div>
+                                       <div class="divlinks fl w240" onclick="javascript:check_window('saveAsDpp(\'hide\',1)');">
+                                               <div id = "saveDppMsg2">You will recieve matches on your email based on this search criteria
+                                               <div class="sp12"></div>
+                                               <span class="width100 fl txt_center"><input type="button"  value="Save" class="btn_view b" style="width:64px;cursor:pointer" id = "saveBtn1" /></span>
+                                               </div>
+                                               <div style="text-align:center; display:none" id="saveDppLoader"><img src="~sfConfig::get('app_img_url')`/profile/images/ajax-loader.gif"></div>
+                                               <span class="width100 fl" style="font-size:14px; display:none" id = "saveDppMsg1"><div class="sp12"></div><i class="ico_right_1 fl">&nbsp;</i>Saved Successfully</span>
+                                               <div class="separator fl width100">&nbsp; </div>
+                                               <div class="fr b"><a href="#" onclick="saveAsDpp('hide',1); return false;">Close [x]</a></div>
+                                       </div>
+                               </div>
+                       </div>
+                ~/if`
 	~/if`
 </div>
 

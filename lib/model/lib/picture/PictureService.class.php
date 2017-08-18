@@ -506,7 +506,7 @@ class PictureService
       $getFromMasterR = '1';
     } 
     $pics=$PICTURE_NEW->get($whereCondition,$getFromMasterR);
-    if(is_array($pics) && $pics[0]!='')
+    if(is_array($pics) && ($pics[0]!='' || $class != 'Profile'))
     {
       foreach ($pics as $k => $v) {
         $ScreenedPicture[$k] = new ScreenedPicture;
@@ -727,10 +727,16 @@ class PictureService
 			if($havePhoto['HAVEPHOTO']==$this->neverAddedPhoto ||$havePhoto['HAVEPHOTO']==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"U","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
-			}
+                                MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                                $memCacheObject = JsMemcache::getInstance();
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+
+                        }
 			else
 				$this->profileObj->edit(array("PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
-		}
+		
+                        
+                }
 		elseif($method=='del')
 		{
 			if($value==$this->photoUnderScreening)
@@ -741,7 +747,11 @@ class PictureService
 			elseif($value==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"N","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosScreenedFlag));
-			}
+                        }
+                        MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                        $memCacheObject = JsMemcache::getInstance();
+                        $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+                        
 		}
 		else
 		{
@@ -1224,7 +1234,7 @@ class PictureService
                         $finalUpdateArr["pictureId"] = $picId;
                         
                         if($ordering == 0 && $task=="FACE")
-                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["EDIT"], implode("", $currentBit));
+                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["RESIZE"], implode("", $currentBit));
                         elseif($ordering==0)
                                $finalUpdateArr["bit"] = implode("", $currentBit);
                         else

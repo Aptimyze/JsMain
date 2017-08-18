@@ -10,3 +10,7 @@ all:
     enable_authToken:  off
   versionupgrade_v1:
     enable_login: off
+  ApiGetDataForMonitoringMetrics:
+    enable_login: off
+  SocialSignin:
+    enable_login: off

@@ -151,30 +151,129 @@
                 </div>
                 <div class="pl12 pt20">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
-                    <ul class="listnone reportlist fontlig f15 pt10 color2">
-                      <li>
-                          <input type="radio"  name="report_profile">Looks like fake profile</li>
-                          <li>
-                          <input type="radio"   name="report_profile">Inappropriate content</li>
-                           <li>
-                          <input type="radio"   name="report_profile">Spam</li>
-                            <li>
-                          <input type="radio"  name="report_profile">Duplicate profile</li>
-                            <li>
-                          <input type="radio"  name="report_profile">Already married/engaged</li>
-                             <li>
-                          <input type="radio"  name="report_profile">Incorrect details/photo</li>
-                             <li>
-                          <input id='otherOptionBtn' type="radio"  name="report_profile">Others
-                        <div id='otherOptionMsgBox' class='disp-none' >
-                        <div id='errorText' class="disp-none"><br><div class="errcolr" style="font-size: 11px;">*Please Enter The Comments</div></div>
-                        <textarea rows='4' type="radio" style='width:95%;outline:none;' class='brdr-0 bgnone reportAbuse  mt10 fontlig' placeholder='Add Comments'></textarea></div>
-                           </li>
-                        
-                          
-                        
-                    
-                    </ul>
+                     <ul id="reportAbuseList" class="listnone hgt200 reportlist fontlig f15 pt10 color2 mb20">
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile" /><span class="reason">One or more of Profile Details are incorrect</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Photo on profile doesn't belong to the person</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is using abusive/indecent language</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is stalking me with messages/calls</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"> <span class="reason">User is asking for money</span>
+        <div class='otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User has no intent to marry</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User is already married / engaged</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+    <li>
+        <input type="radio" name="report_profile"><span class="reason">User is not picking up phone calls</span></li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Person on Phone denied owning this profile</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+    </li>
+    <li>
+        <input type="radio" name="report_profile" /><span class="reason">User's phone is switched off/not reachable</span>
+    </li>
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">User's phone is invalid</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+        </div>
+
+    </li>
+
+    <li class="openBox">
+        <input id='openBox' type="radio" name="report_profile"><span class="reason">Other reasons</span>
+        <div class=' otherOptionMsgBox disp-none'>
+            <div id='errorText' class="disp-none">
+                <br>
+                <div class="errcolr" style="font-size: 11px;">*Please Enter The Comments (in atleast 25 characters)</div>
+            </div>
+            <textarea maxlength="225" rows='4' type="radio" style='width:90%;outline:none;' class='brderinp brdr-0 bgnone reportAbuse  mt10 fontlig padall-10' placeholder='Please elaborate further in your own words about the issue. Please be as detailed as possible....'></textarea>
+
+
+        </div>
+    </li>
+
+</ul>
                 
                 
                 </div>
@@ -212,7 +311,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
   <!--start:next/previous button-->
   ~if $SHOW_PREV`
   	<!--start:prv-->
-    <a id="show_prevListingProfile" ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
+    <a id="show_prevListingProfile" ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
     <div class="pos-abs prfpos5 cursp z1">
     	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic33"></i></div>
@@ -225,7 +324,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     <!--start:next-->
 
 
-    <a id="show_nextListingProfile" ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
+    <a id="show_nextListingProfile" ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
     <div class="pos-abs prfpos6 cursp z1">
     	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic34"></i></div>
@@ -326,7 +425,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
             ~/if`
            </div>
         <!--end:photo--> 
-        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser,"dontShowNameReason"=>$dontShowNameReason,"SAMEGENDER"=>$SAMEGENDER])`
+        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser,"dontShowNameReason"=>$dontShowNameReason,"SAMEGENDER"=>$SAMEGENDER,"showIdfy"=>$arrOutDisplay["showIdfy"]])`
         
       </div>
       <!--end:photo div 1-->

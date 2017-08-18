@@ -60,10 +60,34 @@ class FieldForm extends sfForm
 	public function updateData(){
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
+          $sendSMSToPhone = $this->loggedInObj->getPHONE_MOB();
+          $prevManglikStatus = $this->loggedInObj->getMANGLIK();
+          $prevMstatus = $this->loggedInObj->getMSTATUS();
+          $prevDob = $this->loggedInObj->getDTOFBIRTH();
+          $fieldsEdited = array();
+          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;          
 	  foreach($this->formValues as $field_name=>$value){
 		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
 		{
 			$value = "";
+		}
+		if(array_key_exists($field_name,$sendSMS))
+		{
+                        if($field_name != "MANGLIK" || ($field_name == "MANGLIK" && ($prevManglikStatus !="S0" && $prevManglikStatus !="S")))
+                                $fieldsEdited[] = $field_name;
+		}
+		//aadhar section
+		if($field_name == "NAME")
+		{
+			$nameObj = new NameOfUser();
+            $nameOfUserArr = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
+            $nameOfUser = $nameOfUserArr[$this->loggedInObj->getPROFILEID()]["NAME"];
+            if(strcasecmp($nameOfUser,$value)!=0)
+            {
+                $aadharObj = new aadharVerification();
+                $aadharObj->resetAadharDetails($this->loggedInObj->getPROFILEID());
+
+            }
 		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
@@ -71,7 +95,6 @@ class FieldForm extends sfForm
 		  $table_name_arr=explode(":",$field_obj->getTableName());
 		  $table_name=$table_name_arr[0];
 		  $column_name_arr=explode(",",$table_name_arr[1]);
-
 		  if(count($column_name_arr)==1)
 		  {
 			  //Normal case - only one column to be updated for one form field
@@ -86,11 +109,17 @@ class FieldForm extends sfForm
 					else{
 					 	$jprofileFieldArr[$column_name]=$value;
 					}
+                                        if(in_array($field_name,EditProfileEnum::$editableCriticalArr)){
+                                                $criticalInfoFieldArr[$column_name] = $value;
+                                        }
 					if($column_name == "ANCESTRAL_ORIGIN")
 					{
 						$bExecuteNative_PlaceUpdate = true;
 					}
 					 break;
+                                case "CRITICAL_INFO_CHANGED_DOCS":
+                                        $criticalInfoFieldArr[$column_name] = $value;
+                                        break;
 				case  "JPROFILE_EDUCATION":
 					 $jprofileEducationArr[$column_name]=$value;
 					 break;
@@ -166,7 +195,38 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-          
+        if(count($criticalInfoFieldArr)){
+                $request=sfContext::getInstance()->getRequest();
+                $insert = 1;
+                if($request->getParameter("docOnly") == 1){
+                        $insert = 0;
+                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                        $infoChngObj->updateStatus($this->loggedInObj->getPROFILEID(),"N");
+                }
+                if($insert == 1){
+                        $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                        $editedFields = array_keys($criticalInfoFieldArr);
+                        $screenedStatus = "Y";
+                        if(isset($criticalInfoFieldArr["MSTATUS"]) && $criticalInfoFieldArr["MSTATUS"] == "D"){
+                                $screenedStatus = "N";
+                        }
+                        $infoChngObj->insert($this->loggedInObj->getPROFILEID(),implode(",",$editedFields),$screenedStatus);
+                }
+                unset($infoChngObj);
+                if(isset($criticalInfoFieldArr["DOCUMENT_PATH"])){
+                        $docObj = new CriticalInfoChangeDocUploadService();
+                        $docObj->performDbInsert($this->loggedInObj->getPROFILEID(),$criticalInfoFieldArr["DOCUMENT_PATH"]);
+                }
+                if(isset($criticalInfoFieldArr["MSTATUS"]) && $criticalInfoFieldArr["MSTATUS"] == "D"){
+                        unset($jprofileFieldArr["MSTATUS"]);
+                }
+                $producerObj = new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $updateSeenProfileData = array("process"=>"UPDATE_CRITICAL_INFO_PROFILE",'data'=>array('body'=>array('profileid'=>$this->loggedInObj->getPROFILEID(),"PREV_MSTATUS"=>$prevMstatus,"MSTATUS"=>$criticalInfoFieldArr["MSTATUS"],"PREV_DTOFBIRTH"=>$prevDob,"DTOFBIRTH"=>$criticalInfoFieldArr["DTOFBIRTH"],"current_time"=>date("Y-m-d H:i:s"))));
+                        $producerObj->sendMessage($updateSeenProfileData);
+                }
+        }
 		//Native Place Update
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
@@ -213,6 +273,14 @@ class FieldForm extends sfForm
 								$screen_flag = Flag::removeFlag($field, $screen_flag);
 							}
 						}
+						if($field=="DTOFBIRTH")
+						{
+                                                        $jprofileFieldArr["AGE"] = CommonFunction::getAge($jprofileFieldArr['DTOFBIRTH']);
+                                                }
+						if($field=="MSTATUS" && $value =="N")
+						{
+                                                        $jprofileFieldArr["HAVECHILD"] = "";
+                                                }
 						if($field=="YOURINFO")
 						{
 							if($jprofileFieldArr[YOURINFO]!=$this->loggedInObj->getYOURINFO())
@@ -674,13 +742,30 @@ class FieldForm extends sfForm
 				mapAutoSugSubcasteData($this->loggedInObj->getPROFILEID(), "SUBCASTE", $jprofileFieldArr['SUBCASTE']);
 			}
 			
+                        if(!empty($fieldsEdited) && JsMemcache::getInstance()->get($this->loggedInObj->getPROFILEID()."_5MINS") === false){
+                                $this->sendEditImportantFieldsSMS($this->loggedInObj->getPROFILEID(),$fieldsEdited,$sendSMSToPhone);
+                        }
 			//EDIT LOG
 			$this->editLog($editLogArr);
+			$this->loggedInObj->resetReligionInfo();
 		}
 
 	  return 1;
 	}
-	
+        /**
+         * This function will add profile to critical information change message queue
+         * @param type $profileId  Profile Id
+         * @param type $fieldsEdited Edited fields
+         * @param type $sendSMSToPhone (phone number before change in case of update in phone number) 
+         */
+	public function sendEditImportantFieldsSMS($profileId,$fieldsEdited,$sendSMSToPhone){
+                $producerObj = new Producer();
+                if($producerObj->getRabbitMQServerConnected())
+                {
+                        $senderSmsData=array('process'=>'SMS','data'=>array('type'=>'CRITICAL_INFORMATION_CHANGE','body'=>array('receiverid'=>$profileId, "PHONE"=>$sendSMSToPhone,"editedFields"=>$fieldsEdited) ), 'redeliveryCount'=>0 );
+                        $producerObj->sendMessage($senderSmsData);
+                }
+        }
 	public function editLog($logArr) {
 		if(count($logArr))
 		{
@@ -744,9 +829,10 @@ class FieldForm extends sfForm
 		if($incomplete=="N")
 		{
 			$editableArr=EditProfileEnum::$editableArr;
+			$editableCriticalArr=EditProfileEnum::$editableCriticalArr;
 			foreach($fieldArr as $key=>$val)
 			{
-				if(!in_array($key,$editableArr))
+				if(!in_array($key,$editableArr) && !in_array($key,$editableCriticalArr))
 					return $key;
 			}
 		}

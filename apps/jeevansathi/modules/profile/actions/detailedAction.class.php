@@ -128,14 +128,26 @@ class detailedAction extends sfAction
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
     }
-	 $this->showContactEngine();
+    
+        $ceAction = $request->getParameter('performAction');
+        if($ceAction=='accept')
+        {
+         $request->setParameter("internal", 1);   
+         ProfileCommon::performContactEngineAction($request,'VDP');
+        }
+         $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
 		else
 			$this->from_mailer=0;
-		
-		
+
+		//matchAlertThursdayTracking
+		if($request->getParameter("fromMatchAlertMailer"))
+			$this->fromMatchAlertMailer=1;
+		else
+			$this->fromMatchAlertMailer=0;
+				
 		//Update Profile Data, like tables and count which are as follow
 		// 	
 		//Log View Table
@@ -310,8 +322,9 @@ class detailedAction extends sfAction
   					{
   						$deepLinkingObj = new deepLinking();
   						$resultValue = $deepLinkingObj->getDeepLinkingHeader($request);
-  						$this->headerURLDeepLinking = $resultValue;
+  						$this->headerURLDeepLinking = $resultValue;  		
   					}
+  					//$this->matchAlertTracking($request->getParameter("stype"));
   					$this->setJsmsViewProfileLayout();
   		    }  
             else
@@ -351,11 +364,17 @@ class detailedAction extends sfAction
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 			$arrOutDisplay["buttonDetails"] = json_encode($buttonObj->getNewButtonArray($arrPass));
 		}
+		$arrOutDisplay["showTicks"] = $this->CODEDPP;
+		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
+		//this part is added to ensure that even if toShowHoroscope is 'D', astro gets shown
+        $arrOutDisplay["about"]["NO_ASTRO"] = $this->changeAstroViewCondition($arrOutDisplay["about"]["toShowHoroscope"],$arrOutDisplay["about"]["NO_ASTRO"]);
+        $arrOutDisplay["astroSent"] = $this->checkIfAstroSent();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
+				
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
@@ -395,6 +414,7 @@ class detailedAction extends sfAction
         {
             $this->NAVIGATOR = $request->getParameter('NAVIGATOR');
         }
+       	//print_r($this->arrOutDisplay);die;
 		$this->setTemplate("_mobViewProfile/jsmsViewProfile");
 	}
 	/**
@@ -594,16 +614,14 @@ class detailedAction extends sfAction
 			//Getting loginned profile desired partner data and setting object as well.
 			$this->loginProfile->setJpartner($jpartnerObj);
 			//Green label for detailed profile section of viewed profile.
-			if($jpartnerObj!=null)
+			/*if($jpartnerObj!=null)
 			{
 					$this->CODEOWN=JsCommon::colorCode($this->profile,$this->loginProfile->getJpartner(),$this->casteLabel,$this->sectLabel);
-			}
+			}*/
 			//Green label for desired partner profile section of viewed profile.
 			if($this->profile->getJpartner()!=null)
 			{
-				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);
-                                
-				
+				$this->CODEDPP=JsCommon::colorCode($this->loginProfile,$this->profile->getJpartner(),$this->casteLabel,$this->sectLabel);                                	
 			}
                         
 		}	
@@ -886,7 +904,7 @@ class detailedAction extends sfAction
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
 			$ignore=new IgnoredProfiles("newjs_master");
-			if($ignore->ifIgnored($sender,$receiver))
+			if($ignore->ifIgnored($sender,$receiver,"byMe"))
 					$this->IGNORED=1;
 		}
 	}
@@ -924,6 +942,7 @@ class detailedAction extends sfAction
 	 */
 	private function alterSeenTable()
 	{
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterdetailActionUncalledFunc.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$this->getRequest();
@@ -1055,11 +1074,11 @@ class detailedAction extends sfAction
 	 */
 	public function onlineStatus()
 	{
-		$this->gtalkOnline();
+		//$this->gtalkOnline();
 		$this->userOnline();
 	}
 	/**
-	 * Whether user online on gtalk or not.
+	 * Whether user online on gtalk or not. //NOT BEING USED ANYMORE. Therefore, commented the call above
 	 */
 	public function gtalkOnline()
 	{
@@ -1270,7 +1289,9 @@ class detailedAction extends sfAction
             {
                             $this->STYPE="WO";
             }
-            $this->responseTracking = urlencode($this->responseTracking);		
+            $this->responseTracking = urlencode($this->responseTracking);
+            //$this->matchAlertTracking($request->getParameter("stype"));
+
              //JSB9 Tracking
             $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
             switch($this->tabName)
@@ -1329,9 +1350,63 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);
+        
+        //This part was added to allow idfy to go Online percentage wise
+        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);         	
+        //this part is added to ensure that even if toShowHoroscope is 'D', astro gets shown
+        $this->arrOutDisplay["about"]["NO_ASTRO"] = $this->changeAstroViewCondition($this->arrOutDisplay["about"]["toShowHoroscope"],$this->arrOutDisplay["about"]["NO_ASTRO"]);            
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }
 
+    private function matchAlertTracking($stype)
+    {
+    	if(in_array($stype,ProfileEnums::$matchAlertMailerStypeArr))
+    	{
+    		$channel = MobileCommon::getChannel();
+    		$memCacheObj = JsMemcache::getInstance();
+    		if($this->fromMatchAlertMailer)
+    		{        			
+    			$key = "MatchAlertTracking_".$channel."_".date("Y-m-d");   
+    		}
+    		else
+    		{
+    			$key = "MatchAlertTrackingNotFromMailer_".$channel."_".date("Y-m-d");
+    		}
+    		$memCacheObj->incrCount($key);
+    		unset($memCacheObj);
+    	}
+    	  				
+    }
+
+    public function changeAstroViewCondition($toShowHoroscope,$noAstro)
+    {
+    	if($toShowHoroscope == "D" && $noAstro == 1)
+    	{
+    		$noAstro = 0;
+    	}
+    	return $noAstro;
+    }
+
+    public function checkIfAstroSent()
+    {    	
+    	$astroObj = new astroReport();
+    	$flag = $astroObj->getActualReportFlag($this->loginProfile->getPROFILEID(),$this->profile->getPROFILEID());					
+    	if($flag)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		$count = $astroObj->getNumberOfActualReportSent($this->loginProfile->getPROFILEID());					
+    		if($count >= "100")
+    		{
+    			return 0;
+    		}
+    		else
+    		{
+    			return 1;
+    		}
+    	}	
+    }
 }

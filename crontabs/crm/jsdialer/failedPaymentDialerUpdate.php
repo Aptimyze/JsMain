@@ -29,13 +29,13 @@ $npriority	=5;
 $last20MinTime	=date("Y-m-d H:i:s",time()-10.5*60*60-25*60);
 $last20MinTime	=strtotime($last20MinTime);
 
-$profilesArr 	=fetchProfiles($db_js);
+$profilesArr 	=fetchProfiles($db_master);
 $eligibleArr	=$profilesArr['ELIGIBLE'];
 $inEligibleArr	=$profilesArr['IN_ELIGIBLE'];
 $allDataArr	=$profilesArr['ALL_DATA'];
 
-$allocatedArr	=getAllocatedProfiles($eligibleArr,$db_js);
-$paidArr	=getPaidProfiles($eligibleArr,$db_js,$dateTime);
+$allocatedArr	=getAllocatedProfiles($eligibleArr,$db_master);
+$paidArr	=getPaidProfiles($eligibleArr,$db_master,$dateTime);
 $eligibleArrNew	=array_merge($allocatedArr,$paidArr);
 $eligibleArrNew	=array_unique($eligibleArrNew);
 $eligibleArrNew =array_values($eligibleArrNew);

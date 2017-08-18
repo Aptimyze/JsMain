@@ -5,6 +5,9 @@ include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/billing/refund_paypart.php in USE",$msg);
+
 $ip=FetchClientIP();
 if(strstr($ip, ","))
 {
@@ -222,7 +225,8 @@ if(authenticated($cid))
 					$row=mysql_fetch_array($res);
                                         if($row['ACTIVATED']=='D')
                                         {
-                                                $path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+                                                //$path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+						$path = $_SERVER['DOCUMENT_ROOT']."/profile/retrieveprofile_bg.php $profileid > /dev/null &";
                                                 $cmd = JsConstants::$php5path." -q ".$path;
                                                 passthru($cmd);
                                                                                                                              
@@ -302,7 +306,7 @@ if(authenticated($cid))
             //**START - Entry for negative transactions
             if($val=="refund"){
                 $memHandlerObject = new MembershipHandler();
-                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())),'REFUND');
                 unset($memHandlerObject);
             }
             //**END - Entry for negative transactions

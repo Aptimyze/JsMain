@@ -9,6 +9,7 @@
 class MembershipAPIResponseHandler {
     
     public function initializeAPI($request) {
+
         $loginData = $request->getAttribute("loginData");
         if ($loginData['PROFILEID']) {
             $this->profileid = $loginData['PROFILEID'];
@@ -27,9 +28,15 @@ class MembershipAPIResponseHandler {
         //$this->selectedVas = $request->getParameter("selectedVas");
 	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
+        $this->upgradeMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("upgradeMem"));
+        if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+           $this->upgradeMem = "NA"; 
+        }
+
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }
+
         $this->getAppData = $request->getParameter("getAppData");
         $this->user_agent = $_SERVER['HTTP_USER_AGENT'];
         
@@ -55,6 +62,7 @@ class MembershipAPIResponseHandler {
         if(empty($this->device)){
         	$this->device = 'desktop';
         }
+
         
         $this->allMemberships = $request->getParameter('allMemberships');
 	$this->mainMembership = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter('mainMembership'));
@@ -89,6 +97,7 @@ class MembershipAPIResponseHandler {
         $this->internalParamCheck = $request->getParameter('INTERNAL');
         $this->getMembershipMessage = $request->getParameter('getMembershipMessage');
         $this->getHamburgerMessage = $request->getParameter('getHamburgerMessage');
+        $this->getMembershipPlansStartingRange = $request->getParameter('getMembershipPlansStartingRange');
         $this->appVersion = $request->getParameter('API_APP_VERSION');
 
         $this->callbackSource = $request->getParameter('callbackSource');
@@ -120,18 +129,30 @@ class MembershipAPIResponseHandler {
         $this->userObj->setIpAddress($this->ipAddress);
         $this->userObj->setCurrency($this->currency);
         if (!empty($this->profileid)) {
-            $this->userObj->setMemStatus();
+            $this->userObj->setMemStatus($fromBackend);
             $this->userType = $this->userObj->userType;
-            $this->memID = @strtoupper($purchasesObj->getCurrentlyActiveService($this->profileid));
-            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj);
-            
+            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($this->profileid,"PU.DISCOUNT_PERCENT");
+            if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
+                $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
+                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
+                //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
+            }
+            else{
+                $this->memID = @strtoupper($purchaseDetails);
+                $this->lastPurchaseDiscount = 0;
+                //$this->lastPurchaseBillid = null;
+            }
+
+            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
             if (is_array($this->subStatus) && !empty($this->subStatus)) {
                 $this->countActiveServices = count($this->subStatus);
             } 
             else {
                 $this->countActiveServices = 0;
             }
-            $this->contactsRemaining = $this->userObj->getRemainingContacts($this->profileid);
+            $contactsArr = $this->userObj->getRemainingContacts($this->profileid,"ALLOTED");
+            $this->contactsRemaining = $contactsArr['REMAINING'];
+            $this->totalContactsAllotted = $contactsArr['ALLOTED'];
             $this->userDetails = $this->memHandlerObj->getUserData($this->profileid);
         } 
         else {
@@ -141,9 +162,13 @@ class MembershipAPIResponseHandler {
         if ($this->userObj->userType == 4 || $this->userObj->userType == 6) {
             $this->renewCheckFlag = 1;
         }
-        
+       
+        //set to fetch main membership offer prices for upgrade display section
+        if($this->displayPage == '1' && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->fromBackend != 1 && $this->processPayment != 1){
+            $this->upgradeMem = "MAIN";
+        }
         //set discount info so that it can be used as common variable
-        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj);
+        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem,$this->device);
         if($this->discountTypeInfo == null){
             $this->discountTypeInfo = array();
         }
@@ -168,7 +193,8 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this);
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
+       
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
@@ -231,7 +257,7 @@ class MembershipAPIResponseHandler {
         $dataArr = $this->generateHamburgerMessageResponse();
         $this->topDiscountBanner = $dataArr['hamburger_message'];
 
-        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != 6){
+        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != memUserType::UPGRADE_ELIGIBLE && $this->userObj->userType != 6){
 	        // VAS Logic data required
 	        $profileObj = LoggedInProfile::getInstance('newjs_master');
 	        $horoscopeObj = new Horoscope();
@@ -270,7 +296,10 @@ class MembershipAPIResponseHandler {
         } 
         // elseif ($this->PayUOrderProcess == 1) {
         //     $output = $this->handlePayUOrderProcessing($request);
-        // } 
+        // }
+        else if($this->getMembershipPlansStartingRange == 1) {
+            $output = $this->generateMembershipPlansStartingRange();
+        }  
         elseif ($this->getMembershipMessage == 1) {
             $output = $this->generateOCBMessageResponse();
         } 
@@ -312,6 +341,7 @@ class MembershipAPIResponseHandler {
             } 
             elseif ($this->displayPage == 3 && $this->fromBackend != 1) {
                 $output = $this->generateCartPageResponse($request);
+                //print_r($output);die;
             } 
             elseif ($this->displayPage == 3 && $this->fromBackend == 1) {
                 $output = $this->generateBackendDiscountPageResponse($request);
@@ -323,6 +353,7 @@ class MembershipAPIResponseHandler {
             } 
             else if ($this->displayPage == 5) {
                 $output = $this->generatePaymentOptionsPageResponse($request);
+                //print_r($output);die;
             } 
             else if ($this->displayPage == 6) {
                 $output = $this->generateChequePickupResponse($request);
@@ -386,7 +417,6 @@ class MembershipAPIResponseHandler {
         
         $bottomHelp = $topHelp;
         $bottomHelp['title'] = 'I need help in buying Membership';
-
         //tracking of mem page visits only for free user to autocollapse learning cartoon
         if(in_array($this->userObj->userType,array(2,4,6)))
 		  $openedCount = $this->memHandlerObj->trackAndGetOpenedCount($this->profileid);
@@ -399,7 +429,7 @@ class MembershipAPIResponseHandler {
                 $renewText = "Renew before {$this->expiry_date} & get " . substr($this->topDiscountBanner['top'], 0, strpos($this->topDiscountBanner['top'], "till", 0));;
             }
         } 
-        else if ($this->userObj->userType == 5) {
+        else if ($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
             $renewText = "You may choose from Value Added Services below that best fit your needs";
         }
         
@@ -410,8 +440,8 @@ class MembershipAPIResponseHandler {
         else {
             $renewText = NULL;
         }
-        
-        if ($this->userObj->userType == 5 && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
+       
+        if (($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
 
             //filter out vas services from vas content based on main membership if vas content is there
@@ -440,6 +470,22 @@ class MembershipAPIResponseHandler {
             $userId = $this->profileid;
         }
         $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
+        if($this->device == "desktop" && $this->custVAS == NULL){
+            $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
+            //filter out vas services from vas content based on main membership
+            $this->memApiFuncs->filterMainMemBasedVASData($this->custVAS,$this,"NCP");
+            $this->memApiFuncs->removeExtraParamsFromVAS($this->custVAS, $this);
+            $this->pageOneVas = $this->custVAS;
+            $preSelectVasGlobal = array();
+            if($this->horoscopeSetting == "Y"){
+                $preSelectVasGlobal[] = "A";
+            }
+            $preSelectVasGlobal = implode(",",$preSelectVasGlobal);
+            $this->custVAS = NULL;
+            
+        }
+        if($this->discountTypeInfo["TYPE"] == discountType::OFFER_DISCOUNT)
+            $disableVasDiscount = "1";
         $output = array(
             'title' => $title,
             'topBlockMessage' => $this->topBlockMessage,
@@ -461,22 +507,161 @@ class MembershipAPIResponseHandler {
             'taxRate' => billingVariables::TAX_RATE,
             'tracking_params' => $tracking_params,
             'filteredVasServices'=>$vasFiltering,
-            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'pageOneVas'=>$this->pageOneVas,
+            'preSelectLandingVas'=>$preSelectVasGlobal,
+            'disableVasDiscount'=>$disableVasDiscount,
+            'date'=>date('Y-m-d H:i:s')
         );
         
-        if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
-            $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
-        } 
-        else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "desktop") {
-            $this->memHandlerObj->trackMembershipProgress($this->userObj, '1', '1', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
-        } 
-        else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
-            $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
+        //fetch the upgrade membership content based on eligibilty and channel
+        if(in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request,"",$this);
+            if(is_array($output["upgradeMembershipContent"]) && is_array($output)){
+                $output["title"] = "Upgrade to ".$output["upgradeMembershipContent"]["upgradeMainMemName"];
+            }
         }
         
+        if(in_array($this->device, VariableParams::$lightningDealOfferConfig["channelsAllowed"]) && $this->discountTypeInfo["TYPE"] == discountType::LIGHTNING_DEAL_DISCOUNT){
+            $output["lightningDealContent"] = $this->generateLightningDealResponse($request);
+            if(($this->userObj->userType == memUserType::PAID_WITHIN_RENEW || $this->userObj->userType == memUserType::EXPIRED_WITHIN_LIMIT) && is_array($output["lightningDealContent"])){
+                $output["lightningDealContent"]["renewalLightning"] = "1";
+                $output["backgroundText"] = NULL;
+            }
+            
+            if(is_array($output["lightningDealContent"]) && is_array($output)){
+                $output["title"] = "Upgrade Membership";
+            }
+        }
+        
+        //error_log("device in generateLandingPageResponse= ".$this->device);    
+        if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
+            if($this->upgradeMem || in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $this->memHandlerObj->trackMembershipProgress($this->userObj,'601','61','1',$this->device, $this->user_agent, implode(",", $this->curActServices), '', '',0, 0, 0, '', '', '', '',$this->upgradeMem);
+            }
+            else{
+                $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
+            }
+        } 
+        else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "desktop") {
+            //tracking for upgrade membership page
+            if($this->upgradeMem || in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $this->memHandlerObj->trackMembershipProgress($this->userObj,'1','1','1',$this->device, $this->user_agent, implode(",", $this->curActServices), '', '',0, 0, 0, '', '', '', '',$this->upgradeMem);
+            }
+            else{
+                $this->memHandlerObj->trackMembershipProgress($this->userObj, '1', '1', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
+            }
+        } 
+        else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
+            if($this->device == "mobile_website"){
+                if($this->upgradeMem || in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj,'501','51','1',$this->device, $this->user_agent, implode(",", $this->curActServices), '', '',0, 0, 0, '', '', '', '',$this->upgradeMem);
+                }
+                else{
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
+                }
+            }
+            $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
+        }
+        //print_r($output);die;
         return $output;
     }
     
+    /*generateUpgradeMemDisplayPageResponse
+    * sets the display content for upgrade membership section in apiObj
+    * @inputs : $request
+    */
+    public function generateUpgradeMemResponse($request,$fromSource="",$thisObj){
+        if($thisObj && $thisObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $upgradableMemArr = $thisObj->memHandlerObj->setUpgradableMemberships($thisObj->subStatus[0]['ORIG_SERVICEID']);
+            if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]] && $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['SHOW_ONLINE'] == 'Y'){
+
+                //type of upgrade
+                $output["type"] = "MAIN";
+                //serviceid of upgrade mem without duration
+                $output["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
+                //name of upgrade service
+                $output["upgradeMainMemName"] = $thisObj->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
+                if($thisObj->currency == "RS"){
+                    $output["upgradeCurrency"] = "₹";
+                }
+                else{
+                    $output["upgradeCurrency"] = "$";
+                }
+                if($fromSource != "cron"){
+                    $output["upgradeOCBBenefits"] = $this->memApiFuncs->getOCBUpgradeBenefits($upgradableMemArr["upgradeMem"]);
+                }
+                //formatting output for ocb banner or hamburger text
+                if($fromSource == "Hamburger" || $fromSource == "MyjsOCB"){
+                    $output["upgradeOfferExpiry"] = date('Y-m-d',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    //extra amount to be paid for upgrade
+
+                    $output["upgradeExtraPay"] = number_format($thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 0, '.', ','); 
+
+
+                }
+                else{                           //response for upgrade page  
+                    //duration of upgrade service
+                    $output["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
+                    //total contacts to view for upgarde mem
+                    $output["upgradeTotalContacts"] = $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
+                    //additional benefits with upgrade compared to current mem
+                    if($fromSource != "cron"){
+                        $output["upgradeAdditionalBenefits"] = $thisObj->memApiFuncs->getAdditionalUpgradeBenefits($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
+                    }
+
+                    $formattedUpgradeMemName = ($output["upgradeMainMem"] != "X" ? ucfirst(strtolower($output["upgradeMainMemName"])) : $output["upgradeMainMemName"]);
+                    $formattedCurrentMemName = ($thisObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($thisObj->activeServiceName)) : $thisObj->activeServiceName);
+                    //extra compared facts for upgarde
+                    $output["upgardeComparedFacts"] = array(
+                                    $formattedUpgradeMemName." members are contacted more than ".$formattedCurrentMemName,
+                                    $formattedUpgradeMemName." members get more screen views",
+                                    );
+                    //expiry date for upgarde discount
+                    $output["upgradeOfferExpiry"] = date('M d Y',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    $output["jsmsupgradeOfferExpiry"] = date('jS M, Y',strtotime($thisObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                    //extra amount to be paid for upgrade
+                    $output["upgradeExtraPay"] = number_format($thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 2, '.', ','); 
+                }
+            }
+        }
+        return $output;
+    }
+    
+    public function generateLightningDealResponse($request,$source='',$startingPlanData=''){
+        $memObj = new Membership();
+        $lightningDealDiscount = $memObj->getLightningDealDiscount($this->profileid);
+        if($startingPlanData == ''){
+                $startingPlanData = $this->generateMembershipPlansStartingRange();
+        }
+        $output["discount"] = $lightningDealDiscount['DISCOUNT'];
+        $output["origStartingPrice"] = $startingPlanData["startingPlan"]["origStartingPrice"];
+        $output["discountedPrice"] = $output["origStartingPrice"]*((100-$output["discount"])/100);
+        $output["expiryDate"] = $lightningDealDiscount['EDATE'];
+        if($this->currency == "RS"){
+            $output["currencySymbol"] = "₹";
+        }
+        else{
+            $output["currencySymbol"] = "$";
+        }
+        $planText = "Plans starts @ <span class='strike color8 opa70'>".$output["currencySymbol"].$output["origStartingPrice"]."</span> ".$output["currencySymbol"].$output["discountedPrice"];
+       if($source == "MyjsOCB" || $source == "Hamburger"){
+            return $output;
+        }
+        else{
+            $output["top"] = "FLASH DEAL";
+            $output["discText"] = $output["discount"]."% OFF";
+            $output["other"] = "on all memberships";
+            $output["middle"] = $output["discount"]."% OFF <span class='fontlig f14'>on all memberships</span>";
+            $output["bottom"] = $planText;
+            $curTime = date('Y-m-d H:i:s');
+            $output['priceStrike'] = $output["currencySymbol"].$output["origStartingPrice"];
+            $output['discPrice']   = $output["currencySymbol"].$output["discountedPrice"];
+            $output["diffSecond"] = strtotime($output["expiryDate"]) - strtotime($curTime);
+        }
+        return $output;        
+    }
+
     public function generateVasPageResponse($request) {
         $this->memApiFuncs->getTopBlockContent($this);
         $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
@@ -509,7 +694,10 @@ class MembershipAPIResponseHandler {
         if (($this->mainMem == 'ESP' || $this->mainMem == 'NCP') && !empty($this->mainMemDur)) {
             if ($this->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
-            } 
+            }
+            elseif($this->mainMem == 'NCP'){
+                $arr = VariableParams::$jsExclusiveComboAddon;
+            }
             else {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
@@ -539,11 +727,11 @@ class MembershipAPIResponseHandler {
         }
         $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
         $output = array(
-            'title' => 'Value Added Services',
+            'title' => 'Add Astro',
             'topBlockMessage' => NULL,
             'currency' => $this->currency,
             'dividerText' => NULL,
-            'backgroundText' => 'Plan Selected. You may now also choose some value added services from below.',
+            'backgroundText' => NULL,
             'serviceContent' => $this->service_data,
             'selectedMainServKey' => $this->mainMem,
             'selectedMainServDur' => $this->mainMemDur,
@@ -584,6 +772,7 @@ class MembershipAPIResponseHandler {
         }
         
         $this->memApiFuncs->customizeVASDataForAPI($this->validation, 0, $this);
+
         $vas_text = NULL;
         $skip_text = "Continue";
         
@@ -599,7 +788,7 @@ class MembershipAPIResponseHandler {
         
         if (count($this->vasServices) == 1 && empty($this->mainMem))
             $this->vasServices[0]['remove_text'] = NULL;
-        
+      
         if (isset($this->mainServices) && !empty($this->mainServices)) {
             $finalCartPrice = $this->mainServices['price'] + $this->totalVASPrice;
             $finalCartDiscount = $this->mainServices['discount_given'] + $this->totalVASDiscount;
@@ -651,7 +840,7 @@ class MembershipAPIResponseHandler {
         else
             $sub_dur = $this->mainMemDur;
         
-       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+       	$cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         $this->couponParams = $this->memApiFuncs->getCouponCodeDetails($this);
         
@@ -670,8 +859,13 @@ class MembershipAPIResponseHandler {
         else
             $continueText = "Continue";
         
-        if ($discount == 0)
+        $couponDiscount = 0;
+        if ($discount == 0){
             $discount = NULL;
+        }
+        else if($discount > 0 && is_array($this->mainServices) && $this->mainServices['actual_upgrade_price']){
+            $couponDiscount = $this->mainServices['actual_upgrade_price']-$finalCartPrice;
+        }
         
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $userName = $nameOfUserObj->getName($apiObj->profileid);
@@ -694,6 +888,7 @@ class MembershipAPIResponseHandler {
             'actual_total_text' => "Total",
             'actual_total_price' => $actualTotalPrice,
             'cart_discount' => $discount,
+            'coupon_discount' => $couponDiscount,
             'preSelectedESathiVas' => $preSelectedESathiVas,
             'preSelectedEValuePlusVas' => $this->preSelectedEValuePlusVas,
             'continueText' => $continueText,
@@ -703,7 +898,8 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'proceed_text' => $skip_text,
             'username' => $userName,
-            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'upgradeMem'=>$this->upgradeMem
         );
         
         if ($this->device == 'desktop') {
@@ -711,7 +907,11 @@ class MembershipAPIResponseHandler {
             $request->setParameter('mainMembership', $this->mainMem . $this->mainMemDur);
             $request->setParameter('vasImpression', $this->selectedVas);
             $paymentOptionsData = $this->generatePaymentOptionsPageResponse($request, $chequeData);
-            if ($this->currency == 'RS') {
+            
+            if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+                $output['payAtBranchesData'] = NULL;
+            }
+            else if ($this->currency == 'RS') {
                 $branchData = $this->generatePayAtBranchesPageResponse();
                 $output['payAtBranchesData'] = $branchData;
             }
@@ -726,13 +926,19 @@ class MembershipAPIResponseHandler {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '603', '63', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
         }
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == 'desktop') {
-            $this->memHandlerObj->trackMembershipProgress($this->userObj, '3', '3', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
+            //tracking for upgrade membership page
+            if($this->upgradeMem || in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $this->memHandlerObj->trackMembershipProgress($this->userObj,'3','3','3',$this->device, $this->user_agent,$allMemberships, $mainMembership, $vasImpression,0, 0, 0, '', '', '', '',$this->upgradeMem,$this);
+            }
+            else{
+                $this->memHandlerObj->trackMembershipProgress($this->userObj, '3', '3', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
+            }
             //die(print_r(array($this->userObj, '3', '3', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression))); 
         }
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != 'Android_app') {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '503', '53', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
         }
-        
+        //print_r($output);die;
         return $output;
     }
     
@@ -808,8 +1014,7 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            //echo "abc........";
-            //print_r($this->allMainMem);
+          
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
@@ -867,7 +1072,7 @@ class MembershipAPIResponseHandler {
             }
             unset($addons);
             if ($this->mainMem == "NCP") {
-                foreach (VariableParams::$eValuePlusAddOns as $addons) {
+                foreach (VariableParams::$jsExclusiveComboAddon as $addons) {
                     $this->selectedVas[] = $addons.$dur;
                 }
             }
@@ -894,7 +1099,9 @@ class MembershipAPIResponseHandler {
                         if ($vv['vas_key'] == $vasID[0]) {
                             foreach ($vv['vas_options'] as $x => $z) {
                                 if ($z['id'] == $val) {
-                                    if ($this->mainMem == "NCP" || $this->mainMem == "ESP") {
+                                    //JSC-2435, additional check for Astro so that when NCP and astro are given
+                                    // through backend link, price is not set to zero.
+                                    if (($this->mainMem == "NCP" && ($vasID[0] != 'A')) || $this->mainMem == "ESP") {
                                         $v['vas_id'] = $z['id'];
                                         $v['price'] = 0;
                                         $v['orig_price'] = 0;
@@ -999,7 +1206,7 @@ class MembershipAPIResponseHandler {
         	$sub_dur = '';	
         }
         
-        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $cart_tax_text = "PRICE INCLUDES " . billingVariables::TAX_RATE . "% ". billingVariables::TAX_TEXT. billingVariables::TAX_TEXT_SB;
         
         $this->apply_coupon_text = NULL;
         $this->custVAS = null;
@@ -1093,8 +1300,9 @@ class MembershipAPIResponseHandler {
         if (!isset($this->vasImpression) || $this->device == 'desktop') {
         	$this->vasImpression = $this->selectedVas;
         }
+       
         list($totalCartPrice, $totalCartDiscount) = $this->memApiFuncs->calculateCartPrice($request, $this);
-        
+    
         $creditCardIconMapping = paymentOption::$creditCardIconMapping;
         $debitCardIconMapping = paymentOption::$debitCardIconMapping;
         $walletCardIconMapping = paymentOption::$walletCardIconMapping;
@@ -1199,7 +1407,7 @@ class MembershipAPIResponseHandler {
         );
         
         $title = 'Select Payment Method';
-        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% SERVICE TAX (INCLUDING SWACHH BHARAT CESS)";
+        $serviceTaxContent = "PRICE INCLUDES {$serviceTax}% ". billingVariables::TAX_TEXT . billingVariables::TAX_TEXT_SB;
         
         if ($this->currency == "RS") {
             $callUs = array(
@@ -1263,13 +1471,21 @@ class MembershipAPIResponseHandler {
             $cashChequePickup = NULL;
         }
         
+        if(is_array($this->discountTypeInfo) && $this->discountTypeInfo["TYPE"]==discountType::LIGHTNING_DEAL_DISCOUNT){
+            $cashChequePickup = NULL;
+            $hidePayAtBranchesOption = true;
+        }
+        else{
+            $hidePayAtBranchesOption = false;
+        }
+        
         if ($this->currency == "DOL") {
             $proceedText = "You Pay USD " . number_format($totalCartPrice, 2, '.', ',') . "";
         } 
         else {
             $proceedText = "Continue";
         }
-        
+       
         $output = array(
             'title' => $title,
             'currency' => $this->currency,
@@ -1289,6 +1505,8 @@ class MembershipAPIResponseHandler {
             'device' => $this->device,
             'tracking_params' => $tracking_params,
             'userProfile' => $this->profileid,
+            'upgradeMem' => $this->upgradeMem,
+            'hidePayAtBranchesOption'=>$hidePayAtBranchesOption,
             'backendLink' => array(
                 'fromBackend' => $this->fromBackend,
                 'checksum' => $this->profilechecksum,
@@ -1302,7 +1520,12 @@ class MembershipAPIResponseHandler {
                 $this->memHandlerObj->trackMembershipProgress($this->userObj, '504', '54', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression, $totalCartDiscount, $totalCartPrice, 54, 'F');
             } 
             else {
-                $this->memHandlerObj->trackMembershipProgress($this->userObj, '504', '54', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression);
+                if(($this->upgradeMem && in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])) && ($this->device == "mobile_website" || $this->device == "JSAA_mobile_website")){
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj,'504','54','3',$this->device, $this->user_agent,$this->allMemberships, $this->mainMembership, $this->vasImpression,0, 0, 0, '', '', '', '',$this->upgradeMem);
+                }
+                else{
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj, '504', '54', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression);
+                }
             }
         } 
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == 'Android_app') {
@@ -1310,7 +1533,12 @@ class MembershipAPIResponseHandler {
                 $this->memHandlerObj->trackMembershipProgress($this->userObj, '604', '64', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression, $totalCartDiscount, $totalCartPrice, 64, 'F');
             } 
             else {
-                $this->memHandlerObj->trackMembershipProgress($this->userObj, '604', '64', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression);
+                if($this->upgradeMem && in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj,'604','64','3',$this->device, $this->user_agent,$this->allMemberships, $this->mainMembership, $this->vasImpression,0, 0, 0, '', '', '', '',$this->upgradeMem);
+                }
+                else{
+                    $this->memHandlerObj->trackMembershipProgress($this->userObj, '604', '64', '3', $this->device, $this->user_agent, $this->allMemberships, $this->mainMembership, $this->vasImpression);
+                }
             }
         }
         
@@ -1471,6 +1699,7 @@ class MembershipAPIResponseHandler {
         unset($profileObj);
         
         $order_content = $this->memApiFuncs->getOrderContent($this);
+        //$checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),true);
         
         if ($this->currency == 'RS') {
             $number_label = '1800-419-6299';
@@ -1515,7 +1744,8 @@ class MembershipAPIResponseHandler {
         $connect_message = "Meanwhile, you could ...";
         
         $order_content = $this->memApiFuncs->getOrderContent($this);
-        
+       
+        $checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),false);
         if ($this->currency == "RS") {
             $output = array(
                 'title' => $title,
@@ -1532,7 +1762,8 @@ class MembershipAPIResponseHandler {
                     'number_label' => '1800-419-6299'
                 ) ,
                 'proceed_text' => 'Go To Home',
-                'device' => $this->device
+                'device' => $this->device,
+                'checkMemUpgrade'=>$checkMemUpgrade
             );
         } 
         else {
@@ -1552,7 +1783,8 @@ class MembershipAPIResponseHandler {
                 ) ,
                 'userDetails' => $this->userDetails,
                 'proceed_text' => 'Go To Home',
-                'device' => $this->device
+                'device' => $this->device,
+                'checkMemUpgrade'=>$checkMemUpgrade
             );
         }
         unset($profileObj);
@@ -1577,14 +1809,40 @@ class MembershipAPIResponseHandler {
         else {
             $validityCheck = 1;
         }
+       
         
         if ($validityCheck && is_array($overrideMsg) && !empty($overrideMsg['top']) && !empty($overrideMsg['bottom'])) {
             $top = $overrideMsg['top'];
             $bottom = json_decode(json_encode($overrideMsg['bottom']) , true);
             $pageId = $overrideMsg['pageId'];
         } 
-        else if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1)) {
-            if ($this->renewCheckFlag) {
+
+        else if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0) || $this->lightningDealActive == 1)) {
+            if($this->lightningDealActive == '1'){
+                $startingPlanData = $this->generateMembershipPlansStartingRange();
+                $response = $this->generateLightningDealResponse($request, "MyjsOCB",$startingPlanData);
+                $disc = $response['discount'];
+                $startingPrice = $response['origStartingPrice'];
+                $discountedPrice = $response['discountedPrice'];
+                $currencySymbol = $response["currencySymbol"];
+                $endTimeIST = date('H:i',strtotime('+9 hour 30 minutes',  strtotime($response['expiryDate'])));
+                $top = "FLASH DEAL";
+                //$bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'><del>$currencySymbol$startingPrice</del></span> $currencySymbol$discountedPrice</p>";
+                $bottom = "<p class='fontlig f16 pt5'>Prices starting @ $currencySymbol$discountedPrice</p>";
+                $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST (IST)";
+                $expiryDate = $response['expiryDate'];
+                $valid = "Valid for";
+            }
+            else if($this->upgradeActive == '1'){
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"MyjsOCB",$this);
+
+                if(is_array($upgardeMemResponse)){
+                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $extra = $upgardeMemResponse["upgradeOCBBenefits"];
+                }
+            }
+            else if ($this->renewCheckFlag) {
                 if ($this->fest == 1) {
                     $top = "Get flat " . $this->renewalPercent . "% OFF";
                     $bottom = "or extra months if you renew before <strong>" . date("d M", strtotime($this->userObj->expiryDate)) . "</strong> !";
@@ -1659,16 +1917,22 @@ class MembershipAPIResponseHandler {
                 'membership_message' => array(
                     'top' => $top,
                     'bottom' => $bottom,
-                    'pageId' => $pageId
+                    'pageId' => $pageId,
+                    'extra' => $extra
                 )
             );
+            if(!empty($expiryDate)){
+                $output['membership_message']['expiryDate'] = $expiryDate;
+            }
+            if(!empty($valid)){
+                $output['membership_message']['valid'] = $valid;
+            }
         } 
         else {
             $output = array(
                 'membership_message' => NULL
             );
         }
-        
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_OBC_MESSAGE_API' . $this->appVersion, serialize($output) , 1800);
         return $output;
@@ -1677,17 +1941,42 @@ class MembershipAPIResponseHandler {
     public function generateHamburgerMessageResponse() {
         $serviceName = $this->activeServiceName;
         if ($this->profileid) {
-            $validityCheck = $this->memHandlerObj->checkIfUserIsPaidAndNotWithinRenew($this->profileid, $this->userType);
+            $validityCheck = $this->memHandlerObj->checkIfUserIsPaidAndNotWithinRenew($this->profileid, $this->userType,"hamburger");
         } 
         else {
             $validityCheck = 1;
         }
 
+        $startingPlanData = $this->generateMembershipPlansStartingRange();
+        
         $todays_dt = date('Y-m-d H:i:s');
         $vdodObj = new VariableDiscount();
 
-        if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1)) {
-            if ($this->renewCheckFlag) {
+        if ($validityCheck && ($this->renewCheckFlag || $this->specialActive == 1 || $this->discountActive == 1 || $this->fest == 1 || ($this->upgradeActive == '1' && is_array($this->upgradePercentArr) && count($this->upgradePercentArr)>0) || $this->lightningDealActive == 1)) {
+            if($this->lightningDealActive == '1'){
+                $response = $this->generateLightningDealResponse($request, "Hamburger",$startingPlanData);
+                $disc = $response['discount'];
+                $startingPrice = $response['origStartingPrice'];
+                $discountedPrice = $response['discountedPrice'];
+                $currencySymbol = $response["currencySymbol"];
+                $top = "FLASH DEAL";
+                $bottom = "FLAT $disc% OFF on all Plans, Prices starting @ $currencySymbol$discountedPrice";
+                //$bottom = "$disc% OFF on all Plans.";
+                //$bottom = "Upgrade Membership";
+                $extra = "FD";
+                $expiryDate = $response['expiryDate'];
+            }
+            else if($this->upgradeActive == '1'){
+                $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger",$this);
+
+                if(is_array($upgardeMemResponse)){
+                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $extra = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
+                }
+            }
+            else if ($this->renewCheckFlag) {
                 if ($this->fest == 1) {
                     $top = "Extra Months & upto " . $this->renewalPercent . "% Off till " . date("d M", strtotime($this->userObj->expiryDate)) . "!";
                 } 
@@ -1696,6 +1985,7 @@ class MembershipAPIResponseHandler {
                 }
                 $bottom = "Renew Membership";
                 $expiryDate = date("Y-m-d", strtotime($this->userObj->expiryDate));
+                $disc = $this->renewalPercent;
             } 
             elseif ($this->specialActive == 1) {
                 $discountVD = $vdodObj->getDiscountDetails($this->profileid);
@@ -1721,12 +2011,14 @@ class MembershipAPIResponseHandler {
                     $bottom = "Upgrade Membership";
                 }
                 $expiryDate = date("Y-m-d", strtotime($this->expiry_date));
+                $disc = $this->discPerc;
             } 
             elseif ($this->discountActive == 1) {
             	$discountDisplayText = $vdodObj->getCashDiscountDispText($this->profileid,'cap');
                 $top = $discountDisplayText . " " . $this->discPerc . "% Off till " . date("d M", strtotime($this->expiry_date)) . "!";
                 $bottom = "Upgrade Membership";
                 $expiryDate = date("Y-m-d", strtotime($this->expiry_date));
+                $disc = $this->discPerc;
             } 
             elseif ($this->fest == 1) {
                 $top = "Get extra months / discount till " . date("d M", strtotime($this->festEndDt)) . "!";
@@ -1747,7 +2039,8 @@ class MembershipAPIResponseHandler {
                 'hamburger_message' => array(
                     'top' => $top,
                     'bottom' => $bottom,
-                    'expiry' => $expiryDate
+                    'expiry' => $expiryDate,
+                    'extra'=>$extra
                 )
             );
         } 
@@ -1756,9 +2049,51 @@ class MembershipAPIResponseHandler {
                 'hamburger_message' => NULL
             );
         }
+
+        $output['startingPlan'] = $startingPlanData['startingPlan'];
+        $output['maxDiscount'] = $disc;
+        $output['userType'] = $this->userType;
+        unset($startingPlanData);
         
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->set($this->profileid . '_MEM_HAMB_MESSAGE', serialize($output) , 1800);
+        return $output;
+    }
+
+    /*function to generate Membership plans starting range with discount details
+    *@return: $output
+    */
+    public function generateMembershipPlansStartingRange(){
+        $origStartingPrice = 9999999;  //max integer value
+        $discountedStartingPrice = 9999999;  //max integer value
+        if(is_array($this->minPriceArr) && $this->profileid){
+            foreach($this->minPriceArr as $service => $val){
+                if($val['PRICE_INR']>=0 && $origStartingPrice > $val['PRICE_INR']){
+                    $discountedStartingPrice = $val['OFFER_PRICE'];
+                    if($this->currency == "RS"){
+                        $origStartingPrice = $val['PRICE_INR'];
+                    }
+                    else{
+                        $origStartingPrice = $val['PRICE_USD'];
+                    }
+                }
+            }
+        }
+        $output = array();
+        if($origStartingPrice < 9999999){
+            if($this->currency == "RS"){
+                $output["startingPlan"]["membershipDisplayCurrency"] = '₹';
+            }
+            else{
+                $output["startingPlan"]["membershipDisplayCurrency"] = '$';
+            }
+             
+            $output["startingPlan"]["origStartingPrice"] = "".$origStartingPrice;
+            $output["startingPlan"]["discountedStartingPrice"] = "".$discountedStartingPrice;
+        }
+        else{
+            $output["startingPlan"] = null;
+        }
         return $output;
     }
     
@@ -1815,7 +2150,6 @@ class MembershipAPIResponseHandler {
     
     public function processPickupRequestResponse($request) {
         list($this->totalCartPrice, $this->discountCartPrice) = $this->memApiFuncs->calculateCartPrice($request, $this);
-        
         $userData = $this->memHandlerObj->getUserData($this->profileid);
         
         if (!empty($this->couponCode)) {
@@ -1852,7 +2186,6 @@ class MembershipAPIResponseHandler {
         //$dataArr['CITY'] = html_entity_decode($this->city);
         $dataArr['PREF_TIME'] = date("Y-m-d", strtotime($this->date));
         $dataArr['COMMENTS'] = html_entity_decode($this->comment);
-        
         $paymentHandlerObj = new PaymentHandler();
         $paymentHandlerObj->submitPickupRequest($dataArr);
         $status = 1;
@@ -1861,7 +2194,7 @@ class MembershipAPIResponseHandler {
             "status" => $status,
             "error_id" => NULL,
             "error_text" => NULL,
-            "params" => "displayPage=7&mainMembership=" . $this->mainMembership . "&vasImpression=" . $this->vasImpression . "&profileid=" . $this->profileid
+            "params" => "displayPage=7&mainMembership=" . $this->mainMembership . "&vasImpression=" . $this->vasImpression . "&profileid=" . $this->profileid."&upgradeMem=".$this->upgradeMem
         );
         unset($dataArr);
         return $output;
@@ -1987,7 +2320,7 @@ class MembershipAPIResponseHandler {
 							$appleId = $val->transaction_id;
 							if ($billingAppleOrdersObj->checkIfAppleIdExists($appleId) == 0 && $appleId == $txnid) {
 								$billingAppleOrdersObj->insertOrderDetails($this->profileid,$part2,$part1,$appleId,date("Y-m-d H:i:s"),$receipt);
-								$logStatus = 0;
+								$logStatus = 10;        //Means pure success
 							} else if ($billingAppleOrdersObj->checkIfAppleIdExists($appleId) == 1 && $appleId == $txnid) {
 								$logStatus = 1;
 							}
@@ -2009,7 +2342,7 @@ class MembershipAPIResponseHandler {
 	    	}
 	    }
         
-        if ($logStatus == 0) {
+        if ($logStatus == 10) {
         	$status = 'transaction_successful';
             $AuthDesc = "Y";
             $ret_status="S";
@@ -2037,6 +2370,11 @@ class MembershipAPIResponseHandler {
             $status = 'receipt_validation_failure';
             $AuthDesc = "R_F";
             $ret_status="F";
+        } else if($logStatus ==""){
+            $status = 'transaction_failure';
+            $AuthDesc = "N";
+            $ret_status="F";
+            $logStatus = 2;
         }
 
         /*
@@ -2052,13 +2390,15 @@ class MembershipAPIResponseHandler {
         $memHandlerObj = new MembershipHandler();
 
         $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
-       	$membershipObj->log_payment_status($Order_Id,$ret_status,'APPLEPAY',$status);
-
+       	$membershipObj->log_payment_status($Order_Id,$ret_status,'APPLEPAY',$status, $this->profileid);
         $dup = false;
 
         if ($AuthDesc=="Y") {
             $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
             if (!$dup && $ret) {
+                if($logStatus == 10){
+                    $logStatus = 0;
+                }
                 $membershipObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => $status,
@@ -2116,7 +2456,7 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-        
+       
         $userData = $apiObj->memHandlerObj->getUserData($apiObj->profileid);
         $USERNAME = $userData['USERNAME'];
         $EMAIL = $userData['EMAIL'];
@@ -2242,6 +2582,7 @@ class MembershipAPIResponseHandler {
     }
 
     public function doTestBilling($request) {
+
     	if(JsConstants::$whichMachine == 'test'){
     		include_once (JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
 	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/pg/functions.php");

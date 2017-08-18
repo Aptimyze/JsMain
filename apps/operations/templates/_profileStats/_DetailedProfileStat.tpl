@@ -42,6 +42,18 @@
      <td class="mediumblackb">~$details["CONTACTS"]["DEC_ME"]` </td>
     </tr>
     <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Daily Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">Sent : ~$details["todaySentLimit"]`,   Limit : ~$details["dayLimit"]`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Weekly Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">Sent : ~$details["weeklySentLimit"]`,   Limit : ~$details["weeklyLimit"]`,   Date : ~$details["weekStartDate"]` to ~$details["weekEndDate"]`</td>
+    </tr>
+    <tr class="bggrey">
+     <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Eoi Monthly Limit</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">Sent : ~$details["monthlySentLimit"]`,   Limit : ~$details["monthlyLimit"]`,   Date : ~$details["monthStartDate"]` to ~$details["monthEndDate"]`</td>
+    </tr>
+    <tr class="bggrey">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Profile Length</td>
      <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["PROFILE_LENGTH"]`</td>
     </tr>
@@ -175,7 +187,7 @@
 ~if $details["show_score"] eq 1`
     <tr class="bggreyl">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">Profile source</td>
-     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$SOURCE`</td>
+     <td class="mediumblackb" colspan="3"><img src="/P/imagesnew/zero.gif" width="8" height="20">~$details["SOURCE"]`</td>
     </tr>
     <tr class="bggrey">
      <td class="mediumblack" colspan="4"><img src="/P/imagesnew/zero.gif" width="8" height="20">User Score</td>

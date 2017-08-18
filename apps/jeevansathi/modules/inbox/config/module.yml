@@ -3,4 +3,6 @@ all:
     enable_login:  on
   jsmsMessages:
     enable_login:  on
+  index:
+    enable_login: on
 

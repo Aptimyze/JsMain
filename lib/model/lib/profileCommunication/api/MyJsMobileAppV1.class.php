@@ -14,6 +14,20 @@ class MyJsMobileAppV1
 	static public $tupleTitleField ;
 
 
+
+	public static function deleteMyJsCache($profileIdArray){
+            $memObject = JsMemcache::getInstance();
+            foreach ($profileIdArray as $key => $value) {
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_I');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_A');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_M');
+
+                
+            }    
+
+		
+	}
+
     public static function getCacheKey($pid)
         {
 
@@ -22,19 +36,21 @@ class MyJsMobileAppV1
     	}
 
 	public function getProfilePicAppV1($profileObj)
-	{
+	{   
 		$pictureService = new PictureService($profileObj);
 	        $profilePicObj = $pictureService->getProfilePic();
+
 		if($profilePicObj)
-			$myPic = $profilePicObj->getThumbailUrl();
-                if(!$myPic)
+			$myPic = $profilePicObj->getProfilePic120Url();
+		//die('hjhj');
+        if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
-				$myPic = PictureService::getRequestOrNoPhotoUrl('underScreeningPhoto','ThumbailUrl',$profileObj->getGENDER());
+				$myPic = $profilePicObj->getProfilePic235Url();
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
-
+   		
 		if (MobileCommon::isApp()=='A') 
 			$myPic=PictureFunctions::mapUrlToMessageInfoArr($myPic,"ThumbailUrl","",$profileObj->getGENDER());
 		if (MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I') 
@@ -67,14 +83,16 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
-					if(MobileCommon::isApp())
+					if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+					{
+						continue;
+					}
+
+					if(MobileCommon::isApp() && ($isApp == "A" && $appVersion  && $appVersion < 88))
 					{  
-				// Version Check For ANDROID		
-					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
+						// Version Check For ANDROID
 						continue;
 					}	
-					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
-						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
@@ -99,7 +117,7 @@ $className = get_class($this);
 							{
 								foreach(self::$informationTupleFields[$key] as $i=>$field)
 								{
-									$photoType=$this->getPhotoTypeFromId($key);
+ 									$photoType=$this->getPhotoTypeFromId($key);
                                                                         $tupleObj= $displayObj[$key][$v][$pid];
 									eval('$fieldValue =$tupleObj->get' . $field . '();'); 
 									$fieldLabel = strpos($field,"Url")>0?"PHOTO":$field;
@@ -165,8 +183,75 @@ $className = get_class($this);
 				else
 					$displayV1[strtolower($key)]=NULL;
 			}
+			$profileArray=$this->getProfileInfo($profileInfo);
 		
-		if(is_array($profileInfo))
+		if($profileArray[strtolower("MY_PROFILE")])
+			$displayV1[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
+		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
+			
+
+//print_r($displayV1);die;
+		return $displayV1;
+        }
+
+        
+ /**
+  * 
+  * @param type $profileInfo
+  * @param type $bforceFullyDBCall
+  * @return string
+  */
+  public function getBannerMessage($profileInfo, $bforceFullyDBCall=false)
+  {
+
+    $MESSAGE = NULL;
+    $profileObj = LoggedInProfile::getInstance('newjs_master');
+    $request = sfContext::getInstance()->getRequest();
+    $apiAppVersion = $request->getParameter('API_APP_VERSION');
+      
+    if (!empty($apiAppVersion) && is_numeric($apiAppVersion)) {
+      $memMessage = $this->setAndGetOCBCache($request, $apiAppVersion, $profileObj,$bforceFullyDBCall);
+      if ($apiAppVersion < 21)
+        return $memMessage['membership_message']; // for backward compatibility of Android App
+    } else {
+      $memMessage = $this->setAndGetOCBCache($request, 17, $profileObj,$bforceFullyDBCall);
+    }
+
+    switch (true) {
+
+      case ($profileInfo["COMPLETION"] > 50):
+        $MESSAGE = $memMessage['membership_message'];
+        break;
+
+      case (!$profileObj->getFAMILYINFO()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Family';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '4';
+        break;
+
+      case ($memMessage['membership_message']):
+        $MESSAGE = $memMessage['membership_message'];
+        break;
+
+      case (!$profileObj->getEDUCATION()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Education';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '2';
+        break;
+
+      case (!$profileObj->getJOB_INFO()):
+        $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Work';
+        $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
+        $MESSAGE[myjsCachingEnums::PAGEID] = '3';
+        break;
+    }
+
+    return $MESSAGE;
+  }
+  public function getProfileInfo($profileInfo)
+  {
+
+  	if(is_array($profileInfo))
 		{
 			foreach($profileInfo as $key=>$value)
 			{
@@ -185,74 +270,12 @@ $className = get_class($this);
 				else
 				$displayV1[strtolower("MY_PROFILE")][strtolower($key)] =$value?(is_array($value)?$value:strval($value)):NULL; 		
 			
-
-
 			}
-
-			
-
-			}
-		 
-
-		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
-			
-
-//print_r($displayV1);die;
+		}
 		return $displayV1;
-        }
+  }
 
-
-private function getBannerMessage($profileInfo) {    
-				$MESSAGE=NULL;
-				$request = sfContext::getInstance()->getRequest();
-				$memHandlerObj = new MembershipHandler();
-        	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
-        			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$apiAppVersion);
-        				if ($apiAppVersion<21) return $memMessage['membership_message']; // for backward compatibility of Android App
-        			} else {
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request);
-        			}
-			
-	$profileObj=LoggedInProfile::getInstance('newjs_master');
-
-	switch(true){
-
-			case ($profileInfo["COMPLETION"]>50):
-        	  $MESSAGE=$memMessage['membership_message'];
-        	break;
-
-        	case (!$profileObj->getFAMILYINFO()):
-        	  $MESSAGE['top']='Add About Family';
-          	  $MESSAGE['bottom']='Get more interests & responses';
-          	  $MESSAGE['pageId'] = '4';
-        	break;
-
-        	case ($memMessage['membership_message']):
-        	 $MESSAGE=$memMessage['membership_message'];
-        	break;
-
-        	case (!$profileObj->getEDUCATION()):
-        		$MESSAGE['top']='Add About Education';
-          		$MESSAGE['bottom']='Get more interests & responses';
-          		$MESSAGE['pageId'] = '2';
-        	break;
-
-        	case (!$profileObj->getJOB_INFO()):
-        		$MESSAGE['top']='Add About Work';	
-				$MESSAGE['bottom']='Get more interests & responses';
-				$MESSAGE['pageId'] = '3';
-        	 break;
-						}
-	return $MESSAGE;					
-
-
-        		}        
-
-
-
-
-   public function getPhotoTypeFromId($key){
+  public function getPhotoTypeFromId($key){
      		$mapArray=Array('INTEREST_RECEIVED'=>'ProfilePic120Url','MATCH_ALERT'=>'ProfilePic120Url','VISITORS'=>'ThumbailUrl');
      		return $mapArray[$key];
 
@@ -272,7 +295,82 @@ private function getBannerMessage($profileInfo) {
 		}
 		return $showExpiring;
     }
+    
+  /**
+   * 
+   * @param type $request
+   * @param type $appVersion
+   * @param type $profileObj
+   * @return type
+   */
+  private function setAndGetOCBCache($request, $appVersion = 17, $profileObj,$bForceFullyDB=false)
+  {
 
+    $memCacheObject = JsMemcache::getInstance();
+    $profileId = $profileObj->getPROFILEID();
+    $valArr = NULL;
+    $bEnableCache = (myjsCachingEnums::FLAG || $bForceFullyDB) ? false : true;
+    
+    if ($bEnableCache) {
+      $valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER');
+    }
+    if ($valArr != NULL && is_array($valArr)) {
+
+      $memMessage = '';
+
+      if ($valArr['is_null'] == 1) {
+        return NULL;
+      }
+
+      if ($valArr['top']) {
+        $memMessage['membership_message'][myjsCachingEnums::TOP_PART] = $valArr['top'];
+      }
+      if ($valArr['bottom']) {
+        $memMessage['membership_message'][myjsCachingEnums::BOTTOM_PART] = $valArr['bottom'];
+      }
+      if ($valArr['pageId']) {
+        $memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
+      }
+      if($valArr['extra']){
+      	$memMessage['membership_message'][myjsCachingEnums::EXTRA_PART] = $valArr['extra'];
+      }
+      if($valArr['valid']){
+          $memMessage['membership_message'][myjsCachingEnums::VALID] = $valArr['valid'];
+      }
+      if($valArr['expiryDate']){
+          $memMessage['membership_message'][myjsCachingEnums::EXPIRY_DATE] = $valArr['expiryDate'];
+      }
+    }
+    else {
+      $memHandlerObj = new MembershipHandler();
+      $memMessage = $memHandlerObj->fetchMembershipMessage($request, $appVersion);
+      
+      if ($bEnableCache) {
+        $arr[myjsCachingEnums::IS_NULL] = 0;
+        $arr[myjsCachingEnums::TOP_PART] = '';
+        $arr[myjsCachingEnums::BOTTOM_PART] = '';
+        $arr[myjsCachingEnums::PAGEID] = '';
+        $arr[myjsCachingEnums::EXTRA_PART] = '';
+        $arr[myjsCachingEnums::VALID] = '';
+        $arr[myjsCachingEnums::EXPIRY_DATE] = '';
+
+        if ($memMessage['membership_message'] == NULL) {
+          $arr[myjsCachingEnums::IS_NULL] = 1;
+        }
+        else {
+          if (is_array($memMessage['membership_message'])) {
+            foreach ($memMessage['membership_message'] as $key => $value) {
+              $arr[$key] = $value;
+            }
+          }
+        }
+        $timeForCache = myjsCachingEnums::TIME;
+        $memCacheObject->setHashObject(myjsCachingEnums::PREFIX . $profileId . '_MESSAGE_BANNER', $arr, $timeForCache);
+      }
+
+    }
+    return $memMessage;
+  }
 
 }
 ?>

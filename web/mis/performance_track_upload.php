@@ -2,7 +2,8 @@
 	include_once("connect.inc");
 
 	$db = connect_misdb();
-	$db2 = connect_ddl();
+	//$db2 = connect_ddl();
+	$db2 = connect_db();	
 
 	if(authenticated($cid))
 	{

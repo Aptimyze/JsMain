@@ -6,8 +6,8 @@
  */
 class ProfileInformationModuleMap
 {
+	CONST _defaultList = "INTEREST_RECEIVED";
         /*This declares array of  all the configurations of all the given modules*/
-
 	public static $MYJSAPP_ANDROID_1;
 	public static $MYJSAPP_IOS_1;
 	public static $ContactCenterAPP;
@@ -26,7 +26,8 @@ class ProfileInformationModuleMap
 		}
 		else
 			$arrayName = self::$defaultArray[$module];
-		        if(isset(self::${$arrayName}))
+		       
+		if(isset(self::${$arrayName}))
                 {
                         if($infoType=='')
                                 return self::${$arrayName};
@@ -57,7 +58,8 @@ class ProfileInformationModuleMap
                                    return $k;
                         }
                 }
-                throw new JsException("","Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		jsException::nonCriticalError("Wrong module or infoType is given in profileInformationModuleMap.class.php");
+		return self::_defaultList;
         }
         
 	static public function init()
@@ -300,7 +302,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "stype=AMD",
+			"TRACKING"=> "stype=AMOD",
             "CONTACT_ID"=>""
                 ),
 		);
@@ -616,21 +618,25 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "REMINDER|CANCEL|CONTACT",
 			"TRACKING"=> "",
 		),
-		"MATCH_ALERT"=>Array( 
+				"MATCH_ALERT"=>Array( 
 			"ID"=> "7",
-			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"APP_TYPE"=> "ANDROID",
+			"VERSION"=> "1",
+			"SORT_ORDER"=> "3",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
-			"TUPLE_ORDER"=> "",
+			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
+			"VIEW_FLAG"=> "NEW",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
 			"TITLE"=> "Daily Recommendations",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
-			"TRACKING"=> "stype=AM",
+			"BUTTONS"=> "INITIATE",
+			"TRACKING"=> "stype=A15",
+      			"CONTACT_ID"=>"",
 		),
 		"SHORTLIST"=>Array( 
 			"ID"=> "8",
@@ -809,8 +815,8 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Match of the day",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "",
-			"TRACKING"=> "",
+			"BUTTONS"=> "INITIATE",
+			"TRACKING"=> "stype=AMOD",
                         "CONTACT_ID"=>""
                 )
 
