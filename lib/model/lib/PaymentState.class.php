@@ -9,10 +9,12 @@ class PaymentState
 	const ERISHTA = "ERISHTA";
 	const EVALUE = "EVALUE";
 	const FREE = "FREE";
+	const JSEXCLUSIVE = "JSEXCLUSIVE";
 	private $EVALUE;
 	private $ERISHTA;
 	private $FTO;
 	private $FREE;
+	private $JSEXCLUSIVE;
 	private $AP;
 
 	public function __construct(Profile $profile,$ftoState='')
@@ -36,6 +38,7 @@ getters and setters of class payment state
 	public function getERISHTA() { return $this->ERISHTA; }
 	public function getEVALUE() { return $this->EVALUE; }
 	public function getFREE() { return $this->FREE; }
+	public function getJSEXCLUSIVE() { return $this->JSEXCLUSIVE; }
 	public function getAP() { return $this->AP; }
 	public function isPAID()	
 	{
@@ -65,6 +68,8 @@ Desc: constructor logic
 			$this->FTO = true;
 		else
 			$this->FREE = true;
+		if(MembershipHandler::isEligibleForRBHandling($this->profileObj->getPROFILEID()))
+			$this->JSEXCLUSIVE = true;
 	}
 /**************************************************
 function getPaymentStatus()
@@ -80,6 +85,8 @@ Desc: returns current status of the profile in form of string
 			return PaymentState::EVALUE;
 		if($this->FREE)
 			return PaymentState::FREE;
+		if($this->JSEXCLUSIVE)
+			return PaymentState::JSEXCLUSIVE;
 	}
 	public static function IsJsExclusiveMember($subscription)
 	{
