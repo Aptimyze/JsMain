@@ -219,9 +219,10 @@ getContactDetails(actiondetails){
     contactDetailMessage(result,action, index);
     return;
   }*/
+
     if(actiondetails.errmsglabel)
     {
-    this.setState({topMsg2Text : actiondetails.errmsglabel }); //    $("#topMsg2").html(result.actiondetails.errmsglabel);
+    topMsg2Text = actiondetails.errmsglabel ; //    $("#topMsg2").html(result.actiondetails.errmsglabel);
     var memText, memShow;
 
     if(actiondetails.footerbutton && actiondetails.footerbutton.text)
@@ -235,11 +236,9 @@ getContactDetails(actiondetails){
           memShow = 'dispnone';
 
         }
+      contact1_style=contact2_style = {display:'block'};
     //  $("#membershipMessageCE").text(actiondetails.footerbutton.text).show();else $("#membershipMessageCE").hide();
-    this.setState({
-      showTopMsg2, memText,memShow,
       commonOverlayShow : ''
-    });//$("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
 
     }
 else
