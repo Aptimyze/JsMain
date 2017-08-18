@@ -2,7 +2,7 @@
 <div class="posfix z112 dispnone"  id="reportInvalidContainer">
                     <div class="fullwid fontlig" >
                         <data></data><div class="photoheader">
-                            <div class="pad16 brdr_new" style="height:85px;">
+                            <div class="pad16 brdr_new_2" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
                                     <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Invalid</div>
@@ -73,7 +73,7 @@
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
                         <div class="photoheader">
-                            <div class="pad16 brdr_new" style="height:85px;">
+                            <div class="pad16 brdr_new_2" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportAbuse" class="srp_box3 abs_c" src="">
                                     <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Abuse</div>
@@ -169,7 +169,14 @@
                         </div>
                         <div class="reportAbuseScreen">
                         <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
+
                         </div>
+                        </div>
+                        <div id="attachDiv" class="brdr23 white posfix btm50 fullwid pad3 dn">
+                            <div id="attachTitle">
+                                <i class="reportIcon atachIcon"></i>
+                                <span>Attach Proof</span>
+                            </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
                             <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Abuse</div>

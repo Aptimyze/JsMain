@@ -95,6 +95,11 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
 $("#js-otherReasonsLayer").removeClass('dispnone').val('');
+console.log('yesss')
+$("#attachDiv").removeClass("dn");
+var elem=$("#reportAbuseMidDiv");
+elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height() - $("#attachDiv").innerHeight());
+
 }
 
 mainReasonAbuse=$(this).text();
