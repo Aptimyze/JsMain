@@ -344,6 +344,20 @@ class ProfilePage extends React.Component {
         document.getElementById("showPhoto").classList.remove("dn");
     }
 
+    showError(inputString) {
+        let _this = this;
+        this.setState ({
+                insertError : true,
+                errorMessage : inputString
+        })
+        setTimeout(function(){
+            _this.setState ({
+                insertError : false,
+                errorMessage : ""
+            })
+        }, this.state.timeToHide+100);
+    }
+
     goBack()
     {
         if ( typeof this.props.history.prevUrl == 'undefined' )
@@ -416,7 +430,7 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
 
-                contactEngineView = <ContactEngineButton setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                contactEngineView = <ContactEngineButton showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 

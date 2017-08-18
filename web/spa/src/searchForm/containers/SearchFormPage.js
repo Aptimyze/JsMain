@@ -8,17 +8,20 @@ import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import HamMain from "../../Hamburger/containers/HamMain";
 import {getCookie} from '../../common/components/CookieHelper';
+import AppPromo from "../../common/components/AppPromo";
 
 class SearchFormPage extends React.Component {
 
     constructor(props) {
         super();
+        jsb9Fun.recordBundleReceived(this,new Date().getTime());
         this.state = {
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
             showLoader: false,
-            loggeInStatus: false
+            loggeInStatus: false,
+            showPromo: false
         };
         if(getCookie("AUTHCHECKSUM")) {
             this.state.loggeInStatus = true;
@@ -32,8 +35,26 @@ class SearchFormPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
+        if(nextProps.appPromotion == true) {
+            this.setState ({
+                showPromo : true
+            });
+        }
         console.log("data",nextProps.searchData)
        
+    }
+
+    componentDidUpdate(prevprops) {
+        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+        if(prevprops.location) {
+            if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
+                this.refs.Hamchild.getWrappedInstance().hideHam();
+            }
+        }
+    }
+
+    componentWillUnmount(){
+        this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
 
     showError(inputString) {
@@ -49,6 +70,19 @@ class SearchFormPage extends React.Component {
             })
         }, this.state.timeToHide+100);
     }
+
+    showHam() {
+        if(window.location.search.indexOf("ham=1") == -1) {
+            if(window.location.search.indexOf("?") == -1) {
+                this.props.history.push(window.location.pathname+"?ham=1");
+            } else {
+                this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
+            }
+
+        }
+        this.refs.Hamchild.getWrappedInstance().openHam();
+    }
+
     changeTab(e) {
         if(e.target.nextSibling) {
             e.target.nextSibling.classList.remove("selectedTab");
@@ -70,16 +104,28 @@ class SearchFormPage extends React.Component {
         {
           loaderView = <Loader show="page"></Loader>;
         }
+
+        var promoView;
+        if(this.state.showPromo)
+        {
+            promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
+        }
+
         let savedSearchCountView;
-        savedSearchCountView = <div className="posabs savsrc-pos2">
-            <div className="txtc color6 f12 roundIcon">1</div>
-        </div>;
-        let savedSearchView,genderView;
+        if(document.getElementById("savedSearchCount")) {
+            let count = document.getElementById("savedSearchCount").innerText;
+            savedSearchCountView = <div className="posabs savsrc-pos2">
+                <div className="txtc color6 f12 roundIcon">{count}</div>
+            </div>;    
+        }
+        
+        let savedSearchView,genderView,hamView;
         if(this.state.loggeInStatus == true) {
             savedSearchView = <div className="dispibl fr" id="savedSearchIcon">
                 <i className="savsrc-sp savsrc-icon1"></i>
                 {savedSearchCountView}
             </div>;
+            hamView = <HamMain ref="Hamchild" page="others"></HamMain>;
         } else {
             genderView = <div id="search_gender">
                 <div className="pad3 brdr1 txtc">
@@ -93,10 +139,11 @@ class SearchFormPage extends React.Component {
                     </div>
                 </div>
             </div>;
+            hamView = <HamMain ref="Hamchild" page="Login"></HamMain>;
         }
 
         let headerView = <div className="bg1 padd22">
-            <i id="hamburgerIcon" className="fl dispbl mainsp baricon"></i>
+            <i id="hamburgerIcon" onClick={() => this.showHam()} className="fl dispbl mainsp baricon"></i>
             <div className="white fontthin f19 txtc dispibl wid84p">
                 Search Your Match
             </div>
@@ -114,16 +161,20 @@ class SearchFormPage extends React.Component {
                 </div>
             </div>
         </div>;
-
+        this.trackJsb9 = 1;
         return (
             <div className="bg4" id="SearchFormPage">
                 <GA ref="GAchild" />
+                {promoView}
+                {hamView}
                 {errorView}
                 {loaderView}
-                {headerView}
-                {genderView}
-                {photoView}
-                <div id="search_submit" className="bg7 white fullwid dispbl txtc lh50 pinkRipple">Search</div>
+                <div className="fullheight bg4" id="mainContent">
+                    {headerView}
+                    {genderView}
+                    {photoView}
+                    <div id="search_submit" className="bg7 white fullwid dispbl txtc lh50 pinkRipple">Search</div>
+                </div>
             </div>
         );
     }
@@ -131,7 +182,8 @@ class SearchFormPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return{
-       searchData: state.SearchFormReducer.searchData
+       searchData: state.SearchFormReducer.searchData,
+       Jsb9Reducer : state.Jsb9Reducer
     }
 }
 
@@ -140,7 +192,10 @@ const mapDispatchToProps = (dispatch) => {
         getSearchData: () => {
             let call_url = '/api/v1/search/searchFormData?json={"searchForm":"2013-12-25 00:00:00"}';
             commonApiCall(call_url,{},'GET_SEARCH_DATA','POST',dispatch);
-        }
+        },
+        jsb9TrackRedirection : (time,url) => {
+            jsb9Fun.recordRedirection(dispatch,time,url)
+        },
     }
 }
 
