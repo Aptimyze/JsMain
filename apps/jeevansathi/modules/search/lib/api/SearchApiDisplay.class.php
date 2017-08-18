@@ -850,7 +850,8 @@ class SearchApiDisplay
 	public function getSealInfo($verificationSeal='0')
 	{ 
 			if($verificationSeal == '0')
-							return 0;
+				return 0;
+		
 			$verificationSeal=  explode(",", $verificationSeal);
 			if($verificationSeal[0]=="F"){
 				$sealArr=array_flip(PROFILE_VERIFICATION_DOCUMENTS_ENUM::$VERIFICATION_SEAL_ARRAY);
@@ -924,4 +925,25 @@ class SearchApiDisplay
                 
                 return $label;
         }*/
+
+    public function getFinalVerificationStatus($verificationStatus)
+    {
+    	if(MobileCommon::isAndroidApp())
+		{
+			$aadharObj = new aadharVerification();
+   			$aadharArr = $aadharObj->getAadharDetails($this->viewerObj->getPROFILEID());   			
+   			unset($aadharObj);
+   			$aadharStatus = $aadharArr[$this->viewerObj->getPROFILEID()]["VERIFY_STATUS"];
+   			if($verificationStatus == 1 && $aadharStatus == "Y")
+				return 3;   		
+			elseif($aadharStatus == "Y")
+				return 2;
+   			else
+   				return $verificationStatus;
+		}
+		else
+		{
+			return $verificationStatus;
+		}
+    }
 }

@@ -513,6 +513,29 @@ BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N",
 ),
+24=>array(LAYERID=>"24",
+TIMES=>"1",
+MINIMUM_INTERVAL=>"720",
+TITLE=>"Get your profile Aadhaar verified",
+BUTTON1=>"Verify",
+BUTTON2=>"Skip",
+ACTION1=>"close",
+ACTION2=>"close",
+JSMS_ACTION1=>"/",
+JSMS_ACTION2=>"/",
+TEXT=>"We are moving towards a more secure platform by verifying our users Aadhaar number. Your profile will be shown as Aadhaar verified to other members.",
+LEGAL_TEXT=>"I, the holder of Aadhaar number, hereby give my consent to Baldor Technologies Private Limited, to obtain my Aadhaar number, name, date of birth, address and demographic data for authentication with UIDAI. Baldor Technologies Private Limited has informed me that my identity information would only be used for a background check or a verification of my identity and has also informed me that my biometrics will not be stored/ shared and will be submitted to CIDR only for the purpose of authentication. I have no objection if reports generated from such background check are shared with relevant third parties.",
+SUBTEXT=>"Your Aadhar number will not be visible on site.",
+BUTTON1_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON1_PAGEID_IOS=>"",
+BUTTON1_PAGEID_ANDROID=>"",
+BUTTON2_PAGEID_IOS=>"",
+BUTTON2_PAGEID_ANDROID=>"",
+UNLIMITED => "Y",
+),
 25 => array(LAYERID=>"25",
 TIMES=>"3",
 MINIMUM_INTERVAL=>"720",
@@ -534,6 +557,7 @@ BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N"
 ),     
+       
 );
 if ($label) {
    if ($value) {
@@ -555,7 +579,7 @@ else {
 
 public static function getLAYERFromPriority($priority){
 
-$arr = array(19,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,25,17,3,5,6,7,13,14);
+$arr = array(19,24,1,20,23,18,8,9,15,21,10,22,16,11,12,2,4,25,17,3,5,6,7,13,14);
 	return $arr[$priority-1];
 
 }

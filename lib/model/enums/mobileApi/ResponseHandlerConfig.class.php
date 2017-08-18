@@ -135,6 +135,7 @@ class ResponseHandlerConfig
 	//Report Invalid
 
 	 public static $SAME_NUMBER_INVALID_TWICE = array("message"=>"You cannot report the same number Invalid again.","statusCode" => '1');
+	 public static $CONSENT_MESSAGE = array("message"=>"Consent Required","statusCode" => '5');
 }
 
 ?>

@@ -28,9 +28,16 @@ class ApiVerificationDataV1Action extends sfActions
 			die;
 		}
 		
-		$profileId = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
+		$profileId = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));		
 		$verificationDataString=$this->getVerificationData($profileId);
 		$documentArr = array("documentsVerified"=>$verificationDataString);
+		
+		//aadhar data	
+		$aadharData = $this->getAadharData($profileId);
+		if(is_array($aadharData))
+		{
+			$documentArr["aadharDetails"] = $aadharData;
+		}		
 		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiResponseHandlerObj->setResponseBody($documentArr);
 		$apiResponseHandlerObj->generateResponse();
@@ -85,6 +92,20 @@ class ApiVerificationDataV1Action extends sfActions
 			$verifiedDocumentsString=rtrim($verifiedDocumentsString,",");
 		}
 		return $verifiedDocumentsString;
+
+	}
+
+	// this is used to get aadhar details
+	public function getAadharData($profileId)
+	{
+		$aadharVerificationObj = new aadharVerification();
+		$aadharData = $aadharVerificationObj->getAadharDetails($profileId);
+		if(is_array($aadharData) && !empty($aadharData))
+		{
+			//$returnArr["AADHAR_NO"] = $aadharData[$profileId]["AADHAR_NO"]; 
+			$returnArr["VERIFY_STATUS"] = $aadharData[$profileId]["VERIFY_STATUS"];
+		}
+		return $returnArr;
 
 	}
 }
