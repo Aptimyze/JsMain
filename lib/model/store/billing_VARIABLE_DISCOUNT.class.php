@@ -206,14 +206,22 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
 
                 try
                 {
-                        if($sentMail && $sendSMS)
-                            $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT";
-                        else
-                            $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT";
-                        if(!empty($type)){
-                            $sql .= ",:TYPE";
+                        if($sentMail && $sendSMS){
+                            if(!empty($type)){
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT,:TYPE)";
+                            }
+                            else{
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT)";
+                            }
                         }
-                        $sql .= ")";
+                        else{
+                            if(!empty($type)){
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:TYPE)";
+                            }
+                            else{
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT)";
+                            }
+                        }
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                         $res->bindValue(":DISCOUNT", $discount, PDO::PARAM_INT);
