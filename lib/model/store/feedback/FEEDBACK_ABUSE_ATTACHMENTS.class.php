@@ -98,6 +98,23 @@ class FEEDBACK_ABUSE_ATTACHMENTS extends TABLE
       throw new jsException($e);
     }
   }
-
+  
+  /**
+   * 
+   * @param type $tempAttachmentId
+   * @return type
+   * @throws jsException
+   */
+  public function insertFromTempAttachment($tempAttachmentId) {
+    try{
+      $sql = "INSERT INTO feedback.ABUSE_ATTACHMENTS (DOC_1,DOC_2,DOC_3,DOC_4,DOC_5) SELECT DOC_1,DOC_2,DOC_3,DOC_4,DOC_5 FROM feedback.ABUSE_TEMP_ATTACHMENTS WHERE ID = :TEMP_ID";
+      $pdoStatement = $this->db->prepare($sql);
+      $pdoStatement->bindValue("TEMP_ID", $tempAttachmentId, PDO::PARAM_INT);
+      $pdoStatement->execute();
+      return $this->db->lastInsertId();
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
 }
 ?>

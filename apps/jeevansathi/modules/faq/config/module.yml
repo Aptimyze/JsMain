@@ -17,3 +17,6 @@ all:
     
   reportAbuseForUserLog:
     enable_login:  off
+
+  ApiFeedbackAttachmentV1:
+    enable_login:  off

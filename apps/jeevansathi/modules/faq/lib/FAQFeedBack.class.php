@@ -19,7 +19,9 @@ class FAQFeedBack
     private $m_bAttachmentError;
     private $m_arrAttachmentErrorMsg;
     private $m_iAbuseAttachmentID;
+    private $m_arrTempAttachments;
     const MAX_ALLOWED_ATTACHMENTS = 5;
+    const UPLOAD_PATH = "/uploads/Abuse/";
     
         public function __construct($api=0)
 	{
@@ -224,9 +226,10 @@ class FAQFeedBack
      * @return boolean
      */
 	public function ProcessData(sfWebRequest $request)
-	{     
+	{   
+        $this->webRequest=$request;
 		$this->extractInfo($request);
-		$this->webRequest=$request;
+		
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
 		$dataArray = $this->webRequest->getParameter('feed');
@@ -439,15 +442,29 @@ class FAQFeedBack
   }
   
   /**
-   * 
+   * processFileAttachment
    * @return type
    */
   private function processFileAttachment()
   {
     $request = $this->webRequest;
-    
+    $arrFeed = $this->webRequest->getParameter('feed');
     //Get Files and check the file extension
     $arrFileAttachment = $_FILES['feed'];
+    if( is_null($arrFileAttachment) && $arrFeed['temp_attachment_id'] ) {
+      
+      $tempAttachmentsIds = $arrFeed['temp_attachment_id'];
+      $objTempAttachmentStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS;
+      $arrRecord = $objTempAttachmentStore->getRecord($tempAttachmentsIds);
+      
+      if( false === $arrRecord || false === is_array($arrRecord) ) {
+        $this->m_bAttachmentError = true;
+        $this->m_arrAttachmentErrorMsg["error"] = "No attachments exist on given temp ids";
+      }
+      $this->m_arrTempAttachments = $arrRecord[0];
+      unset($objTempAttachmentStore);
+      return ;
+    }
     
     //JPEG, PNG, GIF, BMP
     $arrAllowedDocType = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
@@ -491,8 +508,12 @@ class FAQFeedBack
   private function uploadDocs()
   {
     $arrFileAttachment = $_FILES['feed'];
+    $arrFeed = $this->webRequest->getParameter('feed');
+    if( is_null( $arrFileAttachment ) && $arrFeed[ 'temp_attachment_id' ] ) {
+      return $this->uploadFromTempAttachments( $arrFeed[ 'temp_attachment_id' ] );
+    }
     
-    $strBaseUploadPath = "/uploads/Abuse/";
+    $strBaseUploadPath = self::UPLOAD_PATH;
     $strUploadPath = JsConstants::$docRoot.$strBaseUploadPath;
     
     if (false === is_dir($strUploadPath)) {
@@ -530,7 +551,152 @@ class FAQFeedBack
     $this->m_iAbuseAttachmentID = -1;
     if($recordID) {
       $this->m_iAbuseAttachmentID = $recordID;
+      $this->moveToCloud($recordID, $arrUploadedPics);
     }
+ 
+    return $recordID;
+  }
+  
+  
+  /**
+   * 
+   * @param type $request
+   * @return type
+   */
+  public function uploadTempAttachments($request)
+  {
+    $this->webRequest=$request;
+    
+    $this->processFileAttachment();
+    
+    $arrFeed = $this->webRequest->getParameter('feed');
+    
+    if($this->m_bAttachmentError) {
+      return $this->m_arrAttachmentErrorMsg;
+    }
+       
+    $arrFileAttachment = $_FILES['feed'];
+    $iTempAttachmentId = -1;
+    if($arrFeed['attachment_id']) {
+      $iTempAttachmentId = $arrFeed['attachment_id'];
+    }
+    
+    $objStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS();
+    
+    $count = 1;
+    if( -1 != $iTempAttachmentId ) {
+      $tempAttachmentRecords = $objStore->getRecord($iTempAttachmentId);
+      
+      if(is_array($tempAttachmentRecords)) {
+        $tempAttachmentRecords = $tempAttachmentRecords[0];
+        foreach($tempAttachmentRecords as $key => $val) {
+          if(0 != strlen($val)) {
+            $count++;
+          }
+        }
+      }
+    }
+  
+    $strBaseUploadPath = self::UPLOAD_PATH;
+    $strUploadPath = JsConstants::$docRoot.$strBaseUploadPath;
+    
+    if (false === is_dir($strUploadPath)) {
+      mkdir($strUploadPath,0777,true);
+    }
+    
+    $uniqueId = uniqid();
+    /**
+     * 
+     */
+    $arrUploadedPics = array();
+    
+    foreach($arrFileAttachment['name'] as $key => $value) {  
+     
+      if($count > self::MAX_ALLOWED_ATTACHMENTS) {
+        $this->m_bAttachmentError = true;
+        $this->m_arrAttachmentErrorMsg[$key] = "Only ".self::MAX_ALLOWED_ATTACHMENTS. " attachments are allowed.";
+        break;
+      }
+      
+      //Move to JS Server
+      $strTargetFile = $strBaseUploadPath."{$uniqueId}_{$value}";
+      $bResult = move_uploaded_file($arrFileAttachment["tmp_name"][$key], JsConstants::$docRoot.$strTargetFile);
+      $strUrlPrefix = IMAGE_SERVER_ENUM::$appPicUrl;
+
+      if($bResult) {
+        $arrUploadedPics["DOC_{$count}"] = "{$strUrlPrefix}{$strTargetFile}";
+        $count++;
+      } else {
+        //Trigger to alert issue while moving pics
+      }
+    }
+    
+    if($this->m_bAttachmentError) {
+      return $this->m_arrAttachmentErrorMsg;
+    }
+    
+    if(-1 == $iTempAttachmentId) {
+      $recordID = $objStore->insertRecord($arrUploadedPics);
+    } else {
+      $objStore->updateRecord($iTempAttachmentId, $arrUploadedPics);
+      $recordID = $iTempAttachmentId;
+    }
+   
+    return $recordID;
+  }
+  
+  /**
+   * 
+   * @return type
+   */  
+  public function getIsAttachmentError(){
+    return $this->m_bAttachmentError;
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  public function getAttachmentErrorMsg(){
+    return $this->m_arrAttachmentErrorMsg;
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  public function getAttachmentId(){
+    return $this-m_iAbuseAttachmentID;
+  }
+  
+  /**
+   * 
+   * @param type $tempAttachmentsIds
+   */
+  private function uploadFromTempAttachments($tempAttachmentsIds) {
+       
+    $objAbuseAttachmentStore = new FEEDBACK_ABUSE_ATTACHMENTS;
+    $recordId = $objAbuseAttachmentStore->insertFromTempAttachment($tempAttachmentsIds);
+    
+//    $objTempAttachmentStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS;
+//    $objTempAttachmentStore->deleteRecord($tempAttachmentsIds);
+    
+    $this->moveToCloud($recordId, $this->m_arrTempAttachments);
+    
+    $this->m_iAbuseAttachmentID = $recordId;
+  }
+  
+  /**
+   * 
+   * @param type $recordId
+   */
+  private function moveToCloud($recordId, $arrUploadedPics) {
+    
+    if($recordId <= 0) {
+      //Nothing to move
+      return ;
+    }
+    
     //Insert into image server log
     $moduleName= array();
     $moduleId=array();
@@ -538,18 +704,19 @@ class FAQFeedBack
     $status=array();
     
     foreach($arrUploadedPics as $key => $val) {
+      
+      if(0 === strlen($val)) {
+        continue;
+      }
+      
       $moduleName[] = IMAGE_SERVER_MODULE_NAME_ENUM::getModuleName("ABUSE_ATTACHMENTS");
-      $moduleId[] = $recordID;
+      $moduleId[] = $recordId;
       $imageType[] = $key;
       $status[] = IMAGE_SERVER_STATUS_ENUM::$onAppServer;
     }
     
     $imageServerLogStore = new ImageServerLog;
     $imageServerLogStore->insertBulk($moduleName, $moduleId, $imageType, $status);
-    
-    //Insert into Report Abuse Log Entry
-    
-    return $recordID;
   }
 } 
 ?>
