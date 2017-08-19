@@ -364,7 +364,7 @@ public function fetchProfiles($processObj)
 			}
                 }
 		else{
-			$loginDtEnd =date("Y-m-d",time()-1*24*60*60);
+			$loginDtEnd =date("Y-m-d",time()-2*24*60*60);
 			$profiles=$preAllocationTempPoolObj->fetchProfilesWithCities($cities,$lowerScoreLimit,$loginDtEnd);	
 		}
 			
