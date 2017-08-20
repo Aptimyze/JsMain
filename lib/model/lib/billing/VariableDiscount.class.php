@@ -234,12 +234,38 @@ class VariableDiscount
 	unset($durationObj);
     }
 
+    /**
+     * @fn activateExtendedVD
+     * @param $params--$entryDate
+     * @return none
+     */
     public function activateExtendedVD($entryDate){
-        //activate and delete today
         $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT("newjs_masterRep");
-        $eligibleRows = $vdExtendedObj->fetchAllRecords("*",$currentDate);
-        print_r($eligibleRows);die;
+        $eligibleRows = $vdExtendedObj->fetchAllRecords("*",$entryDate);
         unset($vdExtendedObj);
+        if(is_array($eligibleRows)){
+            $vdObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
+            $vdOfferDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION("newjs_masterRep");
+            $currentDate = date("Y-m-d");
+            $pidArr = array();
+            foreach ($eligibleRows as $key => $disDetails) {
+                $paid = $this->checkPaidProfile($disDetails["PROFILEID"]);
+                if($paid){
+                    continue;
+                }
+                unset($paid);
+                if(!in_array($disDetails["PROFILEID"], $pidArr)){
+                    $vdObj->addVDProfile($disDetails["PROFILEID"],$disDetails["DISCOUNT"],$disDetails["SDATE"],$disDetails["EDATE"],$currentDate,'Y','Y',false,"Extended");
+                    $pidArr[] = $disDetails["PROFILEID"];
+                }
+                $params = array("PROFILEID"=>$disDetails["PROFILEID"],"SERVICE"=>array($disDetails["SERVICE"]),"DISC1"=>$disDetails["1"],"DISC2"=>$disDetails["2"],"DISC3"=>$disDetails["3"],"DISC6"=>$disDetails["6"],"DISC12"=>$disDetails["12"],"DISCL"=>$disDetails["L"]);
+                $vdOfferDurationObj->addVDOfferDurationServiceWise($params);
+                unset($params);
+            }
+            unset($pidArr);
+            unset($vdOfferDurationObj);
+            unset($vdObj);
+        }
     }
 
     /**
@@ -247,7 +273,6 @@ class VariableDiscount
      * @param $params--conditions,$discountType(optional----key/name for temp table)
      * @return array of resulting rows
      */
-
     public function getDiscountEligibleProfiles($params,$discountType="")
     {
         $resultProfiles = array();

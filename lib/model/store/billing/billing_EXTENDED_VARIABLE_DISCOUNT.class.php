@@ -71,5 +71,18 @@ class billing_EXTENDED_VARIABLE_DISCOUNT extends TABLE{
             throw new jsException($e);
         }
     } 
+
+    public function deleteDiscountEndingYesterday()
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="DELETE FROM billing.EXTENDED_VARIABLE_DISCOUNT WHERE SDATE<:SDATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":SDATE", $todayDate, PDO::PARAM_STR);
+            $res->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
 ?>
