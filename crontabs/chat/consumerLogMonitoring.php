@@ -94,7 +94,7 @@
 
 	function sendMailAlert($subject){
 		//mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check");
-		mail("lavesh.rawat@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check, restarting consumers as well");
+		mail("lavesh.rawat@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check, restarting consumers as well");
 		//mail("nitishpost@gmail.com",$subject,"Please check");
 	}
 ?>
