@@ -30,8 +30,6 @@ export default class BlockPage extends React.Component{
 
 
   render(){
-    console.log('in block');
-    console.log(this.props);
     let image3dot = <div id="3DotProPic" className="txtc">
                       <div id="photoIDDiv" className="photoDiv">
                         <img id="ce_photo" className="srp_box2 mr6" src={this.props.profileThumbNailUrl} />
@@ -39,9 +37,9 @@ export default class BlockPage extends React.Component{
                   </div>;
     let blockLayerButton=   <div className="posfix btmo fullwid" id="bottomElement">
                               <div className="txtc">
-                                <a href="#" className="white fontlig f16 forHide lh50" id="bottomMsg" onClick={() => this.props.bindAction()}>Unblock</a>
+                                <a href="#" className="white fontlig f16 forHide lh50" id="bottomMsg" onClick={() => this.props.bindAction(this.props.blockdata.buttondetails.buttons[0])}>Unblock</a>
                               </div>
-                              <a href="#" className="dispbl bg7 white txtc f16 pad2 fontlig forHide" id="footerButton">Close</a>
+                              <a href="#" className="dispbl bg7 white txtc f16 pad2 fontlig forHide" onClick={this.props.closeBlockLayer} id="footerButton">Close</a>
                             </div>;
 
 

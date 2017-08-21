@@ -15,7 +15,8 @@ export class contactEnginePD extends React.Component{
     super(props);
     this.state = {
       showMessageOverlay:false,
-      layerCount:0
+      layerCount:0,
+      pageSource : this.props.pageSource
         };
     this.actionUrl = {
       "INITIATE":"/api/v2/contacts/postEOI",
@@ -34,22 +35,11 @@ export class contactEnginePD extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-      if (nextProps.contactAction.msgInitiated) {
-        this.setState({
-          showMessageOverlay: true
-        })
-      }
   }
   closeMessageLayer() {
     this.setState({showMessageOverlay: false})
   }
 
-  contactAction(action){
-  	this.props.showLoaderDiv();
-    var url = '&profilechecksum='+this.props.profiledata.profilechecksum;
-//    performAction(button,this.props.profiledata.profilechecksum,callBack.bind(this));
-//    this.props.callContactApi(this.actionUrl[action],action,url);
-  }
   bindAction(button,index){
 
 
@@ -69,7 +59,7 @@ export class contactEnginePD extends React.Component{
           this.postAction(button,responseButtons,index);
         }
         this.props.showLoaderDiv();
-        performAction(this.props.profiledata.profilechecksum,callBack.bind(this),button);
+        performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource});
         this.props.resetMyjsData();
       break;
 
@@ -98,8 +88,16 @@ export class contactEnginePD extends React.Component{
           this.props.replaceSingleButton(newButtons);
           break;
         case 'IGNORE':
-            console.log('in ignore');
-            this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   });
+            console.log('in ignore',actionButton);
+            if(actionButton.params.indexOf("ignore=0")!=-1)
+            {
+              this.hideLayerCommon({showBlockLayer: false   });
+              this.hideLayerCommon({showThreeDots: false   });
+            }
+            else {
+              this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   });
+            }
+            this.props.replaceOldButtons(responseButtons);
             //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
             //this.props.replaceSingleButton(newButtons);
         break;
@@ -157,7 +155,7 @@ getFrontButton(){
   </div>
   );
 }
-  if(this.props.buttondata.buttons)
+  if(this.props.buttondata.buttons && this.props.buttondata.buttons.length>1)
   {
   threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true})} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
 }
@@ -199,7 +197,8 @@ showLayerCommon(data){
 
 }
 hideLayerCommon(data){
-  this.layerCount--;
+  if(this.layerCount>0)
+    this.layerCount--;
   if(!this.layerCount)this.props.setScroll();
   this.setState({
     ...data
@@ -264,7 +263,6 @@ getCommonOverLay(actionDetails){
 
 const mapStateToProps = (state) => {
     return{
-     contactAction: state.contactEngineReducer
     }
 }
 

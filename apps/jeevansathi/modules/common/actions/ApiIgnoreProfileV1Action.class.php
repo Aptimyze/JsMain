@@ -108,7 +108,7 @@ class ApiIgnoreProfileV1Action extends sfActions
                                                 $page['isBookmarked']=1;
                                             else
                                             $page['isBookmarked']=0;
-                                            $button = $buttonObj->getNewButtonArray($page);
+                                            $button = $buttonObj->getButtonArray($page);
                                             $tempButton = $button;
                                             $button['buttons'] = $tempButton['buttons'];
 
