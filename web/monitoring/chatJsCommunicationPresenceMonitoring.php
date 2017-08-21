@@ -27,7 +27,7 @@ foreach($serverUrlArray as $k=>$v){
                 {
 					$status = sendPresenceRequest($v);
 					 if($status!='200'){						
-                        mail ("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
+                        mail ("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
 						foreach($mobileNumberArr as $n=>$no)
 						{
 							sms($no);

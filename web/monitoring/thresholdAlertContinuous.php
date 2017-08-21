@@ -122,7 +122,7 @@ function sendMail($usagePercentage){
 	global $domain, $environment,$sleepTimeout;
 	if($environment == "prod"){
 
-	     //mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after ".($sleepTimeout*3)."sec @ ".$usagePercentage."%","Please check");
+	     //mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after ".($sleepTimeout*3)."sec @ ".$usagePercentage."%","Please check");
 	    mail("nitishpost@gmail.com","Openfire memory usage on ".$domain."@ ".$usagePercentage."%","Please check");
 	}
 	elseif($environment == "dev"){
