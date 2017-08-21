@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='Reporter'></td><td class='Type'></td><td class='Date'></td><td class='Reason'></td><td class='OtherReason'>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='Reporter'></td><td class='Type'></td><td class='Date'></td><td class='Reason'></td><td class='OtherReason'></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled=true value='Download'>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
@@ -10,10 +10,52 @@
 		tempHtml.find('.Date').text(rowJson.DATE);
 		tempHtml.find('.Reason').text(rowJson.REASON);
 		tempHtml.find('.OtherReason').text(rowJson.OTHER_REASON);
+                
+                if(rowJson.ATTACHMENT_ID != -1) {
+                    tempHtml.find('.attach_id').prop('disabled',false).attr('id',rowJson.ATTACHMENT_ID);
+                }
 		return tempHtml;
 
 	}
 
+        function downloadAll(urls) {
+           
+
+            for (var i = 0; i < urls.length; i++) {
+              link.setAttribute('href', urls[i]);
+              link.click();
+            }
+
+            document.body.removeChild(link);
+        }
+        
+        function downloadAttachment()
+        {
+            var id = $(this).attr('id');
+            $.ajax({
+                'url':'/operations.php/feedback/GetAbuseAttachments',
+                'data':{'attachment_id':id},
+                'method':'POST',
+                success:function(response)
+                { 
+                     var link = document.createElement('a');
+
+                    link.setAttribute('download', null);
+                    link.style.display = 'none';
+
+                    document.body.appendChild(link);
+                    
+                    var size = response.length;
+                    for ( var i=0 ; i<size ; i++ ) {
+                        response[i] = response[i].replace('b2.jeev.com', 'xmppdev1.jeevansathi.com');
+                        link.setAttribute('href', response[i]);
+                        link.click();
+                    }
+                    document.body.removeChild(link);
+                }
+            })
+        }
+        
 	function sendAjax()
 	{	
 		userName=$('#userName').val();
@@ -68,7 +110,7 @@
 						$("#dateError2").hide();
 						$("#noUser").hide();
 						$("#dateError3").hide();
-
+                                                $('.attach_id').on('click',downloadAttachment);
 					} 
 					
 					}
@@ -131,6 +173,7 @@
 <td>Date</td>
 <td>Reason</td>
 <td>Other Reason</td>
+<td>Attachment</td>
 </tr>
 
 </table>

@@ -20,3 +20,6 @@ all:
 
   ApiFeedbackAttachmentV1:
     enable_login:  off
+
+  ApiFeedbackDeleteAttachmentV1:
+    enable_login:  off

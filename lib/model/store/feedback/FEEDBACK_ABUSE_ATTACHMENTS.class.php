@@ -116,5 +116,27 @@ class FEEDBACK_ABUSE_ATTACHMENTS extends TABLE
       throw new jsException($ex);
     }
   }
+  
+  /**
+   * 
+   * @param type $attachmentId
+   * @return boolean
+   * @throws jsException
+   */
+  public function getRecord($attachmentId) {
+    try{
+      $sql = "SELECT DOC_1,DOC_2,DOC_3,DOC_4,DOC_5 FROM feedback.ABUSE_ATTACHMENTS WHERE ID = :ID";
+      $pdoStatement = $this->db->prepare($sql);
+      $pdoStatement->bindValue(":ID", $attachmentId, PDO::PARAM_INT);
+      $pdoStatement->execute();
+      //If Record Exist
+      if($pdoStatement->rowCount())
+          return $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+
+      return false;//False Means No Record Exist    
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
 }
 ?>

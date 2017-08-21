@@ -31,7 +31,8 @@ class RequestHandlerConfig
 				"closematchOfDay"=>array("v1"=>"closematchOfDayV1")),
     "faq"=>array(
                 "feedbackAbuse"=>array("v1"=>"ApiFeedbackV1","v2"=>"","v3"=>"ApiFeedbackV1"),
-                "abuseAttachment"=>array("v1"=>"ApiFeedbackAttachmentV1","v2"=>"","v3"=>"ApiFeedbackAttachmentV1")
+                "abuseAttachment"=>array("v1"=>"ApiFeedbackAttachmentV1","v2"=>"","v3"=>"ApiFeedbackAttachmentV1"),
+                "abuseDeleteAttachment"=>array("v1"=>"ApiFeedbackDeleteAttachmentV1","v2"=>"","v3"=>"ApiFeedbackDeleteAttachmentV1")
         ),
     "contactus"=>array(
                 "info"=>array("v1"=>"ApiContactUsV1","v2"=>"","v3"=>"ApiContactUsV1")),

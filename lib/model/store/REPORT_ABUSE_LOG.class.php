@@ -97,7 +97,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	{
 		try	 	
 		{	
-			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
+			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON,ATTACHMENT_ID from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
             $prep->execute();

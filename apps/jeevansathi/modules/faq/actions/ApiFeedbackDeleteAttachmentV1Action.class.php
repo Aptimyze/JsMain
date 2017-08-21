@@ -1,15 +1,15 @@
 <?php
 
 /**
- * profile actions.
- * ApiEditV1
- * Controller to register a new device
+ * 
+ *
+ *
  * @package    jeevansathi
  * @subpackage api
  * @author     Kuna Verma
- * @date       14th Aug 2017
+ * @date       21st Aug 2017
  */
-class ApiFeedbackAttachmentV1Action extends sfActions {
+class ApiFeedbackDeleteAttachmentV1Action extends sfActions {
 
   /**
    * Executes index action
@@ -19,7 +19,7 @@ class ApiFeedbackAttachmentV1Action extends sfActions {
   public function execute($request) {
 
     $loginData = $request->getAttribute("loginData");
-    
+
     $apiResponseHandlerObj = ApiResponseHandler::getInstance();
     if ($loginData[PROFILEID]) {
       $loginProfile = LoggedInProfile::getInstance();
@@ -30,21 +30,14 @@ class ApiFeedbackAttachmentV1Action extends sfActions {
       $apiResponseHandlerObj->generateResponse();
     }
     
-    $arrFeedback = $request->getParameter('feed');
-    if($request->isMethod('POST')) {
-    $feedBackObj = new FAQFeedBack(1);
-      $result = $feedBackObj->uploadTempAttachments($request);     
-      if($feedBackObj->getIsAttachmentError()) {
-        $arrError = array_values($result);
-        
-        $arrErrorOut["message"] = implode(",", $arrError);
-        $arrErrorOut["feed[count]"] = $arrFeedback['count'];
-        
-        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTACHMENT_ERROR);
-        $apiResponseHandlerObj->setResponseBody($arrErrorOut);
+    
+   if ($request->isMethod('POST')) {
+      $feedBackObj = new FAQFeedBack(1);
+      $result = $feedBackObj->deleteTempAttachments($request);
+      if(false === $result) {
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTACHMENT_DELETE_ERROR);
       } else {
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-        $apiResponseHandlerObj->setResponseBody( array( "attachment_id" => $result, "feed[count]"=> $arrFeedback['count'] ) );
       }
     } else {
       $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$POST_PARAM_INVALID);

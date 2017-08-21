@@ -468,7 +468,7 @@ class FAQFeedBack
     
     //JPEG, PNG, GIF, BMP
     $arrAllowedDocType = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
-    $maxDocSize = 5242880; // 1048576 * 5 // 5MB
+    $maxDocSize = 6291456; // 1048576 * 6 // 6MB
     $minDocSize = 1024; // 1 KB
     
     //Do Server Side Validation
@@ -484,17 +484,17 @@ class FAQFeedBack
       //Check Doc Type
       $bResult = in_array((exif_imagetype($arrFileAttachment['tmp_name'][$key])), $arrAllowedDocType);
       if($bResult == false) {
-        $arrErrorMsg[$key] = "Invalid attachment type";
+        $arrErrorMsg[$key] = "Invalid attachment type {$value}";
       }
       //Check Doc Size
       $bResult = $arrFileAttachment['size'][$key] > $minDocSize and $arrFileAttachment['size'][$key] <= $maxDocSize;
       if($bResult == false) {
-        $arrErrorMsg[$key] = "Invalid attachment size";
+        $arrErrorMsg[$key] = "Upto 6MB size attachment allowed {$value}";
       }
       //Check for Max Allowed Attachments
       if($count > self::MAX_ALLOWED_ATTACHMENTS) {
         $maxCount = self::MAX_ALLOWED_ATTACHMENTS;
-        $arrErrorMsg[$key] = "Only {$maxCount} attachments are allowed";
+        $arrErrorMsg[$key] = "Max {$maxCount} attachments allowed";
       }
     }
     
@@ -584,14 +584,17 @@ class FAQFeedBack
     $objStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS();
     
     $count = 1;
+    $arrAvailableKey = array(1=>"DOC_1",2=>"DOC_2",3=>"DOC_3",4=>"DOC_4",5=>"DOC_5");
     if( -1 != $iTempAttachmentId ) {
       $tempAttachmentRecords = $objStore->getRecord($iTempAttachmentId);
-      
+      $arrAvailableKey = array();
       if(is_array($tempAttachmentRecords)) {
         $tempAttachmentRecords = $tempAttachmentRecords[0];
+        $temp = 1;
         foreach($tempAttachmentRecords as $key => $val) {
-          if(0 != strlen($val)) {
-            $count++;
+          if(0 === strlen($val)) {
+            $arrAvailableKey[$temp] = $key;
+            $temp++;
           }
         }
       }
@@ -609,12 +612,13 @@ class FAQFeedBack
      * 
      */
     $arrUploadedPics = array();
-    
+    $count = self::MAX_ALLOWED_ATTACHMENTS - count($arrAvailableKey);
+    $iterator = 1;
     foreach($arrFileAttachment['name'] as $key => $value) {  
      
       if($count > self::MAX_ALLOWED_ATTACHMENTS) {
         $this->m_bAttachmentError = true;
-        $this->m_arrAttachmentErrorMsg[$key] = "Only ".self::MAX_ALLOWED_ATTACHMENTS. " attachments are allowed.";
+        $this->m_arrAttachmentErrorMsg[$key] = "Max ".self::MAX_ALLOWED_ATTACHMENTS. " attachments allowed.";
         break;
       }
       
@@ -624,7 +628,8 @@ class FAQFeedBack
       $strUrlPrefix = IMAGE_SERVER_ENUM::$appPicUrl;
 
       if($bResult) {
-        $arrUploadedPics["DOC_{$count}"] = "{$strUrlPrefix}{$strTargetFile}";
+        $arrUploadedPics[$arrAvailableKey[$iterator]] = "{$strUrlPrefix}{$strTargetFile}";
+        $iterator++;
         $count++;
       } else {
         //Trigger to alert issue while moving pics
@@ -678,8 +683,8 @@ class FAQFeedBack
     $objAbuseAttachmentStore = new FEEDBACK_ABUSE_ATTACHMENTS;
     $recordId = $objAbuseAttachmentStore->insertFromTempAttachment($tempAttachmentsIds);
     
-//    $objTempAttachmentStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS;
-//    $objTempAttachmentStore->deleteRecord($tempAttachmentsIds);
+    $objTempAttachmentStore = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS;
+    $objTempAttachmentStore->deleteRecord($tempAttachmentsIds);
     
     $this->moveToCloud($recordId, $this->m_arrTempAttachments);
     
@@ -717,6 +722,40 @@ class FAQFeedBack
     
     $imageServerLogStore = new ImageServerLog;
     $imageServerLogStore->insertBulk($moduleName, $moduleId, $imageType, $status);
+  }
+  
+  /**
+   * 
+   * @param type $request
+   */
+  public function deleteTempAttachments($request){
+    $this->webRequest=$request;
+    $arrFeedback = $this->webRequest->getParameter('feed');
+    $szAttachmentFileName = $arrFeedback['file_name'];
+    
+    $iAttachmentId = $arrFeedback['attachment_id'];
+    
+    $objTemp = new FEEDBACK_ABUSE_TEMP_ATTACHMENTS();
+    $arrResult = $objTemp->getRecord($iAttachmentId);
+    
+    if(false !== $arrResult) {
+      $arrResult = $arrResult[0];
+      $columnName = null;
+      foreach( $arrResult as $key => $val ) {
+        if(false !== stripos($val, $szAttachmentFileName)) {
+          $columnName = $key;
+          $filePath = $val;
+          break;
+        }
+      }
+      //Remove File
+      if($columnName) {
+        unlink(str_replace(IMAGE_SERVER_ENUM::$appPicUrl, JsConstants::$docRoot, $val));
+        $objTemp->updateRecord($iAttachmentId, array($columnName => ""));
+        return true;
+      }
+    }
+    return false;
   }
 } 
 ?>
