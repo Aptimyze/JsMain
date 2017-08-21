@@ -80,7 +80,7 @@ function debugLog($message){
 
 function sendAlertMail($message){
 	debugLog("sending mail-".$message."\n");
-	mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com","Error in chat consumers","Please check the logs- ".$message);
+	mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com","Error in chat consumers","Please check the logs- ".$message);
 }
 
 /*function sendMonitoringSMS($message,$from,$mobile,$profileid,$gsm,$table=''){
