@@ -77,7 +77,11 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->setDRINK($relaxedDrinking);
 
                 $relaxedHheight = $relaxedObj->getRelaxedHHEIGHT($this->getHHEIGHT());
-                $this->setHHEIGHT($relaxedHheight); 
+                $this->setHHEIGHT($relaxedHheight);
+
+                //added diet relaxation
+                $relaxedDiet = $relaxedObj->getRelaxedDIET($this->getDIET());
+                $this->setDIET($relaxedDiet); 
                 unset($relaxedObj);
         }
         /**

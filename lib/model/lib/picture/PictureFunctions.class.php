@@ -337,8 +337,8 @@ class PictureFunctions
 		if ($type_of_pic == "main")
 			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif";
 		else
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif"; //same image has been kept for main and other for checking
-
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small_new.gif"; 
+		
 		$destination_path = $filename_path;
 
 		if($format == "image/gif" || $format == "image/GIF")
