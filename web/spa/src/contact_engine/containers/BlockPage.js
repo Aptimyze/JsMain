@@ -41,7 +41,7 @@ export default class BlockPage extends React.Component{
                               <div className="txtc">
                                 <a href="#" className="white fontlig f16 forHide lh50" id="bottomMsg" onClick={() => this.props.bindAction()}>Unblock</a>
                               </div>
-                              <a href="#" className="dispbl bg7 white txtc f16 pad2 fontlig forHide" id="footerButton">Close</a>
+                              <a href="#" className="dispbl bg7 white txtc f16 pad2 fontlig forHide" onClick={this.props.closeBlockLayer} id="footerButton">Close</a>
                             </div>;
 
 
