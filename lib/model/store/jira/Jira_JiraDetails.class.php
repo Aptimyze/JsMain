@@ -10,11 +10,11 @@ class Jira_JiraDetails extends TABLE
 	{
 		try
 		{
-			$sql = "INSERT into Jira.JiraDetails(JIRA_ID,TYPE,RELEASE_NAME,RELEASE_DATE,STORY_POINTS,ASSIGNEE,SUMMARY,EPIC,SPRINT_NAME,SPRINT_STARTDATE,SPRINT_ENDDATE) VALUES ";
+			$sql = "INSERT IGNORE into Jira.JiraDetails(JIRA_ID,TYPE,RELEASE_NAME,RELEASE_DATE,STORY_POINTS,ASSIGNEE,SUMMARY,LABEL,EPIC,SPRINT_NAME,SPRINT_STARTDATE,SPRINT_ENDDATE) VALUES ";
 			$i=0;
 			foreach($jiraArr as $key=>$values)
 			{
-				$paramArr[] = "(:JIRA_ID".$i.",:TYPE".$i.",:RELEASE_NAME".$i.",:RELEASE_DATE".$i.",:STORY_POINTS".$i.",:ASSIGNEE".$i.",:SUMMARY".$i.",:EPIC".$i.",:SPRINT_NAME".$i.",:SPRINT_STARTDATE".$i.",:SPRINT_ENDDATE".$i.")";
+				$paramArr[] = "(:JIRA_ID".$i.",:TYPE".$i.",:RELEASE_NAME".$i.",:RELEASE_DATE".$i.",:STORY_POINTS".$i.",:ASSIGNEE".$i.",:SUMMARY".$i.",:LABEL".$i.",:EPIC".$i.",:SPRINT_NAME".$i.",:SPRINT_STARTDATE".$i.",:SPRINT_ENDDATE".$i.")";
 				$i++;				
 			}
 			$sql = $sql.implode(",",$paramArr);
@@ -30,6 +30,7 @@ class Jira_JiraDetails extends TABLE
 				$res->bindValue(":STORY_POINTS".$i,$value["StoryPoints"], PDO::PARAM_STR);
 				$res->bindValue(":ASSIGNEE".$i,$value["assignee"], PDO::PARAM_STR);
 				$res->bindValue(":SUMMARY".$i,$value["summary"], PDO::PARAM_STR);
+				$res->bindValue(":LABEL".$i,$value["label"], PDO::PARAM_STR);
 				$res->bindValue(":EPIC".$i,$value["Epic"], PDO::PARAM_STR);
 				$res->bindValue(":SPRINT_NAME".$i,$value["sprint_name"], PDO::PARAM_STR);
 				$res->bindValue(":SPRINT_STARTDATE".$i,$value["sprint_startDate"], PDO::PARAM_STR);
