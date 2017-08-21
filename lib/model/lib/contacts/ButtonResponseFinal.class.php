@@ -604,10 +604,11 @@ Class ButtonResponseFinal
 			$buttons["label"]  = "Shortlist";
 			$buttons["params"]  = "&shortlist=false";
 		}
+		//print_r($buttons);die;
 		//print_r($button->active);die;
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
-		$buttons['enable']		= $button->active;
+		$buttons['enable']		=true;
 		$buttons['id'] 			= $buttons["action"];
 		$button = self::buttonMerge($buttons);
 		return $buttons;
