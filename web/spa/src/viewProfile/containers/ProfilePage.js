@@ -81,7 +81,7 @@ class ProfilePage extends React.Component {
         this.props.showProfile(this, urlString);
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
-      //  document.getElementById("photoParent").style.height = window.innerWidth +"px";
+        document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
         if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
@@ -342,6 +342,7 @@ class ProfilePage extends React.Component {
     {
         document.getElementById("showAbout").classList.remove("dn");
         document.getElementById("showPhoto").classList.remove("dn");
+        document.getElementById("tempImage").classList.add("dn");
     }
 
     showError(inputString) {
@@ -375,10 +376,10 @@ class ProfilePage extends React.Component {
         var himHer = "him",photoViewTemp,AboutViewTemp;
         if(this.state.gender == "M") {
             himHer = "her";
-            photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+            photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
         } else {
-            photoViewTemp = <img src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
+            photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         }
         var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
