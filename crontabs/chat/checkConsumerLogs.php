@@ -15,7 +15,7 @@ $logFilesPath = array("/data/projects/logs/consumer_user_acceptance.log"=>array(
 					 "/data/projects/logs/consumer_user_accptance.log"=>array("S1"=>10,"S2"=>20),
 					 "/data/projects/logs/consumer_user_accptance_sent.log"=>array("S1"=>10,"S2"=>20)
 					 );
-$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513");
+$mobileNumberArr = array("9910244159","9818424749","8989931104","9810300513");
 $branchPath = JsConstants::$cronDocRoot;
 $currTime = time();
 $i = 0;

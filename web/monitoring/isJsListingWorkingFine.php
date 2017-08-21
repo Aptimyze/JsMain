@@ -5,7 +5,7 @@ include_once(JsConstants::$docRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9868673709","9711304800","9873639543");
+$mobileNumberArr = array("9910244159","9818424749","8989931104","9868673709","9711304800","9873639543");
 
 $pid = 7902447;
 $serverUrlArray = array("http://10.10.18.104:8190","http://10.10.18.75:8190","http://10.10.18.72:8190");
