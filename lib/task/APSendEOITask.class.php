@@ -233,8 +233,11 @@ EOF;
 			echo $this->errorMsg;
                         SendMail::send_email("ankitshukla125@gmail.com","error ".$this->errorMsg,"Exceptions caught");
                 }
-		
-		
+
+        //reset screening status of exclusive RB clients
+        $exServicingObj = new billing_EXCLUSIVE_SERVICING();
+		$exServicingObj->resetScreenedStatusAll();
+		unset($exServicingObj);
 	}
 	
 	/** logs sfException

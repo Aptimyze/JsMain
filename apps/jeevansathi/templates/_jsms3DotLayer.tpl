@@ -306,6 +306,16 @@
 				<div id ="alterIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i class="mainsp srp_phnicon"></i></a></div><div class="clr"></div>
 			</div>
 			<!--end:Alternate no.-->
+			<!--start:mobile no.-->
+                        <div class="pt15 forHide" id="relationshipManager" style="display:none">
+                                <div class="fl white">
+                                        <div class=" f14 lh30 opa50">Relationship manager's phone no</div>
+                                        <div class="f16 forHide" id="relationshipManagerVal" style="display:none"></div>
+                                        <div></div>
+                                </div>
+                                <div id ="relationshipManagerIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i class="mainsp srp_phnicon"></i></a></div><div class="clr"></div>
+                        </div>
+                        <!--end:Alternate no.-->
 			<!--start:Email-->
 			<div class="pt15 forHide" id="email" style="display:none">
 				<div class="fl white">

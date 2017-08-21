@@ -865,16 +865,18 @@ class crmAllocationActions extends sfActions
 	  	if($inputArr["exAction"]=="UNASSIGN")
 	  	{
 	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00",$billid);
-	  		$exServicingObj->removeExclusiveClientEntry($inputArr["assignedToUsername"],$profileid);
+	  		$exServicingObj->removeExclusiveClientEntry($profileid,$inputArr["assignedToUsername"]);
 	  	}
 	  	else if($inputArr["exAction"]=="ASSIGN")
 	  	{
 	  		$exObj->updateExclusiveMemberAssignment($profileid,$inputArr["executiveDetails"]["USERNAME"],date('Y-m-d'),$billid);
-	  		$bill_dttime = $inputArr["bill_dttime"];
-	  	
-	  		//if(!empty($bill_dttime) && strcmp($bill_dttime,crmCommonConfig::$jsexclusiveReferenceDt)>=0){
-	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d')));
-	  		//}
+	  		$inputArr["bill_dttime"] = str_replace("/", "-", $inputArr["bill_dttime"]);
+			$bill_dttime = date('Y-m-d', strtotime($inputArr["bill_dttime"]));
+	  		$refTime = date("Y-m-d",strtotime(crmCommonConfig::$jsexclusiveReferenceDt));
+	  		
+	  		if(!empty($bill_dttime) && $bill_dttime>=$refTime){
+	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d'),"BILLID"=>$billid));
+	  		}
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)
 	  		{

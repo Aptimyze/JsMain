@@ -88,6 +88,7 @@ EOF;
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
                     if ($flag) {
                     	$this->updateStatus($pid,'Y');
+                        $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);
                     } else {
                     	$this->updateStatus($pid,'N');
                     }
@@ -102,6 +103,8 @@ EOF;
 		$exclusiveMatchMailerObj->truncate();
 		$exclusiveMailLogObj = new billing_EXCLUSIVE_MAIL_LOG();
 		$profiles = $exclusiveMailLogObj->getProfiles('Y',"MATCH_MAIL",$date);
+		if(!is_array($profiles))
+			$profiles = array();
 		foreach ($data as $key => $value) {
 		    foreach ($value as $k => $v){
                 if(MemberShipHandler::isEligibleForRBHandling($v["CLIENT_ID"]) && !in_array($v["CLIENT_ID"],$profiles))

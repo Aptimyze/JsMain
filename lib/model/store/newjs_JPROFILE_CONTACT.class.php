@@ -78,7 +78,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			}
 			*/
 			$resSelectDetail->execute();
-      $this->logFunctionCalling(__FUNCTION__);
+     // $this->logFunctionCalling(__FUNCTION__);
 			while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
                                 if($indexProfileId == 1){
@@ -263,10 +263,11 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
         
     private function logFunctionCalling($funName)
     {
-      $key = __CLASS__.'_'.date('Y-m-d');
+        return;
+     /* $key = __CLASS__.'_'.date('Y-m-d');
       JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));*/
     }
 
 

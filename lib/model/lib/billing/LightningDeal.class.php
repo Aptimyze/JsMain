@@ -215,6 +215,9 @@ class LightningDeal
             $dateGreaterThan = date('Y-m-d H:i:s', strtotime('-1 day', strtotime(date('Y-m-d H:i:s'))));
             $lightningObj = new billing_LIGHTNING_DEAL_DISCOUNT();
             $data = $lightningObj->getLightningDealDiscountData($profileid,$dateGreaterThan);
+                        
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->remove($profileid . "_MEM_HAMB_MESSAGE");
             
             $memHandlerObj = new MembershipHandler();
             $hamburgerMsg = $memHandlerObj->fetchHamburgerMessage($request);

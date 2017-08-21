@@ -2216,8 +2216,9 @@ class MembershipHandler
     public function getRealMembershipName($profileid)
     {
         $memCacheObject = JsMemcache::getInstance();
-        if ($memCacheObject->get($profileid . "_MEM_NAME")) {
-            $output = unserialize($memCacheObject->get($profileid . "_MEM_NAME"));
+        $memValue=$memCacheObject->get($profileid . "_MEM_NAME");
+        if ($memValue) {
+            $output = unserialize($memValue);
             $output = json_encode($output);
             $output = str_replace('"', '', $output);
         } else {
@@ -2271,7 +2272,7 @@ class MembershipHandler
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
                 $jprofleSlaveObj = new JPROFILE("crm_slave");
-                $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER,HEIGHT", $whereCondition);
+                $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER", $whereCondition);
                 unset($jprofleSlaveObj);
 
                 //get names of profiles
@@ -2280,9 +2281,10 @@ class MembershipHandler
                 unset($incentiveObj);
 
                 //get names of agents to whom profiles are allotted
+		/*
                 $mainAdminObj   = new incentive_MAIN_ADMIN("crm_slave");
                 $jsadminDetails = $mainAdminObj->getArray(array("PROFILEID" => implode(",", $profileIDArr)), "", "", "ALLOTED_TO AS SALES_PERSON,PROFILEID", "", "PROFILEID");
-                unset($mainAdminObj);
+                unset($mainAdminObj);*/
 
                 //get billing details of profiles via billid's
                 $billIdArr = array_keys($allocationDetails);
