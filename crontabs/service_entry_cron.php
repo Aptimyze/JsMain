@@ -189,7 +189,7 @@ unset($paidComboCount);
 /* Newly purchased service section ends */
 
 //*  Section for cancelled transaction  */
-$sql ="select BILLID from billing.EDIT_DETAILS_LOG where ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date' AND CHANGES LIKE 'TRANSACTION CANCELLED%'";
+/*$sql ="select BILLID from billing.EDIT_DETAILS_LOG where ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date' AND CHANGES LIKE 'TRANSACTION CANCELLED%'";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
 while($row=mysql_fetch_array($res))
 {
@@ -218,21 +218,61 @@ while($row=mysql_fetch_array($res))
 			}
 		}
 	}
+}*/
+
+/*Section for negative entries in billing.PAYMENT_DETAIL_NEW*/
+//confirm status cases
+$sql ="select AMOUNT,BILLID,STATUS from billing.PAYMENT_DETAIL_NEW where ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date' AND STATUS IN('BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+$res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
+while($row=mysql_fetch_array($res))
+{
+	$billid =$row['BILLID'];
+	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid'";
+	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
+
+	if($row1=mysql_fetch_array($res1)){
+		$center	   	=$row1['CENTER'];
+		$serviceidArr =@explode(",",$row1['SERVICEID']);
+		if(!$center)
+			$center ='ONLINE_P';
+		foreach($serviceidArr as $key=>$val){
+			if($row1['MEM_UPGRADE']=="MAIN" && strpos($val, "A")==false){
+				$val .= "-UG";
+			}
+			$dataSetArr[$today][$center][$val] -= 1;
+			if(!empty($amount)){
+				$paidNegCount[$today][$center][$val] -= 1;
+			} elseif(!empty($amount) && $amount<0){
+				$freeNegCount[$today][$center][$val] -= 1;
+			}
+		}
+	}
 }
+
 
 if(count($dataSetArr)>0){
 	foreach($dataSetArr as $date=>$valArr){
 		foreach($valArr as $center=>$valArr1){
 			foreach($valArr1 as $service=>$count){
+				if(isset($paidNegCount[$date][$center][$service])){
+					$paidCnt = $paidNegCount[$date][$center][$service];
+				} 
+				else { 
+					$paidCnt = 0;
+				}
+				if(isset($freeNegCount[$date][$center][$service])){
+					$freeCnt = $freeNegCount[$date][$center][$service];
+				}
+				else {
+					$freeCnt = 0;
+				}
 				if($center=='ONLINE_P')
-					$center ='';
-				if(isset($paidCount[$date][$center][$service])){
-					$paidCnt = $paidCount[$date][$center][$service];
-				} else { $paidCnt = 0;}
-				if(isset($freeCount[$date][$center][$service])){
-					$freeCnt = $freeCount[$date][$center][$service];
-				}else {$freeCnt = 0;}
-				$sqlUp ="update MIS.SERVICE_DETAILS SET COUNT=COUNT-$count, PAID_COUNT=PAID_COUNT-$paidCnt, FREE_COUNT=FREE_COUNT-$freeCnt WHERE SERVICE='$service' AND BRANCH='$center' AND ENTRY_DT='$date'";
+					$sqlCenter ='';
+				else{
+					$sqlCenter = $center;
+				}
+				
+				$sqlUp="insert into MIS.SERVICE_DETAILS(`ENTRY_DT`,`COUNT`,`SERVICE`,`BRANCH`,`FREE_COUNT`,`PAID_COUNT`) VALUES('$today','$count','$service','$sqlCenter','$freeCnt','$paidCnt')";
 				mysql_query_decide($sqlUp,$db) or die("$sqlUp".mysql_error_js($db));
 			}
 		}
@@ -240,7 +280,7 @@ if(count($dataSetArr)>0){
 }
 
 unset($dataSetArr);
-$sqlDel ="delete from MIS.SERVICE_DETAILS where COUNT<1";
+$sqlDel ="delete from MIS.SERVICE_DETAILS where COUNT=0";
 mysql_query_decide($sqlDel,$db) or die("$sqlDel".mysql_error_js($db));
 /*  service cancelled section ends */
 
