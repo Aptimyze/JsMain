@@ -8,6 +8,7 @@ import WriteMessage from "./WriteMessage"
 import {performAction} from './contactEngine';
 import ContactDetails from '../components/ContactDetails';
 import BlockPage from './BlockPage';
+import ReportAbuse from './ReportAbuse';
 
 
 export class contactEnginePD extends React.Component{
@@ -42,11 +43,15 @@ export class contactEnginePD extends React.Component{
 
   bindAction(button,index){
 
+    console.log('binaction');
+    console.log(button);
 
     switch(button.action)
     {
 
       case 'REPORT_ABUSE':
+      console.log('ra case');
+        this.showLayerCommon({showReportAbuse:true});
 
       break;
 
@@ -74,7 +79,7 @@ export class contactEnginePD extends React.Component{
   }
   postAction(actionButton,responseButtons,index)
   {
-
+    console.log('post action');
     if ( responseButtons.responseStatusCode == 4)
     {
       this.props.showError(responseButtons.responseMessage)
@@ -88,6 +93,7 @@ export class contactEnginePD extends React.Component{
           this.props.replaceSingleButton(newButtons);
           break;
         case 'IGNORE':
+
             console.log('in ignore',actionButton);
             if(actionButton.params.indexOf("ignore=0")!=-1)
             {
@@ -98,6 +104,7 @@ export class contactEnginePD extends React.Component{
               this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   });
             }
             this.props.replaceOldButtons(responseButtons);
+
             //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
             //this.props.replaceSingleButton(newButtons);
         break;
@@ -216,7 +223,11 @@ getOverLayDataDisplay(){
       if(this.state.showThreeDots)
         layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
-        layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer =  (<ReportAbuse
+                    username={this.props.profiledata.username}
+                    profilechecksum={this.props.profiledata.profilechecksum}
+                    closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})}
+                    profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showContactDetail)
         layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showMsgLayer)
@@ -235,6 +246,8 @@ getOverLayDataDisplay(){
   }
 
 getCommonOverLay(actionDetails){
+  console.log('---getCommonOverLay');
+  console.log(actionDetails);
   return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
             <a href="#"  className="ce_overlay" > </a>
               <div className="posabs ce_z103 ce_top1 fullwid" >
