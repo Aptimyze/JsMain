@@ -6,6 +6,7 @@
                 <tr>
                     <td style="font-size:12px; padding-bottom:10px;" valign="top">Thanks & Regards,<br>
                         <b style="color:#c4161c;">~$name` - Relationship Manager<font color="#00000"></font></b><br>
+                        <b style="color:#c4161c;">~$phone`<font color="#00000"></font></b><br>
                         <b style="color:#c4161c;">Jeevansathi Exclusive Services<font color="#00000"></font></b>
                     </td>
                 </tr>

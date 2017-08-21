@@ -8,5 +8,6 @@ CREATE TABLE `billing.ExclusiveProposalMailer` (
   `STATUS` enum('N','U','Y','I') DEFAULT 'N',
   `DATE` date NOT NULL,
   `FOLLOWUP_STATUS` varchar(2) NOT NULL,
+  `AGENT_PHONE` varchar(250) NOT NULL,
   UNIQUE KEY `RECEIVER` (`RECEIVER`,`TUPLE_ID`,`DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

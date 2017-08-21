@@ -146,7 +146,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        ~include_partial("global/exclusiveProposalMailSignature",[name=>$data.AGENT_NAME])`
+                        ~include_partial("global/exclusiveProposalMailSignature",[name=>$data.AGENT_NAME,phone=>$data.AGENT_PHONE])`
                     </td>
                     <td></td>
                 </tr>

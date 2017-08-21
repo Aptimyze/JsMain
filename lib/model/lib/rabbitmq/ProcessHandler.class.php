@@ -80,6 +80,64 @@ class ProcessHandler
       case 'CANCEL_ACCEPT_CONTACT':
           ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
           break;
+      case 'EXCLUSIVE_WELCOME_EMAIL':
+          $firstName = $body['firstname'];   //First Name of  RM
+          $senderName = $body['fromName'];     //Full name of RM
+          $profileid = $body['profileid'];
+          $phone = $body['phone'];
+          $serviceDay = $body['serviceDay'];
+          $senderEmail = $body['senderEmail'];
+          $subject = "It was nice talking to you !";
+          //print_r("1.".$serviceDay."\n2.$alias\n3.$profileid\n4.$phone\n5.$firstName\n6.$from\n7.".$body);
+          //print_r($body);die;
+          //die;
+          //Send Email here
+          $top8Mailer = new EmailSender(MailerGroup::TOP8, '1857');
+          $tpl = $top8Mailer->setProfileId($profileid);
+          $tpl->getSmarty()->assign("senderName",$senderName);
+          $tpl->getSmarty()->assign("senderEmail",$senderEmail);
+          $tpl->getSmarty()->assign("firstName",$firstName);
+          $tpl->getSmarty()->assign("phone",$phone);
+          $tpl->getSmarty()->assign("serviceDay",$serviceDay);
+          $tpl->setSubject($subject);
+          $top8Mailer->send();
+          $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+          $exclusiveServicingObj->updateMailerStatus($profileid,'C');//Updating email stage as completed
+          break;
+      case 'EXCLUSIVE_PROPOSAL_EMAIL':
+          $mailerServiceObj = new MailerService();
+          $smarty = $mailerServiceObj->getMailerSmarty();
+          $mailerName = "EXCLUSIVE_PROPOSAL_MAIL";
+          $mailerLinks = $mailerServiceObj->getLinks();
+          $smarty->assign('mailerLinks',$mailerLinks);
+
+          $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+
+          $agentEmail = $body["AGENT_EMAIL"];
+          $agentName = $body["AGENT_NAME"];
+          $agentPhone = $body["AGENT_PHONE"];
+          $smarty->assign('mailerName',$agentEmail);
+          $pid = $body["RECEIVER"];
+          $data = $mailerServiceObj->getRecieverDetails($pid,$body,$mailerName,$widgetArray);
+          if (is_array($data)) {
+              $data["AGENT_PHONE"] = $agentPhone;
+              $data["AGENT_NAME"] = $agentName;
+              $data["body"]=$body["BODY"];
+              $subject = $body["SUBJECT"];
+              $smarty->assign('data',$data);
+              $msg = $smarty->fetch(MAILER_COMMON_ENUM::getTemplate($mailerName).".tpl");
+              //$file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
+              //fwrite($file,$msg);
+              //die;
+              //Sending mail and tracking sent status
+              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName);
+              if ($flag) {
+                  $this->updateStatus($pid,'Y');
+              } else {
+                  $this->updateStatus($pid,'N');
+              }
+          }
+          break;
     }
 	}
 

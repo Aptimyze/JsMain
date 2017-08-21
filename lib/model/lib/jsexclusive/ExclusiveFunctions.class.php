@@ -428,6 +428,7 @@ class ExclusiveFunctions{
         foreach ($result as $key=>$value){
             $agentUserName = $value["AGENT_USERNAME"];
             $result[$key]["EMAIL"] = $agentDetail[$agentUserName]["EMAIL"];
+            $result[$key]["PHONE"] = $agentDetail[$agentUserName]["PHONE"];
             $result[$key]["NAME"] = $agentDetail[$agentUserName]["FIRST_NAME"];
             if ($lastName = $agentDetail[$agentUserName]["LAST_NAME"])
                 $result[$key]["NAME"] .= " ".$lastName;
@@ -438,5 +439,62 @@ class ExclusiveFunctions{
         $result = $proposalObj->getProfilesToSendProposalMail();
         return $result;
     }
+
+    public function sendProposalMail($mailerInfo){
+	    if(!is_array($mailerInfo))
+	        return false;
+
+	    foreach ($mailerInfo as $key=>$value){
+            $userIdArr[] = $value["USER1"];
+        }
+
+        $userIdStr = implode(",",$userIdArr);
+        $nameOfUserObj = new incentive_NAME_OF_USER();
+        $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $userIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+
+        foreach ($nameOfUserArr as $key=>$value){
+            $userNameArr[$value["PROFILEID"]] = $value;
+        }
+
+	    $producerObj = new Producer();
+        if($producerObj->getRabbitMQServerConnected()){
+            foreach ($mailerInfo as $key=>$value){
+                $pid = $value["USER1"];
+                $name = $userNameArr[$pid]["NAME"];
+                $display = $userNameArr[$pid]["DISPLAY"];
+                $agentName = $value["AGENT_NAME"];
+                $agentPhone = $value["AGENT_PHONE"];
+                $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone);
+                $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
+                    'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
+                        'RECEIVER'=>$value["RECEIVER"],
+                        'AGENT_NAME'=>$value["AGENT_NAME"],
+                        'AGENT_EMAIL'=>$value["AGENT_EMAIL"],
+                        'USER1'=>$value["USER1"],
+                        'AGENT_PHONE'=>$value["AGENT_PHONE"],
+                        'SUBJECT'=>$subjectAndBody["subject"],
+                        'BODY'=>$subjectAndBody["body"]),
+                    'redeliveryCount'=>0 );
+                $producerObj->sendMessage($sendMailData);
+            }
+        }
+    }
+
+    public function subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone){
+        $subject = "Marriage Proposal of JS Exclusive Client (";
+        if($display == "Y")
+            $subject .= $name.",";
+        $subject .= "Profile ID: ".$pid.")";
+        $email["subject"] = $subject;
+
+        $body = "Hi, This is $agentName from Jeevansathi Exclusive team reaching out to you on behalf of my Client as they are interested in your profile and want to proceed further\nWe will get in touch with you soon to discuss about this profile and take next steps\nPlease find below the details of our Exclusive client (";
+        if($display == "Y")
+            $body .= $name.",";
+        $body .= "Profile ID: $pid). For more details kindly view the full profile on Jeevansathi.com";
+        $email["body"] = $body;
+
+        return $email;
+    }
+
 }
 ?>
