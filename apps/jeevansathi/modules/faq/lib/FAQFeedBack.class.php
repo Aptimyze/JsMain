@@ -489,12 +489,12 @@ class FAQFeedBack
       //Check Doc Size
       $bResult = $arrFileAttachment['size'][$key] > $minDocSize and $arrFileAttachment['size'][$key] <= $maxDocSize;
       if($bResult == false) {
-        $arrErrorMsg[$key] = "Upto 6MB size attachment allowed {$value}";
+        $arrErrorMsg[$key] = "You can attach a proof less than 6MB in size";
       }
       //Check for Max Allowed Attachments
       if($count > self::MAX_ALLOWED_ATTACHMENTS) {
         $maxCount = self::MAX_ALLOWED_ATTACHMENTS;
-        $arrErrorMsg[$key] = "Max {$maxCount} attachments allowed";
+        $arrErrorMsg[$key] = "You can attach maximum {$maxCount} proofs.";
       }
     }
     
@@ -618,7 +618,7 @@ class FAQFeedBack
      
       if($count > self::MAX_ALLOWED_ATTACHMENTS) {
         $this->m_bAttachmentError = true;
-        $this->m_arrAttachmentErrorMsg[$key] = "Max ".self::MAX_ALLOWED_ATTACHMENTS. " attachments allowed.";
+        $this->m_arrAttachmentErrorMsg[$key] = "You can attach maximum ".self::MAX_ALLOWED_ATTACHMENTS. " proofs.";
         break;
       }
       
