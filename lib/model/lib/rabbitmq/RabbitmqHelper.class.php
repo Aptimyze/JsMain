@@ -53,7 +53,7 @@ class RabbitmqHelper
 
   public static function sendChatConsumerAlert($message)
   {    
-    $emailTo="nitishpost@gmail.com,nsitankita@gmail.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,maxspeed83@gmail.com";
+    $emailTo="nitishpost@gmail.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,maxspeed83@gmail.com";
     $subject="Rabbitmq Chat php consumer error @".JsConstants::$whichMachine;
     $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
     SendMail::send_email($emailTo,$message,$subject);           
