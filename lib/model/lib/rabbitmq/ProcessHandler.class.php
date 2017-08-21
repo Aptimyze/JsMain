@@ -115,7 +115,6 @@ class ProcessHandler
           $smarty->assign('mailerLinks',$mailerLinks);
 
           $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
-          print_r($body);
           $agentEmail = $body["AGENT_EMAIL"];
           $agentName = $body["AGENT_NAME"];
           $agentPhone = $body["AGENT_PHONE"];
@@ -141,7 +140,7 @@ class ProcessHandler
               if ($flag) {
                   $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
               } else {
-                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'N');
+                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
               }
           }
           break;

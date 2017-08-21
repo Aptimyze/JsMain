@@ -107,7 +107,7 @@
                         <table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
                             <tbody>
                             <tr>
-                                <td style="font-size:12px; padding-bottom:10px;" valign="top">If you need any further information about my client, please feel free to contact me on ~$phone` or reply to this Email.
+                                <td style="font-size:12px; padding-bottom:10px;" valign="top">If you need any further information about my client, please feel free to contact me on ~$data.AGENT_PHONE` or reply to this Email.
                                 </td>
                             </tr>
                             </tbody>

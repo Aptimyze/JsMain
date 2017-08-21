@@ -204,19 +204,19 @@ class ExclusiveFunctions{
                     $params["MEMBER_ID"] = $val;
                     $exclusiveFollowupObj->insertIntoExclusiveFollowups($params);
                     $mailerInfo = array();
-                    $mailerInfo[0]["RECEIVER"] = $val;
-                    $mailerInfo[0]["USER1"] = $client;
+                    $mailerInfo[0]["MEMBER_ID"] = $val;
+                    $mailerInfo[0]["CLIENT_ID"] = $client;
                     $agentUsernames = array();
                     $agentUsernames[] = $agent;
                     $pswrdsObj = new jsadmin_PSWRDS();
                     $agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentUsernames);
-                    $mailerInfo[0]["AGENT_EMAIL"] = $agentDetail[$agent]["EMAIL"];
-                    $mailerInfo[0]["AGENT_PHONE"] = $agentDetail[$agent]["PHONE"];
-                    $mailerInfo[0]["AGENT_NAME"] = $agentDetail[$agent]["FIRST_NAME"];
+                    $mailerInfo[0]["EMAIL"] = $agentDetail[$agent]["EMAIL"];
+                    $mailerInfo[0]["PHONE"] = $agentDetail[$agent]["PHONE"];
+                    $mailerInfo[0]["NAME"] = $agentDetail[$agent]["FIRST_NAME"];
                     if ($lastName = $agentDetail[$agent]["LAST_NAME"])
-                        $mailerInfo[0]["AGENT_NAME"] .= " ".$lastName;
-
-                    $this->sendProposalMail($mailerInfo);
+                        $mailerInfo[0]["NAME"] .= " ".$lastName;
+                    $result = $this->getProfilesToSendProposalMail($mailerInfo);
+                    $this->sendProposalMail($result);
                 }
             }
         }
@@ -450,20 +450,18 @@ class ExclusiveFunctions{
                 $result[$key]["NAME"] .= " ".$lastName;
         }
 
-        $proposalObj = new billing_ExclusiveProposalMailer();
-        $proposalObj->insertMailLog($result);
-        $result = $proposalObj->getProfilesToSendProposalMail();
+        $result = $this->getProfilesToSendProposalMail($result);
+
         return $result;
     }
 
     public function sendProposalMail($mailerInfo){
-	    if(!is_array($mailerInfo))
+	    if(!is_array($mailerInfo) || empty($mailerInfo))
 	        return false;
 
 	    foreach ($mailerInfo as $key=>$value){
             $userIdArr[] = $value["USER1"];
         }
-
         $userIdStr = implode(",",$userIdArr);
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $userIdStr), "", "", "PROFILEID,NAME,DISPLAY");
@@ -508,7 +506,7 @@ class ExclusiveFunctions{
         $subject .= "Profile ID: ".$pid.")";
         $email["subject"] = $subject;
 
-        $body = "Hi, This is $agentName from Jeevansathi Exclusive team reaching out to you on behalf of my Client as they are interested in your profile and want to proceed further\nWe will get in touch with you soon to discuss about this profile and take next steps\nPlease find below the details of our Exclusive client (";
+        $body = "Hi, This is $agentName from Jeevansathi Exclusive team reaching out to you on behalf of my Client as they are interested in your profile and want to proceed further.<br><br>We will get in touch with you soon to discuss about this profile and take next steps.<br><br>Please find below the details of our Exclusive client (";
         if($display == "Y")
             $body .= $name.",";
         $body .= "Profile ID: $pid). For more details kindly view the full profile on Jeevansathi.com";
@@ -549,6 +547,15 @@ class ExclusiveFunctions{
         $clientBioData["BIODATA"] = $xlData;
         $clientBioData["FILENAME"] = $file;
         return $clientBioData;
+    }
+
+    public function getProfilesToSendProposalMail($mailerArr){
+        $proposalObj = new billing_ExclusiveProposalMailer();
+        $proposalObj->insertMailLog($mailerArr);
+        $result = $proposalObj->getProfilesToSendProposalMail();
+        if(!is_array($result))
+            $result = array();
+        return $result;
     }
 }
 ?>
