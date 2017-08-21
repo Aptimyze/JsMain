@@ -121,6 +121,16 @@
                 <tr>
                     <td></td>
                     <td>
+                        ~include_partial("global/exclusiveProposalMailSignature",[name=>$data.AGENT_NAME,phone=>$data.AGENT_PHONE])`
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" height="24"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align:left;">
                             <tr>
                                 <td>
@@ -178,16 +188,6 @@
                 ~/if`
                 <tr>
                     <td colspan="3" height="27"></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        ~include_partial("global/exclusiveProposalMailSignature",[name=>$data.AGENT_NAME,phone=>$data.AGENT_PHONE])`
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td colspan="3" height="24"></td>
                 </tr>
                 <tr>
                     <td></td>
