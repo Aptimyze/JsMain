@@ -19,6 +19,7 @@ class MobileCommon{
 	public static function isMobile()
 	{
 		//return true;
+
 		if(!sfContext::getInstance()->getRequest()->getAttribute("JS_MOBILE"))
 		{
 			if (JsConstants::$whichMachine != 'matchAlert') {
@@ -93,6 +94,16 @@ class MobileCommon{
 		else
 			return null;
 	}
+
+	public static function isCron()
+	{
+		$userAgent=$_SERVER[HTTP_USER_AGENT];
+		if(strpos($userAgent,"JsCli")!==FALSE)
+			return "C";
+		else
+			return null;
+	}
+
 
 	//checks if it is crm app
 	public static function isCrmApp()
