@@ -147,11 +147,13 @@ class ExclusiveFunctions{
                 $matchMailFormattedData[$value["PROFILEID"]] = $value;
                 $profileidArr[]=$value["PROFILEID"];
             }
-            $profileidStr = implode(",", $profileidArr);
             $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
-            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
-            foreach($clientNameArr as $index => $val){
-                $modifiedNameArr[$val["PROFILEID"]] = $val;
+            if(is_array($profileidArr) && count($profileidArr)>0){
+                $profileidStr = implode(",", $profileidArr);
+                $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
+                foreach($clientNameArr as $index => $val){
+                    $modifiedNameArr[$val["PROFILEID"]] = $val;
+                }
             }
             foreach($data as $date => $val){
                 foreach($val as $index => $dataValue){
@@ -201,6 +203,20 @@ class ExclusiveFunctions{
                 foreach($arr as $key => $val){
                     $params["MEMBER_ID"] = $val;
                     $exclusiveFollowupObj->insertIntoExclusiveFollowups($params);
+                    $mailerInfo = array();
+                    $mailerInfo[0]["RECEIVER"] = $val;
+                    $mailerInfo[0]["USER1"] = $client;
+                    $agentUsernames = array();
+                    $agentUsernames[] = $agent;
+                    $pswrdsObj = new jsadmin_PSWRDS();
+                    $agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentUsernames);
+                    $mailerInfo[0]["AGENT_EMAIL"] = $agentDetail[$agent]["EMAIL"];
+                    $mailerInfo[0]["AGENT_PHONE"] = $agentDetail[$agent]["PHONE"];
+                    $mailerInfo[0]["AGENT_NAME"] = $agentDetail[$agent]["FIRST_NAME"];
+                    if ($lastName = $agentDetail[$agent]["LAST_NAME"])
+                        $mailerInfo[0]["AGENT_NAME"] .= " ".$lastName;
+
+                    $this->sendProposalMail($mailerInfo);
                 }
             }
         }
@@ -370,7 +386,7 @@ class ExclusiveFunctions{
                 break;
         }
         if($params["followupStatus"]=='Y'){
-       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d');
         }
         
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
@@ -464,6 +480,7 @@ class ExclusiveFunctions{
                 $display = $userNameArr[$pid]["DISPLAY"];
                 $agentName = $value["AGENT_NAME"];
                 $agentPhone = $value["AGENT_PHONE"];
+                $bioData = $this->getClientBioData($pid);
                 $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone);
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
@@ -473,8 +490,12 @@ class ExclusiveFunctions{
                         'USER1'=>$value["USER1"],
                         'AGENT_PHONE'=>$value["AGENT_PHONE"],
                         'SUBJECT'=>$subjectAndBody["subject"],
-                        'BODY'=>$subjectAndBody["body"]),
+                        'BODY'=>$subjectAndBody["body"],
+                        'BIODATAUPLOADED'=>$bioData["isUploaded"],
+                        'BIODATA'=>$bioData["BIODATA"],
+                        'FILENAME'=>$bioData["FILENAME"]),
                     'redeliveryCount'=>0 );
+                $this->updateStatusForProposalMail($value["RECEIVER"],$value["USER1"],'U');
                 $producerObj->sendMessage($sendMailData);
             }
         }
@@ -496,5 +517,38 @@ class ExclusiveFunctions{
         return $email;
     }
 
+    public function updateStatusForProposalMail($receiver,$user,$status){
+        $date = date("Y-m-d",strtotime(' +1 day'));
+        $proposalMailerObj = new billing_ExclusiveProposalMailer();
+        $proposalMailerObj->updateStatus($receiver,$user,$status,$date);
+    }
+
+
+    public function getClientBioData($client){
+        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        $biodata = $exclusiveServicingObj->checkBioData($client);
+        $biodataLocation = $biodata['BIODATA_LOCATION'];
+        $clientBioData = array();
+        if($biodataLocation == null){
+            $clientBioData["isUploaded"] = false;
+            $clientBioData["BIODATA"] = "";
+            $clientBioData["FILENAME"] = "";
+            return $clientBioData;
+        } else{
+            $clientBioData["isUploaded"] = true;
+        }
+        $ext = end(explode('.', $biodataLocation));
+        $file = "BioData-$this->client.".$ext;
+        $xlData=file_get_contents($biodataLocation);
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        $clientBioData["BIODATA"] = $xlData;
+        $clientBioData["FILENAME"] = $file;
+        return $clientBioData;
+    }
 }
 ?>

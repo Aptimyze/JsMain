@@ -108,35 +108,40 @@ class ProcessHandler
           break;
       case 'EXCLUSIVE_PROPOSAL_EMAIL':
           $mailerServiceObj = new MailerService();
+          $exclsuiveFuncObj = new ExclusiveFunctions();
           $smarty = $mailerServiceObj->getMailerSmarty();
           $mailerName = "EXCLUSIVE_PROPOSAL_MAIL";
           $mailerLinks = $mailerServiceObj->getLinks();
           $smarty->assign('mailerLinks',$mailerLinks);
 
           $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
-
+          print_r($body);
           $agentEmail = $body["AGENT_EMAIL"];
           $agentName = $body["AGENT_NAME"];
           $agentPhone = $body["AGENT_PHONE"];
           $smarty->assign('mailerName',$agentEmail);
           $pid = $body["RECEIVER"];
+          $isUploaded = $body["BIODATAUPLOADED"];
+          $bioData = $body["BIODATA"];
+          $fileName = $body["FILENAME"];
           $data = $mailerServiceObj->getRecieverDetails($pid,$body,$mailerName,$widgetArray);
           if (is_array($data)) {
               $data["AGENT_PHONE"] = $agentPhone;
               $data["AGENT_NAME"] = $agentName;
               $data["body"]=$body["BODY"];
+              $data["isUploaded"] = $isUploaded;
               $subject = $body["SUBJECT"];
               $smarty->assign('data',$data);
               $msg = $smarty->fetch(MAILER_COMMON_ENUM::getTemplate($mailerName).".tpl");
-              //$file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
+              //$file = fopen("/var/www/html/branch1/web/sampleMailer.html","w");
               //fwrite($file,$msg);
               //die;
               //Sending mail and tracking sent status
-              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName);
+              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName,$bioData,$fileName);
               if ($flag) {
-                  $this->updateStatus($pid,'Y');
+                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
               } else {
-                  $this->updateStatus($pid,'N');
+                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'N');
               }
           }
           break;
