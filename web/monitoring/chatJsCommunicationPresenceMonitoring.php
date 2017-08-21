@@ -63,7 +63,7 @@ foreach($serverUrlArray as $k=>$v){
         if($overflowQueueArr && count($overflowQueueArr)>0){
                 $queueStr = implode(",", $overflowQueueArr);
                 //var_dump($queueStr);die;
-                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
+                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
         }
 }
 function checkRabbitmqQueueMsgCount($serverid){
