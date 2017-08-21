@@ -17,7 +17,7 @@
     ~foreach from=$welcomeCallsProfiles key=k item=v name=welcomeCallsProfilesLoop`
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/welcomeCallsPage2?client=~$k`">~$k`</a>
+            ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/welcomeCallsPage2?client=~$v['PROFILEID']`">~$v["USERNAME"]` ~if $v["DISPLAY"] eq 'Y'` (~$v["NAME"]`) ~/if`</a>
         </td>
     </tr>
     <br>
