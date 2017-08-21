@@ -227,12 +227,14 @@ $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave))
 while($row=mysql_fetch_array($res))
 {
 	$billid =$row['BILLID'];
+	$amount = $row['AMOUNT'];
 	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid'";
 	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 
 	if($row1=mysql_fetch_array($res1)){
 		$center	   	=$row1['CENTER'];
 		$serviceidArr =@explode(",",$row1['SERVICEID']);
+
 		if(!$center)
 			$center ='ONLINE_P';
 		foreach($serviceidArr as $key=>$val){
@@ -240,6 +242,7 @@ while($row=mysql_fetch_array($res))
 				$val .= "-UG";
 			}
 			$dataSetArr[$today][$center][$val] -= 1;
+			
 			if(!empty($amount)){
 				$paidNegCount[$today][$center][$val] -= 1;
 			} elseif(!empty($amount) && $amount<0){
@@ -248,8 +251,6 @@ while($row=mysql_fetch_array($res))
 		}
 	}
 }
-
-
 if(count($dataSetArr)>0){
 	foreach($dataSetArr as $date=>$valArr){
 		foreach($valArr as $center=>$valArr1){
