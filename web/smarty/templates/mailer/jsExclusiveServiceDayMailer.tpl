@@ -74,7 +74,7 @@
               </tr>
               <tr>  
                       <td valign="top"><br /><font color="#000000">
-                              As discussed on the call, I would just like to outline how we would help you find your perfect life partner. We would request your involvement at each step to help us facilitate the process
+                              These are the acceptances on your profile for the past week. Please go through these profiles and let me know which of them you would like us to pursue on your behalf. We will discuss these profiles on our weekly scheduled call or mean while you can share the desired Profile IDs with us on E-mail for followup.
                       </font></td>
               </tr>
               <tr>

@@ -92,6 +92,8 @@ class ProcessHandler
           //print_r($body);die;
           //die;
           //Send Email here
+          $ccList = $body['agentEmail'];
+          $bccList = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
           $top8Mailer = new EmailSender(MailerGroup::TOP8, '1857');
           $tpl = $top8Mailer->setProfileId($profileid);
           $tpl->getSmarty()->assign("senderName",$senderName);
@@ -100,7 +102,7 @@ class ProcessHandler
           $tpl->getSmarty()->assign("phone",$phone);
           $tpl->getSmarty()->assign("serviceDay",$serviceDay);
           $tpl->setSubject($subject);
-          $top8Mailer->send();
+          $top8Mailer->send("","",$ccList,$bccList);
           $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
           $exclusiveServicingObj->updateMailerStatus($profileid,'C');//Updating email stage as completed
           break;
