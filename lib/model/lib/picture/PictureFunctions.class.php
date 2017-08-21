@@ -335,10 +335,10 @@ class PictureFunctions
 	{
 		PictureFunctions::setHeaders();
 		if ($type_of_pic == "main")
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.png";
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif";
 		else
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.png"; //same image has been kept for main and other for checking
-			
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif"; //same image has been kept for main and other for checking
+
 		$destination_path = $filename_path;
 
 		if($format == "image/gif" || $format == "image/GIF")
@@ -349,13 +349,13 @@ class PictureFunctions
 		$width = imagesx($src_handle);
 		$height = imagesy($src_handle);
 
-		$watermark_handle = imagecreatefrompng($watermark_path);
+		$watermark_handle = imagecreatefromgif($watermark_path);
 		$w = imagesx($watermark_handle);
 		$h = imagesy($watermark_handle);
 
 		$x = $width-$w;
 		$y = ($height-$h)/2;
-
+		
 		imagecopymerge($src_handle,$watermark_handle,$x,$y,0,0,$w,$h,30);
 
 		if ($format == "image/gif" || $format == "image/GIF")
