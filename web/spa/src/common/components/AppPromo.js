@@ -56,7 +56,7 @@ export default class AppPromo extends React.Component {
 	           	    <div className = "fl pt20">            	
 	           	    	<div id="closePromoBtn" onClick={() => this.closeLayer()} className ="ocbnewimg ocbclose"></div>            
 	           	    </div>        	
-	           	    <div className = "fl padl5">            	
+	           	    <div className = "fl padlAppPromo">            	
 	           	    	<div className = "ocbnewimg logoocb"></div>            
 	           	    </div>            
 	           	    <div className = "fr pt10">            	
@@ -65,7 +65,7 @@ export default class AppPromo extends React.Component {
 	           	    	</div>            
 	           	    </div>             
 	           	    <div className = "fr pt13 padr10">            	
-	           	    	<div className = "f14 fontmed">Jeevansathi App | 3 MB </div>                
+	           	    	<div className = "fontSizeAppPromo fontmed">Jeevansathi App | 3 MB </div>                
 	           	    	<div className = "ocbnewimg ocbstar fr"></div>            
 	           	    </div>        
 	          	</div>    
