@@ -220,21 +220,19 @@ getOverLayDataDisplay(){
         layer =  (<ReportAbuse username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showContactDetail)
         layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
-    if(this.state.showMsgLayer)
-    {
+      if(this.state.showMsgLayer)
+      {
         layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
-    }
-    if(this.state.commonOvlayLayer)
-    {
-      layer = this.getCommonOverLay(this.state.commonOvlayData);
-
-    }
-    if(this.state.showBlockLayer)
-    {
-      layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>this.hideLayerCommon({showBlockLayer:false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />;
-    }
-
-    return (  <div key="2">{layer}</div>)
+      }
+      if(this.state.commonOvlayLayer)
+      {
+        layer = this.getCommonOverLay(this.state.commonOvlayData);
+      }
+      if(this.state.showBlockLayer)
+      {
+        layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />;
+      }
+      return (  <div key="2">{layer}</div>)
   }
 
 getCommonOverLay(actionDetails){
