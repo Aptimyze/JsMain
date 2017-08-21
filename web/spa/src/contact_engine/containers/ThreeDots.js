@@ -84,6 +84,7 @@ class ThreeDots extends React.Component{
 
       break;
       case 'IGNORE':
+      console.log('3 dot callback');
         if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
         {
           this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.others[jsonOb.index]},jsonOb.index);
@@ -156,7 +157,7 @@ class ThreeDots extends React.Component{
       {
         loaderView = <Loader show="page"></Loader>;
       }
-      console.log('insed threed');
+      
         return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
                   <a href="#"  className="ce_overlay ce_z102" > </a>
                     <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>

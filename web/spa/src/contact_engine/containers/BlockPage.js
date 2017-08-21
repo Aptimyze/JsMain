@@ -7,9 +7,8 @@ import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import axios from "axios";
 
-
 export default class BlockPage extends React.Component{
-  
+
     constructor(props){
         super();
         this.state = {
@@ -18,6 +17,7 @@ export default class BlockPage extends React.Component{
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
+            tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
         }
     }
     closeBlockPageLayer() {
@@ -27,24 +27,35 @@ export default class BlockPage extends React.Component{
         this.props.unblock();
         this.props.closeBlockPageLayer();
     }
-  
-    
+
+
   render(){
-    return(
-        <div id="vpro_tapoverlay" className="posabs vpro_tapoverlay">
-                <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
-                    <div id="3DotProPic" className="txtc">
+    let image3dot = <div id="3DotProPic" className="txtc">
                       <div id="photoIDDiv" className="photoDiv">
                         <img id="ce_photo" className="srp_box2 mr6" src={this.props.profileThumbNailUrl} />
                       </div>
-                      <div className="f14 white fontlig opa80 pt10" id="topMsg">{this.props.message}</div>
-                    </div>
-                </div>
-                <div className="txtc"><a href="#" className="white fontlig f16 forHide lh50" id="bottomMsg" onClick={() => this.unblock()} >Unblock</a>
-                </div>
-                <div className="dispbl bg7 white txtc f16 pad2 fontlig forHide" id="footerButton" onClick={() => this.closeBlockPageLayer()} >Close</div>
+                  </div>;
+    let blockLayerButton=   <div className="posfix btmo fullwid" id="bottomElement">
+                              <div className="txtc">
+                                <a href="#" className="white fontlig f16 forHide lh50" id="bottomMsg" onClick={() => this.props.bindAction(this.props.blockdata.buttondetails.buttons[0])}>Unblock</a>
+                              </div>
+                              <a href="#" className="dispbl bg7 white txtc f16 pad2 fontlig forHide" onClick={this.props.closeBlockLayer} id="footerButton">Close</a>
+                            </div>;
+
+
+    return(
+      <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+        <a href="#"  className="ce_overlay ce_z102" > </a>
+        <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
+
+          <div className="top_r1 white fullwid" id="commonOverlayTop">
+            {image3dot}
+            <div className="f16 white fontlig opa80 pad18 txtc" id="topMsg">{this.props.blockdata.message}</div>
+          </div>
+          {blockLayerButton}
         </div>
-    ); 
+      </div>
+    );
   }
-  	
+
 }

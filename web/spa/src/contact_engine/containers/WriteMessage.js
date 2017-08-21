@@ -77,11 +77,14 @@ export class WriteMessage extends React.Component{
 
       let offertextHTML='',buttonHTML='';
 
-      if(this.props.buttonData.button.text!=null)
+      if(!this.props.buttonData.button.text)
       {
-         offertextHTML = <div className="white color2 ce_hgt2 brdr23_contact" key="PD_offer_text" id="CEmembershipMessage2">
+         offertextHTML = (<div><div className="white color2 ce_hgt2 brdr23_contact" key="PD_offer_text" id="CEmembershipMessage2">
                           {this.props.buttonData.button.text}
-                         </div>;
+                         </div>
+                         <div className="fullwid clearfix" id="comm_footerMem">
+                         	   <a href="/profile/mem_comparison.php" className="dispbl bg7 white txtc f16 pad20_con fontlig" id="memTxtId">{this.props.buttonData.button.label}</a>
+                         </div></div>);
       }
       buttonHTML = <a href="/profile/mem_comparison.php" id="buttons1" key="PD_mem_label" className="fullwid">
               <div className="fullwid bg7 txtc pad5new posrel lh40">
@@ -89,7 +92,7 @@ export class WriteMessage extends React.Component{
                       <div className="white">  {this.props.buttonData.button.label}</div>
                   </div>
               </div>
-            </a>;
+            </a>
 
       WriteMsg_buttonView = [offertextHTML,buttonHTML];
     }

@@ -31,3 +31,11 @@
 	color: #fff;
 	background: #d9475c;
 }
+.showMoreDiv {
+    height: 0px;
+    transition:.3s ease;
+    webkit-transition:.3s ease;
+}
+.openShowMoreDiv {
+    height: 255px;
+}

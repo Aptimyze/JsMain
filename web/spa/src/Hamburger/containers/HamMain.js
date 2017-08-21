@@ -6,14 +6,20 @@ import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHe
 import axios from "axios";
 import * as CONSTANTS from '../../common/constants/apiConstants'
 import Loader from "../../common/components/Loader";
+import { connect } from "react-redux";
+import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 
 
-export default class HamMain extends React.Component {
+class HamMain extends React.Component {
 
     constructor(props) 
     {
         super();
-        this.state = {showLoader:false}
+        this.state = {
+            showLoader:false,
+            bellResponse: props.bellResponse || "notDefined"
+        }
+        this.resizeHam = this.resizeHam.bind(this);
     }
 
     translateSite(translateURL)
@@ -31,31 +37,59 @@ export default class HamMain extends React.Component {
         }
         window.location.href = newHref;
     }
+    componentWillReceiveProps(nextProps)
+    {
+        if(this.state.bellResponse == "notDefined") {
+            this.setState({
+                bellResponse: nextProps.myjsData.apiDataHam.hamburgerDetails
+            },this.checkHeight);
+        }
+    }
 
     componentDidMount() 
     {   
+        if(!this.props.bellResponse && this.props.page == "others") {
+            this.props.getHamData();
+        }  
         this.setState({
             minorLiHeight : document.getElementsByClassName("minorList")[0].getElementsByTagName("li")[0].getBoundingClientRect().height
         });
         document.getElementById("settingsMinor").style.height = "0px";
-        if(this.props.page == "others") {
-            if(this.props.bellResponse.MEMBERSHIPT_TOP == null || !this.props.bellResponse.MEMBERSHIPT_TOP) {
-                document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
-             } else {
-                document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
-             }
-            document.getElementById("myMatchesMinor").style.height = "0px";
-            document.getElementById("contactsMinor").style.height = "0px";  
+        if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
+            this.checkHeight();
         } else {
             document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
         }
+        window.addEventListener("resize", this.resizeHam);
+    }
+
+    resizeHam() {
+        if(this.state.bellResponse.MEMBERSHIPT_TOP == null || !this.state.bellResponse.MEMBERSHIPT_TOP) {
+            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+        } else {
+            document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+        } 
+    }
+    componentWillUnmount()
+    {
+        window.removeEventListener('resize', this.resizeHam);
+    }
+
+    checkHeight() {
+        if(this.state.bellResponse.MEMBERSHIPT_TOP == null || !this.state.bellResponse.MEMBERSHIPT_TOP) {
+                document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+        } else {
+            document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+        }  
+        document.getElementById("myMatchesMinor").style.height = "0px";
+        document.getElementById("contactsMinor").style.height = "0px";
     }
 
     logoutAccount() {
         this.setState({showLoader:true});
         this.hideHam(); 
 
-        axios.get(CONSTANTS.API_SERVER+"/api/v1/api/logout?AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM") )
+        axios.get(CONSTANTS.API_SERVER+"/static/logoutPage")
         .then(function(response){
             removeCookie("AUTHCHECKSUM");
             localStorage.clear();
@@ -124,15 +158,15 @@ export default class HamMain extends React.Component {
           loaderView = <Loader show="page"></Loader>;
         }
         let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView;
-        if(this.props.page == "others") {
+        if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             membershipRegisterView = <div className="brdrTop pad150">
-                    <div className="txtc color9 mb15">{this.props.bellResponse.MEMBERSHIPT_TOP}</div>
+                    <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
                     <a href="/search/visitors?matchedOrAll=A" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
-                            {this.props.bellResponse.MEMBERSHIPT_BOTTOM}
+                            {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
                     </a>
                 </div>;
-            if(this.props.bellResponse.VISITOR_ALERT != 0) {
-                profileVisitorCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.VISITOR_ALERT}</span>; 
+            if(this.state.bellResponse.VISITOR_ALERT != 0) {
+                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>; 
             }
             profileVisitorView = <li>
                 <div>
@@ -152,8 +186,8 @@ export default class HamMain extends React.Component {
                     </a>
                 </div>
             </li>;
-            if(this.props.bellResponse.BOOKMARK != 0) {
-                shortlistedCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.BOOKMARK}</span>;  
+            if(this.state.bellResponse.BOOKMARK != 0) {
+                shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;  
             }
 
             shortlistedView = <li>
@@ -166,17 +200,17 @@ export default class HamMain extends React.Component {
                 </div>
             </li>;
 
-            if(this.props.bellResponse.FILTERED != 0) {
-                filteredCount = <span className="f15">{this.props.bellResponse.FILTERED}</span>;
+            if(this.state.bellResponse.FILTERED != 0) {
+                filteredCount = <span className="f15">{this.state.bellResponse.FILTERED}</span>;
             }
-            if(this.props.bellResponse.ACCEPTED_MEMBERS != 0) {
-                allAccCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.ACCEPTED_MEMBERS}</span>;
+            if(this.state.bellResponse.ACCEPTED_MEMBERS != 0) {
+                allAccCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.ACCEPTED_MEMBERS}</span>;
             }
-            if(this.props.bellResponse.MESSAGE_NEW != 0) {
-                messageCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.MESSAGE_NEW}</span>;
+            if(this.state.bellResponse.MESSAGE_NEW != 0) {
+                messageCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MESSAGE_NEW}</span>;
             }
-            if(this.props.bellResponse.AWAITING_RESPONSE !=0) {
-                intRecCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.AWAITING_RESPONSE}</span>;
+            if(this.state.bellResponse.AWAITING_RESPONSE !=0) {
+                intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
             }
 
             myContactView = <li>
@@ -235,8 +269,8 @@ export default class HamMain extends React.Component {
                 </ul>
             </li>;
 
-            if(this.props.bellResponse.SAVE_SEARCH != 0) {
-                savedSearchCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.SAVE_SEARCH}</span>;
+            if(this.state.bellResponse.SAVE_SEARCH != 0) {
+                savedSearchCount = <span id="savedSearchCount" className="f12 album_color1 ml15">{this.state.bellResponse.SAVE_SEARCH}</span>;
             }
 
             savedSearchView = <li>
@@ -258,8 +292,8 @@ export default class HamMain extends React.Component {
                 </div>
             </li>;
 
-            if(this.props.bellResponse.MATCHALERT != 0) {
-                dailyRecCount = <span className="f12 album_color1 ml15">{this.props.bellResponse.MATCHALERT}</span>
+            if(this.state.bellResponse.MATCHALERT != 0) {
+                dailyRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MATCHALERT}</span>
             }
             myMatchesView = <li>
                 <div id="myMatchesParent">
@@ -304,24 +338,24 @@ export default class HamMain extends React.Component {
                 </ul>
             </li>;
 
-            if(this.props.bellResponse.AWAITING_RESPONSE_NEW != 0) {
+            if(this.state.bellResponse.AWAITING_RESPONSE_NEW != 0) {
                 awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
                     <div className="vertmid dispcell">
-                        {this.props.bellResponse.AWAITING_RESPONSE_NEW}
+                        {this.state.bellResponse.AWAITING_RESPONSE_NEW}
                     </div>
                 </div>;
             }
-            if(this.props.bellResponse.ACC_ME_NEW != 0) {
+            if(this.state.bellResponse.ACC_ME_NEW != 0) {
                 accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
                     <div className="vertmid dispcell">
-                        {this.props.bellResponse.ACC_ME_NEW}
+                        {this.state.bellResponse.ACC_ME_NEW}
                     </div>
                 </div>;
             }
-            if(this.props.bellResponse.JUST_JOINED_NEW != 0) {
+            if(this.state.bellResponse.JUST_JOINED_NEW != 0) {
                 justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
                     <div className="vertmid dispcell">
-                        {this.props.bellResponse.JUST_JOINED_NEW}
+                        {this.state.bellResponse.JUST_JOINED_NEW}
                     </div>
                 </div>;
             }
@@ -447,9 +481,9 @@ export default class HamMain extends React.Component {
                 </li>
                 <li>
                     <i className="hamSprite searchIcon"></i>
-                    <Link id="searchLink" to={"/search/topSearchBand?isMobile=Y"} className="white">
+                    <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
                         Search
-                    </Link>
+                    </a>
                 </li>
                 <li>
                     <i className="hamSprite searchProfileIcon"></i>
@@ -525,3 +559,19 @@ export default class HamMain extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return{
+        myjsData: state.MyjsReducer
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        getHamData: () => {
+            commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps,null,{ withRef: true })(HamMain)

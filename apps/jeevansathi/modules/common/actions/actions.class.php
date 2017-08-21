@@ -363,7 +363,7 @@ class commonActions extends sfActions
             if ($shortlist == "true") {
                 $bookmarkObj->removeBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", -1);
-                if (MobileCommon::getChannel() == "P") {
+                if (MobileCommon::getChannel() == "P" || MobileCommon::isNewMobileSite()) {
                     $array['button'] = ButtonResponse::getShortListButton('', array('isBookmarked' => 0));
                 } else {
                     $array["button"] = ButtonResponse::getShortListButton('', '', 0);
@@ -392,7 +392,7 @@ class commonActions extends sfActions
             } else {
                 $bookmarkObj->addBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", 1);
-                if (MobileCommon::getChannel() == "P") {
+                if (MobileCommon::getChannel() == "P" || MobileCommon::isNewMobileSite()) {
                     $array['button'] = ButtonResponse::getShortListButton('', array('isBookmarked' => 1));
                 } else {
                     $array["button"] = ButtonResponse::getShortListButton('', '', 1);

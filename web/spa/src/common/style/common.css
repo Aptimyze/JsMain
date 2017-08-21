@@ -190,7 +190,7 @@ header, section, footer, aside, nav, article, figure {
 	width:40%
 }
 .wid42p{width:42%}
-
+.wid45p{width: 45%}
 .wid48p {
 	width:48%
 }
@@ -1311,4 +1311,14 @@ border-radius: 32px;
 }
 .clearfix:after {
 	clear:both
+}
+.ot_bell {
+    background-position: 1px -184px;
+    width: 40px;
+    height: 35px;
+}
+
+.ot_sprtie {
+    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
 }
