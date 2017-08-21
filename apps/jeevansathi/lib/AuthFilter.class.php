@@ -96,9 +96,11 @@ class AuthFilter extends sfFilter {
 				
 				// Code to execute after the action execution, before the rendering
 				//Stopping from going to oldMobileSite
-				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop()){
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop() && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
 					$context->getController()->forward("static", "oldMobileSite");
+					die;
 				}
+
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -400,9 +402,9 @@ class AuthFilter extends sfFilter {
       	}
       	else
       		$lastDayFlag=false;
-      	$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
 
 		if($profileid){
+			$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
 			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();

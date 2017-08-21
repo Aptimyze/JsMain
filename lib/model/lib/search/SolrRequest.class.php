@@ -551,7 +551,7 @@ class SolrRequest implements RequestHandleInterface
                         eval('$hvalue = $this->searchParamtersObj->getH'.$field.'();');
                         if($lvalue && $hvalue)
                         {
-				$this->filters[]="&fq=$field:[$lvalue $hvalue]";
+				$this->filters[]="&fq=$field:[$lvalue TO $hvalue]";
                         }
                 }
                 

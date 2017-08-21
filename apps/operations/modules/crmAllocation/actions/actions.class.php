@@ -865,7 +865,7 @@ class crmAllocationActions extends sfActions
 	  	if($inputArr["exAction"]=="UNASSIGN")
 	  	{
 	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00",$billid);
-	  		$exServicingObj->removeExclusiveClientEntry($inputArr["assignedToUsername"],$profileid);
+	  		$exServicingObj->removeExclusiveClientEntry($profileid,$inputArr["assignedToUsername"]);
 	  	}
 	  	else if($inputArr["exAction"]=="ASSIGN")
 	  	{
@@ -875,7 +875,7 @@ class crmAllocationActions extends sfActions
 	  		$refTime = date("Y-m-d",strtotime(crmCommonConfig::$jsexclusiveReferenceDt));
 	  		
 	  		if(!empty($bill_dttime) && $bill_dttime>=$refTime){
-	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d')));
+	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d'),"BILLID"=>$billid));
 	  		}
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)

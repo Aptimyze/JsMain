@@ -220,6 +220,9 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 deleteChatRoster($profileid);
 removeDeleteCronArg($profileid, $mainDb);
 
+//Delete this profile from ExclusiveServicing
+deleteProfileFromExclusiveServicing($profileid);
+
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
 $username_result=mysql_query($username_query,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
@@ -778,6 +781,11 @@ function deleteChatRoster($profileid) {
   }
 }
 
+
+function deleteProfileFromExclusiveServicing($profileid){
+    $exclusiveFuncObj = new ExclusiveFunctions();
+    $exclusiveFuncObj->deleteEntryFromExclusiveServicing($profileid,'D');
+}
 function removeDeleteCronArg($profileid,$dbObj) {
   $sql = "DELETE FROM PROFILE.DELETE_CRON_ARG WHERE PROFILEID = $profileid";
   $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
