@@ -83,5 +83,22 @@ class billing_ExclusiveProposalMailer extends TABLE{
             throw new jsException($e);
         }
     }
+
+    public function updateStatus($receiver,$tupleID,$status,$date){
+        try{
+            $sql = "UPDATE  billing.ExclusiveProposalMailer 
+                    SET STATUS = :STATUS  
+                    WHERE RECEIVER = :RECEIVER AND DATE = :DATE AND TUPLE_ID = :TUPLEID";
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":RECEIVER",$receiver,PDO::PARAM_INT);
+            $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+            $prep->bindValue(":TUPLEID",$tupleID,PDO::PARAM_INT);
+            $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
+            $prep->execute();
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 ?>

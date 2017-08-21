@@ -25,7 +25,7 @@
                     <td width="606">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
                             <tr>
-                                <td valign="top">Hi ~if $data.RECEIVER.PROFILE->getNAME()`~$data.RECEIVER.PROFILE->getNAME()`~else`~$data.RECEIVER.PROFILE->getUSERNAME()`~/if`,</td>
+                                <td valign="top">Dear Sir/Mam,</td>
                             </tr>
                             <tr>
                                 <td colspan="3" height="10"></td>
@@ -78,6 +78,42 @@
                     <td colspan="3">
                         ~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks])`
                     </td>
+                </tr>
+                <tr>
+                    <td colspan="3" height="10"></td>
+                </tr>
+                ~if $data.isUploaded eq true`
+                <tr>
+                    <td></td>
+                    <td>
+                        <table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                            <tr>
+                                <td style="font-size:12px; padding-bottom:10px;" valign="top">We are also attaching the Client's biodata which they have requested to be sent to you.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" height="10"></td>
+                </tr>
+                ~/if`
+                <tr>
+                    <td></td>
+                    <td>
+                        <table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                            <tr>
+                                <td style="font-size:12px; padding-bottom:10px;" valign="top">If you need any further information about my client, please feel free to contact me on ~$phone` or reply to this Email.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td colspan="3" height="10"></td>
