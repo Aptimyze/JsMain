@@ -34,7 +34,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
         </div>
     </div>
 <div className={"fullwid fontlig pad1 pt30 " + this.state.cdOvlayShow} id="contactDetailOverlay" style={{overflowY: 'auto', height:this.state.cdOHeight}}>
-  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.'})}
+  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.',style:this.state.c1Style})}
   <div className={"pt15 " + this.state.vCPreLayerShow} id="ViewContactPreLayer" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
@@ -42,9 +42,9 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
   <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerTextNoNumber" style={{color: '#fff',textAlign: 'center'}}>{this.state.vCNoNumber}</p>
   </div>
-{this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline'})}
-{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.'})}
-{this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:true,label:'Email'})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{}})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{}})}
+{this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:true,label:'Email',style:{}})}
 
   {this.state.emailInfo}
 
@@ -113,12 +113,12 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
         contactShow = '';
         //$("#mobileVal,#mobile").show();
         mobileVal = displayProps.contact_message;
-        mobileValBlur='';
+        mobileValBlur='dispnone';
 //        $("#mobileVal").html(result.actiondetails.contact1_message);
       }
 
 return (
-  <div className={"pt15 "+ contactShow} >
+  <div style={displayProps.style} className={"pt15 "+ contactShow} >
     <div className="fl white">
       <div className=" f14 lh30 opa50">{displayProps.contact ? (displayProps.contact.label ? displayProps.contact.label : displayProps.label) : displayProps.label}</div>
       <span className={"f16 "+mobileValShow}>{mobileVal}</span>
@@ -212,10 +212,11 @@ this.props.bindAction();
 }
 getContactDetails(actiondetails){
   var memText, memShow, topMsg2Text='', topMsg2TextShow,topMsg2Text, topMsgTextShow,topMsgText='',
-  bottomMsgShow={display:'none'},bottomMsgText='',bottomMsgredirectFun=()=>{},bottomMsgShow2={display:'none'},
+  bottomMsgShow='dispnone',bottomMsgText='',bottomMsgredirectFun=()=>{},bottomMsgShow2={display:'none'},
   bottomMsgText2='', nevMindStyle={display:'none'}, vCPreLayerShow='dispnone', vCPreLayerNoNumShow='dispnone',footerBShow='dispnone',
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
-  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>);
+  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
+  c1Style = {display:'block'};
   //$("#topMsg").hide();
   //$("#"+actionTemplate[action]).show();
   /*if(result.footerbutton)
@@ -276,10 +277,9 @@ else
   else
     topMsgTextShow = 'dispnone';
 
-
-  if(actiondetails.bottommsg){
-
-    bottomMsgShow = {'display': 'inline-block'};
+console.log('3333',actiondetails);
+  if(actiondetails.bottommsg){console.log('hereeee');
+    bottomMsgShow = 'dispibl';
     bottomMsgText = actiondetails.bottommsg;
 //    $("#bottomMsg").html(result.actiondetails.bottommsg);
     if(actiondetails.bottommsgurl)
@@ -309,8 +309,10 @@ else
     }
         if(actiondetails.footerbutton!=null){
           if(actiondetails.footerbutton.action)nevMindStyle={display:'block'};
+          c1Style = {display:'none'};
           footerBShow = 'dispbl';
           footerBText = actiondetails.footerbutton.label;
+
           if(actiondetails.infomsglabel)
           {
             preLayerText = actiondetails.infomsglabel;
@@ -397,7 +399,7 @@ else
           nevMindStyle,vCPreLayerShow,vCPreLayerNoNumShow, footerBText,preLayerText,
           commonOverlayShow,newErrMsg,memHeading,sH1,sH2,sH3,mOExists,mO1,mO2,oPrice:'',oPShow:'dispnone'
           , lowestOfferDiv, vCNoNumber,closeLyrShow,cdOvlayShow,primaryMob,landLine,alternateMob,
-          emailInfo,memOvlayShow,footerBShow
+          emailInfo,memOvlayShow,footerBShow,c1Style
 
         };//$("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
 
