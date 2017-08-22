@@ -201,4 +201,4 @@ height: 32px;}
   }
 }
 
-.reportAbuseScreen{float:left;width: 50%;position: relative;}
+.reportAbuseScreen,.reportInvalidScreen {float:left;width: 50%;position: relative;}

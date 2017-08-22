@@ -88,7 +88,7 @@ const MyjsReducer = (state={
 						arr = state.apiDataMOD;
 						key = 'apiDataMOD';
 					break;
-					case 'MATCH_ALERT':
+					default:
 						arr = state.apiDataDR;
 						key = 'apiDataDR';
 					break;
