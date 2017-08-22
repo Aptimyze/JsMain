@@ -34,7 +34,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
         </div>
     </div>
 <div className={"fullwid fontlig pad1 pt30 " + this.state.cdOvlayShow} id="contactDetailOverlay" style={{overflowY: 'auto', height:this.state.cdOHeight}}>
-  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.',style:this.state.c1Style})}
+  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.',style:this.state.c1Style,id:'mobile'})}
   <div className={"pt15 " + this.state.vCPreLayerShow} id="ViewContactPreLayer" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
@@ -42,9 +42,9 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
   <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerTextNoNumber" style={{color: '#fff',textAlign: 'center'}}>{this.state.vCNoNumber}</p>
   </div>
-{this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{}})}
-{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{}})}
-{this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:true,label:'Email',style:{}})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{},id:'alternateNumber'})}
+{this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:false,label:'Email',style:{},id:'email'})}
 
   {this.state.emailInfo}
 
@@ -96,7 +96,7 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
     {
     mobileValShow='';
     if (displayProps.showReportInvalid)
-      reportInvalid = (<span  onClick={()=>this.reportInvalid(displayProps)} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
+      reportInvalid = (<span  onClick={() => this.props.bindAction({'action':'REPORT_INVALID','type':displayProps.id})} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
 
     }
   //$("#mobileVal").show();

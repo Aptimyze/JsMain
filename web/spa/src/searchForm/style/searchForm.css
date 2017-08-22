@@ -39,3 +39,15 @@
 .openShowMoreDiv {
     height: 255px;
 }
+.savsrc-icon2 {
+    background-position: -130px -206px;
+    width: 23px;
+    height: 20px;
+}
+.savsrc-sp {
+    background-image: url(http://test.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.savsrc-colr1 {
+    color: #999;
+}
