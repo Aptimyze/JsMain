@@ -609,7 +609,11 @@ break;
 
                   '24' => array(  
                     'A' => '107'
+                        ) ,
+                  '26' => array(  
+                    'A' => '108'
                         )        
+       
 
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
