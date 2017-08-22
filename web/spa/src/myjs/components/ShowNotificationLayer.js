@@ -48,7 +48,7 @@ export default class ShowNotificationLayer extends React.Component {
                 {this.returnBlankIfZero('MESSAGE_NEW')}
             </div>
            </a>
-          <a href="/inbox / 9 / 1 ">
+          <a href="/inbox/9/1">
             <div className=" fullwid fontthin f14 color3 pad18 brdr1 clearfix ">
               <div className = "fl wid92p" >
                 <div className="fullwid txtc">Photo Requests</div>
@@ -56,7 +56,7 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('PHOTO_REQUEST_NEW')}
             </div>
           </a>
-          <a href="/inbox / 1 / 1 ">
+          <a href="/inbox/1/1">
             <div className = "fullwid fontthin f14 color3 pad18 brdr1 clearfix" >
               <div className="fl wid92p">
                 <div className="fullwid txtc">Interests Received</div>
@@ -80,7 +80,7 @@ export default class ShowNotificationLayer extends React.Component {
               {this.returnBlankIfZero('DEC_ME_NEW')}
             </div>
           </a>
-          <a href="/inbox / 12 / 1 ">
+          <a href="/inbox/12/1">
             <div className = "fullwid fontthin f14 color3 pad18 brdr1 clearfix" >
               <div className="fl wid92p">
                 <div className="fullwid txtc">Filtered Interests</div>
