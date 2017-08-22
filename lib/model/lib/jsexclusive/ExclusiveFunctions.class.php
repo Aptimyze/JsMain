@@ -147,11 +147,13 @@ class ExclusiveFunctions{
                 $matchMailFormattedData[$value["PROFILEID"]] = $value;
                 $profileidArr[]=$value["PROFILEID"];
             }
-            $profileidStr = implode(",", $profileidArr);
             $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
-            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
-            foreach($clientNameArr as $index => $val){
-                $modifiedNameArr[$val["PROFILEID"]] = $val;
+            if(is_array($profileidArr) && count($profileidArr)>0){
+                $profileidStr = implode(",", $profileidArr);
+                $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $profileidStr), "", "", "PROFILEID,NAME,DISPLAY");
+                foreach($clientNameArr as $index => $val){
+                    $modifiedNameArr[$val["PROFILEID"]] = $val;
+                }
             }
             foreach($data as $date => $val){
                 foreach($val as $index => $dataValue){
@@ -370,7 +372,7 @@ class ExclusiveFunctions{
                 break;
         }
         if($params["followupStatus"]=='Y'){
-       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+       	    $updateArr["CONCALL_SCH_DT"] = date('Y-m-d');
         }
         
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();      
