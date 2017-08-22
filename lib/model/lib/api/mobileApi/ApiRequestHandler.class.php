@@ -174,7 +174,7 @@ class ApiRequestHandler
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else if($output["moduleName"] != "phone" )
+				else if($output['moduleName']!="register" && $output['moduleName']!="static" && $output["moduleName"] != "phone" )
 				{
 					$isApp = MobileCommon::isApp();
 					if($isApp)
