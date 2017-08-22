@@ -46,7 +46,8 @@ class staticActions extends sfActions
    //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executeOldMobileSite(sfWebRequest $request)
   {
-	  
+        $key = 'oldMobileSiteCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->set($key,$_SERVER[HTTP_USER_AGENT]);
   }
   
 	public function executeVerifyAuth(sfWebRequest $request)

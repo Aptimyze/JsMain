@@ -317,7 +317,7 @@ class ErrorHandler
 		
 		//6. Filtered profile
 		
-		if($this->checkProfileFiltered() || true)
+		if($this->checkProfileFiltered())
 		{
 				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
 				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
