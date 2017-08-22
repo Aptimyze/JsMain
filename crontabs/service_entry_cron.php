@@ -220,7 +220,7 @@ while($row=mysql_fetch_array($res))
 	}
 }*/
 
-/*Section for negative entries in billing.PAYMENT_DETAIL_NEW*/
+/*Section for today's negative entries in billing.PAYMENT_DETAIL_NEW for billings done earlier*/
 //confirm status cases
 $sql ="select AMOUNT,BILLID,STATUS from billing.PAYMENT_DETAIL_NEW where ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date' AND STATUS IN('BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
@@ -228,25 +228,32 @@ while($row=mysql_fetch_array($res))
 {
 	$billid =$row['BILLID'];
 	$amount = $row['AMOUNT'];
-	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid'";
+	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid' AND ENTRY_DT<$st_date";
 	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 
 	if($row1=mysql_fetch_array($res1)){
 		$center	   	=$row1['CENTER'];
 		$serviceidArr =@explode(",",$row1['SERVICEID']);
-
 		if(!$center)
 			$center ='ONLINE_P';
-		foreach($serviceidArr as $key=>$val){
-			if($row1['MEM_UPGRADE']=="MAIN" && strpos($val, "A")==false){
-				$val .= "-UG";
-			}
-			$dataSetArr[$today][$center][$val] -= 1;
-			
-			if(!empty($amount)){
-				$paidNegCount[$today][$center][$val] -= 1;
-			} elseif(!empty($amount) && $amount<0){
-				$freeNegCount[$today][$center][$val] -= 1;
+		$sql2 ="select SUM(NET_AMOUNT) AS NET_AMOUNT from billing.PURCHASE_DETAIL WHERE BILLID='$billid' WHERE SERVICEID IN (".$row1['SERVICEID'].")";
+		$res2=mysql_query_decide($sql2,$db_slave) or die("$sql2".mysql_error_js($db_slave));
+		if($row2=mysql_fetch_array($res2)){
+			$netAmount = $row2["NET_AMOUNT"];
+			$refundAmount = -1 * $amount;
+			if($refundAmount >= 0.5*$netAmount){
+				foreach($serviceidArr as $key=>$val){
+					if($row1['MEM_UPGRADE']=="MAIN" && strpos($val, "A")==false){
+						$val .= "-UG";
+					}
+					$dataSetArr[$today][$center][$val] -= 1;
+					
+					if(!empty($amount)){
+						$paidNegCount[$today][$center][$val] -= 1;
+					} elseif(!empty($amount) && $amount<0){
+						$freeNegCount[$today][$center][$val] -= 1;
+					}
+				}
 			}
 		}
 	}
