@@ -108,7 +108,7 @@ class ProcessHandler
           break;
       case 'EXCLUSIVE_PROPOSAL_EMAIL':
           $mailerServiceObj = new MailerService();
-          $exclsuiveFuncObj = new ExclusiveFunctions();
+          $exclusiveFuncObj = new ExclusiveFunctions();
           $smarty = $mailerServiceObj->getMailerSmarty();
           $mailerName = "EXCLUSIVE_PROPOSAL_MAIL";
           $mailerLinks = $mailerServiceObj->getLinks();
@@ -120,9 +120,10 @@ class ProcessHandler
           $agentPhone = $body["AGENT_PHONE"];
           $smarty->assign('mailerName',$agentEmail);
           $pid = $body["RECEIVER"];
-          $isUploaded = $body["BIODATAUPLOADED"];
-          $bioData = $body["BIODATA"];
-          $fileName = $body["FILENAME"];
+          $bioDataArr = $exclusiveFuncObj->getClientBioData($body["USER1"]);
+          $isUploaded = $bioDataArr["isUploaded"];
+          $bioData = $bioDataArr["BIODATA"];
+          $fileName = $bioDataArr["FILENAME"];
           $data = $mailerServiceObj->getRecieverDetails($pid,$body,$mailerName,$widgetArray);
           if (is_array($data)) {
               $data["AGENT_PHONE"] = $agentPhone;
@@ -138,9 +139,9 @@ class ProcessHandler
               //Sending mail and tracking sent status
               $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName,$bioData,$fileName);
               if ($flag) {
-                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
+                  $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
               } else {
-                  $exclsuiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
+                  $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
               }
           }
           break;

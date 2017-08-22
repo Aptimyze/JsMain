@@ -478,7 +478,6 @@ class ExclusiveFunctions{
                 $display = $userNameArr[$pid]["DISPLAY"];
                 $agentName = $value["AGENT_NAME"];
                 $agentPhone = $value["AGENT_PHONE"];
-                $bioData = $this->getClientBioData($pid);
                 $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone);
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
@@ -488,10 +487,7 @@ class ExclusiveFunctions{
                         'USER1'=>$value["USER1"],
                         'AGENT_PHONE'=>$value["AGENT_PHONE"],
                         'SUBJECT'=>$subjectAndBody["subject"],
-                        'BODY'=>$subjectAndBody["body"],
-                        'BIODATAUPLOADED'=>$bioData["isUploaded"],
-                        'BIODATA'=>$bioData["BIODATA"],
-                        'FILENAME'=>$bioData["FILENAME"]),
+                        'BODY'=>$subjectAndBody["body"]),
                     'redeliveryCount'=>0 );
                 $this->updateStatusForProposalMail($value["RECEIVER"],$value["USER1"],'U');
                 $producerObj->sendMessage($sendMailData);
@@ -527,7 +523,7 @@ class ExclusiveFunctions{
         $biodata = $exclusiveServicingObj->checkBioData($client);
         $biodataLocation = $biodata['BIODATA_LOCATION'];
         $clientBioData = array();
-        if($biodataLocation == null){
+        if($biodata == false || $biodataLocation == null){
             $clientBioData["isUploaded"] = false;
             $clientBioData["BIODATA"] = "";
             $clientBioData["FILENAME"] = "";
