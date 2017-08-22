@@ -26,7 +26,6 @@ EOF;
     }
 
     /**
-     * set the array errorTypeArr value for the given type
      * @return void
      * @access protected
      */
@@ -49,6 +48,7 @@ EOF;
                 $MailerTableObj = new viewSimilar_MAILER();
                 $MailerTableObj->insertProfiles($key,$calculatedProfiles,$noOfEois,$typeOfEois);
             }
+            $profilesToSendMailObj->updateIsCalculated($key);
         }
     }
 

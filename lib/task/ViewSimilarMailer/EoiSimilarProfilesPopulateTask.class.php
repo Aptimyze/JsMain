@@ -29,6 +29,14 @@ EOF;
     protected function execute($arguments = array(), $options = array()) {
         sfContext::createInstance($this->configuration);
         $date = date('Y-m-d', strtotime("-1 week"));
+        
+        //trunncate both populate and calculate tables
+        $mailerToBeSentObj = new viewSimilar_VSP_MAILER_PROFILES_TO_BE_SENT();
+        $mailerToBeSentObj->truncateTable();
+        
+        $mailerTableObj = new viewSimilar_MAILER();
+        $mailerTableObj->truncateTable();
+        
         //get profiles from CONTACTS table
         $shards = JsDbSharding::getShardListSlave();
 
@@ -48,7 +56,6 @@ EOF;
 
                     //insert profiles into populate table
                     if (count($profilesToInsertForAUser) > 0) {
-                        $mailerToBeSentObj = new viewSimilar_VSP_MAILER_PROFILES_TO_BE_SENT();
                         $mailerToBeSentObj->setProfilesToSendMail($sender, $profilesToInsertForAUser, $noOfEoi, $typeOfEoi);
                     }
                 }

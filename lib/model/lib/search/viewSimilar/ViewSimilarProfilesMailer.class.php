@@ -73,7 +73,7 @@ class ViewSimilarProfilesMailer {
             $profileListObj = new IgnoredContactedProfiles();
             $ignoredContactedProfiles = $profileListObj->getProfileList($viewer);
             $resultTemp = $similarProfileObj->getSuggestedProf($viewerGender, $viewedContactsStr, $whereParams, $ignoredContactedProfiles);
-
+            
             $suggestedProf = $resultTemp['suggestedProf'];
             $constantVal = $resultTemp['constantVal'];
             $priority = $resultTemp['priority'];
@@ -95,7 +95,7 @@ class ViewSimilarProfilesMailer {
                 if ($scoreDen != 0)
                     $scoreViewed[$val] = $scoreNum / $scoreDen;
             }
-
+            
             //GET IGNORED LIST
             $ignoredList = $ignoredProfileObj->ifProfilesIgnored('0', $viewer, 1);
             if (is_array($suggestedProf)) {

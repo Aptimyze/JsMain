@@ -38,7 +38,7 @@ class viewSimilar_VSP_MAILER_PROFILES_TO_BE_SENT extends TABLE {
      * @param $currentScript: current script running
      * @return array array of profileds
      */
-    public function setProfilesToSendMail($profileId, $userArray,$noOfEoi,$typeOfEoi) {
+    public function setProfilesToSendMail($profileId, $userArray, $noOfEoi, $typeOfEoi) {
         try {
             $i = 1;
             foreach ($userArray as $key => $val) {
@@ -61,6 +61,38 @@ class viewSimilar_VSP_MAILER_PROFILES_TO_BE_SENT extends TABLE {
                 $prep->execute();
             }
         } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    /** This store function is used to set is calculated to true
+     * @param $totalscripts : number of scripts running
+     * @param $currentScript: current script running
+     * @return array array of profileds
+     */
+    public function updateIsCalculated($profileId) {
+        try {
+            if ($profileId) {
+                $sql = "UPDATE viewSimilar.VSP_MAILER_PROFILES_TO_BE_SENT SET IS_CALCULATED = 'Y' WHERE PROFILEID=:PROFILEID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
+                $prep->execute();
+            }
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    /**
+     * Empty The table
+     */
+    public function truncateTable() {
+        try {
+            $sql = "TRUNCATE TABLE viewSimilar.VSP_MAILER_PROFILES_TO_BE_SENT";
+            $res = $this->db->prepare($sql);
+            $res->execute();
+        } catch (PDOException $e) {
+            //add mail/sms
             throw new jsException($e);
         }
     }

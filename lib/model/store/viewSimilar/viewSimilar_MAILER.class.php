@@ -8,7 +8,7 @@ class viewSimilar_MAILER extends TABLE {
 
     /** This store function is to insert profiles into MAILER table
      */
-    public function insertProfiles($sender, $profileArr, $noOfEois,$typeOfEois) {
+    public function insertProfiles($sender, $profileArr, $noOfEois, $typeOfEois) {
         try {
             $i = 1;
             $userStr = "";
@@ -44,8 +44,8 @@ class viewSimilar_MAILER extends TABLE {
     public function getMailerProfiles($totalScript = "1", $script = "0", $limit = "") {
         try {
             $defaultFields = "SNO,PROFILEID,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,USER11,USER12,USER13,USER14,USER15,USER16,USER17,USER18,USER19,USER20,INTERESTS_SENT,TYPE";
-            
-            $sql = "SELECT $defaultFields FROM viewSimilar.MAILER where SENT != 'Y' AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
+
+            $sql = "SELECT $defaultFields FROM viewSimilar.MAILER where SENT = 'N' AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
             if ($limit)
                 $sql.= " limit 0,:LIMIT";
             $prep = $this->db->prepare($sql);
@@ -56,7 +56,7 @@ class viewSimilar_MAILER extends TABLE {
             $prep->execute();
 
             while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                    $result[] = $row;
+                $result[] = $row;
             }
             return $result;
         } catch (PDOException $e) {
@@ -80,6 +80,20 @@ class viewSimilar_MAILER extends TABLE {
             $res->bindValue(":FLAG", $flag, PDO::PARAM_STR);
             $res->execute();
         } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    /**
+     * Empty The table
+     */
+    public function truncateTable() {
+        try {
+            $sql = "TRUNCATE TABLE viewSimilar.MAILER";
+            $res = $this->db->prepare($sql);
+            $res->execute();
+        } catch (PDOException $e) {
+            //add mail/sms
             throw new jsException($e);
         }
     }
