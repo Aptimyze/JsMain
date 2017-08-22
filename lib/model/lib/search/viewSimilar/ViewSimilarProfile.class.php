@@ -221,7 +221,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                 $Age['hAge'] = (int)max($viewedAge,$viewerAge);
             }
            	else {
-           		$viewedAgeMax = $viewedAge + 5;
+           		$viewedAgeMax = $viewerAge + 5;
                 $Age['lAge'] = (int)min($viewedAge,$viewerAge);
                 $Age['hAge'] = (int)max($viewedAgeMax,$viewerAge);
             }
@@ -567,7 +567,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         }
         
         
-        private function getWhereParamsForReverseDpp($viewerGender,$loggedInProfileObj){
+        public function getWhereParamsForReverseDpp($viewerGender,$loggedInProfileObj){
             if($viewerGender == 'FEMALE')
                 $reverseParams = SearchConfig::$reverseParamsFemaleLoggedIn;
             else

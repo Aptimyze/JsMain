@@ -36,6 +36,47 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                         throw new jsException($e);
                 }
         }
+        
+        /** This store function is used to get profiles vied by a user
+         * @param $viewedGender : Gender of profile viewed
+         * @param $viewed : Profile ID of viewed profile
+         * @return array array of profiled viewed by viewed profile ID
+         */
+        public function getViewedProfilesForMultipleViewed($viewedGender, $viewedArray) {
+                try {
+                        if($viewedGender!="MALE" and $viewedGender!="FEMALE" )
+                        {
+                        ValidationHandler::getValidationHandler("","Viewed Gender in viewSimilar_CONTACTS_CACHE_LEVEL -> getViewedProfiles is not set",1);
+                        }
+                        
+                        $i = 0;
+                        $viewedStr = "";
+                        foreach($viewedArray as $key=>$val){
+                            if($val)
+                                $viewedStr .= ":VIEWED".$i++.",";
+                        }
+                        
+                        $viewedStr = trim($viewedStr,',');
+                        if($viewedStr){
+                            $sql = "SELECT SQL_CACHE RECEIVER FROM viewSimilar.CONTACTS_CACHE_LEVEL1_" . $viewedGender . " WHERE SENDER IN (".$viewedStr.")";
+                            $prep = $this->db->prepare($sql);
+                            $i=0;
+                            
+                            foreach($viewedArray as $key=>$val){
+                                if($val)
+                                    $prep->bindValue(":VIEWED".$i++, $val, PDO::PARAM_INT);
+                            }
+                            
+                            $prep->execute();
+                            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                                    $contactsViewed[] = $row['RECEIVER'];
+                            }
+                        }
+                        return $contactsViewed;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
 
         /** This store function is used to get suggested profiles when user contacted min number of specified users
          * @param $viewedOppositeGender : Opposite gender of profiled viewed
