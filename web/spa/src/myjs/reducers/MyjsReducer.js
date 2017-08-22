@@ -78,6 +78,7 @@ const MyjsReducer = (state={
 			break;
 			case 'SPLICE_MYJS_DATA':
 			var arr,key;
+			console.log(action.payload);
 				switch(action.payload.infotype)
 				{
 					case 'INTEREST_RECEIVED':
