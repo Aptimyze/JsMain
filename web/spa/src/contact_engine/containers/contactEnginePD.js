@@ -9,6 +9,7 @@ import {performAction} from './contactEngine';
 import ContactDetails from '../components/ContactDetails';
 import BlockPage from './BlockPage';
 import ReportAbuse from './ReportAbuse';
+import ReportInvalid from './ReportInvalid';
 
 
 export class contactEnginePD extends React.Component{
@@ -43,9 +44,6 @@ export class contactEnginePD extends React.Component{
 
   bindAction(button,index){
 
-    console.log('binaction');
-    console.log(button);
-
     switch(button.action)
     {
 
@@ -54,11 +52,15 @@ export class contactEnginePD extends React.Component{
         this.showLayerCommon({showReportAbuse:true});
 
       break;
-
       case 'REPORT_INVALID':
+        console.log("bindAction REPORT_INVALID");
+        console.log("bindAction REPORT_INVALID button",button);
+        this.showLayerCommon({showReportInvalid:true,reportType:button.type});
       break;
-
+      
       default:
+      console.log(button);
+      console.log(index);
           let callBack = (responseButtons)=>{
           this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
@@ -116,6 +118,11 @@ export class contactEnginePD extends React.Component{
         case 'WRITE_MESSAGE':
             this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
         break;
+
+        case 'REPORT_INVALID':
+            console.log("REPORT_INVALID");
+        break;
+
         default:
           if(responseButtons.actiondetails.errmsglabel){
             this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
@@ -196,6 +203,8 @@ else
 }
 
 showLayerCommon(data){
+  console.log("In showLayerCommon ");
+  console.log(data);
   this.layerCount++;
   this.props.unsetScroll();
   this.setState({
@@ -219,28 +228,36 @@ hideLayerCommon(data){
 
 getOverLayDataDisplay(){
 
-    let layer = '';
+    let layer = [];
       if(this.state.showThreeDots)
-        layer = (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
-        layer =  (<ReportAbuse
+        layer= (<ReportAbuse
                     username={this.props.profiledata.username}
                     profilechecksum={this.props.profiledata.profilechecksum}
                     closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})}
                     profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+
       if(this.state.showContactDetail)
-        layer =  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+
+      if(this.state.showReportInvalid)
+      {
+        console.log("showReportInvalid is true.");
+        layer= (<ReportInvalid username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeInvalidLayer={() => this.hideLayerCommon({showReportInvalid: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} reportType={this.state.reportType} />);
+      }
+
       if(this.state.showMsgLayer)
       {
-        layer = <WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>;
+        layer= (<WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
       }
       if(this.state.commonOvlayLayer)
       {
-        layer = this.getCommonOverLay(this.state.commonOvlayData);
+        layer= (this.getCommonOverLay(this.state.commonOvlayData));
       }
       if(this.state.showBlockLayer)
       {
-        layer= <BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />;
+        layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
       }
       return (  <div key="2">{layer}</div>)
   }
