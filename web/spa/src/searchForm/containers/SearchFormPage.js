@@ -9,12 +9,18 @@ import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import HamMain from "../../Hamburger/containers/HamMain";
 import {getCookie} from '../../common/components/CookieHelper';
 import AppPromo from "../../common/components/AppPromo";
-
+import axios from "axios";;
+import * as CONSTANTS from '../../common/constants/apiConstants';
 class SearchFormPage extends React.Component {
 
     constructor(props) {
         super();
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
+
+        let data = [{"name":"age","type":"double","title1":"Min Age","title2":"Max Age","default1":"18 Years","default2":"70 Years"},{"name":"height","type":"double","title1":"Min Height","title2":"Max Height","default1":"4' 0\"","default2":"7'"},{"name":"religion","type":"single","label":"Religion","default":"Any Religion"},{"name":"mtongue","type":"single","label":"Mother Tongue","default":"Any Mother Tongue"},{"name":"location","type":"single","label":"Country","default":"Any Country"},{"name":"location_cities","type":"single","label":"State/City","default":"Any City"},{"name":"income","type":"double","title1":"Min Income","title2":"Max Income","default1":"Rs. 0","default2":"and above"}];
+
+        let moreData = [{"name":"education","label":"Education","default":"Doesn't Matter"},{"name":"occupation","label":"Occupation","default":"Doesn't Matter"},{"name":"manglik","label":"Manglik","default":"Doesn't Matter"}];
+        
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -22,7 +28,13 @@ class SearchFormPage extends React.Component {
             showLoader: false,
             loggeInStatus: false,
             showPromo: false,
-            showMore: false
+            showMore: false,
+            primaryData: data,
+            moreData: moreData,
+            savedSearchCount: 0,
+            showSavedSearch: false,
+            savedSearchData: [],
+            maxSavedSearchLimit: 0
         };
         if(getCookie("AUTHCHECKSUM")) {
             this.state.loggeInStatus = true;
@@ -31,6 +43,51 @@ class SearchFormPage extends React.Component {
 
     componentDidMount() {
         this.props.getSearchData();
+        if(getCookie("AUTHCHECKSUM")) {
+            let call_url = "/api/v1/search/populateDefaultValues";
+            axios({
+                method: "POST",
+                url: CONSTANTS.API_SERVER +call_url+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
+                data: '',
+                headers: { 
+                  'Accept': 'application/json',
+                  'withCredentials':true
+                },
+            }).then( (response) => {
+                this.appendDefaultValues(response.data)
+            });
+
+            let call_url2 = "/api/v1/search/saveSearchCall?perform=listing&AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM");
+            axios({
+                method: "POST",
+                url: CONSTANTS.API_SERVER +call_url2+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
+                data: '',
+                headers: { 
+                  'Accept': 'application/json',
+                  'withCredentials':true
+                },
+            }).then( (response2) => {
+                if(response2.data.saveDetails.details != null) {
+                    this.appendSavedSearch(response2.data.saveDetails.details,response2.data.saveDetails.maxCount);
+                }
+            });
+        }
+    }
+
+    appendSavedSearch(searchData,maxCount) {
+        this.setState({
+            savedSearchData: searchData,
+            showSavedSearch: true,
+            savedSearchCount: searchData.length,
+            maxSavedSearchLimit:maxCount
+        });
+    }
+
+    appendDefaultValues(defaultData) {
+        console.log("default",defaultData);
+        console.log("actual",this.state.primaryData)
+        var temp = this.state.primaryData;
+        //TODO: append default values from api 
     }
 
     componentWillReceiveProps(nextProps)
@@ -41,6 +98,7 @@ class SearchFormPage extends React.Component {
             });
         }
         console.log("data",nextProps.searchData)
+        //TODO: append data from tables
        
     }
 
@@ -123,6 +181,51 @@ class SearchFormPage extends React.Component {
         {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
+        let savedSearchDetailView,savedSearchBottom,maxLimitView;
+        if(this.state.showSavedSearch == true) {
+            savedSearchBottom = this.state.savedSearchData.map(function(name, index){
+                if(index < this.state.maxSavedSearchLimit) {
+                    return(
+                        <div className="brdr1 savedSearch" id={name.ID}  key={index}>      
+                            <div className="pad18">
+                                <div className="fl wid94p srfrm_wrap">
+                                    <div className="f14 savsrc-colr1">{name.SEARCH_NAME}</div>
+                                    <div id="{name.ID}" className="color8 f16 pt10 savsrc-list savedSearchList">{name.dataString}
+                                    </div>
+                                </div>
+                                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
+                                <div className="clr"></div>
+                            </div>
+                        </div> 
+                    );
+                }
+            },this);
+            if(this.state.savedSearchCount >= this.state.maxSavedSearchLimit) {
+                maxLimitView = <div className="brdr1">
+                    <div className="pad18 f14 savsrc-colr1 txtc">
+                        Saved searches limit reached, tap on 'Manage' to delete
+                    </div>
+                </div>;
+            }
+            savedSearchDetailView = <div className="pt22" id="savedSearches">
+                <div className="brdr1 pad18">
+                    <div className="fullwid clearfix">
+                        <div className="fl wid10p">
+                            <i className="savsrc-sp savsrc-icon2"></i>
+                        </div>
+
+                        <div className="fl savsrc-mrt2 wid90p savsrc-ft1">
+                            <div>
+                                <div className="fl dispibl color2">Saved Searches ({this.state.savedSearchCount})</div>
+                            </div>
+                            <div id="manageSavedSearch" className="OpenManagelayer dispibl fr color8 padl20">Manage</div>
+                        </div>
+                    </div>
+                </div>
+                {savedSearchBottom}
+                {maxLimitView}
+            </div>; 
+        }
 
         let savedSearchCountView;
         if(document.getElementById("savedSearchCount")) {
@@ -175,147 +278,61 @@ class SearchFormPage extends React.Component {
                 </div>
             </div>
         </div>;
+
         
-        let ageView = <div id = "search_age">
-            <div className="brdr1 pad18">
-                <div className="wid45p dispibl">
-                    <div className="fullwid" id="search_LAGE">
-                        <div className="fl">
-                            <div className="color8 f12">Min Age</div>
-                            <div className="color8 f17 pt10">
-                                <span className="label wid70p">18</span> Years
-                            </div>
-                        </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i>
-                        </div>
-                    </div>
-                </div>
-                <div className="wid45p fr mrr5 dispibl">
-                    <div className="fullwid" id="search_HAGE">
-                        <div className="fl srfrm_wrap">
-                            <div className="color8 f12">Max Age</div>
-                            <div className="color8 f17 pt10">
-                                <span className="label wid70p">70</span> Years
-                            </div>
-                        </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>;
-        
-        let heightView = <div id = "search_height">
-            <div className="brdr1 pad18">
-                <div className="wid45p dispibl">
-                    <div className="fullwid" id="search_LHEIGHT">
-                        <div className="fl">
-                            <div className="color8 f12">Min Height</div>
-                            <div className="color8 f17 pt10">
-                                <span class="label wid70p">4' 0" </span>
-                            </div>
-                        </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i>
-                        </div>
-                    </div>
-                </div>
-                <div className="wid45p fr mrr5 dispibl">
-                    <div className="fullwid" id="search_HHEIGHT">
-                        <div className="fl srfrm_wrap">
-                            <div className="color8 f12">Max Height</div>
-                            <div className="color8 f17 pt10">
-                                <span className="label wid70p">7' </span> Years
-                            </div>
-                        </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>;
-        
-        let religionView = <div id="search_RELIGION">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Religion</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Any Religion</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
 
-        let mtongueView = <div id="search_MTONGUE">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Mother Tongue</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Any Mother Tongue</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let countryView = <div id="search_COUNTRY">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Country</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">India</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let cityView = <div id="search_CITY">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">State/City</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Delhi NCR</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let incomeView = <div id = "search_INCOME">
-            <div className="brdr1 pad18">
-                <div className="wid45p dispibl">
-                    <div className="fullwid" id="search_LINCOME">
-                        <div className="fl">
-                            <div className="color8 f12">Min Income</div>
-                            <div className="color8 f17 pt10">
-                                <span class="label wid70p">Rs. 0</span>
+        let mainView = this.state.primaryData.map(function(name, index){
+            if(name.type == "double") {
+                return (
+                    <div id={"search_"+name.name}  key={index}>
+                        <div className="brdr1 pad18">
+                            <div className="wid45p dispibl">
+                                <div className="fullwid" id={"search_l"+name.name}>
+                                    <div className="fl">
+                                        <div className="color8 f12">{name.title1}</div>
+                                        <div className="color8 f17 pt10">
+                                            <span className="label wid70p">{name.default1}</span>
+                                        </div>
+                                    </div>
+                                    <div className="fr pt8"> 
+                                        <i className="mainsp arow1"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="wid45p fr mrr5 dispibl">
+                                <div className="fullwid" id={"search_h"+name.name}>
+                                    <div className="fl srfrm_wrap">
+                                        <div className="color8 f12">{name.title1}</div>
+                                        <div className="color8 f17 pt10">
+                                            <span className="label wid70p">{name.default2}</span> 
+                                        </div>
+                                    </div>
+                                    <div className="fr pt8"> 
+                                        <i className="mainsp arow1"></i> 
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i>
-                        </div>
-                    </div>
-                </div>
-                <div className="wid45p fr mrr5 dispibl">
-                    <div className="fullwid" id="search_HINCOME">
-                        <div className="fl srfrm_wrap">
-                            <div className="color8 f12">Max Income</div>
-                            <div className="color8 f17 pt10">
-                                <span className="label wid70p">and above</span> Years
+                    </div> 
+                );   
+            } else {
+                return(
+                    <div id={"search_"+name.name}  key={index}>      
+                        <div className="pad18 brdr1">
+                            <div className="dispibl srfrm_wrap">
+                                <div className="color8 f12">{name.label}</div>
+                                <div className="color8 f17 pt10">
+                                    <span className="label wid70p">{name.default}</span>
+                                </div>
                             </div>
+                            <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
                         </div>
-                        <div className="fr pt8"> 
-                            <i className="mainsp arow1"></i> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>;
+                    </div> 
+                );
+            }
+            
+          },this)
+
         let moreOptionsView;
         if(this.state.showMore == false) {
             moreOptionsView = <div onClick={() => this.changeMore()} className="showmorelink pad18 txtc bg6" id="moreoptions">
@@ -328,47 +345,26 @@ class SearchFormPage extends React.Component {
                 <i className="arow8 fr"></i>
             </div>;
         }
-        let educationView = <div id="search_EDUCATION">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Education</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Doesn't Matter</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let occupationView = <div id="search_OCCUPATION">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Occupation</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Doesn't Matter</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let manglikView = <div id="search_MANGLIK">
-            <div className="pad18 brdr1">
-                <div className="dispibl srfrm_wrap">
-                    <div className="color8 f12">Manglik</div>
-                    <div className="color8 f17 pt10">
-                        <span className="label wid70p">Doesn't Matter</span>
-                    </div>
-                </div>
-                <div className="fr wid4p pt8"> <i className="mainsp arow1"></i> </div>
-            </div>
-        </div>;
-
-        let moreDetailView = <div className="showMoreDiv scrollhid" id="moreDetails">
-            {educationView}
-            {occupationView}
-            {manglikView}
-        </div>;
+        
+        
+        
+        let moreDetailView = this.state.moreData.map(function(name, index){
+                return(
+                    <div id={"search_"+name.name}  key={index}>      
+                        <div className="pad18 brdr1">
+                            <div className="dispibl srfrm_wrap">
+                                <div className="color8 f12">{name.label}</div>
+                                <div className="color8 f17 pt10">
+                                    <span className="label wid70p">{name.default}</span>
+                                </div>
+                            </div>
+                            <div className="fr wid4p pt8"> 
+                                <i className="mainsp arow1"></i> 
+                            </div>
+                        </div>
+                    </div> 
+                );
+            },this);
 
         this.trackJsb9 = 1;
         
@@ -382,17 +378,14 @@ class SearchFormPage extends React.Component {
                 <div className="fullheight bg4" id="mainContent">
                     {headerView}
                     {genderView}
-                    {ageView}
-                    {heightView}
-                    {religionView}
-                    {mtongueView}
-                    {countryView}
-                    {cityView}
-                    {incomeView}
+                    {mainView}
                     {photoView}
                     {moreOptionsView}
-                    {moreDetailView}
+                    <div className="showMoreDiv scrollhid" id="moreDetails">
+                        {moreDetailView}
+                    </div>
                     <div id="search_submit" className="bg7 white fullwid dispbl txtc lh50 pinkRipple">Search</div>
+                    {savedSearchDetailView}
                 </div>
             </div>
         );
