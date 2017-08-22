@@ -224,19 +224,21 @@ while($row=mysql_fetch_array($res))
 //confirm status cases
 $sql ="select AMOUNT,BILLID,STATUS from billing.PAYMENT_DETAIL_NEW where ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date' AND STATUS IN('BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
 $res=mysql_query_decide($sql,$db_slave) or die("$sql".mysql_error_js($db_slave));
+
 while($row=mysql_fetch_array($res))
 {
+
 	$billid =$row['BILLID'];
 	$amount = $row['AMOUNT'];
-	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid' AND ENTRY_DT<$st_date";
-	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
+	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid' AND ENTRY_DT<'$st_date'";
 
+	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 	if($row1=mysql_fetch_array($res1)){
 		$center	   	=$row1['CENTER'];
 		$serviceidArr =@explode(",",$row1['SERVICEID']);
 		if(!$center)
 			$center ='ONLINE_P';
-		$sql2 ="select SUM(NET_AMOUNT) AS NET_AMOUNT from billing.PURCHASE_DETAIL WHERE BILLID='$billid' WHERE SERVICEID IN (".$row1['SERVICEID'].")";
+		$sql2 ="select SUM(NET_AMOUNT) AS NET_AMOUNT from billing.PURCHASE_DETAIL WHERE BILLID='$billid'";
 		$res2=mysql_query_decide($sql2,$db_slave) or die("$sql2".mysql_error_js($db_slave));
 		if($row2=mysql_fetch_array($res2)){
 			$netAmount = $row2["NET_AMOUNT"];
