@@ -213,6 +213,7 @@ class ExclusiveFunctions{
                     $mailerInfo[0]["EMAIL"] = $agentDetail[$agent]["EMAIL"];
                     $mailerInfo[0]["PHONE"] = $agentDetail[$agent]["PHONE"];
                     $mailerInfo[0]["NAME"] = $agentDetail[$agent]["FIRST_NAME"];
+                    $mailerInfo[0]["STATUS"] = "F0";
                     if ($lastName = $agentDetail[$agent]["LAST_NAME"])
                         $mailerInfo[0]["NAME"] .= " ".$lastName;
                     $result = $this->getProfilesToSendProposalMail($mailerInfo);
@@ -478,7 +479,8 @@ class ExclusiveFunctions{
                 $display = $userNameArr[$pid]["DISPLAY"];
                 $agentName = $value["AGENT_NAME"];
                 $agentPhone = $value["AGENT_PHONE"];
-                $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone);
+                $userName = $value["USERNAME"];
+                $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$userName);
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
                         'RECEIVER'=>$value["RECEIVER"],
@@ -495,17 +497,17 @@ class ExclusiveFunctions{
         }
     }
 
-    public function subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$agentPhone){
+    public function subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$userName){
         $subject = "Marriage Proposal of JS Exclusive Client (";
         if($display == "Y")
             $subject .= $name.",";
-        $subject .= "Profile ID: ".$pid.")";
+        $subject .= "Profile ID: ".$userName.")";
         $email["subject"] = $subject;
 
         $body = "Hi, This is $agentName from Jeevansathi Exclusive team reaching out to you on behalf of my Client as they are interested in your profile and want to proceed further.<br><br>We will get in touch with you soon to discuss about this profile and take next steps.<br><br>Please find below the details of our Exclusive client (";
         if($display == "Y")
             $body .= $name.",";
-        $body .= "Profile ID: $pid). For more details kindly view the full profile on Jeevansathi.com";
+        $body .= "Profile ID: $userName). For more details kindly view the full profile on Jeevansathi.com";
         $email["body"] = $body;
 
         return $email;
@@ -546,6 +548,12 @@ class ExclusiveFunctions{
     }
 
     public function getProfilesToSendProposalMail($mailerArr){
+        foreach($mailerArr as $key=>$value){
+            $clientID = $value["CLIENT_ID"];
+            $clientProfileObj = new Operator;
+            $res = $clientProfileObj->getDetail($clientID,"PROFILEID","PROFILEID,USERNAME");
+            $mailerArr[$key]["USERNAME"] = $res["USERNAME"];
+        }
         $proposalObj = new billing_ExclusiveProposalMailer();
         $proposalObj->insertMailLog($mailerArr);
         $result = $proposalObj->getProfilesToSendProposalMail();

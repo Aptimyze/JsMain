@@ -9,7 +9,7 @@ class billing_ExclusiveProposalMailer extends TABLE{
         try{
             if (is_array($mailer) && !empty($mailer)){
                 $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
-                $sql = "INSERT IGNORE INTO billing.ExclusiveProposalMailer (`RECEIVER`,`AGENT_NAME`,`AGENT_EMAIL`,`TUPLE_ID`,`FOLLOWUP_STATUS`,`DATE`,`AGENT_PHONE`) VALUES ";
+                $sql = "INSERT IGNORE INTO billing.ExclusiveProposalMailer (`RECEIVER`,`AGENT_NAME`,`AGENT_EMAIL`,`TUPLE_ID`,`FOLLOWUP_STATUS`,`DATE`,`AGENT_PHONE`,`USERNAME`) VALUES ";
                 $COUNT = 1;
                 foreach($mailer as $key=>$value) {
                     $valueToInsert .= "(:KEY".$COUNT.",";
@@ -40,6 +40,10 @@ class billing_ExclusiveProposalMailer extends TABLE{
                     $bind["KEY".$COUNT]["VALUE"] = $value["PHONE"];
                     $bind["KEY".$COUNT]["TYPE"] = "STRING";
                     $COUNT++;
+                    $valueToInsert .=":KEY".$COUNT.",";
+                    $bind["KEY".$COUNT]["VALUE"] = $value["USERNAME"];
+                    $bind["KEY".$COUNT]["TYPE"] = "STRING";
+                    $COUNT++;
                     $valueInsert .= rtrim($valueToInsert,',')."),";
                     $valueToInsert="";
                 }
@@ -62,7 +66,7 @@ class billing_ExclusiveProposalMailer extends TABLE{
     public function getProfilesToSendProposalMail(){
         try{
             $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
-            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
+            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":DATE",$tomorrowDT,PDO::PARAM_STR);
@@ -76,6 +80,7 @@ class billing_ExclusiveProposalMailer extends TABLE{
                 $result[$COUNT]["AGENT_EMAIL"] = $row["AGENT_EMAIL"];
                 $result[$COUNT]["USER1"] = $row["TUPLE_ID"];
                 $result[$COUNT]["AGENT_PHONE"] = $row["AGENT_PHONE"];
+                $result[$COUNT]["USERNAME"] = $row["USERNAME"];
                 $COUNT++;
             }
             return $result;

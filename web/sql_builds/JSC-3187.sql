@@ -9,5 +9,6 @@ CREATE TABLE `billing.ExclusiveProposalMailer` (
   `DATE` date NOT NULL,
   `FOLLOWUP_STATUS` varchar(2) DEFAULT 'F0',
   `AGENT_PHONE` varchar(250) NOT NULL,
+  `USERNAME` varchar(40) DEFAULT NULL,
   UNIQUE KEY `RECEIVER` (`RECEIVER`,`TUPLE_ID`,`DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
