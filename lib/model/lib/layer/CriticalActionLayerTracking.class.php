@@ -500,6 +500,16 @@ return 0;
                       
                     break;
 
+                  case '26':
+
+                      if(self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION'))) 
+                      {
+                          $len = strlen($profileObj->getYOURINFO());
+                          if(!$len || $len<100)
+                              $show=1;
+                      }
+                    break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
