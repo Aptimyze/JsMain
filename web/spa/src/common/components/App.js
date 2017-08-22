@@ -18,11 +18,10 @@ import {
   Switch
 } from "react-router-dom";
 import EnsureLoggedInContainer from '../containers/EnsureLoggedInContainer';
+import MyjsPage from './../../myjs/containers/MyjsPage';
 
 const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
   .then(module => module.default), { name: 'LoginPage' });
-const MyjsPage = asyncComponent(() => import('./../../myjs/containers/MyjsPage')
-  .then(module => module.default), { name: 'MyjsPage' });
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
 const PhotoAlbumPage = asyncComponent(() => import('./../../photoAlbum/containers/PhotoAlbumPage')
