@@ -557,6 +557,28 @@ BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N"
 ),     
+26 => array(LAYERID=>"26",
+TIMES=>"3",
+MINIMUM_INTERVAL=>"720",
+TITLE=>"Write About Yourself",
+TEXT=>"Please write a brief introduction about yourself to get better responses from your prospective matches. You may write about your studies, your hobbies and interests and your personality.",
+NOTE_TEXT=>'<b>Note:</b> The text you had earlier written about yourself was found inappropriate and was removed from your profile by our screening team.',
+BUTTON1=>"Submit",
+BUTTON2=>"Skip",
+ACTION1=>"close",
+ACTION2=>"close",
+JSMS_ACTION1=>"/",
+JSMS_ACTION2=>"/",
+BUTTON1_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON1_PAGEID_IOS=>"",
+BUTTON1_PAGEID_ANDROID=>"",
+BUTTON2_PAGEID_IOS=>"",
+BUTTON2_PAGEID_ANDROID=>"",
+UNLIMITED => "N"
+),     
        
 );
 if ($label) {
