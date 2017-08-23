@@ -194,17 +194,21 @@ class jsexclusiveActions extends sfActions {
         $purchasesObj = new billing_PURCHASES();
 
         $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
-        $combinedIdArr = array_keys($combinedIdArr);
-        $combinedIdStr = implode(",",$combinedIdArr);
+        if(is_array($combinedIdArr) && !empty($combinedIdArr)){
+            $combinedIdArr = array_keys($combinedIdArr);
+            $combinedIdStr = implode(",",$combinedIdArr);
 
-        $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
 
-        $userNames = $purchasesObj->getUserName($combinedIdStr);
+            $userNames = $purchasesObj->getUserName($combinedIdStr);
 
-        foreach($nameOfUserArr as $key=>$value){
-            $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+            foreach($nameOfUserArr as $key=>$value){
+                $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+            }
+            $this->welcomeCallsProfiles = $nameOfUserArr;
+        } else{
+            $this->welcomeCallsProfiles = $combinedIdArr;
         }
-        $this->welcomeCallsProfiles = $nameOfUserArr;
         $this->welcomeCallsProfilesCount = count($this->welcomeCallsProfiles);
     }
 
