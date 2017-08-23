@@ -622,6 +622,8 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
+		chmod($filePath, 0777);
+
                 if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
                 {
                         $this->setLogged();
