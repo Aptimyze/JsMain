@@ -178,10 +178,12 @@ class ViewSimilarProfilesMailer {
         if (in_array('A', $typeArray)) {
             $i = 0;
             foreach ($typeArray as $key => $type) {
-                if ($i++ == 5)
+                if ($i == 5)
                     break;
-                if ($type == 'A')
+                if ($type == 'A'){
                     $finalArr['profiles'][] = $userArray[$key];
+                    $i++;
+                }
             }
             $finalArr['type'] = 'A';
         }

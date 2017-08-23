@@ -44,11 +44,11 @@ EOF;
         // match alert configurations
         
         $receivers = $mailerServiceObj->getMailerReceiversViewSimilarProfilesMailer($totalScript, $currentScript, $this->limit, $fields);
-        $clicksource = "matchalert1";
+        $clicksource = "VSP_MAILER";
         $this->smarty = $mailerServiceObj->getMailerSmarty();
 
-        $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
-        $instanceId = $countObj->getID('MATCHALERT_MAILER');
+//        $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
+//        $instanceId = $countObj->getID('MATCHALERT_MAILER');
 
         $this->smarty->assign('instanceID', $instanceId);
         if (is_array($receivers)) {

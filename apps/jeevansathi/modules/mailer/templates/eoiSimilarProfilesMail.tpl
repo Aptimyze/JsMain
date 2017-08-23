@@ -10,9 +10,6 @@
      </table>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:650px; text-align:left" align="center">
         <tr>
-            <td colspan="3"><img src="~JsConstants::$ser2Url`/mailer/openRate?checksum=~$data.RECEIVER.PROFILECHECKSUM`&logic_used=~$data.logic`&sent_date=~$data.OpenTracking.sentDate`&freq=~$data.OpenTracking.frequency`&email=~$data.OpenTracking.emailType`&stype=~$data.stypeMatch`" width="0" height="0" vspace="0" hspace="0" align="left"></td>
-        </tr>
-        <tr>
             <td style="border-bottom:1px solid #ededed">
 			~include_partial("global/mailer_sub_header",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,mailerLinks=>$mailerLinks])`
             </td>
@@ -79,7 +76,7 @@
                     </tr>
                     <tr>
                         <td colspan="3">
-                        	~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
+                        	~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate,fromVsp=>1])`
                         </td>
                     </tr>
                     <tr>
@@ -109,7 +106,7 @@
                                     <tr>
                                     <td>
                                     <!--FeedBack section :Start-->
-                                     ~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
+                                     ~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate,fromVsp=>1])`
                                     </td>
                                     </tr>
                                     <!--FeedBack section :End-->
@@ -196,5 +193,4 @@
             </td>
         </tr>
     </table>
-    <img src="~sfConfig::get('app_site_url')`/track.php?MAILER_ID=~$instanceID`" style="display:none !important;overflow:hidden;line-height:0"></img>
 </body>
