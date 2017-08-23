@@ -133,7 +133,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $dncOb= new dnc_DNC_LIST();
 
                 if ($loggedInProfileObj->getPHONE_MOB()||$loggedInProfileObj->getPHONE_RES()){
-                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_RES()));
+                $resultArray=$dncOb->DncStatus(array($loggedInProfileObj->getPHONE_MOB(),$loggedInProfileObj->getPHONE_WITH_STD()));
                 if (is_array($resultArray)) return true;
                 	}
 
@@ -1114,8 +1114,9 @@ public static function insertConsentMessageFlag($profileid) {
          */
         public static function logFunctionCalling($className, $funName)
         {
-            $key = $className.'_'.date('Y-m-d');
-            JsMemcache::getInstance()->hIncrBy($key, $funName);
+        	return;
+           /* $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);*/
 
             //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }

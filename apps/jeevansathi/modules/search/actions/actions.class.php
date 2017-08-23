@@ -546,7 +546,7 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+                                                //JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
 						/*unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
