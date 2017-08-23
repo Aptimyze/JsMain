@@ -53,8 +53,6 @@ export class contactEnginePD extends React.Component{
 
       break;
       case 'REPORT_INVALID':
-        console.log("bindAction REPORT_INVALID");
-        console.log("bindAction REPORT_INVALID button",button);
         this.showLayerCommon({showReportInvalid:true,reportType:button.type});
       break;
       

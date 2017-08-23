@@ -91,11 +91,10 @@ export default class ReportInvalid extends React.Component{
         }
         else
         {
-          phone = 'N';
+          phone = 'Y';
         }
 
         let postData = '?mobile='+mobile+'&phone='+phone+'&profilechecksum='+profilechecksum+'&reasonCode='+_this.state.selectValue+'&otherReasonValue='+otherReasonValue;
-        console.log(postData);
 
         axios({
         method: 'POST',
@@ -108,8 +107,7 @@ export default class ReportInvalid extends React.Component{
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
         },
       }).then( (response) => {
-            console.log("response data is: ");
-            console.log(response.data);
+            this.props.closeInvalidLayer();
             _this.showError(response.data.message);
         })
         .catch( (error) => {
@@ -124,7 +122,7 @@ export default class ReportInvalid extends React.Component{
     let errorView,topviewInvalidrLayer,invalidListLayer,invalidButtonLayer;
     let _this = this;
 
-    let InvalidList = ["The number does not exist ", "Switched off / Not reachable", "Not an account holder's phone", "Not picking up ", "Already married / engaged ", "Other reasons (please specify)"];
+    let InvalidList = [{"key":6,"text":"The number does not exist "}, {"key":1,"text":"Switched off / Not reachable"}, {"key":2,"text":"Not an account holder's phone"}, {"key":4,"text":"Not picking up "}, {"key":3,"text":"Already married / engaged "}, {"key":5,"text":"Other reasons (please specify)"}];
     
 
     topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportAbustop">
@@ -143,8 +141,8 @@ export default class ReportInvalid extends React.Component{
                                     <ul className="f16 fontthin white mb70">
                                         {InvalidList.map(function(name, index){
                                             return <li key={index}  className="reportInvalidOption dispibl dashedBorder pad18 fullwid">
-                                                <div onClick={(e) => this.listSelected(e)} data-value ={index} id={"opt"+index} className="fullwid posrel InvalidLi">
-                                                    {name}
+                                                <div onClick={(e) => this.listSelected(e)} data-value ={name.key} id={"opt"+index} className="fullwid posrel InvalidLi">
+                                                    {name.text}
                                                     <i className="RAcorrectImg vpro_sprite ce_abu_tick dn"></i>
                                                 </div>
                                             </li>;

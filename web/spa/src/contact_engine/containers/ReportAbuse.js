@@ -106,8 +106,6 @@ export default class ReportAbuse extends React.Component{
   }
 
   render(){
-    console.log('report abuse');
-    console.log(this.props);
     let errorView,topviewAbuserLayer,abusiveListLayer,AbusiveButtonLayer;
 
       let abuseList = ["Let Jeevansathi know what is wrong with this profile","One or more of Profile Details are incorrect","Photo on profile doesn't belong to the person","User is using abusive/indecent language"," User is stalking me with messages/calls","User is asking for money","User has no intent to marry","User is already married / engaged","User is not picking up phone calls","Person on Phone denied owning this profile","User's phone is switched off/not reachable","User's phone is invalid","Other reasons (please specify)"];
