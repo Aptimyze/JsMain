@@ -16,11 +16,21 @@ export class WriteMessage extends React.Component{
   }
 
   componentDidMount(){
+    let e = document.getElementById('msgId');
+    //e.scrollTop =  e.scrollHeight;
     document.getElementById("ProfilePage").classList.add("scrollhid");
-    let topHeadHgt, bottomBtnHeight;
+    let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
     bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
-    document.getElementById('msgId').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+    remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
+
+    e.style.height = remHgtMSG+"px";
+    console.log(remHgtMSG);
+    console.log(e.scrollHeight);
+    if( remHgtMSG < e.scrollHeight)
+    {
+      e.scrollTop =  e.scrollHeight;
+    }
   }
 
   showLoaderDiv() {
@@ -41,6 +51,7 @@ export class WriteMessage extends React.Component{
   sendMessage() {
     this.showLoaderDiv()
     let message = document.getElementById("writeMessageTxtId").value;
+    var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
     var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message;
     this.props.sendMessageApi('/api/v2/contacts/postWriteMessage','MESSAGE',url);
@@ -48,6 +59,7 @@ export class WriteMessage extends React.Component{
       showLoader:false
     });
     document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
+    e.scrollTop =  e.scrollHeight;
   }
 
   render(){
@@ -56,7 +68,7 @@ export class WriteMessage extends React.Component{
         {
           loaderView = <Loader show="div"></Loader>;
         }
-    let WriteMsg_buttonView, WriteMsg_innerView,WriteMsg_topView;
+    let WriteMsg_buttonView, WriteMsg_innerView,WriteMsg_topView,WrtieMsg_historydiv,WriteMsg_appendmsg;
   console.log('in 22');
   console.log(this.props);
     WriteMsg_topView =   <div className="posrel clearfix fontthin ce_hgt1">
@@ -97,25 +109,52 @@ export class WriteMessage extends React.Component{
     }
     else
     {
-      WriteMsg_buttonView = <div className="fullwid clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
-            <div className="fl wid80p com_pad3">
-                <textarea id="writeMessageTxtId" className="fullwid lh15 inp_1 white"></textarea>
-            </div>
-            <div onClick={() => this.sendMessage()} className="fr com_pad4">
-                <div className="color2 f16 fontlig">Send</div>
-            </div>
-        </div>;
-        WriteMsg_innerView = <div>
-          <div className="com_pad1_new fontlig f16 white" id="presetMessageDispId">
-            <span id="presetMessageTxtId">Start the conversation by writing a message.</span>
-           <span className="dispbl f12 color1 pt5 white" id="presetMessageStatusId"></span>
-          </div>
-          <div id="writeMsgDisplayId">
 
-          </div>
-        </div>;
-    }
-    return(
+      WriteMsg_buttonView = <div className="fullwid clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
+                              <div className="fl wid80p com_pad3">
+                                <textarea id="writeMessageTxtId" className="fullwid lh15 inp_1 white"></textarea>
+                              </div>
+                              <div onClick={() => this.sendMessage()} className="fr com_pad4">
+                                <div className="color2 f16 fontlig">Send</div>
+                              </div>
+                            </div>;
+      if(this.props.buttonData.messages.length!=0)
+      {
+              WrtieMsg_historydiv =  this.props.buttonData.messages.map((msg,index)=>{
+                                      let msg_class1;
+                                      if(msg.mymessage == 'true')
+                                      {
+                                        msg_class1 = "txtr ce_pad_l";
+                                      }
+                                      else
+                                      {
+                                        msg_class1 = "txtl ce_pad_2";
+                                      }
+
+                                      return(
+                                          <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index}>
+                                            <span>{msg.message}</span>
+                                            <span className="dispbl f12 color1 pt5 white">{msg.timeTxt}</span>
+                                          </div>
+                                      );
+                                    });
+      }
+      else
+      {
+            WrtieMsg_historydiv = <div className="com_pad1_new fontlig f16 white" id="presetMessageDispId">
+              <span id="presetMessageTxtId">Start the conversation by writing a message.</span>
+             <span className="dispbl f12 color1 pt5 white" id="presetMessageStatusId"></span>
+            </div>
+      }
+      WriteMsg_appendmsg = <div id="writeMsgDisplayId">
+                              <div className="txtr com_pad_l fontlig f16 white com_pad1">
+                                <div className="com_pad2 clearfix fl dispibl writeMsgDisplayTxtId"></div>
+                                <div className="dispbl f12 color1 pt5 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div>
+                            </div>
+                          </div>;
+      WriteMsg_innerView=[WrtieMsg_historydiv,WriteMsg_appendmsg];
+  }
+  return(
       <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid">
