@@ -278,16 +278,16 @@ class LoginPage extends React.Component {
         }
 
         return (
-            <div id="LoginPage">
+            <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>
                 <GA ref="GAchild" />
                 <HamMain ref="Hamchild" page="Login"></HamMain>
                 {promoView}
                 {errorView}
                 {loaderView}
-                <div className="fullheight" id="mainContent">
+                <div className="fullheight overAuto headerimg1" id="mainContent">
                     <div className="perspective fullheight" id="perspective">
-                        <div className="headerimg1 fullheight" id="pcontainer">
+                        <div className="fullheight" id="pcontainer">
                             <div id="headerimg1" className="rel_c">
                                 <div className="op_pad1">
                                     <div className="lgin_pad1">
