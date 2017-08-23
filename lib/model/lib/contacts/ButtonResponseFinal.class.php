@@ -175,23 +175,22 @@ Class ButtonResponseFinal
 		if(is_array($buttonsResponse))
 		{
 			foreach($buttonsResponse as $key=>$val)
-			{//print_r($page);die;
+			{
 
 				if($val->TYPE == "TEXT")
 				{
 					$buttons[] = self::getButtonsFinalResponse($val,$page,"","",$channel);
 					$responseArray["infomsglabel"] = self::getButtonsFinalResponse($val,$page);
-					//print_r($responseArray["infomsglabel"]);die;
-					//print_r($channel);die;
-					//var_dump($channel);die;
 
+				}
+				else if($val->TYPE == "EXTRA_TEXT"){
+					$responseArray = $responseArray + $this->getExtraText($val);
 				}
 				else
 				$buttons[] = self::getButtonsFinalResponse($val,$page,"","","",$count);
 			}
 		}
 		$responseArray['buttons'] = $buttons;
-		//print_r($buttons);die;
 		$finalResponse = self::buttonDetailsMerge($responseArray);
 		return $finalResponse;
 
