@@ -1,4 +1,4 @@
-.hamView {
+.dropView {
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -10,22 +10,14 @@
 	opacity: 0.7;
 	transition: all .2s linear;
 }
-.hamShow {
+.dropShow {
     transition: all .2s linear;
-    transform: translate(0%, 0%) !important;
-    -webkit-transform: translate(0%, 0%) !important;
-    -moz-transform: translate(0%, 0%) !important;
-    -o-transform: translate(0%, 0%) !important;
-    -ms-transform: translate(0%, 0%) !important;
+    right:80% !important;
 }
-#hamburger {
-    background: url(https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg);
-
-	transform: translate(-100%, 0%);
-    -webkit-transform: translate(-100%, 0%);
-    -moz-transform: translate(-100%, 0%);
-    -o-transform: translate(-100%, 0%);
-    -ms-transform: translate(-100%, 0%);
+#dropDown {
+    background: #2c3137;
+	transform: translate(100%, 0%);
+    right:-100%;
 
 	transition: all .2s linear;
     -webkit-transition: all .2s linear;
@@ -50,13 +42,6 @@
 .listingHam li {
     padding: 10px 10px;
 }
-
-@media (min-width: 280px) and (max-width: 320px) {
-    .listingHam li {
-        padding: 10px 6px !important;
-    }
-}
-
 .listingHam li i {
 	margin: 0px 10px;
 	vertical-align: bottom;
@@ -202,4 +187,8 @@
     position: relative;
     text-align: center;
     padding-top: 5px;
+}
+#DD_OPTION li {
+    padding: 15px;
+    list-style-type: none;
 }

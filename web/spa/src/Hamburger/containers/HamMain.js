@@ -136,6 +136,7 @@ class HamMain extends React.Component {
 
     openHam() 
     {
+        document.getElementById("mainContent").classList.add("scrollhid");
         document.getElementById("hamView").classList.add("z99")
         document.getElementById("hamView").classList.remove("dn")
         document.getElementById("hamView").classList.add("backShow")
@@ -148,6 +149,7 @@ class HamMain extends React.Component {
         document.getElementById("hamView").classList.add("dn")
         document.getElementById("hamView").classList.remove("backShow")
         document.getElementById("hamburger").classList.remove("hamShow")
+        document.getElementById("mainContent").classList.remove("scrollhid");
     }
 
     render() 
@@ -481,9 +483,9 @@ class HamMain extends React.Component {
                 </li>
                 <li>
                     <i className="hamSprite searchIcon"></i>
-                    <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
+                    <Link id="searchLink" to={"/search/topSearchBand?isMobile=Y"} className="white">
                         Search
-                    </a>
+                    </Link>
                 </li>
                 <li>
                     <i className="hamSprite searchProfileIcon"></i>
