@@ -74,19 +74,20 @@ Class ButtonResponseFinal
 					$type="R";
 			}
 			$this->page["CHAT_GROUP"] = $type;
-			//echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
+		  //echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			$buttonsResponse = self::getButtons($source,$this->channel,$viewer,$type);
-			//print_r($buttonsResponse);die;
 			foreach($buttonsResponse as $key=>$val)
 			{
 				if($val->TYPE == "TEXT")
 					$responseArray["infomsglabel"] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
+				else if($val->TYPE == "EXTRA_TEXT")
+						$responseArray = $responseArray + $this->getExtraText($val);
+
 				else
 					$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
 			}
 			$responseArray['buttons'] = $buttons;
                         $responseArray['contactType'] = $type;
-			//print_r($responseArray);die;
 
 		}
 		else
@@ -118,8 +119,8 @@ Class ButtonResponseFinal
 		{
 			$source = "VDP";
 		}
-		//echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$type;die;
-		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);
+//		echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$type;
+		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);//die;
 		foreach($buttonsResponse as $key=>$val)
 		{
 			if($val->TYPE == "REMINDER")
@@ -128,7 +129,11 @@ Class ButtonResponseFinal
 			}
 			if($val->TYPE == "TEXT")
 				$responseArray["infomsglabel"] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
-			else
+			else if($val->TYPE == "EXTRA_TEXT")
+			{
+				$responseArray = $responseArray + $this->getExtraText($val);
+			}
+				else
 				$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
 		}
 		$responseArray['buttons'] = $buttons;
@@ -139,8 +144,6 @@ Class ButtonResponseFinal
 
 	public static function getListingButtons($source,$channel,$viewer="",$type="",$page="",$count="")
 	{
-		//print_r($count);die;
-		//print_r($page);die;
 		//var_dump($type);die;
 		/*$exclude_list = array("VDP","VDP_VSP","S","SHORTLIST","PEOPLE_WHO_VIEWED_MY_CONTACTS","ACCEPTANCES_SENT","ACCEPTANCES_RECEIVED","NOT_INTERESTED_BY_ME","NOT_INTERESTED");
 		if($channel=="M")
@@ -148,11 +151,9 @@ Class ButtonResponseFinal
 			if(!in_array($source, $exclude_list))
 			{echo "string";die;
 					$type = $this->contactObj->getTYPE();
-					//print_r($type);die;
 					if($type=="I")
 					{
 						$count = $this->contactObj->getCOUNT();
-						//print_r($count);die;
 					}
 				if ($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID()) {
 					$viewer = "S";
@@ -163,8 +164,8 @@ Class ButtonResponseFinal
 				}
 			}
 		}*/
+//		echo $source." ".$channel." ".$viewer.",".$type;die;
 		$type = $type?$type:"N";
-		//print_r("dkvkd");die;
 		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);
 		//var_dump($buttonsResponse);die;
 		//var_dump($viewer);
@@ -276,20 +277,17 @@ Class ButtonResponseFinal
 
 			}
 		}
-		//echo $return["BUTTONS"];die;
+
 		$buttonsDetails = json_decode($return["BUTTONS"]);
-		//print_r($buttonsDetails);die;
 		return $buttonsDetails;
 	}
 
 	public static function getButtonsFinalResponse($button,$params,$loginProfile='', $otherProfile='',$source='',$count='')
-	{//print_r($source);die;
+	{
 		if($button->TYPE=="TEXT" && $source=="M")
 		{
 			$button->TYPE="DEFAULT";
 		}
-		//print_r($button);die;
-		//var_dump($count);die;
 		switch($button->TYPE){
 			case "INITIATE":
 			$buttons = self::getSendInterestButton($button,$params);
@@ -328,6 +326,12 @@ Class ButtonResponseFinal
 			case "CHAT":
 			$buttons = self::getChatButton($button,$params);
 			break;
+			case "EXTRA_TEXT":
+			$buttons = self::getExtraText($button,$params);
+			break;
+			case "REPORT_ABUSE":
+			$buttons = $button;
+			break;
 			default:
 			$buttons = self::getdefaultButton($button,$params);
 			break;
@@ -336,7 +340,7 @@ Class ButtonResponseFinal
 	}
 
 	public static function getSendInterestButton($button,$params)
-	{//print_r("xsc");die;
+	{
 		if($params["stype"] || $params['STYPE'])
 		{
 			$stype = ($params["stype"])?$params["stype"]:$params["STYPE"];
@@ -409,7 +413,6 @@ Class ButtonResponseFinal
 	public static function getIgnoreButton($button,$params)
 	{
 		$ignored = $params["isIgnored"];
-		//print_r($button);die;
 		if($ignored)
 		{
 			$buttons["label"] 		= "Unblock"; ;
@@ -454,7 +457,7 @@ Class ButtonResponseFinal
 	}
 
 	public static function getAcceptButton($button,$params)
-	{//echo "string";die;
+	{
 		if($params["responseTracking"] )
 		{
 			$responseTracking = $params["responseTracking"];
@@ -529,10 +532,9 @@ Class ButtonResponseFinal
 	}
 
 	public static function getReminderButton($button,$params,$count)
-	{//print_r("ccc");die;
+	{
 		if(!$count)
 		$count = $params["count"];
-		//var_dump($count);die;
 		if($count){
 			if ($count < ErrorHandler::REMINDER_COUNT) {
 				if((ErrorHandler::REMINDER_COUNT - $count) == 1)
@@ -572,7 +574,7 @@ Class ButtonResponseFinal
 	}
 
 	public static function getShortlistButton($button,$params,$loginProfile='', $otherProfile='')
-	{//print_r($params);die;
+	{
 		if(isset($params['SHORTLIST']))
 		{
 			$params['isBookmarked'] = $params['SHORTLIST'] == "Y"?1:0;
@@ -604,8 +606,6 @@ Class ButtonResponseFinal
 			$buttons["label"]  = "Shortlist";
 			$buttons["params"]  = "&shortlist=false";
 		}
-		//print_r($buttons);die;
-		//print_r($button->active);die;
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
 		$buttons['enable']		=true;
@@ -706,4 +706,17 @@ Class ButtonResponseFinal
 		return $buttons;
 	}
 
+public function getExtraText($button){
+	$arr = array();
+	if(!$button) return $arr;
+	foreach ($button->KEYS as $key => $value) {
+		# code...
+			$arr[$value->KEYNAME] = $value->STATIC ? $value->TEXT : $this->replaceText($value->TEXT);
+	}
+	return $arr;
+}
+
+private function replaceText($value){
+	return str_replace(array("{OTHER_USERNAME}","{USERNAME}","{DATE}"),array($this->contactHandlerObj->getViewer()->getUSERNAME(),$this->contactHandlerObj->getViewed()->getUSERNAME(),$this->contactObj->getTIME()) ,$value);
+}
 }
