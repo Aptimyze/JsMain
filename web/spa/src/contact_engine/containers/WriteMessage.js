@@ -16,11 +16,21 @@ export class WriteMessage extends React.Component{
   }
 
   componentDidMount(){
+    let e = document.getElementById('msgId');
+    //e.scrollTop =  e.scrollHeight;
     document.getElementById("ProfilePage").classList.add("scrollhid");
-    let topHeadHgt, bottomBtnHeight;
+    let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
     bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
-    document.getElementById('msgId').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+    remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
+
+    e.style.height = remHgtMSG+"px";
+    console.log(remHgtMSG);
+    console.log(e.scrollHeight);
+    if( remHgtMSG < e.scrollHeight)
+    {
+      e.scrollTop =  e.scrollHeight;
+    }
   }
 
   showLoaderDiv() {
