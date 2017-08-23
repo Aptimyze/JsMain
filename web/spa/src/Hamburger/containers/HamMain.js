@@ -51,9 +51,6 @@ class HamMain extends React.Component {
         if(!this.props.bellResponse && this.props.page == "others") {
             this.props.getHamData();
         }  
-        this.setState({
-            minorLiHeight : document.getElementsByClassName("minorList")[0].getElementsByTagName("li")[0].getBoundingClientRect().height
-        });
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             this.checkHeight();
@@ -123,9 +120,13 @@ class HamMain extends React.Component {
             document.getElementById(minorElem).style.height = "0px";
         } else {
             e.target.parentElement.classList.add("plusParent");
+            let liElems = document.getElementById(minorElem).getElementsByTagName("li");
+            let minorLiHeight = 0;
+            for(let i=0;i<liElems.length;i++) {
+                minorLiHeight += liElems[i].getBoundingClientRect().height;
+            }
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
-            let exactHeight = this.state.minorLiHeight * listingLen;
-            document.getElementById(minorElem).style.height = exactHeight + "px";
+            document.getElementById(minorElem).style.height = minorLiHeight + "px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
             let _this = this;
             setTimeout(function(){
