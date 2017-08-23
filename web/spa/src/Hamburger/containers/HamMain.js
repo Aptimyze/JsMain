@@ -163,7 +163,7 @@ class HamMain extends React.Component {
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
-                    <a href="/search/visitors?matchedOrAll=A" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                    <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
                             {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
                     </a>
                 </div>;
