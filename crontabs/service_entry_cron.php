@@ -60,8 +60,9 @@ while($row=mysql_fetch_array($res))
 			$res3=mysql_query_decide($sql3,$db_slave) or die("$sql3".mysql_error_js($db_slave));
 			
 			if($row3=mysql_fetch_array($res3)){
-				$count--;
+				
 				if(strstr($serviceid,'C')){
+					$count--;
 					$dataSet[$center][$serviceid1]++;
 					if(!empty($amount) && $amount>0){
 						$paidComboCount[$center][$serviceid1]++;
