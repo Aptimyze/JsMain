@@ -23,7 +23,7 @@ class Btn3dotprint extends React.Component{
 
                             return (
                               <div key={index} onClick={() => this.props.bindAction(button,index)} className="wid49p txtc mt45 dispibl" id={top_id}>
-                                <i className= {cssMap[button.iconid] + (button.active ? "" : " opa50") } id={inside_id}></i>
+                                <i className= {cssMap[button.iconid] + (button.enable ? "" : " opa50") } id={inside_id}></i>
                                 <div className="f14 white fontlig lh30" id={outside_id}>{label}</div>
                               </div>
                             )
