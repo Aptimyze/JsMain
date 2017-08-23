@@ -51,9 +51,6 @@ class HamMain extends React.Component {
         if(!this.props.bellResponse && this.props.page == "others") {
             this.props.getHamData();
         }  
-        this.setState({
-            minorLiHeight : document.getElementsByClassName("minorList")[0].getElementsByTagName("li")[0].getBoundingClientRect().height
-        });
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             this.checkHeight();
@@ -123,9 +120,13 @@ class HamMain extends React.Component {
             document.getElementById(minorElem).style.height = "0px";
         } else {
             e.target.parentElement.classList.add("plusParent");
+            let liElems = document.getElementById(minorElem).getElementsByTagName("li");
+            let minorLiHeight = 0;
+            for(let i=0;i<liElems.length;i++) {
+                minorLiHeight += liElems[i].getBoundingClientRect().height;
+            }
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
-            let exactHeight = this.state.minorLiHeight * listingLen;
-            document.getElementById(minorElem).style.height = exactHeight + "px";
+            document.getElementById(minorElem).style.height = minorLiHeight + "px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
             let _this = this;
             setTimeout(function(){
@@ -163,7 +164,7 @@ class HamMain extends React.Component {
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
-                    <a href="/search/visitors?matchedOrAll=A" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                    <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
                             {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
                     </a>
                 </div>;
@@ -465,7 +466,7 @@ class HamMain extends React.Component {
         }
 
         let listingView = <div id="listing" className="overflowhidden">
-            <ul id="scrollElem" className="fontreg white listingHam fullheight overAuto">
+            <ul id="scrollElem" className="fontreg white listingHam fullheight overAutoHidden">
                 <li className="brdrBtm f14 pb8 fontlig">
                     <div className="wid49p dispibl">
                         <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>

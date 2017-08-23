@@ -66,6 +66,7 @@
 }
 .minorList li a{
     margin-left: 60px;
+    display: block;
 }
 .minorList li {
     list-style: none;

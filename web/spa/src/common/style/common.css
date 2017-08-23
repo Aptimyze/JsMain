@@ -1154,6 +1154,10 @@ transform:  translateX(100%) rotateY(0deg) !important;
     overflow: hidden;
 }
 .overAuto {overflow: auto;}
+.overAutoHidden{    
+	overflow-y: auto;
+    overflow-x: hidden;
+}
 .vbtm{	vertical-align:bottom;}
 
 .reportInvalidjsmsButton
