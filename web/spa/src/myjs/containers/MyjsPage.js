@@ -107,7 +107,6 @@ export  class MyjsPage extends React.Component {
 	componentWillReceiveProps(nextProps)
 	{
 		// this.callEventListner();
-		console.log('nextProps',nextProps);
 		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched)
 			this.restApiHits(this);
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
@@ -270,10 +269,13 @@ export  class MyjsPage extends React.Component {
 			}
 
 		this.trackJsb9 = 1;
+		var style = {
+     		height: window.innerHeight + "px"
+    	};
   		return(
-  		<div id="MyjsPage">
+  		<div id="MyjsPage" style={style}>
   			{promoView}
-	  		<div id="mainContent">
+	  		<div className="fullheight" id="mainContent">
 			  	<MetaTagComponents page="MyjsPage"/>
 			  	<GA ref="GAchild" />
 				<div className="perspective" id="perspective">

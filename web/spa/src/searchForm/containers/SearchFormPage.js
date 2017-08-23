@@ -11,6 +11,9 @@ import {getCookie} from '../../common/components/CookieHelper';
 import AppPromo from "../../common/components/AppPromo";
 import axios from "axios";;
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import DropMain from "../../DropDown/containers/DropMain";
+
+
 class SearchFormPage extends React.Component {
 
     constructor(props) {
@@ -19,8 +22,8 @@ class SearchFormPage extends React.Component {
 
         let data = [{"name":"age","type":"double","title1":"Min Age","title2":"Max Age","default1":"18 Years","default2":"70 Years"},{"name":"height","type":"double","title1":"Min Height","title2":"Max Height","default1":"4' 0\"","default2":"7'"},{"name":"religion","type":"single","label":"Religion","default":"Any Religion"},{"name":"mtongue","type":"single","label":"Mother Tongue","default":"Any Mother Tongue"},{"name":"location","type":"single","label":"Country","default":"Any Country"},{"name":"location_cities","type":"single","label":"State/City","default":"Any City"},{"name":"income","type":"double","title1":"Min Income","title2":"Max Income","default1":"Rs. 0","default2":"and above"}];
 
-        let moreData = [{"name":"education","label":"Education","default":"Doesn't Matter"},{"name":"occupation","label":"Occupation","default":"Doesn't Matter"},{"name":"manglik","label":"Manglik","default":"Doesn't Matter"}];
-        
+        let moreData = [{"name":"education","label":"Education","default":"Doesn't Matter","type":"single"},{"name":"occupation","label":"Occupation","default":"Doesn't Matter","type":"single"},{"name":"manglik","label":"Manglik","default":"Doesn't Matter","type":"single"}];
+
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -34,7 +37,8 @@ class SearchFormPage extends React.Component {
             savedSearchCount: 0,
             showSavedSearch: false,
             savedSearchData: [],
-            maxSavedSearchLimit: 0
+            maxSavedSearchLimit: 0,
+            tupleData: []
         };
         if(getCookie("AUTHCHECKSUM")) {
             this.state.loggeInStatus = true;
@@ -42,6 +46,7 @@ class SearchFormPage extends React.Component {
     }
 
     componentDidMount() {
+        document.getElementById("SearchFormPage").style.height = window.innerHeight+"px";
         this.props.getSearchData();
         if(getCookie("AUTHCHECKSUM")) {
             let call_url = "/api/v1/search/populateDefaultValues";
@@ -97,7 +102,10 @@ class SearchFormPage extends React.Component {
                 showPromo : true
             });
         }
-        console.log("data",nextProps.searchData)
+        console.log("data",nextProps.searchData.services.searchForm.data)
+        this.setState({
+            tupleData: nextProps.searchData.services.searchForm.data
+        })
         //TODO: append data from tables
        
     }
@@ -107,6 +115,9 @@ class SearchFormPage extends React.Component {
         if(prevprops.location) {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
                 this.refs.Hamchild.getWrappedInstance().hideHam();
+                if(this.refs.Dropchild) {
+                    this.refs.Dropchild.hideHam();
+                }
             }
         }
     }
@@ -127,6 +138,28 @@ class SearchFormPage extends React.Component {
                 errorMessage : ""
             })
         }, this.state.timeToHide+100);
+    }
+
+    showDrop(elem,e) {
+        if(window.location.search.indexOf("ham=1") == -1) {
+            if(window.location.search.indexOf("?") == -1) {
+                this.props.history.push(window.location.pathname+"?ham=1");
+            } else {
+                this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
+            }
+
+        }
+        
+        let temp;
+        if(elem.name.type == "double") {
+            if(e.target.className.indexOf("drop1") > -1) {
+                this.refs.Dropchild.openHam(elem.name.title1,elem.name.type,this.state.tupleData[elem.name.name]);
+            } else if(e.target.className.indexOf("drop2") > -1){
+                this.refs.Dropchild.openHam(elem.name.title2,elem.name.type,this.state.tupleData[elem.name.name]);
+            }    
+        } else {
+            this.refs.Dropchild.openHam(elem.name.label,elem.name.type,this.state.tupleData[elem.name.name]);
+        }
     }
 
     showHam() {
@@ -286,29 +319,29 @@ class SearchFormPage extends React.Component {
                 return (
                     <div id={"search_"+name.name}  key={index}>
                         <div className="brdr1 pad18">
-                            <div className="wid45p dispibl">
-                                <div className="fullwid" id={"search_l"+name.name}>
-                                    <div className="fl">
-                                        <div className="color8 f12">{name.title1}</div>
-                                        <div className="color8 f17 pt10">
-                                            <span className="label wid70p">{name.default1}</span>
+                            <div onClick={(e) => this.showDrop({name},e)} className="wid45p dispibl drop1" id={"search_l"+name.name}>
+                                <div className="fullwid drop1">
+                                    <div className="fl drop1">
+                                        <div className="color8 f12 drop1">{name.title1}</div>
+                                        <div className="color8 f17 pt10 drop1">
+                                            <span className="label wid70p drop1">{name.default1}</span>
                                         </div>
                                     </div>
-                                    <div className="fr pt8"> 
-                                        <i className="mainsp arow1"></i>
+                                    <div className="fr pt8 drop1"> 
+                                        <i className="drop1 mainsp arow1"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div className="wid45p fr mrr5 dispibl">
-                                <div className="fullwid" id={"search_h"+name.name}>
-                                    <div className="fl srfrm_wrap">
-                                        <div className="color8 f12">{name.title1}</div>
-                                        <div className="color8 f17 pt10">
-                                            <span className="label wid70p">{name.default2}</span> 
+                            <div onClick={(e) => this.showDrop({name},e)} id={"search_h"+name.name} className="wid45p fr mrr5 dispibl drop2">
+                                <div className="fullwid drop2">
+                                    <div className="fl srfrm_wrap drop2">
+                                        <div className="color8 f12 drop2">{name.title2}</div>
+                                        <div className="color8 f17 pt10 drop2">
+                                            <span className="label wid70p drop2">{name.default2}</span> 
                                         </div>
                                     </div>
-                                    <div className="fr pt8"> 
-                                        <i className="mainsp arow1"></i> 
+                                    <div className="fr pt8 drop2"> 
+                                        <i className="mainsp arow1 drop2"></i> 
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +350,7 @@ class SearchFormPage extends React.Component {
                 );   
             } else {
                 return(
-                    <div id={"search_"+name.name}  key={index}>      
+                    <div onClick={(e) => this.showDrop({name},e)} id={"search_"+name.name}  key={index}>      
                         <div className="pad18 brdr1">
                             <div className="dispibl srfrm_wrap">
                                 <div className="color8 f12">{name.label}</div>
@@ -350,7 +383,7 @@ class SearchFormPage extends React.Component {
         
         let moreDetailView = this.state.moreData.map(function(name, index){
                 return(
-                    <div id={"search_"+name.name}  key={index}>      
+                    <div onClick={(e) => this.showDrop({name},e)} id={"search_"+name.name}  key={index}>      
                         <div className="pad18 brdr1">
                             <div className="dispibl srfrm_wrap">
                                 <div className="color8 f12">{name.label}</div>
@@ -369,8 +402,9 @@ class SearchFormPage extends React.Component {
         this.trackJsb9 = 1;
         
         return (
-            <div className="bg4" id="SearchFormPage">
+            <div id="SearchFormPage">
                 <GA ref="GAchild" />
+                <DropMain ref="Dropchild" />
                 {promoView}
                 {hamView}
                 {errorView}

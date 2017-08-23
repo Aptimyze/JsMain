@@ -628,6 +628,7 @@ header, section, footer, aside, nav, article, figure {
 /*--- margin classes---*/
 .mr6{margin:6px}
 .mt1{margin-top:1px}
+.mt5{margin-top: 5px}
 .mt60{margin-top:60px}
 .mtn39{margin-top: -39px}
 .mt10 {margin-top: 10px }
@@ -1195,6 +1196,7 @@ border-radius: 32px;
 .ml0{margin-left:0px }
 .ml15{margin-left: 15px}
 .ml60{margin-left: 60px}
+.ml25p{margin-left: 25%}
 .wid300{width: 300px}
 .top65{top: 65px}
 .overXHidden{overflow-x: hidden}
