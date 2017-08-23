@@ -59,7 +59,8 @@ export default class ReportInvalid extends React.Component{
             _this.setState ({
                 insertError : false,
                 errorMessage : ""
-            })
+            });
+            _this.props.closeInvalidLayer();
         }, this.state.timeToHide+100);
     }
 
@@ -107,8 +108,8 @@ export default class ReportInvalid extends React.Component{
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
         },
       }).then( (response) => {
-            this.props.closeInvalidLayer();
             _this.showError(response.data.message);
+             
         })
         .catch( (error) => {
           console.warn('Actions - fetchJobs - recreived error: ', error)
