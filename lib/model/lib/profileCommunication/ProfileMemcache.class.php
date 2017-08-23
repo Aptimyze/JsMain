@@ -356,15 +356,18 @@ class ProfileMemcache
            $tempArr[$key] = $this->get($key);
 
         }
-        if($lifetime < self::EXPIRY_THRESHHOLD)
-        {
-            // key doesnot exist or expire time is not defined
-            $lifetime = self::EXPIRY_TIME;
-            JsMemcache::getInstance()->setHashObject($this->_getProfileKey($this->_getProfileId()),$tempArr,$lifetime) ;
 
-        }
-        else
-            JsMemcache::getInstance()->setHashObjectWithoutExp($this->_getProfileKey($this->_getProfileId()),$tempArr) ;
+	if($tempArr){
+	        if($lifetime < self::EXPIRY_THRESHHOLD)
+        	{
+	            // key doesnot exist or expire time is not defined
+        	    $lifetime = self::EXPIRY_TIME;
+	            JsMemcache::getInstance()->setHashObject($this->_getProfileKey($this->_getProfileId()),$tempArr,$lifetime) ;
+
+        	}
+	        else
+        	    JsMemcache::getInstance()->setHashObjectWithoutExp($this->_getProfileKey($this->_getProfileId()),$tempArr) ;
+	}
         $this->_updatedFields = null;
 //        $ret_val = JsMemcache::getInstance()->set($this->_getProfileKey(), $data_variables, $lifetime);
         return $ret_val;

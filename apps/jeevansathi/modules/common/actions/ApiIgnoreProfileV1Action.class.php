@@ -199,7 +199,12 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$button["buttons"]["other"] = null;
 					$responseArray["confirmLabelMsg"] = $this->getIgnoreMessage();
 					$responseArray["confirmLabelHead"] = "Profile moved to Blocked Member's list";
-					$responseArray["infomsglabel"] = "You have blocked this user";
+					if(MobileCommon::isApp()=="A")
+					{
+						$responseArray["infomsglabel"] = "This profile will be removed from your search results and other lists. This profile will not be able to contact you any further";
+					}
+					else
+						$responseArray["infomsglabel"] = "You have blocked this user";
  					if(MobileCommon::isApp()=="I"){
 						$pictureServiceObj=new PictureService($this->ignoreProfile);
 	                    $profilePicObj = $pictureServiceObj->getProfilePic();

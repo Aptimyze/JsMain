@@ -298,6 +298,7 @@ var acceptance = function() {
         innerHtml=innerHtml.replace(/\{\{phone_view_Contact\}\}/g,'phone'+i);
         innerHtml=innerHtml.replace(/\{\{handled_contact\}\}/g,'profileHandled'+i);
         innerHtml=innerHtml.replace(/\{\{email\}\}/g,'email'+i);
+        innerHtml=innerHtml.replace(/\{\{relationshipManager\}\}/g,'relationshipManager'+i);
           innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
           
         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(i+1)+"&contact_id="+this.data.contact_id);

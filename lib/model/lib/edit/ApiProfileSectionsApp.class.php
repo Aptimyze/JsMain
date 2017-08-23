@@ -384,6 +384,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 //			$basicArr[]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
 //		else
 //			$basicArr[]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
+
 		$name = $nameData[$this->profile->getPROFILEID()]['NAME'];
 		$basicArr[]=$this->getApiFormatArray("NAME","Full Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
 		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[$this->profile->getPROFILEID()]['DISPLAY'],'','Y');
@@ -551,7 +552,12 @@ class ApiProfileSectionsApp extends ApiProfileSections {
         }
         
 		$basicArr[] =$this->getApiFormatArray("HIV","HIV+?" ,$szHivLabel,$this->profile->getHIV(),$this->getApiScreeningField("HIV"));
-		   
+
+		//aadhar verification
+		$aadharVerificationObj = new aadharVerification();
+		$aadharArr = $aadharVerificationObj->getAadharDetails($this->profile->getPROFILEID());
+		$basicArr[] =$this->getApiFormatArray("AADHAAR","Aadhaar no." ,$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],$aadharArr[$this->profile->getPROFILEID()]["AADHAR_NO"],"","",$aadharArr[$this->profile->getPROFILEID()]["VERIFY_STATUS"]);
+		  
         return $basicArr;
 		
 	}
@@ -1026,7 +1032,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       return 1;
     else
       return 0;
-  }
-    
+  }    
 }
 ?>

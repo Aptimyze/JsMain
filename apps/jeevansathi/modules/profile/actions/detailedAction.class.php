@@ -366,6 +366,9 @@ class detailedAction extends sfAction
 		}
 		$arrOutDisplay["showTicks"] = $this->CODEDPP;
 		$arrOutDisplay["selfProfileId"] = LoggedInProfile::getInstance()->getPROFILEID();
+		//this part is added to ensure that even if toShowHoroscope is 'D', astro gets shown
+        $arrOutDisplay["about"]["NO_ASTRO"] = $this->changeAstroViewCondition($arrOutDisplay["about"]["toShowHoroscope"],$arrOutDisplay["about"]["NO_ASTRO"]);
+        $arrOutDisplay["astroSent"] = $this->checkIfAstroSent();
 		//print_r($arrOutDisplay["buttonDetails"]);die;
 		////////////////////////////////////////////////////////
 		$this->profile->setNullValueMarker("");
@@ -411,6 +414,7 @@ class detailedAction extends sfAction
         {
             $this->NAVIGATOR = $request->getParameter('NAVIGATOR');
         }
+       	//print_r($this->arrOutDisplay);die;
 		$this->setTemplate("_mobViewProfile/jsmsViewProfile");
 	}
 	/**
@@ -1348,7 +1352,9 @@ class detailedAction extends sfAction
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
         
         //This part was added to allow idfy to go Online percentage wise
-        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);        
+        $this->arrOutDisplay["showIdfy"] = CommonFunction::getFlagForIdfy($this->senderProfileId);         	
+        //this part is added to ensure that even if toShowHoroscope is 'D', astro gets shown
+        $this->arrOutDisplay["about"]["NO_ASTRO"] = $this->changeAstroViewCondition($this->arrOutDisplay["about"]["toShowHoroscope"],$this->arrOutDisplay["about"]["NO_ASTRO"]);            
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }
@@ -1373,4 +1379,34 @@ class detailedAction extends sfAction
     	  				
     }
 
+    public function changeAstroViewCondition($toShowHoroscope,$noAstro)
+    {
+    	if($toShowHoroscope == "D" && $noAstro == 1)
+    	{
+    		$noAstro = 0;
+    	}
+    	return $noAstro;
+    }
+
+    public function checkIfAstroSent()
+    {    	
+    	$astroObj = new astroReport();
+    	$flag = $astroObj->getActualReportFlag($this->loginProfile->getPROFILEID(),$this->profile->getPROFILEID());					
+    	if($flag)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		$count = $astroObj->getNumberOfActualReportSent($this->loginProfile->getPROFILEID());					
+    		if($count >= "100")
+    		{
+    			return 0;
+    		}
+    		else
+    		{
+    			return 1;
+    		}
+    	}	
+    }
 }

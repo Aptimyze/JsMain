@@ -102,6 +102,7 @@ class Messages
 
 	const JSExNoPhoMes="We have liked your profile. If you are interested in taking things forward then please indicate by \"Accepting\". 
 	Also would request you to please forward some of your photos to our mail id {{EMAIL}} .";
+  const JSExReminderNoPhoMes="We like your profile. Please accept this interest to take things forward. Thanks.";
 
   //privilege error message ends here
 
@@ -129,6 +130,8 @@ class Messages
 
   const PAID_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
   const PAID_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted.";
+   const FREE_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you after you upgrade.";  
+  const FREE_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted after you upgrade.";
   const REMINDER_SENT_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from interest sent";
   const SECOND_REMINDER_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from the last reminder sent";
   
