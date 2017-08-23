@@ -50,6 +50,13 @@
 .listingHam li {
     padding: 10px 10px;
 }
+
+@media (min-width: 280px) and (max-width: 320px) {
+    .listingHam li {
+        padding: 10px 6px !important;
+    }
+}
+
 .listingHam li i {
 	margin: 0px 10px;
 	vertical-align: bottom;
