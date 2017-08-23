@@ -162,7 +162,7 @@ class MessageLog
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)
         {
-			$array[$profileid]["LAST_MESSAGE"] = utf8_encode(str_ireplace($breaks,"\r\n",$value[0]["MESSAGE"]));
+			$array[$profileid]["LAST_MESSAGE"] = str_ireplace($breaks,"\r\n",$value[0]["MESSAGE"]);
 			$array[$profileid]["TIME"] = $value[0]["DATE"];
 			$array[$profileid]["COUNT"] = 0;
 			
@@ -355,7 +355,7 @@ if($limit == 1000000)
 	public function getRBMessage($sender,$receiverObj,$profileObj)
 	{
 
-		if($this->isJsDummyMember($sender))
+		if($this->isJsDummyMember($sender) || MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID()))
 				{
 					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
