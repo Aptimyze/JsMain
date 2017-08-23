@@ -736,7 +736,7 @@ class PictureFunctions
         	{
         		return 0;
         	}
-        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues)) //if verify activation date is 15 days and above AND pic is not uploaded
+        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues) && $dateDiff != time()) //if verify activation date is 15 days and above AND pic is not uploaded
         	{
         		return 1;
         	}
