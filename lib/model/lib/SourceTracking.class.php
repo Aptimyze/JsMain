@@ -192,9 +192,14 @@ Class SourceTracking
 				{
 					if(isset($_COOKIE['JS_SOURCE']) && $this->source!='ofl_prof' && $this->source!='101')
 					$this->source=$_COOKIE['JS_SOURCE'];
+					if(isset($_COOKIE['source'])) //added to ensure that source is retained from custom reg pages
+					{
+						$this->source=$_COOKIE['source'];
+					}
 				}
 				//removing check 
 				//if(!strstr(strtolower($source),"af"))
+				
 				$dbMisSource=new MIS_SOURCE();
 				if($result=$dbMisSource->existSource($this->source))
 				{

@@ -30,6 +30,7 @@ class MessageQueues
   CONST COMMUNITY_DISCOUNT_CONSUMER_COUNT = 2; //count of community discount consumer
   CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
+  CONST DELETE_RETRIEVE_CONSUMER_COUNT = 5;
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
