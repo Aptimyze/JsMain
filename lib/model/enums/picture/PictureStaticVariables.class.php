@@ -78,6 +78,7 @@ class PictureStaticVariablesEnum
         public static $photoColumnArray = Array("TITLE","KEYWORD","PICTUREID","ORDERING","PROFILEID","PICFORMAT","UPDATED_TIMESTAMP");
         public static $acceptedhavePhotoValues = array("U","Y");
         const VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS = 1296000; //15 days in seconds
+        const VERIFY_ACT_DATE_BLANK = "0000-00-00 00:00:00";
 }
 
 ?>

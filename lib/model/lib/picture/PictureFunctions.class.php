@@ -728,7 +728,11 @@ class PictureFunctions
         	$subscription = $loginProfile->getSUBSCRIPTION();
         	$verifyActivatedDate = $loginProfile->getVERIFY_ACTIVATED_DT();
         	$time = time();
-       		$dateDiff = $time - strtotime($verifyActivatedDate);       					  	
+        	if($verifyActivatedDate == PictureStaticVariablesEnum::VERIFY_ACT_DATE_BLANK)
+        	{
+        		$verifyActivatedDate = 0;
+        	}        	
+       		$dateDiff = $time - strtotime($verifyActivatedDate);       		       		
         	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
         	{
         		return 0;
