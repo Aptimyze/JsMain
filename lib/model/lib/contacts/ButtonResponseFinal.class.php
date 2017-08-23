@@ -164,12 +164,9 @@ Class ButtonResponseFinal
 				}
 			}
 		}*/
-//		echo $source." ".$channel." ".$viewer.",".$type;die;
+		//echo $source." ".$channel." ".$viewer.",".$type;die;
 		$type = $type?$type:"N";
 		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);
-		//var_dump($buttonsResponse);die;
-		//var_dump($viewer);
-		//var_dump($type);die;
 		$responseArray = array();
 
 		if(is_array($buttonsResponse))
@@ -212,8 +209,7 @@ Class ButtonResponseFinal
 
 
 		public function jsmsRestButtonsrray($params,$type,$infoKey, $source, $viewer,$username,$count)
-		{//var_dump($params["PHOTO"]);die;
-			//echo "string";die;
+		{
 			if($infoKey=="ACCEPTANCES_RECEIVED" || $infoKey=="ACCEPTANCES_SENT")
 			{
 
@@ -257,9 +253,6 @@ Class ButtonResponseFinal
 	public static function getButtons($source,$channel="",$viewer="",$contactType="")
 	{
 		$arr = ContactEngineMap::getFieldLabel("BUTTON_RESPONSE","",1);
-		//echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$contactType;die;
-		//var_dump($arr);die;
-		//var_dump($contactType);die;
 		foreach($arr as $key=>$value)
 		{
 			if($value["SOURCE"] == $source)

@@ -77,8 +77,7 @@ class Decline extends ContactEvent{
     $this->updateMemcache($currentFlag,$this->contactHandler->getContactObj()->getFILTERED());
     $this->contactHandler->getContactObj()->setType(ContactHandler::DECLINE);
     $this->contactHandler->getContactObj()->setSEEN(Contacts::NOTSEEN);
-
-//    $this->contactHandler->getContactObj()->updateContact();
+    $this->contactHandler->getContactObj()->updateContact();
     $responseTracking =  $this->contactHandler->getElements("RESPONSETRACKING");
     JSResponseTracking::updateResponseTracking($this->contactHandler,$responseTracking);
     $this->contactHandler->setElement("STATUS","D");
