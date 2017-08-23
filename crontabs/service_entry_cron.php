@@ -36,7 +36,7 @@ while($row=mysql_fetch_array($res))
 		$serviceid1	=$row1['SERVICEID'];
 		$serviceid1Arr	=@explode(",",$serviceid1);
 		$serviceid1	=$serviceid1Arr[0];
-
+		
 		$sql2 = "SELECT AMOUNT FROM billing.PAYMENT_DETAIL WHERE BILLID=$billid";
 		$res2=mysql_query_decide($sql2,$db_slave) or die("$sql2".mysql_error_js($db_slave));
 		$row2=mysql_fetch_array($res2);
@@ -58,12 +58,19 @@ while($row=mysql_fetch_array($res))
 		} else if(strstr($serviceid1,'NCP')){
 			$sql3 ="select SERVICEID from billing.SERVICE_STATUS where BILLID='$billid' AND SERVICEID='$serviceid'";
 			$res3=mysql_query_decide($sql3,$db_slave) or die("$sql3".mysql_error_js($db_slave));
+			
 			if($row3=mysql_fetch_array($res3)){
 				$count--;
 				if(strstr($serviceid,'C')){
 					$dataSet[$center][$serviceid1]++;
 					if(!empty($amount) && $amount>0){
 						$paidComboCount[$center][$serviceid1]++;
+					}
+				}
+				else if(strstr($serviceid, 'A')){
+					$dataSet[$center][$serviceid]++;
+					if(!empty($amount) && $amount>0){
+						$paidCount[$center][$serviceid]++;
 					}
 				}
 			}
