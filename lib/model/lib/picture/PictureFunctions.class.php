@@ -727,7 +727,8 @@ class PictureFunctions
         	$profilePic = $loginProfile->getHAVEPHOTO();        	
         	$subscription = $loginProfile->getSUBSCRIPTION();
         	$verifyActivatedDate = $loginProfile->getVERIFY_ACTIVATED_DT();
-       		$dateDiff = time() - strtotime($verifyActivatedDate);       					  	
+        	$time = time();
+       		$dateDiff = $time - strtotime($verifyActivatedDate);       					  	
         	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
         	{
         		return 0;
@@ -736,7 +737,7 @@ class PictureFunctions
         	{
         		return 0;
         	}
-        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues) && $dateDiff != time()) //if verify activation date is 15 days and above AND pic is not uploaded
+        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues) && $dateDiff != $time) //if verify activation date is 15 days and above AND pic is not uploaded
         	{
         		return 1;
         	}
