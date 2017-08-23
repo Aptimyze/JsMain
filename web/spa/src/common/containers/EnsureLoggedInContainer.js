@@ -48,7 +48,6 @@ class EnsureLoggedInContainer extends React.Component
                         <Route path='/myjs' component={MyjsPage} />
                         <Route path='/profile/mainmenu.php' component={MyjsPage} />
                         <Route path='/P/logout.php' component={MyjsPage} />
-
                         <Route component={PageNotFound} />
                         </Switch>
                         </div>
@@ -57,7 +56,11 @@ class EnsureLoggedInContainer extends React.Component
         else if((SPA_PAGE.indexOf(this.props.location.pathname)=== -1))
         {
                return <div>
+                        <Switch>
+                        <Route path='/profile/mainmenu.php' component={LoginPage} />
+                        <Route path='/P/logout.php' component={LoginPage} />
                         <Route component={PageNotFound} />
+                        </Switch>
                        </div>
         }
         else

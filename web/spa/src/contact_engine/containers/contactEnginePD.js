@@ -88,10 +88,11 @@ export class contactEnginePD extends React.Component{
     }
     else
     {
+
       switch(actionButton.action)
       {
         case 'SHORTLIST':
-          var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);console.log(newButtons);
+          var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
           this.props.replaceSingleButton(newButtons);
           break;
         case 'IGNORE':
