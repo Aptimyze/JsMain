@@ -264,6 +264,7 @@ function openPhotoAlbum(username,profilechecksum,AlbumCount,hasAlbum){
             $("#photoAlbumNext").hide();
         }
         ajaxCallForAlbum(username,profilechecksum);
+        $("#commonOverlay").fadeIn();
     }
     else{
         return false;
@@ -317,9 +318,7 @@ function ajaxCallForAlbum(username,profilechecksum){
                     
                     loadImage("#photo1 div div img",photoURL[0]);
                     loadImage("#photo2 div div img",photoURL[1]);
-
                     $("#photoLayerMain").show();
-                    $("#commonOverlay").fadeIn();
                     //$("#photoAlbumPrev").hide();
                     $("#photoAlbumCaption").text(currentView+" / "+totalImg);
                     $("#photoAlbumUsername").text(username);
