@@ -6,9 +6,8 @@ import {LOGGED_OUT_PAGE} from "../../common/constants/CommonConstants";
 import {SPA_PAGE} from "../../common/constants/CommonConstants";
 import {stripTrailingSlash} from '../../common/components/UrlDecoder';
 
-// import MyjsPage from '../../myjs/containers/MyjsPage';
-const MyjsPage = asyncComponent(() => import('../../myjs/containers/MyjsPage')
-  .then(module => module.default), { name: 'MyjsPage' });
+import MyjsPage from '../../myjs/containers/MyjsPage';
+
 const ProfilePage = asyncComponent(() => import('./../../viewProfile/containers/ProfilePage')
   .then(module => module.default), { name: 'ProfilePage' });
 const PageNotFound = asyncComponent(() => import('./../components/PageNotFound')
