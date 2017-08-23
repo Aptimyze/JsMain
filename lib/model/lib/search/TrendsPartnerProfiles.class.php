@@ -11,7 +11,7 @@ class TrendsPartnerProfiles extends PartnerProfile {
         private $jpartnerDepFields = array("MSTATUS"=>"HAVECHILD");
         private $dppSuggestionFields = array("AGE"=>array("LAGE","HAGE"));
         private $dppSuggestionFieldsFunction = array("AGE"=>"Age");
-        private $dppRelaxationFields = array("HHEIGHT"=>"HHEIGHT","CITY_RES"=>"CITY_RES","CASTE"=>"CASTE","SMOKE"=>"SMOKE","DRINK"=>"DRINK",'EDU_LEVEL_NEW'=>"EDUCATION", 'OCCUPATION'=>"OCCUPATION", 'CASTE'=>"CASTE", 'MTONGUE'=>"MTONGUE");
+        private $dppRelaxationFields = array("HHEIGHT"=>"HHEIGHT","CITY_RES"=>"CITY_RES","CASTE"=>"CASTE","SMOKE"=>"SMOKE","DRINK"=>"DRINK",'EDU_LEVEL_NEW'=>"EDUCATION", 'OCCUPATION'=>"OCCUPATION", 'CASTE'=>"CASTE", 'MTONGUE'=>"MTONGUE","DIET"=>"DIET");
         //private $dppRelaxationFields = array("CASTE"=>"CASTE");
         private $specificConditionFields = array("INCOME"=>"INCOME");
         private $specificConditionFieldsFunction = array("INCOME"=>"setRelaxIncome");

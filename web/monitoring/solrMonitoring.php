@@ -3,7 +3,7 @@ include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 
 $today    = date("Y-m-d");
 $yesterday = date("Y-m-d",strtotime("-3 day",strtotime($today)));
-$daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20".$today."T00:00:00Z]";
+$daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20TO%20".$today."T00:00:00Z]";
 
 $urlTocheckArray = array(
     0=>array("append"=>'/select?q=*:*',"counter"=>670000),

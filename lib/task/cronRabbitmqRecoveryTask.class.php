@@ -285,7 +285,7 @@ return true;
     }
     else{
         $this->consumerToCountMapping = array(
-                                  MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
+                                  MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::DELETE_RETRIEVE_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::UPDATECRITICALINFO_STARTCOMMAND=>MessageQueues::UPDATE_CRITICAL_INFO_CONSUMER_COUNT            ,

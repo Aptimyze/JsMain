@@ -105,7 +105,7 @@ class MessageLog
  				$RBmessage['DATE'] = $value['TIME'];
                                 $profileObj = new Profile('',$value['SENDER']);
                                 $receiverObj = new Profile('',$value['RECEIVER']);
-				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);
+				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$value['COUNT']);
 				unset($profileObj);
 				unset($receiverObj);
 				$RBmessage['MESSAGE'] = $messageForRB;
@@ -162,7 +162,7 @@ class MessageLog
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)
         {
-			$array[$profileid]["LAST_MESSAGE"] = utf8_encode(str_ireplace($breaks,"\r\n",$value[0]["MESSAGE"]));
+			$array[$profileid]["LAST_MESSAGE"] = str_ireplace($breaks,"\r\n",$value[0]["MESSAGE"]);
 			$array[$profileid]["TIME"] = $value[0]["DATE"];
 			$array[$profileid]["COUNT"] = 0;
 			
@@ -204,12 +204,12 @@ class MessageLog
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
 		foreach ($messageArray as $key => $value) {
-
-			if( $key=='0' && $value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
+			$rbData=$this->EOIFromRB($value['SENDER'],$value['RECEIVER']);
+			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $rbData)
 			{ 
                           $receiverObj = new Profile('',$value['RECEIVER']);
                           $profileObj = new Profile('',$value['SENDER']);
-			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);	
+			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$rbData['COUNT']);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
 		}
@@ -343,22 +343,25 @@ if($limit == 1000000)
 
            $dbName = JsDbSharding::getShardNo($sender,'');
 	   $dbObj = new newjs_CONTACTS($dbName);
-	   $isRB = $dbObj->isRBContact($sender,$receiver);
-
-	   if($isRB == 1)
+	   $rbData = $dbObj->isRBContact($sender,$receiver);
+	   if(isset($rbData) && $rbData['MSG_DEL'] == 'Y')
 	   {  
-	   		return 1;
+	   		return $rbData;
 	   }
-	   return 0;
+	   return "";
 	}
 
-	public function getRBMessage($sender,$receiverObj,$profileObj)
+	public function getRBMessage($sender,$receiverObj,$profileObj,$count=1)
 	{
 
-		if($this->isJsDummyMember($sender))
+		if($this->isJsDummyMember($sender) || MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID()))
 				{
-					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()==""){
+						if($count<=1)
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
+						else
+							$message=Messages::getMessage(Messages::JSExReminderNoPhoMes);
+						}
 					else
 					{
 							$draftsObj = new ProfileDrafts($profileObj);
