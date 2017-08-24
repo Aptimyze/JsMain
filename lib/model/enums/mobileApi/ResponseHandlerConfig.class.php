@@ -136,6 +136,8 @@ class ResponseHandlerConfig
 
 	 public static $SAME_NUMBER_INVALID_TWICE = array("message"=>"You cannot report the same number Invalid again.","statusCode" => '1');
 	 public static $CONSENT_MESSAGE = array("message"=>"Consent Required","statusCode" => '5');
+
+	 public static $AADHAR_ALREADY_VERIFIED = array("message" => "This Aadhaar number is already verified for another profile on Jeevansathi.", "statusCode" => '1');
 }
 
 ?>

@@ -32,7 +32,7 @@ class aadharVerificationV1Action extends sfActions
 		elseif($aadharVerificationObj->preVerification($aadharId)) //aadhar already entered and verified
 		{
 			$errorArr["ERROR"] = aadharVerificationEnums::ALREADYVERIFIED;
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$AADHAR_ALREADY_VERIFIED);
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 		} 
 		else
