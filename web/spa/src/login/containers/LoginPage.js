@@ -322,7 +322,7 @@ class LoginPage extends React.Component {
                                             
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLink" href="#" className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLink" href={CONSTANTS.HINDI_SITE} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
