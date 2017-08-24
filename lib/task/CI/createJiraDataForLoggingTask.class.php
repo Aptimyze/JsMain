@@ -51,7 +51,7 @@ EOF;
       
     // this gets the tag array
     $response = CommonFunction::sendCurlGETRequest($urlToHit,'',"",$headerArr,"GET");      
-    
+    //print_R($response);die;
     //to get tags for the required date
     foreach ($response as $key => $value) 
     {       
@@ -61,8 +61,7 @@ EOF;
       {          
         $this->tagArr[$value->name] = $value->release->description;         
       }        
-    }
-    
+    }    
     $jiraArr = array();
 
     //to take one tag at a time, use the jira's in the desrciption to find data and store in table.
@@ -86,7 +85,9 @@ EOF;
             $this->jiraDetails[$value]["StoryPoints"]= $response->fields->customfield_10004;
             $this->jiraDetails[$value]["assignee"]= $response->fields->assignee->name;
             $this->jiraDetails[$value]["summary"]= $response->fields->summary;
-            $this->jiraDetails[$value]["Epic"]= jiraEpicEnums::$epicNames[$response->fields->customfield_10007];          
+            $this->jiraDetails[$value]["label"]= implode(",",$response->fields->labels);
+            $this->jiraDetails[$value]["Epic"]= jiraEpicEnums::$epicNames[$response->fields->customfield_10007];
+            
             $sprintData = explode(",",$response->fields->customfield_10006[0]);
             if(is_array($sprintData) && !empty($sprintData))
             {
