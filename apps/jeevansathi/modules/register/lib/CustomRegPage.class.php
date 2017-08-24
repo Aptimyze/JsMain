@@ -82,7 +82,7 @@ class CustomRegPage
 	}
 	
 	private function SetRegistration_PageParameter($request)
-	{
+	{		
 		//Heading, subheadings, and image
 		$request->setParameter("customReg",1);
 		$request->setParameter("h",$this->m_szHeading);
@@ -95,7 +95,7 @@ class CustomRegPage
 		$request->setParameter("service_email","S");
 		$request->setParameter("service_call","S");
 		$request->setParameter("service_sms","S");
-		$request->setParameter("service_email","S");	
+		$request->setParameter("service_email","S");		
 	}
 	
 	private function BakeHtml($szHtmlCode,$szFormData)

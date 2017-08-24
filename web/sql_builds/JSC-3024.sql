@@ -50,6 +50,3 @@ CREATE TABLE incentive.`ExclusiveMatchMailer` (
   AGENT_PHONE varchar(250) NOT NULL,
   `STATUS` enum('N','U','Y','I') DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO jeevansathi_mailer.`EMAIL_TYPE` (`MAIL_ID`, `TPL_LOCATION`, `HEADER_TPL`, `FOOTER_TPL`, `TEMPLATE_EX_LOCATION`, `MAIL_GROUP`, `CUSTOM_CRITERIA`, `SENDER_EMAILID`, `DESCRIPTION`, `MEMBERSHIP_TYPE`, `GENDER`, `PHOTO_PROFILE`, `REPLY_TO_ENABLED`, `FROM_NAME`, `REPLY_TO_ADDRESS`, `MAX_COUNT_TO_BE_SENT`, `REQUIRE_AUTOLOGIN`, `FTO_FLAG`, `PRE_HEADER`, `PARTIALS`) VALUES (1857, 'jsExclusiveServiceDayMailer.tpl', NULL, 'revamp_footer.tpl', NULL, 27, 1, '~$senderEmail`', 'Upgrade membership to JS Exclusive', 'D', NULL, NULL, NULL, '~$senderName`', NULL, NULL, NULL, NULL, 'Please add ~$senderEmail` to your address book to ensure delivery of this mail into you inbox', '');
-

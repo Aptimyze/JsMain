@@ -191,7 +191,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         {
                 try
                 {
-			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID,LAST_LOGIN_DT,FROM_REG) SELECT PROFILEID,now(),FROM_REG FROM matchalerts.MATCHALERTS_TO_BE_SENT_REG";
+			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID,LAST_LOGIN_DT) SELECT PROFILEID,now() FROM matchalerts.MATCHALERTS_TO_BE_SENT_REG";
 			$res = $this->db->prepare($sql);
                         $res->execute();
                 }

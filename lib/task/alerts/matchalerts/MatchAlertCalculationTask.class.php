@@ -97,7 +97,7 @@ EOF;
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);     
                                                         
-                                                        if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
+                                                        if($totalResults["CNT"] == 0 && $profileid%9==1 && $matchLogic!='O'){
                                                                 $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
                                                                 $totalResults = $lastSearchObj->getMatches();
                                                                 if($totalResults["CNT"] == 0){
@@ -131,7 +131,7 @@ EOF;
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
-                                                        if($totalResults["CNT"] == 0 && $profileid%10==0 && $matchLogic!='O'){
+                                                        if($totalResults["CNT"] == 0 && $profileid%9==1 && $matchLogic!='O'){
                                                                 $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$lastSearch);
                                                                 $totalResults = $lastSearchObj->getMatches();
                                                                 if($totalResults["CNT"] == 0){
