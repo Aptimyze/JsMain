@@ -44,7 +44,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                 $this->postParams["removeProfiles"] = implode(",", explode(" ", $searchUtilObj->getIgnoredProfiles($this->profileId, "spaceSeperator", 1, 1, 1, 1))); // profileid ,separated by , noAwaitingContacts, removeMatchAlerts, tempContacts, getFromCache
                 $suffix = "_" . $this->loggedInProfileObj->getGENDER();
                 $this->postParams['pg_data']["edu_level" . $suffix] = (integer) $this->loggedInProfileObj->getEDU_LEVEL_NEW();
-                $this->postParams['pg_data']["havephoto" . $suffix] = str_replace("NA", "N", $this->loggedInProfileObj->getHAVEPHOTO());
+                $this->postParams['pg_data']["havephoto" . $suffix] = $this->loggedInProfileObj->getHAVEPHOTO();
                 $this->postParams['pg_data']["gender" . $suffix] = $this->loggedInProfileObj->getGENDER();
                 $this->postParams['pg_data']["age" . $suffix] = (integer) $this->loggedInProfileObj->getAGE();
                 $this->postParams['pg_data']["btype" . $suffix] = (integer) $this->loggedInProfileObj->getBTYPE();
@@ -62,7 +62,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                 $this->postParams['pg_data']["ref_manglik" . $suffix] = $this->loggedInProfileObj->getMANGLIK() == "" ? "N" : $this->loggedInProfileObj->getMANGLIK();
                 $this->postParams['pg_data']["religion" . $suffix] = (integer) $this->loggedInProfileObj->getRELIGION();
                 $dppData = $this->getDppData();
-                $this->postParams['dpp_pg']["manglik"] = $dppData[0]["MANGLIK"]== "" ? "N" : $dppData[0]["MANGLIK"];
+                $this->postParams['dpp_pg']["manglik"] = $dppData[0]["MANGLIK"];
         }
 
         private function sendCommunityPostRequest() {
