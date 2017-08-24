@@ -1347,7 +1347,11 @@ class detailedAction extends sfAction
 			$this->arrOutDisplay["button_details"] = $buttonObj->getLogoutButtonArray($arrPass);
 		}
                 $this->searchId= $request->getParameter('searchid');
-		$this->finalResponse=json_encode($this->arrOutDisplay);
+        $finalProfileArray['about']=$this->arrOutDisplay['about'];
+        $finalProfileArray['button_details']=$this->arrOutDisplay['button_details'];
+        $finalProfileArray['page_info']=$this->arrOutDisplay['page_info'];
+        unset($finalProfileArray['about']['myinfo']);
+        $this->finalResponse=json_encode($finalProfileArray);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
         
