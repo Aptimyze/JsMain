@@ -61,8 +61,6 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                 $this->postParams['pg_data']["ref_mstatus" . $suffix] = $this->loggedInProfileObj->getMSTATUS();
                 $this->postParams['pg_data']["ref_manglik" . $suffix] = $this->loggedInProfileObj->getMANGLIK() == "" ? "N" : $this->loggedInProfileObj->getMANGLIK();
                 $this->postParams['pg_data']["religion" . $suffix] = (integer) $this->loggedInProfileObj->getRELIGION();
-                $this->postParams['pg_data']["commzone" . $suffix] = "North";
-                $this->postParams['pg_data']["cityzone" . $suffix] = "North";
                 $dppData = $this->getDppData();
                 $this->postParams['dpp_pg']["manglik"] = $dppData[0]["MANGLIK"]== "" ? "N" : $dppData[0]["MANGLIK"];
         }
