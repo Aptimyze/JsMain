@@ -46,8 +46,10 @@ export class WriteMessage extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-
+    if(nextProps.contactAction.msgInitiated)
+      this.props.buttonData.messages = nextProps.contactAction.message.messages.concat(this.props.buttonData.messages);
   }
+
   sendMessage() {
     this.showLoaderDiv()
     let message = document.getElementById("writeMessageTxtId").value;
@@ -62,6 +64,11 @@ export class WriteMessage extends React.Component{
     e.scrollTop =  e.scrollHeight;
   }
 
+  showMessagesOnScroll(){
+    var url = '&profilechecksum='+this.props.profilechecksum+'&MSGID='+this.props.buttonData.MSGID+'&pagination=1';
+    this.props.writeMessageApi('/api/v2/contacts/WriteMessage','WRITE_MESSAGE',url);
+  }
+
   render(){
   var loaderView;
         if(this.state.showLoader)
@@ -69,8 +76,6 @@ export class WriteMessage extends React.Component{
           loaderView = <Loader show="div"></Loader>;
         }
     let WriteMsg_buttonView, WriteMsg_innerView,WriteMsg_topView,WrtieMsg_historydiv,WriteMsg_appendmsg;
-  console.log('in 22');
-  console.log(this.props);
     WriteMsg_topView =   <div className="posrel clearfix fontthin ce_hgt1">
         <div className="posabs com_left1">
           <img id="imageId" src={this.props.buttonData.viewed} className="com_brdr_radsrp ce_dim1"/>
@@ -118,8 +123,11 @@ export class WriteMessage extends React.Component{
                                 <div className="color2 f16 fontlig">Send</div>
                               </div>
                             </div>;
-      if(this.props.buttonData.messages.length!=0)
+      if(this.props.buttonData.messages != null)
       {
+              if(this.props.buttonData.messages.length <25)
+                this.showMessagesOnScroll();                               
+              console.log(this.props.buttonData.messages);
               WrtieMsg_historydiv =  this.props.buttonData.messages.map((msg,index)=>{
                                       let msg_class1;
                                       if(msg.mymessage == 'true')
@@ -184,11 +192,14 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return{
-         sendMessageApi: (api,action,url) => {
+  return{
+        sendMessageApi: (api,action,url) => {
           commonApiCall(api,url,action,'POST',dispatch,true);
+        },
+        writeMessageApi: (api,action,url) => {
+          commonApiCall(api,url,action,'POST',dispatch,true);
+        }
     }
-}
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(WriteMessage)

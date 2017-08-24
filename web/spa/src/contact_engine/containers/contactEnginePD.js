@@ -61,7 +61,11 @@ export class contactEnginePD extends React.Component{
           this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
         }
-        var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource});
+        if(button.action == 'WRITE_MESSAGE')
+          params = '&pagination=1';
+        else
+          params = '';
+        var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
         if(!temp)return;
         this.props.showLoaderDiv();
         this.props.resetMyjsData();
