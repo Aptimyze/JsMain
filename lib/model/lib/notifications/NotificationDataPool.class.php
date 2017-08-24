@@ -631,11 +631,13 @@ class NotificationDataPool
         }
     }
     
-    public function getUpgradedMembershipDetails($profileid){
+    public function getUpgradedMembershipDetails($profileid,$currency="RS",$source=""){
         if($profileid){
-            include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+            if($source != "backend"){
+                include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+            }
             $this->memHandlerObj = new MembershipHandler();
-            $this->currency = "RS";
+            $this->currency = $currency;
             $this->userObj = new memUser($profileid);
             $this->userObj->setMemStatus();
             $this->userObj->setCurrency($this->currency);
