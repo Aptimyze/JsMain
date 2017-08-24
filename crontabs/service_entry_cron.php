@@ -166,7 +166,7 @@ while($row=mysql_fetch_array($res))
 		$paidCnt = $paidCount[$center][$serviceid];
 		$freeCnt = $count - $paidCnt;
 		$sqlIns="insert into MIS.SERVICE_DETAILS(`ENTRY_DT`,`COUNT`,`SERVICE`,`BRANCH`,`FREE_COUNT`,`PAID_COUNT`) VALUES('$today','$count','$serviceid-UG','$center','$freeCnt','$paidCnt')";
-//                print_r($sqlIns);
+                //print_r($sqlIns);
 		mysql_query_decide($sqlIns,$db) or die("$sqlIns".mysql_error_js($db));
 	}
         unset($paidCount);
@@ -183,11 +183,14 @@ while($row=mysql_fetch_array($res))
 if(count($dataSet)>0){
 	foreach($dataSet as $key=>$branchVal){
 		foreach($branchVal as $key1=>$sidVal){
-			$newCnt =$dataSet[$key][$key1];
-			$paidCnt = $paidComboCount[$key][$key1];
-			$freeCnt = $newCnt - $paidCnt;
-			$sql_insert="insert into MIS.SERVICE_DETAILS(`ENTRY_DT`,`COUNT`,`SERVICE`,`BRANCH`,`FREE_COUNT`,`PAID_COUNT`) VALUES('$today','$newCnt','$key1','$key','$freeCnt','$paidCnt')";
-			mysql_query_decide($sql_insert,$db) or die("$sql_insert".mysql_error_js($db));
+			if(strstr($key1, "A")==false){
+				$newCnt =$dataSet[$key][$key1];
+				$paidCnt = $paidComboCount[$key][$key1];
+				$freeCnt = $newCnt - $paidCnt;
+				$sql_insert="insert into MIS.SERVICE_DETAILS(`ENTRY_DT`,`COUNT`,`SERVICE`,`BRANCH`,`FREE_COUNT`,`PAID_COUNT`) VALUES('$today','$newCnt','$key1','$key','$freeCnt','$paidCnt')";
+				
+				mysql_query_decide($sql_insert,$db) or die("$sql_insert".mysql_error_js($db));
+			}
 		}
 	}
 }
