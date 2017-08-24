@@ -12,3 +12,5 @@ all:
     enable_login: off
   ApiGetDataForMonitoringMetrics:
     enable_login: off
+  SocialSignin:
+    enable_login: off

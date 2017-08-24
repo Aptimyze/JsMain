@@ -75,6 +75,8 @@ class memDiscountTypes
 
 class VariableParams
 {
+    public static $jsExclusiveReleaseDate = "2017-08-01"; //YYYY-MM-DD
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',
@@ -620,10 +622,11 @@ class VariableParams
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",
-        "Then utilizes his expertise to shortlist potential matches for you",
-        "Connects with you to find the most suitable matches for you",
-        "Introduces you to the chosen matches & arranges meetings",
-        "Priority Customer service"
+        "Utilizes their expertise and sends interests to shortlisted matches",
+        "Contacts profiles you like on your behalf",
+        "Introduces you to chosen matches and arranges meetings",
+        "Priority Customer service",
+        "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
     public static $DOL_CONV_RATE = 60;
     
@@ -688,6 +691,12 @@ class VariableParams
     public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
     
     public static $lightningDealDuration = '30'; //in minutes;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME = 86400;
+    
+    const COMMUNITY_WELCOME_DISCOUNT_KEY = "CommunityWelcomeDiscount";
+    
+    const COMMUNITY_WELCOME_DISCOUNT_DURATION = "2"; //in days
 }
 class discountType
 {
@@ -941,4 +950,5 @@ class franchiseeCommission
 class SelectGatewayRedirect{
     public static $gatewayOptions = array('default','payu','ccavenue');
 }
+
 ?>

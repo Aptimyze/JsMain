@@ -269,10 +269,10 @@ class apidetailedv1Action extends sfAction
 		if($this->loginProfile->getPROFILEID() != $this->profile->getPROFILEID())
 		{
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
-
-			if(MobileCommon::isIOSApp()){
-				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
-			} else
+			
+			if(MobileCommon::isIOSApp())
+				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORED"=>$this->IGNORED));
+			else
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 
 		}

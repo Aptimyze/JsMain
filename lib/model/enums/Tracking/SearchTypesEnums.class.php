@@ -128,6 +128,7 @@ class SearchTypesEnums
 	const MatchAlertMailer3 = "BN3";
         const MatchAlertMailer4 = "BN4";
         const MatchAlertMailer5 = "BN5";
+        const MatchAlertMailer7 = "BN7";
 
         const contactViewerMailer="CVM";
 

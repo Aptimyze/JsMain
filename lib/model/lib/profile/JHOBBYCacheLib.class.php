@@ -230,10 +230,11 @@ class JHOBBYCacheLib extends TABLE
      */
     private function logCacheConsumeCount($funName)
     {
-        $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        return;
+       /* $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));*/
     }
 
 }

@@ -237,7 +237,12 @@ try{
                       passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/retrieveprofile_bg.php " . $body['profileId'] . " > /dev/null");  
                       break;
       case "DELETING" :
-                      passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/deleteprofile_bg.php " . $body['profileId'] . " > /dev/null");
+                      if($body['current_time']){
+                        passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/deleteprofile_bg.php " . $body['profileId'] . " '". $body['current_time'] ."' > /dev/null");
+                      } else {
+                        passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/deleteprofile_bg.php " . $body['profileId'] . " > /dev/null");
+                      }
+                      
                       break;
 
     }
@@ -313,6 +318,25 @@ try{
 		$this->updateViewLogTable($viewLogData,$viewLogData['triggerOrNot']);
 	}
  }
+ public function sendMatchAlertsReg($body)
+ {
+        $profileId = $body["profileid"];
+        $memObject = JsMemcache::getInstance();
+        $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
+        unset($memObject);
+        $table = "main";
+        if($tableEmpty == 1){
+                $table = "temp";
+        }
+        $matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT();
+        $matchalerts_MATCHALERTS_TO_BE_SENT->insertIntoMatchAlertsTempTable($table, $profileId,'1');  
+        unset($matchalerts_MATCHALERTS_TO_BE_SENT);
+        if($tableEmpty != 1){
+                $php5 = JsConstants::$php5path;
+                $cronDocRoot = JsConstants::$cronDocRoot;
+                passthru("$php5 $cronDocRoot/symfony alert:MatchAlertCalculation $profileId 0 1");
+        }
+ }
  public function updateCriticalInfo($body)
  {
 	$prevMstatus=  $body['PREV_MSTATUS'];
@@ -320,6 +344,7 @@ try{
 	$prevDob = $body['PREV_DTOFBIRTH'];
 	$dob = $body['DTOFBIRTH'];
 	$profileid = $body['profileid']; 
+	$current_time = $body['current_time']; 
         $deleteInterest = 0;
 	if($dob && $prevDob){
                 $createDate = new DateTime($prevDob);
@@ -338,11 +363,11 @@ try{
                 $producerObj=new Producer();
 		if($producerObj->getRabbitMQServerConnected())
 		{
-			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid,'current_time'=>$current_time)), 'redeliveryCount'=>0 );
 			$producerObj->sendMessage($sendMailData);
                 }else
 		{
-			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+			$path = $_SERVER[DOCUMENT_ROOT]."/profile/deleteprofile_bg.php $profileid '$current_time' > /dev/null &";
                         $cmd = JsConstants::$php5path." -q ".$path;
                         passthru($cmd);
 		}
@@ -351,7 +376,6 @@ try{
                 $maileobj = new CriticalInformationMailer($profileid,$body);
                 $maileobj->sendMailer(); 
         }
-        
  }
  public function updateMatchAlertsLaseSeen($body)
  {
@@ -459,6 +483,14 @@ public function logDiscount($body,$type){
         }
     }
 }
+
+    public function addCommunityDiscount($body,$type){
+        if($type == "COMMUNITY_DISCOUNT_LOG"){
+            $memHandlerObj = new MembershipHandler();
+            $memHandlerObj->processCommunityWelcomeDiscount($body["PROFILEID"],$body["COMMUNITY"]);
+            unset($memHandlerObj);
+        }
+    }
 
   /*
    * Send instant eoi notification

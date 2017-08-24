@@ -8769,7 +8769,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
 	if($row_jp["SUBSCRIPTION"])
 	{
 		$subArray=explode(",",$row_jp["SUBSCRIPTION"]);
-		if(in_array("T",$subArray))
+		if(in_array("X",$subArray))
 		{
 			$sqlAP="DELETE FROM Assisted_Product.AP_PROFILE_INFO WHERE PROFILEID='$profileid'";
 		        mysql_query_decide($sqlAP) or logError($sqlAP);

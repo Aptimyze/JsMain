@@ -42,6 +42,14 @@ class staticActions extends sfActions
 	else if(MobileCommon::isMobile())
         $this->setTemplate("mob404");
   }
+  
+   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
+  public function executeOldMobileSite(sfWebRequest $request)
+  {
+        $key = 'oldMobileSiteCount_'.date('Y-m-d');
+        JsMemcache::getInstance()->set($key,$_SERVER[HTTP_USER_AGENT]);
+  }
+  
 	public function executeVerifyAuth(sfWebRequest $request)
 	{
 		$siteUrl=JsConstants::$siteUrl;
@@ -446,7 +454,7 @@ class staticActions extends sfActions
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
     $this->textUnderInput = $layerData[TEXTUNDERINPUT];
-    if($this->layerId==18 || $this->layerId==20 || $this->layerId==23)
+    if($this->layerId==18 || $this->layerId==20 || $this->layerId==23 || $this->layerId == 25)
     {
           include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
           $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));

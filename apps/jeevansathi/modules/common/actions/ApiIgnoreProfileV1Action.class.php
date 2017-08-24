@@ -94,8 +94,8 @@ class ApiIgnoreProfileV1Action extends sfActions
                                         }
                     //changed to library call
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
-					JsMemcache::getInstance()->remove($profileID);
-					JsMemcache::getInstance()->remove($ignoredProfileid);
+					ProfileMemcache::clearInstance($profileID);
+					ProfileMemcache::clearInstance($ignoredProfileid);
                                         $ignoreCount--;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);
 					$page["source"] = $request->getParameter("pageSource");
@@ -187,8 +187,8 @@ class ApiIgnoreProfileV1Action extends sfActions
                                     }   
                                         
                                         $ignore_Store_Obj->ignoreProfile($profileID,$ignoredProfileid);
-					JsMemcache::getInstance()->remove($profileID);
-					JsMemcache::getInstance()->remove($ignoredProfileid);
+					ProfileMemcache::clearInstance($profileID);
+					ProfileMemcache::clearInstance($ignoredProfileid);
                                         $ignoreCount++;
 					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
                                         
@@ -197,7 +197,12 @@ class ApiIgnoreProfileV1Action extends sfActions
 					$button["buttons"]["other"] = null;
 					$responseArray["confirmLabelMsg"] = $this->getIgnoreMessage();
 					$responseArray["confirmLabelHead"] = "Profile moved to Blocked Member's list";
-					$responseArray["infomsglabel"] = "You have blocked this user";
+					if(MobileCommon::isApp()=="A")
+					{
+						$responseArray["infomsglabel"] = "This profile will be removed from your search results and other lists. This profile will not be able to contact you any further";
+					}
+					else
+						$responseArray["infomsglabel"] = "You have blocked this user";
  					if(MobileCommon::isApp()=="I"){
 						$pictureServiceObj=new PictureService($this->ignoreProfile);
 	                    $profilePicObj = $pictureServiceObj->getProfilePic();
