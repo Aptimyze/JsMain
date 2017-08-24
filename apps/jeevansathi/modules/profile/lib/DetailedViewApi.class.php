@@ -129,6 +129,8 @@ class DetailedViewApi
 			$this->m_arrOut = array();
 			$this->getMetaTags();
 			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
+			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
 		}
                 
 		$this->m_arrOut = array();
