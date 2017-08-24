@@ -41,7 +41,7 @@ function ajaxPassword(checksum,pswrd)
 {
   $.ajax({                 
     url: '/profile/password_check.php?',
-    data: "checksum="+checksum+"&pswrd="+pswrd,
+    data: "checksum="+checksum+"&pswrd="+escape(pswrd),
     success: function(response) 
     {
       if(response=="true")

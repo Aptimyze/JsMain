@@ -285,6 +285,10 @@ class ProfileCacheConstants
                                         'COUNT',
                                         'HARDSOFT',
 
+                                        //keys for aadhar
+                                        'AADHAR_NO',
+                                        'REQUEST_ID',
+                                        'VERIFY_STATUS',
                                     );
     
     public static $arrJProfileColumns = array(
@@ -596,6 +600,13 @@ class ProfileCacheConstants
                                     'INCOME',
                                     'COUNT',
                                     'HARDSOFT',
+                                    );
+
+    public static $arrAadharVerifyColumns = array(
+                                        'PROFILEID',
+                                        'AADHAR_ID',
+                                        'REQUEST_ID',
+                                        'VERIFY_STATUS',
                                     );
 }
 ?>

@@ -63,7 +63,8 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           case "9":
             removeCookie("AUTHCHECKSUM");
             localStorage.clear();
-            window.location.href="/";
+            console.log("redirecting to page.");
+            window.location.href="/login?prevUrl="+window.location.href;
             break;
           case "7":
             window.location.href="/register/newJsmsReg?incompleteUser=1";

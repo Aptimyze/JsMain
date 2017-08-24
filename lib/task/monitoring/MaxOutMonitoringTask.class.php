@@ -29,10 +29,11 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
 	date_default_timezone_set('Asia/Kolkata');
-
+	$issue = 0;
+	$i = 0;
+	$sleep = 5;
 	while(1)
 	{
-		$issue = 0;
 		$serverStatusObj = new ServerStatus;
 		$serverstatus = $serverStatusObj->getStatus();
 		$str = date("Y-m-d H:i:s").":\n";
@@ -41,17 +42,27 @@ EOF;
 			$str.= $serverid."::".$serverData['idle']."\n";
 			if($serverData['flag']==0)
 			{
-				$issue = 1;
+				$i=1;
 			}
 		}
+		if($i==1){
+			$issue+=1;
+			$sleep = 2;
+		}
+		else{
+			$issue =0;
+			$sleep = 5;
+		}
+		$i=0;
 //			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/maxout.txt",var_export($serverstatus,true)."\n\n",FILE_APPEND);
-		if($issue==1)
+		if($issue>=3)
 		{
+			$issue = 0;
 			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/maxout.txt",$str."\n\n",FILE_APPEND);
 			$str="Idle Workers ".$str;
 			CommonUtility::sendSlackmessage($str,"apache");
 		}
-		sleep(5);
+		sleep($sleep);
 	}
 
   }

@@ -59,7 +59,7 @@ class showLIVETagsAction extends sfActions
                     $tagTime = date("Y-m-d H:i:s",$tagDate);                    
                 }
                     
-				$this->tagArr[$i]["description"] = $value->release->description;
+				$this->tagArr[$i]["description"] = explode(",",$value->release->description);
 				$this->tagArr[$i]["dateTime"] = $tagDate[0]." ".$tagTime;
 				$timeArr[$i] = $updatedDate;    			
 			}
@@ -69,6 +69,6 @@ class showLIVETagsAction extends sfActions
             unset($tagDate);
             unset($tagTime);
     	}
-    	array_multisort($timeArr, SORT_DESC, $this->tagArr);
+    	array_multisort($timeArr, SORT_DESC, $this->tagArr);        
     }
 }

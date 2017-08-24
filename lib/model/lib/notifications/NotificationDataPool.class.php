@@ -187,7 +187,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
                         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
                         }
         unset($otherProfiles);
         $counter = 0;

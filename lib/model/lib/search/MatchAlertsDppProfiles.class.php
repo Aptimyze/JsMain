@@ -68,8 +68,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->setINCOME($incomeStr);
                 
                 $relaxedCity = $relaxedObj->getRelaxedCITY_RES($this->getCITY_RES());
-                $this->setCITY_RES($relaxedCity);
-                $this->setCITY_INDIA($relaxedCity);
+                $this->setCITY_RES($relaxedCity,"",2);
 
                 $relaxedSmoking = $relaxedObj->getRelaxedSMOKE($this->getSMOKE());
                 $this->setSMOKE($relaxedSmoking);
@@ -78,7 +77,11 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->setDRINK($relaxedDrinking);
 
                 $relaxedHheight = $relaxedObj->getRelaxedHHEIGHT($this->getHHEIGHT());
-                $this->setHHEIGHT($relaxedHheight); 
+                $this->setHHEIGHT($relaxedHheight);
+
+                //added diet relaxation
+                $relaxedDiet = $relaxedObj->getRelaxedDIET($this->getDIET());
+                $this->setDIET($relaxedDiet); 
                 unset($relaxedObj);
         }
         /**

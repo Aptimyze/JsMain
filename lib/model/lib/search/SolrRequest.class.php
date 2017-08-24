@@ -190,6 +190,7 @@ class SolrRequest implements RequestHandleInterface
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
                 else
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout,'',$profileObj->getPROFILEID());
+                
                 $end= microtime(TRUE);
                 $diff = $end - $start;
                 if($diff > 2 ){
@@ -198,6 +199,7 @@ class SolrRequest implements RequestHandleInterface
                 }
                 
                 if(!$this->searchResults){
+                        $this->searchParamtersObj->setSEARCH_FAILED(1);
                         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".date('H:i:s')." ::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
@@ -446,8 +448,7 @@ class SolrRequest implements RequestHandleInterface
                                 $this->filters[]="&fq={!tag=country_res,city_res,state}CITY_RES:($solrFormatValueCity)";
                         }
                 }
-		
-	
+                
 		// value where for ends here
 		if($textQuery && is_array($textQuery))
 		{
@@ -523,6 +524,11 @@ class SolrRequest implements RequestHandleInterface
 			$this->filters[]="&fq=-HANDICAPPED:(".str_replace(","," ",$this->searchParamtersObj->getHANDICAPPED_IGNORE()).")";
                 if($this->searchParamtersObj->getOCCUPATION_IGNORE())
 			$this->filters[]="&fq=-OCCUPATION:(".str_replace(","," ",$this->searchParamtersObj->getOCCUPATION_IGNORE()).")";
+                
+                if($this->searchParamtersObj->getKNOWN_COLLEGE_IGNORE()){
+			$this->filters[]="&fq=-KNOWN_COLLEGE:(".str_replace(","," ",$this->searchParamtersObj->getKNOWN_COLLEGE_IGNORE()).")";
+                }
+                
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches
@@ -545,7 +551,7 @@ class SolrRequest implements RequestHandleInterface
                         eval('$hvalue = $this->searchParamtersObj->getH'.$field.'();');
                         if($lvalue && $hvalue)
                         {
-				$this->filters[]="&fq=$field:[$lvalue $hvalue]";
+				$this->filters[]="&fq=$field:[$lvalue TO $hvalue]";
                         }
                 }
                 

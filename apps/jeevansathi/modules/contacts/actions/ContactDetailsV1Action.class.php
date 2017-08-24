@@ -507,6 +507,12 @@ class ContactDetailsV1Action extends sfAction
 				$responseArray["contact4"]["action"] = "MAIL";
 				$responseArray["contact4"]["iconid"] = IdToAppImagesMapping::MAILICON;
 			}
+			if (strstr($value["LABEL"], "Relationship manager")) {
+				$responseArray["contact5"]["value"]  = $value["VALUE"];
+				$responseArray["contact5"]["label"]  = $value['LABEL'];
+				$responseArray["contact5"]["action"] = "CALL";
+				$responseArray["contact5"]["iconid"] = IdToAppImagesMapping::PHONEICON;
+			}
 		}
 		return $responseArray;
 	}

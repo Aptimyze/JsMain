@@ -51,4 +51,5 @@ class MailerGroup{
 
   const PROMOTIONAL_ALTERNATE_EMAIL = 46;
   const CRITICAL_INFO_EMAIL = 47;
+  const REPORT_PHONE_INVALID_EMAIL= 48;
 }

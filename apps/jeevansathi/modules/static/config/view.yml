@@ -278,6 +278,13 @@ jsmsVerificationStaticPageSuccess:
    javascripts: [jsms/common/verificationIcon_js]
    layout: jsmsMobLayout
 
+oldMobileSiteSuccess:
+  metas:
+    title:        Jeevansathi Matrimonials- Login
+  stylesheets:    [jsms/oldMobileSite/oldMobileSitePage]
+  javascripts: []
+  layout: jsmsMobLayout
+
 privacySettingsSuccess:
     metas:
       title: Privacy Settings-Jeevansathi

@@ -33,7 +33,7 @@ EOF;
                 $instanceID = $countObj->getID('SALES_FEEDBACK_MAILER');
 		$crmMailerObj 	= new crmMailer();
 		$profilesArr 	= $crmMailerObj->getProfileForFeedbackMailer();
-		$jprofileObj = new JPROFILE('newjs_slave');
+		$jprofileObj = new JPROFILE('crm_slave');
 		if(is_array($profilesArr))
 			$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
 		if(count($profilesArr)>0){

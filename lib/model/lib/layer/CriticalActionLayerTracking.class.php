@@ -7,7 +7,7 @@ class CriticalActionLayerTracking
 
   const ANALYTIC_SCORE_THRESHOLD=70;
   const RCB_LAYER_REF_DATE='2011-01-01';
-
+  public static $independentCALS = array(19); // cals that are highly important and surpass the normal CAL Logic
   /* this function will select entries for today
    *@param- profile id, layer on which user gives response,button the user presses
    */
@@ -75,13 +75,9 @@ class CriticalActionLayerTracking
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
     $profileId = $profileObj->getPROFILEID();
-    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
-              return 0;
-
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -97,7 +93,13 @@ class CriticalActionLayerTracking
 
 
     }
-
+    foreach (self::$independentCALS as $key => $value) {
+      # code...
+      if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
+        return $value;
+    }
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
+              return 0;
 
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
@@ -269,8 +271,6 @@ return 0;
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {
-                            JsMemcache::getInstance()->incrCount("DPP_CAL_0");
-
                             $show=1;
                             if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
                             {
@@ -283,9 +283,8 @@ return 0;
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
                               {
-                                if(is_array($value['data']))
-                                {
-                                  JsMemcache::getInstance()->incrCount("DPP_CAL_1");
+                                if(is_array($value['data']))                                  
+                                {      
                                   $show = 0;
                                   break;
                                 }
@@ -398,9 +397,9 @@ return 0;
 
                       }
                       break;
-                    case '19':
 
-                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){
+                    case '19': 
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
                       $lightningCALObj = new LightningDeal();
                       $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);
                       if($lightningCALData != false){
@@ -411,10 +410,11 @@ return 0;
                         $request->setParameter('NEW_PRICE',$lightningCALData['discountedPrice']);
                         $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
                         $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
-                        $show=1;
-                      }
 
+                        $show=1;                      
+                        self::flushCALCacheData($profileid);
                       }
+                      }                      
                     break;
 
                      case '21':
@@ -470,10 +470,35 @@ return 0;
 
 
                     break;
+
+                  case '25':
+                    if(!MobileCommon::isApp()){
+                      if(in_array($profileObj->getRELIGION(), 
+                        array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
+                        if(!($profileObj->getMANGLIK())) {
+                          $show=1;
+                        }
+                      }
+                    }
+                  break;
+
                   case '24':
 
-                            $show=1;
-                  break;
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      {
+                          $nameData=(new NameOfUser())->getNameData($profileid);
+                          $nameOfUser=$nameData[$profileid]['NAME'];
+                          if($nameOfUser)
+                          {
+                            $aadhaarObj = new aadharVerification();
+                            $details = $aadhaarObj->getAadharDetails($profileid)[$profileid];
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
+                              $show=1;
+                          }
+                      }
+                      
+                      
+                    break;
 
           default : return false;
         }
@@ -543,8 +568,9 @@ break;
                 '16' => array(
 
                     'A' => '84',
-                    'I' => '4.5'
 
+                    'I' => '10.5'
+                    
                         ),
 
                 '19' => array(
@@ -570,7 +596,11 @@ break;
                   '20' => array(
                     'A' => '99',
                     'I' => '5.4'
-                        )
+                        ),
+
+                  '24' => array(  
+                    'A' => '107'
+                        )        
 
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
@@ -588,5 +618,12 @@ break;
        }
        return false;
 
+  }
+
+
+  public static  function flushCALCacheData($profileid)
+  {
+    $redis = JsMemcache::getInstance();
+    $redis->delete($profileid.'_CAL_DAY_FLAG');
   }
 }

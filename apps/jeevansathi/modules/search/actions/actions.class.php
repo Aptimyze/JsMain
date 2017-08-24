@@ -546,7 +546,7 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+                                                //JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
 						/*unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
@@ -1711,7 +1711,6 @@ class searchActions extends sfActions
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
                                 
-                                
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
 				
@@ -1730,9 +1729,9 @@ class searchActions extends sfActions
 				}
 
 			}
-			
 			/** caching **/
-			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+                        if($SearchParamtersObj->getSEARCH_FAILED() != 1)
+                                $ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
 
 			/** caching **/
 

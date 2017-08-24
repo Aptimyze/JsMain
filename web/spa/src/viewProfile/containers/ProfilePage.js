@@ -361,7 +361,16 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-        if ( typeof this.props.history.prevUrl == 'undefined' )
+        // console.log(window.location.pathname);
+        // console.log(this.props.history.prevUrl);
+        // console.log(this.props.history.prevUrl.indexOf(window.location.pathname));
+        let same_url = false
+        if ( this.props.history.prevUrl )
+        {
+            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;   
+        }
+
+        if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
         {
             this.props.history.push("/myjs");
         }
