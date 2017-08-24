@@ -63,18 +63,25 @@ class SearchUtility
                                                 $Obj = new ContactsRecords;
                                                 $hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
                                                 
+                                                if($removeMatchAlerts)
+                                                {
+                                                        $matchalerts_LOG = new matchalerts_LOG();
+                                                        $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
+                                                }
+                                                
+                                                // adding code to remove temporary contacts sent by the user while the user is unscreened.
+                                                if($tempContacts)
+                                                {		
+                                                        $contactsTempObj =  new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
+                                                        $hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid,$seperator);
+                                                }
+                                                
                                                 if($getFromCache == 1){
-                                                       $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
+                                                        $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
                                                 }
                                         }
 					/** matchAlerts Profile **/
 					
-					if($removeMatchAlerts)
-					{
-						$matchalerts_LOG = new matchalerts_LOG();
-						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
-					}
-
 
 					
 					$request = sfContext::getInstance()->getRequest();	
@@ -96,12 +103,6 @@ class SearchUtility
 						}
 					}
 					
-				}
-				// adding code to remove temporary contacts sent by the user while the user is unscreened.
-				if($tempContacts)
-				{		
-					$contactsTempObj =  new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
-					$hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid,$seperator);
 				}
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
 				/* For Online search  */
@@ -1088,6 +1089,43 @@ class SearchUtility
 			}	
                 }
                 return 0;
+        }
+        /**
+         * This function returns space separated list of ignored profiles having ignored, contacted,matchalerts and temp contacted profiles.
+         * @param type $pid
+         * @param type $seperator
+         * @param type $noAwaitingContacts
+         * @param type $removeMatchAlerts
+         * @param type $tempContacts
+         * @param type $SearchParamtersObj
+         * @return type
+         */
+        function getIgnoredProfiles($pid,$seperator,$noAwaitingContacts,$removeMatchAlerts,$tempContacts,$getFromCache) {
+                if($getFromCache == 1){
+                        $memObject=JsMemcache::getInstance();
+                        $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
+                        if($hideArr != ""){
+                                return $hideArr;
+                        }
+                }
+                $IgnoredProfilesObj = new IgnoredProfiles();
+                $hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid, $seperator);
+
+                /* contacted profiles */
+                $Obj = new ContactsRecords;
+                $hideArr.= $Obj->getContactsList($pid, $seperator, $noAwaitingContacts);
+
+                if ($removeMatchAlerts) {
+                        $matchalerts_LOG = new matchalerts_LOG();
+                        $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid, $seperator);
+                }
+
+                if ($tempContacts) {
+                        $contactsTempObj = new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
+                        $hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid, $seperator);
+                }
+                
+                return $hideArr;
         }
 
 }
