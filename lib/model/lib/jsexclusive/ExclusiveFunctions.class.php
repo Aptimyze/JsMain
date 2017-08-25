@@ -82,7 +82,7 @@ class ExclusiveFunctions{
     * @param :$params=""
     */
 	public function processScreenedEois($params=""){
-		if(is_array($params) && $params["clientId"] && $params["agentUsername"]){
+		if(is_array($params) && $params["clientId"] && $params["agentUsername"] && ($params["button"]!="SKIP")){
 			$exMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
 			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
 				/*$mqData = $this->formatRabbitmqData($params);
@@ -121,6 +121,37 @@ class ExclusiveFunctions{
 			$exServicingObj = new billing_EXCLUSIVE_SERVICING();
 			$exServicingObj->updateScreenedStatus($params["agentUsername"],$params["clientId"],'Y');
 			unset($exServicingObj);
+		} else if(is_array($params) && $params["clientId"] && $params["agentUsername"] && $params["button"]=="SKIP"){
+			$exMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
+			if(is_array($params["acceptArr"]) && count($params["acceptArr"])>0){
+				$assistedEoiObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
+				$assistedEoiObj->deleteEntry($params["clientId"],$params["acceptArr"]);
+				unset($assistedEoiObj);
+				foreach ($params["acceptArr"] as $key => $value) {
+					$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"S"));
+				}
+				unset($exMappingObj);
+				
+				$exServicingObj = new billing_EXCLUSIVE_SERVICING();
+				$exServicingObj->updateScreenedStatus($params["agentUsername"],$params["clientId"],'Y');
+				unset($exServicingObj);
+				$to = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
+				$from = "info@jeevansathi.com";
+				$subject = "Skip feature used";
+				$pswrdsObj = new jsadmin_PSWRDS();
+				$agentNameArr = array($params["agentUsername"]);
+				
+				$agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentNameArr);
+				$firstName = $agentDetail[$params["agentUsername"]]["FIRST_NAME"];
+				
+				$LastName = $agentDetail[$params["agentUsername"]]["LAST_NAME"];
+				if(!empty($firstName)){
+					$msgBody = "Skip feature used by ".$firstName.' '.$LastName.'('.$params["agentUsername"].") on ".$params["clientUsername"];
+				}else{
+					$msgBody = "Skip feature used by ".$params["agentUsername"]." on ".$params["clientUsername"];
+					}
+				SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+			}
 		}
 	}
         
