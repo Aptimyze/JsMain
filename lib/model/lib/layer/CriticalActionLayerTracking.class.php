@@ -463,7 +463,7 @@ return 0;
 
                   case '20':
 
-                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
+                      if( (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION'))) && self::checkConditionForCityCAL($profileObj)) 
                       {  
                           $show=1;
                            
@@ -484,7 +484,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION'))) 
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];
@@ -598,7 +598,8 @@ break;
                         ),
 
                   '24' => array(  
-                    'A' => '107'
+                    'A' => '107',
+                    'I' => '6.0'
                         )        
 
           );

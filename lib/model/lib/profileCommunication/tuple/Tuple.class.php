@@ -175,7 +175,7 @@ class Tuple {
 
     public function getCOMPLETE_VERIFICATION_STATUS()
     {
-        if(MobileCommon::isApp() == "A")
+        if(MobileCommon::isApp())
         {
             $aadharObj = new aadharVerification();
             $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
