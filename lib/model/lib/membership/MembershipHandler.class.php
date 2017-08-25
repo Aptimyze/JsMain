@@ -527,6 +527,12 @@ class MembershipHandler
     {
         $billingExcCallbackObj = new billing_EXC_CALLBACK();
         $added                 = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // Add exclusive Record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
         return $added;
     }
 
@@ -566,6 +572,12 @@ class MembershipHandler
     {
         $excCallbackObj = new billing_EXC_CALLBACK();
         $excCallbackObj->addRecord($profileid, $phoneNo, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // add rcb record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
     }
 
     public function checkEmailSendForDay($profileid, $email)

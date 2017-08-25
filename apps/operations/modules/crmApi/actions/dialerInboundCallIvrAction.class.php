@@ -27,8 +27,11 @@ class dialerInboundCallIvrAction extends sfActions
 		}else{
 			$dialerObj =new DialerInbound();
 			$abusive =$dialerObj->getAbusiveStatus($phone);	
-			if(!$abusive)
-				$this->abusiveStatus ='N';	
+			if(!$abusive){
+				$this->abusiveStatus ='N';
+		                $optinDncObj =new incentive_OPTIN_DNC();
+        		        $optinDncObj->addOptinRecord($phone);
+			}	
 			$profileArr =$dialerObj->getProfileDetails($phone);
 
 			if(is_array($profileArr)){
