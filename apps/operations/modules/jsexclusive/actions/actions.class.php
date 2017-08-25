@@ -189,9 +189,9 @@ class jsexclusiveActions extends sfActions {
     public function executeActiveClientList(sfWebRequest $request)
     {
         $agent = $request['name'];
-        $exclusiveObj = new billing_EXCLUSIVE_SERVICING(); //connection
-        $nameOfUserObj = new incentive_NAME_OF_USER();//connection
-        $expiryDateObj = new billing_SERVICE_STATUS();//connection
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING("crm_slave"); //connection
+        $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");//connection
+        $expiryDateObj = new billing_SERVICE_STATUS("newjs_slave");//connection
         $clientUsername = new JPROFILE("newjs_slave");
         $clientInfoArr = $exclusiveObj->getActiveClientInfo($agent);
         if(is_array($clientInfoArr))
