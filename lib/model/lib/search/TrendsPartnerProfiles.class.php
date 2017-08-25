@@ -11,7 +11,7 @@ class TrendsPartnerProfiles extends PartnerProfile {
         private $jpartnerDepFields = array("MSTATUS"=>"HAVECHILD");
         private $dppSuggestionFields = array("AGE"=>array("LAGE","HAGE"));
         private $dppSuggestionFieldsFunction = array("AGE"=>"Age");
-        private $dppRelaxationFields = array("HHEIGHT"=>"HHEIGHT","CITY_RES"=>"CITY_RES","CASTE"=>"CASTE","SMOKE"=>"SMOKE","DRINK"=>"DRINK",'EDU_LEVEL_NEW'=>"EDUCATION", 'OCCUPATION'=>"OCCUPATION", 'CASTE'=>"CASTE", 'MTONGUE'=>"MTONGUE");
+        private $dppRelaxationFields = array("HHEIGHT"=>"HHEIGHT","CITY_RES"=>"CITY_RES","CASTE"=>"CASTE","SMOKE"=>"SMOKE","DRINK"=>"DRINK",'EDU_LEVEL_NEW'=>"EDUCATION", 'OCCUPATION'=>"OCCUPATION", 'CASTE'=>"CASTE", 'MTONGUE'=>"MTONGUE","DIET"=>"DIET");
         //private $dppRelaxationFields = array("CASTE"=>"CASTE");
         private $specificConditionFields = array("INCOME"=>"INCOME");
         private $specificConditionFieldsFunction = array("INCOME"=>"setRelaxIncome");
@@ -144,8 +144,7 @@ class TrendsPartnerProfiles extends PartnerProfile {
                                 if($relaxVal['notOcc']!='')
                                     $this->setOCCUPATION_IGNORE($relaxVal['notOcc']);
                         }elseif($key == "CITY_RES"){
-                                $this->setCITY_RES(str_replace("'","",$relaxVal));
-                                $this->setCITY_INDIA(str_replace("'","",$relaxVal));
+                                $this->setCITY_RES(str_replace("'","",$relaxVal),"",2);
                         }else{
                                 if($key == "CASTE"){
                                         eval('$this->set'.$key.'("'.str_replace("'","",$relaxVal).'",1);');

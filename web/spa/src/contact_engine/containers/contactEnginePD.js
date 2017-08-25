@@ -53,20 +53,21 @@ export class contactEnginePD extends React.Component{
 
       break;
       case 'REPORT_INVALID':
-        console.log("bindAction REPORT_INVALID");
-        console.log("bindAction REPORT_INVALID button",button);
         this.showLayerCommon({showReportInvalid:true,reportType:button.type});
       break;
-      
+
       default:
-      console.log(button);
-      console.log(index);
           let callBack = (responseButtons)=>{
           this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
         }
+        if(button.action == 'WRITE_MESSAGE')
+          params = '&pagination=1';
+        else
+          params = '';
+        var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
+        if(!temp)return;
         this.props.showLoaderDiv();
-        performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource});
         this.props.resetMyjsData();
       break;
 

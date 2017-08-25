@@ -27,7 +27,7 @@
     <input type="hidden" id="OldPrice" value="~$lightningCALData.oldPrice`"></input>
     <input type="hidden" id="NewPrice" value="~$lightningCALData.newPrice`"></input>
     <input type="hidden" id="TimeForLightning" value="~$lightningCALData.lightningCALTime`"></input>
-    <input type="hidden" id="showConsentMsgId" value="~$lightningCALData.showConsentMsg`"> ~if $videoLinkLayer neq 'N'`
+    <input type="hidden" id="showConsentMsgId" value="~$showConsentMsg`"> ~if $videoLinkLayer neq 'N'`
     <div id="videoLinkDivID" class="fullwid" style="background-color:#fdfdfd">
         <div class="container mainwid pos-rel txtc lh61">
 

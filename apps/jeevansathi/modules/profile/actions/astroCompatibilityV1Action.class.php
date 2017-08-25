@@ -59,7 +59,7 @@ class astroCompatibilityV1Action extends sfActions
 			//if the mail has been sent
 			if($flag)
 			{
-				$successArr["MESSAGE"] = "Sample Mail Sent";
+				$successArr["MESSAGE"] = "Sample Mail Sent";				
 			}
 			else //if the mail has not been sent
 			{
@@ -93,17 +93,17 @@ class astroCompatibilityV1Action extends sfActions
 			if($sendMail  && $subscription)
 			{
 				$astroObj = new astroReport();
-				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);						
+				$flag = $astroObj->getActualReportFlag($loggedInProfileId,$otherProfileId);					
 				if($flag)
 				{
 					$successArr["MESSAGE"] = "Actual Report Sent";
 				}
 				else
 				{
-					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);
+					$count = $astroObj->getNumberOfActualReportSent($loggedInProfileId);					
 					if($count >= "100")
 					{
-						$successArr["MESSAGE"] = "Actual Report Sent";
+						$successArr["MESSAGE"] = "Actual Report Sent";	
 					}
 					else
 					{
@@ -121,7 +121,9 @@ class astroCompatibilityV1Action extends sfActions
 						$file=PdfCreation::PdfFile($urlToVedic);					
 						if($file)
 						{
+							PdfCreation::setResponse("astroCompatibility-".$otherUsername.".pdf",$file);
 							$successArr = $astroObj->sendAstroMail(1839,$otherUsername,$otherProfileId,$file,"actual",$loggedInProfileId);
+							$successArr["STATUS"] = "1";
 							$astroObj->setActualReportFlag($loggedInProfileId,$otherProfileId);
 							$astroObj->addDataForActualReport($loggedInProfileId);
 							if($count == "0")
@@ -138,9 +140,13 @@ class astroCompatibilityV1Action extends sfActions
 				}
 				
 				unset($astroObj);
-				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-				$apiResponseHandlerObj->setResponseBody($successArr);
-				$apiResponseHandlerObj->generateResponse();
+				if(MobileCommon::isApp())
+				{
+					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					$apiResponseHandlerObj->setResponseBody($successArr);
+					$apiResponseHandlerObj->generateResponse();
+				}
+				
 				return SfView::NONE;
 				
 			}

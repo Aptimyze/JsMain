@@ -669,11 +669,12 @@ class ProfileCacheLib
      */
     private function logDelCount()
     {
-        $key = 'cacheDeleteCount'.date('Y-m-d');
+    return;
+       /* $key = 'cacheDeleteCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
     }
     
     /**

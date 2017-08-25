@@ -327,13 +327,14 @@ class ProfileMemcache
      * @access private
      * @return String
      */
-    private function _getProfileKey()
+    public static function _getProfileKey($profileid)
     {
         
-        return "_k_".$this->_profileid;
+        return "_k_".$profileid;
         
     }
     
+
     /**
      * 
      * Set Data in JsMemcache object for current profileid
@@ -349,21 +350,24 @@ class ProfileMemcache
     private function _setCacheData()
     {
         // Get TTL of Key
-        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileKey());
+        $lifetime = JsMemcache::getInstance()->ttl($this->_getProfileKey($this->_getProfileId()));
         foreach($this->_updatedFields as $key =>$value)
         {
            $tempArr[$key] = $this->get($key);
 
         }
-        if($lifetime < self::EXPIRY_THRESHHOLD)
-        {
-            // key doesnot exist or expire time is not defined
-            $lifetime = self::EXPIRY_TIME;
-            JsMemcache::getInstance()->setHashObject($this->_getProfileKey(),$tempArr,$lifetime) ;
 
-        }
-        else
-            JsMemcache::getInstance()->setHashObjectWithoutExp($this->_getProfileKey(),$tempArr) ;
+	if($tempArr){
+	        if($lifetime < self::EXPIRY_THRESHHOLD)
+        	{
+	            // key doesnot exist or expire time is not defined
+        	    $lifetime = self::EXPIRY_TIME;
+	            JsMemcache::getInstance()->setHashObject($this->_getProfileKey($this->_getProfileId()),$tempArr,$lifetime) ;
+
+        	}
+	        else
+        	    JsMemcache::getInstance()->setHashObjectWithoutExp($this->_getProfileKey($this->_getProfileId()),$tempArr) ;
+	}
         $this->_updatedFields = null;
 //        $ret_val = JsMemcache::getInstance()->set($this->_getProfileKey(), $data_variables, $lifetime);
         return $ret_val;
@@ -414,12 +418,14 @@ class ProfileMemcache
     public static function clearInstance($profileid)
     {
         if (isset(self::$_instance[$profileid])) {
-            JsMemcache::getInstance()->delete(self::$_instance[$profileid]->_getProfileKey());
+
             unset(self::$_instance[$profileid]);
         } else {
             //      jsException::log("Please set the instance first by calling \"getInstance\" method.");
         }
+        JsMemcache::getInstance()->delete(self::_getProfileKey($profileid));
     }
+
 
     /**
      * 
@@ -487,7 +493,7 @@ class ProfileMemcache
      */
     public function getMemcacheData()
     {
-        $this->_memcache      = JsMemcache::getInstance()->getHashAllValue($this->_getProfileKey());
+        $this->_memcache      = JsMemcache::getInstance()->getHashAllValue($this->_getProfileKey($this->_getProfileId()));
         if ($this->_memcache && is_array($this->_memcache))
             return $this->_memcache;
         else

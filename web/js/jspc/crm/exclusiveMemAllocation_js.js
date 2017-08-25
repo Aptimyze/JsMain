@@ -48,6 +48,10 @@ $(document).ready(function() {
  	if(params["exAction"]=="ASSIGN")
  	{
  		assigned_to = $("#ASSIGN"+params["billid"]).find('select').val();
+ 		if($("#EXCLUSIVE_"+params["billid"]).length!=0){
+ 			params["bill_dttime"] = $("#EXCLUSIVE_"+params["billid"]).html();
+ 			//console.log(params["bill_dttime"]);
+ 		}
  		params["executiveDetails"] = executivesdata[parseInt(assigned_to)];
  		if(assigned_to=="")
  		{
@@ -57,7 +61,8 @@ $(document).ready(function() {
  	}
  	else
  	{
- 		params["executiveDetails"]=null;
+ 		assigned_to = $("#UNASSIGN"+params["billid"]).html();
+ 		params["assignedToUsername"]=assigned_to;
 	} 
  	if(validRequest==true)
  		sendExMemAllocationRequest(params);

@@ -43,7 +43,7 @@ class AuthFilter extends sfFilter {
 
 		/*SPA*/
 
-		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php');
+		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view');
 		$spa = 0;
 		$originalArray = array('https://','http://');
 		$replaceArray = array('','');
@@ -147,6 +147,12 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('FirstCall', 1);
 
 				// Code to execute after the action execution, before the rendering
+				//Stopping from going to oldMobileSite
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop() && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
+					$context->getController()->forward("static", "oldMobileSite");
+					die;
+				}
+
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -297,9 +303,10 @@ class AuthFilter extends sfFilter {
 				if($login)
 				{
 					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					if(JsMemcache::getInstance()->get($key))
+					$kundliData=JsMemcache::getInstance()->get($key);
+					if($kundliData)
                                         {
-                                                $kundli_link = JsMemcache::getInstance()->get($key);
+                                                $kundli_link = $kundliData;
                                         }
 					else
 					{
@@ -449,7 +456,8 @@ class AuthFilter extends sfFilter {
       		$lastDayFlag=false;
 
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null || JsMemcache::getInstance()->get($profileid."_appPromo")===false)
+			$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
+			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
@@ -471,7 +479,7 @@ class AuthFilter extends sfFilter {
 			}
 			else
 			{
-				return JsMemcache::getInstance()->get($profileid."_appPromo");
+				return $appPromo;
 			}
 		}
 		else

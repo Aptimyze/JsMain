@@ -37,8 +37,16 @@ class LoginPage extends React.Component {
             timeToHide: 3000,
             showLoader: false,
             showPromo: false,
-            showCaptchDiv: false
+            showCaptchDiv: false,
+            showRegisterationMessage: false
         };
+        let prevUrl = window.location.href.split("prevUrl=")[1];
+        if ( prevUrl )
+        {
+            prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
+            props.history.prevUrl = "/"+prevUrl;
+            this.state.showRegisterationMessage = true;        
+        }
     }
 
     componentDidMount() {
@@ -65,9 +73,8 @@ class LoginPage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-
        if ( nextProps.MyProfile.AUTHCHECKSUM ) {
-            if ( (this.props.history.prevUrl) && ((this.props.history.prevUrl).indexOf('/login/') === -1) && ((this.props.history.prevUrl).indexOf('/spa/dist/index.html') === -1)  )
+            if ( (this.props.history.prevUrl) && ((this.props.history.prevUrl).indexOf('/login') === -1) && ((this.props.history.prevUrl).indexOf('/spa/dist/index.html') === -1)  )
             {
                 this.props.history.push(this.props.history.prevUrl);
             }
@@ -277,6 +284,13 @@ class LoginPage extends React.Component {
             captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
         }
 
+        let registeredMessageDiv = "";
+
+        if (this.state.showRegisterationMessage)
+        {
+            registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
+        }
+
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>
@@ -297,6 +311,7 @@ class LoginPage extends React.Component {
                                         <img className="loginLogo" src="https://static.jeevansathi.com/images/jsms/commonImg/mainLogoNew.png" />
                                     </div>
                                     <div>
+                                        {registeredMessageDiv}
 
                                         {formInput}
 
@@ -307,7 +322,7 @@ class LoginPage extends React.Component {
                                             
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLink" href="#" className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLink" href={CONSTANTS.HINDI_SITE} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>

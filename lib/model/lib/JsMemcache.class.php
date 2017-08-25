@@ -77,7 +77,7 @@ class JsMemcache extends sfMemcacheCache{
 			}
 			catch (Exception $e) {
 				$this->client = NULL;
-				jsException::log("C-redisClusters".$e->getMessage());
+				jsException::log("C-redisClusters($key)".$e->getMessage());
 			}
 		}
 		else
@@ -140,11 +140,11 @@ class JsMemcache extends sfMemcacheCache{
 						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
 					if($retryCount == 1)
-						jsException::log("S-redisClusters  ->".$key." -- ".$this->get($key));
+						jsException::log("S-redisClusters($key)  ->".$key." -- ".$this->get($key));
 				}
 				catch (Exception $e)
 				{
-					jsException::log("S-redisClusters  ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+					jsException::log("S-redisClusters($key)  ->".$key." -- ".$e->getMessage()."  ".$retryCount);
 					self::$instance == null;
 					self::getInstance();
 					if($retryCount==0)
@@ -186,7 +186,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("G-redisClusters".$e->getMessage());
+					jsException::log("G-redisClusters($key)".$e->getMessage());
 					self::$instance == null;
 					self::getInstance();
 					if($retryCount==0)
@@ -239,7 +239,7 @@ class JsMemcache extends sfMemcacheCache{
 					if($throwException) {
 						throw $e;
 					}
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -279,7 +279,7 @@ class JsMemcache extends sfMemcacheCache{
 					if($throwException) {
 						throw $e;
 					}
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -297,7 +297,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -315,7 +315,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 					return false;
 				}
 			}
@@ -333,7 +333,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -351,7 +351,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -369,7 +369,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -400,7 +400,7 @@ class JsMemcache extends sfMemcacheCache{
 					if ($throwException) {
 						throw $e;
 					}
-                    jsException::log("HS-redisClusters".$e->getMessage());
+                    jsException::log("HS-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -430,7 +430,7 @@ class JsMemcache extends sfMemcacheCache{
 					if ($throwException) {
 						throw $e;
 					}
-                    jsException::log("HS-redisClusters".$e->getMessage());
+                    jsException::log("HS-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -452,7 +452,7 @@ class JsMemcache extends sfMemcacheCache{
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HG-redisClusters".$e->getMessage());
+                    jsException::log("HG-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -475,7 +475,7 @@ class JsMemcache extends sfMemcacheCache{
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HGM-redisClusters".$e->getMessage());
+                    jsException::log("HGM-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -497,7 +497,7 @@ class JsMemcache extends sfMemcacheCache{
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HG-redisClusters".$e->getMessage());
+                    jsException::log("HG-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -515,7 +515,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters incr".$e->getMessage());
+					jsException::log("HG-redisClusters($key) incr".$e->getMessage());
 				}
 			}
 		}
@@ -587,7 +587,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters hincrBy".$e->getMessage());
+					jsException::log("HG-redisClusters($key) hincrBy".$e->getMessage());
 				}
 			}
 		}
@@ -615,7 +615,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters getMultiHashByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) getMultiHashByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -658,7 +658,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters getMultiHashFieldsByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) getMultiHashFieldsByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -692,7 +692,7 @@ class JsMemcache extends sfMemcacheCache{
 				        if($throwException){
 				            throw $e;
 					}
-					jsException::log("HG-redisClusters setMultipleHashByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) setMultipleHashByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -718,7 +718,7 @@ class JsMemcache extends sfMemcacheCache{
                     if ($throwException) {
                         throw $e;
                     }
-                    jsException::log("HG-redisClusters hdel" . $e->getMessage());
+                    jsException::log("HG-redisClusters($key) hdel" . $e->getMessage());
                 }
             }
         }
@@ -736,7 +736,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -757,7 +757,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -777,7 +777,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -797,7 +797,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -815,7 +815,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -833,7 +833,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -851,7 +851,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -882,7 +882,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -901,7 +901,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -978,7 +978,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  				catch (Exception $e)
  				{
- 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 					jsException::log("S-redisClusters($key) TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
  				}
  			}
  		}
@@ -1002,7 +1002,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  				catch (Exception $e)
  				{
- 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 					jsException::log("S-redisClusters($key) TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
  				}
  			}
  		}

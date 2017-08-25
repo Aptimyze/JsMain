@@ -236,16 +236,16 @@ class phoneActions extends sfActions
    		
    		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
-  }
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
+        }
      	if(!$reasonNumber)
      	{
      			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
-	$respObj->setResponseBody($result);
-	$respObj->generateResponse();
-	die;
+          $respObj->setResponseBody($result);
+          $respObj->generateResponse();
+          die;
      	}
 
      	$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
@@ -265,9 +265,10 @@ class phoneActions extends sfActions
 			die;
      	}
 
-   		$profile2=new Profile();
+        
    		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
+        ReportInvalid::markNumberUnverified($profileid, $phone, $mobile);
 
 		if($reasonNumber == 3)
 			{  
@@ -318,12 +319,28 @@ class phoneActions extends sfActions
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);
+       	$respObj = ApiResponseHandler::getInstance();
+       	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->setResponseBody($result);
+		$respObj->generateResponse();
         die();
 		}
 
+    public function executeDNCConsent(sfWebRequest $request)
+  	{
 
 
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
+    $arr['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+    $arr['apiHit'] = CommonConstants::$CONSENT_MSG_API;
+    $arr['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
+    $sendingDetails['consentData'] = $arr;
+    $respObj->setResponseBody($sendingDetails);
+    $respObj->generateResponse();
+    die;
 
+  }
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {

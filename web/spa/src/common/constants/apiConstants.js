@@ -1,4 +1,4 @@
-export const API_SERVER = 'http://test.jeevansathi.com';
+export const API_SERVER = 'http://testjs-15.infoedge.com';
 export const LOGIN_CALL_URL = '/api/v1/api/login';
 //Myjs # Head, Edit bar
 export const MYJS_CALL_URL = '/api/v1/myjs/perform';
@@ -16,3 +16,4 @@ export const ABUSE_FEEDBACK_API = '/api/v1/faq/feedbackAbuse';
 export const REMINDER_API = '/api/v2/contacts/postSendReminder';
 export const CONTACT_ENGINE_API = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1","REPORT_INVALID_API":"/phone/reportInvalid"};
 export const PHOTALBUM_API = "/api/v1/social/getAlbum";
+export const HINDI_SITE = "http://hindi2.mox.net.in";
