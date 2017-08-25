@@ -87,6 +87,8 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 $whereString .= " AND ((PARTNER_HHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_HHEIGHT')
                                 $whereString .= " AND PARTNER_HHEIGHT<=:".$key.") || PARTNER_HHEIGHT = '' || PARTNER_HHEIGHT IS NULL)" ;
+                            else if($key == "MSTATUS")
+                                $whereString .= " AND MSTATUS IN(:".$key."0)" ;
                             else{
                                 $valArray = explode(" ",$value);
                                 $whereString.= "AND (";
