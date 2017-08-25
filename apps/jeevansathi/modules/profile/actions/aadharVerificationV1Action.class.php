@@ -23,17 +23,28 @@ class aadharVerificationV1Action extends sfActions
 		$this->username = $this->loginProfile->getUSERNAME();
 		$aadharId = $request->getParameter("aid");
 		$nameOfUser = $request->getParameter("name");
+		$returnId = $aadharVerificationObj->preVerification($aadharId,$this->profileId);
 		if(strlen($aadharId) != aadharVerificationEnums::AADHARLENGTH) //to check the length of aadhar number
 		{
 			$errorArr["ERROR"] = aadharVerificationEnums::IMPROPERFORMAT;
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
-		elseif($aadharVerificationObj->preVerification($aadharId)) //aadhar already entered and verified
+		elseif($returnId) //aadhar already entered and verified
 		{
-			$errorArr["ERROR"] = aadharVerificationEnums::ALREADYVERIFIED;
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$AADHAR_ALREADY_VERIFIED);
-			$apiResponseHandlerObj->setResponseBody($errorArr);
+			if($returnId == $this->profileId)
+			{
+				$errorArr["ERROR"] = aadharVerificationEnums::AADHARVERIFIED;
+				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$AADHAR_ALREADY_VERIFIED_BY_SAME);
+				$apiResponseHandlerObj->setResponseBody($errorArr);
+			}
+			else
+			{
+				$errorArr["ERROR"] = aadharVerificationEnums::ALREADYVERIFIED;
+				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$AADHAR_ALREADY_VERIFIED);
+				$apiResponseHandlerObj->setResponseBody($errorArr);
+			}
+			
 		} 
 		else
 		{		
