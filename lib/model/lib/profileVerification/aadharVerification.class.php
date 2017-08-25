@@ -153,12 +153,12 @@ class aadharVerification
 		JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
 	}
 
-    public function preVerification($aadharId)
+    public function preVerification($aadharId,$profileId)
     {
-        $resultArr = self::$aadharObj->checkIfAadharVerified($aadharId,aadharVerificationEnums::VERIFIED);
+        $resultArr = self::$aadharObj->checkIfAadharVerified($aadharId,aadharVerificationEnums::VERIFIED);        
         if(is_array($resultArr) && !empty($resultArr))
         {
-            return 1;
+            return $resultArr["PROFILEID"];
         }
         else
             return 0;
