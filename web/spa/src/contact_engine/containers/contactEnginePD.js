@@ -232,21 +232,21 @@ getOverLayDataDisplay(){
 
     let layer = [];
       if(this.state.showThreeDots)
-        layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.hideLayerCommon({showThreeDots: false})} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
         layer= (<ReportAbuse
                     username={this.props.profiledata.username}
                     profilechecksum={this.props.profiledata.profilechecksum}
                     closeAbuseLayer={() => this.hideLayerCommon({showReportAbuse: false})}
-                    profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+                    profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
-        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} />);
+        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.hideLayerCommon({'showContactDetail':false})} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showReportInvalid)
       {
         console.log("showReportInvalid is true.");
-        layer= (<ReportInvalid username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeInvalidLayer={() => this.hideLayerCommon({showReportInvalid: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} reportType={this.state.reportType} />);
+        layer= (<ReportInvalid username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeInvalidLayer={() => this.hideLayerCommon({showReportInvalid: false})} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} reportType={this.state.reportType} />);
       }
 
       if(this.state.showMsgLayer)
@@ -259,7 +259,7 @@ getOverLayDataDisplay(){
       }
       if(this.state.showBlockLayer)
       {
-        layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
+        layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
       }
       return (  <div key="2">{layer}</div>)
   }
@@ -273,7 +273,7 @@ getCommonOverLay(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
                           <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
                         </div>
                 </div>
