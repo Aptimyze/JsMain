@@ -172,11 +172,15 @@
 
                         </div>
                         </div>
-                        <div id="attachDiv" class="brdr23 white posfix btm50 fullwid pad3 dn">
+                        <div id="attachDiv" style="overflow: auto" class="brdr23 white posfix btm50 fullwid pad3 dn">
                             <div id="attachTitle">
                                 <i class="reportIcon atachIcon"></i>
                                 <span>Attach Proof</span>
                             </div>
+                            
+                            <div id="photoDiv" >
+                            </div>
+                            
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
                             <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Abuse</div>

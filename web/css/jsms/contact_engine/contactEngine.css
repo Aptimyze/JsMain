@@ -273,7 +273,7 @@ color: transparent;
     background-position: -13px -8px;
 }
 .crossPosition {
-    position: absolute;
-    left: 83%;
-    margin-top: -20px;
+    display: inline-block;
+    float: right;
+    position: relative;
 }

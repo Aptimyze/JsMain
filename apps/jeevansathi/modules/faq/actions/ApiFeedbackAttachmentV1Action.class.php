@@ -31,6 +31,7 @@ class ApiFeedbackAttachmentV1Action extends sfActions {
     }
     
     $arrFeedback = $request->getParameter('feed');
+    
     if($request->isMethod('POST')) {
     $feedBackObj = new FAQFeedBack(1);
       $result = $feedBackObj->uploadTempAttachments($request);     

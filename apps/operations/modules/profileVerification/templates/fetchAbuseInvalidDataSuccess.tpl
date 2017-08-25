@@ -40,14 +40,14 @@
                 { 
                      var link = document.createElement('a');
 
-                    link.setAttribute('download', null);
+                    
                     link.style.display = 'none';
 
                     document.body.appendChild(link);
                     
                     var size = response.length;
                     for ( var i=0 ; i<size ; i++ ) {
-                        response[i] = response[i].replace('b2.jeev.com', 'xmppdev1.jeevansathi.com');
+                        link.setAttribute('download', response[i].split("/").pop());
                         link.setAttribute('href', response[i]);
                         link.click();
                     }

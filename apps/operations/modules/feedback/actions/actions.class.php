@@ -246,8 +246,14 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
           if(0 === strlen($val)) {
             continue;
           }
-          //TODO : Change it to   
-          $val = str_replace(IMAGE_SERVER_ENUM::$appPicUrl, JsConstants::$siteUrl, $val);
+          //TODO : Change it to
+          $prefix = substr($val, 0, 2);
+          $imagePath = substr($val, 2);
+          if( $prefix == IMAGE_SERVER_ENUM::$appPicUrl ) {
+            $val = JsConstants::$applicationPhotoUrl.$imagePath;
+          } else if ( $prefix == IMAGE_SERVER_ENUM::$cloudUrl ){
+            $val = JsConstants::$httpsCloudUrl.$imagePath;
+          }
           $arrOut[] = $val;
         }
       }
