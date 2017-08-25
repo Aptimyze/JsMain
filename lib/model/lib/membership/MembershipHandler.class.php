@@ -2936,12 +2936,13 @@ class MembershipHandler
         $serviceStatusObj = new billing_SERVICE_STATUS();
         $contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
         $suspendUnlimitedServiceObj = new billing_SUSPENDED_UNLIMITED_SERVICE_LOG();
-        $newServiceDetail = $serviceStatusObj->fetchAllServiceDetailsForBillid($billID);
-        if(!is_array($newServiceDetail)) {
+        if($suspend){
             $newServiceDetail[0]["PROFILEID"] = $profileID;
             $newServiceDetail[0]["SERVEFOR"] = $serveFor;
             $newServiceDetail[0]["SERVICEID"] = $serviceID;
             $newServiceDetail[0]["BILLID"] = $billID;
+        } else{
+            $newServiceDetail = $serviceStatusObj->fetchAllServiceDetailsForBillid($billID);
         }
         foreach ($newServiceDetail as $key=>$value){
             $serveFor = $value["SERVEFOR"];
