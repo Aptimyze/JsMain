@@ -429,17 +429,16 @@ class ProfilePage extends React.Component {
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
         if(this.state.dataLoaded)
-        {
+        {   
             document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
                 let profiledata = {
                     profilechecksum : this.state.profilechecksum,
                     responseTracking: this.state.responseTracking,
-                    profileThumbNailUrl: this.props.AboutInfo.thumbnailPic || this.state.defaultPicData,
+                    profileThumbNailUrl: this.props.pageInfo.thumb_url || this.state.defaultPicData,
                     username:this.props.AboutInfo.username
                 };
-
                 contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;

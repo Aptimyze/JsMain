@@ -44,13 +44,17 @@ class AuthFilter extends sfFilter {
 		/*SPA*/
 
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view');
+		$nonSpaUrls = array('ownview=1');
 		$spa = 0;
 		$originalArray = array('https://','http://');
 		$replaceArray = array('','');
 		$specificDomain = str_replace($originalArray, $replaceArray, $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
+		$specificSubDomain = explode('?',$specificDomain[1],2);
 		if($specificDomain[1] == '')
 			$spa = 1;
+		elseif(in_array($specificSubDomain[1],$nonSpaUrls))
+			$spa = 0;
 		else {
 			foreach ($spaUrls as $url) {
 		    	if (strpos($specificDomain[1], $url) !== FALSE) {
@@ -61,7 +65,6 @@ class AuthFilter extends sfFilter {
 		}
 		if( MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
 			//bot section here.
-
 			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs-2.1.1/bin/phantomjs";
 			$phantomCrawler =  JsConstants::$docRoot."/spa/phantomCrawler.js";
 

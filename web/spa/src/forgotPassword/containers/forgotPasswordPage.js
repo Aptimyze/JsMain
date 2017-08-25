@@ -28,6 +28,7 @@ class ForgotPassword extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        
         this.setState({
             showLoader:false
         });
@@ -64,7 +65,6 @@ class ForgotPassword extends React.Component {
                         isd = isd.split("+")[1];
                     }    
                 }
-
                 this.props.sendPassLink(inpText,isd);
             }  
         }
@@ -144,7 +144,7 @@ const mapDispatchToProps = (dispatch) => {
             } else {
                 call_url = "/api/v1/api/forgotlogin?email="+inpText+"&phone="+inpText+"&isd="+isd; 
             }
-            dispatch(commonApiCall(call_url,{},'SEND_FORGOT_LINK','POST'));
+            commonApiCall(call_url,{},'SEND_FORGOT_LINK','POST',dispatch);
         }
     }
 }

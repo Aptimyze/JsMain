@@ -106,8 +106,6 @@ class SearchFormPage extends React.Component {
         this.setState({
             tupleData: nextProps.searchData.services.searchForm.data
         })
-        //TODO: append data from tables
-       
     }
 
     componentDidUpdate(prevprops) {
