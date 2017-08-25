@@ -187,11 +187,28 @@ class jsexclusiveActions extends sfActions {
     }
 
     public function executeWelcomeCalls(sfWebRequest $request) {
-
         $agent = $request['name'];
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-        $this->welcomeCallsProfiles = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
+        $nameOfUserObj = new incentive_NAME_OF_USER();
+        $purchasesObj = new billing_PURCHASES();
+
+        $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
+        if(is_array($combinedIdArr) && !empty($combinedIdArr)){
+            $combinedIdArr = array_keys($combinedIdArr);
+            $combinedIdStr = implode(",",$combinedIdArr);
+
+            $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+
+            $userNames = $purchasesObj->getUserName($combinedIdStr);
+
+            foreach($nameOfUserArr as $key=>$value){
+                $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+            }
+            $this->welcomeCallsProfiles = $nameOfUserArr;
+        } else{
+            $this->welcomeCallsProfiles = $combinedIdArr;
+        }
         $this->welcomeCallsProfilesCount = count($this->welcomeCallsProfiles);
     }
 
@@ -201,7 +218,7 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $this->client = $request['client'];
 
-        //$this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
+        $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
         if($request["submit"]){
