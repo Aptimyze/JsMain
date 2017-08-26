@@ -29,7 +29,8 @@ export class contactEnginePD extends React.Component{
       "CANCEL":"/api/v2/contacts/postCancelInterest",
       "SHORTLIST":"/api/v1/common/AddBookmark",
       "MESSAGE":"/api/v2/contacts/postWriteMessage",
-      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails"
+      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails",
+      "MEMBERSHIP":"/profile/mem_comparison.php"
     };
   }
 
@@ -54,6 +55,10 @@ export class contactEnginePD extends React.Component{
       break;
       case 'REPORT_INVALID':
         this.showLayerCommon({showReportInvalid:true,reportType:button.type});
+      break;
+
+      case 'MEMBERSHIP':
+        window.location=this.actionUrl[button.action];
       break;
 
       default:
@@ -261,8 +266,6 @@ getOverLayDataDisplay(){
   }
 
 getCommonOverLay(actionDetails){
-  console.log('---getCommonOverLay');
-  console.log(actionDetails);
   return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
             <a href="#"  className="ce_overlay" > </a>
               <div className="posabs ce_z103 ce_top1 fullwid" >

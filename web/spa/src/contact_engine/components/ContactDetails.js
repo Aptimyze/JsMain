@@ -7,7 +7,7 @@ export default class ContactDetails extends React.Component{
     this.state=this.getContactDetails(this.props.actionDetails);
   }
 
-componentWillReceiveProps(nextProps){console.log(nextProps,'next');
+componentWillReceiveProps(nextProps){
 var newState = this.getContactDetails(nextProps.actionDetails);
 this.setState({...newState});
 }
@@ -15,7 +15,7 @@ render(){
 
 return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
-            <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
+            <div className={"posabs ce_z103 ce_top1 fullwid " +this.state.commonOverlayShow} style={this.state.tupleDim}>
 
 <div className="white fullwid" id="commonOverlayTop">
 
@@ -86,11 +86,8 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
   if(displayProps.contact){
     contactShow = '';
 
-//    $("#mobileVal,#mobileValBlur").hide();
-    //$("#mobileValBlur").hide();
-    //$("#mobile").show();
     if(displayProps.contact.value=="blur"){
-      mobileValBlur = ''; //$("#mobileValBlur").show();
+      mobileValBlur = '';
     }
     else
     {
@@ -99,11 +96,8 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
       reportInvalid = (<span  onClick={() => this.props.bindAction({'action':'REPORT_INVALID','type':displayProps.id})} className="reportInvalidjsmsButton invalidMob " style = {{color:'#d9475c'}}> Report Invalid </span>);
 
     }
-  //$("#mobileVal").show();
           mobileVal = displayProps.contact.value;
-              //  $("#mobileVal").html(displayProps.contact.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (displayProps.contact.iconid){
-//                   $("#mobileIcon > a").attr('href','tel:'+displayProps.contact.value.toString());
               mobileIconShow = '';
         }
   }
@@ -111,10 +105,8 @@ let reportInvalid=(<div></div>),mobileIconShow='dispnone',mobileValShow='dispnon
       {
         mobileValShow = '';
         contactShow = '';
-        //$("#mobileVal,#mobile").show();
         mobileVal = displayProps.contact_message;
         mobileValBlur='dispnone';
-//        $("#mobileVal").html(result.actiondetails.contact1_message);
       }
 
 return (
@@ -138,17 +130,12 @@ getEmailInfo(displayProps)
     if(displayProps.contact){
       contactShow = '';
 
-  //    $("#mobileVal,#mobileValBlur").hide();
-      //$("#mobileValBlur").hide();
-      //$("#mobile").show();
       if(displayProps.contact.value=="blur"){
-        mobileValBlur = ''; //$("#mobileValBlur").show();
+        mobileValBlur = '';
       }
-      else emailValShow='';//$("#mobileVal").show();
+      else emailValShow='';
       emailVal = displayProps.contact.value;
-                //  $("#mobileVal").html(displayProps.contact.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                   if (displayProps.contact.iconid){
-  //                   $("#mobileIcon > a").attr('href','tel:'+displayProps.contact.value.toString());
                 mobileIconShow = '';
           }
     }
@@ -178,7 +165,7 @@ getMembershipOvlay(){
                   </div>
                   <div className="pad2 f16 fontlig" id="newErrMsg">{this.state.newErrMsg}</div>
                   <div className="pad20 f16 fontlig mt15" id="membershipheading">{this.state.memHeading}</div>
-                  <ul className=" memList f13 fontlig">
+                  <ul style={{paddingLeft:'40px'}} className=" memList f13 fontlig">
                       <li className="tick pad21" id="subheading1">{this.state.sH1}</li>
                       <li className="tick pad21" id="subheading2">{this.state.sH2}</li>
                       <li className="tick pad21" id="subheading3">{this.state.sH3}</li>
@@ -197,7 +184,7 @@ getMembershipOvlay(){
               <a href="#" id="skipLayer" className="f16 fontmed app_clrw txtc posSkip">Skip</a>
               <div className="bg7">
 
-              <a href="#" id="footerButtonNew" className="fullwid dispbl lh50 txtc f17 fontlig white"></a>
+              <a onClick={()=>this.props.bindAction(this.props.actionDetails.footerbutton)} id="footerButtonNew" className="fullwid dispbl lh50 txtc f17 fontlig white">{this.props.actionDetails.footerbutton.newlabel}</a>
               </div>
       </div>
 
@@ -207,7 +194,6 @@ getMembershipOvlay(){
 
 footerBFunction(){
 this.props.bindAction();
-//  this.props.bindAction
 
 }
 getContactDetails(actiondetails){
@@ -217,17 +203,9 @@ getContactDetails(actiondetails){
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
   memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
   c1Style = {};
-  //$("#topMsg").hide();
-  //$("#"+actionTemplate[action]).show();
-  /*if(result.footerbutton)
-  {
-    contactDetailMessage(result,action, index);
-    return;
-  }*/
-
     if(actiondetails.errmsglabel)
     {
-    topMsg2Text = actiondetails.errmsglabel ; //    $("#topMsg2").html(result.actiondetails.errmsglabel);
+    topMsg2Text = actiondetails.errmsglabel ;
     var memText, memShow;
 
     if(actiondetails.footerbutton && actiondetails.footerbutton.text)
@@ -241,7 +219,6 @@ getContactDetails(actiondetails){
           memShow = 'dispnone';
 
         }
-    //  $("#membershipMessageCE").text(actiondetails.footerbutton.text).show();else $("#membershipMessageCE").hide();
       commonOverlayShow : ''
 
     }
@@ -259,11 +236,9 @@ else
 
       }
 
-    //if(result.actiondetails.membershipOfferMsg)$("#membershipMessageCE").text(result.actiondetails.membershipOfferMsg).show();else $("#membershipMessageCE").hide();
     if(actiondetails.contactdetailmsg){
         topMsg2Text = actiondetails.contactdetailmsg,
         topMsg2TextShow = '';
-        //$("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
       topMsg2TextShow = 'dispnone';
@@ -272,16 +247,13 @@ else
   {
     topMsgText = actiondetails.contactdetailmsg,
     topMsgTextShow = '';
-//    $("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
     topMsgTextShow = 'dispnone';
 
-console.log('3333',actiondetails);
-  if(actiondetails.bottommsg){console.log('hereeee');
+  if(actiondetails.bottommsg){
     bottomMsgShow = 'dispibl';
     bottomMsgText = actiondetails.bottommsg;
-//    $("#bottomMsg").html(result.actiondetails.bottommsg);
     if(actiondetails.bottommsgurl)
       bottomMsgredirectFun = ()=>{window.location.replace(actiondetails.bottommsgurl)}
 
@@ -289,22 +261,10 @@ console.log('3333',actiondetails);
   if(actiondetails.bottommsg2){
     bottomMsgShow2 = {'display': 'inline-block'};
     bottomMsgText2 = actiondetails.bottommsg2;
-//    $("#bottomMsg").html(result.actiondetails.bottommsg);
 
   }
-//
-// if(result.actiondetails.bottommsg2){
-//     $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
-//   }
-
-    // primaryMob = this.getPhoneSection({contact:actiondetails.contact1,contact_message:actiondetails.contact1_message,showReportInvalid:true,label:'Phone No.'});
-    // landLine = this.getPhoneSection({contact:actiondetails.contact2,contact_message:actiondetails.contact2_message,showReportInvalid:true,label:'Landline'});
-    // alternateMob = this.getPhoneSection({contact:actiondetails.contact3,contact_message:actiondetails.contact3_message,showReportInvalid:false,label:'Alternate No.'});
-    // emailInfo = this.getEmailInfo({contact:actiondetails.contact4,contact_message:actiondetails.contact4_message,showReportInvalid:false,label:'Email'});
     if(actiondetails.contact1 && actiondetails.contact1.value=="blur")
       nevMindStyle = {display:'block'};
-    //$("#footerButton").html(result.actiondetails.footerbutton.label);
-    //$("#mobile").hide();
 
     }
         if(actiondetails.footerbutton!=null){
@@ -316,77 +276,47 @@ console.log('3333',actiondetails);
           if(actiondetails.infomsglabel)
           {
             preLayerText = actiondetails.infomsglabel;
-            //$("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
             vCPreLayerShow = '';
-            //$("#ViewContactPreLayer").show();
           }
           if(actiondetails.newerrmsglabel)
           {
             commonOverlayShow = 'dispnone';
-            //$("#commonOverlay").hide();
             newErrMsg = actiondetails.newerrmsglabel;
-            //$("#newErrMsg").html(result.actiondetails.newerrmsglabel);
             memHeading  = actiondetails.membershipmsgheading;
-            //$("#membershipheading").html(result.actiondetails.membershipmsgheading);
             sH1=actiondetails.membershipmsg.subheading1;
             sH2=actiondetails.membershipmsg.subheading2;
             sH3=actiondetails.membershipmsg.subheading3;
-            // $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
-            // $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
-            // $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
-
             if(typeof(actiondetails.offer) != "undefined" && actiondetails.offer != null)
             {
               mOExists = ''
-              //$("#MembershipOfferExists").show();
               var mO1 = actiondetails.offer.membershipOfferMsg1.toUpperCase();
               var mO2 = actiondetails.offer.membershipOfferMsg2;
-              //$("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
-              //$("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
               if(typeof(actiondetails.strikedprice) != "undefined" && actiondetails.strikedprice != null)
               {
                 var oPrice = actiondetails.strikedprice;
                 var oPShow = '';
-                //$("#oldPrice").html(result.actiondetails.strikedprice);
-                //$("#oldPrice").show();
               }
 
 
               var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={this.state.oPShow}>{this.state.oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
             </div>);
-              //discntPrice = result.actiondetails.discountedprice;
-              //lwstOffShow = '';
-              // $("#currency").html(result.actiondetails.membershipoffercurrency);
-              // $("#newPrice").html(result.actiondetails.discountedprice);
-              // $("#LowestOffer").show();
             }
             else if(typeof(actiondetails.lowestoffer) != "undefined" && actiondetails.lowestoffer != null)
             {
-              lowestOfferDiv = (<div className="f16 fontlig mt60" id="LowestOffer" ></div>);
+              lowestOfferDiv = (<div className="f16 fontlig mt60" id="LowestOffer" >{actiondetails.lowestoffer}</div>);
 
-              //$("#LowestOffer").html(result.actiondetails.lowestoffer);
-              //$("#LowestOffer").addClass("mt60");
-              //$("#LowestOffer").show();
             }
 
-            //bindFooterButtonswithId(result,'footerButtonNew');
             memOvlayShow = '';
 
           }
           else if(actiondetails.errmsglabel)
           {
             topMsg2TextShow='dispnone';
-            //////************/$("#topMsg2,#landline").hide();
-            //$("#landline").hide();
-            //$("#ViewContactPreLayerTextNoNumber").html("You will be able to see the Email Id of "+result.actiondetails.headerlabel+ "but not the phone number. This is because "+result.actiondetails.headerlabel+"'s has chosen to hide phone number.");
             var vCNoNumber = actiondetails.errmsglabel;
-           //$("#ViewContactPreLayerTextNoNumber").html(result.actiondetails.errmsglabel);
            vCPreLayerNoNumShow = '';
-            //$("#ViewContactPreLayerNoNumber").show();
           }
 
-
-          //footerBFunction = (result.actiondetails.footerButton) =>
 
 	}
         else {
@@ -401,8 +331,7 @@ console.log('3333',actiondetails);
           , lowestOfferDiv, vCNoNumber,closeLyrShow,cdOvlayShow,primaryMob,landLine,alternateMob,
           emailInfo,memOvlayShow,footerBShow,c1Style
 
-        };//$("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
-
+        };
 }
 
 }
