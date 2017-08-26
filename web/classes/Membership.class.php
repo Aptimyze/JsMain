@@ -754,6 +754,9 @@ class Membership
         //flush myjs cache after success payment
         if($this->profileid && !empty($this->profileid)){
             MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+            $memCacheObject = JsMemcache::getInstance();
+            $memCacheObject->delete($this->profileid . "_MEM_HAMB_MESSAGE");
+            unset($memCacheObject);
         }
     }
 
@@ -1124,8 +1127,14 @@ class Membership
                 if ($duration == '35640') $expiry_date = '2099-01-01';
                 else $expiry_date = date("Y-m-d", $ts);
                 $insert_query_str = "'$this->billid','$this->profileid','$serviceid_arr[$i]','$service_components','Y','$activated_on','','$this->entryby','$expiry_date','Y','$rights_str'";
-                if ($rights_str == 'T' || $rights_str == 'L') $this->assisted_arr[] = $rights_str;
-                elseif (strstr($rights_str, 'F')) $this->start_direct_call($serviceid_arr[$i], '0');
+                
+                if ($rights_str == 'L'){
+                    $this->assisted_arr[] = $rights_str;
+                }
+                if(strpos($rights_str, 'X')!==false){
+                    $this->assisted_arr[] = 'X';
+                }
+                if (strstr($rights_str, 'F')) $this->start_direct_call($serviceid_arr[$i], '0');
             }
             if ($serviceObj->getServiceType($serviceid_arr[$i]) == 'C') {
                 $total = $serviceObj->getCount($serviceid_arr[$i]);
@@ -1361,10 +1370,11 @@ class Membership
                 $newjsConnObj->updateSubscriptionForId($this->subscription, $id);
             }
         }
+        
         foreach ($this->assisted_arr as $k => $v) {
-            if ($v == 'T') {
+            if ($v == 'X') {
                 startAutoApply($this->profileid, $this->walkin);
-		addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
+                addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
             }
             if ($v == 'L') {
                 if (!in_array('T', $this->assisted_arr)) startHomeDelivery($this->profileid, '');
@@ -2131,12 +2141,16 @@ class Membership
         $DT = date('Y-m-d');
         $servefor = $billingServStatObj->getActiveSuscriptionString($profileid);
         $end_arr = array_diff($cancel_arr, $servefor_arr);
-        if (in_array("T", $end_arr)) endAutoApply($profileid);
+       
+        /*if (in_array("T", $end_arr)){
+            endAutoApply($profileid);
+        }*/
         if (in_array("L", $end_arr)) endHomeDelivery($profileid);
         if (in_array("I", $end_arr) || (!strstr('F', $servefor))) endIntroCalls($profileid);
         foreach ($cancel_arr as $key => $value) {
             if(strpos($value, 'X') !== false)
             {
+                endAutoApply($profileid);
                 //remove entry from billing.EXCLUSIVE_MEMBERS table
                 $exMemObj = new billing_EXCLUSIVE_MEMBERS();
                 $exMemObj->removeExclusiveMemberEntry($profileid);
@@ -2331,7 +2345,7 @@ class Membership
             return 0;
         }
         $today = date('Y-m-d H:i:s');
-        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT('newjs_masterRep');
+        $billingVarDiscObj = new billing_LIGHTNING_DEAL_DISCOUNT();
         $row = $billingVarDiscObj->fetchDiscountDetails($profile,$today);
         if (is_array($row) && $row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];
@@ -2481,14 +2495,14 @@ class Membership
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else if ($screeningStatus == "N") {
+        }/*else if ($screeningStatus == "N") {
             $main_service = $mainServiceId;
             $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else {
+        }*/else {
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive,$lightningDealActive,$lightning_deal_discount_expiry,$lightningDealDiscountPercent) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
            
             // Existing codes for setting discount type in billing.ORDERS

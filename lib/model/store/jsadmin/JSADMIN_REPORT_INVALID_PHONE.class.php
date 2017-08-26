@@ -284,7 +284,50 @@ public function entryExistsForPair($submitter,$submittee)
             throw new jsException($e);
         }
     
-    } 
+    }
+    
+    /**
+     * 
+     * @param type $profileId
+     * @param type $phone
+     * @param type $mobile
+     * @param type $timeOfMarking
+     * @param type $lastDateToCheck
+     * @return type
+     * @throws jsException
+     */
+    public function getCountOfInvalid($profileId, $phone, $mobile, $timeOfMarking, $lastDateToCheck) {
+      try {
+
+        if (!($profileId) || !$timeOfMarking || !$lastDateToCheck) {
+          throw new jsException("", "profileId IS not passed or blank , also check if start and end dates are mentioned");
+        }
+
+        $sql = 'SELECT count( * ) AS CNT
+                FROM jsadmin.REPORT_INVALID_PHONE
+                WHERE DATE( `SUBMIT_DATE` ) <= DATE( :TIME_OF_MAKING )
+                AND DATE( `SUBMIT_DATE` ) >= DATE( :TIME_OF_LAST )
+                AND `PHONE` = :PHONE
+                AND `MOBILE` = :MOB
+                AND `SUBMITTEE` = :PG_ID';
+        
+        $prep = $this->db->prepare($sql);
+        
+        $prep->bindValue(":TIME_OF_MAKING", $timeOfMarking, PDO::PARAM_STR);
+        $prep->bindValue(":TIME_OF_LAST", $lastDateToCheck, PDO::PARAM_STR);
+        $prep->bindValue(":PHONE", $phone, PDO::PARAM_STR);  
+        $prep->bindValue(":MOB", $mobile, PDO::PARAM_STR); 
+        $prep->bindValue(":PG_ID", $profileId, PDO::PARAM_STR); 
+        
+        $prep->execute();
+
+        if ($row = $prep->fetch(PDO::FETCH_ASSOC))
+          $output = $row['CNT'];
+        return $output;
+      } catch (Exception $e) {
+        throw new jsException($e);
+      }
+    }
 
 }
 ?>    

@@ -74,7 +74,8 @@ EOF;
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
 				$data["stypeMatch"] =$stypeMatch."&clicksource=".$clicksource;
-				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);                           
+                                $dppLink = $mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic;
+				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid,$dppLink);                           
                                 $data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
                                 
@@ -89,7 +90,7 @@ EOF;
                                 }
                                 
                                 if(($values["LOGIC_USED"] == self::COMMUNITY_MODEL)){
-                                    $data["body"].="<a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>click here</a>";
+                                    $data["body"].="<a href='".$dppLink."'>click here</a>";
                                 }
                                 
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
@@ -132,6 +133,9 @@ EOF;
       case 5 : 
         return SearchTypesEnums::MatchAlertMailer5;
         break;
+      case 7 : 
+        return SearchTypesEnums::MatchAlertMailer7;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -145,7 +149,7 @@ EOF;
   *@param $profileId : Receiver profile Id
   *@return $subject : subject of the mail
   */
-  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId)
+  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId,$dppLink="")
   {
 	$subject = array();
 	$today = date("d M");
@@ -184,6 +188,11 @@ EOF;
                 case "5"://relaxed dpp trends case
                         $subject["subject"]= $count.$matchStr." based on your broader Desired Partner Profile";
 			$subject["body"]="Shown below are matches based on your broader Desired Partner Profile. We have broadened some of your preferences as your Desired Partner Profile may be very strict. To get matches as per Desired Partner Profile, please ";
+                        $subject["showDpp"]= 1;
+                        break;
+                case "7"://relaxed dpp trends case
+                        $subject["subject"]= $count.$matchStr." based on your latest search";
+			$subject["body"]="To get more matches strictly based on your Desired Partner Profile, please broaden your <a href='$dppLink'>Desired Partner Profile</a>. Meanwhile, please go through these matches from your latest search, which we have added to your Recommendations.";
                         $subject["showDpp"]= 1;
                         break;
 		default :

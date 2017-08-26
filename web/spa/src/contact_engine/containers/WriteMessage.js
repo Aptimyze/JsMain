@@ -7,26 +7,32 @@ import Loader from "../../common/components/Loader";
 
 export class WriteMessage extends React.Component{
   constructor(props){
-    super();
+    super(props);
     this.state = {
         showLoader: false,
-        tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
+        tupleDim : {'width' : window.innerWidth,'height': window.innerHeight},
+        nxtdata: this.props.buttonData.hasNext,
+        messages : this.props.buttonData.messages
     };
+    this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
 
   }
 
+
+
   componentDidMount(){
+    this.state.initialscrollpos = document.getElementById('msgId').scrollHeight;
+
     let e = document.getElementById('msgId');
     //e.scrollTop =  e.scrollHeight;
     document.getElementById("ProfilePage").classList.add("scrollhid");
     let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
     bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
-    remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
 
+    //Note:this will take the scroll to the bottom of the msg inner view, where prvious msh are being displayes
+    remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
     e.style.height = remHgtMSG+"px";
-    console.log(remHgtMSG);
-    console.log(e.scrollHeight);
     if( remHgtMSG < e.scrollHeight)
     {
       e.scrollTop =  e.scrollHeight;
@@ -46,10 +52,13 @@ export class WriteMessage extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-
+//    if(nextProps.contactAction.msgInitiated)
+  //    this.props.buttonData.messages = nextProps.contactAction.message.messages.concat(this.props.buttonData.messages);
   }
+
   sendMessage() {
-    this.showLoaderDiv()
+
+    this.showLoaderDiv();
     let message = document.getElementById("writeMessageTxtId").value;
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
@@ -62,15 +71,41 @@ export class WriteMessage extends React.Component{
     e.scrollTop =  e.scrollHeight;
   }
 
+  showMessagesOnScroll(e){
+    if(!this.state.nxtdata)return;
+    var url = `&profilechecksum=${this.props.profilechecksum}&MSGID=${this.props.buttonData.MSGID ? this.props.buttonData.MSGID:""}&pagination=1`;
+    commonApiCall('/api/v2/contacts/WriteMessage',url,'WRITE_MESSAGE','POST').then((response)=>{
+      this.scrollHeight = document.getElementById('msgId').scrollHeight;
+      let messages = response.messages.concat(this.state.messages);
+      this.setState({nxtdata:response.hasNext,messages:messages });
+    });
+  }
+  componentDidUpdate(){
+    console.log('didupdate');
+    document.getElementById('msgId').scrollTop = document.getElementById('msgId').scrollHeight-(this.scrollHeight);
+  }
+  WrieMsgScrollEvent(){
+
+    let e = document.getElementById('msgId');
+
+    //console.log('scroll height', e.scrollHeight )
+    //console.log('scroll top',e.scrollTop);
+    if(e.scrollTop==0)
+    {
+
+     this.showMessagesOnScroll(e);
+    }
+  }
+
   render(){
+
   var loaderView;
         if(this.state.showLoader)
         {
           loaderView = <Loader show="div"></Loader>;
         }
+
     let WriteMsg_buttonView, WriteMsg_innerView,WriteMsg_topView,WrtieMsg_historydiv,WriteMsg_appendmsg;
-  console.log('in 22');
-  console.log(this.props);
     WriteMsg_topView =   <div className="posrel clearfix fontthin ce_hgt1">
         <div className="posabs com_left1">
           <img id="imageId" src={this.props.buttonData.viewed} className="com_brdr_radsrp ce_dim1"/>
@@ -118,9 +153,11 @@ export class WriteMessage extends React.Component{
                                 <div className="color2 f16 fontlig">Send</div>
                               </div>
                             </div>;
-      if(this.props.buttonData.messages.length!=0)
+      if(this.state.messages != null)
       {
-              WrtieMsg_historydiv =  this.props.buttonData.messages.map((msg,index)=>{
+              //if(this.props.buttonData.messages.length <25)
+                //this.showMessagesOnScroll();
+              WrtieMsg_historydiv =  this.state.messages.map((msg,index)=>{
                                       let msg_class1;
                                       if(msg.mymessage == 'true')
                                       {
@@ -132,7 +169,7 @@ export class WriteMessage extends React.Component{
                                       }
 
                                       return(
-                                          <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index}>
+                                          <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
                                             <span>{msg.message}</span>
                                             <span className="dispbl f12 color1 pt5 white">{msg.timeTxt}</span>
                                           </div>
@@ -141,17 +178,12 @@ export class WriteMessage extends React.Component{
       }
       else
       {
-            WrtieMsg_historydiv = <div className="com_pad1_new fontlig f16 white" id="presetMessageDispId">
+            WrtieMsg_historydiv = <div className="com_pad1_new fontlig f16 white" id="presetMessageDispId" key="nomsg">
               <span id="presetMessageTxtId">Start the conversation by writing a message.</span>
              <span className="dispbl f12 color1 pt5 white" id="presetMessageStatusId"></span>
             </div>
       }
-      WriteMsg_appendmsg = <div id="writeMsgDisplayId">
-                              <div className="txtr com_pad_l fontlig f16 white com_pad1">
-                                <div className="com_pad2 clearfix fl dispibl writeMsgDisplayTxtId"></div>
-                                <div className="dispbl f12 color1 pt5 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div>
-                            </div>
-                          </div>;
+      WriteMsg_appendmsg = <div id="writeMsgDisplayId" key="newMsgSent"></div>;
       WriteMsg_innerView=[WrtieMsg_historydiv,WriteMsg_appendmsg];
   }
   return(
@@ -163,7 +195,7 @@ export class WriteMessage extends React.Component{
               {WriteMsg_topView}
             </div>
 
-            <div className="message_con ce_scoll1" id="msgId">
+            <div className="message_con ce_scoll1" onScroll={this.WrieMsgScrollEvent} id="msgId">
               {WriteMsg_innerView}
             </div>
 
@@ -184,11 +216,14 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return{
-         sendMessageApi: (api,action,url) => {
+  return{
+        sendMessageApi: (api,action,url) => {
           commonApiCall(api,url,action,'POST',dispatch,true);
+        },
+        writeMessageApi: (api,action,url) => {
+          commonApiCall(api,url,action,'POST',dispatch,true);
+        }
     }
-}
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(WriteMessage)

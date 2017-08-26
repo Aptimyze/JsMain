@@ -129,6 +129,8 @@ class DetailedViewApi
 			$this->m_arrOut = array();
 			$this->getMetaTags();
 			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
+			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'ThumbailUrl','',$this->m_objProfile->getGender());
+			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
 		}
                 
 		$this->m_arrOut = array();
@@ -456,7 +458,7 @@ class DetailedViewApi
 
 		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
     if($bHoroScope === 'D'){
-      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;     
     }
     else{
         $astroArr = (array)$this->m_arrAstro;
@@ -492,6 +494,11 @@ class DetailedViewApi
             else
                 $this->m_arrOut['NO_ASTRO']=1;
 
+        //condition change for astro report to be shown
+        if($bHoroScope === 'D' && $this->m_arrOut['NO_ASTRO'] == 1)
+        {
+            $this->m_arrOut['NO_ASTRO']=0;
+        }
         if(MobileCommon::isAndroidApp())
         { 
             $this->m_arrOut['thumbnailPic'] = null;
@@ -641,7 +648,25 @@ class DetailedViewApi
 		$verificationSealObj=new VerificationSealLib($objProfile,'1');
    		$this->m_arrOut['verification_status']=$verificationSealObj->getFsoStatus();
    		unset($verificationSealObj);
-    
+   		
+   		//adding aadhar verification part
+   		if(MobileCommon::isApp() == "A")
+   		{
+   			$aadharObj = new aadharVerification();
+   			$aadharArr = $aadharObj->getAadharDetails($this->m_actionObject->profile->getPROFILEID());
+   			unset($aadharObj);
+   			if($this->m_arrOut['verification_status'] && $aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+   			{
+   				$this->m_arrOut['complete_verification_status'] = 3; //this indicates that both are verified.
+   			}
+   			elseif($aadharArr[$this->m_actionObject->profile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+        	{
+        		$this->m_arrOut['complete_verification_status'] = 2; //this indicates aadhar is verified.
+        	} 
+        	else{
+        		$this->m_arrOut['complete_verification_status'] = $this->m_arrOut['verification_status'];
+        	}  			
+   		}   	    
 	}
 	
 	/**

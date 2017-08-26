@@ -59,7 +59,9 @@ class RequestHandlerConfig
       "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1"),
         "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1"),
         "dppSuggestionsCAL"=>array("v1"=>"dppSuggestionsCALV1","v2"=>"dppSuggestionsCALV1","v3"=>"dppSuggestionsCALV1"),
-        "dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1")),
+        "dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1"),
+        "aadharVerification"=>array("v1"=>"aadharVerificationV1","v2"=>"aadharVerificationV1","v3"=>"aadharVerificationV1"),
+        "aadharVerificationStatus"=>array("v1"=>"aadharVerificationStatusV1","v2"=>"aadharVerificationStatusV1","v3"=>"aadharVerificationStatusV1"),),
 		"settings" => array(
 			"alertManager" => array("v1" => "AlertManagerV1", "v2" => "", "v3" => "AlertManagerV1"),
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
@@ -75,7 +77,8 @@ class RequestHandlerConfig
 			"logout" => array("v1" => "logoutv1", "v2" => "logoutv1", "v3" => "logoutv1"),
 			"versionupgrade" => array("v1" => "versionupgrade_v1", "v3" => "versionupgrade_v1"),
 			"hamburgerDetails" => array("v1" => "hamburgerDetailsV1", "v3" => "hamburgerDetailsV1"),
-                        "metricMonitoring" => array("v1" => "ApiGetDataForMonitoringMetrics")),
+			"socialsignin" => array("v1" => "SocialSignin", "v3" => "SocialSignin"),
+            "metricMonitoring" => array("v1" => "ApiGetDataForMonitoringMetrics")),
 
 		"social" => array(
 			"requestPhoto" => array("v1" => "RequestPhotoV1", "v2" => "", "v3" => "RequestPhotoV1"),
@@ -119,6 +122,8 @@ class RequestHandlerConfig
 			),
 		"inbox" => array("perform" => array("v1" => "performV1", "v2" => "performV2", "v3" => "performV2")),
 		"phone" => array("display" => array("v1" => "displayV1", "v2" => "displayV1", "v3" => "displayV1"),
+					"consentConfirm" => array("v1" => "consentConfirm", "v2" => "consentConfirm", "v3" => "consentConfirm"),
+				"DNCConsent" => array("v1" => "DNCConsent", "v2" => "DNCConsent", "v3" => "DNCConsent"),
 			"save" => array("v1" => "saveV1", "v3" => "saveV1"),
 			"verified" => array("v1" => "verifiedV1", "v3" => "verifiedV1"),
 			"sendOTPSMS" => array("v1" => "SendOtpSMS", "v2" => "SendOtpSMS", "v3" => "SendOtpSMS"),

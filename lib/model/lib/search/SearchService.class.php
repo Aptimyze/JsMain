@@ -91,7 +91,7 @@ class SearchService
 		$fieldMapArrayLabelMapping = searchConfig::fieldMapArrayLabelMapping();
 		$doesntMatterLabel = searchConfig::$doesntMatterLabel;
 		$allLabel = searchConfig::$allLabel;
-
+                
 		/* 
 		* loop through all cluster to display 
 		* clusters with 'n' options/counts will be set here.
@@ -493,7 +493,7 @@ class SearchService
 			}
 		}
 		//print_r($this->clusterArr[$clusterName]);
-
+                
                 if($moreClusterSoring==1)
                 {
 			if($clusterName=='EDU_LEVEL_NEW' || $clusterName=='OCCUPATION')
@@ -663,7 +663,7 @@ class SearchService
 				}
                         }
                         else
-               		{         
+               		{
 				/** 
 				* At the top of each cluster , we need to show All / Doesn't matter.
 				*/
@@ -677,6 +677,17 @@ class SearchService
 					$topClusterOptionLabel = $allLabel;
 				$this->clusterArr[$clusterName][$topClusterOptionLabel][0]='Show';
 				$this->clusterArr[$clusterName][$topClusterOptionLabel][1]='ALL';
+                                
+                                $ifAny = "";
+                                if($v1 == 'KNOWN_COLLEGE'){
+                                        $ifAny = $SearchParamtersObj->{"getKNOWN_COLLEGE_IGNORE"}();
+                                     $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][0]='Show';
+                                     $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][1]='Any';
+                                     if($ifAny=='000')
+                                        $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][2]='Y';
+                                     else
+                                        $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][2]=''; 
+                                }
 				if($SearchParamtersObj->{"get".$v1}()=='')
 				{
 					$isAll_Y = 1;
@@ -684,7 +695,7 @@ class SearchService
 						$isAll_Y = 0;
 					if($v1=='EDUCATION_GROUPING' && $SearchParamtersObj->getEDU_LEVEL_NEW()!='')
 						$isAll_Y = 0;
-					if($isAll_Y)	
+					if($isAll_Y && $ifAny =="")	
 						$this->clusterArr[$clusterName][$topClusterOptionLabel][2]='Y';
 				}
 				elseif($v1=='MSTATUS' && $SearchParamtersObj->{"get".$v1}()=='DONT_MATTER')
@@ -920,7 +931,6 @@ class SearchService
 							        if($isSelected)
 						                	$this->clusterArr[$clusterName][$label][2]='Y';
 							 	}
-
                 					        if($label=='Others' || $label=='Other')
 							 	{
 									if($isSelected)
@@ -1017,7 +1027,7 @@ class SearchService
 							unset($this->clusterArr['INDIA_NRI']['All'][2]);
 				}
 			}
-		}
+                }
                 if(1)
                 {
 			foreach($clustersToShow as $k1=>$v1)
@@ -1120,7 +1130,7 @@ class SearchService
 			}
 			}
 		}
-
+                
 		/**
 		* Unsetting options that add no value for special case cluster 'LAST_ACTIVITY'	and 'PROFILE_ADDED';
 		*/

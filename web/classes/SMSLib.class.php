@@ -541,7 +541,7 @@ class SMSLib
                 return $messageValue["ISD"];
 
             case "PHONE_ISD_COMMA":
-                if (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"])) {
+                if (($messageValue["SHOWPHONE_MOB"] != 'N') && ($messageValue["PHONE_MOB"])) {
                     $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
                     $mob_len = $this->getVariables("PHONE_ISD_COMMA");
                     $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";

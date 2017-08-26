@@ -481,6 +481,11 @@ class registerActions extends sfActions
 				$this->loginProfile = LoggedInProfile::getInstance();
 				$this->loginProfile->getDetail($this->loginData[PROFILEID], "PROFILEID");
                 $this->form->updateData($this->loginData[PROFILEID],$values_that_are_not_in_form);
+                
+                //Added Community wise Welcome discount
+                $memHandlerObj = new MembershipHandler();
+                $memHandlerObj->addCommunityWelcomeDiscount($this->loginData[PROFILEID],$this->loginProfile->getMTONGUE());
+                
 				$fto_action = FTOStateUpdateReason::REGISTER;
 				$this->loginProfile->getPROFILE_STATE()->updateFTOState($this->loginProfile, $fto_action);
 				$id = $this->loginProfile->getPROFILEID();
@@ -711,6 +716,11 @@ class registerActions extends sfActions
     public function executeCustomreg(sfWebRequest $request)
     {
 		$loginData=$request->getAttribute("loginData");
+		$source  = $request->getParameter("source");
+				
+		//setting cookie
+		setcookie("source", $source, time() + 7200, "/");
+		
 		//IF User is login then redirect to site
 		if(is_numeric($loginData[PROFILEID]))
 		{
