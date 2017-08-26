@@ -180,9 +180,6 @@ Class ButtonResponseFinal
 					$responseArray["infomsglabel"] = self::getButtonsFinalResponse($val,$page);
 
 				}
-				else if($val->TYPE == "EXTRA_TEXT"){
-					$responseArray = $responseArray + $this->getExtraText($val);
-				}
 				else
 				$buttons[] = self::getButtonsFinalResponse($val,$page,"","","",$count);
 			}
@@ -318,11 +315,8 @@ Class ButtonResponseFinal
 			case "CHAT":
 			$buttons = self::getChatButton($button,$params);
 			break;
-			case "EXTRA_TEXT":
-			$buttons = self::getExtraText($button,$params);
-			break;
 			case "REPORT_ABUSE":
-			$buttons = $button;
+			$buttons = self::getReportAbuseButton($button,$params);
 			break;
 			default:
 			$buttons = self::getdefaultButton($button,$params);
@@ -600,7 +594,7 @@ Class ButtonResponseFinal
 		}
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
-		$buttons['enable']		=true;
+		$buttons['enable']		= $button->active=="true"?true:false;
 		$buttons['id'] 			= $buttons["action"];
 		$button = self::buttonMerge($buttons);
 		return $buttons;
@@ -706,6 +700,18 @@ public function getExtraText($button){
 			$arr[$value->KEYNAME] = $value->STATIC ? $value->TEXT : $this->replaceText($value->TEXT);
 	}
 	return $arr;
+}
+public static function getReportAbuseButton($button,$params)
+{
+	$buttons["action"] 		= $button->TYPE;
+	$buttons["label"] 		= $button->label;
+	$buttons["iconid"] 		= $button->icon;
+	$buttons["primary"] 	= $button->primary;
+	$buttons["secondary"] 	= $button->secondary;
+	$buttons['enable']		= $button->active=="true"?true:false;
+	$buttons['id'] 			= $button->TYPE;
+	$button = self::buttonMerge($buttons);
+	return $buttons;
 }
 
 private function replaceText($value){
