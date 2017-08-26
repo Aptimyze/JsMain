@@ -5,7 +5,7 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import ThreeDots from "./ThreeDots"
 import WriteMessage from "./WriteMessage"
-import {performAction} from './contactEngine';
+import {performAction, cssMap} from './contactEngine';
 import ContactDetails from '../components/ContactDetails';
 import BlockPage from './BlockPage';
 import ReportAbuse from './ReportAbuse';
@@ -15,9 +15,9 @@ import ReportInvalid from './ReportInvalid';
 export class contactEnginePD extends React.Component{
   constructor(props){
     super(props);
+    this.layerCount = 0;
     this.state = {
       showMessageOverlay:false,
-      layerCount:0,
       pageSource : this.props.pageSource
         };
     this.actionUrl = {
@@ -49,9 +49,7 @@ export class contactEnginePD extends React.Component{
     {
 
       case 'REPORT_ABUSE':
-      console.log('ra case');
         this.showLayerCommon({showReportAbuse:true});
-
       break;
       case 'REPORT_INVALID':
         this.showLayerCommon({showReportInvalid:true,reportType:button.type});
@@ -87,7 +85,6 @@ export class contactEnginePD extends React.Component{
   }
   postAction(actionButton,responseButtons,index)
   {
-    console.log('post action');
     if ( responseButtons.responseStatusCode == 4)
     {
       this.props.showError(responseButtons.responseMessage)
@@ -102,8 +99,6 @@ export class contactEnginePD extends React.Component{
           this.props.replaceSingleButton(newButtons);
           break;
         case 'IGNORE':
-
-            console.log('in ignore',actionButton);
             if(actionButton.params.indexOf("ignore=0")!=-1)
             {
               this.hideLayerCommon({showBlockLayer: false   });
@@ -127,16 +122,21 @@ export class contactEnginePD extends React.Component{
         break;
 
         case 'REPORT_INVALID':
-            console.log("REPORT_INVALID");
         break;
 
         default:
           if(responseButtons.actiondetails.errmsglabel){
             this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
           }
-
           else
           this.props.replaceOldButtons(responseButtons);
+
+          // for decline and cancel cases
+          if(responseButtons.buttondetails.confirmLabelMsg && responseButtons.buttondetails.confirmLabelHead){
+            this.showLayerCommon({cancelDeclineLayer:true,commonOvlayData:responseButtons.buttondetails});
+
+          }
+
         break;
       }
     }
@@ -186,7 +186,7 @@ if(primaryButton.enable==true)
     return (<div id="buttons1" className="view_ce fullwid">
       <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton)}>
         <div className="wid60p">
-          <i className="mainsp msg_srp"></i>
+          <i className={cssMap[primaryButton.iconid]}></i>
           <div className="white">{primaryButton.label}</div>
         </div>
         </div>
@@ -210,8 +210,6 @@ else
 }
 
 showLayerCommon(data){
-  console.log("In showLayerCommon ");
-  console.log(data);
   this.layerCount++;
   this.props.unsetScroll();
   this.setState({
@@ -250,8 +248,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showReportInvalid)
       {
-        console.log("showReportInvalid is true.");
-        layer= (<ReportInvalid username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeInvalidLayer={() => this.hideLayerCommon({showReportInvalid: false})} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} reportType={this.state.reportType} />);
+        layer= (<ReportInvalid username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} closeInvalidLayer={() => this.hideLayerCommon({showReportInvalid: false})} profileThumbNailUrl={this.props.buttondata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} reportType={this.state.reportType} />);
       }
 
       if(this.state.showMsgLayer)
@@ -262,6 +259,11 @@ getOverLayDataDisplay(){
       {
         layer= (this.getCommonOverLay(this.state.commonOvlayData));
       }
+      if(this.state.cancelDeclineLayer)
+      {
+        layer= (this.getCancelDeclineLayer(this.state.commonOvlayData));
+      }
+
       if(this.state.showBlockLayer)
       {
         layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.hideLayerCommon({showBlockLayer:false});this.hideLayerCommon({showThreeDots:false});}} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
@@ -276,14 +278,41 @@ getCommonOverLay(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
-                          <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div className="fullwid pad1 txtc" id="errorMsgOverlay">
+                            <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
+                          </div>
                         </div>
                 </div>
               </div>
               <div className="posfix btmo fullwid" id="bottomElement">
                 <div className="pt15">
                     <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.hideLayerCommon({commonOvlayLayer:false})} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+                </div>
+              </div>
+
+          </div>
+);
+}
+getCancelDeclineLayer(actionDetails){
+  return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
+            <a href="#"  className="ce_overlay" > </a>
+              <div className="posabs ce_z103 ce_top1 fullwid" >
+
+                <div className="white fullwid" id="commonOverlayTop">
+                        <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
+                        </div>
+                        <div className="fullwid pad18 txtc f16 opa80 fontlig white pt10 " id="confirmationOverlay" >
+                            <div className="fontthin f18 " id="confirmMessage0" >{actionDetails.confirmLabelHead}</div>
+                            <div className="lh30 top20px " id="confirmMessage1" >{actionDetails.confirmLabelMsg}</div>
+                        </div>
+                </div>
+              </div>
+              <div className="posfix btmo fullwid" id="bottomElement">
+                <div className="pt15">
+                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.hideLayerCommon({cancelDeclineLayer:false})} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
                 </div>
               </div>
 
