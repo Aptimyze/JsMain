@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
@@ -351,7 +351,7 @@ return 0;
                               sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
                               $layerData = ob_get_contents();
                               ob_end_clean();
-                              $dppSugg=json_decode($layerData,true);
+                              $dppSugg=json_decode($layerData,true);//print_r($dppSugg);die;
                               if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value) 
@@ -500,6 +500,16 @@ return 0;
                       
                     break;
 
+                  case '26':
+
+                      if($profileObj->getACTIVATED()=='Y' && self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION'))) 
+                      {
+                          $len = strlen($profileObj->getYOURINFO());
+                          if(!$len || $len<100)
+                              $show=1;
+                      }
+                  break;
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -600,7 +610,11 @@ break;
                   '24' => array(  
                     'A' => '107',
                     'I' => '6.0'
+                        ) ,
+                  '26' => array(  
+                    'A' => '108'
                         )        
+       
 
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])
