@@ -1009,7 +1009,7 @@ class ContactDetails {
 			$exclusiveFunctionsObj=new ExclusiveFunctions();
 			$rmPhone=$exclusiveFunctionsObj->getRMDetails($this->profileObj->getPROFILEID());
 			if($rmPhone){
-				$this->setRM_LABEL("Relationship manager's phone no");
+				$this->setRM_LABEL("Relationship manager");
 			$this->setRM_VALUE("+91-".$rmPhone);
 			}
 		}

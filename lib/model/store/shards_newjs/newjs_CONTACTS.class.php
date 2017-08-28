@@ -1387,5 +1387,24 @@ public function getSendersPending($chunkStr)
                 throw new jsException($ex);
             }
         }
+        
+        public function getProfilesWhoHaveContactedInLastFewDays($date,$shard){
+            try{
+            	
+                $sql = "SELECT SENDER,GROUP_CONCAT(RECEIVER) as RECEIVERS,GROUP_CONCAT(TYPE) AS TYPES FROM `CONTACTS` where time > :DATE AND SENDER%3=:SHARD group by sender";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+                $prep->bindValue(":SHARD",$shard,PDO::PARAM_INT);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[$row['SENDER']]['Receivers']=$row['RECEIVERS'];
+                    $result[$row['SENDER']]['Types']=$row['TYPES'];
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
 }
 ?>
