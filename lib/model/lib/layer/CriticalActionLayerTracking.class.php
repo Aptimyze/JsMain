@@ -79,7 +79,7 @@ class CriticalActionLayerTracking
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
     /* make sure no layer opens before one day */
-    if(false && is_array($getTotalLayers))
+    if(is_array($getTotalLayers))
     {
 
             //get maximum entry date of the records fetched
