@@ -296,7 +296,7 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 }
 getCityStateData(url){
 
-commonApiCall(url,'','','POST','',false).then((response) => {console.log(response);
+commonApiCall(url,'','','POST','',false).then((response) => {
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
   var countryTemp = response.country_res[0];
@@ -417,7 +417,7 @@ let innerDiv = (<ul id="occList" style={{paddingLeft: '40px'}} className="occLis
      obj.map( (value,index) => {
        var cityKey = Object.keys(value)[0];
        var cityName = value[cityKey];
-       if(cityKey=='51')
+       if(cityKey=='51' || cityKey=='-1')
         {
           return ('');
         }

@@ -29,9 +29,8 @@ constructor(props){
 
 
 componentWillMount(){
-  this.styles ={};
-  this.styles.showStyle = {display:'block'};
-  this.styles.hideStyle = {display:'none'};
+  this.showStyle = {display:'block'};
+  this.hideStyle = {display:'none'};
   switch(this.props.calData.LAYERID)
   {
       case '9':
@@ -41,7 +40,7 @@ componentWillMount(){
         barStyle1: (this.props.calData.NAME_PRIVACY=='Y' ?  this.style1 : this.style2) ,
         barStyle2: this.props.calData.NAME_PRIVACY=='Y' ?  this.style2 : this.style1 ,
         namePrivacy:this.props.calData.NAME_PRIVACY=='Y' ? 'Y' : 'N',
-        showTextStyle: this.props.calData.NAME_PRIVACY=='Y' ? this.showStyle : this.hideStyle
+        showTextStyle: this.props.calData.NAME_PRIVACY=='Y' ? this.hideStyle : this.showStyle
       });
       break;
 
@@ -233,13 +232,13 @@ getNameCAL(){
   <div className="fontlig">
   <div className="pad_new app_clrw f20 txtc">Provide Your Name</div>
     <div className="pad_new2 app_clrw f14 txtc ">{this.props.calData.TEXT}</div>
-  <input id='nameInpCAL' value={this.props.calData.nameOfUser} type="text" className="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your name here" />
+  <input id='nameInpCAL' defaultValue={this.props.calData.NAME_OF_USER} type="text" className="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your name here" />
     <div className="pt10 f15 fontlig fullwid txtc colr8A">This field will be screened</div>
     <div className="mt30 pad_new2 hgt90">
       {this.namePrivacyCALButtonClick()}
     </div>
 
-    <div id="skipBtn"  style = {this.skipStyle} onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')} className="f14 fontlig txtc app_clrw pt35p">{this.props.calData.BUTTON2}</div>
+    <div id="skipBtn"  style = {this.state.skipStyle} onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')} className="f14 fontlig txtc app_clrw pt35p">{this.props.calData.BUTTON2}</div>
 
     <div  type="submit" id="submitName" onClick={()=>this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')} className="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">{this.props.calData.BUTTON1}</div>
   </div>
@@ -329,7 +328,7 @@ getAlternateEmailCAL(){
           <div className="pt10 f15 fontlig fullwid txtc colr8A">{this.props.calData.TEXTUNDERINPUT}</div>
            <div className="pad_new app_clrw f14 txtc">{this.props.calData.SUBTITLE}</div>
 
-          <div id="CALButton" className="f14 fontlig txtc app_clrw colr8A" style={{paddingTop: '115px'}}><span id ="CALButtonB2" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}>{this.props.calData.BUTTON2NEW}</span></div>
+          <div id="CALButton" className="f14 fontlig txtc colr8A" style={{paddingTop: '115px'}}><span id ="CALButtonB2" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}>{this.props.calData.BUTTON2NEW}</span></div>
 
           <div onClick={()=>this.validateAltEmailAndSave()} type="submit" id="submitAltEmail" className="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">{this.props.calData.BUTTON1NEW}</div>
         </div>
@@ -503,7 +502,6 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
     }
     return prevState;
   });
-  console.log(this.state);
 //  let classnm = !this.state.classCounter[counter] ? "ppp" : ' suggestSelected'; console.log(this.state.classCounter);console.log(classnm);
 }
 
