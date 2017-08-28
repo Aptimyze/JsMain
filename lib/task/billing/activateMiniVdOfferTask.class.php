@@ -35,14 +35,17 @@ EOF;
     $membershipHandlerObj =new MembershipHandler();
     $membershipHandlerObj->addVariableDiscountProfiles();
 
-  	// Mini-vd process
-  	$entryDate =date("Y-m-d");
-  	$sendMailAlert = true;  
+    // Mini-vd process
+    $entryDate =date("Y-m-d");
+    $sendMailAlert = true;  
     $VDObj = new VariableDiscount();
-    $VDObj->populateRemainingRecordsFromVDTemp($entryDate,$sendMailAlert);
-          
+
     // Extended VD process
     $VDObj->activateExtendedVD($entryDate);
+
+    // Mini-vd process 	    	
+    $VDObj->populateRemainingRecordsFromVDTemp($entryDate,$sendMailAlert);
+          
     unset($VDObj); 
   }
 }
