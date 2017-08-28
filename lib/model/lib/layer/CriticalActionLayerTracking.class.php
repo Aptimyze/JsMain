@@ -73,13 +73,13 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
     /* make sure no layer opens before one day */
-    if(is_array($getTotalLayers))
+    if(false && is_array($getTotalLayers))
     {
 
             //get maximum entry date of the records fetched
@@ -351,7 +351,7 @@ return 0;
                               sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
                               $layerData = ob_get_contents();
                               ob_end_clean();
-                              $dppSugg=json_decode($layerData,true);
+                              $dppSugg=json_decode($layerData,true);//print_r($dppSugg);die;
                               if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value) 
@@ -502,13 +502,13 @@ return 0;
 
                   case '26':
 
-                      if(self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION'))) 
+                      if($profileObj->getACTIVATED()=='Y' && self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION'))) 
                       {
                           $len = strlen($profileObj->getYOURINFO());
                           if(!$len || $len<100)
                               $show=1;
                       }
-                    break;
+                  break;
 
           default : return false;
         }

@@ -388,9 +388,70 @@ var altEmailUser = '~$altEmailUser`';
   
   </div>
 
-    
-    
+      ~elseif $calObject.LAYERID==26`
+<style>
+  .childDiv  {
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+</style>   
+<div style="width:100%;overflow-x: hidden;">
+<div id='mainContainer' style="width:200%;transition-duration:.5s;transform: translateX(-0%);">
+     <div class="childDiv fl" style="background-color: #09090b;">
+  <div  class="posrel pad18Incomplete">
+
+  <div class="br50p txtc" style='height:80px;'>
+      
+    </div>
+     
+  </div>
+   
+  <div class="txtc">   
+  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
+  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
+  </div>
+  <div class="pad1 lh25 fontlig f14" style="color:#cccccc;">~$calObject.NOTE_TEXT`</div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');console.log('palas');">~$calObject.BUTTON1`</div>
+  </div>
+  <!--end:div-->
   
+  </div>   
+
+  <div class="childDiv bg4 " style="height:638px" resize="">
+  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div class="fl wid20p white">               <i  class="no_arow2"></i> </div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
+    <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="fr txtc white f14">~$calObject.BUTTON2`</div>
+
+<!-- ngIf: bShowSkip -->                <div class="clr"></div>              </div>            </div>          </div>
+  <div id="scrollContent" class="scrollContent bg4" style="height:528px">
+    <div class="pad1 brdr1 bg11">
+        <div class="pt15 pb10 fullwid">
+          <div class="fl color12 f12">Type min 100 Chars</div>
+          <div class="fr color12 f12">Count - <span id="TACount" class="color2"> 0</span></div>
+          <div class="clr"></div>
+        </div>
+    <div class="pt10">
+            <textarea id="textAboutMe" class="fullwid color12 f17 fontlig lh30 hgt180 bg11"></textarea>
+    </div>
+    </div>
+  </div>
+  <div class="fullwid posabs btmo">
+    <div class="pt20" id="doneBtn" > <div  class="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div> </div>
+  </div>
+</div>
+   </div> 
+  <script>
+  $('#textAboutMe').bind('input ', function(e) {
+    var len = $('#textAboutMe').val().length;
+   // / if(len==)
+   if(len>=100) $('#TACount').css('color','green');else $('#TACount').css('color','#d9475c');
+ $("#TACount").html($('#textAboutMe').val().length); 
+});
+
+</script>
+</div>
   ~elseif $calObject.LAYERID !=9`
       <div style="background-color: #09090b;">
   <div  class="posrel pad18Incomplete">
