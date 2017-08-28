@@ -1895,7 +1895,7 @@ function attachAbuseDocument(event) {
         
         var imgDom = $("<img />", {"width" : "80%", "height" : "100px"});
         previewDom.append(imgDom);
-        previewDom.append( $( "<div />", {"class" : "f12 white mt5" , "innerHTML" : fileObject.name} ) );
+        previewDom.append( $( "<div />", {"class" : "f12 white mt5"} ).html(fileObject.name) );
         
         var reader = new FileReader();
         reader.onload = (function(imgDom) { return function(e) { imgDom[0].src = e.target.result; }; })(imgDom);
