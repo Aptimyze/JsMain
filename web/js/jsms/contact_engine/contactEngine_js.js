@@ -1836,12 +1836,15 @@ function attachAbuseDocument(event) {
                     
                     formData.append('feed[attachment_id]', arrReportAbuseFiles['tempAttachmentId'] );
                     formData.append('feed[file_name]', arrReportAbuseFiles[itr].name );
-                    $("#contactLoader,#loaderOverlay").show();
+                    setTimeout(function(){
+                        $("#contactLoader,#loaderOverlay").show();
+                    },0);
+                    
                     $.ajax({
                         url     : apiUrl,
                         method  : 'POST',
                         data    : formData,
-                        async   : false,
+                        async   : true,
                         cache: false,
                         processData: false,
                         success : function ( response ) {
@@ -1976,7 +1979,9 @@ function uploadAttachment()
                 ) {
             formData.append("feed[attachment_id]", temp_attachment_id);
         }
-        $("#contactLoader,#loaderOverlay").show();
+        setTimeout(function(){
+            $("#contactLoader,#loaderOverlay").show();
+        },0);
 
         $.ajax({
             url     : apiUrl,
