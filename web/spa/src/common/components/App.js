@@ -40,6 +40,7 @@ class App extends React.Component
 {
 
   componentWillMount() {
+    localStorage.clear();
     this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
     this.props.MyProfile.GENDER  = localStorage.getItem('GENDER');
     this.props.MyProfile.USERNAME  = localStorage.getItem('USERNAME');
