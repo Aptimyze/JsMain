@@ -226,8 +226,8 @@ export  class MyjsPage extends React.Component {
   		if(!this.props.myjsData.fetched){
 	         return (<div><Loader show="page"></Loader></div>)
 	    }
-			if(this.props.myjsData.apiData.calObject && !this.state.calShown){
-				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this} />);
+			if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
+				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
 
   		if(this.props.myjsData.fetched)
@@ -336,7 +336,9 @@ const mapDispatchToProps = (dispatch) => {
         hitApi_Ham: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
         },
-				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}})
+				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
+				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})
+
     }
 }
 
