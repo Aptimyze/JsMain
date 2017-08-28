@@ -209,7 +209,7 @@ function sendsolrSMS() {
         global $errorMsg, $errorServer;
         $FROM_ID = "JSSRVR";
         $PROFILE_ID = "144111";
-        $SMS_TO = array('9773889617');
+        $SMS_TO = array('9773889617',"9873639543","9818424749");
         $servers = implode(',', array_unique($errorServer));
         $smsMessage = "Mysql Error Count have reached Threshold on " . $servers . " solr post failed within 5 minutes";
         foreach ($SMS_TO as $mobPhone) {
