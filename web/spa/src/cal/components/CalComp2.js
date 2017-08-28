@@ -296,7 +296,7 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 }
 getCityStateData(url){
 
-commonApiCall(url,'','','POST','',false).then((response) => {console.log(response);
+commonApiCall(url,'','','POST','',false).then((response) => {
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
   var countryTemp = response.country_res[0];
@@ -417,7 +417,7 @@ let innerDiv = (<ul id="occList" style={{paddingLeft: '40px'}} className="occLis
      obj.map( (value,index) => {
        var cityKey = Object.keys(value)[0];
        var cityName = value[cityKey];
-       if(cityKey=='51')
+       if(cityKey=='51' || cityKey=='-1')
         {
           return ('');
         }
@@ -463,7 +463,7 @@ return (<div style={{backgroundColor: '#09090b',height: window.innerHeight}}>
               </ul>
 </div>
 <div style={{padding: '25px 0 8% 0'}}>
-<div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}>{this.calData.BUTTON2}</div>
+<div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')}>{this.calData.BUTTON2}</div>
 </div>
 <div id='CALButtonB2' onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')} style={{color:'#cccccc', paddingTop: '20px'}} className="pdt15 pb10 txtc white f14">{this.calData.BUTTON2}</div>
 

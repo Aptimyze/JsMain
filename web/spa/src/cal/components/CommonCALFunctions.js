@@ -7,7 +7,7 @@ export default function CALCommonCall(url, clickAction,myjsObj,params) {
     if(typeof params !='undefined') url += params;
     return commonApiCall(url).then(()=>{
       if(clickAction=='/')
-        myjsObj.setState({calShown:true});
+        myjsObj();
       else window.location.href=clickAction;
        //history,push('/myjs');
   });

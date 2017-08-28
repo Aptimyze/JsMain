@@ -121,7 +121,12 @@ const MyjsReducer = (state={
 						timeStamp : value
 						}
 				break;
-
+				case 'SET_CAL_SHOWN':
+					state = {
+						...state,
+						calShown: true
+						}
+				break;
 	}
 	return state;
 }
