@@ -138,11 +138,6 @@ EOF;
                                                                         $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
                                                                 }
                                                         }
-                                                        if($totalResults["CNT"] != 0 && !empty($totalResults["profiles"])){
-                                                                $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$profileid);
-                                                                $hideArr .= " ".implode(" ",$totalResults["profiles"]);
-                                                                $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$profileid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
-                                                        }
 						}
 //                                                 cache ttl set to 1hr
 //                                                $memObject->remove('SEARCH_JPARTNER_'.$profileid);

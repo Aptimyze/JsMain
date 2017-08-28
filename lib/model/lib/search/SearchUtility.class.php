@@ -63,12 +63,6 @@ class SearchUtility
                                                 $Obj = new ContactsRecords;
                                                 $hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
                                                 
-                                                if($removeMatchAlerts)
-                                                {
-                                                        $matchalerts_LOG = new matchalerts_LOG();
-                                                        $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
-                                                }
-                                                
                                                 // adding code to remove temporary contacts sent by the user while the user is unscreened.
                                                 if($tempContacts)
                                                 {		
@@ -81,7 +75,11 @@ class SearchUtility
                                                 }
                                         }
 					/** matchAlerts Profile **/
-					
+					if($removeMatchAlerts)
+                                        {
+                                                $matchalerts_LOG = new matchalerts_LOG();
+                                                $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
+                                        }
 
 					
 					$request = sfContext::getInstance()->getRequest();	
@@ -1104,6 +1102,10 @@ class SearchUtility
                 if($getFromCache == 1){
                         $memObject=JsMemcache::getInstance();
                         $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
+                        if ($removeMatchAlerts) {
+                                $matchalerts_LOG = new matchalerts_LOG();
+                                $hideArr.= " ".$matchalerts_LOG->getProfilesSentInMatchAlerts($pid, $seperator);
+                        }
                         if($hideArr != ""){
                                 return $hideArr;
                         }
