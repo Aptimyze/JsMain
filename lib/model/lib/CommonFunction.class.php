@@ -1035,7 +1035,7 @@ class CommonFunction
     	return false;
     }
     
-    public static function showAndBeyondPixel($profileId) {
+    public static function showAndBeyondPixel($profileId="") {
         if ($profileId && JsConstants::$whichMachine == "prod") {
             $loggedInObj = LoggedInProfile::getInstance();
             $subscription = $loggedInObj->getSUBSCRIPTION();
