@@ -1035,30 +1035,29 @@ class CommonFunction
     	return false;
     }
     
-    public static function showAndBeyondPixel($profileId)
-    {
-    	if($profileId && JsConstants::$whichMachine=="prod")
-    	{
-                $loggedInObj = LoggedInProfile::getInstance();
-                $subscription = $loggedInObj->getSUBSCRIPTION();
-                $verifyDate=$loggedInObj->getVERIFY_ACTIVATED_DT();
-                $verifyDateFlag=true;
-                if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
-				{
-					$verifyDate = $loggedInObj->getENTRY_DT();
-				}
-                	$datetime1 = new DateTime();
-					$datetime2 = new DateTime($verifyDate);
-					$interval = $datetime1->diff($datetime2);
-					if($interval->days<=7)
-						$verifyDateFlag=true;
-                if($subscription=='' && $verifyDateFlag){
-                    $analyticScore = ScoringLib::getAnalyticScore($profileId);
-                    if($analyticScore >= 0 && $analyticScore <=30)
-    			return true;
-                }   		
-    	}    	
-    	return false;
+    public static function showAndBeyondPixel($profileId) {
+        if ($profileId && JsConstants::$whichMachine == "prod") {
+            $loggedInObj = LoggedInProfile::getInstance();
+            $subscription = $loggedInObj->getSUBSCRIPTION();
+            $verifyDate = $loggedInObj->getVERIFY_ACTIVATED_DT();
+            $verifyDateFlag = true;
+            if (!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00') {
+                $verifyDate = $loggedInObj->getENTRY_DT();
+            }
+            $datetime1 = new DateTime();
+            $datetime2 = new DateTime($verifyDate);
+            $interval = $datetime1->diff($datetime2);
+            if ($interval->days <= 7)
+                $verifyDateFlag = true;
+            if ($subscription == '' && $verifyDateFlag) {
+                $analyticScore = ScoringLib::getAnalyticScore($profileId);
+                if ($analyticScore >= 0 && $analyticScore <= 50)
+                    return true;
+            }
+        }
+        else if(JsConstants::$whichMachine == "prod")
+            return true;
+        return false;
     }
 
     //this has been added to common functions since we need a particular output for CI files
