@@ -417,7 +417,7 @@ class ProfilePage extends React.Component {
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
+                            profileThumbNailUrl={this.props.pageInfo.thumb_url|| this.state.defaultPicData} >
                           </CommHistory>
         }
 
@@ -448,9 +448,9 @@ class ProfilePage extends React.Component {
 
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
-                FamilyView = <FamilyTab family={this.props.FamilyInfo}></FamilyTab>;
+                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
 
-                DppView = <DppTab about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+                DppView = <DppTab selfPicUrl={this.props.pageInfo.thumb_url} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 

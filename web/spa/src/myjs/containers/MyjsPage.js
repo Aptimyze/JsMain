@@ -6,6 +6,7 @@ import AcceptCount from '../components/MyjsAcceptcount';
 import MyjsProfileVisitor from '../components/MyjsProfileVisitor';
 import InterestExp from '../components/MyjsInterestExp';
 import NodataBlock from '../components/MyjsNodataBlock';
+import MyjsOcbLayer from "../components/Myjsocb";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import {DISPLAY_PROPS}  from "../../common/constants/CommonConstants";
@@ -18,6 +19,7 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import AppPromo from "../../common/components/AppPromo";
+
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -51,27 +53,6 @@ export class CheckDataPresent extends React.Component{
 
 		}
 	}
-}
-export class MemMsgView extends React.Component{
-render(){
-
-	return(<a href={this.props.data.membership_message_link}>
-		<div className="posrel pt20 pb20 newBgBand">
-			<div className="posrel fullwid">
-				<div className="clearfix myjsp2">
-					<div className="fl fontlig wid88p">
-						<div className="f24 white">{this.props.data.top}</div>
-						<div className="f14 white">{this.props.data.bottom}</div>
-					</div>
-					<div className="fr wid10p pt16">
-						<i className="mainsp myjsdim2"></i>
-					</div>
-				</div>
-			</div>
-		</div>
-		</a>
-	)}
-
 }
 
 export  class MyjsPage extends React.Component {
@@ -239,7 +220,7 @@ export  class MyjsPage extends React.Component {
 
 				if(this.props.myjsData.apiData.membership_message!=null)
 				{
-				 	var membershipmessageView = <MemMsgView data={this.props.myjsData.apiData.membership_message}/>
+				 	var membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
 				}
 
   			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>

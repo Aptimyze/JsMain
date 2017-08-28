@@ -417,3 +417,7 @@ ul.shownotiful li{width: 100%;border-bottom:1px solid #dddbdb;padding:20px 15px;
     border-bottom-right-radius: 40px;
     border-bottom-left-radius: 40px;
 }
+.flsh_pos1{right:14px; top:0}
+.flsh_bg1{background-position: -323px -168px;width: 17px;height: 27px;}
+ul#rcbflshTimer li { display: inline-block; font-size: 16px;}
+ul#rcbflshTimer li  span:nth-child(2) {font-size: 11px;}
