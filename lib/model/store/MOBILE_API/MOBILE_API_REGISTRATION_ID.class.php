@@ -30,13 +30,22 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 	{
 		if(!$registrationid)
 			return;
-                $sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET `APP_VERSION` =:APP_VERSION, `OS_VERSION`=:OS_VERSION, `DEVICE_BRAND`=:DEVICE_BRAND, `DEVICE_MODEL`=:DEVICE_MODEL,`TIME`=now() WHERE`REG_ID`=:REG_ID";
+                $sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET `APP_VERSION` =:APP_VERSION";
+
+		if($osVersion && $deviceBrand && $deviceModel){
+			$sqlUpdate .=", `OS_VERSION`=:OS_VERSION, `DEVICE_BRAND`=:DEVICE_BRAND, `DEVICE_MODEL`=:DEVICE_MODE";
+		}
+		$sqlUpdate .=", `TIME`=now() WHERE `REG_ID`=:REG_ID";
                 $resUpdate = $this->db->prepare($sqlUpdate);
                 $resUpdate->bindValue(":REG_ID",$registrationid,constant('PDO::PARAM_'.$this->{'REG_ID_BIND_TYPE'}));
 		$resUpdate->bindValue(":APP_VERSION",$appVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
-                $resUpdate->bindValue(":OS_VERSION",$osVersion,constant('PDO::PARAM_'.$this->{'OS_VERSION_BIND_TYPE'}));
-                $resUpdate->bindValue(":DEVICE_BRAND",$deviceBrand,constant('PDO::PARAM_'.$this->{'DEVICE_BRAND_BIND_TYPE'}));
-                $resUpdate->bindValue(":DEVICE_MODEL",$deviceModel,constant('PDO::PARAM_'.$this->{'DEVICE_MODEL_BIND_TYPE'}));
+
+		if($osVersion && $deviceBrand && $deviceModel){
+	                $resUpdate->bindValue(":OS_VERSION",$osVersion,constant('PDO::PARAM_'.$this->{'OS_VERSION_BIND_TYPE'}));
+	                $resUpdate->bindValue(":DEVICE_BRAND",$deviceBrand,constant('PDO::PARAM_'.$this->{'DEVICE_BRAND_BIND_TYPE'}));
+	                $resUpdate->bindValue(":DEVICE_MODEL",$deviceModel,constant('PDO::PARAM_'.$this->{'DEVICE_MODEL_BIND_TYPE'}));
+		}
+
                 $resUpdate->execute();
 	}
 	public function updateProfileId($registrationid,$profileid='')

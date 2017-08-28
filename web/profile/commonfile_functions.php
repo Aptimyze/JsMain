@@ -133,7 +133,7 @@ $css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"   => "29");
 $css_arr[]=array("jsms/common/errorBar" => "2");
 $css_arr[]=array("jsms/contacts/contact_engine" => "3");
 $css_arr[]=array("mobreg_pass_css"   => "5");
-$css_arr[]=array("operations_styles" => "2");
+$css_arr[]=array("operations_styles"  => "3");
 $css_arr[]=array("jsms/Seo/seoMobile_css"   => "4");
 $css_arr[]=array("jsms/login/newMobLogin_css"   => "22");
 $css_arr[]=array("jsms/search/searchdropdown"   => "4");
