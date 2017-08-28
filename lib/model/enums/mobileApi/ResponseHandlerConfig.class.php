@@ -140,6 +140,9 @@ class ResponseHandlerConfig
 	public static $ABUSE_ATTACHMENT_ERROR = array("message"=>"Error in attachment.","statusCode"=>'1');
     public static $ABUSE_ATTACHMENT_DELETE_ERROR = array("message"=>"Given file name not exist.","statusCode"=>'1');
 	 public static $CONSENT_MESSAGE = array("message"=>"Consent Required","statusCode" => '5');
+	 //aadhar errors
+	 public static $AADHAR_ALREADY_VERIFIED = array("message" => "This Aadhaar number is already verified for another profile on Jeevansathi.", "statusCode" => '1');
+	 public static $AADHAR_ALREADY_VERIFIED_BY_SAME = array("message" => "Aadhaar number is verified", "statusCode" => '1');
 }
 
 ?>

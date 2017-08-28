@@ -44,6 +44,10 @@ while ($row = mysql_fetch_array($res)) {
         endIntroCalls($pid);
     }
 
+    //Reactivate previous old unlimited membership after expiration of new service
+    $membershipHandler = new MembershipHandler();
+    $membershipHandler->changeUnlimitedServiceStatusForNewService($billid,false);
+
     // Deleting entry from billing.EXCLUSIVE_SERVICING as soon as subs expire
     if (strpos($row['SERVEFOR'],'X')){
         $exclusiveFunctionsObj = new ExclusiveFunctions();
