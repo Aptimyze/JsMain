@@ -105,7 +105,7 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
 $("#js-otherReasonsLayer").removeClass('dispnone').val('');
-console.log('yesss')
+
 $("#attachDiv").removeClass("dn");
 var elem=$("#reportAbuseMidDiv");
 elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height() - $("#attachDiv").innerHeight());
@@ -1836,7 +1836,7 @@ function attachAbuseDocument(event) {
                     
                     formData.append('feed[attachment_id]', arrReportAbuseFiles['tempAttachmentId'] );
                     formData.append('feed[file_name]', arrReportAbuseFiles[itr].name );
-                    
+                    $("#contactLoader,#loaderOverlay").show();
                     $.ajax({
                         url     : apiUrl,
                         method  : 'POST',
@@ -1845,6 +1845,7 @@ function attachAbuseDocument(event) {
                         cache: false,
                         processData: false,
                         success : function ( response ) {
+                                        $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
                                         if(response.responseStatusCode == 0) {
                                            self.parent().remove();
                                         } else {
@@ -1853,6 +1854,7 @@ function attachAbuseDocument(event) {
                                         }
                                     },
                         error   :  function ( response ) {
+                                       $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
                                        result.push(arrReportAbuseFiles[itr]);
                                        ShowTopDownError(['Something went wrong. Please try again.'], 2000);
                                        return ;
@@ -1974,7 +1976,8 @@ function uploadAttachment()
                 ) {
             formData.append("feed[attachment_id]", temp_attachment_id);
         }
-        
+        $("#contactLoader,#loaderOverlay").show();
+
         $.ajax({
             url     : apiUrl,
             method  : 'POST',
@@ -1984,7 +1987,7 @@ function uploadAttachment()
             processData: false,
             contentType: false,
             success : function ( response ) {
-                            
+                            $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
                             if(response.responseStatusCode == 0) {
                                arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
                                fileObject.uploaded = true;
@@ -1994,6 +1997,7 @@ function uploadAttachment()
                             }
                         },
             error   :  function ( response ) {
+                            $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
                             fileObject.error = true;
                             ShowTopDownError( [ "Something went wrong. Please try again" ], 2000 );
                         },
