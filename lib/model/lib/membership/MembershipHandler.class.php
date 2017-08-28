@@ -527,6 +527,12 @@ class MembershipHandler
     {
         $billingExcCallbackObj = new billing_EXC_CALLBACK();
         $added                 = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // Add exclusive Record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
         return $added;
     }
 
@@ -566,6 +572,12 @@ class MembershipHandler
     {
         $excCallbackObj = new billing_EXC_CALLBACK();
         $excCallbackObj->addRecord($profileid, $phoneNo, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // add rcb record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
     }
 
     public function checkEmailSendForDay($profileid, $email)
@@ -2931,5 +2943,48 @@ class MembershipHandler
             return false;
         }
     }
-     
+
+    public function changeUnlimitedServiceStatusForNewService($billID,$suspend,$profileID=0,$serviceID='',$serveFor=''){
+        $serviceStatusObj = new billing_SERVICE_STATUS();
+        $contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+        $suspendUnlimitedServiceObj = new billing_SUSPENDED_UNLIMITED_SERVICE_LOG();
+        if($suspend){
+            $newServiceDetail[0]["PROFILEID"] = $profileID;
+            $newServiceDetail[0]["SERVEFOR"] = $serveFor;
+            $newServiceDetail[0]["SERVICEID"] = $serviceID;
+            $newServiceDetail[0]["BILLID"] = $billID;
+        } else{
+            $newServiceDetail = $serviceStatusObj->fetchAllServiceDetailsForBillid($billID);
+        }
+        foreach ($newServiceDetail as $key=>$value){
+            $serveFor = $value["SERVEFOR"];
+            $serviceID = $value["SERVICEID"];
+            if(strpos($serveFor,'F') !==false && strpos($serviceID,'L') !==true){
+                $profileId = $value["PROFILEID"];
+                $oldUnlimitedService = $serviceStatusObj->fetchProfilesWithUnlimitedMembership($profileId);
+                if(is_array($oldUnlimitedService)){
+                    $id = $oldUnlimitedService[0]["ID"];
+                    if($suspend){
+                        $contactsDetails = $contactsAllotedObj->getAll($value["PROFILEID"]);
+                        $infoArr[0]["OLDBILLID"] = $oldUnlimitedService[0]["BILLID"];
+                        $infoArr[0]["OLDSERVICEID"] = $oldUnlimitedService[0]["SERVICEID"];
+                        $infoArr[0]["NEWBILLID"] = $value["BILLID"];
+                        $infoArr[0]["NEWSERVICEID"] = $value["SERVICEID"];
+                        $infoArr[0]["STATUS"] = 'Y';
+                        $infoArr[0]["CONTACTS_ALLOTED"] = $contactsDetails["ALLOTED"];
+                        $infoArr[0]["CONTACTS_VIEWED"] = $contactsDetails["VIEWED"];
+                        $infoArr[0]["CONTACTS_CREATED"] = $contactsDetails["CREATED"];
+                        $suspendUnlimitedServiceObj->insertSuspendedServices($infoArr);
+                        $serviceStatusObj->changeUnlimitedMembershipStatus($id,'N');
+                    } else{
+                        $contactsDetails = $suspendUnlimitedServiceObj->getContactAllotted($oldUnlimitedService[0]["BILLID"],$value["BILLID"]);
+                        $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
+                        $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
+                        $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                    }
+                }
+            }
+        }
+    }
+
 }
