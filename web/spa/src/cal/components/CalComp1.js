@@ -72,7 +72,7 @@ componentDidMount(){
       case '9':
       let val1 = $i("submitName").getBoundingClientRect().top, val2 = $i("skipBtn").getBoundingClientRect().top ;
 
-      if($i("submitName").length && val1-val2-70 >0)
+      if($i("submitName") && val1-val2-70 >0)
       {
             this.setState({skipStyle : {"marginTop":(val1-val2-70)} } );
       }
