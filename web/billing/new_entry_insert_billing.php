@@ -117,7 +117,10 @@ if(authenticated($cid))
 		$reason = addslashes(stripslashes($reason));
 		if($curtype!='DOL')
 			$discount=round($discount,2);
-
+        if(strpos($main_service_id,"Upgrade")!==false){
+            $main_service_id = str_replace("Upgrade", "", $main_service_id);
+            $discount_type = 15;
+        }
 		$rights = $serviceObj->getRights($main_service_id);
 		//Assigning value to VERIFY_SERVICE depending on whether contact details are invalid or not [2847[
 		if(@in_array("D",$rights))
@@ -173,7 +176,7 @@ if(authenticated($cid))
 		else
 			$membership_details["dol_conv_bill"]='N';
 		$membershipObj->startServiceBackend($membership_details);
-		$membershipObj->makePaid();
+		$membershipObj->makePaid(false,"MAIN","123");
 		$membershipObj->updateEasyBill();
 		$membershipObj->updateIvr();
 		

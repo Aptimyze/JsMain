@@ -381,13 +381,13 @@ if(authenticated($cid))
                 if($curtype == "RS"){
                     $price = $upgradeData["upgradeExtraPayRSUnformatted"];
                     $price_tax = $upgradeData["upgradeExtraPayRSUnformatted"];
-                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"]." Upgrade";
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayRSUnformatted"];
                 }
                 else{
                     $price = $upgradeData["upgradeExtraPayDOLUnformatted"];
                     $price_tax = $upgradeData["upgradeExtraPayDOLUnformatted"];
-                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"]." Upgrade";
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
                 }
             }
@@ -560,11 +560,11 @@ if(authenticated($cid))
 			}
             if($upgradeCase == 1){
                 if($curtype == "RS"){
-                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"]." Upgrade";
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayRSUnformatted"];
                 }
                 else{
-                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"]." Upgrade";
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
                 }
             }

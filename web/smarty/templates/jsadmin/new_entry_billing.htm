@@ -1006,26 +1006,26 @@
 						<td class="fieldsnew"><input type="text" name="JSExclusive_service_price" id="JSExclusive_service_price" disabled size="8"></td>
 					</tr>
 					<!--  New service added Ends -->
-                    
-                    <!-- Upgrade membership added -->
-					<tr>
-						<td class="label">
-							<input type="checkbox" name="chk_upgrade_service" id="chk_upgrade_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_upgrade_service','chk_membership_service','chk_JSExclusive_service');">
-						</td>
-						<td class="fieldsnew">
-							<select name="upgrade_service" id="upgrade_service" onchange="get_service_price(this);">
-								<option value="~$upgradeData.upgradeMainMem`Upgrade">Upgrade Membership</option>
-							</select>
-						</td>
-                        <td class="fieldsnew">
-                            <select name="upgrade_service_duration" id="upgrade_service_duration" onchange="get_service_price(this);" disabled>
-                                <option value="~$upgradeData.upgradeMainMemDur`">For ~$upgradeData.upgradeMainMemDur` months</option>
-							</select>
-						</td>
-						<td class="fieldsnew"><input type="text" name="upgrade_service_price" id="upgrade_service_price" disabled size="8"></td>
-					</tr>
-					<!--  Upgrade membership Ends -->
-                    
+                    ~if $upgradeData.upgradeMainMemName`
+                        <!-- Upgrade membership added -->
+                        <tr>
+                            <td class="label">
+                                <input type="checkbox" name="chk_upgrade_service" id="chk_upgrade_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_upgrade_service','chk_membership_service','chk_JSExclusive_service');">
+                            </td>
+                            <td class="fieldsnew">
+                                <select name="upgrade_service" id="upgrade_service" onchange="get_service_price(this);">
+                                    <option value="~$upgradeData.upgradeMainMem`Upgrade">Upgrade to ~$upgradeData.upgradeMainMemName`</option>
+                                </select>
+                            </td>
+                            <td class="fieldsnew">
+                                <select name="upgrade_service_duration" id="upgrade_service_duration" onchange="get_service_price(this);" disabled>
+                                    <option value="~$upgradeData.upgradeMainMemDur`">For ~$upgradeData.upgradeMainMemDur` months</option>
+                                </select>
+                            </td>
+                            <td class="fieldsnew"><input type="text" name="upgrade_service_price" id="upgrade_service_price" disabled size="8"></td>
+                        </tr>
+                        <!--  Upgrade membership Ends -->
+                    ~/if`
                     
 					<tr>
 						<td class="label" colspan="2">Total (Including tax, if currency type is Rupees)</td>
