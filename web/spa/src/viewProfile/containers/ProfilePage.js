@@ -417,7 +417,7 @@ class ProfilePage extends React.Component {
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
+                            profileThumbNailUrl={this.props.pageInfo.thumb_url|| this.state.defaultPicData} >
                           </CommHistory>
         }
 
