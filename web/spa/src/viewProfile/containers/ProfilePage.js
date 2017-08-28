@@ -114,6 +114,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.nextUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
                 _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
                 document.getElementById("swipePage").classList.add("animateLeft");
@@ -125,6 +126,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.prevUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+                _this.refs.GAchild.trackJsEventGA("jsms","prevProfileVisit","")
                 _this.props.showProfile(_this, _this.state.prevDataApi);
             }
         });
@@ -163,7 +165,7 @@ class ProfilePage extends React.Component {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
             }
-            this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
+            //this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
             this.setState({
                 prevUrl,
                 prevDataApi
@@ -264,13 +266,6 @@ class ProfilePage extends React.Component {
                     this.setState({disablePhotoLink: true})
                 }
             }
-
-
-            //calling tracking event
-            /*setTimeout(function(){
-                console.log("mm",_this.refs.GAchild.trackJsEventGA("jsms","new","2"))
-            },3000);
-            */
         }
         else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true)
         {
@@ -334,8 +329,7 @@ class ProfilePage extends React.Component {
     {
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
-        }
-
+        } 
     }
 
     imageLoaded()
@@ -361,9 +355,6 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-        // console.log(window.location.pathname);
-        // console.log(this.props.history.prevUrl);
-        // console.log(this.props.history.prevUrl.indexOf(window.location.pathname));
         let same_url = false
         if ( this.props.history.prevUrl )
         {

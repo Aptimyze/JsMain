@@ -30,12 +30,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       }
     }
 
-    if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl) {
+    if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl || localStorage.getItem("currentDataUrl") == callUrl &&  localStorage.getItem("currentData")) {
       let data;
       if(localStorage.getItem("prevDataUrl") == callUrl) {
         data = JSON.parse(localStorage.getItem("prevData"))
-      } else {
+      } else if(localStorage.getItem("nextDataUrl") == callUrl) {
         data = JSON.parse(localStorage.getItem("nextData"))
+      } else {
+        data = JSON.parse(localStorage.getItem("currentData"))
       }
       if(typeof dispatch == 'function')
       {
@@ -63,7 +65,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           case "9":
             removeCookie("AUTHCHECKSUM");
             localStorage.clear();
-            console.log("redirecting to page.");
             window.location.href="/login?prevUrl="+window.location.href;
             break;
           case "7":
@@ -92,6 +93,10 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         }
         if(typeof dispatch == 'function')
         {
+          if(reducer == "SHOW_INFO") {
+            localStorage.setItem("currentData", JSON.stringify(response.data));
+            localStorage.setItem("currentDataUrl",callUrl)            
+          }
           dispatch({
             type: reducer,
             payload: response.data,
