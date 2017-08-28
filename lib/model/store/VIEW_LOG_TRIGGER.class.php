@@ -19,10 +19,12 @@ class VIEW_LOG_TRIGGER extends TABLE{
 			try 
 			{
 
-				$sqlUpdate="REPLACE INTO VIEW_LOG_TRIGGER  (VIEWER,VIEWED,DATE) VALUES ('$viewer','$viewed',now())";
+				$sqlUpdate="REPLACE INTO VIEW_LOG_TRIGGER  (VIEWER,VIEWED,DATE) VALUES (:VIEWER_ID,:VIEWED_ID,now())";
 				//$sqlUpdate = "UPDATE MIS.FEATURED_PROFILE_VIEW SET COUNT=COUNT+1 WHERE DATE='$date'";
-
-				$this->db->exec($sqlUpdate);
+				$res=$this->db->prepare($sqlUpdate);
+				$res->bindValue(":VIEWER_ID",$viewer,PDO::PARAM_INT);
+				$res->bindValue(":VIEWED_ID",$viewed,PDO::PARAM_INT);
+				$res->execute();
 				
 			}
 			catch(PDOException $e)
@@ -36,8 +38,12 @@ class VIEW_LOG_TRIGGER extends TABLE{
 			try 
 			{
 				$date = date("Y-m-d");
-				$sql="REPLACE INTO VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values ('$viewer','$viewed','$date','Y')";
-				$this->db->exec($sql);
+				$sql="REPLACE INTO VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values (:VIEWER_ID,:VIEWED_ID,:DATE,'Y')";
+				$res=$this->db->prepare($sql);
+				$res->bindValue(":VIEWER_ID",$viewer,PDO::PARAM_INT);
+				$res->bindValue(":VIEWED_ID",$viewed,PDO::PARAM_INT);
+				$res->bindValue(":DATE",$date,PDO::PARAM_STR);				
+				$res->execute();
 				
 			}
 			catch(PDOException $e)
