@@ -174,7 +174,7 @@ class FamilyTab extends React.Component {
     	{
     		FamilyData = <div>
     			<div className="hgt10"></div>
-    			<div className="fontlig color1 f14 pb10 txtc" id="vpro_no_family_detail">This user has not provided family details yet</div>
+    			<div className="fontlig color1 f14 pb10 txtc" id="vpro_no_family_detail">{this.props.username} has not provided family details yet</div>
     		</div>;	
     	}
 
