@@ -30,8 +30,6 @@ const PageNotFound = asyncComponent(() => import('./PageNotFound')
   .then(module => module.default), { name: 'PageNotFound' });
 const ForgotPassword = asyncComponent(() => import('./../../forgotPassword/containers/forgotPasswordPage')
   .then(module => module.default), { name: 'ForgotPassword' });
-const SearchForm = asyncComponent(() => import('./../../searchForm/containers/SearchFormPage')
-  .then(module => module.default), { name: 'SearchForm' });
 
 
 const hash = getRoutePath(window.location.href);
@@ -59,7 +57,6 @@ class App extends React.Component
       <div>
       {redirectToHashUrl}
       <Switch>
-      <Route path='/search/topSearchBand' component= {SearchForm}/>
       <Route path='/login' component= {LoginPage}/>
       <Route path='/profile/viewprofile.php' component={ProfilePage} />
       <Route path='/social/MobilePhotoAlbum' component={PhotoAlbumPage} />

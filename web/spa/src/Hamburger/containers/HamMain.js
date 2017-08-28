@@ -484,9 +484,9 @@ class HamMain extends React.Component {
                 </li>
                 <li>
                     <i className="hamSprite searchIcon"></i>
-                    <Link id="searchLink" to={"/search/topSearchBand?isMobile=Y"} className="white">
+                    <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
                         Search
-                    </Link>
+                    </a>
                 </li>
                 <li>
                     <i className="hamSprite searchProfileIcon"></i>
