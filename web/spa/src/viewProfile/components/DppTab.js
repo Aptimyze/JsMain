@@ -328,7 +328,7 @@ class DppTab extends React.Component {
         }
 
     	return(
-    		<div id="DppTab" className="dn">
+    		<div id="DppTab" className="dn mb56">
 				<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}

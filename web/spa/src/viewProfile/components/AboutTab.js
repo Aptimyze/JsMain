@@ -10,7 +10,7 @@ class AboutTab extends React.Component {
     }
     render() {
     	return (
-		    <div id="AboutTab">
+		    <div id="AboutTab" className="mb56">
 				  <BasicInfo about = {this.props.about}/>
           <CareerInfo about = {this.props.about}/>
   				<KundliInfo username = {this.props.about.username} show_gunascore={this.props.show_gunascore} profilechecksum={this.props.profilechecksum} about = {this.props.about}/>
