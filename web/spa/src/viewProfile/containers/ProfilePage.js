@@ -62,7 +62,10 @@ class ProfilePage extends React.Component {
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
-        } else {
+        } else if(getParameterByName(window.location.href,"username") != null) {
+            urlString = "?username="+getParameterByName(window.location.href,"username");
+        }
+        else {
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");

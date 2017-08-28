@@ -8,10 +8,10 @@
 }
 .backShow {
 	opacity: 0.7;
-	transition: all 2s linear;
+	transition: all .2s linear;
 }
 .hamShow {
-    transition: all 2s linear;
+    transition: all .2s linear;
     transform: translate(0%, 0%) !important;
     -webkit-transform: translate(0%, 0%) !important;
     -moz-transform: translate(0%, 0%) !important;
@@ -27,11 +27,11 @@
     -o-transform: translate(-100%, 0%);
     -ms-transform: translate(-100%, 0%);
 
-	transition: all 2s linear;
-    -webkit-transition: all 2s linear;
-    -moz-transition: all 2s linear;
-    -o-transition:all 2s linear;
-    -ms-transition: all 2s linear;
+	transition: all .2s linear;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    -o-transition:all .2s linear;
+    -ms-transition: all .2s linear;
 
 	-webkit-background-size: cover;
     -moz-background-size: cover;
