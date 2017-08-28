@@ -35,8 +35,8 @@ class VIEW_LOG_TRIGGER extends TABLE{
         {
 			try 
 			{
-
-				$sql="insert ignore into VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values ('$viewer','$viewed',now(),'Y')";
+				$date = date("Y-m-d");
+				$sql="REPLACE INTO VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values ('$viewer','$viewed','$date','Y')";
 				$this->db->exec($sql);
 				
 			}
