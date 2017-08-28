@@ -1845,7 +1845,7 @@ function attachAbuseDocument(event) {
                         cache: false,
                         processData: false,
                         success : function ( response ) {
-                                        $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                                        $("#contactLoader,#loaderOverlay").hide();
                                         if(response.responseStatusCode == 0) {
                                            self.parent().remove();
                                         } else {
@@ -1854,7 +1854,7 @@ function attachAbuseDocument(event) {
                                         }
                                     },
                         error   :  function ( response ) {
-                                       $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                                       $("#contactLoader,#loaderOverlay").hide();
                                        result.push(arrReportAbuseFiles[itr]);
                                        ShowTopDownError(['Something went wrong. Please try again.'], 2000);
                                        return ;
@@ -1987,7 +1987,7 @@ function uploadAttachment()
             processData: false,
             contentType: false,
             success : function ( response ) {
-                            $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                            $("#contactLoader,#loaderOverlay").hide();
                             if(response.responseStatusCode == 0) {
                                arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
                                fileObject.uploaded = true;
@@ -1997,7 +1997,7 @@ function uploadAttachment()
                             }
                         },
             error   :  function ( response ) {
-                            $("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                            $("#contactLoader,#loaderOverlay").hide();
                             fileObject.error = true;
                             ShowTopDownError( [ "Something went wrong. Please try again" ], 2000 );
                         },
