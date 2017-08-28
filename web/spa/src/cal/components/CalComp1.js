@@ -52,7 +52,7 @@ componentWillMount(){
         let calData = this.props.calData;
         document.getElementsByTagName('body')[0].style.backgroundColor = '#fff';
         this.suggStyle = {backgroundColor:'#d9475c',color:'white'};
-        this.setState({suggDescriptionText: calData.Description,objectCounter:{'others':[]},classCounter:{},suggStyle:{backgroundColor:'#d9475c',color:'white'},simpleStyle:{},suggCount:0});
+        this.setState({suggDescriptionText: calData.dppSuggObject.Description,objectCounter:{'others':[]},classCounter:{},suggStyle:{backgroundColor:'#d9475c',color:'white'},simpleStyle:{},suggCount:0});
       break;
 
 
@@ -407,7 +407,7 @@ return (<div>
 
   </div>
 
-  <div id="overlayMid" className="bg4 pad3 ">
+  <div id="overlayMid" style={{height:(window.innerHeight-97)+'px'}} className="bg4 pad3 ">
       <div id="mainHeading" className="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
       <div id="dppDescription" className="txtc color8 fontlig f17">{this.state.suggDescriptionText}</div>
       <div id="dppSuggestions" className="mb30">{this.getSuggestions()}</div>
@@ -432,8 +432,8 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
     switch (key2)
     {
       case 'other':
-        otherArray = prevState.objectCounter['others'];
-        if(!otherArray[otherCounter])
+        let otherArray = prevState.objectCounter['others'];
+        if(!otherArray || !otherArray[otherCounter])
         {
           otherArray[otherCounter]={};
           otherArray[otherCounter]['type']=elem.type;
@@ -442,13 +442,13 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
 
         if(classCounter)
           {
-              var index = prevState.objectCounter[otherCounter]['arr'].indexOf(value);
+              var index = prevState.objectCounter['others'][otherCounter]['arr'].indexOf(value);
               if(index!=-1)
-                prevState.objectCounter[otherCounter]['arr'].splice(index, 1);
+                prevState.objectCounter['others'][otherCounter]['arr'].splice(index, 1);
           }
         else
         {
-              prevState.objectCounter[otherCounter]['arr'].push(value);
+              prevState.objectCounter['others'][otherCounter]['arr'].push(value);
         }
       break;
 
@@ -578,10 +578,10 @@ if(this.state.suggCount<=0) {this.showError('Please select at least one suggesti
 var sendObj = [];
 var objectCounter = this.state.objectCounter;
 
-if(objectCounter['AGE']['LAGE'])
+if(objectCounter['AGE'] && objectCounter['AGE']['LAGE'])
     sendObj.push({"type":'AGE',"data":objectCounter['AGE']});
 
-if(objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS'])
+if(objectCounter['INCOME'] && (objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS']))
     sendObj.push({"type":'INCOME',"data":objectCounter['INCOME']});
 
 objectCounter['others'].forEach(function(elem){
