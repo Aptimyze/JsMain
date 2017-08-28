@@ -55,6 +55,9 @@ class DppTab extends React.Component {
             about_partner = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_about_partner">{this.props.dpp.about_partner}</div>
         } else {
             about_partner = <div className="hgt10"></div>;
+            if(document.getElementById("matchHeader")) {
+                document.getElementById("matchHeader").classList.add("pad20");
+            }
         }
 
         var HisHer,self_gender;
