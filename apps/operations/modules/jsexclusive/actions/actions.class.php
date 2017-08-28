@@ -147,11 +147,18 @@ class jsexclusiveActions extends sfActions {
 				
 				$email = $request->getParameter("email");
 				$exclusiveObj = new ExclusiveFunctions();
-				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr));
+				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"button"=>$formArr["submit"]));
 				unset($exclusiveObj);
 			}
 			else{
-				++$this->clientIndex;
+				 if($formArr["submit"] == "SKIP"){
+					$acceptArr = $formArr["ACCEPT"];
+				 	$acceptArr = array_values($acceptArr);
+				 	$email = $request->getParameter("email");
+					$exclusiveObj = new ExclusiveFunctions();
+					$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"button"=>$formArr["submit"],"clientUsername"=>$request->getParameter("clientUsername")));
+					unset($exclusiveObj);
+				 } 
 			}
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
@@ -165,6 +172,7 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $notFound = $request['notFound'];
         $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        $this->activeClientsCount = $exclusiveObj->getActiveClientCount($agent);
         //Counter for welcome calls
         $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
         $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
@@ -185,7 +193,40 @@ class jsexclusiveActions extends sfActions {
             $this->notFound=1;
         }
     }
-
+    public function executeActiveClientList(sfWebRequest $request)
+    {
+        $agent = $request['name'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING("crm_slave"); //connection
+        $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");//connection
+        $expiryDateObj = new billing_SERVICE_STATUS("newjs_slave");//connection
+        $clientUsername = new JPROFILE("newjs_slave");
+        $clientInfoArr = $exclusiveObj->getActiveClientInfo($agent);
+        if(is_array($clientInfoArr))
+        {
+            foreach ($clientInfoArr as $key => $value) {
+                $clientIdArr[] = $value["CLIENT_ID"];
+                $billIdArr[] = $value["BILLID"];
+            }
+            $this->columnNamesArr = array("Client ID", "Client Name", "Assign Date", "Service Day", "Expiry Date");
+            $clientIdStr = implode(",", $clientIdArr);
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            $expiryDateArr = $expiryDateObj->fetchServiceDetailsByBillId($billIdArr,"PROFILEID,EXPIRY_DT");
+            $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
+            $this->count = count($clientInfoArr);
+            for ($i = 0; $i < $this->count; $i++) {
+                $dataArray[$i]['CLIENT_ID'] = $clientInfoArr[$i]['CLIENT_ID'];
+                $dataArray[$i]['USERNAME'] = $usernameArr[$clientInfoArr[$i]['CLIENT_ID']]["USERNAME"];
+                $dataArray[$i]['ASSIGNED_DT'] = $clientInfoArr[$i]['ASSIGNED_DT'];
+                $dataArray[$i]['SERVICE_DAY'] = $clientInfoArr[$i]['SERVICE_DAY'];
+                $dataArray[$i]['EXPIRY_DT'] = $expiryDateArr[$clientInfoArr[$i]['CLIENT_ID']]['EXPIRY_DT'];
+                if($clientNameArr[$i]['DISPLAY'] == 'Y'){
+                    $dataArray[$i]['CLIENT_NAME'] = $clientNameArr[$i]['NAME'];
+                }
+            }
+            $this->dataArray = $dataArray;
+        }
+        unset($exclusiveObj,$nameOfUserObj,$expiryDateObj,$clientUsername);
+    }
     public function executeWelcomeCalls(sfWebRequest $request) {
         $agent = $request['name'];
         //Get all clients here
@@ -194,11 +235,13 @@ class jsexclusiveActions extends sfActions {
         $purchasesObj = new billing_PURCHASES();
 
         $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
+
         if(is_array($combinedIdArr) && !empty($combinedIdArr)){
             $combinedIdArr = array_keys($combinedIdArr);
             $combinedIdStr = implode(",",$combinedIdArr);
 
             $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+
 
             $userNames = $purchasesObj->getUserName($combinedIdStr);
 

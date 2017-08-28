@@ -19,6 +19,9 @@ class feedbackMatchAlertMailerAction extends sfActions
 		$this->feedbackValue = $request->getParameter('feedbackValue'); //feedback value given by user
 		
 		$this->checksum = $request->getParameter('checksum');
+                if($this->stype == SearchTypesEnums::EOI_SIMILAR_PROFILES_MAIL_ACCEPTED || $this->stype == SearchTypesEnums::EOI_SIMILAR_PROFILES_MAIL_OTHERS){
+                    $this->fromVspMail = 1;
+                }
 		
 		$this->echecksum = JsAuthentication::jsEncrypt($this->profileid,"");
 		$this->feedbackTime = date("Y-m-d H:i:s"); //time when feedback given
@@ -37,8 +40,11 @@ class feedbackMatchAlertMailerAction extends sfActions
                         $matchAlertFeedbackObj = new matchAlertFeedback();
                         $matchAlertFeedbackObj->insertMatchAlertFeedback($this->profileid,$this->mailSentDate,$this->stype,$this->feedbackValue,$this->feedbackTime);
                 }
-                $this->redirectLink = $this->matchAlertLink."/".$this->echecksum."/".$this->checksum."?From_Mail=Y&stype=".$this->stype."&clicksource=matchalert1";	
-		
+                if($this->fromVspMail){
+                    $this->redirectLink = $this->matchAlertLink."/".$this->echecksum."/".$this->checksum."?From_Mail=Y&stype=".$this->stype;
+                }
+                else
+                    $this->redirectLink = $this->matchAlertLink."/".$this->echecksum."/".$this->checksum."?From_Mail=Y&stype=".$this->stype."&clicksource=matchalert1";
 		$this->countRedirectDpp = 15;
 	}
 }

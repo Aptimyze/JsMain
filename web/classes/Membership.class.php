@@ -733,6 +733,11 @@ class Membership
         if($memUpgrade != "NA" && $doneUpto!="MEM_DEACTIVATION"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
+
+        //Suspend previous old unlimited membership for new service
+        $membershipHandler = new MembershipHandler();
+        $membershipHandler->changeUnlimitedServiceStatusForNewService($this->billid,true,$this->profileid,$this->serviceid,$this->servefor);
+
         $this->setServiceActivation();
         $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
