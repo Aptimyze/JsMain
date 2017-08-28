@@ -486,14 +486,13 @@ else {
 
                     if(layerId==26 && button == "B1")
                     {   
-
-
-                        if($('#textAboutMe').val().length < 100)
+                        var dataAboutMe = {'editFieldArr[YOURINFO]':$('#textAboutMe').val().trim() };
+                        if($('#textAboutMe').val().trim().length < 100)
                         {
-                            showError("Please select City");
+                            showError("Please type min 100 characters.");
                             CALButtonClicked=0;
                             return;
-                    }
+                        }
 
                         showLoader();
                         $.ajax({
@@ -501,7 +500,7 @@ else {
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
                             dataType : 'json',
-                            data: dataStateCity,
+                            data: dataAboutMe,
                             success: function(response) {
                                 hideLoader();
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 

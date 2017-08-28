@@ -396,6 +396,8 @@ var altEmailUser = '~$altEmailUser`';
     position: relative;
 }
 </style>   
+      <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
+
 <div style="width:100%;overflow-x: hidden;">
 <div id='mainContainer' style="width:200%;transition-duration:.5s;transform: translateX(-0%);">
      <div class="childDiv fl" style="background-color: #09090b;">
@@ -414,14 +416,14 @@ var altEmailUser = '~$altEmailUser`';
   <div class="pad1 lh25 fontlig f14" style="color:#cccccc;">~$calObject.NOTE_TEXT`</div>
   <!--start:div-->
   <div style='padding: 25px 0 8% 0;'>
-  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');console.log('palas');">~$calObject.BUTTON1`</div>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');">~$calObject.BUTTON1`</div>
   </div>
   <!--end:div-->
   
   </div>   
 
   <div class="childDiv bg4 " style="height:638px" resize="">
-  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div class="fl wid20p white">               <i  class="no_arow2"></i> </div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
+  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div onclick="$('#mainContainer').css('transform','translateX(0%)');" class="fl wid20p white">               <i id="backBtn" class="mainsp arow2"></i></div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
     <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="fr txtc white f14">~$calObject.BUTTON2`</div>
 
 <!-- ngIf: bShowSkip -->                <div class="clr"></div>              </div>            </div>          </div>
@@ -433,11 +435,11 @@ var altEmailUser = '~$altEmailUser`';
           <div class="clr"></div>
         </div>
     <div class="pt10">
-            <textarea id="textAboutMe" class="fullwid color12 f17 fontlig lh30 hgt180 bg11"></textarea>
+            <textarea id="textAboutMe"  style="height:300px" class="fullwid color12 f17 fontlig lh30  bg11">~$calObject.ABOUT_ME_TEXT`</textarea>
     </div>
     </div>
   </div>
-  <div class="fullwid posabs btmo">
+  <div class="fullwid posabs btmo" onclick="criticalLayerButtonsAction('~$calObject.JSMS_ACTION1`','B1');">
     <div class="pt20" id="doneBtn" > <div  class="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div> </div>
   </div>
 </div>
