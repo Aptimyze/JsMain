@@ -548,9 +548,11 @@ Class ButtonResponseFinal
 		}
 		if($params["page_source"] == "VDP_VSP")
 		{
-			$buttons["label"] = $button->label;
 			$buttons["enable"] = false;
 		}
+		else
+			$buttons["enable"] = $button->active=='true' ? true : false;
+
 		$buttons["iconid"] 		= $button->icon;
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;

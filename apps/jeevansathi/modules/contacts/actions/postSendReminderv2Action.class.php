@@ -231,16 +231,21 @@ class postSendReminderv2Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
-		if(MobileCommon::isNewMobileSite())
+    if(MobileCommon::isNewMobileSite())
 		{
-			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
-			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
-			//$finalresponseArray["button_after_action"]["photo"]=$restResponseArray["photo"];
-            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+        if(sfContext::getInstance()->getRequest()->getParameter('pagesource')!='VDP')
+        {
+          $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
+    			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
+    			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+          $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+
+        }
+
 			//$finalresponseArray["button_after_action"][] =
 
 		}
+
 		else
 		{
                 $button_after_action = $buttonObj->getButtonArray();

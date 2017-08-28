@@ -172,17 +172,17 @@ class postAcceptv2Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
-		if(MobileCommon::isNewMobileSite())
+		if(MobileCommon::isNewMobileSite() && $this->source!='VDP')
 		{
 
 			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
-			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
 			else
-			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
 
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
-            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
 			//$finalresponseArray["button_after_action"][] =
 
 		}
