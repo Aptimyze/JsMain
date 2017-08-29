@@ -499,7 +499,7 @@ class DetailedViewApi
         {
             $this->m_arrOut['NO_ASTRO']=0;
         }
-        if(MobileCommon::isAndroidApp())
+        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite())
         { 
             $this->m_arrOut['thumbnailPic'] = null;
             $havePhoto=$this->m_objProfile->getHAVEPHOTO();
@@ -650,7 +650,7 @@ class DetailedViewApi
    		unset($verificationSealObj);
    		
    		//adding aadhar verification part
-   		if(MobileCommon::isApp() == "A")
+   		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
    		{
    			$aadharObj = new aadharVerification();
    			$aadharArr = $aadharObj->getAadharDetails($this->m_actionObject->profile->getPROFILEID());
