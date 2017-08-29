@@ -9,7 +9,7 @@ class DppTab extends React.Component {
             loginStatus = true;
         }
         this.state = {
-            selfPicUrl : props.about.selfThumbnail || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
+            selfPicUrl : props.selfPicUrl || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
             partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif",
             loginStatus
         };
@@ -252,7 +252,7 @@ class DppTab extends React.Component {
             dpp_earning = <div className="clearfix js-countFields">
                 <div className="fl wid71p">
                     <div className="f12 color1">Earning</div>
-                    <div className="fontlig pb15 pt5" id="vpro_dpp_earning">this.stackData({this.props.dpp.dpp_earning})</div>
+                    <div className="fontlig pb15 pt5" id="vpro_dpp_earning">{this.stackData(this.props.dpp.dpp_earning)}</div>
                 </div>
                 {this.getStatusMark("dpp_earning")}
             </div>

@@ -436,7 +436,7 @@ class ProfilePage extends React.Component {
                 };
                 contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
 
-                photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
+                photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
                 if(this.props.AboutInfo.name_of_user)
                 {
@@ -449,8 +449,8 @@ class ProfilePage extends React.Component {
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
-
-                DppView = <DppTab selfPicUrl={this.props.pageInfo.thumb_url} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+                
+                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 

@@ -428,7 +428,7 @@ class HamMain extends React.Component {
                 </a>
             </li>;
             logoutView = <li>
-                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white ml60">
+                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white mlLogout">
                     Logout
                 </div>
             </li>;

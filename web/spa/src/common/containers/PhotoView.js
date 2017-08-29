@@ -18,9 +18,6 @@ class PhotoView extends React.Component {
             showVerified: false
         };
     }
-    componentDidMount() {
-    document.getElementById("profilePic").style.height = window.innerWidth +"px";
-    }
     componentWillReceiveProps(nextProps) {
         let response = nextProps.photoAction;
         let _this = this;
@@ -131,7 +128,7 @@ class PhotoView extends React.Component {
         }
 
         var verificationView;
-        if(this.props.verification_status == 0)
+        if(this.props.verification_status == 1)
         {
             verificationView =  <div className="posabs srp_pos3 searchNavigation showDetails" id="id1">
                 <div id="album1">
