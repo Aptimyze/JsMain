@@ -171,8 +171,7 @@
                         <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
 
                         </div>
-                        </div>
-                        <div id="attachDiv" style="overflow: auto" class="brdr23 white posfix btm50 fullwid pad3 dn">
+                          <div id="attachDiv" style="overflow: auto; right:0px" class="brdr23 white posabs btmo fullwid pad3 dn">
                             <div id="attachTitle">
                                 <i class="reportIcon atachIcon"></i>
                                 <span>Attach Proof</span>
@@ -181,7 +180,9 @@
                             <div id="photoDiv" >
                             </div>
                             
+                        </div>  
                         </div>
+                        
                         <div class="posfix fullwid scrollhid pos1_c1">
                             <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Abuse</div>
                         </div>

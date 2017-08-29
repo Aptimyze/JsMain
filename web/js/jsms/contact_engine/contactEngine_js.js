@@ -74,7 +74,7 @@ mainEle.show();
 
 var el=$("#reportAbuseMidDiv");
 el.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
-
+$("#reportAbuseMidDiv").removeClass("scrollhidImp")
 var div = document.createElement('div');
             // css transition properties
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
@@ -108,7 +108,9 @@ $("#js-otherReasonsLayer").removeClass('dispnone').val('');
 
 $("#attachDiv").removeClass("dn");
 var elem=$("#reportAbuseMidDiv");
-elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height() - $("#attachDiv").innerHeight());
+elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+$("#attachDiv").width(window.innerWidth-40);
+$("#reportAbuseMidDiv").addClass("scrollhidImp");
 
 }
 
