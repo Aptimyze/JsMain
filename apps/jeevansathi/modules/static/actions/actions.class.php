@@ -439,7 +439,7 @@ class staticActions extends sfActions
 
     }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
-    
+    $this->calObject = $layerData; 
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
