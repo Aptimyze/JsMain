@@ -40,7 +40,10 @@ class ApiCALayerV1Action extends sfActions
         $layerToShow = false;
         //As Per Peek Level Unset Some Listing Across Channels
         if(JsConstants::$hideUnimportantFeatureAtPeakLoad <=4) {
-            $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
+        	if($request->getParameter("calFromPD")==1 && $request->getParameter("layerId")==19)
+        		$layerToShow=19;
+        	else	
+	            $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
         }
 		
 		//print_r($layerToShow); die;
@@ -73,7 +76,6 @@ class ApiCALayerV1Action extends sfActions
 
 	    if($layerToShow == 19)
 	    {
-      		
             $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
             $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
             $layerData['startDate']  = $request->getParameter('START_DATE');
