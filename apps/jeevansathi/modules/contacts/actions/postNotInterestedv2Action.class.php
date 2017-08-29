@@ -117,7 +117,7 @@ class postNotInterestedv2Action extends sfAction
   			//$finalresponseArray["button_after_action"][] =
       }
       else {
-        $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","R","D");
+//        $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","R","D");
         $restResponseArray= $buttonObj->jsmsRestButtonsrray();
         $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
 

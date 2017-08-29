@@ -189,16 +189,9 @@ class postAcceptv2Action extends sfAction
     }
     else
     {
-      if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
-      $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","S","A");
-      else
-      $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","R","A");
-
       $restResponseArray= $buttonObj->jsmsRestButtonsrray();
       $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
       $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
-
-
     }
 		}
 		else
