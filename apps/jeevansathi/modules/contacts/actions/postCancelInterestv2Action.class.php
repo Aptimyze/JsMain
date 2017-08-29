@@ -129,7 +129,7 @@ class postCancelInterestv2Action extends sfAction
         }
         else
         {
-          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","E");
+          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","S",$this->tobetype);
         }
 
 			//$finalresponseArray["button_after_action"][] =
