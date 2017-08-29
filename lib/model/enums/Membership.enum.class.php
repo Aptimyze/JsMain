@@ -728,7 +728,7 @@ class paymentOption
         "CR" => "Credit Card",
         "DR" => "Debit Card",
         "NB" => "Net Banking",
-        "CSH" => "Wallet"
+        "CSH" => "Paytm / MobiKwik"
     );
     public static $ccCardType = array(
         "card1" => array(
