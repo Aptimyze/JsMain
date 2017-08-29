@@ -108,7 +108,7 @@ componentWillUnmount(){
 
 
         <div className="cell brdr6 editBarStyle1">
-
+          <a href="/profile/viewprofile.php?ownview=1">
           <div className="fullwid pad12" id="jsmsProfilePic">
             <div className="posrel fl">
               <div className="hold hold1">
@@ -123,28 +123,7 @@ componentWillUnmount(){
             <div className="fl  color7 fontlig padl10 pt16" id="percent">{this.state.profileCompletionCount}%</div>
             <div className="clr"></div>
           </div>
-        </div>
-
-        <div className="cell brdr6 vtop pad13 editBarStyle4">
-          <div className="txtc ">
-            <a href="/profile/viewprofile.php?ownview=1#Family">
-              <div className="editBarStyle5">
-                <i className="mainsp myjs_family"></i>
-              </div>
-            </a>
-            <div className="f12 color7 fontlig">Family</div>
-          </div>
-        </div>
-
-        <div className="cell brdr6 vtop pad13 editBarStyle4">
-          <div className="txtc ">
-            <a href="/profile/viewprofile.php?ownview=1#Details">
-              <div className="editBarStyle5">
-                  <i className="mainsp basicdetail"></i>
-              </div>
-            </a>
-            <div className="f12 color7 fontlig">Basic</div>
-          </div>
+          </a>
         </div>
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
@@ -188,6 +167,28 @@ componentWillUnmount(){
               </div>
             </a>
             <div className="f12 color7 fontlig">Career</div>
+          </div>
+        </div>
+
+        <div className="cell brdr6 vtop pad13 editBarStyle4">
+          <div className="txtc ">
+            <a href="/profile/viewprofile.php?ownview=1#Family">
+              <div className="editBarStyle5">
+                <i className="mainsp myjs_family"></i>
+              </div>
+            </a>
+            <div className="f12 color7 fontlig">Family</div>
+          </div>
+        </div>
+
+        <div className="cell brdr6 vtop pad13 editBarStyle4">
+          <div className="txtc ">
+            <a href="/profile/viewprofile.php?ownview=1#Details">
+              <div className="editBarStyle5">
+                  <i className="mainsp basicdetail"></i>
+              </div>
+            </a>
+            <div className="f12 color7 fontlig">Basic</div>
           </div>
         </div>
 
