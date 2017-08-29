@@ -18,9 +18,6 @@ class PhotoView extends React.Component {
             showVerified: false
         };
     }
-    componentDidMount() {
-    document.getElementById("profilePic").style.height = window.innerWidth +"px";
-    }
     componentWillReceiveProps(nextProps) {
         let response = nextProps.photoAction;
         let _this = this;
