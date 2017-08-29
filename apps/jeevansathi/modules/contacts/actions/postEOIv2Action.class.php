@@ -306,7 +306,7 @@ class postEOIv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite()  )
 		{
 
-      if(sfContext::getInstance()->getRequest()->getParameter('pagesource')!='VDP')
+      if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
       {
         $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
         $restResponseArray= $buttonObj->jsmsRestButtonsrray();
