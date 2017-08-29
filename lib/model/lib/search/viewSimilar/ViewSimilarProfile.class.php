@@ -89,8 +89,11 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $dbName = JsDbSharding::getShardNo($viewer);
                         $loggedInJpartnerObj = new newjs_JPARTNER($dbName);
                         $pMstatus = $loggedInJpartnerObj->get(array('PROFILEID'=>$viewer),'PARTNER_MSTATUS');
-                        if($pMstatus[0]['PARTNER_MSTATUS'] != '')
-                            $whereParams['MSTATUS'] = $pMstatus[0]['PARTNER_MSTATUS'];
+                        if($pMstatus[0]['PARTNER_MSTATUS'] != ''){
+                            $pMstatus[0]['PARTNER_MSTATUS'] = trim($pMstatus[0]['PARTNER_MSTATUS'],"'");
+                            $mstatusArr = explode("','",$pMstatus[0]['PARTNER_MSTATUS']);
+                            $whereParams['MSTATUS'] = implode(' ', $mstatusArr);
+                        }
                         
                         if(viewSimilarConfig::VspWithoutSolr($viewed)){
                             $profileListObj = new IgnoredContactedProfiles();
