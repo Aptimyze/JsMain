@@ -172,35 +172,29 @@ class HamMain extends React.Component {
                 profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>; 
             }
             profileVisitorView = <li>
-                <div>
-                    <i className="hamSprite profileVisitorIcon"></i>
-                    <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="f17 white">
-                        Profile Visitors
-                    </a>
-                    {profileVisitorCount}
-                </div>
+                <i className="hamSprite profileVisitorIcon"></i>
+                <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="f17 white">
+                    Profile Visitors
+                </a>
+                {profileVisitorCount}
             </li>;
 
             phoneBookView = <li>
-                <div>
-                    <i className="hamSprite phoneIcon"></i>
-                    <a href="/inbox/16/1" id="phoneLink" className="f17 white">
-                        Phonebook
-                    </a>
-                </div>
+                <i className="hamSprite phoneIcon"></i>
+                <a href="/inbox/16/1" id="phoneLink" className="f17 white">
+                    Phonebook
+                </a>
             </li>;
             if(this.state.bellResponse.BOOKMARK != 0) {
                 shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;  
             }
 
             shortlistedView = <li>
-                <div>
-                    <i className="hamSprite shortlistedIcon"></i>
-                    <a href="/search/shortlisted" id="shortlistedLink" className="f17 white">
-                        Shortlisted
-                        {shortlistedCount}
-                    </a>
-                </div>
+                <i className="hamSprite shortlistedIcon"></i>
+                <a href="/search/shortlisted" id="shortlistedLink" className="f17 white">
+                    Shortlisted
+                    {shortlistedCount}
+                </a>
             </li>;
 
             if(this.state.bellResponse.FILTERED != 0) {
@@ -277,22 +271,18 @@ class HamMain extends React.Component {
             }
 
             savedSearchView = <li>
-                <div>
-                    <i className="hamSprite savedSearchIcon"></i>
-                    <a href="/search/MobSaveSearch" id="savedSearchLink" className="f17 white">
-                        Saved Searches
-                        {savedSearchCount}
-                    </a>
-                </div>
+                <i className="hamSprite savedSearchIcon"></i>
+                <a href="/search/MobSaveSearch" id="savedSearchLink" className="f17 white">
+                    Saved Searches
+                    {savedSearchCount}
+                </a>
             </li>;
 
             editProfileView = <li>
-                <div>
-                    <i className="hamSprite editProfileIcon"></i>
-                    <a href="/profile/viewprofile.php?ownview=1" id="editProfileLink" className="f17 white">
-                        Edit Profile
-                    </a>
-                </div>
+                <i className="hamSprite editProfileIcon"></i>
+                <a href="/profile/viewprofile.php?ownview=1" id="editProfileLink" className="f17 white">
+                    Edit Profile
+                </a>
             </li>;
 
             if(this.state.bellResponse.MATCHALERT != 0) {
