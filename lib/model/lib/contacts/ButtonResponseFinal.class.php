@@ -596,7 +596,7 @@ Class ButtonResponseFinal
 		}
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
-		$buttons['enable']		= $button->active=="true"?true:false;
+		$buttons['enable']		= !$button ? true : ($button->active=='true'  ? true : false);
 		$buttons['id'] 			= $buttons["action"];
 		$button = self::buttonMerge($buttons);
 		return $buttons;
