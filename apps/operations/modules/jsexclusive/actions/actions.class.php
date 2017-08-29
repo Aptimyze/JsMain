@@ -261,6 +261,36 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $this->client = $request['client'];
 
+        $from = $request['from'];
+
+        //check if user is eligible for new handling
+        if($from == 'search'){
+            $username = $request['username'];
+            if($username){
+                $jprofileObj = new JPROFILE("newjs_slave");
+                $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+            } else{
+                $details=false;
+            }
+            if(!details){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
+            if(!$userDetails){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $this->client=$details['PROFILEID'];
+        }
+
         $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
@@ -283,32 +313,6 @@ class jsexclusiveActions extends sfActions {
                     $this->message = "Invalid Username: ".$username;
                 }
             }
-        }
-
-        $from = $request['from'];
-        
-        //check if user is eligible for new handling
-        if($from == 'search'){
-            $username = $request['username'];
-            $jprofileObj = new JPROFILE("newjs_slave");
-            $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
-            if(!details){
-                $module="jsexclusive";
-                $action="welcomeCallsPage2";
-                $params=array("notFound"=>true);
-                $this->notFound=true;
-                //$this->forwardTo($module,$action,$params);
-            }
-            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
-            if(!$userDetails){
-                $module="jsexclusive";
-                $action="welcomeCallsPage2";
-                $params=array("notFound"=>true);
-                $this->notFound=true;
-                //$this->forwardTo($module,$action,$params);
-            }
-            $this->client=$details['PROFILEID'];
         }
         
     }
