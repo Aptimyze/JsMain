@@ -172,19 +172,34 @@ class postAcceptv2Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
-		if(MobileCommon::isNewMobileSite() && $this->source!='VDP')
+		if(MobileCommon::isNewMobileSite())
 		{
 
-			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
-			else
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
+      if($this->source!='VDP')
+      {
+    			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+    			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
+    			else
+    			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
 
-			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+    			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
+    			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+                $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
 			//$finalresponseArray["button_after_action"][] =
+    }
+    else
+    {
+      if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+      $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","S","A");
+      else
+      $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","R","A");
 
+      $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+      $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
+      $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+
+
+    }
 		}
 		else
 		{
