@@ -28,6 +28,11 @@ class ProfilePage extends React.Component {
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
+        let ownView = false;
+        if(getParameterByName(window.location.href,"preview") == 1) {
+            ownView = true;
+        }
+
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -44,7 +49,8 @@ class ProfilePage extends React.Component {
             responseTracking:responseTracking,
             disablePhotoLink: false,
             callApi: false,
-            listingName: ""
+            listingName: "",
+            ownView:ownView
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
@@ -59,6 +65,8 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
+        console.log('componentDidMount');
+        console.log(this.props);
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
@@ -89,7 +97,15 @@ class ProfilePage extends React.Component {
         if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
         }
-        if(this.state.gender == "M") {
+        if(this.state.gender == "M" & this.state.ownView == false) {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
+            })
+        } else if(this.state.gender == "F" & this.state.ownView == false) {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+            })
+        } else if(this.state.gender == "F" & this.state.ownView == true) {
             this.setState({
                defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
             })
@@ -136,7 +152,7 @@ class ProfilePage extends React.Component {
     }
 
     setNextPrevLink() {
-        
+
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
             let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
@@ -333,7 +349,7 @@ class ProfilePage extends React.Component {
     {
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
-        } 
+        }
     }
 
     imageLoaded()
@@ -362,7 +378,7 @@ class ProfilePage extends React.Component {
         let same_url = false
         if ( this.props.history.prevUrl )
         {
-            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;   
+            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
         }
 
         if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
@@ -378,19 +394,37 @@ class ProfilePage extends React.Component {
     render()
     {
         var himHer = "him",photoViewTemp,AboutViewTemp;
-        if(this.state.gender == "M") {
+        if(this.state.gender == "M" && this.state.ownView == false) {
             himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
-        } else {
+        } else if(this.state.gender == "F" && this.state.ownView == false){
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
+        } else if(this.state.gender == "M" && this.state.ownView == true) {
+             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
+        } else {
+            himHer = "her";
+            photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+
+        }
+        let backBtnView;
+        if(this.state.ownView == false) {
+            backBtnView = <div id="backBtn" onClick={() => this.goBack()} className="posabs ot_pos1">
+                <i className="mainsp arow2"></i>
+            </div>;
         }
         var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
         var historyIcon;
-        if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1") {
+        if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1" && this.state.ownView == false) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
                 <i className="vpro_sprite vpro_comHisIcon cursp"></i>
+            </div>;
+        } else if(this.state.ownView == true) {
+            historyIcon = <div className="posabs vpro_pos1">
+                <a href="/profile/viewprofile.php?ownview=1">
+                    <i id="closeMyPreview" className="mainsp vpro_cross1"></i>
+                </a>
             </div>;
         }
         var errorView;
@@ -412,19 +446,19 @@ class ProfilePage extends React.Component {
         }
 
         var historyView;
-        if(this.state.showHistory) {
+        if(this.state.showHistory && this.state.ownView == false) {
             historyView = <CommHistory
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.pageInfo.thumb_url|| this.state.defaultPicData} >
+                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
                           </CommHistory>
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
         if(this.state.dataLoaded)
-        {   
+        {
             document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
@@ -434,7 +468,9 @@ class ProfilePage extends React.Component {
                     profileThumbNailUrl: this.props.pageInfo.thumb_url || this.state.defaultPicData,
                     username:this.props.AboutInfo.username
                 };
-                contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                if(this.state.ownView == false) {
+                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
@@ -449,8 +485,9 @@ class ProfilePage extends React.Component {
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
-                
+
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 
@@ -519,9 +556,7 @@ class ProfilePage extends React.Component {
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">
-                                <div id="backBtn" onClick={() => this.goBack()} className="posabs ot_pos1">
-                                    <i className="mainsp arow2"></i>
-                                </div>
+                                {backBtnView}
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
                                     {Header}
                                 </div>
@@ -544,9 +579,9 @@ class ProfilePage extends React.Component {
                         </div></div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
-                                <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
-                                <div id="FamilyHeader" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
-                                <div id="DppHeader" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
+                                <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
+                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
+                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
                                 <div className="clr"></div>
                             </div>
                         </div>

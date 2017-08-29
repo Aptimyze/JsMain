@@ -69,7 +69,9 @@ export  class MyjsPage extends React.Component {
 			drApi: false,
 			vaApi: false,
 			hamApi: false,
-			showPromo: false
+			showPromo: false,
+			deviceHeight: window.innerHeight,
+			stopApiHit: 0
 		}
   	}
 
@@ -82,13 +84,19 @@ export  class MyjsPage extends React.Component {
 	}
 
 	componentDidUpdate(){
+		if(this.isScreenFull() && !this.state.stopApiHit){
+			this.setState({
+				stopApiHit: 1
+			})
+		}
+		this.callEventListner();
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 	}
 
 	componentWillReceiveProps(nextProps)
 	{
 		// this.callEventListner();
-		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched)
+		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !this.state.stopApiHit)
 			this.restApiHits(this);
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
@@ -100,6 +108,18 @@ export  class MyjsPage extends React.Component {
             });
 		}
 	}
+
+	isScreenFull(){
+		let current = 0 ;
+		if(document.getElementById('perspective')){
+			current = document.getElementById('perspective').clientHeight;
+		}
+		if(current>this.state.deviceHeight)
+			return 1;
+		else
+			return 0;
+	}
+
 	removePromoLayer()
     {
         this.setState ({
@@ -161,25 +181,25 @@ export  class MyjsPage extends React.Component {
 		    	ieApi: true
 		    });
 		}
-  		if(!this.state.irApi){
+  		else if(!this.state.irApi){
 		    this.props.hitApi_IR();
 		    this.setState({
 		    	irApi: true
 		    });
 		}
-  		if(!this.state.modApi){
+  		else if(!this.state.modApi){
 		    this.props.hitApi_MOD();
 		    this.setState({
 		    	modApi: true
 		    });
 		}
-		if(!this.state.vaApi){
+		else if(!this.state.vaApi){
 		    this.props.hitApi_VA();
 		    this.setState({
 		    	vaApi: true
 		    });
 		}
- 		if(!this.state.drApi){
+ 		else if(!this.state.drApi){
 		    this.props.hitApi_DR();
 		    this.setState({
 		    drApi: true
@@ -196,7 +216,6 @@ export  class MyjsPage extends React.Component {
 			this.props.hitApi_IR(nextPage);
 		}
   	render() {
-
 
 		var promoView;
         if(this.state.showPromo == true)
