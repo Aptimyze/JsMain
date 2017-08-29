@@ -303,16 +303,23 @@ class postEOIv2Action extends sfAction
             	$finalresponseArray["sent"] = false;
         	}
 		}
-		if(MobileCommon::isNewMobileSite())
+		if(MobileCommon::isNewMobileSite()  )
 		{
 
-			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
-			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
-			//$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
-            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
-			//$finalresponseArray["button_after_action"][] =
+      if(sfContext::getInstance()->getRequest()->getParameter('pagesource')!='VDP')
+      {
+        $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
+        $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+        $finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+        //$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
+              $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+        //$finalresponseArray["button_after_action"][] =
 
+      }
+      else
+      {
+        $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I");
+      }
 		}
 		else
 		{

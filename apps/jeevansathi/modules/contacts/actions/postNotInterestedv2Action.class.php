@@ -106,12 +106,12 @@ class postNotInterestedv2Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
-		if(MobileCommon::isNewMobileSite())
+		if(MobileCommon::isNewMobileSite() && sfContext::getInstance()->getRequest()->getParameter('pagesource')!='VDP')
 		{
-			$finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("NOT_INTERESTED_BY_ME","M","R","D");
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("NOT_INTERESTED_BY_ME","M","R","D");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
-            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
 			//$finalresponseArray["button_after_action"][] =
 
 		}

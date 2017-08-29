@@ -64,10 +64,9 @@ export class contactEnginePD extends React.Component{
           this.props.hideLoaderDiv();
           this.postAction(button,responseButtons,index);
         }
+        let params = '';
         if(button.action == 'WRITE_MESSAGE')
-          params = '&pagination=1';
-        else
-          params = '';
+           params = '&pagination=1';
         var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
         if(!temp)return;
         this.props.showLoaderDiv();
