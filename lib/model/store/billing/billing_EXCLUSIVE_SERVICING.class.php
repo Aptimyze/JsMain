@@ -32,7 +32,36 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             throw new jsException($e);
         }
     }
-
+    public function getActiveClientCount($agentUsername) {
+        try {
+            $sql = "SELECT COUNT(1) AS CNT FROM billing.EXCLUSIVE_SERVICING where AGENT_USERNAME =:AGENT_USERNAME";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+            $res->execute();
+            if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                return $result['CNT'];
+            }
+            return NULL;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getActiveClientInfo($agentUsername) {
+        if($agentUsername){
+            try {
+                $sql = "SELECT CLIENT_ID,ASSIGNED_DT,SERVICE_DAY,BILLID FROM billing.EXCLUSIVE_SERVICING where AGENT_USERNAME =:AGENT_USERNAME";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+                $res->execute();
+                while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                    $clientInfo[] =$result; 
+                }
+                return $clientInfo;
+            } catch (Exception $e) {
+                throw new jsException($e);
+            }
+        }
+    }
     /**
      * Function to get profile details from EXCLUSIVE_SERVICING table
      *

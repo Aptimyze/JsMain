@@ -536,7 +536,7 @@ class DetailedViewApi
    		unset($verificationSealObj);
    		
    		//adding aadhar verification part
-   		if(MobileCommon::isApp() == "A")
+   		if(MobileCommon::isApp())
    		{
    			$aadharObj = new aadharVerification();
    			$aadharArr = $aadharObj->getAadharDetails($this->m_actionObject->profile->getPROFILEID());
