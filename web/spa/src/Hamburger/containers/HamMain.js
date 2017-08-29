@@ -447,12 +447,10 @@ class HamMain extends React.Component {
                 </div>
             </div>
             editProfileView = <li>
-                <div>
-                    <i className="hamSprite editProfileIcon"></i>
-                    <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="f17 white">
+                <i className="hamSprite editProfileIcon"></i>
+                <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="f17 white">
                         Browse By Community
-                    </a>
-                </div>
+                </a>
             </li>;
         }
 
