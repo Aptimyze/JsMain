@@ -61,6 +61,7 @@
     .firtElemSmall{
         margin-left: 0px !important;
     }
+    .mlLogout{margin-left: 10px !important;}
 }
 
 .listingHam li i {
@@ -210,3 +211,4 @@
     text-align: center;
     padding-top: 5px;
 }
+.mlLogout {margin-left: 60px}
