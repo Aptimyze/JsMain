@@ -155,6 +155,7 @@ getEmailInfo(displayProps)
 }
 
 getMembershipOvlay(){
+  let fButton = this.getFooterButton(this.props.actionDetails.footerbutton);
   return (<div className={"posrel fullwid fullheight overlayPos "+this.state.memOvlayShow} id="membershipOverlay">
       <img src="/images/jsms/membership_img/revamp_bg1.jpg" className="posfix classimg1 bgset" />
       <div className="fullheight fullwid layerOpa posrel" style={{overflow:'auto'}}>
@@ -180,20 +181,20 @@ getMembershipOvlay(){
           </div>
 
       </div>
-      <div id="footerDiv" className="posfix fullwid btmo" style={{background:'black'}}>
-              <a href="#" id="skipLayer" className="f16 fontmed app_clrw txtc posSkip">Skip</a>
-              <div className="bg7">
 
-              <a onClick={()=>this.props.bindAction(this.props.actionDetails.footerbutton)} id="footerButtonNew" className="fullwid dispbl lh50 txtc f17 fontlig white">{this.props.actionDetails.footerbutton.newlabel}</a>
-              </div>
-      </div>
-
-
+      {fButton}
   </div>);
 }
 
-footerBFunction(){
-this.props.bindAction();
+getFooterButton(fButton){
+  if(!fButton) return (<div></div>);
+return       (<div id="footerDiv" className="posfix fullwid btmo" style={{background:'black'}}>
+              <a href="#" id="skipLayer" className="f16 fontmed app_clrw txtc posSkip">Skip</a>
+              <div className="bg7">
+
+              <a onClick={()=>this.props.bindAction(fButton)} id="footerButtonNew" className="fullwid dispbl lh50 txtc f17 fontlig white">{fButton.newlabel}</a>
+              </div>
+      </div>);
 
 }
 getContactDetails(actiondetails){

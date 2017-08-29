@@ -28,6 +28,11 @@ class ProfilePage extends React.Component {
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
+        let ownView = false;
+        if(getParameterByName(window.location.href,"preview") == 1) {
+            ownView = true;
+        }
+        
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -44,7 +49,8 @@ class ProfilePage extends React.Component {
             responseTracking:responseTracking,
             disablePhotoLink: false,
             callApi: false,
-            listingName: ""
+            listingName: "",
+            ownView:ownView
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
@@ -91,7 +97,15 @@ class ProfilePage extends React.Component {
         if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
         }
-        if(this.state.gender == "M") {
+        if(this.state.gender == "M" & this.state.ownView == false) {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
+            })
+        } else if(this.state.gender == "F" & this.state.ownView == false) {
+            this.setState({
+               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+            })
+        } else if(this.state.gender == "F" & this.state.ownView == true) {
             this.setState({
                defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
             })
@@ -380,19 +394,37 @@ class ProfilePage extends React.Component {
     render()
     {
         var himHer = "him",photoViewTemp,AboutViewTemp;
-        if(this.state.gender == "M") {
+        if(this.state.gender == "M" && this.state.ownView == false) {
             himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
-        } else {
+        } else if(this.state.gender == "F" && this.state.ownView == false){
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
+        } else if(this.state.gender == "M" && this.state.ownView == true) {
+             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
+        } else {
+            himHer = "her";
+            photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+
+        }
+        let backBtnView;
+        if(this.state.ownView == false) {
+            backBtnView = <div id="backBtn" onClick={() => this.goBack()} className="posabs ot_pos1">
+                <i className="mainsp arow2"></i>
+            </div>;
         }
         var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
         var historyIcon;
-        if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1") {
+        if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1" && this.state.ownView == false) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
                 <i className="vpro_sprite vpro_comHisIcon cursp"></i>
+            </div>;
+        } else if(this.state.ownView == true) {
+            historyIcon = <div className="posabs vpro_pos1">
+                <a href="/profile/viewprofile.php?ownview=1">
+                    <i id="closeMyPreview" className="mainsp vpro_cross1"></i>
+                </a>
             </div>;
         }
         var errorView;
@@ -414,14 +446,14 @@ class ProfilePage extends React.Component {
         }
 
         var historyView;
-        if(this.state.showHistory) {
+        if(this.state.showHistory && this.state.ownView == false) {
             historyView = <CommHistory
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
                           </CommHistory>
-        }
+        } 
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
@@ -436,7 +468,9 @@ class ProfilePage extends React.Component {
                     profileThumbNailUrl: this.props.pageInfo.thumb_url || this.state.defaultPicData,
                     username:this.props.AboutInfo.username
                 };
-                contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                if(this.state.ownView == false) {
+                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;    
+                }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
 
@@ -522,9 +556,7 @@ class ProfilePage extends React.Component {
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
                             <div className="posrel">
-                                <div id="backBtn" onClick={() => this.goBack()} className="posabs ot_pos1">
-                                    <i className="mainsp arow2"></i>
-                                </div>
+                                {backBtnView}
                                 <div className="fontthin f19 white headerOverflow" id="vpro_headerTitle">
                                     {Header}
                                 </div>
