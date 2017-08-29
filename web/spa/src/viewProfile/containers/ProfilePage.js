@@ -32,7 +32,7 @@ class ProfilePage extends React.Component {
         if(getParameterByName(window.location.href,"preview") == 1) {
             ownView = true;
         }
-        
+
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -453,7 +453,7 @@ class ProfilePage extends React.Component {
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
                           </CommHistory>
-        } 
+        }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
@@ -469,7 +469,7 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
                 if(this.state.ownView == false) {
-                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;    
+                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
@@ -579,9 +579,9 @@ class ProfilePage extends React.Component {
                         </div></div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
-                                <div id="AboutHeader" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
-                                <div id="FamilyHeader" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
-                                <div id="DppHeader" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
+                                <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
+                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
+                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
                                 <div className="clr"></div>
                             </div>
                         </div>
