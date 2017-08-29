@@ -59,6 +59,8 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
+        console.log('componentDidMount');
+        console.log(this.props);
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
@@ -136,7 +138,7 @@ class ProfilePage extends React.Component {
     }
 
     setNextPrevLink() {
-        
+
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
             let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
@@ -333,7 +335,7 @@ class ProfilePage extends React.Component {
     {
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
-        } 
+        }
     }
 
     imageLoaded()
@@ -362,7 +364,7 @@ class ProfilePage extends React.Component {
         let same_url = false
         if ( this.props.history.prevUrl )
         {
-            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;   
+            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
         }
 
         if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
@@ -417,14 +419,14 @@ class ProfilePage extends React.Component {
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.pageInfo.thumb_url|| this.state.defaultPicData} >
+                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
                           </CommHistory>
         }
 
         var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
 
         if(this.state.dataLoaded)
-        {   
+        {
             document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
@@ -449,8 +451,9 @@ class ProfilePage extends React.Component {
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
-                
+
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 

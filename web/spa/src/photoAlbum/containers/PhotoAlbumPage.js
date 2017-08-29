@@ -26,11 +26,29 @@ export default class PhotoAlbumPage extends React.Component {
   }
   componentDidMount(){
 
-    let _this = this;
-    console.log(this.props.location.search);
-    if(getCookie("AUTHCHECKSUM"))
-    {
-        commonApiCall(CONSTANTS.PHOTALBUM_API,"&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1),'','POST').then(function(response){
+    console.log('albuk');
+
+
+    let newPchksum, _this = this;
+
+    //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
+     let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
+
+     console.log(str);
+
+     if(str.indexOf("&")>-1)
+     {
+       let b = str.split("&");
+       newPchksum = b[0]
+     }
+     else {
+       newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
+     }
+
+     //console.log(newPchksum);
+     //console.log(commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST'));
+
+        commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
           console.log('albumdata', response);
           _this.setState({
                       getRes: response,
@@ -39,19 +57,7 @@ export default class PhotoAlbumPage extends React.Component {
           console.log(response);
         });
 
-    }
-    // if(getCookie("AUTHCHECKSUM"))
-    // {
-    //   console.log(this.props.location.search);
-    //   axios.get('http://test1.jeev.com/api/v1/social/getAlbum'+ this.props.location.search + '&AUTHCHECKSUM='+ getCookie("AUTHCHECKSUM") )
-    //     .then(function(response){
-    //       _this.setState({
-    //           getRes: response.data,
-    //           recAlbumlink: true
-    //       });
-    //
-    //     })
-    // }
+
   }
 
 componentDidUpdate(){
@@ -124,11 +130,16 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         height: window.innerHeight,
         display: "table"
       }
+        console.log('render');
 
       return(
 
+
+
           <div className="posrel">
             <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
+
+
             <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
 
 

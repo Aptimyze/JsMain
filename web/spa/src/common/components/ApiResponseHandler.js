@@ -8,6 +8,7 @@ import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/
 export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
 
+
   let callMethod = method ? method :  'POST';
     let aChsum = getCookie('AUTHCHECKSUM');
     let checkSumURL = '';
@@ -16,17 +17,43 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
       if ( callUrl.indexOf("?") == -1 )
       {
-        if(data)
+
+        if(data){
+
           checkSumURL = '?AUTHCHECKSUM='+aChsum+data;
+
+        }
+
         else
-          checkSumURL = '?AUTHCHECKSUM='+aChsum;
+        {
+
+            checkSumURL = '?AUTHCHECKSUM='+aChsum;
+
+        }
+
       }
       else
       {
-        if(data)
+
+        if(data){
+
           checkSumURL = '&AUTHCHECKSUM='+aChsum+data;
-        else
+
+        }
+
+        else{
+
           checkSumURL = '&AUTHCHECKSUM='+aChsum;
+
+        }
+
+      }
+    }
+    else
+    {
+
+      if(Object.keys(data).length!=0){
+          checkSumURL = data;
       }
     }
 
@@ -49,6 +76,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       }
     }
     else {
+    
       return axios({
         method: callMethod,
         url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
@@ -95,7 +123,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         {
           if(reducer == "SHOW_INFO") {
             localStorage.setItem("currentData", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrl",callUrl)            
+            localStorage.setItem("currentDataUrl",callUrl)
           }
           dispatch({
             type: reducer,
