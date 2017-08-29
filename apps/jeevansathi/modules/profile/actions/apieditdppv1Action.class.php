@@ -424,7 +424,7 @@ class apieditdppv1Action extends sfAction
 			$emailId = $execDetails["EMAIL"];//"sanyam1204@gmail.com";
 			foreach(json_decode($dppData) as $key=>$value)
 			{				
-				if(MobileCommon::isNewMobileSite() || MobileCommon::isAndroidApp())
+				if(MobileCommon::isNewMobileSite())
 				{
 					foreach($value->OnClick as $k1=>$v1)
 					{
