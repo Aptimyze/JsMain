@@ -844,9 +844,19 @@ class BILLING_PURCHASES extends TABLE
 
     public function getUserName($profilesid){
         try{
-            $sql = "SELECT USERNAME,PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN (:PROFILESID)";
+            $sql = "SELECT USERNAME,PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN (";
+            $COUNT=1;
+            foreach($profilesid as $key=>$value) {
+                $valueToInsert .= ":KEY" . $COUNT . ",";
+                $bind["KEY" . $COUNT]["VALUE"] = $value;
+                $COUNT++;
+            }
+            $valueInsert = rtrim($valueToInsert,',').")";
+            $sql .=$valueInsert;
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILESID",$profilesid,PDO::PARAM_INT);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_INT);
+            }
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             while($row = $prep->fetch()){
