@@ -347,6 +347,7 @@ class jsexclusiveActions extends sfActions {
                 $fromEmail=$agentDetails['EMAIL'];
                 $firstname=$agentDetails['FIRST_NAME'];
                 $phone = $agentDetails['PHONE'];
+                $agentEmail = $agentDetails['EMAIL'];
                 $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay); //Get the full day like Saturday from day code like SAT
                 $producerObj=new Producer();        //Push the message to delayed queue for sending email after 2 hours
                 if($producerObj->getRabbitMQServerConnected()){
@@ -357,7 +358,8 @@ class jsexclusiveActions extends sfActions {
                                                             'firstname'=>$firstname,
                                                             'phone'=>$phone,
                                                             'serviceDay'=>$serviceDay,
-                                                            'senderEmail'=>$fromEmail),
+                                                            'senderEmail'=>$fromEmail,
+                                                            'agentEmail'=>$agentEmail),
                                             'redeliveryCount'=>0 );
                     $producerObj->sendMessage($sendMailData);
                 }
