@@ -27,6 +27,7 @@ class apieditdppv1Action extends sfAction
 		
 		$this->m_objLoginProfile = LoggedInProfile::getInstance();
 		$this->profileId = $this->m_objLoginProfile->getPROFILEID();
+		$this->subscription = $this->m_objLoginProfile->getSUBSCRIPTION();
     if($this->m_objLoginProfile->getAGE()== "")
       $this->m_objLoginProfile->getDetail($this->profileId ,"PROFILEID","*");
 		
@@ -68,15 +69,18 @@ class apieditdppv1Action extends sfAction
 					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
 					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
-					if($request->getParameter("getData")=="dpp"){
+					if($request->getParameter("getData")=="dpp" || strpos($this->subscription,'X' )!==false){
 						ob_start();
 						$request->setParameter("sectionFlag","dpp");
 						$request->setParameter("internal",1);
 						$fieldValues = sfContext::getInstance()->getController()->getPresentationFor("profile","ApiEditV1");
-						$this->dppData = ob_get_contents();
+						$this->dppData = ob_get_contents();						
 						ob_end_clean();
-						$apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-
+						$this->sendMailToRM($this->dppData);
+						if($request->getParameter("getData")=="dpp")
+						{
+							$apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
+						}					
 					}
 				}
 				else
@@ -405,6 +409,37 @@ class apieditdppv1Action extends sfAction
 		}//End of For loop
 		
 		$request->setParameter("editFieldArr",$arrOut);
+	}
+
+	public function sendMailToRM($dppData)
+	{					
+		if(strpos($this->subscription,'X' )!==false) //jsExclusive
+		{
+			$username = $this->m_objLoginProfile->getUSERNAME();
+			$dppMsgStr = "Hi,<br><br>The updated DPP for Client '".$username. "' is: <br><br>";
+			$subject = "Your client '".$username."' has changed thier DPP";
+			$from  = "info@jeevansathi.com";
+			$exclusiveFunctionsObj=new ExclusiveFunctions();
+			$execDetails=$exclusiveFunctionsObj->getRMDetails($this->profileId);
+			$emailId = $execDetails["EMAIL"];//"sanyam1204@gmail.com";
+			foreach(json_decode($dppData) as $key=>$value)
+			{				
+				if(MobileCommon::isNewMobileSite() || MobileCommon::isAndroidApp())
+				{
+					foreach($value->OnClick as $k1=>$v1)
+					{
+						$dppMsgStr.= $v1->key." : ".$v1->label_val."<br>";	
+					}
+				}
+				else
+				{
+					$dppMsgStr.= $value->key." : ".$value->label_val."<br>";
+				}
+			}
+			$dppMsgStr.="<br> Regards<br>JS Team";			
+			SendMail::send_email($emailId, $dppMsgStr, $subject, $from);		
+			//code to get the RM of the username
+		}	
 	}
 }
 ?>

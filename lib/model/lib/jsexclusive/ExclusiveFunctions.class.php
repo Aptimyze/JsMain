@@ -418,9 +418,8 @@ class ExclusiveFunctions{
                 $rmDetails =$exServicingObj->checkBioData($profileid);
 		$rmName =$rmDetails['AGENT_USERNAME'];
 		$pswrdsObj =new jsadmin_PSWRDS('newjs_masterRep');
-		$executiveDetails =$pswrdsObj->getExecutiveDetails($rmName);	
-		$phone =$executiveDetails['PHONE'];
-		return $phone;
+		$executiveDetails =$pswrdsObj->getExecutiveDetails($rmName);		
+		return $executiveDetails;
 	}
 
     public function deleteEntryFromExclusiveServicing($profileid,$flag,$billid=0) {
