@@ -115,6 +115,19 @@ class MailerService
 		$recievers = $visitorAlertMailerObj->getMailerProfiles($totalScript,$script,$limit);
 		return $recievers;	
 	}
+        
+        /* This function is used to get receivers to send mail 
+	* @param totalScript : total scripts executing for mailer cron
+	* @param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getMailerReceiversViewSimilarProfilesMailer($totalScript="",$script="",$limit='')
+	{
+		$vspMailerObj = new viewSimilar_MAILER();
+		$recievers = $vspMailerObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;	
+	}
 	 /* This function is used check whether to show Android Icon to Receiver or not
 	* @param  NO
 	* @return recievers : 1
@@ -168,6 +181,19 @@ class MailerService
 			throw  new jsException("No sno/flag in updateSentForUsers() in RegularMatchAlerts.class.php");
 		$matchalertMailerObj = new visitorAlert_MAILER();
                 $matchalertMailerObj->updateSentForUsers($sno,$flag);
+
+	}
+        
+        /* This funxtion is used update the sent flag(Y for sent and F for fail) for each visitor alert mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForSimilarProfilesMailUsers($sno,$flag)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForUsers()");
+		$vspMailerObj = new viewSimilar_MAILER();
+                $vspMailerObj->updateSentForUsers($sno,$flag);
 
 	}
 

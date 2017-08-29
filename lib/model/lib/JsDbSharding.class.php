@@ -74,6 +74,14 @@ class JsDbSharding
 		
 		
 	}
+    static public function getShardListSlave()
+	{
+		for($shard = 0;$shard<=2;$shard++)
+			$shardList[] = JsDbSharding::getShardDbName($shard,1);
+		return $shardList;
+		
+		
+	}
 		/**
           * This function returns the shard number to which a profileid belongs.
           * @param - $profileid - profileid for which the shard name needs to be found

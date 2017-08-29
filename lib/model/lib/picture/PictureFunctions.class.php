@@ -335,10 +335,10 @@ class PictureFunctions
 	{
 		PictureFunctions::setHeaders();
 		if ($type_of_pic == "main")
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_1.gif";
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif";
 		else
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small.gif";
-			
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small_new.gif"; 
+		
 		$destination_path = $filename_path;
 
 		if($format == "image/gif" || $format == "image/GIF")
@@ -355,7 +355,7 @@ class PictureFunctions
 
 		$x = $width-$w;
 		$y = ($height-$h)/2;
-
+		
 		imagecopymerge($src_handle,$watermark_handle,$x,$y,0,0,$w,$h,30);
 
 		if ($format == "image/gif" || $format == "image/GIF")
@@ -718,6 +718,35 @@ class PictureFunctions
                 }elseif($perform == 'remove'){
                         JsMemcache::getInstance()->remove($key);
                 }
+        }
+
+        //This function is used for conditional access of photos defining conditions on when to show the photo.
+        public static function conditionalPhotoAccess()
+        {
+        	$loginProfile = LoggedInProfile::getInstance();
+        	$profilePic = $loginProfile->getHAVEPHOTO();        	
+        	$subscription = $loginProfile->getSUBSCRIPTION();
+        	$verifyActivatedDate = $loginProfile->getVERIFY_ACTIVATED_DT();
+        	$time = time();
+        	if($verifyActivatedDate == PictureStaticVariablesEnum::VERIFY_ACT_DATE_BLANK)
+        	{
+        		$verifyActivatedDate = 0;
+        	}        	
+       		$dateDiff = $time - strtotime($verifyActivatedDate);       		       		
+        	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
+        	{
+        		return 0;
+        	}
+        	elseif($subscription) //if member is paid, dont show layer
+        	{
+        		return 0;
+        	}
+        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues) && $dateDiff != $time) //if verify activation date is 15 days and above AND pic is not uploaded
+        	{
+        		return 1;
+        	}
+        	else
+        		return 0;
         }
 }
 ?>
