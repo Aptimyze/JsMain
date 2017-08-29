@@ -521,6 +521,8 @@ Class ButtonResponseFinal
 	{
 		if(!$count)
 		$count = $params["count"];
+		$buttons["enable"] = $button->active=='true' ? true : false;
+
 		if($count){
 			if ($count < ErrorHandler::REMINDER_COUNT) {
 				if((ErrorHandler::REMINDER_COUNT - $count) == 1)
@@ -539,7 +541,6 @@ Class ButtonResponseFinal
 
 				$buttons["label"]  = "Reminder ".(ErrorHandler::REMINDER_COUNT - 1)."/".(ErrorHandler::REMINDER_COUNT - 1);
 				$buttons["enable"] = false;
-				$buttons["action"] = "DEFAULT";
 			}
 		}else{
 			$buttons["iconid"] = IdToAppImagesMapping::SEND_REMINDER;
@@ -550,8 +551,6 @@ Class ButtonResponseFinal
 		{
 			$buttons["enable"] = false;
 		}
-		else
-			$buttons["enable"] = $button->active=='true' ? true : false;
 
 		$buttons["iconid"] 		= $button->icon;
 		$buttons["primary"] 	= $button->primary;

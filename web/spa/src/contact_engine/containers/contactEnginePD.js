@@ -128,8 +128,15 @@ export class contactEnginePD extends React.Component{
             this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
           }
           else
-          this.props.replaceOldButtons(responseButtons);
-
+          {console.log(responseButtons,'responsebutton');
+          if(responseButtons.buttondetails.buttons){console.log('infirsst',responseButtons);
+            this.props.replaceOldButtons(responseButtons);}
+          else if(responseButtons.buttondetails.button)
+          {console.log('insec',responseButtons);
+            var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
+            this.props.replaceSingleButton(newButtons);
+          }
+          }
           // for decline and cancel cases
           if(responseButtons.buttondetails.confirmLabelMsg && responseButtons.buttondetails.confirmLabelHead){
             this.showLayerCommon({cancelDeclineLayer:true,commonOvlayData:responseButtons.buttondetails});
@@ -159,14 +166,14 @@ getFrontButton(){
 
   return(<div key='1' id="buttons1" className="view_ce fullwid">
 
-    <div className="wid50p bg7 dispibl txtc pad5new brdr6" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0])}>
+    <div className="wid50p bg7 dispibl txtc pad5new brdr6" id="primeWid_1" onClick={() => this.bindAction(otherButtons[0],0)}>
 
       <div id="btnAccept" className="fontlig f13 white cursp dispbl">
         <i className="ot_sprtie ot_chk"></i>
         <div className="white">{otherButtons[0].label}</div>
       </div>
     </div>
-    <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.bindAction(otherButtons[1])}>
+    <div className="wid50p bg7 dispibl txtc pad5new fr" id="primeWid_2" onClick={() => this.bindAction(otherButtons[1],1)}>
       <div id="btnDecline" className="fontlig f13 whitecursp dispbl">
         <i className="ot_sprtie newitcross"></i>
         <div className="white">{otherButtons[1].label}</div>
@@ -177,13 +184,14 @@ getFrontButton(){
 }
   if(this.props.buttondata.buttons && this.props.buttondata.buttons.length>1)
   {
-  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true})} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(otherButtons[0].action=='DEFAULT' ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true})} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(!
+    otherButtons[0].enable ? "srp_pinkdots" : "threedot1")}></i></a></div>);
 }
 if(primaryButton.enable==true)
 {
 
     return (<div id="buttons1" className="view_ce fullwid">
-      <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton)}>
+      <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton,0)}>
         <div className="wid60p">
           <i className={cssMap[primaryButton.iconid]}></i>
           <div className="white">{primaryButton.label}</div>

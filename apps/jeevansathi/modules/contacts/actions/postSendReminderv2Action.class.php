@@ -233,7 +233,7 @@ class postSendReminderv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
     if(MobileCommon::isNewMobileSite())
 		{
-        if(sfContext::getInstance()->getRequest()->getParameter('pagesource')!='VDP')
+        if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
         {
           $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
     			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
@@ -241,9 +241,13 @@ class postSendReminderv2Action extends sfAction
           $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
 
         }
+        else
+          {
+            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R");
+//            die("sssss");
+//            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
 
-			//$finalresponseArray["button_after_action"][] =
-
+          }
 		}
 
 		else
