@@ -1,6 +1,5 @@
 
 var calTimerTime,calTimer;
-
 $(document).ready(function() {
 var calIdTemp =$("#CriticalActionlayerId").val(); 
 if(calIdTemp=='18'){
@@ -485,7 +484,37 @@ else {
                         return;
                     }
 
+                    if(layerId==26 && button == "B1")
+                    {   
+                        var dataAboutMe = {'editFieldArr[YOURINFO]':$('#textAboutMe').val().trim() };
+                        if($('#textAboutMe').val().trim().length < 100)
+                        {
+                            showError("Please type min 100 characters.");
+                            CALButtonClicked=0;
+                            return;
+                        }
 
+                        showLoader();
+                        $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataAboutMe,
+                            success: function(response) {
+                                hideLoader();
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                 hideLoader();   
+                                showError('Something went wrong');
+
+                                }
+                            });
+                        return;
+                    }
 
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
         CALButtonClicked=0;

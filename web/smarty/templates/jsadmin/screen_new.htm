@@ -297,6 +297,9 @@
 		</table>
 		</center>
 		<form name=fr1 action="screen_new.php" method="post" onsubmit="return validate()">
+                    ~if $activatedWithoutYourInfo`
+                        <input type="hidden" name="activatedWithoutYourInfo" id="activatedWithoutYourInfo" value="~$activatedWithoutYourInfo`">
+                    ~/if`
 			<table width="750" border="0" cellspacing="0" cellpadding="0" align="center">
 				<tr>
 					<input type="hidden" name="from_skipped" value=~$from_skipped`>

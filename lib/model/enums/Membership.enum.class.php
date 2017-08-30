@@ -71,6 +71,8 @@ class memDiscountTypes
         15 => 'Main Membership Upgrade Discount',
         16 => 'Lightning Deal Discount'
     );
+    
+    public static $allowVDExtension = array("WELCOME");
 }
 
 class VariableParams
@@ -706,6 +708,7 @@ class discountType
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
     const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
+    const WELCOME_DISCOUNT = "WELCOME";
 }
 class mainMem
 {
@@ -728,7 +731,7 @@ class paymentOption
         "CR" => "Credit Card",
         "DR" => "Debit Card",
         "NB" => "Net Banking",
-        "CSH" => "Wallet"
+        "CSH" => "Paytm / MobiKwik"
     );
     public static $ccCardType = array(
         "card1" => array(

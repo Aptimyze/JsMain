@@ -48,7 +48,13 @@ EOF;
                         if($type=='EXPORT'){
                                 $import = "full-import";
                                 if($this->isPost == 1){
-                                        passthru("$php5 $cronDocRoot/crontabs/solrIndexing.php FULL");
+                                        foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
+                                                $index = array_search($solrUrl, JsConstants::$solrServerUrls);
+                                                if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
+                                                        $url = $solrUrl."dataimport?command=".$import;
+                                                        CommonUtility::sendCurlGetRequest($url);
+                                                }
+                                        }
                                 }
                         }else if($type=='DELTA'){
                                 $import = "delta-import";

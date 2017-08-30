@@ -101,32 +101,13 @@ class WelcomeMailConsumer {
         $process = $msgdata['process'];
         $redeliveryCount = $msgdata['redeliveryCount'];
         $type = $msgdata['data']['type'];
-
+        $body = $msgdata['data'];
         try {
             switch ($process) {
+                case 'EXCLUSIVE_MAIL':
                 case 'EXCLUSIVE_DELAYED_EMAIL':
-                    $firstName = $msgdata['data']['firstname'];   //First Name of  RM
-                    $senderName = $msgdata['data']['fromName'];     //Full name of RM
-                    $profileid = $msgdata['data']['profileid'];
-                    $phone = $msgdata['data']['phone'];
-                    $serviceDay = $msgdata['data']['serviceDay'];
-                    $senderEmail = $msgdata['data']['senderEmail'];
-                    $subject = "It was nice talking to you !";
-                    //print_r("1.".$serviceDay."\n2.$alias\n3.$profileid\n4.$phone\n5.$firstName\n6.$from\n7.".$msgdata['data']);
-                    //print_r($msgdata['data']);die;
-                    //die;
-                    //Send Email here
-                    $top8Mailer = new EmailSender(MailerGroup::TOP8, '1857');
-                    $tpl = $top8Mailer->setProfileId($profileid);
-                    $tpl->getSmarty()->assign("senderName",$senderName);
-                    $tpl->getSmarty()->assign("senderEmail",$senderEmail);
-                    $tpl->getSmarty()->assign("firstName",$firstName);
-                    $tpl->getSmarty()->assign("phone",$phone);
-                    $tpl->getSmarty()->assign("serviceDay",$serviceDay);
-                    $tpl->setSubject($subject);
-                    $top8Mailer->send();
-                    $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-                    $exclusiveServicingObj->updateMailerStatus($profileid,'C');//Updating email stage as completed
+                    $processHandler = new ProcessHandler();
+                    $processHandler->sendMail($type,$body);
                     break;
             }
         } catch (Exception $exception) {

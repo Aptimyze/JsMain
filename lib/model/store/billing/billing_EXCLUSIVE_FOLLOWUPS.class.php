@@ -248,5 +248,26 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
     }
   }
 
+  public function getDetailsForProposalMail(){
+  	try{
+        $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
+
+  		$sql = "SELECT AGENT_USERNAME,CLIENT_ID,MEMBER_ID,STATUS FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS = 'F0' AND FOLLOWUP1_DT = :CURRENT_DT) OR(STATUS = 'F1' AND FOLLOWUP2_DT = :CURRENT_DT) OR (STATUS = 'F2' AND FOLLOWUP3_DT = :CURRENT_DT) OR (STATUS = 'F3' AND FOLLOWUP4_DT = :CURRENT_DT)";
+
+  		$prep = $this->db->prepare($sql);
+  		$prep->bindValue(":CURRENT_DT",$tomorrowDT,PDO::PARAM_STR);
+  		$prep->execute();
+        $prep->setFetchMode(PDO::FETCH_ASSOC);
+
+        while ($row = $prep->fetch()){
+        	$result[] = $row;
+		}
+
+		return $result;
+	}catch (Exception $e){
+  		throw new jsException($e);
+	}
+  }
+
 }
 ?>
