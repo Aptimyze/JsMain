@@ -518,6 +518,34 @@ public function executeCALRedirection($request){
       die;
     }
 
+//PostWeddingServices page
+  public function executePostWeddingServices(sfWebRequest $request)
+  {
+    $loginData = $request->getAttribute("loginData");
+    if($loginData[PROFILEID])
+    {
+      $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
+      $authenticationLoginObj->logout($loginData[PROFILEID]);
+      
+    }
+    $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
+    $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
+    if($result)
+      $data=json_decode($result,true);
+    if($data['isError']===false)
+    { 
+      $this->finalResponse['postServicesPage']=true;
+      $this->finalResponse['servicesData']=$data['success'];
+    }
+    else{
+      $this->finalResponse['postServicesPage']=false;
+      $this->finalResponse['servicesData']="";
+    }
+    $this->finalResponse=json_encode($this->finalResponse);
+    //Stopping Common functionality 
+    $this->chat_hide = 1;
+    $this->logoutChat = 1;
+  }
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {

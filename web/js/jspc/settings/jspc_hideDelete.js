@@ -299,7 +299,7 @@ function ajaxDelete(optionVal,specifyReason)
                           if(response=="success redirect")
                           window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
                         else
-                          window.location.href= "/static/logoutPage";
+                          window.location.href= "/static/PostWeddingServices";
                         }
                         
                       });

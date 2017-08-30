@@ -250,9 +250,10 @@
         var errorMessage = "";
         if(useCase == 'skipDelete') {
             $("#formContainer").fadeOut(500);
-            $("#skipContainer").fadeIn(500);
             $(window).scrollTop(0);
-            return errorLog;
+            postWeddingServices();
+            /*$("#skipContainer").fadeIn(500);            
+            return errorLog;*/
         }
         if(useCase == 'photo'){
             $(".jfilestyle").addClass('err');
@@ -343,7 +344,8 @@
         }
         if(useCase == 'verified'){
             $("#formContainer").fadeOut(500);
-            $("#resultContainer").fadeIn(500);
+            postWeddingServices();
+            /*$("#resultContainer").fadeIn(500);*/
         } else {
             $('html,body').animate({scrollTop: $("#errorMessage").offset().top-20},1000);
             $("#errorMessage").html(errorMessage);
