@@ -96,7 +96,7 @@ EOF;
                                                                 $lowTrendsObj->insertForProfile($profileid,$todayDate,$totalResults["LOGIC_LEVEL"]);
                                                         }
                                                         $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,$totalResults["LOGIC_LEVEL"],$profilesWithLimitReached,$todayDate);
-                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"],$LowUnifiedDppLimit);     
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"],$this->LowUnifiedDppLimit);     
                                                 }else{
                                                 $returnTotalCountWithCluster = 0;
 						if($trends)

@@ -37,8 +37,8 @@ class MailerConfigVariables
         public static $logicLevelStrictTrends = 8;
         public static $logicLevelStrictNonTrends = 9;
         
-        public static $sortByRelaxedTrends = "ST";
-        public static $sortByRelaxedNonTrends = "SNT";
+        public static $sortByRelaxedTrends = "RT";
+        public static $sortByRelaxedNonTrends = "RNT";
         public static $logicLevelRelaxedTrends = 10;
         public static $logicLevelRelaxedNonTrends = 11;
         

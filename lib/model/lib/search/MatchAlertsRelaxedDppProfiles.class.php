@@ -22,6 +22,7 @@ class MatchAlertsRelaxedDppProfiles extends MatchAlertsDppStrategy {
          */
         public function getRelaxedDppCriteria($limit, $sort) {
                 $this->getSearchCriteria($limit, $sort);
+                $this->performRelaxation();
         }
 
         public function performRelaxation() {
@@ -39,7 +40,6 @@ class MatchAlertsRelaxedDppProfiles extends MatchAlertsDppStrategy {
                 $this->setSuggestionCriteria();
                 $this->setRelaxCriteria();
                 $this->setSpecificCriteria();
-                $this->showFilteredProfiles = 'N';
                 unset($this->jpartnerData);
                 unset($memObject);
         }
