@@ -485,13 +485,11 @@ $(document).ready(function() {
         });
         $("#paidBenefits").html(insertText);
     }
-    if(typeof lightDiscText != "undefined"){
+    if(lightDiscText){
         $("#memMsgContent").hide();
-        if(typeof lightningRenew != "undefined") {
-            if (lightningRenew == "1") {
+        if(lightningRenew == "1"){
                 $("#discBanner").addClass("disp-none");
             }
-        }
         $("#lightDisc").html(lightDiscText);
         $("#lightStrikePrice").html(priceStrike);
         $("#lightDiscPrice").html(discPrice);
