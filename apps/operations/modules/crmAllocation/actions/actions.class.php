@@ -292,6 +292,7 @@ class crmAllocationActions extends sfActions
         $this->setTemplate('agentAllocation');
 
 	//JSC-1684
+        $privilege =explode("+",$privilege);
         if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('OPR',$privilege))
                 $this->online_payment=1;
         if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('ExPmSr',$privilege)||in_array('CSEXEC',$privilege))
