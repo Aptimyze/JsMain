@@ -275,7 +275,7 @@
 <form method="post" name="pg2_frm" action="new_entry_billing.php">
 <table cellpadding="4" cellspacing="4" align="center">
 <tr>
-<td>
+<td>~$upgradeCase`NNN
 ~if $renew`
 <table cellpadding="4" cellspacing="4" width="80%" align="center">
         <tr>
@@ -476,7 +476,7 @@
 				Amount*
 			~/if`
 		</td>
-		<td class="fieldsnew"><input type="text" name="amount" value="~$amount`" onkeyup="validate_amount()" /></td>
+		<td class="fieldsnew"><input type="text" name="amount" value="~$amount`" onkeyup="validate_amount()" ~if $upgradeCase eq '1'` readonly="readonly" ~/if` /></td>
 	</tr>
 	<tr>
                 <td class="label">Bill Type:</td>

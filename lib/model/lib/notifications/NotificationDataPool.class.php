@@ -655,20 +655,22 @@ class NotificationDataPool
             }
             
             $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
-            
+            $apiObj->subStatus = $this->subStatus;
+            $purchasesObj = new BILLING_PURCHASES();
+            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
+            $apiObj->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
             if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
                 $this->upgradeMem = "MAIN";
                 
-                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L",3,"","MAIN"); //3 is for default value
-
+                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code, $this->upgradePercentArr, $this->upgradeActive, $this->lightningDealActive, $this->lightning_deal_discount_expiry, $this->lightningDealDiscountPercent) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L",3,$apiObj,"MAIN"); //3 is for default value
                 $this->displayPage = 1;$this->device = "desktop";$ignoreShowOnlineCheck = false;
 
                 list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
-
+                
                 $apiResponseHandlerObj = new MembershipAPIResponseHandler();
                 $response = $apiResponseHandlerObj->generateUpgradeMemResponse("", "cron",$this);
                 $response["memPurchasedDate"] = $this->subStatus[0]["ACTIVATED_ON"];
-                
+                $response["discount"] = $this->upgradePercentArr[$response["upgradeMainMem"].$response["upgradeMainMemDur"]]["actualUpsellMRP"] - $this->upgradePercentArr[$response["upgradeMainMem"].$response["upgradeMainMemDur"]]["discountedUpsellMRP"];
                 return $response;
             }
         }

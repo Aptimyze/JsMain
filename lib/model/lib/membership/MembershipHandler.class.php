@@ -2604,9 +2604,14 @@ class MembershipHandler
                             $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
                         }
                         //update the success deactivate entry
-                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
+                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!="" && $params["NEW_ORDERID"] != "backend"){
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                             $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
+                            unset($upgradeOrdersObj);
+                        }
+                        elseif($params["NEW_ORDERID"] && $params["NEW_ORDERID"] == "backend"){
+                            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                            $lastInsertedId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$params["PROFILEID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$params["MEMBERSHIP"],"OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
                         }
                     }
@@ -2637,8 +2642,15 @@ class MembershipHandler
     * @outputs: none
     */
     function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
-        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();        
+        if($orderid == "backend"){
+            $id = JsMemcache::getInstance()->get($profileid."_BACK_UPGRADE");
+            $upgradeOrdersObj->updateOrderUpgradeEntryById($id,$updateArr);
+            JsMemcache::getInstance()->remove($profileid."_BACK_UPGRADE");            
+        }
+        else{
+            $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        }
         unset($upgradeOrdersObj);
         if($flushCache == true){
             $memCacheObject = JsMemcache::getInstance();

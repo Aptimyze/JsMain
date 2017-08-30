@@ -83,6 +83,14 @@ if(authenticated($cid))
 	$smarty->assign("ophone",$ophone);
 	$smarty->assign("mphone",$mphone);
 
+    $upgradeProfileid = $pid?$pid:$profileid;
+    if($upgradeProfileid){
+        $upgradeData = getUpgradeData($upgradeProfileid);
+        if($pg2_submit)
+            $upgradeDiscount = $upgradeData["discount"];
+        $smarty->assign("upgradeData",$upgradeData);
+        
+    }
 
 	$service_type_arr = populate_service_type();
 	get_service_price();
@@ -185,11 +193,7 @@ if(authenticated($cid))
 	$smarty->assign("dep_year",$dep_year);
 	$smarty->assign("dep_branch",$dep_branch);
     
-    $upgradeProfileid = $pid?$pid:$profileid;
-    if($upgradeProfileid){
-        $upgradeData = getUpgradeData($upgradeProfileid);
-        $smarty->assign("upgradeData",$upgradeData);
-    }
+    
     
 	/*End of - Smarty variable assignment, to be used in various scripts based on button clicked, all smarty variables are not used for single templates*/
 
@@ -390,6 +394,8 @@ if(authenticated($cid))
                     $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
                 }
+                $smarty->assign("discount",$upgradeDiscount);
+                $smarty->assign("upgradeCase",$upgradeCase);
             }
 
 			$smarty->assign("price",$price);	//to display service_price excluding tax.
@@ -400,7 +406,9 @@ if(authenticated($cid))
 			$smarty->assign("tax",$tax);
 		
 			$total_pay = $price_tax - $discount;
-			
+			if($upgradeCase == 1){
+                $smarty->assign("amount",$total_pay);
+            }
 			$smarty->assign("total_pay",$total_pay);
 			$smarty->assign("main_service_id",$serviceid);
 			$smarty->assign("service_names",$service_names);
@@ -567,6 +575,8 @@ if(authenticated($cid))
                     $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
                     $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
                 }
+                $smarty->assign("discount",$upgradeDiscount);
+                $smarty->assign("upgradeCase",$upgradeCase);
             }
 			$smarty->assign("service_names",$service_names);
 			$smarty->display("new_entry_summary_billing.htm");

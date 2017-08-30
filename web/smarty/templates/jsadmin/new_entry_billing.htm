@@ -21,9 +21,13 @@
 			}
             if(selectId == "chk_upgrade_service" && selected == true){
                 document.getElementById("chk_astro_service").disabled=true;
+                document.getElementById("discount").disabled=true;
+                document.getElementById("disc_perc").disabled=true;
             }
             else{
                 document.getElementById("chk_astro_service").disabled=false;
+                document.getElementById("discount").disabled=false;
+                document.getElementById("disc_perc").disabled=false;
             }
 		}
 		function newRequest()
@@ -1014,7 +1018,7 @@
                             </td>
                             <td class="fieldsnew">
                                 <select name="upgrade_service" id="upgrade_service" onchange="get_service_price(this);">
-                                    <option value="~$upgradeData.upgradeMainMem`Upgrade">Upgrade to ~$upgradeData.upgradeMainMemName`</option>
+                                    <option value="~$upgradeData.upgradeMainMem`~$upgradeData.upgradeMainMemDur`Upgrade">Upgrade to ~$upgradeData.upgradeMainMemName`</option>
                                 </select>
                             </td>
                             <td class="fieldsnew">
@@ -1065,9 +1069,9 @@
 							~/if`
 						</td>
 						<td class="fieldsnew">
-							<input type="text" name="discount" value="~$discount`" onkeyup="return validate_discount();"/>
+							<input type="text" id="discount" name="discount" value="~$discount`" onkeyup="return validate_discount();"/>
 							&nbsp;OR
-							<input type="text" name="disc_perc" value="" size="6" onkeyup="return validate_discount_perc();" />
+							<input type="text" id="disc_perc" name="disc_perc" value="" size="6" onkeyup="return validate_discount_perc();" />
 							&nbsp;<b>%</b>
 						</td>
 					</tr>
