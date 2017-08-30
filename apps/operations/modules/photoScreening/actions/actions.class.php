@@ -802,5 +802,82 @@ class photoScreeningActions extends sfActions {
         
         $this->setTemplate('showDeletedPlusOriginalPhotos');                 
     }
+
+
+
+	/**
+	 * This function is used to display the profile to be screened by the screening user
+	 * */
+	public function executeBenchmark(sfWebRequest $request) {
+		$this->cid = $request->getParameter("cid");
+		$name = $request->getAttribute('name');
+		$this->source = $request->getParameter('source');
+		$this->execName = $name;
+
+		//Initialize Enum Array
+		$interfaceArr=ProfilePicturesTypeEnum::$INTERFACE;
+		$photoDataObj = new test_PHOTO_BENCHMARK();
+		$profileDetails = $photoDataObj->get();
+		if($profileDetails["allotted"] == $this->cid){
+			$this->alreadyAlloted = 1;
+			$this->marked = 1;
+			$this->setTemplate('markPhotosForScreening');
+		}
+		else{
+			//Get Pictures To Screen
+			$paramArr["interface"] = $interfaceArr["1"];
+			$this->photoArr = $profileDetails;
+			if(PictureFunctions::IfUsePhotoDistributed($profileDetails["profileData"]["PROFILEID"]))
+			{
+				$matchToBeArr = JsConstants::$photoServerShardingEnums;
+
+				$arr = $photoData["profilePic"]["profileType"];
+				$mainPic = $photoData["profilePic"]["mainPicUrl"]["url"];
+
+				/***/
+				foreach($matchToBeArr as $k=>$v)
+				{
+					if($mainPic)
+					{
+						if(strstr($mainPic,$v))
+						{
+							$finalArr[] = $v;
+							$l1 = $v;
+						}
+					}
+				}
+
+				if($photoData["nonScreened"])
+				{
+					foreach($photoData["nonScreened"] as $kk=>$vv)
+					{
+						foreach($matchToBeArr as $k=>$v)
+						{
+							if(strstr($vv["url"],$v))
+							{
+								if(is_array($finalArr) && in_array($v,$finalArr))
+									;
+								else
+									$finalArr[] = $v;
+							}
+						}
+					}
+				}
+				if(count($finalArr)==1)
+					$this->imageCopyServer = "/".$finalArr[0];
+				else
+				{
+					$this->imageCopyServer = "/".$l1;
+				}
+
+
+			}
+			$this->setTemplate('showPhotosToScreen');
+		}
+
+
+
+
+	}
 }
 ?>
