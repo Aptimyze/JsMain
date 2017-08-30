@@ -44,7 +44,9 @@ class MAILER_COMMON_ENUM
                  self::$mailerSenders["ADD_PHOTO_MAILER"]["SENDER"]="info@jeevansathi.com";
                 self::$mailerSenders["ADD_PHOTO_MAILER"]["ALIAS"]="Jeevansathi Info";
                 self::$mailerSenders["EXCLUSIVE_MATCH_MAIL"]["SENDER"]="info@jeevansathi.com";
-                self::$mailerSenders["ExclusiveMatchMail"]["ALIAS"]="Jeevansathi Info";
+                self::$mailerSenders["EXCLUSIVE_MATCH_MAIL"]["ALIAS"]="Jeevansathi Info";
+                self::$mailerSenders["EXCLUSIVE_PROPOSAL_MAIL"]["SENDER"]="info@jeevansathi.com";
+                self::$mailerSenders["EXCLUSIVE_PROPOSAL_MAIL"]["ALIAS"]="Jeevansathi Info";
                 self::$mailerSenders["EOI_SIMILAR_PROFILES"]["SENDER"]="matchalert@jeevansathi.com";
                 self::$mailerSenders["EOI_SIMILAR_PROFILES"]["ALIAS"]="Jeevansathi Matches";
                 self::$template["MATCHALERT"]="matchalert";
@@ -59,6 +61,7 @@ class MAILER_COMMON_ENUM
                 self::$template["PAID_MEMBERS_MAILER"]="paidMembersMail";
                 self::$template["ADD_PHOTO_MAILER"]="addPhotoMailer";
                 self::$template["EXCLUSIVE_MATCH_MAIL"]="exclusiveMatchMailer";
+                self::$template["EXCLUSIVE_PROPOSAL_MAIL"]="exclusiveProposalMailer";
                 self::$template["EOI_SIMILAR_PROFILES"]="eoiSimilarProfilesMail";
 		self::$membershipTracking["MATCHALERT"]= array('vdGetDiscount'=>'VDMA1','vdPercent'=>'VDMA2','upgrade'=>'MA2','renew'=>'MA2RO','renewPercent'=>'MA2RC');
 		self::$membershipTracking["NEW_MATCHES"]= array('vdGetDiscount'=>'VDNP1','vdPercent'=>'VDNP2','upgrade'=>'NP2','renew'=>'NP2RO','renewPercent'=>'NP2RC');
@@ -71,6 +74,7 @@ class MAILER_COMMON_ENUM
                 self::$membershipTracking["PAID_MEMBERS_MAILER"] = array('vdGetDiscount'=>'VDPMM1','vdPercent'=>'VDPMM2','upgrade'=>'PMM2','renew'=>'PMM2R','renewPercent'=>'PMM2RC');
                 self::$membershipTracking["ADD_PHOTO_MAILER"] = array('vdGetDiscount'=>'VDAPM1','vdPercent'=>'VDAPM2','upgrade'=>'APM2','renew'=>'APM2R','renewPercent'=>'APM2RC');
                 self::$membershipTracking["EXCLUSIVE_MATCH_MAIL"] = array('vdGetDiscount'=>'VDMA1','vdPercent'=>'VDMA2','upgrade'=>'MA2','renew'=>'MA2RO','renewPercent'=>'MA2RC');
+                self::$membershipTracking["EXCLUSIVE_PROPOSAL_MAIL"] = array('vdGetDiscount'=>'VDMA1','vdPercent'=>'VDMA2','upgrade'=>'MA2','renew'=>'MA2RO','renewPercent'=>'MA2RC');
                 self::$membershipTracking["EOI_SIMILAR_PROFILES"] = array('vdGetDiscount'=>'VDVSP1','vdPercent'=>'VDVSP2','upgrade'=>'VSP2','renew'=>'VSP2RO','renewPercent'=>'VSP2RC');
 		self::$userFieldLabel["MATCHALERT"] = "USER";
 		self::$userFieldLabel["NEW_MATCHES"] = "USER";
@@ -82,6 +86,7 @@ class MAILER_COMMON_ENUM
                 self::$userFieldLabel["PAID_MEMBERS_MAILER"] = "USER";
                 self::$userFieldLabel["ADD_PHOTO_MAILER"] = "USER";
                 self::$userFieldLabel["EXCLUSIVE_MATCH_MAIL"] = "USER";
+            self::$userFieldLabel["EXCLUSIVE_PROPOSAL_MAIL"] = "USER";
                 self::$userFieldLabel["EOI_SIMILAR_PROFILES"] = "USER";
 		self::$googlePlayTracking["MATCHALERT"] = "utm_content=MatchAlert_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["NEW_MATCHES"] = "utm_content=MatchAlert_M&utm_campaign=JSAA";
@@ -92,6 +97,7 @@ class MAILER_COMMON_ENUM
                 self::$googlePlayTracking["PAID_MEMBERS_MAILER"] = "utm_content=paidMembers_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["ADD_PHOTO_MAILER"] = "utm_content=AddPhotoMailer_M&utm_campaign=JSAA";
                 self::$googlePlayTracking["EXCLUSIVE_MATCH_MAIL"] = "utm_content=EXCLUSIVE_MATCH_MAIL_M&utm_campaign=JSAA";
+            self::$googlePlayTracking["EXCLUSIVE_PROPOSAL_MAIL"] = "utm_content=EXCLUSIVE_PROPOSAL_MAIL_M&utm_campaign=JSAA";
                 self::$iTunesTracking["MATCHALERT"] = "cc=MatchAlert_M";
                 self::$iTunesTracking["NEW_MATCHES"] = "cc=MatchAlert_M";
                 self::$iTunesTracking["VISITORALERT"] = "cc=VisitorAlert_M";
@@ -101,6 +107,7 @@ class MAILER_COMMON_ENUM
                self::$iTunesTracking["PAID_MEMBERS_MAILER"] = "cc=paidMembers_M";
                self::$iTunesTracking["ADD_PHOTO_MAILER"] = "cc=AddPhotoMailer_M";
                self::$iTunesTracking["EXCLUSIVE_MATCH_MAIL"] = "cc=ExclusiveMatchMail_M";
+                self::$iTunesTracking["EXCLUSIVE_PROPOSAL_MAIL"] = "cc=ExclusiveMatchMail_M";
         }
 	
 	/* This function is used to get user field label of the given mailer type 

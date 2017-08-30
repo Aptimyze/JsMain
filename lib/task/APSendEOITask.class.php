@@ -69,7 +69,7 @@ EOF;
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition,$totalScripts,$currentScript);
-		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2017-07-16 00:00:00"));
+		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2017-08-27 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -126,34 +126,34 @@ EOF;
                                 
                                 $searchMutualMatches = true;
                                 
-                                //get mutual matches first
+                                /*//get mutual matches first
 				$mutualMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,$this->clusterForMutualMatches,'',$notInProfiles);
                                 
-                                $mutualMatchesCount = $mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][2]+$mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][1];
+                                $mutualMatchesCount = $mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][2]+$mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][1];*/
                                 
                                 //get subscription details of pack
                                 $membershipHandlerObj = new MembershipHandler();
                                 $activeSubsDetails = $membershipHandlerObj->getActiveSubscriptionDetail($senderId,'T');
                                 
-                                
-                                //get maximum number to be sent
-                                $numberToBeSent = $this->getEoiNumberToBeSent($mutualMatchesCount,$activeSubsDetails,$limit,$this->minEois);
-                                $stringToWrite = "Sender-:  ".$senderId."    mutual matches-:  ".$mutualMatchesCount."     numberSent-:  ".$numberToBeSent;
-                                fwrite($file,$stringToWrite."\n");
                                 //if mutual matches are less than number expected find partner matches
                                 //$mutualMatchesCount < $numberToBeSent) || !$mutualMatchesCount
-                                if(1){
-                                    $searchMutualMatches= false;
-                                    //get dpp matches with not in param
-                                    
-                                    //profiles registered 7 days before
-                                     $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate,'','',$source='AP');
-                                     $resultArr = $partnerMatchesArr;
-                                     $dppLoop++; 
-                                }
-                                else
-                                    $resultArr = $mutualMatchesArr;
+                                $searchMutualMatches= false;
+                                //get dpp matches with not in param
+
+                                //profiles registered 7 days before
+                                $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
+                                
+                                $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate,'','',$source='AP');
+                                
+                                $resultArr = $partnerMatchesArr;
+                                $dppLoop++;
+                                $partnerMatchesCount = $partnerMatchesArr['CNT'];
+          
+                                //get maximum number to be sent
+                                $numberToBeSent = $this->getEoiNumberToBeSent($partnerMatchesCount,$activeSubsDetails,$limit,$this->minEois);
+                                
+                                $stringToWrite = "Sender-:  ".$senderId."    mutual matches-:  ".$partnerMatchesCount."     numberSent-:  ".$numberToBeSent;
+                                fwrite($file,$stringToWrite."\n");
                                 
                                 $limit = $numberToBeSent;
                                     
@@ -316,12 +316,12 @@ EOF;
 		return false;
 	}
         
-        public function getEoiNumberToBeSent($mutualMatchesCount,$subsDetailsArr,$maxEois,$minEois) {
+        public function getEoiNumberToBeSent($dppMatchesCount,$subsDetailsArr,$maxEois,$minEois) {
             $durationOfPack = $subsDetailsArr['DURATION_MONTHS']*30;
             $today = strtotime(date("Y-m-d"));
             $expiryDate = strtotime($subsDetailsArr['EXPIRY_DT']);
             $daysRemaining = floor(($expiryDate - $today)/(60*60*24))+1;
-            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($mutualMatchesCount*0.5)/$daysRemaining)),$minEois),$maxEois);
+            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($dppMatchesCount*0.5)/$daysRemaining)),$minEois),$maxEois);
             return $eoiToBeSent;
         }
         

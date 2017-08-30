@@ -485,10 +485,12 @@ $(document).ready(function() {
         });
         $("#paidBenefits").html(insertText);
     }
-    if(lightDiscText){
+    if(typeof lightDiscText != "undefined"){
         $("#memMsgContent").hide();
-        if(lightningRenew == "1"){
-            $("#discBanner").addClass("disp-none");
+        if(typeof lightningRenew != "undefined") {
+            if (lightningRenew == "1") {
+                $("#discBanner").addClass("disp-none");
+            }
         }
         $("#lightDisc").html(lightDiscText);
         $("#lightStrikePrice").html(priceStrike);

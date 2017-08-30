@@ -661,7 +661,7 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"   => "23");
 $js_arr[]=array("jsms/help/JSMSHelp_js" => "15");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"   => "9");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"   => "6");
-$js_arr[]=array("jsms/myjs/CALJSMS_js"              => "52");
+$js_arr[]=array("jsms/myjs/CALJSMS_js"              => "53");
 $js_arr[]=array("jspc/chat/customElem"   => "7");
 $js_arr[]=array("jspc/chat/strophe_receipts"   => "7");
 $js_arr[]=array("-1.0.2/Gruntfile" => "4");
