@@ -18,7 +18,8 @@ export default class PhotoAlbumPage extends React.Component {
         recAlbumlink: false,
         setCont: 0,
         'sliderStyle' :this.sliderTupleStyle,
-        tupleWidth : {'width' : window.innerWidth}
+        tupleWidth : {'width' : window.innerWidth},
+        intialACount: 1
       }
       this.CssFix();
 
@@ -27,15 +28,9 @@ export default class PhotoAlbumPage extends React.Component {
   componentDidMount(){
 
     console.log('albuk');
-
-
     let newPchksum, _this = this;
-
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
-
-     console.log(str);
-
      if(str.indexOf("&")>-1)
      {
        let b = str.split("&");
@@ -44,19 +39,14 @@ export default class PhotoAlbumPage extends React.Component {
      else {
        newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
      }
-
-     //console.log(newPchksum);
-     //console.log(commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST'));
-
-        commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
+     commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
           console.log('albumdata', response);
           _this.setState({
                       getRes: response,
                       recAlbumlink: true
                   });
           console.log(response);
-        });
-
+       });
 
   }
 
@@ -64,7 +54,8 @@ componentDidUpdate(){
 if(!this.state.recAlbumlink || this.sliderBound) return;
   this.sliderBound =1;
   let elem = document.getElementById('galleryContainer');
-  this.obj = new MyjsSliderBinding(elem,this.state.getRes.albumUrls,this.alterCssStyle.bind(this),1);
+  //onstructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit,pagesrc)
+  this.obj = new MyjsSliderBinding(elem,this.state.getRes.albumUrls,{nxtSlideFun:this.incrCount.bind(this),prvSlideFun:this.decrCount.bind(this),styleFunction:this.alterCssStyle.bind(this)},1,'','',"Palbum");
   this.obj.initTouch();
 
 
@@ -80,6 +71,20 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         return prevState;
       });
     }
+
+
+  incrCount(){
+    let count = this.state.intialACount;
+    if(count>=this.state.getRes.albumUrls.length)return;
+    ++count;
+    this.setState({intialACount:count});
+  }
+  decrCount(){
+    let count = this.state.intialACount;
+    if(count<=1)return;
+    --count;
+    this.setState({intialACount:count});
+  }
 
     CssFix(){
   			// create our test div element
@@ -113,9 +118,33 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
   {
       this.props.history.goBack();
   }
+  // changeAlbumCount(total){
+  //   console.log("======");
+  //
+  //
+  //   console.log('count chage');
+  //   console.log(total);
+  //   console.log(window.innerWidth);
+  //   let totalAlb_W = total * window.innerWidth;
+  //   console.log(totalAlb_W);
+  //
+  //   let test = document.getElementById("galleryContainer").style.transform;
+  //
+  //   console.log(test);
+  //
+  //   let regex = /translate3d\(\s*([^ ,]+)\s*,\s*([^ ,]+)\s*,\s*([^ )]+)\s*\)/;
+  //
+  //   var result = test.split(regex);
+  //
+  //   console.log(result)
+  //
+  //
+  //   console.log("======");
+  // }
 
 
   render() {
+
     if(!this.state.recAlbumlink){
       return(<div className="noData album"></div>)
     }
@@ -130,7 +159,9 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         height: window.innerHeight,
         display: "table"
       }
-        console.log('render');
+      //console.log('render');
+      //this.changeAlbumCount(this.state.getRes.albumUrls.length);
+
 
       return(
 
@@ -138,6 +169,10 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
           <div className="posrel">
             <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
+
+            <div className="posabs z1 bckpos1 fontlig f18 white">
+              {this.state.intialACount}/{this.state.getRes.albumUrls.length}
+            </div>
 
 
             <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >

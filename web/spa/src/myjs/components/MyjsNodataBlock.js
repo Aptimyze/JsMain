@@ -39,8 +39,6 @@ export default class NodataBlock extends React.Component{
 			  let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
         let browsePrfHtml='';
 
-      
-
         if(this.props.data.apiDataDR.no_of_results=="0"){
           browsePrfHtml= <div id="browseMyMatchBand" key="browseprf">
             <div  className="bg7 pad1" >
@@ -55,7 +53,7 @@ export default class NodataBlock extends React.Component{
             </div>
           </div>;
         }
-        if(!this.props.data.apiDataIR.total){
+        if(this.props.data.apiDataIR.total == "0"){
           noDataHtml1= <SetNodataHtml idname="IR_null" key="IR_null" title="Interests Received" message="Members Who Showed Interest In Your Profile Will Appear Here"   />
        }
        if(!this.props.data.apiDataVA.total){
