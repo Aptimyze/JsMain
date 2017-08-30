@@ -2023,11 +2023,13 @@ class MembershipHandler
 
     public function addVariableDiscountProfiles()
     {
+
         $vdDurationObj         = new billing_VARIABLE_DISCOUNT_DURATION("newjs_masterRep");
         $vdPoolTechObj         = new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_masterRep");
         $vdObj                 = new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj    = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $vdDurationPoolTechObj = new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_masterRep");
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
         $jprofileObj           = new JPROFILE('newjs_slave');
         $vdProfilesArr         = array();
 
@@ -2040,7 +2042,9 @@ class MembershipHandler
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
 	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
-            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
+            //confirm filter required in main vd??
+            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles("'".discountType::WELCOME_DISCOUNT."'");
+
             foreach ($vdProfilesArr as $key => $profileid) {
 
                 // paid condition check
@@ -2050,19 +2054,36 @@ class MembershipHandler
                 }
 
                 // get discount details
-                $discountArr = $vdDurationPoolTechObj->getDiscountArr($profileid);
-                if (is_array($discountArr)) {
-                    $discount = max($discountArr);
+                $discountArr = $vdDurationPoolTechObj->getTechDiscountDetails($profileid);
+             
+                if (is_array($discountArr) && is_array($discountArr[0]) && $discountArr[1]) {
+                    $discount = $discountArr[1];
                 }
 
-                unset($discountArr);
                 // add discount
                 if ($discount) {
-                    $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
-                    $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    
+                    //check if already VD-welcome discount is active for this profile
+                    $existingVDEntries = $vdObj->getDiscountDetails($profileid,discountType::WELCOME_DISCOUNT);
+                    
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && is_array($discountArr[0]) && $existingVDEntries["EDATE"]<$endDate){
+                        $extendedStartDt = $startDate;
+                        if($startDate<=$existingVDEntries["EDATE"]){
+                            $extendedStartDt = date("Y-m-d",strtotime($existingVDEntries["EDATE"]." +1 day"));
+                        }
+                        $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$discountArr[0],"PROFILEID"=>$profileid,"DISCOUNT"=>$discount,"SDATE"=>$extendedStartDt,"EDATE"=>$endDate,"ENTRY_DT"=>$activationDt));
+                        unset($extendedStartDt);
+                    }
+                    else{
+                        $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
+                        $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    }
+                    unset($existingVDEntries);
                 }
+                unset($discountArr);
             }
         }
+    unset($vdExtendedObj);
     }
 
     public function calculateVariableRenewalDiscount($profileid)
@@ -2900,7 +2921,7 @@ class MembershipHandler
         $sendSMSForDiscount = true;  //SMS to be sent
         
         $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC1"=>$discountPercent,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
-        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
+        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount,discountType::WELCOME_DISCOUNT);
         
         $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
         $commWelDiscLogObj->addEntry($profileid,$discountPercent,$startDate,$endDate,$community,$entryDt);
@@ -2978,9 +2999,11 @@ class MembershipHandler
                         $serviceStatusObj->changeUnlimitedMembershipStatus($id,'N');
                     } else{
                         $contactsDetails = $suspendUnlimitedServiceObj->getContactAllotted($oldUnlimitedService[0]["BILLID"],$value["BILLID"]);
-                        $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
-                        $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
-                        $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                        if(is_array($contactsDetails) && !empty($contactsDetails)){
+                            $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
+                            $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
+                            $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                        }
                     }
                 }
             }

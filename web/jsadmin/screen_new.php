@@ -102,7 +102,8 @@ if (authenticated($cid)) {
 		$service_mes = $myrow['SERVICE_MESSAGES'];
 		$source = $myrow['SOURCE'];
 		$std = $myrow['STD'];
-		if ($activated == 'U' || ($activated == 'Y' && !areAllBitsSet($screening_val)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
+                $activatedWithoutYourInfo = $_POST["activatedWithoutYourInfo"];
+		if ($activated == 'U' || ($activated == 'Y' && (!areAllBitsSet($screening_val) || $activatedWithoutYourInfo)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
 			if ($name != "" || $name_hob != "" || $name_contact != "" || $name_edu != "") {
 				if ($name != "") {
 					$NAME = explode(",", $name);
@@ -214,7 +215,10 @@ if (authenticated($cid)) {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
 								if ($_POST[$NAME[$i]] == "") {
-									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate.";
+                                                                        if(!$activatedWithoutYourInfo)
+                                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
@@ -226,13 +230,22 @@ if (authenticated($cid)) {
 							}
 							else
 							{
-							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate.";
+                                                        if(!$activatedWithoutYourInfo)
+                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
 							
-							} 
-							$INCOMPLETE="Y";
+							}
+                                                        if(!$activatedWithoutYourInfo)
+                                                            $INCOMPLETE="Y";
+                                                        else{
+                                                            if(strlen($_POST[$NAME[$i]])<50)
+                                                                $arrProfileUpdateParams[$NAME[$i]] = "";
+                                                            $completeWithoutYourInfo = "Y";
+                                                        }
 							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
                 			$instantNotificationObj->sendNotification($pid);
 						}
@@ -338,7 +351,11 @@ if (authenticated($cid)) {
 				}
 //				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
 //				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-        
+        if($activatedWithoutYourInfo){
+            $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+            $activated_without_yourInfoObj->delete($pid);
+        }
+            
         $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
@@ -390,7 +407,7 @@ if (authenticated($cid)) {
 				if ($INCOMPLETE != "")
 				{
 					//$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
-          $arrProfileUpdateParams['SCREENING'] = 0;
+          //$arrProfileUpdateParams['SCREENING'] = 0;
           $arrProfileUpdateParams['PREACTIVATED'] = $activated;
           $arrProfileUpdateParams['ACTIVATED'] = 'N';
           $arrProfileUpdateParams['INCOMPLETE'] = 'Y';
@@ -643,16 +660,21 @@ $screeningValMainAdmin = 0;
 		$smarty->assign('password', $r2['PASSWORD']);
 		$smarty->assign('email', $r2['EMAIL']);
 		//Mail only when incomplete checkbox is not checked
-		if ($service_mes == 'S') if ($INCOMPLETE != "") {
+		if ($service_mes == 'S') if ($INCOMPLETE != "" || $completeWithoutYourInfo=="Y") {
 			if ($why_inc != "Please provide reason why this profile is incomplete" && $why_inc != "") {
 				$inc_reason = htmlspecialchars($why_inc, ENT_QUOTES);
 				$sql = "replace into jsadmin.INCOMPLETE(PROFILEID,REASON) values ('$pid','$inc_reason')";
 				mysql_query_decide($sql) or die(mysql_error_js());
 			}
 			$from = "info@jeevansathi.com";
-			
+                        
 			$smarty->assign("bl_msg", $bl_msg);
-			$subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        if(!$activatedWithoutYourInfo){
+                            $subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        }
+                        else{
+                            $subject = "'About me' mentioned in your Profile has been edited/removed as it was inappropriate";
+                        }
 			$smarty->assign("CHECKSUM", $PROFILECHECKSUM);
 			$smarty->assign("echecksum", $echecksum);
 			$smarty->assign("myprofilechecksum", $PROFILECHECKSUM);
@@ -743,8 +765,9 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
+                                            if(!$activatedWithoutYourInfo)
 						CommonFunction::sendWelcomeMailer($pid);
-					}
+                                            }
 						//send_email($to, $MESSAGE);
 				}
 				else
@@ -769,7 +792,7 @@ $screeningValMainAdmin = 0;
 			}
 		}
 		}
-        
+                
         $cScoreObject = ProfileCompletionFactory::getInstance(null,null,$pid);
         $cScoreObject->updateProfileCompletionScore();
 		$smarty->assign("name", $user);
@@ -847,8 +870,8 @@ $screeningValMainAdmin = 0;
 					while ($row = mysql_fetch_array($res));
 				}
 			} if (!$stop && $email_profileid == "") {
-				if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC";
-				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND jp.ACTIVATED='Y' AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
+				if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') UNION SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC;";
+				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (jp.ACTIVATED='Y' AND A.PROFILEID IS NULL)  AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
 				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($myrow = mysql_fetch_array($result)) {
 					do {
@@ -864,7 +887,13 @@ $screeningValMainAdmin = 0;
 							if ($val == "new") {
 //								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                                                            $activatedWithoutYourInfoCase = $myrow['PROID'];
+            if(!$activatedWithoutYourInfoCase){
                 markProfileUnderScreening($profileid);
+                $smarty->assign("activatedWithoutYourInfo", 0);
+            }
+            else
+                  $smarty->assign("activatedWithoutYourInfo", 1);
 							}
 							$stop = 1;
 							break;
@@ -873,8 +902,8 @@ $screeningValMainAdmin = 0;
 					while ($myrow = mysql_fetch_array($result));
 				}
 				if (!$stop) {
-					if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC";
-					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND ACTIVATED='Y' AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
+					if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 UNION SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 ORDER BY ENTRY_DT ASC";
+					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (ACTIVATED='Y' AND A.PROFILEID IS NULL) AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
 					$result = mysql_query_decide($sql) or die(mysql_error_js());
 					if ($myrow = mysql_fetch_array($result)) {
 						do {
@@ -890,7 +919,13 @@ $screeningValMainAdmin = 0;
 								if ($val == "new") {
 //									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                                                                    $activatedWithoutYourInfoCase = $myrow['PROID'];
+            if(!$activatedWithoutYourInfoCase){
                   markProfileUnderScreening($profileid);
+                  $smarty->assign("activatedWithoutYourInfo", 0);
+            }
+            else
+                  $smarty->assign("activatedWithoutYourInfo", 1);
 								}
 								$stop = 1;
 								break;
