@@ -40,7 +40,9 @@ class KundliInfo extends React.Component {
                 szHisHer = "his";
             }
             htmlStr += "<div class='fontlig padl5 fl vpro_wordwrap'> Your guna score with " + szHisHer+ " is        <span class='"+colorClass+"'>" + nextProps.gunaScore.SCORE+ "/36   </span></div>";
-            document.getElementById("gunaScore").innerHTML = htmlStr;
+            if(document.getElementById("gunaScore")) {
+                document.getElementById("gunaScore").innerHTML = htmlStr;    
+            }   
         }
     }
 
