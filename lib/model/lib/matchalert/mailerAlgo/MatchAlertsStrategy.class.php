@@ -6,28 +6,28 @@ abstract class MatchAlertsStrategy
 {
 	protected $removeMatchAlerts = 1;
         private $frequency = 1;
-        private $limitNtRec = 16;
-	private $limitTRec = 10;
 	abstract function getMatches();
   
 
         public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0,$matchesSetting=''){
-
-                $profileIdsForList = array();
-                if($logicLevel == MailerConfigVariables::$strategyReceiversNT)
-                        $profileIds = array_slice($profileIds,0,$this->limitNtRec);
-                else{
-                        $profileIds = array_slice($profileIds,0,$this->limitTRec);
+                
+                $ListIds = array();
+                if($listCount !=0){
+                        $ListIds = array_slice($profileIds,0,$listCount);
+                        $profileIds = array_slice($profileIds,0,$limit);
+                }else{
+                        $profileIds = array_slice($profileIds,0,$limit);
+                        $ListIds = $profileIds;
                 }
                 $matchalertLogObj = new matchalerts_LOG();
                 $matchalertTempLogObj = new matchalerts_LOG_TEMP();
                 
          
-                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
-                $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
+                $matchalertLogObj->insertLogRecords($receiverId, $ListIds, $logicLevel);
+                $matchalertTempLogObj->insertLogRecords($receiverId, $ListIds, $logicLevel);
                 
                 $mCache = new MatchAlertsLogCaching();
-                $mCache->setAddCacheKey($receiverId,$profileIds);
+                $mCache->setAddCacheKey($receiverId,$ListIds);
                 unset($mCache);
                 
                 unset($matchalertLogObj);

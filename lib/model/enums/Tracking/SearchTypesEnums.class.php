@@ -129,6 +129,12 @@ class SearchTypesEnums
         const MatchAlertMailer4 = "BN4";
         const MatchAlertMailer5 = "BN5";
         const MatchAlertMailer7 = "BN7";
+        
+        // match alerts unified logic stype
+        const MatchAlertsStrictTrends = "BNST";
+        const MatchAlertsStrictNonTrends = "BNSNT";
+        const MatchAlertsRelaxedTrends = "BNRT";
+        const MatchAlertsRelaxedNonTrends = "BNRNT";
 
         const contactViewerMailer="CVM";
 

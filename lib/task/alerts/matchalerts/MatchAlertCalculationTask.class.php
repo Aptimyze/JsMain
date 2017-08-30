@@ -10,6 +10,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limitTRecTemp = 10;
 	private $LowDppCountCachetime = 604800; // 1 week
 	private $LowDppLimit = 10;
+	private $LowUnifiedDppLimit = 20;
         private $limitCommunityRec = 10;
         private $limitLastSearchRec = 10;
 	const clusterRecordLimit = 10;
@@ -64,7 +65,7 @@ EOF;
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
-                        //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
+                        //$arr = array(9474668=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'O','PERSONAL_MATCHES'=>'A'));
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -83,6 +84,20 @@ EOF;
                                         $matchLogic = $v["MATCH_LOGIC"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
+                                                if($loggedInProfileObj->getPROFILEID()%11<=1){
+                                                        if($matchLogic == "O"){
+                                                                $strictDppObj = new StrictDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
+                                                                $totalResults = $strictDppObj->getMatches();
+                                                        }else{
+                                                               $strictDppObj = new RelaxedDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
+                                                                $totalResults = $strictDppObj->getMatches();
+                                                        }
+                                                        if($totalResults["CNT"] == 0){
+                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,$totalResults["LOGIC_LEVEL"]);
+                                                        }
+                                                        $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,$totalResults["LOGIC_LEVEL"],$profilesWithLimitReached,$todayDate);
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"],$LowUnifiedDppLimit);     
+                                                }else{
                                                 $returnTotalCountWithCluster = 0;
 						if($trends)
 						{
@@ -148,7 +163,7 @@ EOF;
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
-
+                                                }
 					}
 				}
 			
@@ -176,8 +191,11 @@ EOF;
          * @param type $memObject Cahce Object
          * @param type $profileid // profile id
          */
-        private function setLowDppFlag($memObject,$profileid,$dppCount){
-                if($dppCount < $this->LowDppLimit){
+        private function setLowDppFlag($memObject,$profileid,$dppCount,$limitFlag=0){
+                if($limitFlag == 0){
+                        $limitFlag = $this->LowDppLimit;
+                }
+                if($dppCount < $limitFlag){
                         $memObject->set('MA_LOWDPP_FLAG_'.$profileid,1,$this->LowDppCountCachetime);
                         $memObject->incrCount('MA_LOWDPP_FLAG_COUNT');
                 }else{
