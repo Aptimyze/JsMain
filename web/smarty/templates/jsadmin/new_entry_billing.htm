@@ -13,11 +13,15 @@
 			var selected =document.getElementById(selectId).checked;
 			if(selected==true){
 				document.getElementById(disableId).disabled=true;
-                document.getElementById(disableIdSecond).disabled=true;
+                if(document.getElementById(disableIdSecond) != null){
+                    document.getElementById(disableIdSecond).disabled=true;
+                }
 			}
 			else{
 				document.getElementById(disableId).disabled=false;
-                document.getElementById(disableIdSecond).disabled=false;
+                if(document.getElementById(disableIdSecond) != null){
+                    document.getElementById(disableIdSecond).disabled=false;
+                }
 			}
             if(selectId == "chk_upgrade_service" && selected == true){
                 document.getElementById("chk_astro_service").disabled=true;
@@ -121,7 +125,7 @@
 			for(var i=0;i<services_array.length;i++)
 			{
 				required_id = services_array[i];
-				if(document.getElementById("chk_" + required_id).checked)
+				if(document.getElementById("chk_" + required_id) !=null && document.getElementById("chk_" + required_id).checked)
 				{
 					var ind1= document.getElementById(required_id).value;
 					var ind2= document.getElementById(required_id + "_duration").value;
@@ -133,7 +137,9 @@
 							~foreach from=$v key=k1 item=v1`
 							if(ind2=='~$k1`')
 							{
-								document.getElementById(required_id + "_price").value='~$v1`';
+                                if(document.getElementById(required_id + "_price") != null){
+                                    document.getElementById(required_id + "_price").value='~$v1`';
+                                }
 							}
 							~/foreach`
 						}
@@ -162,7 +168,9 @@
 				}
 				else
 				{
-					document.getElementById(required_id + "_price").value='';
+                    if(document.getElementById(required_id + "_price") != null){
+                        document.getElementById(required_id + "_price").value='';
+                    }
 				}
 			}
 		calculate_total();
@@ -195,7 +203,7 @@
 			for(var i=0;i<services_array.length;i++)
 			{
 				id = services_array[i];
-				if(document.getElementById("chk_" + id).checked)
+				if(document.getElementById("chk_" + id) != null && document.getElementById("chk_" + id).checked)
 					total_price += parseInt(document.getElementById(id + "_price").value);
 			}
 			document.getElementById("total_price").value = total_price;
