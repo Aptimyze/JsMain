@@ -88,7 +88,7 @@ bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
   let elem = document.getElementById(this.props.listing.infotype+"_tuples");
   if(!elem)return;
-  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples ,this.alterCssStyle.bind(this),0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,
+  this.obj = new MyjsSliderBinding(elem,this.props.listing.profiles ? this.props.listing.profiles : this.props.listing.tuples ,{styleFunction:this.alterCssStyle.bind(this)},0,this.props.listing.infotype == 'INTEREST_RECEIVED'? 1:0,
       this.props.apiNextPage);
   this.obj.initTouch();
   this.setState({

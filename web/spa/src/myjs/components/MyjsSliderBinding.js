@@ -1,11 +1,11 @@
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
-  constructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit)
+  constructor(parent,tupleObject,funObj,notMyjs,indexElevate,nextPageHit,pagesrc)
   {
     this.parent = parent;
     this.tupleObject = tupleObject;
-    this.styleFunction = styleFunction;
+    this.styleFunction = funObj.styleFunction;
     this.el = parent;
     this.parent = this.el.parentNode;
     this.threshold = !notMyjs ? 40 :100;
@@ -19,6 +19,9 @@ export default class MyjsSliderBinding  {
     var _this=this;
     this.page = 1;
     this.indexElevate = indexElevate ? indexElevate : 0 ;
+    this.pagesrc = pagesrc;
+    this.nxtSlideFun = typeof funObj.nxtSlideFun == 'function' ? funObj.nxtSlideFun : ()=>{} ;
+    this.prvSlideFun = typeof funObj.prvSlideFun == 'function' ? funObj.prvSlideFun : ()=>{} ;
   }
 
 
@@ -106,6 +109,8 @@ export default class MyjsSliderBinding  {
             NextSlide()
             {
                 var index = this._index + 1;
+
+
                 if ((index+1) > (this.tupleObject.length+this.indexElevate))
                 {
                     index = (this.tupleObject.length+this.indexElevate)-1;
@@ -120,11 +125,11 @@ export default class MyjsSliderBinding  {
                 else
                     var transform = this.transformX * (index - 1) + this.transformX_corr;
                 this.alterCssStyle('-'+transform,index);
+                this.nxtSlideFun();
             }
 
             PrevSlide()
             {
-
                 var index = this._index - 1;
                 if (index < 0){
                 this.transitionDuration=500;
@@ -135,6 +140,7 @@ export default class MyjsSliderBinding  {
                 else
                     var transform = 0;
                 this.alterCssStyle('-'+transform,index);
+                this.prvSlideFun();
             }
             gotoSlide(index)
             {
