@@ -38,8 +38,8 @@ div.desc {
  <br>
 
  
- 
-    <div id='content' class="marLeft15Per">
+ <div id ="container">
+     <div id='content' class="marLeft15Per">
         <form id="form" method="post" onsubmit="formSubmit(this); return false;">
             <div>
             ~foreach from = $arrPic key=imgType item=imgSrc`
@@ -54,10 +54,10 @@ div.desc {
             </div>
             <div style="clear:both"></div>
             <div class="marLeft35Per">
-                <input type="radio" name="undefined" value="Approve" checked="checked">
+                <input type="radio" value="approve" checked="checked">
                 <label> Approve </label>
 
-                <input type="radio" name="undefined" value="edit" checked="checked">
+                <input type="radio" value="edit" >
                 <label> Edit </label>
             </div>
             <div  class="marLeft35Per">
@@ -65,6 +65,8 @@ div.desc {
             </div>
         </form>
     </div>
+ </div>
+    
  
  
  
