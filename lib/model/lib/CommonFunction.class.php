@@ -580,7 +580,7 @@ class CommonFunction
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
 		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE") && $contactHandler->getContactObj()->getTYPE()=='A')
 			$source=CONTACT_ELEMENTS::ACCEPTANCE_TRACKING;
-		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE" ) && $viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE")
+		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE" ) && ($viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE"))
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
 		else
 			$source=CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING;
