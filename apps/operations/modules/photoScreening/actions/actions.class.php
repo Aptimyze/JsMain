@@ -818,66 +818,33 @@ class photoScreeningActions extends sfActions {
 		$interfaceArr=ProfilePicturesTypeEnum::$INTERFACE;
 		$photoDataObj = new test_PHOTO_BENCHMARK();
 		$profileDetails = $photoDataObj->get();
-		if($profileDetails["allotted"] == $this->cid){
-			$this->alreadyAlloted = 1;
-			$this->marked = 1;
-			$this->setTemplate('markPhotosForScreening');
-		}
-		else{
-			//Get Pictures To Screen
-			$paramArr["interface"] = $interfaceArr["1"];
-			$this->photoArr = $profileDetails;
-			if(PictureFunctions::IfUsePhotoDistributed($profileDetails["profileData"]["PROFILEID"]))
-			{
-				$matchToBeArr = JsConstants::$photoServerShardingEnums;
-
-				$arr = $photoData["profilePic"]["profileType"];
-				$mainPic = $photoData["profilePic"]["mainPicUrl"]["url"];
-
-				/***/
-				foreach($matchToBeArr as $k=>$v)
-				{
-					if($mainPic)
-					{
-						if(strstr($mainPic,$v))
-						{
-							$finalArr[] = $v;
-							$l1 = $v;
-						}
-					}
-				}
-
-				if($photoData["nonScreened"])
-				{
-					foreach($photoData["nonScreened"] as $kk=>$vv)
-					{
-						foreach($matchToBeArr as $k=>$v)
-						{
-							if(strstr($vv["url"],$v))
-							{
-								if(is_array($finalArr) && in_array($v,$finalArr))
-									;
-								else
-									$finalArr[] = $v;
-							}
-						}
-					}
-				}
-				if(count($finalArr)==1)
-					$this->imageCopyServer = "/".$finalArr[0];
-				else
-				{
-					$this->imageCopyServer = "/".$l1;
-				}
-
-
-			}
-			$this->setTemplate('showPhotosToScreen');
-		}
-
-
-
-
-	}
+        //var_dump($profileDetails);
+		
+        $arrImgOut = array();
+        $arrImgType = array('ProfilePic120Url', 'ProfilePic235Url', 'ProfilePic450Url', 'ProfilePicUrl');
+        
+        if(false !== $profileDetails) {
+          foreach( $arrImgType as $key ) {
+           
+            $val = $profileDetails[$key];
+            $prefix = substr($val, 0, 2);
+            $imagePath = substr($val, 2);
+            if( $prefix == IMAGE_SERVER_ENUM::$appPicUrl ) {
+              $val = JsConstants::$applicationPhotoUrl.$imagePath;
+            } else if ( $prefix == IMAGE_SERVER_ENUM::$cloudUrl ){
+              $val = JsConstants::$httpsCloudUrl.$imagePath;
+            }
+            
+            $arrImgOut[$key] = $val;
+          }
+        }
+        
+        if($request->getParameter("json_response") == 1) {
+          header("Content-type: application/json");
+          echo json_encode($arrImgOut);die;
+        }
+        
+        $this->arrPic = $arrImgOut;
+    }
 }
-?>
+?>js
