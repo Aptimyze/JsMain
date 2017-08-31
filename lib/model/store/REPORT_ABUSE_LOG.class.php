@@ -9,7 +9,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	
 	
 	
-	public function insertReport($reporter,$reportee,$category,$reason,$from='',$crmUser='') 
+	public function insertReport($reporter,$reportee,$category,$reason,$from='',$crmUser='', $attachment_id=-1) 
 	{  
 		
 		try
@@ -17,7 +17,7 @@ class REPORT_ABUSE_LOG extends TABLE
 			if(!$reporter || !$reportee || !$category)
 				return;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON,CATEGORY,CRM_USER) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY,:COMINGFROM,:CRM_USER)";
+			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON,CATEGORY,CRM_USER,ATTACHMENT_ID) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY,:COMINGFROM,:CRM_USER,:ATTACHMENT_ID)";
 			
 			$pdoStatement = $this->db->prepare($sql);
 			
@@ -29,6 +29,7 @@ class REPORT_ABUSE_LOG extends TABLE
 			$pdoStatement->bindValue(":DATE",$timeNow,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":COMINGFROM",$from,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":CRM_USER",$crmUser,PDO::PARAM_STR);
+            $pdoStatement->bindValue(":ATTACHMENT_ID",$attachment_id,PDO::PARAM_INT);
 			$pdoStatement->execute();
 			
 			return ;
@@ -96,7 +97,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	{
 		try	 	
 		{	
-			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
+			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON,ATTACHMENT_ID from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
             $prep->execute();
