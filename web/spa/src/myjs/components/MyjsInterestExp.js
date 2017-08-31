@@ -12,7 +12,7 @@ export class ShowExpiryList extends React.Component {
    let countTuple = (tupleArray.length<=3)?tupleArray.length: 3;
    let setdim = {width:"60px" , height:"60px" };
    let IntExpListing;
-   if(tupleArray.length>4)
+   if(tupleArray.length>3)
    {
       IntExpListing=    <div className="mar05 dispibl"><a href={this.props.url}>
         <div className="row mar05 bg7 brdr50p posrel outerCircleDiv" style={setdim}>
