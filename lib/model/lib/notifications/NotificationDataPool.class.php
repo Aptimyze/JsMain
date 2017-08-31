@@ -640,26 +640,26 @@ class NotificationDataPool
             $this->currency = $currency;
             $this->userObj = new memUser($profileid);
             $this->userObj->setMemStatus();
-            $this->userObj->setCurrency($this->currency);
-            $purchasesObj = new BILLING_PURCHASES();
-            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
-            if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
-                $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
-                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
-                //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
-            }
-            else{
-                $this->memID = @strtoupper($purchaseDetails);
-                $this->lastPurchaseDiscount = 0;
-                //$this->lastPurchaseBillid = null;
-            }
-            
-            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
-            $apiObj->subStatus = $this->subStatus;
-            $purchasesObj = new BILLING_PURCHASES();
-            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
-            $apiObj->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
             if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+                $this->userObj->setCurrency($this->currency);
+                $purchasesObj = new BILLING_PURCHASES();
+                $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
+                if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
+                    $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
+                    $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
+                    //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
+                }
+                else{
+                    $this->memID = @strtoupper($purchaseDetails);
+                    $this->lastPurchaseDiscount = 0;
+                    //$this->lastPurchaseBillid = null;
+                }
+
+                $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
+                $apiObj->subStatus = $this->subStatus;
+                $purchasesObj = new BILLING_PURCHASES();
+                $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
+                $apiObj->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
                 $this->upgradeMem = "MAIN";
                 
                 list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code, $this->upgradePercentArr, $this->upgradeActive, $this->lightningDealActive, $this->lightning_deal_discount_expiry, $this->lightningDealDiscountPercent) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L",3,$apiObj,"MAIN"); //3 is for default value

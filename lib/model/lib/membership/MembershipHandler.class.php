@@ -2613,6 +2613,7 @@ class MembershipHandler
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                             $lastInsertedId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$params["PROFILEID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$params["MEMBERSHIP"],"OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
+                            JsMemcache::getInstance()->set($params["PROFILEID"]."_BACK_UPGRADE",$lastInsertedId,3600);
                         }
                     }
                     unset($billingServStatObj);
