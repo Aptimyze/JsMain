@@ -808,13 +808,17 @@ class photoScreeningActions extends sfActions {
 	 * */
 	public function executeBenchmark(sfWebRequest $request) {
 		$this->cid = $request->getParameter("cid");
-		$name = $request->getAttribute('name');
+		$this->name = $request->getAttribute('name');
 		$this->source = $request->getParameter('source');
-		$this->execName = $name;
-
+		$photoDataObj = new test_PHOTO_BENCHMARK();
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		    $pictureid = $request->getParameter('pid');
+			$edit = $request->getParameter('edit');
+			$photoDataObj->updateBenchmark($pictureid,$edit);
+		}
 		//Initialize Enum Array
 		$interfaceArr=ProfilePicturesTypeEnum::$INTERFACE;
-		$photoDataObj = new test_PHOTO_BENCHMARK();
+
 		$profileDetails = $photoDataObj->get();
         //var_dump($profileDetails);die;
 		
@@ -845,4 +849,4 @@ class photoScreeningActions extends sfActions {
         $this->arrPic = $arrImgOut;
     }
 }
-?>js
+?>

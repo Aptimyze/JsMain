@@ -41,6 +41,9 @@ div.desc {
  
     <div id='content' class="marLeft15Per">
         <form id="form" method="post" onsubmit="formSubmit(this); return false;">
+            <input type=hidden name="cid" value="~$cid`">
+            <input type=hidden name="name" value="~$name`">
+            <input type=hidden name="pid" value="~$picId`">
             <div>
             ~foreach from = $arrPic key=imgType item=imgSrc`
             <div class="gallery">
@@ -54,10 +57,10 @@ div.desc {
             </div>
             <div style="clear:both"></div>
             <div class="marLeft35Per">
-                <input type="radio" name="undefined" value="Approve" checked="checked">
+                <input type="radio" name="edit" value="false" checked="checked">
                 <label> Approve </label>
 
-                <input type="radio" name="undefined" value="edit" checked="checked">
+                <input type="radio" name="edit" value="true" checked="checked">
                 <label> Edit </label>
             </div>
             <div  class="marLeft35Per">
