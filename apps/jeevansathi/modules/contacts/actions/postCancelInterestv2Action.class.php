@@ -131,6 +131,8 @@ class postCancelInterestv2Action extends sfAction
         {
           $restResponseArray= $buttonObj->jsmsRestButtonsrray();
           $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+          $finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+
         }
 
 			//$finalresponseArray["button_after_action"][] =
