@@ -209,6 +209,7 @@ Class ButtonResponseApi
 		$button["iconid"] = IdToAppImagesMapping::ENABLE_CONTACT;
 		$button["label"]  = "Send Interest";
 		$button["action"] = "INITIATE";
+		$button["enable"] = true;
 		if (isset($page["stype"]))
 			$button["params"] = "&stype=" . $page["stype"];
 		if (isset($page["page_source"]))
