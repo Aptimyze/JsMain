@@ -73,6 +73,11 @@ div.desc {
  
  
  
- <script></script>
+ <script>
+     var cid = "~$cid`";
+     var name = "~$name`";
+
+
+ </script>
 ~include_partial('global/footer')`
  </body>

@@ -23,13 +23,14 @@ function updateDOM(data) {
     var mainDiv = $("<div />", {id:"content", class:"marLeft15Per"});
     var formEle = $("<form />", {id:"", method:"post", onsubmit: "formSubmit(this); return false;"});
     
-    var approveInputAttr = {type:"radio", name:data.Id, value:"approve", checked:"checked"};
-    var editInputAttr = {type:"radio", name:data.Id, value:"edit"};
+    var approveInputAttr = {type:"radio", name:"edit", value:"false", checked:"checked"};
+    var editInputAttr = {type:"radio", name:"edit", value:"true"};
+
    
     $.each(data.imgs,function(picType, picSrc) {
         formEle.append(createPicTuble(picType, picSrc));
     });
-    formEle.append($("<div />",{"style" : "cliear:both"}));
+    formEle.append($("<div />",{"style" : "clear:both"}));
     
     var inputDiv = $("<div />",{class : 'marLeft35Per'});
     
@@ -37,7 +38,9 @@ function updateDOM(data) {
     inputDiv.append($("<label />", {text : "Approve"}))
     inputDiv.append($("<input>",editInputAttr))
     inputDiv.append($("<label />", {text : "Edit"}))
-    
+    formEle.append("<input  type=hidden name=\"cid\" value="+cid+">");
+    formEle.append("<input  type=hidden name=\"name\" value="+name+">");
+    formEle.append("<input  type=hidden name=\"pid\" value="+data.Id+">");
     formEle.append(inputDiv);
     
     var inputDiv = $("<div />",{class : 'marLeft35Per'});
@@ -61,7 +64,7 @@ function getApiData()
 
 function formSubmit(target)
 {
-    url = "/photoScreenSubmit.php";
+    url = "/operations.php/photoScreening/benchmark?json_response=1";
     $.ajax({
            type: "POST",
            url: url,
@@ -69,7 +72,9 @@ function formSubmit(target)
            success: function(data)
            {
                console.log(data); // show response from the php script.
-               //TODO : Remove the old data
+               $("#content").remove();
+               updateDOM(data);
+
            }
     });
 }

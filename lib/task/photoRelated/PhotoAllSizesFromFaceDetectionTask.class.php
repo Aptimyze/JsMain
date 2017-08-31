@@ -99,6 +99,7 @@ EOF;
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{
+
 						foreach(ProfilePicturesTypeEnum::$PICTURE_SIZES as $k =>$v)
 						{
 							if($value[$k]=="" && $k!="MainPicUrl")
