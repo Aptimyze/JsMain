@@ -71,6 +71,8 @@ class memDiscountTypes
         15 => 'Main Membership Upgrade Discount',
         16 => 'Lightning Deal Discount'
     );
+    
+    public static $allowVDExtension = array("WELCOME");
 }
 
 class VariableParams
@@ -622,10 +624,11 @@ class VariableParams
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",
-        "Then utilizes his expertise to shortlist potential matches for you",
-        "Connects with you to find the most suitable matches for you",
-        "Introduces you to the chosen matches & arranges meetings",
-        "Priority Customer service"
+        "Utilizes their expertise and sends interests to shortlisted matches",
+        "Contacts profiles you like on your behalf",
+        "Introduces you to chosen matches and arranges meetings",
+        "Priority Customer service",
+        "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
     public static $DOL_CONV_RATE = 60;
     
@@ -705,6 +708,7 @@ class discountType
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
     const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
+    const WELCOME_DISCOUNT = "WELCOME";
 }
 class mainMem
 {
@@ -727,7 +731,7 @@ class paymentOption
         "CR" => "Credit Card",
         "DR" => "Debit Card",
         "NB" => "Net Banking",
-        "CSH" => "Wallet"
+        "CSH" => "Paytm / MobiKwik"
     );
     public static $ccCardType = array(
         "card1" => array(

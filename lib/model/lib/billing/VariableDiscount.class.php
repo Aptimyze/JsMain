@@ -210,7 +210,7 @@ class VariableDiscount
        * @param  $profileid,$discountDetails,$serviceArr,$sendSms
        * @return none
        */ 
-    public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false)
+    public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false,$type="")
     {
         $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $SENT_MAIL = 'Y';  //$SENT_MAIL = 'Y' specifies no mail to be sent
@@ -223,7 +223,8 @@ class VariableDiscount
         if(!$vdObj1->getProfileidWithDiscount($profileid))
         {
 	    $vdObj = new billing_VARIABLE_DISCOUNT();
-            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS);
+
+            $vdObj->addVDProfile($profileid,$discountDetails["discountPercent"],$discountDetails["startDate"],$discountDetails["endDate"],$discountDetails["entryDate"],$SENT_MAIL,$SENT_SMS,false,$type);
             $durationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
             $params = array("PROFILEID"=>$profileid,"SERVICE"=>$serviceArr,"DISC1"=>$discountDetails["DISC1"],"DISC2"=>$discountDetails["DISC2"],"DISC3"=>$discountDetails["DISC3"],"DISC6"=>$discountDetails["DISC6"],"DISC12"=>$discountDetails["DISC12"],"DISCL"=>$discountDetails["DISCL"]);
             $durationObj->addVDOfferDurationServiceWise($params);
@@ -234,11 +235,44 @@ class VariableDiscount
     }
 
     /**
+     * @fn activateExtendedVD
+     * @param $params--$entryDate
+     * @return none
+     */
+    public function activateExtendedVD($entryDate){
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT("newjs_masterRep");
+        $eligibleRows = $vdExtendedObj->fetchAllRecords("*",$entryDate);
+        unset($vdExtendedObj);
+        if(is_array($eligibleRows)){
+            $vdObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
+            $vdOfferDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION("newjs_masterRep");
+            $currentDate = date("Y-m-d");
+            $pidArr = array();
+            foreach ($eligibleRows as $key => $disDetails) {
+                $paid = $this->checkPaidProfile($disDetails["PROFILEID"]);
+                if($paid){
+                    continue;
+                }
+                unset($paid);
+                if(!in_array($disDetails["PROFILEID"], $pidArr)){
+                    $vdObj->addVDProfile($disDetails["PROFILEID"],$disDetails["DISCOUNT"],$disDetails["SDATE"],$disDetails["EDATE"],$currentDate,'Y','Y',false,"Extended");
+                    $pidArr[] = $disDetails["PROFILEID"];
+                }
+                $params = array("PROFILEID"=>$disDetails["PROFILEID"],"SERVICE"=>array($disDetails["SERVICE"]),"DISC1"=>$disDetails["1"],"DISC2"=>$disDetails["2"],"DISC3"=>$disDetails["3"],"DISC6"=>$disDetails["6"],"DISC12"=>$disDetails["12"],"DISCL"=>$disDetails["L"]);
+                $vdOfferDurationObj->addVDOfferDurationServiceWise($params);
+                unset($params);
+            }
+            unset($pidArr);
+            unset($vdOfferDurationObj);
+            unset($vdObj);
+        }
+    }
+
+    /**
      * @fn getDiscountEligibleProfiles
      * @param $params--conditions,$discountType(optional----key/name for temp table)
      * @return array of resulting rows
      */
-
     public function getDiscountEligibleProfiles($params,$discountType="")
     {
         $resultProfiles = array();
@@ -371,10 +405,11 @@ class VariableDiscount
         $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
-	$todayDate =date("Y-m-d");
+	   $todayDate =date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
@@ -426,7 +461,36 @@ class VariableDiscount
                         $profileArr[$pid] =$discMax;
                     }
                     $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
-                    $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
+
+                    //check if already VD-welcome discount is active for this profile
+                    $existingVDEntries = $VDObj->getDiscountDetails($pid,discountType::WELCOME_DISCOUNT);
+                    
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && $existingVDEntries["EDATE"]<$details['EDATE']){
+                        $extendedStartDt = $details['SDATE'];
+                        if($details['SDATE']<=$existingVDEntries["EDATE"]){
+                            $extendedStartDt = date("Y-m-d",strtotime($existingVDEntries["EDATE"]." +1 day"));
+                        }
+                        
+                        $serviceWiseDisc = array();
+                        foreach ($service as $key => $value) {
+                            $serviceWiseDisc[$key]["SERVICE"] = $value;
+                            $serviceWiseDisc[$key]["1_DISCOUNT"] = $params["DISC1"];
+                            $serviceWiseDisc[$key]["2_DISCOUNT"] = $params["DISC2"];
+                            $serviceWiseDisc[$key]["3_DISCOUNT"] = $params["DISC3"];
+                            $serviceWiseDisc[$key]["6_DISCOUNT"] = $params["DISC6"];
+                            $serviceWiseDisc[$key]["12_DISCOUNT"] = $params["DISC12"];
+                            $serviceWiseDisc[$key]["L_DISCOUNT"] = $params["DISCL"];
+                        }
+                        if(is_array($serviceWiseDisc) && count($serviceWiseDisc)>0){
+                            $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$serviceWiseDisc,"PROFILEID"=>$pid,"DISCOUNT"=>$discMax,"SDATE"=>$extendedStartDt,"EDATE"=>$details['EDATE'],"ENTRY_DT"=>$entryDate));
+                        }
+                        unset($serviceWiseDisc);
+                        unset($extendedStartDt);
+                        unset($profileArr[$pid]);
+                    }
+                    else{
+                        $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
+                    }
                 }
             }
             unset($rows); 
@@ -442,17 +506,20 @@ class VariableDiscount
         unset($VDObj);
         unset($VDDurationObj);
         unset($VDTempObj);
+        unset($vdExtendedObj);
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
         $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
+
         $profileArr =array();
 	$vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
 
-            $rows = $VDTempObj->fetchActiveRecords($entryDate);
+            $rows = $VDTempObj->fetchActiveRecords($entryDate,"'".discountType::WELCOME_DISCOUNT."'");
             if(is_array($rows))
             foreach ($rows as $key => $details)
             {
@@ -495,7 +562,36 @@ class VariableDiscount
                         $profileArr[$pid] =$discMax;
                     }
                     $params = array("PROFILEID"=>$pid,"SERVICE"=>$service,"DISC1"=>$disc1,"DISC2"=>$disc2,"DISC3"=>$disc3,"DISC6"=>$disc6,"DISC12"=>$disc12,"DISCL"=>$discL);
-                    $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
+
+                    //check if already VD-welcome discount is active for this profile
+                    $existingVDEntries = $VDObj->getDiscountDetails($pid,discountType::WELCOME_DISCOUNT);
+                    
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && $existingVDEntries["EDATE"]<$details['EDATE']){
+                        $extendedStartDt = $details['SDATE'];
+                        if($details['SDATE']<=$existingVDEntries["EDATE"]){
+                            $extendedStartDt = date("Y-m-d",strtotime($existingVDEntries["EDATE"]." +1 day"));
+                        }
+
+                        $serviceWiseDisc = array();
+                        foreach ($service as $key => $value) {
+                            $serviceWiseDisc[$key]["SERVICE"] = $value;
+                            $serviceWiseDisc[$key]["1_DISCOUNT"] = $params["DISC1"];
+                            $serviceWiseDisc[$key]["2_DISCOUNT"] = $params["DISC2"];
+                            $serviceWiseDisc[$key]["3_DISCOUNT"] = $params["DISC3"];
+                            $serviceWiseDisc[$key]["6_DISCOUNT"] = $params["DISC6"];
+                            $serviceWiseDisc[$key]["12_DISCOUNT"] = $params["DISC12"];
+                            $serviceWiseDisc[$key]["L_DISCOUNT"] = $params["DISCL"];
+                        }
+                        if(is_array($serviceWiseDisc) && count($serviceWiseDisc)>0){
+                            $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$serviceWiseDisc,"PROFILEID"=>$pid,"DISCOUNT"=>$discMax,"SDATE"=>$extendedStartDt,"EDATE"=>$details['EDATE'],"ENTRY_DT"=>$entryDate));
+                        }
+                        unset($serviceWiseDisc);
+                        unset($extendedStartDt);
+                        unset($profileArr[$pid]);
+                    }
+                    else{
+                        $VDDuartionObj->addVDOfferDurationServiceWise($params,$sendAlert);
+                    }
                 }
             }
             unset($rows);
@@ -504,13 +600,15 @@ class VariableDiscount
           $sdate =$dateArr[0];
           $edate =$dateArr[1];
         }
-        if(is_array($profileArr))
-        foreach($profileArr as $profileid=>$discount){
-            $VDObj->addVDProfile($profileid,$discount,$sdate,$edate,$entryDate,"","",$sendAlert);
+        if(is_array($profileArr)){
+            foreach($profileArr as $profileid=>$discount){
+                $VDObj->addVDProfile($profileid,$discount,$sdate,$edate,$entryDate,"","",$sendAlert);
+            }
         }
         unset($VDObj);
         unset($VDDurationObj);
         unset($VDTempObj);
+        unset($vdExtendedObj);
     }
 
     /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table

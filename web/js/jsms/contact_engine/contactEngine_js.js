@@ -1273,6 +1273,18 @@ if(result.actiondetails.bottommsg2){
             $("#msgIcon").show();
                 }
         }
+         if(result.actiondetails.contact9){
+    $("#relationshipManageVal").hide();
+               // $("#alternateVal").hide();
+                $("#relationshipManager").show();
+                 $("#relationshipManagerVal").show();$("#relationshipManagerVal").html(result.actiondetails.contact9.value);
+        if (result.actiondetails.contact9.iconid){ 
+                   $("#relationshipManagerIcon > a").attr('href','tel:'+result.actiondetails.contact9.value.toString());
+            $("#relationshipManagerIcon").show();
+        }
+    
+    
+    }
     }
     
     

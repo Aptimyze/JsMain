@@ -722,7 +722,7 @@ class socialActions extends sfActions
   * This function is used to display the album of a user.
   **/
   public function executeMobilePhotoAlbum(sfWebRequest $request)
-  {   
+  {
 	$profilechecksum = $request->getParameter('profilechecksum');
 	$linkarr = $request->getpathInfoArray();
 	
@@ -760,7 +760,19 @@ class socialActions extends sfActions
 
 
 	$loggedInProfileid = $request->getAttribute('profileid');
-	if(!$profilechecksum)
+	if(!$loggedInProfileid) //this was added to ensure that POG album cannot be viewed in case of Logout.
+	{
+		$request->setParameter("regMsg","Y");
+		$this->forward('static','LogoutPage');
+	}	
+	$requestedProfileid = NULL;
+
+	if($profilechecksum)
+	{
+		$authenticationJsObj = new JsAuthentication();
+		$requestedProfileid =$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
+	}
+	if($requestedProfileid==NULL || $requestedProfileid=='')
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
 		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
@@ -773,8 +785,12 @@ class socialActions extends sfActions
 	}
 	else
 	{
-		$authenticationJsObj = new JsAuthentication();
-		$requestedProfileid=$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
+
+		if(PictureFunctions::conditionalPhotoAccess()) //if conditional layer is to be shown
+		{
+			$this->showLayer = 1;
+			$this->setTemplate("mobile/mobilePhotoAlbum");
+		}
 		$Profile = Profile::getInstance('newjs_master',$requestedProfileid);
 		$Profile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
 		if($Profile->getPHOTO_DISPLAY()=='C')
@@ -787,11 +803,11 @@ class socialActions extends sfActions
                         else
                                 $contact_status = $contact_status_new["TYPE"];
 		}
-		$ProfileObj=$Profile;	
+		$ProfileObj=$Profile;		
+
 	}
 	$picServiceObj = new PictureService($ProfileObj);
 	$album = $picServiceObj->getAlbum($contact_status);
-        
 	if(is_array($album))
 	{
 		$this->countPics = count($album);
@@ -817,7 +833,7 @@ class socialActions extends sfActions
 //			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
 		}		
 	}
-	else if($profilechecksum)
+	else if($requestedProfileid)
 		$this->redirect(sfConfig::get("app_site_url")."/profile/viewprofile.php?profilechecksum=".$profilechecksum);
 	else
 		$this->redirect(sfConfig::get("app_site_url")."/social/MobilePhotoUpload");
@@ -829,7 +845,7 @@ class socialActions extends sfActions
 	}
 	$this->mob_img_url=$mob_img_url;
 	$this->pictureId=$pictureId;
-	if(!$profilechecksum)
+	if(!$requestedProfileid)
 	{
 		$this->goBackLink=sfConfig::get('app_site_url')."/profile/viewprofile.php?ownview=1";
 	}
@@ -1633,7 +1649,8 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
 					$this->photohave = "Y";
 				if($profileObj->getSUBSCRIPTION()=="" || $profileObj->getSUBSCRIPTION()=="D")
 					$this->photosubs = "Y";
-
+				if($receiverProfileId)
+				{
 				$receiverObj = Profile::getInstance("newjs_master",$receiverProfileId);
 				$receiverObj->getDetail("","","USERNAME,GENDER,PRIVACY");
 
@@ -1642,6 +1659,11 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
                                 
 				$psObj = new PictureService($receiverObj);
 				$output = $psObj->performPhotoRequest();
+				}
+				else
+				{
+					$output = "InvalidReceiver";
+				}
 				if($output == "Success")
 				{	$output = "true";
                                         if($receiverObj->getGENDER()=="F")
@@ -1649,6 +1671,11 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
                                         else
                                                 $heSheCall = "he";
 					$successMessage = "Your photo request has been sent to ".$this->USERNAME.". We will inform you when $heSheCall uploads photo.";
+				}
+				if($output == "InvalidReceiver")
+				{
+					$output = "I";
+					$successMessage = "Receiver provided is invalid";
 				}
 				elseif($output == "SameGender")
 				{

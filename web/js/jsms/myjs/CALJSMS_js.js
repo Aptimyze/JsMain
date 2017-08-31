@@ -1,6 +1,5 @@
 
 var calTimerTime,calTimer;
-
 $(document).ready(function() {
 var calIdTemp =$("#CriticalActionlayerId").val(); 
 if(calIdTemp=='18'){
@@ -87,6 +86,66 @@ if(calIdTemp=='18'){
         }
 
         }
+
+    /* CAL 25 */
+    if(calIdTemp=='25'){
+
+    occuSelected= 0;
+
+    if($("#manglikSubmit").length && $("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70 >0)
+        {
+              $("#skipBtn").css("margin-top",$("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70);
+        }
+
+    if(isIphone != '1')
+    {
+        $(window).resize(function()
+        {
+        $("#occMidDiv").css("height",window.innerHeight - 50);
+        // $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
+        }); 
+    }
+
+
+    $("#occMidDiv").css("height",window.innerHeight - 50);
+    $("#occClickDiv").on("click", function() { 
+        if(typeof listArray == 'undefined' || listArray === null)
+        { 
+                listArray = {
+                // D :"Don't know",
+                M : "Manglik",
+                A : "Angshik (partial manglik)",
+                N : "Non Manglik"};
+            }
+            appendOccupationData(listArray);
+                $("#listDiv").removeClass("dn");
+        });
+
+     appendOccupationData = function(res) {
+        $("#occList").html('');
+        occuSelected = 0;
+        $.each(res, function(index, elem) {
+                    $("#occList").append('<li occCode = "'+index+'">' + elem + '</li>');
+        });
+        // $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
+        $("#occList li").each(function(index, element) {
+            $(this).bind("click", function() {
+
+                $("#occSelect").html($(this).html());
+                $("#occSelect").attr('occCode',$(this).attr('occCode'));
+                $("#listDiv").addClass("dn");
+                $('#searchOcc').val("");
+                $("#occList").html("");
+                $("#contText").hide();
+                $("#manglikSubmit").show();
+            });
+        });
+        $("#listLoader").addClass("dn");
+        $("#occList").removeClass("dn");
+        }
+
+        } /*end of CAL 25*/
+
 
 
 if(calIdTemp=='20' || calIdTemp==23 ){
@@ -313,7 +372,7 @@ else {
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataOcc,
                             success: function(response) {
                                 if(button == 'B2'){
@@ -351,6 +410,33 @@ else {
 
                         }
 
+                    }
+                    if(layerId == 25 && button == "B1"){
+                        var occuCode = $("#occSelect").attr('occCode');
+                        if(!occuCode){
+                            showError("Please select a Manglik Status");
+                            console.log("Please select a Manglik Status");
+                            CALButtonClicked=0;
+                            return;
+                        }
+                        
+                        if(occuCode){
+                            dataOcc = {'editFieldArr[MANGLIK]':occuCode};
+                            $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataOcc,
+                            success: function(response) {
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button;
+                                CALButtonClicked=0;
+                            },
+                            error: function(response) {
+                                }
+                            });
+
+                        }
                     }
 
                 if(layerId==20 || layerId==23)
@@ -392,7 +478,7 @@ else {
                             url: '/api/v1/profile/editsubmit',
                             headers: { 'X-Requested-By': 'jeevansathi' },       
                             type: 'POST',
-                            dateType : 'json',
+                            dataType : 'json',
                             data: dataStateCity,
                             success: function(response) {
                                 hideLoader();
@@ -414,6 +500,38 @@ else {
                         return;
                     }
 
+                    if(layerId==26 && button == "B1")
+                    {   
+                        var dataAboutMe = {'editFieldArr[YOURINFO]':$('#textAboutMe').val().trim() };
+                        if($('#textAboutMe').val().trim().length < 100)
+                        {
+                            showError("Please type min 100 characters.");
+                            CALButtonClicked=0;
+                            return;
+                        }
+
+
+                        showLoader();
+                        $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataAboutMe,
+                            success: function(response) {
+                                hideLoader();
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                 hideLoader();   
+                                showError('Something went wrong');
+
+                                }
+                            });
+                        return;
+                    }
 
         if(button == 'B2'){
             GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
@@ -421,9 +539,7 @@ else {
             GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
         }
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-        CALButtonClicked=0;
-        
-        
+        CALButtonClicked=0;        
     }
 
 
@@ -432,13 +548,17 @@ else {
             $(id1).css('background-color','#d9475c');
             $(id2).css('background-color','#C6C6C6');
         }
+        var showErrorTimeout;
         function showError(msg)
         {
-
-              $( "#validation_error" ).text(msg);
-              $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
+            if(showErrorTimeout){
+                clearTimeout(showErrorTimeout);
+            }
+            $( "#validation_error" ).text(msg);
+            $( "#validation_error" ).slideDown( "slow", function() {});//.delay( 3000 );
+            showErrorTimeout = setTimeout(function(){
               $( "#validation_error" ).slideUp( "slow", function() {});
-
+            }, 3000);
         }
 
 

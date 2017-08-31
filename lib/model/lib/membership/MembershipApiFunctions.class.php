@@ -813,7 +813,7 @@ class MembershipApiFunctions
     public function getAdditionalUpgradeBenefits($currentMem,$upgradeMem) {
         if ($upgradeMem == "X") {
             $additionalBenefits = VariableParams::$newApiPageOneBenefitsJSX;
-            $lastIndex = count($additionalBenefits)-1;
+            $lastIndex = count($additionalBenefits)-2;
             if($additionalBenefits[$lastIndex] == "Priority Customer service"){
                 unset($additionalBenefits[$lastIndex]);
             }

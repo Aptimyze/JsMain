@@ -1246,15 +1246,15 @@ public function getSendersPending($chunkStr)
                         throw new jsException("","PROFILEID IS BLANK IN newjs_CONTACTS.class.php");
 		try
 		{
-			$sql = "SELECT count(*) as CNT from newjs.CONTACTS WHERE SENDER =:SENDER AND RECEIVER = :RECEIVER and MSG_DEL =:MSG_DEL";
+			$sql = "SELECT * from newjs.CONTACTS WHERE SENDER =:SENDER AND RECEIVER = :RECEIVER and MSG_DEL =:MSG_DEL";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":RECEIVER",$receiver,PDO::PARAM_INT);
 			$res->bindValue(":SENDER",$sender,PDO::PARAM_INT);
 			$res->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
 			$res->execute();
 			$row = $res->fetch(PDO::FETCH_ASSOC);
-			$val = $row['CNT'];
-			return $val;
+			//$val = $row['CNT'];
+			return $row;
 		}
 		catch (PDOException $e)
                 {
@@ -1381,6 +1381,25 @@ public function getSendersPending($chunkStr)
                 while($row = $prep->fetch(PDO::FETCH_ASSOC))
                 {
                     $result[]=$row;                
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+        
+        public function getProfilesWhoHaveContactedInLastFewDays($date,$shard){
+            try{
+            	
+                $sql = "SELECT SENDER,GROUP_CONCAT(RECEIVER) as RECEIVERS,GROUP_CONCAT(TYPE) AS TYPES FROM `CONTACTS` where time > :DATE AND SENDER%3=:SHARD group by sender";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+                $prep->bindValue(":SHARD",$shard,PDO::PARAM_INT);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[$row['SENDER']]['Receivers']=$row['RECEIVERS'];
+                    $result[$row['SENDER']]['Types']=$row['TYPES'];
                 }
                 return $result;
             } catch (Exception $ex) {

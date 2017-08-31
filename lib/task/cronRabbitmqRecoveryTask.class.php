@@ -269,7 +269,7 @@ return true;
                                   MessageQueues::CRONJUSTJOINEDLASTSEEN_STARTCOMMAND=>MessageQueues::JUST_JOINED_LAST_SEEN_CONSUMER_COUNT,
                                   MessageQueues::OUTBOUND_STARTCOMMAND=>MessageQueues::OUTBOUND_CONSUMER_COUNT,
                                   MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_STARTCOMMAND=>MessageQueues::CRONEXCLUSIVEDELAYEDMAILER_CONSUMER_COUNT,
-                          	  MessageQueues::CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
+                          	  MessageQueues::CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND=>  MessageQueues::COMMUNITY_DISCOUNT_CONSUMER_COUNT
                                     );
     }
     elseif($arguments["server"] == "63"){
@@ -285,7 +285,7 @@ return true;
     }
     else{
         $this->consumerToCountMapping = array(
-                                  MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::CONSUMER_COUNT_SINGLE,
+                                  MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::DELETE_RETRIEVE_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
                                   MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::UPDATECRITICALINFO_STARTCOMMAND=>MessageQueues::UPDATE_CRITICAL_INFO_CONSUMER_COUNT            ,

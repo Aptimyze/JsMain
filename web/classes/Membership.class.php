@@ -733,6 +733,11 @@ class Membership
         if($memUpgrade != "NA" && $doneUpto!="MEM_DEACTIVATION"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
+
+        //Suspend previous old unlimited membership for new service
+        $membershipHandler = new MembershipHandler();
+        $membershipHandler->changeUnlimitedServiceStatusForNewService($this->billid,true,$this->profileid,$this->serviceid,$this->servefor);
+
         $this->setServiceActivation();
         $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
@@ -1127,8 +1132,14 @@ class Membership
                 if ($duration == '35640') $expiry_date = '2099-01-01';
                 else $expiry_date = date("Y-m-d", $ts);
                 $insert_query_str = "'$this->billid','$this->profileid','$serviceid_arr[$i]','$service_components','Y','$activated_on','','$this->entryby','$expiry_date','Y','$rights_str'";
-                if ($rights_str == 'T' || $rights_str == 'L') $this->assisted_arr[] = $rights_str;
-                elseif (strstr($rights_str, 'F')) $this->start_direct_call($serviceid_arr[$i], '0');
+                
+                if ($rights_str == 'L'){
+                    $this->assisted_arr[] = $rights_str;
+                }
+                if(strpos($rights_str, 'X')!==false){
+                    $this->assisted_arr[] = 'X';
+                }
+                if (strstr($rights_str, 'F')) $this->start_direct_call($serviceid_arr[$i], '0');
             }
             if ($serviceObj->getServiceType($serviceid_arr[$i]) == 'C') {
                 $total = $serviceObj->getCount($serviceid_arr[$i]);
@@ -1364,10 +1375,11 @@ class Membership
                 $newjsConnObj->updateSubscriptionForId($this->subscription, $id);
             }
         }
+        
         foreach ($this->assisted_arr as $k => $v) {
-            if ($v == 'T') {
+            if ($v == 'X') {
                 startAutoApply($this->profileid, $this->walkin);
-		addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
+                addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
             }
             if ($v == 'L') {
                 if (!in_array('T', $this->assisted_arr)) startHomeDelivery($this->profileid, '');
@@ -2134,12 +2146,16 @@ class Membership
         $DT = date('Y-m-d');
         $servefor = $billingServStatObj->getActiveSuscriptionString($profileid);
         $end_arr = array_diff($cancel_arr, $servefor_arr);
-        if (in_array("T", $end_arr)) endAutoApply($profileid);
+       
+        /*if (in_array("T", $end_arr)){
+            endAutoApply($profileid);
+        }*/
         if (in_array("L", $end_arr)) endHomeDelivery($profileid);
         if (in_array("I", $end_arr) || (!strstr('F', $servefor))) endIntroCalls($profileid);
         foreach ($cancel_arr as $key => $value) {
             if(strpos($value, 'X') !== false)
             {
+                endAutoApply($profileid);
                 //remove entry from billing.EXCLUSIVE_MEMBERS table
                 $exMemObj = new billing_EXCLUSIVE_MEMBERS();
                 $exMemObj->removeExclusiveMemberEntry($profileid);

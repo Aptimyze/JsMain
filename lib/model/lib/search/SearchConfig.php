@@ -219,4 +219,5 @@ class SearchConfig
         public static $VspWithoutSolr = 1;
 
     public static $viewedMaxLimit = 5000; //setting limit for viewed and not viewed cluster
+    public static $searchFullRangeParameters = 'AGE,HEIGHT,ENTRY_DT,VERIFY_ACTIVATED_DT,INCOME,INCOME_DOL';
 }

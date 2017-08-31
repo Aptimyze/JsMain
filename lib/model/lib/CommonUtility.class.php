@@ -837,7 +837,7 @@ die;
 	* @return: $showChat
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
-		$chatNotAvailModuleArr = ["membership","register","phone","social","settings","promotions"];
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings","promotions","contactus","faq","successStory"];
         $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
 		$showChat = 1;
 		if(!$loggedIn){
@@ -1108,5 +1108,5 @@ die;
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
     }
-}
+    }
 ?>

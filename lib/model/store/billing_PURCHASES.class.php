@@ -841,4 +841,20 @@ class BILLING_PURCHASES extends TABLE
             throw new jsException($ex);
         }
     }
+
+    public function getUserName($profilesid){
+        try{
+            $sql = "SELECT USERNAME,PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN (:PROFILESID)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILESID",$profilesid,PDO::PARAM_INT);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while($row = $prep->fetch()){
+                $result[$row["PROFILEID"]] = $row["USERNAME"];
+            }
+            return $result;
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
 }

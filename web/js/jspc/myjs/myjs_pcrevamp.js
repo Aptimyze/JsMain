@@ -601,7 +601,7 @@ engagementCounts.prototype.noResultCase = function() {
 
 function CriticalActionLayer(){
 var CALayerShow=$("#CALayerShow").val();
-if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || getCookie("calShown") ) return;
+if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || (getCookie("calShown") && (CALayerShow!='19')) ) return;
 if(CALayerShow!='0')
   {
       

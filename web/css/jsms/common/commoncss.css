@@ -1242,3 +1242,4 @@ border-radius: 32px;
 .pad-all10{
         padding:10px;
 }
+.setshare {top: 50%;transform: translate(-50%,-50%);left: 50%;}

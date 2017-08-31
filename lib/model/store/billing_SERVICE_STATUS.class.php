@@ -998,5 +998,53 @@ class BILLING_SERVICE_STATUS extends TABLE {
              throw new jsException($ex);
          }
      }
+    public function getMaxExpirydForBillid($billid)
+    {
+        try
+        {
+            $sql  = "SELECT EXPIRY_DT FROM billing.SERVICE_STATUS WHERE BILLID=:BILLID AND SERVEFOR LIKE '%F%' LIMIT 1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output = $row['EXPIRY_DT'];
+            }
+            return $output;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function fetchProfilesWithUnlimitedMembership($profileID){
+        try{
+            $sql ="SELECT ID, BILLID, PROFILEID, SERVICEID FROM billing.SERVICE_STATUS WHERE PROFILEID = :PROFILEID AND SERVICEID LIKE :SERVICEID AND SERVEFOR LIKE :SERVEFOR ORDER BY ID LIMIT 1";
+            $serviceID = "%L%";
+            $serveFor = "%F%";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID",$serviceID,PDO::PARAM_STR);
+            $prep->bindValue(":SERVEFOR",$serveFor,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while($row = $prep->fetch()){
+                $result[] = $row;
+            }
+            return $result;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function changeUnlimitedMembershipStatus($id,$status){
+        try{
+            $sql = "UPDATE billing.SERVICE_STATUS SET ACTIVE = :STATUS, ACTIVATED = :STATUS WHERE ID = :ID LIMIT 1 ";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
+            $prep->bindValue(":ID",$id,PDO::PARAM_INT);
+            $prep->execute();
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 

@@ -527,6 +527,12 @@ class MembershipHandler
     {
         $billingExcCallbackObj = new billing_EXC_CALLBACK();
         $added                 = $billingExcCallbackObj->insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // Add exclusive Record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
         return $added;
     }
 
@@ -566,6 +572,12 @@ class MembershipHandler
     {
         $excCallbackObj = new billing_EXC_CALLBACK();
         $excCallbackObj->addRecord($profileid, $phoneNo, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime);
+
+        // add rcb record in OPTIN-DNC
+        if($phoneNo){
+                $optinDncObj =new incentive_OPTIN_DNC();
+                $optinDncObj->addOptinRecord($phoneNo);
+        }
     }
 
     public function checkEmailSendForDay($profileid, $email)
@@ -2011,11 +2023,13 @@ class MembershipHandler
 
     public function addVariableDiscountProfiles()
     {
+
         $vdDurationObj         = new billing_VARIABLE_DISCOUNT_DURATION("newjs_masterRep");
         $vdPoolTechObj         = new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_masterRep");
         $vdObj                 = new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj    = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $vdDurationPoolTechObj = new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_masterRep");
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
         $jprofileObj           = new JPROFILE('newjs_slave');
         $vdProfilesArr         = array();
 
@@ -2028,7 +2042,9 @@ class MembershipHandler
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
 	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
-            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
+            //confirm filter required in main vd??
+            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles("'".discountType::WELCOME_DISCOUNT."'");
+
             foreach ($vdProfilesArr as $key => $profileid) {
 
                 // paid condition check
@@ -2038,19 +2054,36 @@ class MembershipHandler
                 }
 
                 // get discount details
-                $discountArr = $vdDurationPoolTechObj->getDiscountArr($profileid);
-                if (is_array($discountArr)) {
-                    $discount = max($discountArr);
+                $discountArr = $vdDurationPoolTechObj->getTechDiscountDetails($profileid);
+             
+                if (is_array($discountArr) && is_array($discountArr[0]) && $discountArr[1]) {
+                    $discount = $discountArr[1];
                 }
 
-                unset($discountArr);
                 // add discount
                 if ($discount) {
-                    $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
-                    $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    
+                    //check if already VD-welcome discount is active for this profile
+                    $existingVDEntries = $vdObj->getDiscountDetails($profileid,discountType::WELCOME_DISCOUNT);
+                    
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && is_array($discountArr[0]) && $existingVDEntries["EDATE"]<$endDate){
+                        $extendedStartDt = $startDate;
+                        if($startDate<=$existingVDEntries["EDATE"]){
+                            $extendedStartDt = date("Y-m-d",strtotime($existingVDEntries["EDATE"]." +1 day"));
+                        }
+                        $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$discountArr[0],"PROFILEID"=>$profileid,"DISCOUNT"=>$discount,"SDATE"=>$extendedStartDt,"EDATE"=>$endDate,"ENTRY_DT"=>$activationDt));
+                        unset($extendedStartDt);
+                    }
+                    else{
+                        $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
+                        $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    }
+                    unset($existingVDEntries);
                 }
+                unset($discountArr);
             }
         }
+    unset($vdExtendedObj);
     }
 
     public function calculateVariableRenewalDiscount($profileid)
@@ -2216,8 +2249,9 @@ class MembershipHandler
     public function getRealMembershipName($profileid)
     {
         $memCacheObject = JsMemcache::getInstance();
-        if ($memCacheObject->get($profileid . "_MEM_NAME")) {
-            $output = unserialize($memCacheObject->get($profileid . "_MEM_NAME"));
+        $memValue=$memCacheObject->get($profileid . "_MEM_NAME");
+        if ($memValue) {
+            $output = unserialize($memValue);
             $output = json_encode($output);
             $output = str_replace('"', '', $output);
         } else {
@@ -2271,7 +2305,7 @@ class MembershipHandler
                 $whereCondition = array("SUBSCRIPTION" => '%X%', "ACTIVATED" => 'Y');
                 //get jprofile details
                 $jprofleSlaveObj = new JPROFILE("crm_slave");
-                $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER,HEIGHT", $whereCondition);
+                $profileDetails  = $jprofleSlaveObj->getProfileSelectedDetails($profileIDArr, "PROFILEID,USERNAME,EMAIL,PHONE_MOB,AGE,MSTATUS,RELIGION,CASTE,INCOME,GENDER", $whereCondition);
                 unset($jprofleSlaveObj);
 
                 //get names of profiles
@@ -2280,9 +2314,10 @@ class MembershipHandler
                 unset($incentiveObj);
 
                 //get names of agents to whom profiles are allotted
+		/*
                 $mainAdminObj   = new incentive_MAIN_ADMIN("crm_slave");
                 $jsadminDetails = $mainAdminObj->getArray(array("PROFILEID" => implode(",", $profileIDArr)), "", "", "ALLOTED_TO AS SALES_PERSON,PROFILEID", "", "PROFILEID");
-                unset($mainAdminObj);
+                unset($mainAdminObj);*/
 
                 //get billing details of profiles via billid's
                 $billIdArr = array_keys($allocationDetails);
@@ -2886,7 +2921,7 @@ class MembershipHandler
         $sendSMSForDiscount = true;  //SMS to be sent
         
         $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC1"=>$discountPercent,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
-        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
+        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount,discountType::WELCOME_DISCOUNT);
         
         $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
         $commWelDiscLogObj->addEntry($profileid,$discountPercent,$startDate,$endDate,$community,$entryDt);
@@ -2929,5 +2964,50 @@ class MembershipHandler
             return false;
         }
     }
-     
+
+    public function changeUnlimitedServiceStatusForNewService($billID,$suspend,$profileID=0,$serviceID='',$serveFor=''){
+        $serviceStatusObj = new billing_SERVICE_STATUS();
+        $contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+        $suspendUnlimitedServiceObj = new billing_SUSPENDED_UNLIMITED_SERVICE_LOG();
+        if($suspend){
+            $newServiceDetail[0]["PROFILEID"] = $profileID;
+            $newServiceDetail[0]["SERVEFOR"] = $serveFor;
+            $newServiceDetail[0]["SERVICEID"] = $serviceID;
+            $newServiceDetail[0]["BILLID"] = $billID;
+        } else{
+            $newServiceDetail = $serviceStatusObj->fetchAllServiceDetailsForBillid($billID);
+        }
+        foreach ($newServiceDetail as $key=>$value){
+            $serveFor = $value["SERVEFOR"];
+            $serviceID = $value["SERVICEID"];
+            if(strpos($serveFor,'F') !==false && strpos($serviceID,'L') !==true){
+                $profileId = $value["PROFILEID"];
+                $oldUnlimitedService = $serviceStatusObj->fetchProfilesWithUnlimitedMembership($profileId);
+                if(is_array($oldUnlimitedService)){
+                    $id = $oldUnlimitedService[0]["ID"];
+                    if($suspend){
+                        $contactsDetails = $contactsAllotedObj->getAll($value["PROFILEID"]);
+                        $infoArr[0]["OLDBILLID"] = $oldUnlimitedService[0]["BILLID"];
+                        $infoArr[0]["OLDSERVICEID"] = $oldUnlimitedService[0]["SERVICEID"];
+                        $infoArr[0]["NEWBILLID"] = $value["BILLID"];
+                        $infoArr[0]["NEWSERVICEID"] = $value["SERVICEID"];
+                        $infoArr[0]["STATUS"] = 'Y';
+                        $infoArr[0]["CONTACTS_ALLOTED"] = $contactsDetails["ALLOTED"];
+                        $infoArr[0]["CONTACTS_VIEWED"] = $contactsDetails["VIEWED"];
+                        $infoArr[0]["CONTACTS_CREATED"] = $contactsDetails["CREATED"];
+                        $suspendUnlimitedServiceObj->insertSuspendedServices($infoArr);
+                        $serviceStatusObj->changeUnlimitedMembershipStatus($id,'N');
+                    } else{
+                        $contactsDetails = $suspendUnlimitedServiceObj->getContactAllotted($oldUnlimitedService[0]["BILLID"],$value["BILLID"]);
+                        if(is_array($contactsDetails) && !empty($contactsDetails)){
+                            $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
+                            $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
+                            $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

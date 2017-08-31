@@ -46,7 +46,7 @@ class ApiEditSubmitV1Action extends sfActions
             // file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf_new.$date.txt",$http_msg,FILE_APPEND);
 		}
 		
-		$this->editFieldNameArr=$request->getParameter('editFieldArr');		
+		$this->editFieldNameArr=$request->getParameter('editFieldArr');        
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{
 			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
@@ -54,6 +54,12 @@ class ApiEditSubmitV1Action extends sfActions
                 if(array_key_exists("CASTE",$this->editFieldNameArr) && in_array($this->editFieldNameArr['CASTE'],array(151,243)))
                 {
                         $this->editFieldNameArr['JAMAAT']='';
+                }
+                
+                if(array_key_exists("YOURINFO",$this->editFieldNameArr) && strlen($this->loginProfile->getYOURINFO())<100)
+                {
+                        $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+                        $activated_without_yourInfoObj->insert($this->loginProfile->getPROFILEID());
                 }
 
 		unset($this->editFieldNameArr['STATE_RES']);
@@ -65,7 +71,7 @@ class ApiEditSubmitV1Action extends sfActions
 		unset($this->editFieldNameArr['DAY']);
 		unset($this->editFieldNameArr['YEAR']);
                 //print_r($this->editFieldNameArr);die;
-                
+        
                         if(!MobileCommon::isApp())
                         {
                                 if(!empty($_FILES)){

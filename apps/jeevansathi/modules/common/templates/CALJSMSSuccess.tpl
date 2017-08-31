@@ -239,6 +239,37 @@
     </div>
 
 
+~elseif $calObject.LAYERID eq '25'`
+
+        <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please select a Manglik Status.</div>
+        
+        <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
+        <div id="occMidDiv" style='padding-top:20%;' class="posrel midDiv white">
+            <div class="pb10 fontlig f19 txtc">~$calObject.TITLE`</div>
+             <div class="pad0840 txtc fontlig f16">~$calObject.TEXT`</div>
+           <div class="pad0840 txtc fontlig f16">~$calObject.SUBTEXT`</div>
+            <div id="occClickDiv" class="wid90p mar0auto bg4 hgt75 mt30 pad25">
+                <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select Manglik Status</div>
+                <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
+            </div>
+          
+          <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
+
+        </div>
+    </div>
+    <div id="listDiv" class="listDivInner bg4 scrollhid dn" style= '-webkit-overflow-scrolling: touch;'>
+        <div id="listLoader" class="centerDiv"><img src="~$IMG_URL`/images/jsms/commonImg/loader.gif" /></div>
+        <div class="hgt70 btmShadow selDiv color11 fontlig f18 fullwid">Select Manglik Status</div>
+        <ul id="occList" class="occList color11 fontlig f18 dn">
+        </ul>
+    </div>
+    <div id="foot" class="posfix fullwid bg7 btmo">
+        <div class="scrollhid posrel">
+            <input type="submit" id="manglikSubmit" class=" fullwid dispbl lh50 txtc f18 white" onclick="criticalLayerButtonsAction('','B1');" value="Submit">
+        </div>
+    </div>
+
+
 
 
 ~elseif ($calObject.LAYERID eq '20' or $calObject.LAYERID eq '23')`
@@ -359,9 +390,72 @@ var altEmailUser = '~$altEmailUser`';
   
   </div>
 
-    
-    
+      ~elseif $calObject.LAYERID==26`
+<style>
+  .childDiv  {
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+</style>   
+      <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
+
+<div style="width:100%;overflow-x: hidden;">
+<div id='mainContainer' style="width:200%;transition-duration:.5s;transform: translateX(-0%);">
+     <div class="childDiv fl" style="background-color: #09090b;">
+  <div  class="posrel pad18Incomplete">
+
+  <div class="br50p txtc" style='height:80px;'>
+      
+    </div>
+     
+  </div>
+   
+  <div class="txtc">   
+  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
+  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
+  </div>
+  <div class="pad1 lh25 fontlig f14" style="color:#cccccc;"><b>Note: </b><span>~$calObject.NOTE_TEXT2`</span></div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');">~$calObject.BUTTON1`</div>
+  </div>
+  <!--end:div-->
   
+  </div>   
+
+  <div class="childDiv bg4 " style="height:638px" resize="">
+  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div onclick="$('#mainContainer').css('transform','translateX(0%)');" class="fl wid20p white">               <i id="backBtn" class="mainsp arow2"></i></div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
+    <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="fr txtc white f14">~$calObject.BUTTON2`</div>
+
+<!-- ngIf: bShowSkip -->                <div class="clr"></div>              </div>            </div>          </div>
+  <div id="scrollContent" class="scrollContent bg4" style="height:528px">
+    <div class="pad1 brdr1 bg11">
+        <div class="pt15 pb10 fullwid">
+          <div class="fl color12 f12">Type min 100 Chars</div>
+          <div class="fr color12 f12">Count - <span id="TACount" class="color2"> ~$calObject.ABOUT_ME_TEXT|count_characters:true`</span></div>
+          <div class="clr"></div>
+        </div>
+    <div class="pt10">
+            <textarea id="textAboutMe"  style="height:300px" class="fullwid color12 f17 fontlig lh30  bg11">~$calObject.ABOUT_ME_TEXT`</textarea>
+    </div>
+    </div>
+  </div>
+  <div class="fullwid posabs btmo" onclick="criticalLayerButtonsAction('~$calObject.JSMS_ACTION1`','B1');">
+    <div class="pt20" id="doneBtn" > <div  class="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div> </div>
+  </div>
+</div>
+   </div> 
+  <script>
+  $('#textAboutMe').bind('input ', function(e) {
+    var len = $('#textAboutMe').val().trim().length;
+   // / if(len==)
+   if(len>=100) $('#TACount').css('color','green');else $('#TACount').css('color','#d9475c');
+ $("#TACount").html(len); 
+});
+
+</script>
+</div>
   ~elseif $calObject.LAYERID !=9`
       <div style="background-color: #09090b;">
   <div  class="posrel pad18Incomplete">

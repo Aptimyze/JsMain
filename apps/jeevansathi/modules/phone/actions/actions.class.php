@@ -319,12 +319,28 @@ class phoneActions extends sfActions
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);
+       	$respObj = ApiResponseHandler::getInstance();
+       	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->setResponseBody($result);
+		$respObj->generateResponse();
         die();
 		}
 
+    public function executeDNCConsent(sfWebRequest $request)
+  	{
 
 
+    $respObj = ApiResponseHandler::getInstance();
+    $respObj->setHttpArray(ResponseHandlerConfig::$CONSENT_MESSAGE);
+    $arr['msgArray'] = CommonConstants::$CONSENT_MSG_TEXT;
+    $arr['apiHit'] = CommonConstants::$CONSENT_MSG_API;
+    $arr['USERNAME'] = LoggedInProfile::getInstance()->getUSERNAME();
+    $sendingDetails['consentData'] = $arr;
+    $respObj->setResponseBody($sendingDetails);
+    $respObj->generateResponse();
+    die;
 
+  }
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {

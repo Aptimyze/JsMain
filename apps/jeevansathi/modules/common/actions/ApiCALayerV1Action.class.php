@@ -89,7 +89,19 @@ class ApiCALayerV1Action extends sfActions
 	    $layerData['PREFERENCES'] = $request->getParameter('DPP_CASTE_BAR') ;
 	    }
 
-		$this->m_arrOut=$layerData;
+	     if($layerToShow==24)
+        {
+	        $profileId=$this->loginProfile->getPROFILEID();
+	        $nameData=(new NameOfUser())->getNameData($profileId);
+	        $nameOfUser=$nameData[$profileId]['NAME'];
+	    }
+
+	     if($layerToShow==26)
+        {
+        	$layerData['ABOUT_ME_TEXT'] = $this->loginProfile->getYOURINFO();
+	    }
+
+				$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;
                 $this->m_arrOut['NAME_PRIVACY']=$namePrivacy ? $namePrivacy : NULL;
 	    }
