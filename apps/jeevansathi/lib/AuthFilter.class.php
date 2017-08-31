@@ -118,7 +118,10 @@ class AuthFilter extends sfFilter {
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
-		
+                                
+                                if(MobileCommon::isNewMobileSite())
+                                    $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
+                                
 				$request->setAttribute('loginData', $data);
 				if ($data[PROFILEID]) $login = true;
 				else $login = false;
@@ -377,8 +380,6 @@ class AuthFilter extends sfFilter {
 				}
 			}
 		}
-                if(MobileCommon::isNewMobileSite())
-                        $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
                 
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();
