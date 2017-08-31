@@ -113,6 +113,7 @@ render(){
     return <div></div>;
   }
 
+
 //  var loaderStyles = [], divStyles=[];
   return(
 
@@ -133,6 +134,7 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => {
+                  console.log(tuple);
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
@@ -143,7 +145,7 @@ render(){
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
                             <div className="fl">
-                              <img className="tuple_image hgtwid110" src={tuple.photo.url} />
+                              <img className="tuple_image hgtwid110" src={tuple.profilepic120url} />
                             </div>
                             <div className="fl pl_a" style={{'width':'48%'}}>
                               <div className="f14 color7">
