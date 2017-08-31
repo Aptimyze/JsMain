@@ -25,14 +25,23 @@ div.desc {
     padding: 15px;
     text-align: center;
 }
+
+.marLeft15Per {
+    margin-left: 15%
+}
+
+.marLeft35Per {
+    margin-left: 35%
+}
 </style>
 ~include_partial('global/header')`
  <br>
 
  
  
-    <div id='row_1' class="disp-none">
-        <form id="form_row_1" method="post" onsubmit="formSubmit(this); return false;">
+    <div id='content' class="marLeft15Per">
+        <form id="form" method="post" onsubmit="formSubmit(this); return false;">
+            <div>
             ~foreach from = $arrPic key=imgType item=imgSrc`
             <div class="gallery">
                 <a target="_blank" href="~$imgSrc`">
@@ -42,19 +51,23 @@ div.desc {
                 <div class="desc"> ~$imgType` </div>
             </div>
             ~/foreach`
-            <br>
-            <input type="radio" name="undefined" value="Approve" checked="checked">
-            <label> Approve </label>
-            
-            <input type="radio" name="undefined" value="edit" checked="checked">
-            <label> Edit </label>
-            
-            <input type="submit" id="row_1"/>
+            </div>
+            <div style="clear:both"></div>
+            <div class="marLeft35Per">
+                <input type="radio" name="undefined" value="Approve" checked="checked">
+                <label> Approve </label>
+
+                <input type="radio" name="undefined" value="edit" checked="checked">
+                <label> Edit </label>
+            </div>
+            <div  class="marLeft35Per">
+                <input type="submit" id="~$picId`"/>
+            </div>
         </form>
     </div>
  
  
  
-
+ <script></script>
 ~include_partial('global/footer')`
  </body>

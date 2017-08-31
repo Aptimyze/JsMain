@@ -803,8 +803,6 @@ class photoScreeningActions extends sfActions {
         $this->setTemplate('showDeletedPlusOriginalPhotos');                 
     }
 
-
-
 	/**
 	 * This function is used to display the profile to be screened by the screening user
 	 * */
@@ -818,7 +816,7 @@ class photoScreeningActions extends sfActions {
 		$interfaceArr=ProfilePicturesTypeEnum::$INTERFACE;
 		$photoDataObj = new test_PHOTO_BENCHMARK();
 		$profileDetails = $photoDataObj->get();
-        //var_dump($profileDetails);
+        //var_dump($profileDetails);die;
 		
         $arrImgOut = array();
         $arrImgType = array('ProfilePic120Url', 'ProfilePic235Url', 'ProfilePic450Url', 'ProfilePicUrl');
@@ -838,12 +836,12 @@ class photoScreeningActions extends sfActions {
             $arrImgOut[$key] = $val;
           }
         }
-        
+        $arrOut = array("Id"=>$profileDetails['PICTUREID'] , "imgs"=>$arrImgOut);
         if($request->getParameter("json_response") == 1) {
           header("Content-type: application/json");
-          echo json_encode($arrImgOut);die;
+          echo json_encode($arrOut);die;
         }
-        
+        $this->picId = $profileDetails['PICTUREID'];
         $this->arrPic = $arrImgOut;
     }
 }
