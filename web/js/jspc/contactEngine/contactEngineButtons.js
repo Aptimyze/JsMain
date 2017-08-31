@@ -32,6 +32,20 @@ var Button= function(elementObj) {
 
 
 Button.prototype.request= function() {
+	
+	/* GA tracking */
+	try{
+		if(this.name=="IGNORE")
+		{
+			if(this.params==="&ignore=0")
+				GAMapper("GA_CE" ,{action:"UNBLOCK"});
+			else
+				GAMapper("GA_CE" ,{action:"BLOCK"});
+		}	
+		else
+			GAMapper("GA_CE" ,{action:this.name});
+	}
+	catch(e){}
 if(this.name=='WRITE_MESSAGE_LIST')
     {
         this.params+=('&pagination=1');
