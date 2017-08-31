@@ -35,10 +35,19 @@ class test_PHOTO_BENCHMARK extends TABLE {
 		}
 	}
 
-	public function get()
+	public function get($name='')
 	{
-		$sql = "SELECT * FROM test.PHOTO_BENCHMARK WHERE facedetected = 1 LIMIT 1";
+		$str = "";
+		if($name)
+		{
+			$str = " AND agent = :AGENT";
+		}
+		$sql = "SELECT * FROM test.PHOTO_BENCHMARK WHERE facedetected = 1 and edit IS NULL $str LIMIT 1";
 		$res = $this->db->prepare($sql);
+		if($name)
+		{
+
+		}
 		$res->execute();
 		$result = $res->fetch(PDO::FETCH_ASSOC);
 		return $result;
@@ -49,6 +58,32 @@ class test_PHOTO_BENCHMARK extends TABLE {
 			$sql = "UPDATE test.PHOTO_BENCHMARK set showed=true where PICTUREID = :PICTUREID";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PICTUREID",$pid,PDO::PARAM_INT);
+			$res->execute();
+		}
+		catch (Exception $ex) {
+			throw new jsException($ex);
+		}
+	}
+
+	public function updateOpenCVEdit($pid)
+	{
+		try{
+			$sql = "UPDATE test.PHOTO_BENCHMARK set opencvEdit = true where PICTUREID =:PICTUREID";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":PICTUREID",$pid,PDO::PARAM_INT);
+			$res->execute();
+		}
+		catch (Exception $ex) {
+			throw new jsException($ex);
+		}
+	}
+	public function updateBenchmark($pictureid,$edit)
+	{
+		try{
+			$sql = "UPDATE test.PHOTO_BENCHMARK set edit = :EDIT where PICTUREID =:PICTUREID";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":PICTUREID",$pictureid,PDO::PARAM_INT);
+			$res->bindValue(":EDIT",$edit,PDO::PARAM_STR);
 			$res->execute();
 		}
 		catch (Exception $ex) {

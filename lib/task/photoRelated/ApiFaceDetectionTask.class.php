@@ -14,7 +14,6 @@ class ApiFaceDetectionTask extends sfBaseTask
 		"ProfilePic450Url" => array("MAX_FACE" => "410", "IDEAL_FACE" => "200", "HEIGHT_INCREASE" => 30, "MIN_FACE" => "75"),
 		"ProfilePicUrl" => array("MAX_FACE" => "135", "IDEAL_FACE" => "110", "HEIGHT_INCREASE" => 13, "MIN_FACE" => "75"),
 		"MobileAppPicUrl" => array("MAX_FACE" => "410", "IDEAL_FACE" => "200", "HEIGHT_INCREASE" => 30, "MIN_FACE" => "75"));
-	private $limit = 100;
 
 	protected function configure()
 	{
@@ -186,14 +185,12 @@ EOF;
 		if (($height / ($sFactor * $MAX_HEIGHT)) > ($width / ($sFactor * $MAX_WIDTH))) {
 			if ($width < $sFactor * $MAX_WIDTH) {
 				$start_x = 0;
-				$end_x = $width;
 				$final_width = $width;
 			} else {
 				$final_width = $sFactor * $MAX_WIDTH;
 				$faceMid = $face_x + ($face_w / 2);
 				if ($faceMid < $MAX_FROM_CENTER * $sFactor) {
 					$start_x = 0;
-					$end_x = $final_width;
 				} else {
 					$end_x = $width < ($faceMid + $MAX_FROM_CENTER * $sFactor) ? $width : round($faceMid + $MAX_FROM_CENTER * $sFactor);
 					$start_x = $end_x - $final_width;
@@ -201,19 +198,16 @@ EOF;
 			}
 			$start_y = $face_y2;
 			$req_h = max($final_width / $RATIO_REQUIRED, $face_h + $height_margin);
-			$end_y = $height < $req_h ? ($start_y + $height) : ($start_y + $req_h);
 			$final_height = $req_h;
 
 		} else {
 			$start_y = $face_y2;
 			$final_height = min($height, $sFactor * $MAX_HEIGHT);
-			$end_y = $final_height + $start_y;
 			$req_w = max($final_height * $RATIO_REQUIRED, $face_w);
 			$final_width = $width < $req_w ? $width : $req_w;
 			$faceMid = $face_x + ($face_w / 2);
 			if ($faceMid < $final_width / 2) {
 				$start_x = 0;
-				$end_x = $final_width;
 			} else {
 				$end_x = $width < ($faceMid + ($final_width / 2)) ? $width : ($faceMid + ($final_width / 2));
 				$start_x = $end_x - $final_width;
