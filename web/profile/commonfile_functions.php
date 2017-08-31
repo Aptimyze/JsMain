@@ -723,6 +723,7 @@ $js_arr[]=array("jsms/login/uploadDocument_js"       => "5");
 $js_arr[]=array("jspc/login/uploadDoc_js"       => "5");
 $js_arr[]=array("/JSNotificationExtension/JSnotification/client"    => "2");
 $js_arr[]=array("jsms/settings/privacySettings_js"  => "2");
+$js_arr[]=array("photoScreening_js"  => "1");
 return $js_arr;
 }
 function getJavascript(){

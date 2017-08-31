@@ -807,6 +807,7 @@ class photoScreeningActions extends sfActions {
 	 * This function is used to display the profile to be screened by the screening user
 	 * */
 	public function executeBenchmark(sfWebRequest $request) {
+      
 		$this->cid = $request->getParameter("cid");
 		$this->name = $request->getAttribute('name');
 		$this->source = $request->getParameter('source');

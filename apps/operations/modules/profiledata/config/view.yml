@@ -61,11 +61,3 @@ albumSuccess:
   stylesheets:    [common_css, colorbox_css]
 
   javascripts:    []
-
-benchmarkSuccess:
-  metas:
-    title:        Test Page
-
-  stylesheets:    [operations_jeevansathi, operations_styles]
-
-  javascripts:    []

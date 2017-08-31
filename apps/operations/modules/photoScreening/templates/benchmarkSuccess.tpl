@@ -38,8 +38,8 @@ div.desc {
  <br>
 
  
- 
-    <div id='content' class="marLeft15Per">
+ <div id ="container">
+     <div id='content' class="marLeft15Per">
         <form id="form" method="post" onsubmit="formSubmit(this); return false;">
             <input type=hidden name="cid" value="~$cid`">
             <input type=hidden name="name" value="~$name`">
@@ -60,7 +60,7 @@ div.desc {
                 <input type="radio" name="edit" value="false" checked="checked">
                 <label> Approve </label>
 
-                <input type="radio" name="edit" value="true" checked="checked">
+                <input type="radio" name="edit" value="true">
                 <label> Edit </label>
             </div>
             <div  class="marLeft35Per">
@@ -68,6 +68,8 @@ div.desc {
             </div>
         </form>
     </div>
+ </div>
+    
  
  
  
