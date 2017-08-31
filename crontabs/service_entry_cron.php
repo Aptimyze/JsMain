@@ -241,7 +241,7 @@ while($row=mysql_fetch_array($res))
 
 	$billid =$row['BILLID'];
 	$amount = $row['AMOUNT'];
-	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid' AND ENTRY_DT<'$st_date'";
+	$sql1 ="select SERVICEID,CENTER,MEM_UPGRADE,SERVEFOR from billing.PURCHASES WHERE BILLID='$billid' AND ENTRY_DT<='$end_date'";
 
 	$res1=mysql_query_decide($sql1,$db_slave) or die("$sql1".mysql_error_js($db_slave));
 	if($row1=mysql_fetch_array($res1)){

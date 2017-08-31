@@ -128,17 +128,28 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 $whereString .= " AND ((PARTNER_HHEIGHT>=:".$key;
                             else if($key == 'HPARTNER_HHEIGHT')
                                 $whereString .= " AND PARTNER_HHEIGHT<=:".$key.") || PARTNER_HHEIGHT = '' || PARTNER_HHEIGHT IS NULL)" ;
-                            else if($key == "MSTATUS")
-                                $whereString .= " AND MSTATUS IN(:".$key."0)" ;
                             else{
                                 $valArray = explode(" ",$value);
-                                $whereString.= "AND (";
+                                if($key == "MSTATUS")
+                                    $whereString .= " AND MSTATUS IN(";
+                                else
+                                    $whereString.= " AND (";
                                 $i=0;
                                 foreach($valArray as $k1=>$v1){
-                                        $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") OR ";
+                                        if($key == "MSTATUS")
+                                            $whereString .= ":".$key.$i++."," ;
+                                        else{
+                                            $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") OR ";
+                                        }
                                 }
-                                $whereString = substr($whereString, 0, -4);
-                                $whereString .= " || ".$key."='' || ".$key." IS NULL)";
+                                if($key == "MSTATUS"){
+                                    $whereString = trim($whereString,',');
+                                    $whereString .= ")";
+                                }
+                                else{
+                                    $whereString = substr($whereString, 0, -4);
+                                    $whereString .= " || ".$key."='' || ".$key." IS NULL)";
+                                }
                             }
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
@@ -148,16 +159,18 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             $sql .= "AND RECEIVER NOT IN (" . $inStatement2 . ")";
                         $sql .= $whereString;
                         $prep = $this->db->prepare($sql);
+                        //echo $sql;die;
                         foreach ($whereParams as $key=>$value){
                             if(in_array($key,array('lage','hage','LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
                                 $prep->bindValue(":".$key,$value,PDO::PARAM_INT);
                             else{
                                 $valArray = explode(" ",$value);
                                 $c=0;
-                                foreach($valArray as $k1=>$v1)
+                                foreach($valArray as $k1=>$v1){
                                     $prep->bindValue(":".$key.$c++,$v1,PDO::PARAM_STR);
+                                }
                             }
-                        }//die;
+                        }
                         foreach ($viewedContactsStr as $key => $value) {
                                 $prep->bindValue(":VIEWEDSTR" . $i, $value, PDO::PARAM_LOB);
                                 $i++;

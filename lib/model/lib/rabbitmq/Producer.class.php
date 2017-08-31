@@ -352,7 +352,10 @@ class Producer
         case "EXCLUSIVE_DELAYED_EMAIL":
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::EXCLUSIVE_MAIL_DELAY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
         break;
-                                    
+
+        case "EXCLUSIVE_MAIL":
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::EXCLUSIVE_MAIL_SENDING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+            break;
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='')
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='',$attach='',$fileName='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -60,7 +60,8 @@ class MailerService
 			if (!empty($alternateEmailID) && is_string($alternateEmailID)) {
 				$senderDetails["SENDER"] = $alternateEmailID;
 			}
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
+            $bccList = $this->getBccMailList($mailerName);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,$bccList,$attach,'',$fileName,'','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -1053,5 +1054,20 @@ return $edu;
                 $addPhotoMailerObj->updateAddPhotoUsersFlag($sno,$flag,$pid);
 
 	}
+    
+    /*
+     * This function is used to get bcc mail id
+     * @param $mailerName: name of the mailer
+     */
+    public function getBccMailList($mailerName){
+        switch($mailerName){
+            case "EXCLUSIVE_MATCH_MAIL":
+                $bccList = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
+                break;
+            default:
+                $bccList = "";
+        }
+        return $bccList;
+    }
 }
 ?>
