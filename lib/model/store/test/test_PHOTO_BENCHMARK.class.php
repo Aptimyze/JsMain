@@ -40,13 +40,13 @@ class test_PHOTO_BENCHMARK extends TABLE {
 		$str = "";
 		if($name)
 		{
-			$str = " AND agent = :AGENT";
+			$str = " AND owner = :AGENT";
 		}
 		$sql = "SELECT * FROM test.PHOTO_BENCHMARK WHERE facedetected = 1 and edit IS NULL $str LIMIT 1";
 		$res = $this->db->prepare($sql);
 		if($name)
 		{
-
+			$res->bindValue(":AGENT",$name,PDO::PARAM_STR);
 		}
 		$res->execute();
 		$result = $res->fetch(PDO::FETCH_ASSOC);
@@ -89,5 +89,19 @@ class test_PHOTO_BENCHMARK extends TABLE {
 		catch (Exception $ex) {
 			throw new jsException($ex);
 		}
+	}
+
+	public function initiate($name)
+	{
+		try{
+			$sql = "UPDATE test.PHOTO_BENCHMARK set owner = :NAME where edit IS NULL and OWNER IS NULL LIMIT 1";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":NAME",$name,PDO::PARAM_STR);
+			$res->execute();
+		}
+		catch (Exception $ex) {
+			throw new jsException($ex);
+		}
+
 	}
 }

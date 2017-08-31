@@ -58,14 +58,14 @@ EOF;
 		unset($profilesUpdate);
 		$faceDetected = false;
 		$imageT = PictureFunctions::getImageFormatType($origPic);
- 		$outputGot = $this->getPictureCoordinates($origPic);
+		$outputGot = $this->getPictureCoordinates($origPic);
 		$coordRegex = "/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 		$profilesUpdate = array();
 		if (preg_match($coordRegex, $outputGot)) {
 			$faceDetected = true;
 			foreach (ProfilePicturesTypeEnum::$PICTURE_SIZES as $k => $v) {
 				if ($k != "MainPicUrl") {
-						$picUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_TEST_DIR[$k], $pid, $profileid, $imageT, 'nonScreened');
+					$picUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_TEST_DIR[$k], $pid, $profileid, $imageT, 'nonScreened');
 
 					$output = $this->cropPicture($origPic, $outputGot, $k, $picUrl, $imageT);
 					if ($output)
@@ -74,7 +74,7 @@ EOF;
 				}
 			}
 		}
-		$this->track($faceDetected, $pid, $origPic,$profilesUpdate,$imageT,$profileid);
+		$this->track($faceDetected, $pid, $origPic, $profilesUpdate, $imageT, $profileid);
 
 		unset($profileObj);
 		unset($pictureServiceObj);
@@ -111,7 +111,7 @@ EOF;
 		$result = curl_exec($ch);
 		curl_close($ch);
 
-		$result = json_decode($result,true);
+		$result = json_decode($result, true);
 		$response = $result["responses"][0];
 		$cord = null;
 		if (!empty($response["faceAnnotations"])) {
@@ -267,9 +267,9 @@ EOF;
 	}
 
 
-	private function track($faceDetected, $pid, $origPath,$profilesUpdate,$imageT,$profileid)
+	private function track($faceDetected, $pid, $origPath, $profilesUpdate, $imageT, $profileid)
 	{
 		$track = new test_PHOTO_BENCHMARK();
-		$track->insert($faceDetected, $pid, $origPath,$profilesUpdate,$imageT,$profileid);
+		$track->insert($faceDetected, $pid, $origPath, $profilesUpdate, $imageT, $profileid);
 	}
 }

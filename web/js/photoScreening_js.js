@@ -32,7 +32,7 @@ function updateDOM(data) {
     });
     formEle.append($("<div />",{"style" : "clear:both"}));
     
-    var inputDiv = $("<div />",{class : 'marLeft35Per'});
+    var inputDiv = $("<div />",{class : 'marLeft35Per'}) ;
     
     inputDiv.append($("<input>",approveInputAttr));
     inputDiv.append($("<label />", {text : "Approve"}))
