@@ -210,7 +210,7 @@ color: transparent;
 .dashedBorder {
     border-bottom: 1px dotted #7e7e7e;
 }
-.brdr_new {
+.brdr_new_2 {
      border-bottom: 1px solid #7e7e7e;
 }
 .view_ce {
@@ -257,4 +257,26 @@ color: transparent;
 }
 .pos_fix {
     position: fixed
+}
+.reportIcon{
+    background-image:url(IMG_URL/images/jsms/commonImg/reportIcon.png);
+    background-repeat: no-repeat;
+}
+.atachIcon {
+    width: 32px;
+    height: 19px;
+    background-position: -49px -8px;
+}
+.closeIcon {
+    width: 28px;
+    height: 19px;
+    background-position: -13px -8px;
+}
+.crossPosition {
+    display: inline-block;
+    float: right;
+    position: relative;
+}
+.scrollhidImp {
+    overflow: hidden !important;
 }
