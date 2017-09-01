@@ -17,7 +17,8 @@ export class MyjsSlider extends React.Component {
       'sliderStyle' :this.sliderTupleStyle,
       tupleWidth : {'width' : window.innerWidth},
       loaderStyles:[],
-      divStyles:[]
+      divStyles:[],
+      MyjsThumb:''
     }
 
     if(!props.listing.total) {
@@ -134,7 +135,21 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => {
-                  console.log(tuple);
+                  console.log(tuple.profilepic120url);
+                  if(!tuple.profilepic120url){
+                    //console.log("a-1");
+                    if(tuple.gender=="F")
+                    {
+                      this.state.MyjsThumb = "https://static.jeevansathi.com/images/picture/120x120_f.png?noPhoto";
+                    }
+                    else {
+                      this.state.MyjsThumb = "https://static.jeevansathi.com/images/picture/120x120_m.png?noPhoto";
+                    }
+                  }
+                  else {
+                    this.state.MyjsThumb = tuple.profilepic120url;
+                  }
+                  //console.log(this.state.MyjsThumb);
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
@@ -145,7 +160,7 @@ render(){
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
                             <div className="fl">
-                              <img className="tuple_image hgtwid110" src={tuple.profilepic120url} />
+                              <img className="tuple_image hgtwid110" src={this.state.MyjsThumb} />
                             </div>
                             <div className="fl pl_a" style={{'width':'48%'}}>
                               <div className="f14 color7">
