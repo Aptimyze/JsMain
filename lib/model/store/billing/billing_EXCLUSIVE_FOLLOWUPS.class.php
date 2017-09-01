@@ -247,6 +247,22 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
       throw new jsException($e);
     }
   }
-
+  public function clientFollowupHistory($agent)
+  {
+  	try {
+  		$sql = "SELECT MEMBER_ID,CLIENT_ID,ENTRY_DT,FOLLOWUP_1,FOLLOWUP_2,FOLLOWUP_3,FOLLOWUP_4,FOLLOWUP1_DT,FOLLOWUP2_DT,FOLLOWUP3_DT,FOLLOWUP4_DT,STATUS FROM billing.EXCLUSIVE_FOLLOWUPS"
+                            . " WHERE AGENT_USERNAME=:AGENT"
+                            . " ORDER BY ENTRY_DT DESC";
+		    $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+		    $res->execute();
+		    while($result=$res->fetch(PDO::FETCH_ASSOC)){
+		        $rows[] = $result;
+		    }
+		    return $rows;
+  	} catch (Exception $e) {
+  		throw new jsException($e);
+  	}
+  }
 }
 ?>
