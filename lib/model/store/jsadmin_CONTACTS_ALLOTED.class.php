@@ -228,4 +228,32 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             throw new jsException($e);
         }
     }
+
+    public function getAll($profileID){
+        try{
+            $sql = "SELECT * FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID = :PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $prep->fetch();
+            return $result;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function updateCountAfterUnlimitedServiceReactivation($profileID,$allocated,$viewed,$created){
+        try{
+            $sql = "REPLACE INTO jsadmin.CONTACTS_ALLOTED(PROFILEID,ALLOTED,VIEWED,CREATED) VALUES(:PROFILEID,:ALLOCATED,:VIEWED,:CREATED)";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileID, PDO::PARAM_INT);
+            $prep->bindValue(":ALLOCATED", $allocated, PDO::PARAM_INT);
+            $prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+            $prep->bindValue(":CREATED",$created,PDO::PARAM_STR);
+            $prep->execute();
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
