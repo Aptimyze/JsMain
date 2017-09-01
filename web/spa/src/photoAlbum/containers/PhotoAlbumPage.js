@@ -4,6 +4,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import MyjsSliderBinding from "../../myjs/components/MyjsSliderBinding";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import Loader from "../../common/components/Loader";
 require ('../style/albumcss.css');
 
 
@@ -19,6 +20,7 @@ export default class PhotoAlbumPage extends React.Component {
         setCont: 0,
         'sliderStyle' :this.sliderTupleStyle,
         tupleWidth : {'width' : window.innerWidth},
+        screendim :{'width' : window.innerWidth,'height':window.innerHeight},
         intialACount: 1
       }
       this.CssFix();
@@ -27,7 +29,7 @@ export default class PhotoAlbumPage extends React.Component {
   }
   componentDidMount(){
 
-    console.log('albuk');
+    //console.log('albuk');
     let newPchksum, _this = this;
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
@@ -40,12 +42,12 @@ export default class PhotoAlbumPage extends React.Component {
        newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
      }
      commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
-          console.log('albumdata', response);
+          //console.log('albumdata', response);
           _this.setState({
                       getRes: response,
                       recAlbumlink: true
                   });
-          console.log(response);
+          //console.log(response);
        });
 
   }
@@ -118,35 +120,14 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
   {
       this.props.history.goBack();
   }
-  // changeAlbumCount(total){
-  //   console.log("======");
-  //
-  //
-  //   console.log('count chage');
-  //   console.log(total);
-  //   console.log(window.innerWidth);
-  //   let totalAlb_W = total * window.innerWidth;
-  //   console.log(totalAlb_W);
-  //
-  //   let test = document.getElementById("galleryContainer").style.transform;
-  //
-  //   console.log(test);
-  //
-  //   let regex = /translate3d\(\s*([^ ,]+)\s*,\s*([^ ,]+)\s*,\s*([^ )]+)\s*\)/;
-  //
-  //   var result = test.split(regex);
-  //
-  //   console.log(result)
-  //
-  //
-  //   console.log("======");
-  // }
 
 
   render() {
 
     if(!this.state.recAlbumlink){
-      return(<div className="noData album"></div>)
+      return(<div className="noData album bg14 posrel" style={this.state.screendim}>
+                <div className="posabs setmid"><img src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/></div>
+             </div>)
     }
     else
     {
@@ -159,9 +140,6 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         height: window.innerHeight,
         display: "table"
       }
-      //console.log('render');
-      //this.changeAlbumCount(this.state.getRes.albumUrls.length);
-
 
       return(
 
