@@ -29,18 +29,25 @@ export default class PhotoAlbumPage extends React.Component {
   }
   componentDidMount(){
 
-    //console.log('albuk');
+
     let newPchksum, _this = this;
+    let aChsum = getCookie('AUTHCHECKSUM');
+    console.log(aChsum);
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
-     if(str.indexOf("&")>-1)
+
+     if(aChsum)
      {
-       let b = str.split("&");
-       newPchksum = b[0]
-     }
-     else {
+
        newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
      }
+     else
+     {
+      
+       newPchksum = str;
+     }
+
+
      commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
           //console.log('albumdata', response);
           _this.setState({
@@ -158,9 +165,18 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
             {this.state.getRes.albumUrls.map((urllist, index) => {
               return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
-                  <img id={"albumLoader_"+index} className="loadrpos" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
-                  <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid"  />
-              </div>;
+                        <div className="posrel" style={this.state.screendim}>
+                        <img id={"albumLoader_"+index} className="loadrpos posabs setmid" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+                        <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
+
+                        </div>
+                    </div>
+
+
+
+
+
+
             })}
 
             </div>
