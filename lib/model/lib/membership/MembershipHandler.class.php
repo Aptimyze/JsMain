@@ -2999,9 +2999,11 @@ class MembershipHandler
                         $serviceStatusObj->changeUnlimitedMembershipStatus($id,'N');
                     } else{
                         $contactsDetails = $suspendUnlimitedServiceObj->getContactAllotted($oldUnlimitedService[0]["BILLID"],$value["BILLID"]);
-                        $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
-                        $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
-                        $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                        if(is_array($contactsDetails) && !empty($contactsDetails)){
+                            $contactsAllotedObj->updateCountAfterUnlimitedServiceReactivation($value["PROFILEID"],$contactsDetails["CONTACTS_ALLOTED"],$contactsDetails["CONTACTS_VIEWED"],$contactsDetails["CONTACTS_CREATED"]);
+                            $suspendUnlimitedServiceObj->updateStatus($oldUnlimitedService[0]["BILLID"],$value["BILLID"],'N');
+                            $serviceStatusObj->changeUnlimitedMembershipStatus($id,'Y');
+                        }
                     }
                 }
             }

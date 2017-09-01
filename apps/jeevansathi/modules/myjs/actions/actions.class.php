@@ -312,6 +312,8 @@ class myjsActions extends sfActions
 
   public function executeJsmsPerform(sfWebRequest $request)
 	{			//myjs jsms action hit for logging
+        
+        $request->setParameter('currentPageName',"myjs");
         $this->pageMyJs = 1; 
         
         LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
@@ -394,7 +396,9 @@ class myjsActions extends sfActions
 
  	public function executeJspcPerform(sfWebRequest $request)
 	{
-		if(MobileCommon::isNewMobileSite())
+    $request->setParameter('currentPageName',"myjs");
+
+    if(MobileCommon::isNewMobileSite())
 		{
 			header("Location:".sfConfig::get("app_site_url"));die;
 		}

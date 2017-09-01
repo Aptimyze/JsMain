@@ -29,9 +29,19 @@ if(authenticated($cid))
 	{
 		$sql_s="SELECT count(*) as cnt FROM newjs.JPROFILE USE INDEX(SCREENING) LEFT JOIN jsadmin.MAIN_ADMIN ON jsadmin.MAIN_ADMIN.PROFILEID = newjs.JPROFILE.PROFILEID WHERE (jsadmin.MAIN_ADMIN.PROFILEID IS NULL) AND ( ACTIVATED = 'Y' AND SCREENING < '1099511627775' ) ";
 	}
+        
+        $sql_awy = "SELECT COUNT(*) AS CNT2 FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO";
+        
 	$res_s=mysql_query_decide($sql_s) or die("$sql_s".mysql_error_js());
+        $res_awy = mysql_query_decide($sql_awy) or die("$sql_awy".mysql_error_js());
+        
 	$row_s=mysql_fetch_array($res_s);
-	$cnt=$row_s['cnt'];
+        $row_awy=mysql_fetch_array($res_awy);
+        
+        if($val == "new")
+            $cnt=$row_s['cnt'] + $row_awy['CNT2'] ;
+        else
+            $cnt=$row_s['cnt'] - $row_awy['CNT2'] ;
 	if(mysql_num_rows($res_s)<1)
 	{
 		$cnt=0;

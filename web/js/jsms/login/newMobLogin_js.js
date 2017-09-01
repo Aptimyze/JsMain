@@ -1,3 +1,4 @@
+
 function getIosVersionOne(ua) {
     //return false;
     var ua = ua || navigator.userAgent;
@@ -112,8 +113,8 @@ $(function(){
             });
 		});
 $("#loginButton").bind("touchstart",function(){
-  
-  
+  /* GA tracking */
+  GAMapper("GA_HOME_LOGIN_BTN");
 	$(window).scrollTop(0);
         var email=$("#email").val();
         var pass=$("#password").val();
@@ -188,11 +189,13 @@ $("#loginButton").bind("touchstart",function(){
                                     errorMes=result.responseMessage;
                                 if(redirectUrl)
 								{
+                  GAMapper("GA_LOGIN_REPONSE_SUCCESS");
 									setTimeout(function(){startTouchEvents(10);ShowNextPage(redirectUrl,0);},animationtimer);
 									return;
 								}
 								if(errorMes)
 								{
+                  GAMapper("GA_LOGIN_REPONSE_FAIL");
 									setTimeout(function(){startTouchEvents(10);ShowTopDownError([errorMes]);},animationtimer);
 									return;
 								}

@@ -63,6 +63,9 @@ class detailedAction extends sfAction
      */
 	public function execute($request)
 	{		
+		$request->setParameter("currentPageName", "Profile Page");
+
+
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
 		$this->suggAlgoNoOfResultsToBeShownAtATime = sfConfig::get('mod_profile_detailed_suggAlgoNoOfResultsToBeShownAtATime');
 		
@@ -80,7 +83,7 @@ class detailedAction extends sfAction
                 
                 // VA Whitelisting
                 //whiteListing of parameters
-                DetailActionLib::whiteListParams($request);
+                //DetailActionLib::whiteListParams($request);
                 
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
