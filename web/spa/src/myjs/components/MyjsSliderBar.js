@@ -129,6 +129,7 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => {
+                  //console.log(tuple);
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
@@ -149,11 +150,25 @@ render(){
                               </div>
                               <div className="attr">
                                 <ul>
-                                   <li className="textTru"><span className="tuple_title">{tuple.tuple_title_field}</span> </li>
-                                   <li className="textTru"><span className="tuple_age">{tuple.age}</span> Years <span className="tuple_height"> {tuple.height} </span> </li>
-                                   <li className="textTru"><span className="tuple_caste whtSpaceNo">{tuple.caste}</span></li>
-                                   <li className="textTru"><span className="tuple_mtongue">{tuple.mtongue}</span></li>
-                                   <li className="textTru"><span className="tuple_income">{tuple.income}</span></li>
+
+                                  <li className="textTru">
+                                    <span className="tuple_title">{tuple.occupation}</span>
+                                  </li>
+                                  <li className="textTru">
+                                    <span className="tuple_age">{tuple.age}</span> Years  <span className="tuple_height">{tuple.height}</span>
+                                  </li>
+                                  <li className="textTru">
+                                    <span className="tuple_caste whtSpaceNo">{tuple.caste}</span>
+                                  </li>
+                                  <li className="textTru">
+                                    <span className="tuple_mtongue">{tuple.mtongue}</span>
+                                  </li>
+                                  <li className="textTru">
+                                    <span className="tuple_education">{tuple.edu_level_new}</span>
+                                  </li>
+
+
+
                                 </ul>
                               </div>
                             </div>
