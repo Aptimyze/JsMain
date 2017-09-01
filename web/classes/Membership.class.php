@@ -2566,6 +2566,10 @@ class Membership
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem,$apiResHandlerObj);
         }
 
+        if($apiResHandlerObj->usdTOinr && $apiResHandlerObj->processPayment){
+            $total = $apiResHandlerObj->track_total;
+        }
+
         if ($couponCodeVal && $mainServiceId) {
             $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
             if (is_numeric($discountVal) && $discountVal > 0) {

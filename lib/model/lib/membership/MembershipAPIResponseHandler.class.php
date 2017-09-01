@@ -75,7 +75,8 @@ class MembershipAPIResponseHandler {
         $this->totalCartPrice = $request->getParameter('totalCartPrice');
         $this->paymentMode = $request->getParameter('paymentMode');
         $this->cardType = $request->getParameter('cardType');
-        
+        $this->usdTOinr = $request->getParameter('usdTOinr');
+
         $this->callType = $request->getParameter('execCallbackType');
         $this->callTab = $request->getParameter('tabVal');
         $this->callProfile = $request->getParameter('profileid');
@@ -274,7 +275,7 @@ class MembershipAPIResponseHandler {
 			$newjsMessageLogObj = new NEWJS_MESSAGE_LOG($shardDb);
 			$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
 		}
-    
+
         return $this;
     }
     
@@ -2456,7 +2457,13 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-       
+        if($apiObj->usdTOinr && $apiObj->processPayment){
+            $convRate = $apiObj->userObj->memObj->get_DOL_CONV_RATE();
+            $apiObj->totalCartPrice *= $convRate;
+            $apiObj->discountCartPrice *= $convRate;
+            $apiObj->userObj->currency = "RS";
+            $apiObj->currency= "RS";
+        }
         $userData = $apiObj->memHandlerObj->getUserData($apiObj->profileid);
         $USERNAME = $userData['USERNAME'];
         $EMAIL = $userData['EMAIL'];
