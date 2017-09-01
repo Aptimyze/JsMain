@@ -351,10 +351,10 @@ if (authenticated($cid)) {
 				}
 //				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
 //				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-        if($activatedWithoutYourInfo){
+        //if($activatedWithoutYourInfo){
             $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
             $activated_without_yourInfoObj->delete($pid);
-        }
+        //}
             
         $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
