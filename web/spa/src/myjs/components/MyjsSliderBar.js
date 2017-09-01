@@ -135,7 +135,7 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => {
-                  console.log(tuple.profilepic120url);
+                  //console.log(tuple.profilepic120url);
                   if(!tuple.profilepic120url){
                     //console.log("a-1");
                     if(tuple.gender=="F")
