@@ -11,22 +11,13 @@ export class MyjsSlider extends React.Component {
   constructor(props) {
     super(props);
     this.sliderTupleStyle = {'whiteSpace': 'nowrap','marginLeft':'10px','fontSize':'0px','overflowX':'hidden','display': 'inline-block'};
-
     this.state={
       'sliderBound' :false,
       'sliderStyle' :this.sliderTupleStyle,
       tupleWidth : {'width' : window.innerWidth},
       loaderStyles:[],
       divStyles:[],
-      MyjsThumb:''
-    }
-
-    if(!props.listing.total) {
-      if(props.listing.profiles) {
-        props.listing.total = props.listing.profiles.length;
-      } else {
-        props.listing.total = 0;
-      }
+      total : props.listingName == 'match_alert'?props.listing.no_of_results:props.listing.total
     }
   }
 
@@ -45,6 +36,9 @@ componentWillUnmount() {
 }
 
  componentWillReceiveProps(nextProps){
+    this.setState({
+      total : nextProps.listingName == 'match_alert'?nextProps.listing.no_of_results:nextProps.listing.total
+    })
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
    {
      this.setState({
@@ -124,7 +118,7 @@ render(){
           <div className="fullwid pb10">
             <div className="fl color7">
               <span className="f17 fontlig">{this.props.title}</span>
-              <span id='matchAlert_count' className="opa50 f14">{" "+this.props.listing.total}</span>
+              <span id='matchAlert_count' className="opa50 f14">{" "+this.state.total}</span>
             </div>
             <div className="fr pt5"> <a href={this.props.url} className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
             <div className="clr"></div>
@@ -135,21 +129,6 @@ render(){
               <div id={this.props.listing.infotype+"_tuples"}   style={this.state.sliderStyle}>
               {
                 [this.props.listing.profiles.map((tuple,index) => {
-                  //console.log(tuple.profilepic120url);
-                  if(!tuple.profilepic120url){
-                    //console.log("a-1");
-                    if(tuple.gender=="F")
-                    {
-                      this.state.MyjsThumb = "https://static.jeevansathi.com/images/picture/120x120_f.png?noPhoto";
-                    }
-                    else {
-                      this.state.MyjsThumb = "https://static.jeevansathi.com/images/picture/120x120_m.png?noPhoto";
-                    }
-                  }
-                  else {
-                    this.state.MyjsThumb = tuple.profilepic120url;
-                  }
-                  //console.log(this.state.MyjsThumb);
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
@@ -160,7 +139,7 @@ render(){
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
                             <div className="fl">
-                              <img className="tuple_image hgtwid110" src={this.state.MyjsThumb} />
+                              <img className="tuple_image hgtwid110" src={tuple.profilepic120url} />
                             </div>
                             <div className="fl pl_a" style={{'width':'48%'}}>
                               <div className="f14 color7">

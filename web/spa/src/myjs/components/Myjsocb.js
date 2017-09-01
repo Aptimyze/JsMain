@@ -116,8 +116,12 @@ export default class MyjsOcbLayer extends React.Component {
         ocbview= <div className="posrel fullwid">
   				<div className="clearfix myjsp2">
   					<div className="fl fontlig wid88p">
-  						<div className="f24 white">{this.props.Ocb_data.top}</div>
-  						<div className="f14 white">{this.props.Ocb_data.bottom}</div>
+  						<div className="f24 white">
+                  <div dangerouslySetInnerHTML={{__html:this.props.Ocb_data.top}} />
+              </div>
+  						<div className="f14 white">
+                  <div dangerouslySetInnerHTML={{__html:this.props.Ocb_data.bottom}} />
+              </div>
   					</div>
   					<div className="fr wid10p pt16">
   						<i className="mainsp myjsdim2"></i>

@@ -14,7 +14,7 @@ export class ShowExpiryList extends React.Component {
    let IntExpListing;
    if(tupleArray.length>3)
    {
-      IntExpListing=    <div className="mar05 dispibl"><a href={this.props.url}>
+      IntExpListing=    <div className="mar05 dispibl"><a href='/inbox/23/1'>
         <div className="row mar05 bg7 brdr50p posrel outerCircleDiv" style={setdim}>
           <div className="cell vmid white fullwid f23 fontlig txtc">
            + {this.props.totalcount-3}
