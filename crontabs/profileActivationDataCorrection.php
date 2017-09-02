@@ -25,7 +25,7 @@ while($row = mysql_fetch_array($res))
 }
 $l = implode(",",$arr);
 $sql = "DELETE FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO WHERE PROFILEID IN ($l)";
-echo $sql;
+$file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/proScreening.txt","a");
+$stringToWrite = $l."\n";
+fwrite($file,$stringToWrite."\n");
 $res = mysql_query($sql,$db) or die(mysql_error($db));
-//print_r($arr1);
-
