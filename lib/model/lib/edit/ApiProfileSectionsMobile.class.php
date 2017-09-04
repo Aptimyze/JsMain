@@ -475,7 +475,23 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @returns key value array of Basic Information section of app
 	 * */
 	public function getApiBasicInfo() {
-		
+		//Aaadhaar Verified
+                $basicArr[AADHAAR][outerSectionName]="Aadhaar No.";
+		$basicArr[AADHAAR][outerSectionKey]="Aadhaar";
+		$basicArr[AADHAAR][singleKey]=0;
+                
+                $aadhaarObj = new aadharVerification();
+                $aadhaarDetails =  $aadhaarObj->getAadharDetails($this->profile->getPROFILEID());
+                $aadhaarStatus = $aadhaarDetails[$this->profile->getPROFILEID()][VERIFY_STATUS];
+                
+                $aadhaarNo = '';
+                $aadhaarNoText= 'Verify Aadhaar';
+                if($aadhaarStatus == 'Y'){
+                    $aadhaarNo = $this->formatAadhaarNo($aadhaarDetails[$this->profile->getPROFILEID()][AADHAR_NO]);
+                    $aadhaarNoText = $aadhaarNo;
+                }
+                
+		$basicArr[AADHAAR][OnClick][]=$this->getApiFormatArray("AADHAAR",$aadhaarNoText,$aadhaarNo,'','','',$this->textArea);
 		//your info
 		$basicArr[YOURINFO][outerSectionName]="About Me";
 		$basicArr[YOURINFO][outerSectionKey]="AboutMe";
@@ -1261,6 +1277,14 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     		return 1;
     	else
     		return 0;
+    }
+    
+    public function formatAadhaarNo($aadhaarNo)
+    {    
+    	for($i=0;$i<=strlen($aadhaarNo)-4;$i = $i+4){
+            $returnString .= " ".substr($aadhaarNo,$i-4,4); 
+        }
+        return $returnString;
     }
 }
 ?>
