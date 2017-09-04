@@ -514,6 +514,7 @@ class ExclusiveFunctions{
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
                         'RECEIVER'=>$value["RECEIVER"],
+                    	'USERNAME'=>$userName,
                         'AGENT_NAME'=>$value["AGENT_NAME"],
                         'AGENT_EMAIL'=>$value["AGENT_EMAIL"],
                         'USER1'=>$value["USER1"],
