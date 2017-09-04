@@ -343,6 +343,7 @@ else {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
+        
         if(CALButtonClicked===1)return;  
         CALButtonClicked=1;
         var CALParams='';
@@ -374,6 +375,11 @@ else {
                             dataType : 'json',
                             data: dataOcc,
                             success: function(response) {
+                                if(button == 'B2'){
+                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                                }else if(button == "B1"){
+                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                                }
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
@@ -386,6 +392,11 @@ else {
                         {
                             
                             var occupText = $("#occInputDiv input").val();
+                            if(button == 'B2'){
+                                GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                            }else if(button == "B1"){
+                                GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                            }
                             window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
                             CALButtonClicked=0;
                             return;
@@ -471,6 +482,11 @@ else {
                             data: dataStateCity,
                             success: function(response) {
                                 hideLoader();
+                                if(button == 'B2'){
+                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                                }else if(button == "B1"){
+                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                                }
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
@@ -494,6 +510,7 @@ else {
                             return;
                         }
 
+
                         showLoader();
                         $.ajax({
                             url: '/api/v1/profile/editsubmit',
@@ -516,10 +533,13 @@ else {
                         return;
                     }
 
+        if(button == 'B2'){
+            GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+        }else if(button == "B1"){
+            GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+        }
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-        CALButtonClicked=0;
-        
-        
+        CALButtonClicked=0;        
     }
 
 

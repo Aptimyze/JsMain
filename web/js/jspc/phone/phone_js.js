@@ -1,7 +1,7 @@
 $(document).ready(function() {
 $("#isdMain").attr('saved',savedIsd);
 $("#phoneNumberMain").attr('saved',savedNum);
-	$("#verifyButton").bind('click',function () {showOtpLayer('isdMain','phoneNumberMain');});
+	$("#verifyButton").bind('click',function () {GAMapper("GAV_VOL_SHOW"); showOtpLayer('isdMain','phoneNumberMain');});
 handleBack();
 });
 

@@ -1,4 +1,7 @@
+~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 <script type="text/javascript">
+	currentPageName = "~$currentPageName`";
+	GAMapper('GA_MYJS_PAGE');
     var userGender="~$apiData.gender`",siteUrl="~sfConfig::get('app_site_url')`";
     var myjsdata = ~$jsonData|decodevar`;
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";

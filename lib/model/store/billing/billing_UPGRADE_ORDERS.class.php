@@ -137,5 +137,37 @@ class billing_UPGRADE_ORDERS extends TABLE
         throw new jsException($e);
     }
   }
+  
+  
+  /**
+     * Function to update upgrade order entry into UPGRADE_ORDERS table
+     *
+     * @param   id,$params
+     * @return  none
+     */ 
+    public function updateOrderUpgradeEntryById($id,$params=array())
+    {
+        try
+        {
+            if(is_array($params) && count($params)>0){
+                foreach ($params as $key => $value) {
+                  $updateStr .= "".$key."=:".$key.",";
+                }
+                $updateStr = substr($updateStr, 0,-1);
+                $sql = "UPDATE billing.UPGRADE_ORDERS SET ".$updateStr." WHERE ID=:ID";
+                $res=$this->db->prepare($sql);
+                foreach ($params as $k => $v) {
+                  $res->bindValue(":".$k,$v,constant('PDO::PARAM_'.$this->{$k.'_BIND_TYPE'}));
+                }
+                $res->bindValue(":ID",$id,PDO::PARAM_STR);
+                $res->execute();
+            }
+        }
+        catch(PDOException $e)
+        {
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }
+    }
 }
 ?>
