@@ -74,6 +74,15 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           token: tupleID
         });
       }
+    } else if(reducer != "SAVE_INFO" && localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna")) {
+      if(typeof dispatch == 'function')
+      {
+        dispatch({
+          type: reducer,
+          payload: JSON.parse(localStorage.getItem("currentGuna"))
+        });
+      }
+
     }
     else {
     
@@ -124,6 +133,9 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           if(reducer == "SHOW_INFO") {
             localStorage.setItem("currentData", JSON.stringify(response.data));
             localStorage.setItem("currentDataUrl",callUrl)
+          } else if(reducer == "SHOW_GUNA") {
+            localStorage.setItem("currentGuna", JSON.stringify(response.data));
+            localStorage.setItem("currentDataUrlForGuna",callUrl)
           }
           dispatch({
             type: reducer,

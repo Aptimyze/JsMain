@@ -128,6 +128,16 @@ class ThreeDots extends React.Component{
     document.getElementById("vpro_tapoverlay").classList.remove("dn");
   }
 
+  componentDidMount(){
+    //console.log('did mount');
+    //console.log(document.getElementById("commonOverlayTop").offsetHeight);
+    if(document.getElementById("commonOverlayTop").offsetHeight> window.innerWidth)
+    {
+      document.getElementById("overlaysecond_threedot").style.overflow = "auto";
+      document.getElementById("commonOverlayTop").style.margin = "20px 0";
+    }
+  }
+
 
   componentWillReceiveProps(nextProps)
   {
@@ -157,10 +167,10 @@ class ThreeDots extends React.Component{
       {
         loaderView = <Loader show="page"></Loader>;
       }
-      
-        return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+
+        return (<div className="posabs ce-bg ce_top1 ce_z101 scrollhid" id="overlayove_threedot" style={this.state.tupleDim}>
                   <a href="#"  className="ce_overlay ce_z102" > </a>
-                    <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
+                    <div className="posabs ce_z103 ce_top1 fullwid" id="overlaysecond_threedot" style={this.state.tupleDim}>
 
                       <div className="threeDotOverlay white fullwid" id="commonOverlayTop">
                         {image3dot}

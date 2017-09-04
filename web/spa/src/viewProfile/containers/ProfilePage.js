@@ -324,12 +324,14 @@ class ProfilePage extends React.Component {
 
     showTab(elem)
     {
+      //console.log(elem);
+      //console.log(this.state.tabArray);
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
-                document.getElementById(this.state.tabArray[i]+"Header").classList.remove("vpro_selectTab");
+                document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
                 document.getElementById(this.state.tabArray[i]+"Tab").classList.add("dn");
             }
-            document.getElementById(elem+"Header").classList.add("vpro_selectTab");
+            document.getElementById("tab"+elem).classList.add("vpro_selectTab");
             document.getElementById(elem+"Tab").classList.remove("dn");
         }
     }

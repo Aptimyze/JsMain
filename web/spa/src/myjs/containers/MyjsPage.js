@@ -325,7 +325,7 @@ const mapDispatchToProps = (dispatch) => {
 					let reducerName = '';
 					if(typeof nextPage == 'undefined'){ nextPage=1;reducerName = 'SET_IR_DATA';}
 					else { reducerName = 'SET_IR_PAGINATION';}
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage+'&JSMS_MYJS=1',reducerName,'POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage+'&caching=1&JSMS_MYJS=1',reducerName,'POST',dispatch);
         },
         hitApi_VA: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1','SET_VA_DATA','POST',dispatch);

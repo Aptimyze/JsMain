@@ -4,6 +4,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import MyjsSliderBinding from "../../myjs/components/MyjsSliderBinding";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import Loader from "../../common/components/Loader";
 require ('../style/albumcss.css');
 
 
@@ -18,7 +19,9 @@ export default class PhotoAlbumPage extends React.Component {
         recAlbumlink: false,
         setCont: 0,
         'sliderStyle' :this.sliderTupleStyle,
-        tupleWidth : {'width' : window.innerWidth}
+        tupleWidth : {'width' : window.innerWidth},
+        screendim :{'width' : window.innerWidth,'height':window.innerHeight},
+        intialACount: 1
       }
       this.CssFix();
 
@@ -26,37 +29,33 @@ export default class PhotoAlbumPage extends React.Component {
   }
   componentDidMount(){
 
-    console.log('albuk');
-
 
     let newPchksum, _this = this;
-
+    let aChsum = getCookie('AUTHCHECKSUM');
+    console.log(aChsum);
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
 
-     console.log(str);
-
-     if(str.indexOf("&")>-1)
+     if(aChsum)
      {
-       let b = str.split("&");
-       newPchksum = b[0]
-     }
-     else {
+
        newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
      }
+     else
+     {
+      
+       newPchksum = str;
+     }
 
-     //console.log(newPchksum);
-     //console.log(commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST'));
 
-        commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
-          console.log('albumdata', response);
+     commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
+          //console.log('albumdata', response);
           _this.setState({
                       getRes: response,
                       recAlbumlink: true
                   });
-          console.log(response);
-        });
-
+          //console.log(response);
+       });
 
   }
 
@@ -64,7 +63,8 @@ componentDidUpdate(){
 if(!this.state.recAlbumlink || this.sliderBound) return;
   this.sliderBound =1;
   let elem = document.getElementById('galleryContainer');
-  this.obj = new MyjsSliderBinding(elem,this.state.getRes.albumUrls,this.alterCssStyle.bind(this),1);
+  //onstructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit,pagesrc)
+  this.obj = new MyjsSliderBinding(elem,this.state.getRes.albumUrls,{nxtSlideFun:this.incrCount.bind(this),prvSlideFun:this.decrCount.bind(this),styleFunction:this.alterCssStyle.bind(this)},1,'','',"Palbum");
   this.obj.initTouch();
 
 
@@ -80,6 +80,20 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         return prevState;
       });
     }
+
+
+  incrCount(){
+    let count = this.state.intialACount;
+    if(count>=this.state.getRes.albumUrls.length)return;
+    ++count;
+    this.setState({intialACount:count});
+  }
+  decrCount(){
+    let count = this.state.intialACount;
+    if(count<=1)return;
+    --count;
+    this.setState({intialACount:count});
+  }
 
     CssFix(){
   			// create our test div element
@@ -116,8 +130,11 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
 
   render() {
+
     if(!this.state.recAlbumlink){
-      return(<div className="noData album"></div>)
+      return(<div className="noData album bg14 posrel" style={this.state.screendim}>
+                <div className="posabs setmid"><img src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/></div>
+             </div>)
     }
     else
     {
@@ -130,7 +147,6 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
         height: window.innerHeight,
         display: "table"
       }
-        console.log('render');
 
       return(
 
@@ -139,15 +155,28 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
           <div className="posrel">
             <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
 
+            <div className="posabs z1 bckpos1 fontlig f18 white">
+              {this.state.intialACount}/{this.state.getRes.albumUrls.length}
+            </div>
+
 
             <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
 
 
             {this.state.getRes.albumUrls.map((urllist, index) => {
               return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
-                  <img id={"albumLoader_"+index} className="loadrpos" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
-                  <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid"  />
-              </div>;
+                        <div className="posrel" style={this.state.screendim}>
+                        <img id={"albumLoader_"+index} className="loadrpos posabs setmid" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+                        <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
+
+                        </div>
+                    </div>
+
+
+
+
+
+
             })}
 
             </div>
