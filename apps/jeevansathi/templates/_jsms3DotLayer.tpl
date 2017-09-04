@@ -174,7 +174,7 @@
                           <div id="attachDiv" style="overflow: auto; right:0px" class="brdr23 white posabs btmo fullwid pad3 dn">
                             <div id="attachTitle">
                                 <i class="reportIcon atachIcon"></i>
-                                <span>Attach Proof</span>
+                                <span>Attach Screenshot</span>
                             </div>
                             
                             <div id="photoDiv" >

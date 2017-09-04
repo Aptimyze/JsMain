@@ -14,7 +14,7 @@
 		
 		~if $finalFollowUpsPool && $finalFollowUpsPool.followUpData`
 			~foreach from=$finalFollowUpsPool.followUpData item=valued key=sno`
-			<tr align="CENTER" bgcolor="#fbfbfb" id="followUp~$sno`">
+			<tr align="CENTER" bgcolor=" ~if $highlighted[$valued.ID] eq 1` #87CEFA ~else`#fbfbfb" ~/if` id="followUp~$sno`">
 				<td height="21" align="CENTER">~($sno+1)`</td>
 				<td height="21" align="CENTER">
 				~if $finalFollowUpsPool.clientsData[$valued.CLIENT_ID]`<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.CLIENT_ID`" target="_blank">~$finalFollowUpsPool.clientsData[$valued.CLIENT_ID].USERNAME`</a>~/if`</td>
