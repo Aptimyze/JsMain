@@ -188,9 +188,10 @@ class ProcessHandler
                                  break;
       case 'EXCLUSIVE_PROPOSAL_SMS' :
       						$receiver = $body['RECEIVER'];
-      						$user = $body['USER1'];
-      						CommonUtility::sendPlusTrackInstantSMS('EXCLUSIVE_PROPOSAL_SMS',$receiver,
-     								array("PROFILE_ID"=>$user,"DESCRIPTION_LINK"=>$URL));
+      						$user = $body['USERNAME'];
+      						$tokenArr = array("PROFILE_ID"=>$user,"DESCRIPTION_LINK"=>$URL);
+      						CommonUtility::sendPlusTrackInstantSMS('EXCLUSIVE_PROPOSAL_SMS',$receiver,$tokenArr);
+      						
     }
   }
 public function sendAutoReminder($receiver,$sender){
