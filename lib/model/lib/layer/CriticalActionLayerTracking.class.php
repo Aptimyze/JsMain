@@ -472,7 +472,7 @@ return 0;
                     break;
 
                   case '25':
-                    if(!MobileCommon::isApp()){
+                    if(!MobileCommon::isApp() && !MobileCommon::isNewMobileSite()){
                       if(in_array($profileObj->getRELIGION(), 
                         array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
                         if(!($profileObj->getMANGLIK())) {
