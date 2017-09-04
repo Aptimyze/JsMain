@@ -343,7 +343,7 @@ class SearchApiStrategyV1
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
                         
-                        if(MobileCommon::isAndroidApp()){
+                        if(MobileCommon::isAndroidApp()  || MobileCommon::isIOSApp()){
                                 $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
                                 if($clusterIndex != ""){
                                         if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
