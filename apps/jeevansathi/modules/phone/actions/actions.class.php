@@ -344,6 +344,7 @@ class phoneActions extends sfActions
 
   public function executeJsmsDisplay(sfWebRequest $request)
   {
+  	$request->setParameter('currentPageName',"Phone Verification");
 	if($request->getParameter('fromReg'))
 		$this->fromReg = 1;
 	$this->groupname = $request->getParameter('groupname');
@@ -391,6 +392,7 @@ class phoneActions extends sfActions
 //action for pc phone verification ....... By Palash Chordia 
   public function executePhoneVerificationPcDisplay(sfWebRequest $request)
 		{
+							$request->setParameter("currentPageName", "Phone verficaion Jspc");
 	$this->loginData=$request->getAttribute("loginData");
 	$loginProfileid = $this->loginData[PROFILEID];
 	$this->loginProfile=LoggedInProfile::getInstance();
