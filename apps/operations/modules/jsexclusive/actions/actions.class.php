@@ -210,6 +210,9 @@ class jsexclusiveActions extends sfActions {
             $this->columnNamesArr = array("Client ID", "Client Name", "Assign Date", "Service Day", "Expiry Date");
             $clientIdStr = implode(",", $clientIdArr);
             $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $key => $val){
+                $nameTempArr[$val["PROFILEID"]] = $val;
+            }
             $expiryDateArr = $expiryDateObj->fetchServiceDetailsByBillId($billIdArr,"PROFILEID,EXPIRY_DT");
             $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
             $this->count = count($clientInfoArr);
@@ -219,9 +222,8 @@ class jsexclusiveActions extends sfActions {
                 $dataArray[$i]['ASSIGNED_DT'] = $clientInfoArr[$i]['ASSIGNED_DT'];
                 $dataArray[$i]['SERVICE_DAY'] = $clientInfoArr[$i]['SERVICE_DAY'];
                 $dataArray[$i]['EXPIRY_DT'] = $expiryDateArr[$clientInfoArr[$i]['CLIENT_ID']]['EXPIRY_DT'];
-                if($clientNameArr[$i]['DISPLAY'] == 'Y'){
-                    $dataArray[$i]['CLIENT_NAME'] = $clientNameArr[$i]['NAME'];
-                }
+                if($nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['DISPLAY'] == 'Y')
+                     $dataArray[$i]['CLIENT_NAME'] = $nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['NAME'];
             }
             $this->dataArray = $dataArray;
         }
