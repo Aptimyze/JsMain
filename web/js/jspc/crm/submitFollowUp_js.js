@@ -58,13 +58,15 @@ $(document).ready(function() {
             $("#month").addClass("crm-disabled");
             $("#year").attr("disabled","disabled");
             $("#year").addClass("crm-disabled");
-            $("#reasonText").attr("disabled","disabled");
-            $("#reasonText").addClass("crm-disabled");
+            $("#reasonText").removeAttr("disabled");
+            $("#reasonText").removeClass("crm-disabled");
+            //$("#reasonText").attr("disabled","disabled");
+            //$("#reasonText").addClass("crm-disabled");
         }
     });
 
     $("#reason").change(function(){
-        var selectedVal = $(this).find(':selected').val();
+        /*var selectedVal = $(this).find(':selected').val();
         if(selectedVal=="Others"){
             $("#reasonText").removeAttr("disabled");
             $("#reasonText").removeClass("crm-disabled");
@@ -72,6 +74,6 @@ $(document).ready(function() {
         else{
             $("#reasonText").attr("disabled","disabled");
             $("#reasonText").addClass("crm-disabled");
-        }
+        }*/
     });
 });
