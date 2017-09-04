@@ -785,7 +785,11 @@ class jsexclusiveActions extends sfActions {
         //columns list for interface
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
         $currentDt = date("Y-m-d");
-
+        $fetchedList = JsMemcache::getInstance()->lrange('handledProfile','0','-1');
+        foreach($fetchedList as $key => $val){
+        	$highlighted[$val] = 1;
+        }
+        $this->highlighted = $highlighted;
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
         $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
         unset($followUpObj);
@@ -797,6 +801,10 @@ class jsexclusiveActions extends sfActions {
             $this->infoMsg = $request->getParameter("infoMsg");
             $exclusiveLib = new ExclusiveFunctions();
             $this->finalFollowUpsPool = $exclusiveLib->formatFollowUpsData($this->followUpsCount);
+            $currentTime = date('Y-m-d H:i:s');
+            
+           /* $expireTime =  date('Y-m-d', strtotime('+1 day',strtotime(date('Y-m-d'))))." 00:00:00";
+            print_r(array($currentTime,$expireTime)); */
             unset($exclusiveLib);
         }
         //print_r($this->finalFollowUpsPool);die;
@@ -831,15 +839,22 @@ class jsexclusiveActions extends sfActions {
                         $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit !"));
                     }
                 }
+                // add followup ID to the redis object if the followID(set by agent)  date is equal to current date
+                if($formArr["date1"] == date('Y-m-d')){
+                	$exclusiveLib = new ExclusiveFunctions();
+                	$exclusiveLib->addDataToRedisObject('handledProfile',$this->ifollowUpId);
+                	$this->forwardTo("jsexclusive","followupCaller");
+                	unset($exclusiveLib);
+                }
                 $this->forwardTo("jsexclusive","followupCaller");
             }
             else{
                 $this->clientUsername = $formArr["iclient"];
                 $this->memberUsername = $formArr["imember"];
                 
-                $this->todayDay = date('d',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayMonth   = date('m',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayYear  = date('Y',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayDay = date('d',strtotime(date("Y-m-d")));
+                $this->todayMonth   = date('m',strtotime(date("Y-m-d")));
+                $this->todayYear  = date('Y',strtotime(date("Y-m-d")));
                 $this->dayArr = GetDateArrays::getDayArray();
                 $this->monthArr   = GetDateArrays::getMonthArray();
                 $this->yearArr    = array();
