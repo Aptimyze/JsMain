@@ -127,12 +127,12 @@ class SMSLib
 
         switch ($messageToken) {
         	case "DESCRIPTION_LINK" :
-        		$longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $tokenValue[PROFILE_ID]. "&CMGFRMMMMJS=mobile";
+        		$longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $tokenValue[USERNAME_ID]. "&CMGFRMMMMJS=mobile";
         			return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
         			
-        	case "PROFILE_ID": 
-        			$PROFILE_ID = $tokenValue[PROFILE_ID];
-        			return $PROFILE_ID;
+        	case "USERNAME_ID": 
+        		$USERNAME_ID= $tokenValue[USERNAME_ID];
+        		return $USERNAME_ID;
             case "FIELD_LIST":
                     $FIELD_LIST = $this->getVariables("FIELD_LIST");
                     $fieldsList = strlen($tokenValue['editedFields']) <= $FIELD_LIST["maxlength"] ? $tokenValue['editedFields'] : substr($tokenValue['editedFields'], 0, $FIELD_LIST["maxlength"] - 2) . "..";

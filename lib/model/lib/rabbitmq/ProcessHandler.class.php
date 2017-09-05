@@ -189,7 +189,7 @@ class ProcessHandler
       case 'EXCLUSIVE_PROPOSAL_SMS' :
       						$receiver = $body['RECEIVER'];
       						$user = $body['USERNAME'];
-      						$tokenArr = array("PROFILE_ID"=>$user,"DESCRIPTION_LINK"=>$URL);
+      						$tokenArr = array("USERNAME_ID"=>$user,"DESCRIPTION_LINK"=>$URL);
       						CommonUtility::sendPlusTrackInstantSMS('EXCLUSIVE_PROPOSAL_SMS',$receiver,$tokenArr);
       						
     }
