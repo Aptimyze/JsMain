@@ -474,7 +474,7 @@ $('.js-overlay').fadeOut(200,"linear",function(){
 };
 
 $('#reportAbuseCross').bind('click',closeReportAbuseLayer);
-
+$('.js-abuseAttachment').off('click').on('click', attachAbuseDocument);
 
 }
 
@@ -593,9 +593,11 @@ var isValid = false;
       if($(this).hasClass('selected')) { 
         mainReason = $(this).find(".reason").html();
         if($(this).hasClass("openBox")) {
-         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
+         //reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
+        reason=$('.js-AbuseOpenTextArea').val().trim();
         if(!reason || reason.length < 25) {
-            $(this).find('#errorText').removeClass('disp-none');
+            $('.js-errorMsg').removeClass('disp-none');
+            //$(this).find('#errorText').removeClass('disp-none');
             isValid = true;
         }
       }
@@ -604,6 +606,27 @@ var isValid = false;
     if(isValid == true) {
       return;
     }
+
+var bUploadSuccessFul = false;
+if(arrReportAbuseFiles.length) {
+    showCommonLoader();
+    var bResult = uploadAttachment();
+    if( false == bResult )
+        return ;
+    
+    for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+        if(arrReportAbuseFiles[itr].hasOwnProperty("uploded") || 
+                arrReportAbuseFiles[itr].uploded == false || 
+                (arrReportAbuseFiles[itr].hasOwnProperty("error") && arrReportAbuseFiles[itr].error == true) ) {
+            bUploadSuccessFul = false;
+            break;
+        }
+        bUploadSuccessFul = true;
+    }
+    if(false === bUploadSuccessFul)
+        return bUploadSuccessFul;
+}
+    
 $('.js-overlay').unbind('click');
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
@@ -619,6 +642,11 @@ reason=$.trim(reason);
 feed.category='Abuse';
 feed.mainReason=mainReason;
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
+if( bUploadSuccessFul ) {
+    feed.attachment = 1;
+    feed.temp_attachment_id = arrReportAbuseFiles['tempAttachmentId'] ;
+}
+
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
@@ -659,3 +687,20 @@ jQuery.myObj.ajax(ajaxConfig);
 
 }
 
+$('.js-abuseBack').on('click',function() {
+    $('.js-reportAttachLayer').addClass('disp-none');
+    
+    //Clear Text
+    $('.js-selectedOption').html("");
+    $('.js-AbuseOpenTextArea').val("");
+    
+    //Clear already attached docs
+    arrReportAbuseFiles = [];
+    var photoNode = document.getElementById("previewContainer");
+    while (photoNode.hasChildNodes()) {
+        photoNode.removeChild(photoNode.lastChild);
+    }
+    
+    $('.js-reportOptionLayer').find('.selected').removeClass('selected');
+    $('.js-reportOptionLayer').removeClass('disp-none');
+})
