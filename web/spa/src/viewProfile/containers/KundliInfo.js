@@ -224,11 +224,11 @@ class KundliInfo extends React.Component {
             if(this.state.astroType == "astroCompMem") {
                 astroButton = <div>
                     <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
-                        Buy Astro Compatibility
+                        Upgrade Membership
                     </a>
                 </div>;
                 astroText = <div className="astrob1 js-textAstro">
-                    A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.
+                    A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.
                 </div>;
             } else if(this.state.astroType == "freeAstroComp") {
                 astroButton = <div>
@@ -237,7 +237,7 @@ class KundliInfo extends React.Component {
                     </a>
                 </div>;
                 astroText = <div className="astrob1 js-textAstro">
-                    A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.
+                    A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.
                 </div>;
             } else {
                 astroButton = <div id="astroButton" className = "astrob1 js-textAstro"  onClick={() => this.closeAstroLayer()}>
