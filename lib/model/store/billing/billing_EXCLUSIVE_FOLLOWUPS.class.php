@@ -74,7 +74,7 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		try
 		{
 		    $sql = "SELECT * FROM billing.EXCLUSIVE_FOLLOWUPS WHERE (STATUS LIKE 'F0' AND FOLLOWUP1_DT <= :CURRENT_DT) OR (STATUS LIKE 'F1' AND FOLLOWUP2_DT <= :CURRENT_DT) OR (STATUS LIKE 'F2' AND FOLLOWUP3_DT <= :CURRENT_DT) OR (STATUS LIKE 'F3' AND FOLLOWUP4_DT <= :CURRENT_DT)";
-		    $sql .= "ORDER BY STATUS DESC,MEMBER_ID";
+		    $sql .= "ORDER BY STATUS DESC,CLIENT_ID";
 		    if($offset>=0 && !empty($limit)){
 		    	$sql .= " LIMIT ".$offset.",".$limit;
 		    }
@@ -85,24 +85,36 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
 		    	if(strpos($result['FOLLOWUP_1'], "|")!==false){
 		    		$followup1Str = explode("|", $result['FOLLOWUP_1']);
 		    		$result['FOLLOWUP_1'] = $followup1Str[0];
+		    		if(count($followup1Str)==3 && !empty($followup1Str[1])){
+		    			$result['FOLLOWUP_1'] = $result['FOLLOWUP_1'].'('.$followup1Str[1].')';
+		    		}
 		    		unset($followup1Str);
 		    	}
 		    	if(strpos($result['FOLLOWUP_2'], "|")!==false){
 		    		$followup2Str = explode("|", $result['FOLLOWUP_2']);
 		    		$result['FOLLOWUP_2'] = $followup2Str[0];
+		    		if(count($followup2Str)==3 && !empty($followup2Str[1])){
+		    			$result['FOLLOWUP_2'] = $result['FOLLOWUP_2'].'('.$followup2Str[1].')';
+		    		}
 		    		unset($followup2Str);
 		    	}
 		    	if(strpos($result['FOLLOWUP_3'], "|")!==false){
 		    		$followup3Str = explode("|", $result['FOLLOWUP_3']);
 		    		$result['FOLLOWUP_3'] = $followup3Str[0];
+		    		if(count($followup3Str)==3 && !empty($followup3Str[1])){
+		    			$result['FOLLOWUP_3'] = $result['FOLLOWUP_3'].'('.$followup3Str[1].')';
+		    		}
 		    		unset($followup3Str);
 		    	}
 		    	if(strpos($result['FOLLOWUP_4'], "|")!==false){
 		    		$followup4Str = explode("|", $result['FOLLOWUP_4']);
 		    		$result['FOLLOWUP_4'] = $followup4Str[0];
+		    		if(count($followup4Str)==3 &&  !empty($followup4Str[1])){
+		    			$result['FOLLOWUP_4'] = $result['FOLLOWUP_4'].'('.$followup4Str[1].')';
+		    		}
 		    		unset($followup4Str);
 		    	}
-		        $rows[$result["MEMBER_ID"]][] = $result;
+		        $rows[$result["CLIENT_ID"]][] = $result;
 		    }
 		    return $rows;
 		}
@@ -246,6 +258,24 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
     {
       throw new jsException($e);
     }
+  }
+
+  public function clientFollowupHistory($agent)
+  {
+  	try {
+  		$sql = "SELECT MEMBER_ID,CLIENT_ID,ENTRY_DT,FOLLOWUP_1,FOLLOWUP_2,FOLLOWUP_3,FOLLOWUP_4,FOLLOWUP1_DT,FOLLOWUP2_DT,FOLLOWUP3_DT,FOLLOWUP4_DT,STATUS FROM billing.EXCLUSIVE_FOLLOWUPS"
+                            . " WHERE AGENT_USERNAME=:AGENT"
+                            . " ORDER BY ENTRY_DT DESC";
+		    $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+		    $res->execute();
+		    while($result=$res->fetch(PDO::FETCH_ASSOC)){
+		        $rows[] = $result;
+		    }
+		    return $rows;
+  	} catch (Exception $e) {
+  		throw new jsException($e);
+  	}
   }
 
   public function getDetailsForProposalMail(){

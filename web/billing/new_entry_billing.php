@@ -83,6 +83,14 @@ if(authenticated($cid))
 	$smarty->assign("ophone",$ophone);
 	$smarty->assign("mphone",$mphone);
 
+    $upgradeProfileid = $pid?$pid:$profileid;
+    if($upgradeProfileid){
+        $upgradeData = getUpgradeData($upgradeProfileid);
+        if($pg2_submit)
+            $upgradeDiscount = $upgradeData["discount"];
+        $smarty->assign("upgradeData",$upgradeData);
+        
+    }
 
 	$service_type_arr = populate_service_type();
 	get_service_price();
@@ -184,6 +192,9 @@ if(authenticated($cid))
 	$smarty->assign("dep_month",$dep_month);
 	$smarty->assign("dep_year",$dep_year);
 	$smarty->assign("dep_branch",$dep_branch);
+    
+    
+    
 	/*End of - Smarty variable assignment, to be used in various scripts based on button clicked, all smarty variables are not used for single templates*/
 
 	/* When button is clicked from first page*/
@@ -299,7 +310,7 @@ if(authenticated($cid))
 		{
 			$no_err=0;
 			//$services_arr = array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
-			$services_arr = array("membership_service","astro_service","JSExclusive_service");
+			$services_arr = array("membership_service","astro_service","JSExclusive_service","upgrade_service");
 			for($i=0;$i<count($services_arr);$i++)
 			{
 				$to_check = "chk_".$services_arr[$i];
@@ -331,11 +342,13 @@ if(authenticated($cid))
 			}
 			foreach($temp_service_id_arr as $k=>$v)
                         {
-                                if($serviceObj->getServiceName($v)=='')
-                                {
-                                        $msg="Please select the valid duration for the selected service(s)";
-                                        if($msg)
-                                                $no_err=0;
+                                if(strpos($v,"Upgrade")===false){
+                                    if($serviceObj->getServiceName($v)=='')
+                                    {
+                                            $msg="Please select the valid duration for the selected service(s)";
+                                            if($msg)
+                                                    $no_err=0;
+                                    }
                                 }
                         }
 			if(!$no_err)
@@ -354,6 +367,9 @@ if(authenticated($cid))
 		
 			for($i=0;$i<count($temp_service_id_arr);$i++)
 			{
+                if(strpos($temp_service_id_arr[$i],"Upgrade")!==false){
+                    $upgradeCase = 1;
+                }
 				$temp_service_id = $temp_service_id_arr[$i];
 				$service_amount = $serviceObj->getServicesAmountWithoutTax($temp_service_id,$curtype);
 				$service_amount_tax = $serviceObj->getServicesAmount($temp_service_id,$curtype);
@@ -364,6 +380,23 @@ if(authenticated($cid))
 				$price += $service_amount[$temp_service_id]["PRICE"];
 				$price_tax += $service_amount_tax[$temp_service_id]["PRICE"];
 			}
+            
+            if($upgradeCase == 1){
+                if($curtype == "RS"){
+                    $price = $upgradeData["upgradeExtraPayRSUnformatted"];
+                    $price_tax = $upgradeData["upgradeExtraPayRSUnformatted"];
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
+                    $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayRSUnformatted"];
+                }
+                else{
+                    $price = $upgradeData["upgradeExtraPayDOLUnformatted"];
+                    $price_tax = $upgradeData["upgradeExtraPayDOLUnformatted"];
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
+                    $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
+                }
+                $smarty->assign("discount",$upgradeDiscount);
+                $smarty->assign("upgradeCase",$upgradeCase);
+            }
 
 			$smarty->assign("price",$price);	//to display service_price excluding tax.
 			$smarty->assign("tax_rate",$membershipObj->getTaxRate());
@@ -373,12 +406,15 @@ if(authenticated($cid))
 			$smarty->assign("tax",$tax);
 		
 			$total_pay = $price_tax - $discount;
-			
+			if($upgradeCase == 1){
+                $smarty->assign("amount",$total_pay);
+            }
 			$smarty->assign("total_pay",$total_pay);
 			$smarty->assign("main_service_id",$serviceid);
 			$smarty->assign("service_names",$service_names);
 			$smarty->assign("dep_branch",strtoupper(getcenter_for_walkin($user)));
-
+            
+            $smarty->assign("profileid",$profileid);
 			$smarty->display("new_entry_paydet_billing.htm");
 		}
 		else
@@ -386,7 +422,6 @@ if(authenticated($cid))
 			$smarty->assign("renew",$renew);
 			$smarty->display("new_entry_billing.htm");
 		}
-		
 	}
 	/* End of - When button is clicked from first page*/
 
@@ -523,11 +558,26 @@ if(authenticated($cid))
 			$temp_service_name_array = $serviceObj->getServiceName($main_service_id);
 			for($i=0;$i<count($temp_service_id_arr);$i++)
 			{
+                if(strpos($temp_service_id_arr[$i],"Upgrade")!==false){
+                    $upgradeCase = 1;
+                }
 				$temp_service_id = $temp_service_id_arr[$i];
 				$service_amount_tax = $serviceObj->getServicesAmount($temp_service_id,$curtype);
 				$service_names[$i]["NAME"] = $temp_service_name_array[$temp_service_id]["NAME"];
 				$service_names[$i]["PRICE"] = $service_amount_tax[$temp_service_id]["PRICE"];
 			}
+            if($upgradeCase == 1){
+                if($curtype == "RS"){
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
+                    $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayRSUnformatted"];
+                }
+                else{
+                    $service_names[0]["NAME"] = $upgradeData["upgradeMainMemName"].$upgradeData["upgradeMainMemDur"]." Upgrade";
+                    $service_names[0]["PRICE"] = $upgradeData["upgradeExtraPayDOLUnformatted"];
+                }
+                $smarty->assign("discount",$upgradeDiscount);
+                $smarty->assign("upgradeCase",$upgradeCase);
+            }
 			$smarty->assign("service_names",$service_names);
 			$smarty->display("new_entry_summary_billing.htm");
 		}
@@ -798,5 +848,22 @@ function get_service_price()
 
 	$smarty->assign("rupee_arr",$ser_rupee_arr);
 	$smarty->assign("dollar_arr",$ser_dollar_arr);
+}
+
+function getUpgradeData($upgradeProfileid){
+    $userObj = new memUser($upgradeProfileid);
+    $userObj->setMemStatus();
+    if ($userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+        $upgradeEligible = 1;
+        $notificationDataPoolObj = new NotificationDataPool();
+        $upgradeData = $notificationDataPoolObj->getUpgradedMembershipDetails($upgradeProfileid,'RS',"backend");
+        unset($notificationDataPoolObj);
+        $notificationDataPoolObj = new NotificationDataPool();
+        $upgradeDataDol = $notificationDataPoolObj->getUpgradedMembershipDetails($upgradeProfileid,'DOL',"backend");
+        unset($notificationDataPoolObj);
+        $upgradeData["upgradeExtraPayRSUnformatted"] = $upgradeData["upgradeExtraPayUnformated"];
+        $upgradeData["upgradeExtraPayDOLUnformatted"] = $upgradeDataDol["upgradeExtraPayUnformated"];
+        return $upgradeData;
+    }
 }
 ?>
