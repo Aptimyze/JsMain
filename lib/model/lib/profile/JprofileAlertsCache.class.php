@@ -128,7 +128,19 @@ class JprofileAlertsCache
     public function update($profileid, $key, $val) {
 
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-        $out = $objJALT->update($profileid, $key, $val);
+        list($out,$affectedRows) = $objJALT->update($profileid, $key, $val);
+        if($affectedRows == 0){
+            $jprofileAlertObj = new JprofileAlertsCache();
+            $row = $jprofileAlertObj->getAllSubscriptions($profileid);
+            unset($jprofileAlertObj);
+            if($row != NULL){
+                $row["PROFILEID"] = $profileid;
+                $objJALT->insertAllColumns($row);
+            }
+            else{
+                $jprofileAlertObj->insertNewRow($profileid);
+            }
+        }
         if($out === true)
         {   
             $updateCacheVal[$key] = $val;

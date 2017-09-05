@@ -210,6 +210,9 @@ class jsexclusiveActions extends sfActions {
             $this->columnNamesArr = array("Client ID", "Client Name", "Assign Date", "Service Day", "Expiry Date");
             $clientIdStr = implode(",", $clientIdArr);
             $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $key => $val){
+                $nameTempArr[$val["PROFILEID"]] = $val;
+            }
             $expiryDateArr = $expiryDateObj->fetchServiceDetailsByBillId($billIdArr,"PROFILEID,EXPIRY_DT");
             $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
             $this->count = count($clientInfoArr);
@@ -219,9 +222,8 @@ class jsexclusiveActions extends sfActions {
                 $dataArray[$i]['ASSIGNED_DT'] = $clientInfoArr[$i]['ASSIGNED_DT'];
                 $dataArray[$i]['SERVICE_DAY'] = $clientInfoArr[$i]['SERVICE_DAY'];
                 $dataArray[$i]['EXPIRY_DT'] = $expiryDateArr[$clientInfoArr[$i]['CLIENT_ID']]['EXPIRY_DT'];
-                if($clientNameArr[$i]['DISPLAY'] == 'Y'){
-                    $dataArray[$i]['CLIENT_NAME'] = $clientNameArr[$i]['NAME'];
-                }
+                if($nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['DISPLAY'] == 'Y')
+                     $dataArray[$i]['CLIENT_NAME'] = $nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['NAME'];
             }
             $this->dataArray = $dataArray;
         }
@@ -783,7 +785,11 @@ class jsexclusiveActions extends sfActions {
         //columns list for interface
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
         $currentDt = date("Y-m-d");
-
+        $fetchedList = JsMemcache::getInstance()->lrange('handledProfile','0','-1');
+        foreach($fetchedList as $key => $val){
+        	$highlighted[$val] = 1;
+        }
+        $this->highlighted = $highlighted;
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
         $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
         unset($followUpObj);
@@ -795,6 +801,10 @@ class jsexclusiveActions extends sfActions {
             $this->infoMsg = $request->getParameter("infoMsg");
             $exclusiveLib = new ExclusiveFunctions();
             $this->finalFollowUpsPool = $exclusiveLib->formatFollowUpsData($this->followUpsCount);
+            $currentTime = date('Y-m-d H:i:s');
+            
+           /* $expireTime =  date('Y-m-d', strtotime('+1 day',strtotime(date('Y-m-d'))))." 00:00:00";
+            print_r(array($currentTime,$expireTime)); */
             unset($exclusiveLib);
         }
         //print_r($this->finalFollowUpsPool);die;
@@ -829,15 +839,22 @@ class jsexclusiveActions extends sfActions {
                         $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit !"));
                     }
                 }
+                // add followup ID to the redis object if the followID(set by agent)  date is equal to current date
+                if($formArr["date1"] == date('Y-m-d')){
+                	$exclusiveLib = new ExclusiveFunctions();
+                	$exclusiveLib->addDataToRedisObject('handledProfile',$this->ifollowUpId);
+                	$this->forwardTo("jsexclusive","followupCaller");
+                	unset($exclusiveLib);
+                }
                 $this->forwardTo("jsexclusive","followupCaller");
             }
             else{
                 $this->clientUsername = $formArr["iclient"];
                 $this->memberUsername = $formArr["imember"];
                 
-                $this->todayDay = date('d',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayMonth   = date('m',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayYear  = date('Y',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayDay = date('d',strtotime(date("Y-m-d")));
+                $this->todayMonth   = date('m',strtotime(date("Y-m-d")));
+                $this->todayYear  = date('Y',strtotime(date("Y-m-d")));
                 $this->dayArr = GetDateArrays::getDayArray();
                 $this->monthArr   = GetDateArrays::getMonthArray();
                 $this->yearArr    = array();

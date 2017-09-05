@@ -219,6 +219,7 @@ class ApiResponseHandler
 
 		//set flag for android xmppBackgroundConnectionTimeout
 		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
+		$output["channelSource"] = MobileCommon::getFullChannelName();
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];

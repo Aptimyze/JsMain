@@ -342,7 +342,7 @@ class ExclusiveFunctions{
         $currentDt = date("Y-m-d");
         if(empty($params["date1"])){
             if($params["followupStatus"]=='F'){
-                $params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+                $params["date1"] = date('Y-m-d',strtotime($currentDt));
             }
             else{
                 $params["date1"] = $currentDt;
@@ -351,21 +351,25 @@ class ExclusiveFunctions{
       	else if($params["followupStatus"]=='Y' || $params["followupStatus"]=='N'){
       		$params["date1"] = $currentDt;
       	}
-      	else if($params["date1"]==$currentDt){
-      		$params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
-      	}
+      	/* else if($params["date1"]==$currentDt){
+      		$params["date1"] = date('Y-m-d',strtotime($currentDt));
+      	} */
 
         $updateArr = array();
         switch($params["followUpDetails"]["STATUS"]){
             case "F0":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F1";
-                    $updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                   // $updateArr["FOLLOWUP_1"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    	$updateArr["FOLLOWUP_1"] = $params["reason"]."|".$params["reasonText"];
                     $updateArr["FOLLOWUP2_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_1"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N' || $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_1"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -375,12 +379,16 @@ class ExclusiveFunctions{
             case "F1":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F2";
-                    $updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                     $updateArr["FOLLOWUP3_DT"] = $params["date1"];
+                    //$updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_2"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    	$updateArr["FOLLOWUP_2"] = $params["reason"]."|".$params["reasonText"];
+                    $updateArr["FOLLOWUP3_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_2"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_2"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -390,12 +398,16 @@ class ExclusiveFunctions{
             case "F2":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F3";
-                    $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                     $updateArr["FOLLOWUP4_DT"] = $params["date1"];
+                    //$updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_3"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    $updateArr["FOLLOWUP_3"] = $params["reason"]."|".$params["reasonText"];
+                    $updateArr["FOLLOWUP4_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_3"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_3"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -403,13 +415,17 @@ class ExclusiveFunctions{
                 $updateArr["FOLLOWUP3_DT"] = $currentDt;
                 break;
             case "F3":
-                if($params["followupStatus"]=='F'){
+            	if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F4";
-                    $updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                }
+                    //$updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_4"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    $updateArr["FOLLOWUP_4"] = $params["reason"]."|".$params["reasonText"];
+            	}
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_4"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_4"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -450,6 +466,14 @@ class ExclusiveFunctions{
                 $exclusiveServicingObj->removeExclusiveClientEntry($profileid);
             }
         }
+	}
+	
+	public function addDataToRedisObject($key,$value){
+		JsMemcache::getInstance()->lpush($key,$value);
+	}
+	
+	public  function deleteRedisKey($Key){
+		JsMemcache::getInstance()->delete($Key);
 	}
 
 	public function getReceiverAndAgentDetailsforProposalMail(){

@@ -308,6 +308,23 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
 	}
+	public function lrange($key,$test1,$test2)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->lrange($key,$test1,$test2);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("D-redisClusters($key)".$e->getMessage());
+				}
+			}
+		}
+	}
 	public function zRange($key,$test1,$test2)
 	{
 		if(self::isRedis())
