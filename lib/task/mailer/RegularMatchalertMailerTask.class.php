@@ -41,7 +41,7 @@ EOF;
 	if(!sfContext::hasInstance())
 		sfContext::createInstance($this->configuration);
         
-        if(CommonUtility::runFeatureInDaytime(2, 4)){
+        if(CommonUtility::runFeatureInDaytime(1,8)){
                 successfullDie();
         }
 	$totalScript = $arguments["totalScript"]; // total no of scripts

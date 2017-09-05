@@ -27,6 +27,7 @@ EOF;
                 $memObject=JsMemcache::getInstance();
                 $memObject->set('MATCHALERT_POPULATE_EMPTY',1,7200);
                 $memObject->set('MATCHALERT_LOG_DATE',  strtotime(MailerConfigVariables::$matchalertsLogTimeFor),MailerConfigVariables::$matchalertsLogTimeCache);
+                unset($memObject);
                 
 		$matchalerts_MAILER = new matchalerts_MAILER;
 		/** 
@@ -98,8 +99,9 @@ EOF;
                  */
                 $matchalerts_MATCHALERTS_TO_BE_SENT->updateTrends();
                 $matchalerts_MATCHALERTS_TO_BE_SENT->resetTrendsIfOldLogicSet();
+                $memObject=JsMemcache::getInstance();
                 $memObject->remove('MATCHALERT_POPULATE_EMPTY');
-                
+                unset($memObject);
                 $matchalerts_MATCHALERTS_TO_BE_SENT->insertFromTempTable();
                 $matchalerts_MATCHALERTS_TO_BE_SENT->truncateTempTable();
 	}
