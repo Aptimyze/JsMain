@@ -26,6 +26,7 @@ EOF;
 
                 $memObject=JsMemcache::getInstance();
                 $memObject->set('MATCHALERT_POPULATE_EMPTY',1,7200);
+                $memObject->set('MATCHALERT_LOG_DATE',  strtotime(MailerConfigVariables::$matchalertsLogTimeFor),MailerConfigVariables::$matchalertsLogTimeCache);
                 
 		$matchalerts_MAILER = new matchalerts_MAILER;
 		/** 

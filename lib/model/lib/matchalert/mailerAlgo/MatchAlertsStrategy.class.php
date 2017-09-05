@@ -19,12 +19,20 @@ abstract class MatchAlertsStrategy
                 else{
                         $profileIds = array_slice($profileIds,0,$this->limitTRec);
                 }
+                
                 $matchalertLogObj = new matchalerts_LOG();
                 $matchalertTempLogObj = new matchalerts_LOG_TEMP();
                 
-         
-                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
-                $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
+                $memObject=JsMemcache::getInstance();
+                $logDate = $memObject->get('MATCHALERT_LOG_DATE');
+                if($logDate === false || $logDate == ''){
+                        $logDate = strtotime(MailerConfigVariables::$matchalertsLogTimeFor);
+                        $memObject->set('MATCHALERT_LOG_DATE',$logDate,  MailerConfigVariables::$matchalertsLogTimeCache);
+                }
+                $dateForMailer = date("Y-m-d",$logDate);
+                $date=MailerConfigVariables::getNoOfDays($logDate);
+                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel,$date);
+                $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel,$date);
                 
                 $mCache = new MatchAlertsLogCaching();
                 $mCache->setAddCacheKey($receiverId,$profileIds);
@@ -37,7 +45,7 @@ abstract class MatchAlertsStrategy
                 if($matchesSetting != 'U' && ($matchesSetting == 'A' || $matchesSetting == '' || in_array($day_of_week,array('1','3','5'))))
                 {
                   $matchalertMailerObj = new matchalerts_MAILER();
-                  $matchalertMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel, $this->frequency);
+                  $matchalertMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel, $this->frequency,$dateForMailer);
                   unset($matchalertMailerObj);
                 }
         }
