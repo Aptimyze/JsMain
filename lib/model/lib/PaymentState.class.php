@@ -42,7 +42,7 @@ getters and setters of class payment state
 	public function getAP() { return $this->AP; }
 	public function isPAID()	
 	{
-		if($this->ERISHTA||$this->EVALUE)
+		if($this->ERISHTA||$this->EVALUE || $this->JSEXCLUSIVE)
 			return true;
 		else
 			return false;
