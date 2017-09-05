@@ -12,12 +12,12 @@ class FamilyTab extends React.Component {
     	var myfamily;
     	if(this.props.family.myfamily)
     	{
-    		myfamily = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_myfamily">{this.props.family.myfamily}</div>;
-    	} else 
+    		myfamily = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_myfamily" dangerouslySetInnerHTML={{__html:this.props.family.myfamily}} />;
+    	} else
     	{
     		myfamily = <div class="hgt10"></div>;
     	}
-    	
+
     	var family_bg;
     	if(this.props.family.family_bg)
     	{
@@ -149,7 +149,7 @@ class FamilyTab extends React.Component {
             	</div>
     		</div>;
     	}
-    	
+
 
     	var FamilyData;
     	if(this.props.family.myfamily || this.props.family.family_bg || this.props.family.family_income || this.props.family.father_occ || this.props.family.mother_occ || this.props.family.sibling_info || this.props.family.sub_caste || this.props.family.gothra || this.props.family.native_place || this.props.family.caste || this.props.family.mathab || this.props.family.diocese || this.props.family.sect || this.props.family.living)
@@ -175,7 +175,7 @@ class FamilyTab extends React.Component {
     		FamilyData = <div>
     			<div className="hgt10"></div>
     			<div className="fontlig color1 f14 pb10 txtc" id="vpro_no_family_detail">{this.props.username} has not provided family details yet</div>
-    		</div>;	
+    		</div>;
     	}
 
     	return(
