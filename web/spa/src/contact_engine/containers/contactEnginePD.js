@@ -161,7 +161,7 @@ getFrontButton(){
   let primaryButton = this.props.buttondata.buttons[0];
   let threeDots = (<div></div>);
   let otherButtons = this.props.buttondata.buttons;
-  if(otherButtons[0].action == 'ACCEPT' && otherButtons[1].action == 'DECLINE')
+  if(otherButtons[0].action == 'ACCEPT' && otherButtons[1].action == 'DECLINE' && otherButtons[1].enable)
   {
 
   return(<div key='1' id="buttons1" className="view_ce fullwid">
