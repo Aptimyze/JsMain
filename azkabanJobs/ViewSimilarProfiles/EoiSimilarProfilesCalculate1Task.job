@@ -1,0 +1,5 @@
+type=command
+dependencies=EoiSimilarProfilesPopulateTask
+command=${php5} ${docRoot}/symfony vsm:EoiSimilarProfilesCalculateTask 3 1 
+retries=3
+retry.backoff=50000
