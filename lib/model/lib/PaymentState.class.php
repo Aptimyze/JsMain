@@ -10,6 +10,10 @@ class PaymentState
 	const EVALUE = "EVALUE";
 	const FREE = "FREE";
 	const JSEXCLUSIVE = "JSEXCLUSIVE";
+	const FTO_TEXT = "fto";
+	const ERISHTA_TEXT = "eRishta";
+	const EVALUE_TEXT = "eValue";
+	const FREE_TEXT = "Free";
 	private $EVALUE;
 	private $ERISHTA;
 	private $FTO;
@@ -94,6 +98,17 @@ Desc: returns current status of the profile in form of string
 			return true;
 		
 		return false;
+	}
+	public function getPaymentStatusText()
+	{
+		if($this->FTO)
+			return PaymentState::FTO_TEXT;
+		if($this->ERISHTA)
+			return PaymentState::ERISHTA_TEXT;
+		if($this->EVALUE)
+			return PaymentState::EVALUE_TEXT;
+		if($this->FREE)
+			return PaymentState::FREE_TEXT;
 	}
 }
 ?>
