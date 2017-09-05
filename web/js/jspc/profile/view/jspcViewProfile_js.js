@@ -599,6 +599,8 @@ var isValid = false;
             $('.js-errorMsg').removeClass('disp-none');
             //$(this).find('#errorText').removeClass('disp-none');
             isValid = true;
+        } else {
+            $('.js-errorMsg').addClass('disp-none');
         }
       }
     }
@@ -651,7 +653,9 @@ ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':rea
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST'
-
+ajaxConfig.error=function(response) {
+    hideCommonLoader();
+}
 ajaxConfig.success=function(response){
 	$('#reportAbuse-layer').fadeOut(300,"linear");
 
@@ -700,6 +704,8 @@ $('.js-abuseBack').on('click',function() {
     while (photoNode.hasChildNodes()) {
         photoNode.removeChild(photoNode.lastChild);
     }
+    
+   $("#previewContainer").append("<div class='abuse_opt-sel f11 pb10 errcolr js-attachError'></div>");
     
     $('.js-reportOptionLayer').find('.selected').removeClass('selected');
     $('.js-reportOptionLayer').removeClass('disp-none');

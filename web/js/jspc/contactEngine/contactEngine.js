@@ -1423,17 +1423,20 @@ function uploadAttachment()
                             if(response.responseStatusCode == 0) {
                                if(file.hasOwnProperty('error')) {
                                    delete file.error;
+                                   delete fileObject.errorMsg;
                                }
                                arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
                                fileObject.uploaded = true;
                             } else {
                                 fileObject.error = true
+                                fileObject.errorMsg = response.message;
                                 ShowErrorMsg( response.message );                                
                             }
                         },
             error   :  function ( response ) {
                             hideCommonLoader();
                             fileObject.error = true;
+                            fileObject.errorMsg = "Something went wrong. Please try again";
                             ShowErrorMsg("Something went wrong. Please try again");
                         },
         };
@@ -1454,6 +1457,7 @@ function uploadAttachment()
         if( file.hasOwnProperty("uploaded") == false || file.uploaded == false  ) {
                 if(( file.hasOwnProperty('error') && file.error == true )) {
                     setTimeout(function(){
+                        ShowErrorMsg(file.errorMsg);
                         hideCommonLoader();
                     },0);
                     return false;
