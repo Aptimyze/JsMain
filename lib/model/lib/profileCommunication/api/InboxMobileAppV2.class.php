@@ -1295,7 +1295,7 @@ class InboxMobileAppV2
 						                                "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
 						                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
 																						"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
-																						"MATCH_OF_THE_DAY"=>"responseTracking=".SearchTypesEnums::JSMSMatchOfDay,
+																						"MATCH_OF_THE_DAY"=>"stype=".SearchTypesEnums::JSMSMatchOfDay,
 
 											);
 						                }
