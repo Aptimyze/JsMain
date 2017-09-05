@@ -533,9 +533,13 @@
             ~/if`
             <div id="noOptionSelected" class="disp-none txtc color5 fontreg f12 pb15">Please select a payment option</div>
             <div style="overflow:hidden;position: relative;">
-            <div class="pt10 f11 txtc">
-                <input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR">I wish to pay with Indian card<br>
-            </div>
+            ~if $data.currency eq '$'`
+                <div class="pt10 f11 txtc clearfix mauto pb7 wid80p">
+                    <div class="fl">
+                        <input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR"></div><div class="fl" style="padding-left: 6px;">I wish to pay with Indian card
+                    </div>
+                </div>
+            ~/if`
             <div id="payNowBtn" class="fullwid bg_greyed txtc lh50"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="finalCartPrice">~$data.cart_price`&nbsp;|&nbsp;</span><span class="colrw" id="cartPaymentSpan">Pay Now</span></div>
             </div>
             <div class="pt10 f11 txtc">~$data.cart_tax_text`</div>

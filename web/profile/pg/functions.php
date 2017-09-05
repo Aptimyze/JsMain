@@ -208,7 +208,7 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  *    RETURNS       :    Returns true if record successfully entered
  ***********************************************************************/
 
-function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
+function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA",$usdTOinr='N') {
     
     if(!$memUpgrade || $memUpgrade == ""){
         $memUpgrade = "NA";
@@ -294,8 +294,8 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
             $servefor = $servefor.',J';
         }
         $billingOrderObj = new BILLING_ORDERS();
-        $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE";
-        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_insert','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
+        $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE,USD_TO_INR";
+        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_insert','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type','$usdTOinr'";
         $insert_id = $billingOrderObj->genericOrderInsert($paramsStr, $valuesStr);
         
         $data["ORDERID"] = $ORDERID . "-" . $insert_id;

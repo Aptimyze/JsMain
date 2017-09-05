@@ -305,7 +305,9 @@ class MembershipActionFunctions
                 $data["proceed_text"] = $proceed_text;
             }
         }
-        
+
+        $data["usdTOinr"] = $request->getParameter("usdTOinr");
+
         return $data;
     }
 

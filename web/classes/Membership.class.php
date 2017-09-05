@@ -1161,6 +1161,7 @@ class Membership
     
     function populatePurchaseDetail($upgradeMem="NA") {
         $serviceObj = new Services;
+        $membershipHandlerObj = new MembershipHandler();
         if (strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'NCP')) {
             $serarr = explode(",", $this->serviceid);
             for ($s = 0; $s < count($serarr); $s++) {
@@ -1251,11 +1252,21 @@ class Membership
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
 
             //handling for main membership upgrade
+            $newAmountArr = $membershipHandlerObj->getAmountForUSDtoINRpayment($this->billid,$row['SERVICEID']);
             if($price != 0 && $upgradeMem == 'MAIN'){
+                if(is_array($newAmountArr)){
+                    $this->amount = round($newAmountArr["AMOUNT"]*$share/100,2);
+                    $this->discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
+                }
                 $actualAmount = $this->amount + $this->discount;
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$actualAmount','$this->discount','$this->amount','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             }
             else{
+                if(is_array($newAmountArr)){
+                    $net_price = round($newAmountArr["AMOUNT"]*$share/100,2);
+                    $discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
+                    $price = $net_price + $discount;
+                }
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             }
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
@@ -2567,6 +2578,7 @@ class Membership
         }
 
         if($apiResHandlerObj->usdTOinr && $apiResHandlerObj->processPayment){
+            $discount = $apiResHandlerObj->track_discount;
             $total = $apiResHandlerObj->track_total;
         }
 
