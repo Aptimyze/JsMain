@@ -223,9 +223,9 @@ $searchKeyArray=array('L'=>'View similar from home page',
 'BN5'=>'Dpp_Relaxation_Matchalerts',
 'BN7'=>'LastSearch_Matchalerts',
 'BNST'=>'Strict Dpp (Trends) Match Alerts',
-'BNSNT'=>'Strict Dpp (Non Trends) Match Alerts',
+'BNSN'=>'Strict Dpp (Non Trends) Match Alerts',
 'BNRT'=>'Relaxed Dpp (Trends) Match Alerts',
-'BNRNT'=>'Relaxed Dpp (Non Trends) Match Alerts',
+'BNRN'=>'Relaxed Dpp (Non Trends) Match Alerts',
 'MAA'=>'EOI-Android MatchAlert Notification',
 'JJA'=>'EOI-Android Just Join Notification',
 'ICP'=>'VIEW_SIMILAR_IOS_ON_PD',
@@ -438,7 +438,7 @@ $searchKeyArray=array('L'=>'View similar from home page',
 							$initiated[$s]+=1;
 						}
 
-						if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5" || $s=="BN7" || $s= "BNST" || $s= "BNSNT" || $s= "BNRT" || $s= "BNRNT")
+						if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5" || $s=="BN7" || $s= "BNST" || $s= "BNSN" || $s= "BNRT" || $s= "BNRN")
 						{
 							$dataArraynew["B"][$d][$t]+=1;
 						}
@@ -491,7 +491,7 @@ $searchKeyArray=array('L'=>'View similar from home page',
 						$initiated[$s]+=$myrownew2["CNT"];
 					}
 					
-					if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5" || $s=="BN7"  || $s= "BNST" || $s= "BNSNT" || $s= "BNRT" || $s= "BNRNT")
+					if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5" || $s=="BN7"  || $s= "BNST" || $s= "BNSN" || $s= "BNRT" || $s= "BNRN")
 					{
 						$dataArraynew["B"][$d][$t]+=$myrownew2["CNT"];
 					}

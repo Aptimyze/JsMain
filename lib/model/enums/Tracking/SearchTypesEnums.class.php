@@ -132,9 +132,9 @@ class SearchTypesEnums
         
         // match alerts unified logic stype
         const MatchAlertsStrictTrends = "BNST";
-        const MatchAlertsStrictNonTrends = "BNSNT";
+        const MatchAlertsStrictNonTrends = "BNSN";
         const MatchAlertsRelaxedTrends = "BNRT";
-        const MatchAlertsRelaxedNonTrends = "BNRNT";
+        const MatchAlertsRelaxedNonTrends = "BNRN";
 
         const contactViewerMailer="CVM";
 
