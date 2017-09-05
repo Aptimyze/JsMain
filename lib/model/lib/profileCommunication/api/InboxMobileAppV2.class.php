@@ -1226,11 +1226,12 @@ class InboxMobileAppV2
 
 
 	private function getTracking($infoType){
-		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+		$request = sfContext::getInstance()->getRequest();
+		if($rtype = $request->getParameter("retainResponseType"))
 		{
 		return "responseTracking=".$rtype;
 		}
-		if(sfContext::getInstance()->getRequest()->getParameter("myjs"))
+		if($request->getParameter("myjs"))
 		{
 			$trackingMap=array(
                                 "INTEREST_RECEIVED_FILTER"=>"responseTracking=".JSTrackingPageType::MYJS_AWAITING,
@@ -1246,7 +1247,7 @@ class InboxMobileAppV2
 
                                );
 		}
-		else if(sfContext::getInstance()->getRequest()->getParameter("ContactCenterDesktop")==1)
+		else if($request->getParameter("ContactCenterDesktop")==1)
 		{
                         if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
                             $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSPC;
@@ -1270,7 +1271,7 @@ class InboxMobileAppV2
                  );
 		}
 		elseif(MobileCommon::isApp()=='I'){
-                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                    if($request->getParameter("matchedOrAll")=="M")
                         $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_IOS;
                     else
                         $visitorsStype = SearchTypesEnums::VISITORS_IOS;
@@ -1289,8 +1290,17 @@ class InboxMobileAppV2
                                  "INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_IOS
 					);
                 }
+								elseif($request->getParameter("JSMS_MYJS")=="1"){
+						                        $trackingMap=array(
+						                                "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
+						                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
+																						"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
+																						"MATCH_OF_THE_DAY"=>"responseTracking=".JSTrackingPageType::JSMSMatchOfDay,
+
+											);
+						                }
 		else{
-                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
+                    if($request->getParameter("matchedOrAll")!="A")
                         $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSMS;
                     else
                         $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
