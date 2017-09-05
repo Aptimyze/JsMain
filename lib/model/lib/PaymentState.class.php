@@ -16,6 +16,7 @@ class PaymentState
 	const EVALUE_TEXT = "eValue";
 	const FREE_TEXT = "Free";
 	const EADVANTAGE_TEXT = "eAdvantage";
+	const JSEXCLUSIVE_TEXT = "JsExclusive";
 	private $EVALUE;
 	private $ERISHTA;
 	private $FTO;
