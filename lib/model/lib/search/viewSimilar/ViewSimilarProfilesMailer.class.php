@@ -25,6 +25,10 @@ class ViewSimilarProfilesMailer {
             $viewedGender = 'MALE';
             $viewerGender = 'FEMALE';
         }
+        else{
+                echo $loggedInProfile."--".$viewerGenderChar."\n";
+                return array();
+        }
 
         $viewer = $loggedInProfile;
         $viewerAge = $loginProfile->getAGE();
