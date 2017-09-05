@@ -146,6 +146,18 @@ EOF;
       case 7 : 
         return SearchTypesEnums::MatchAlertMailer7;
         break;
+      case 8 : 
+        return SearchTypesEnums::MatchAlertsStrictTrends;
+        break;
+      case 9 : 
+        return SearchTypesEnums::MatchAlertsStrictNonTrends;
+        break;
+      case 10 : 
+        return SearchTypesEnums::MatchAlertsRelaxedTrends;
+        break;
+      case 11 : 
+        return SearchTypesEnums::MatchAlertsRelaxedNonTrends;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;

@@ -178,7 +178,7 @@ EOF;
          * @param type $profileid // profile id
          */
         private function logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileID,$totalResults,$type,$profilesWithLimitReached,$todayDate){
-                if(($totalResults["CNT"] == 0 || $totalResults["actualDppCount"] == 0) && !in_array($profileID, $profilesWithLimitReached)){
+                if(($totalResults["CNT"] == 0 || (isset($totalResults["actualDppCount"]) && $totalResults["actualDppCount"] == 0)) && !in_array($profileID, $profilesWithLimitReached)){
                         $lowMatchesCheckObj->insertForProfile($profileID);
                 }
                 if($totalResults["CNT"] == 0)
