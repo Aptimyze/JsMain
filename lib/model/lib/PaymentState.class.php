@@ -10,10 +10,12 @@ class PaymentState
 	const EVALUE = "EVALUE";
 	const FREE = "FREE";
 	const JSEXCLUSIVE = "JSEXCLUSIVE";
+	const EADVANTAGE = "EADVANTAGE";
 	const FTO_TEXT = "fto";
 	const ERISHTA_TEXT = "eRishta";
 	const EVALUE_TEXT = "eValue";
 	const FREE_TEXT = "Free";
+	const EADVANTAGE_TEXT = "eAdvantage";
 	private $EVALUE;
 	private $ERISHTA;
 	private $FTO;
@@ -63,7 +65,12 @@ Desc: constructor logic
 		$this->FTO = false;
 		$subscription =	 $profile->getSUBSCRIPTION();
 		if(strstr($subscription,"F,D") || strstr($subscription,"D,F") || strstr($subscription,"D"))
+		{
 			$this->EVALUE = true;
+			if(strpos($subscription,"N") !== false){
+				$this->EADVANTAGE = true;
+			}
+		}
 		elseif(MembershipHandler::isEligibleForRBHandling($profile->getPROFILEID()))
 			$this->JSEXCLUSIVE = true;
 		elseif(strstr($subscription,"F"))
@@ -105,8 +112,12 @@ Desc: returns current status of the profile in form of string
 			return PaymentState::FTO_TEXT;
 		if($this->ERISHTA)
 			return PaymentState::ERISHTA_TEXT;
-		if($this->EVALUE)
-			return PaymentState::EVALUE_TEXT;
+		if($this->EVALUE){
+			if($this->EADVANTAGE)
+				return PaymentState::EADVANTAGE_TEXT;
+			else
+				return PaymentState::EVALUE_TEXT;
+		}
 		if($this->FREE)
 			return PaymentState::FREE_TEXT;
 	}
