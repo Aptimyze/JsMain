@@ -351,10 +351,10 @@ if (authenticated($cid)) {
 				}
 //				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
 //				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-        if($activatedWithoutYourInfo){
+        //if($activatedWithoutYourInfo){
             $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
             $activated_without_yourInfoObj->delete($pid);
-        }
+        //}
             
         $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
@@ -732,8 +732,11 @@ $screeningValMainAdmin = 0;
 				{	$email_sender=new EmailSender(MailerGroup::PHONE_VERIFICATION,1775);
 					$emailTpl=$email_sender->setProfileId($pid);
 					$profileObj=$emailTpl->getSenderProfile();
+                                        $profileState=JsCommon::getProfileState($profileObj);
 				}
-					$profileState=JsCommon::getProfileState($profileObj);
+                                else{
+                                    $profileState="F";
+                                }
 				
 			if($profileState=="F" || $profileState=="P")
 			 {

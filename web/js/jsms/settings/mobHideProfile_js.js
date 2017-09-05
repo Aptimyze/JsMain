@@ -21,7 +21,7 @@ function ajaxPassword(pswrd, action)
 	stopTouchEvents(1,1,1);
 	$.ajax({                 
 	url: '/api/v1/common/checkPassword',
-	data: "data=" + JSON.stringify({'pswrd' : pswrd}),
+	data: "data=" + JSON.stringify({'pswrd' : escape(pswrd)}),
 	success: function(response) 
 	{
 		if(response.success == 1)

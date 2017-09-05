@@ -624,6 +624,7 @@ class MembershipAPIResponseHandler {
                     //extra amount to be paid for upgrade
                     $output["upgradeExtraPay"] = number_format($thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"], 2, '.', ','); 
                 }
+                $output["upgradeExtraPayUnformated"] = $thisObj->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"]; 
             }
         }
         return $output;

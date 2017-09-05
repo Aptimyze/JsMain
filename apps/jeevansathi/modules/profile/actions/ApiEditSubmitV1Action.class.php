@@ -56,7 +56,7 @@ class ApiEditSubmitV1Action extends sfActions
                         $this->editFieldNameArr['JAMAAT']='';
                 }
                 
-                if(array_key_exists("YOURINFO",$this->editFieldNameArr) && strlen($this->loginProfile->getYOURINFO())<100)
+                if(array_key_exists("YOURINFO",$this->editFieldNameArr) && strlen($this->loginProfile->getYOURINFO())<100 && $this->loginProfile->getACTIVATED()=='Y')
                 {
                         $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
                         $activated_without_yourInfoObj->insert($this->loginProfile->getPROFILEID());

@@ -39,7 +39,7 @@
                                 <div class="mem_pad25"> <a class="accordion-section-title disp_ib icons memacc-notsel pl30" href="#accordion-~$v.mode_id`" paymentSel="~$v.mode_id`">~$v.name`</a> </div>
                                 <div id="accordion-~$v.mode_id`" class="accordion-section-content">
                                     <div class="fullwid clearfix pos-rel">
-                                        <div class="color12 fontlig f15 lh20 pos-abs" style="top:-40px; left:120px"> Yes, we have a 100% safe & secure payment gateway.</div>
+                                        <div class="color12 fontlig f15 lh20 pos-abs" style="top:-40px; left:180px"> Yes, we have a 100% safe & secure payment gateway.</div>
                                         <!--start:left-->
                                         ~if $v.mode_id eq "CR"`
                                         <div id="CR-iconList">
@@ -260,7 +260,11 @@
                                             <div class="pt40 pos-rel ~$v.mode_id`_width">
                                                 <div class="pos-rel fontlig">
                                                     <select name="paymentOption_~$v.mode_id`" class="custom">
-                                                        <option>Select ~$v.name`</option>
+                                                        ~if $v.mode_id neq "CSH"`
+                                                            <option>~$v.payment_title`</option>
+                                                        ~else`
+                                                            <option>Select wallet</option>
+                                                        ~/if`
                                                         ~foreach from=$v.payment_options key=kk item=vv name=cardLoop`
                                                         <option paymentMode="~$v.mode_id`" cardType="~$vv.mode_option_id`" id="~$v.mode_id`~$vv.ic_id`" value="~$k`">~$vv.name`</option>
                                                         ~/foreach`
@@ -640,7 +644,13 @@
             if (checkEmptyOrNull(paymentOpt)) {
                 $("#accordion-" + paymentOpt + " .jspScrollable dd.itm-0").trigger('click');
                 $("#accordion-" + paymentOpt + " .defaultScrollbar dd.itm-0").trigger('click');
-                $("#accordion-" + paymentOpt).find('.selectedValue').html('Select '+currentTabName);
+                if(paymentOpt == "CR" || paymentOpt == "DR")
+                    var text = "Select your card";
+                else if(paymentOpt == "NB")
+                    var text = "Select your bank";
+                else
+                    var text = "Select wallet"
+                $("#accordion-" + paymentOpt).find('.selectedValue').html(text);
                 eraseCookie('paymentMode');
                 eraseCookie('cardType');
             }

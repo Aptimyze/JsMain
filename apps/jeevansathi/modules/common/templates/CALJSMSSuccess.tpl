@@ -1,5 +1,7 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
+    currentPageName = "~$calObject.LAYERID`";
+    GAMapper("GA_CAL_PAGE", {"layerid": currentPageName});
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';
@@ -413,7 +415,7 @@ var altEmailUser = '~$altEmailUser`';
   <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
   <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
   </div>
-  <div class="pad1 lh25 fontlig f14" style="color:#cccccc;">~$calObject.NOTE_TEXT`</div>
+  <div class="pad1 lh25 fontlig f14" style="color:#cccccc;"><b>Note: </b><span>~$calObject.NOTE_TEXT2`</span></div>
   <!--start:div-->
   <div style='padding: 25px 0 8% 0;'>
   <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');">~$calObject.BUTTON1`</div>
@@ -431,7 +433,7 @@ var altEmailUser = '~$altEmailUser`';
     <div class="pad1 brdr1 bg11">
         <div class="pt15 pb10 fullwid">
           <div class="fl color12 f12">Type min 100 Chars</div>
-          <div class="fr color12 f12">Count - <span id="TACount" class="color2"> 0</span></div>
+          <div class="fr color12 f12">Count - <span id="TACount" class="color2"> ~$calObject.ABOUT_ME_TEXT|count_characters:true`</span></div>
           <div class="clr"></div>
         </div>
     <div class="pt10">
@@ -446,10 +448,10 @@ var altEmailUser = '~$altEmailUser`';
    </div> 
   <script>
   $('#textAboutMe').bind('input ', function(e) {
-    var len = $('#textAboutMe').val().length;
+    var len = $('#textAboutMe').val().trim().length;
    // / if(len==)
    if(len>=100) $('#TACount').css('color','green');else $('#TACount').css('color','#d9475c');
- $("#TACount").html($('#textAboutMe').val().length); 
+ $("#TACount").html(len); 
 });
 
 </script>
