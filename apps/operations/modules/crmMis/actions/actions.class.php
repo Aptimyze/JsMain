@@ -1808,6 +1808,7 @@ class crmMisActions extends sfActions
 
 	public function executeCityWiseFreshAndRenewalMis(sfWebRequest $request)
 	{
+		ini_set('memory_limit',-1);
 		$formArr = $request->getParameterHolder()->getAll();
 		$this->cid = $formArr['cid'];
 		$this->yearArr = array();
