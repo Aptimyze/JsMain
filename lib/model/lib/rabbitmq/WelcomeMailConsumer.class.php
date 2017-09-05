@@ -105,6 +105,10 @@ class WelcomeMailConsumer {
         try {
             switch ($process) {
                 case 'EXCLUSIVE_MAIL':
+                	$processHandler = new ProcessHandler();
+                	$processHandler->sendSMS("EXCLUSIVE_PROPOSAL_SMS", $body);
+                	$processHandler->sendMail($type,$body);
+                	break;
                 case 'EXCLUSIVE_DELAYED_EMAIL':
                     $processHandler = new ProcessHandler();
                     $processHandler->sendMail($type,$body);
