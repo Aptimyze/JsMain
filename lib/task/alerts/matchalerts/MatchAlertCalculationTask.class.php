@@ -91,6 +91,11 @@ EOF;
                                                         }else{
                                                                $strictDppObj = new RelaxedDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
                                                                 $totalResults = $strictDppObj->getMatches();
+                                                                if($totalResults["CNT"] == 0 && $profileid%9==1){
+                                                                        $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT,MailerConfigVariables::$lastSearch);
+                                                                        $totalResults = $lastSearchObj->getMatches();
+                                                                        $totalResults["LOGIC_LEVEL"] = MailerConfigVariables::$lastSearch;
+                                                                }
                                                         }
                                                         if($totalResults["CNT"] == 0){
                                                                 $lowTrendsObj->insertForProfile($profileid,$todayDate,$totalResults["LOGIC_LEVEL"]);
