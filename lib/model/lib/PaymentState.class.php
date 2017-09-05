@@ -120,6 +120,8 @@ Desc: returns current status of the profile in form of string
 		}
 		if($this->FREE)
 			return PaymentState::FREE_TEXT;
+		if($this->JSEXCLUSIVE)
+			return PaymentState::JSEXCLUSIVE_TEXT;
 	}
 }
 ?>
