@@ -111,6 +111,7 @@ export default class LifestyleInfo extends React.Component {
                     </div>
                 </div>;
             }
+            if(this.props.life.lifestyle || this.props.life.assets || this.props.life.skills_speaks || this.props.life.skills_i_cook || this.props.life.hobbies || this.props.life.interest || this.props.life.dress_style || this.props.life.fav_tv_show || this.props.life.fav_book || this.props.life.fav_movies || this.props.life.fav_cuisine){
     		LifestyleSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
     			<div className="fl">
     				<i className="vpro_sprite vpro_lstyle"></i>
@@ -130,6 +131,7 @@ export default class LifestyleInfo extends React.Component {
 	  			{fav_cuisine}
 	  			<div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>
     		</div>;
+            }
     	}
     	return(
     		<div>
