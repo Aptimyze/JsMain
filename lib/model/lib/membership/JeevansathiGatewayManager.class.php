@@ -42,7 +42,7 @@ class JeevansathiGatewayManager
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
 
-        if($apiParams->usdTOinr){
+        if($apiParams->usdTOinr == 1){
             $usdTOinr = 'Y';
         }else{
             $usdTOinr = 'N';
@@ -164,7 +164,7 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
 
-        if($apiParams->usdTOinr){
+        if($apiParams->usdTOinr == 1){
             $usdTOinr = 'Y';
         }else{
             $usdTOinr = 'N';

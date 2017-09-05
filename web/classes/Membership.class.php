@@ -1252,7 +1252,7 @@ class Membership
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
 
             //handling for main membership upgrade
-            $newAmountArr = $membershipHandlerObj->getAmountForUSDtoINRpayment($this->billid,$row['SERVICEID']);
+            $newAmountArr = $membershipHandlerObj->getAmountForUSDtoINRpayment($this->billid,$this->orderid);
             if($price != 0 && $upgradeMem == 'MAIN'){
                 if(is_array($newAmountArr)){
                     $this->amount = round($newAmountArr["AMOUNT"]*$share/100,2);
