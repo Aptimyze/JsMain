@@ -51,7 +51,7 @@ function GAMapper(GAEvent, extraParams={}){
             "GA_PHONEVERIFICATION_PAGE"		:["V", "Phone Verification Screen"],
             "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']],
 
-  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || ""]
+  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || "default"]
 
         }
         if(GAMapping[GAEvent]){

@@ -495,8 +495,13 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 function performAction(action, tempParams, index,isPrime,fromButton)
 {
   /* GA tracking action on contactEngine */
-  if(typeof actionDetail[action] != "undefined")
-  GAMapper("GA_CONTACT_ENGINE", {"actionDetail": actionDetail[action]});
+  if((typeof action != "undefined")&&(typeof actionDetail[action] != "undefined")){
+    GAMapper("GA_CONTACT_ENGINE", {"actionDetail": actionDetail[action]});
+  }else{
+    /* default case when action not found */
+    GAMapper("GA_CONTACT_ENGINE");
+  }
+  
 
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
