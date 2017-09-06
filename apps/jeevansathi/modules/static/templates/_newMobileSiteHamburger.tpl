@@ -192,7 +192,7 @@
                                 <li class='mb12'><a bind-slide=1  id="fraudLink" href="/static/page/fraudalert" class="newS white">Fraud Alert</a>
                                 </li>
                                 <li class='mb12'>
-                                    <div bind-slide=1 href="/P/logout.php" id="logoutLink" style="margin-left: 35px;" class="newS white ml10">Logout</div>
+                                    <div bind-slide=1 href="/P/logout.php" id="logoutLink" style="margin-left: 30px;" class="newS white ml10">Logout</div>
                                 </li>
                                 <li>
                                     <a bind-slide=1  id="switchLink" href="/?desktop=Y" class="newS white">Switch to Desktop Site</a>
