@@ -17,10 +17,10 @@
       
 
                         <li class="f13 pb8 fontlig">
-                            <div id="appDownloadLink1" class="wid49p dispnone"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
-                            <div class="wid49p dispnone" id="appleAppDownloadLink1"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
-                            <div class="wid49p dispibl">
-                                <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white fr mar0Imp">हिंदी में</div>
+                            <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
+                            <div class="dispnone" id="appleAppDownloadLink1"><a bind-slide=1  style="margin-left:14px"  href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
+                            <div class="dispibl mr10 fr">
+                                <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white  mar0Imp">हिंदी में</div>
                             </div>
                         </li>
                         <div style="height: 1px;padding: 0px 20px;"><div style="background-color: white;height: 1px;opacity: .5;"></div></div>                        
@@ -29,8 +29,8 @@
                                 <div class="dispibl txtc wid32p">
                                     <a bind-slide=1  id="awaitingResponseLinkTop" href="/inbox/1/1" class="dispbl white f12">
                                         <i id="int_rec" style="margin: 0px;" class="hamSprite irIcon posrel">
-                                            ~if $profileMemcacheObj->get('AWAITING_RESPONSE')` 
-                                            <div class="posabs newham_pos1"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">~if $profileMemcacheObj->get('AWAITING_RESPONSE')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE')`~/if`</div></div></div>
+                                            ~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')` 
+                                            <div class="posabs newham_pos1"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE_NEW')`~/if`</div></div></div>
                                             ~/if` 
                                         </i>
                                         <div>Interests<br>Received</div>
@@ -77,7 +77,7 @@
                         <li class='mb12'>
                             <div id="myMatchesParent" >
                                 <i class="hamSprite myMatchesIcon"></i>
-                                <div class=" ml25 f17 white dispibl">My Matches</div>
+                                <div class=" ml10 f17 white dispibl">My Matches</div>
                                 <i id="expandMyMatches" class="hamSprite plusIcon fr"></i>
                             </div>
                             <ul id="myMatchesMinor"  style="margin-top: 12px" class="minorList dispnone f15" >
@@ -107,7 +107,7 @@
                         </li>
                         <li class='mb12'>
                             <div id="contactsParent"><i class="hamSprite myContactIcon"></i>
-                                <div id="myContactLink" class="f17 ml25 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
+                                <div id="myContactLink" class="f17 ml10 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
                             <ul id="contactsMinor" style="margin-top: 12px" class="minorList dispnone f15" >
                                 <li class='mb12'>
                                     <a bind-slide=1  id="intRecLink" href="/inbox/1/1" class="newS white">
@@ -158,7 +158,7 @@
                         <li class='mb12'>
                             <div id="settingsParent">
                                 <i class="hamSprite settingsIcon"></i>
-                                <div id="settingsLink" class="ml25 dispibl white">Settings</div>
+                                <div id="settingsLink" class="ml10 dispibl white">Settings</div>
                                 <i id="expandSettings" class="hamSprite plusIcon fr"></i>
                             </div>
                             <ul id="settingsMinor" style="margin-top: 12px" class="minorList dispnone f15">
@@ -221,11 +221,11 @@
        ~else`
    <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden"> 
 
-                        <li class="f13 pb8 fontlig">
-                            <div id="appDownloadLink1" class="wid49p dispnone"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
-                            <div class="wid49p dispnone" id="appleAppDownloadLink1"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
-                            <div class="wid49p dispibl">
-                                <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white fr mar0Imp">हिंदी में</div>
+                        <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
+                            <div id="appDownloadLink1" class="dispnone"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
+                            <div class="dispnone" id="appleAppDownloadLink1"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
+                            <div class="fr mr10 dispibl">
+                                <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white  mar0Imp">हिंदी में</div>
                             </div>
                         </li>
                         <li>

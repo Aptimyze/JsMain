@@ -61,7 +61,7 @@ height: 20px;}
     background-position: -50px -14px;
 }
 .listingHam li {
-    padding: 10px 10px;
+    padding: 10px 10px 10px 6px;
 }
 
 @media (min-width: 280px) and (max-width: 320px) {
@@ -75,7 +75,7 @@ height: 20px;}
     vertical-align: bottom;
 }
 .listingHam li a{
-    margin-left: 25px;
+    margin-left: 10px;
 }
 .minorList li a{
     margin-left: 10px;
@@ -250,5 +250,5 @@ height: 20px;}
     margin-left: 25px;
 }
 .minorList li a.newS {
-    margin-left: 35px;
+    margin-left: 30px;
 }
