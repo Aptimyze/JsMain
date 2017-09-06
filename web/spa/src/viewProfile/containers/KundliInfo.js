@@ -15,14 +15,14 @@ class KundliInfo extends React.Component {
 
     componentDidMount() {
         if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
-            this.props.getGuna(this.props.profilechecksum,this.props.about.sameGender);   
-        } 
+            this.props.getGuna(this.props.profilechecksum,this.props.about.sameGender);
+        }
     }
 
     closeAstroLayer() {
         this.setState({
             showAstroLayer:false
-        });        
+        });
     }
 
     componentWillReceiveProps(nextProps)
@@ -41,8 +41,8 @@ class KundliInfo extends React.Component {
             }
             htmlStr += "<div class='fontlig padl5 fl vpro_wordwrap'> Your guna score with " + szHisHer+ " is        <span class='"+colorClass+"'>" + nextProps.gunaScore.SCORE+ "/36   </span></div>";
             if(document.getElementById("gunaScore")) {
-                document.getElementById("gunaScore").innerHTML = htmlStr;    
-            }   
+                document.getElementById("gunaScore").innerHTML = htmlStr;
+            }
         }
     }
 
@@ -59,7 +59,7 @@ class KundliInfo extends React.Component {
             method: "POST",
             url: CONSTANTS.API_SERVER +call_url,
             data: '',
-            headers: { 
+            headers: {
               'Accept': 'application/json',
               'withCredentials':true
             },
@@ -68,7 +68,7 @@ class KundliInfo extends React.Component {
 
     render() {
     	var city_country;
-    	if(this.props.about.city_country) 
+    	if(this.props.about.city_country)
     	{
     		city_country = <div>
     			<div className="f12 color1">City, Country of Birth</div>
@@ -78,7 +78,7 @@ class KundliInfo extends React.Component {
     		</div>;
     	}
     	var date_time;
-    	if(this.props.about.date_time) 
+    	if(this.props.about.date_time)
     	{
     		date_time = <div>
     			<div className="f12 color1">Date &amp; Time of Birth</div>
@@ -90,7 +90,7 @@ class KundliInfo extends React.Component {
 
         var AstroReport;
         if(!this.props.about.NO_ASTRO && this.props.about.sameGender != 1)
-        {   
+        {
             var classAsign = "";
             if(this.props.about.COMPATIBILITY_SUBSCRIPTION == "N" && this.props.about.paidMem == "Y") {
                 classAsign = "astroCompMem";
@@ -105,8 +105,8 @@ class KundliInfo extends React.Component {
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
     	{
-               var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
-        
+               var urlString = "/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
+
             downloadHoroscope = <div>
     			<a href = {urlString}>
                     <button id="downloadHoroscope" className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
@@ -116,15 +116,15 @@ class KundliInfo extends React.Component {
     	}
 
     	var horoscope;
-    	if(this.props.about.sameGender != 1 && this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == "")) 
+    	if(this.props.about.sameGender != 1 && this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
     	{
     		horoscope = <div className="clearfix pb20 pt20">
     		 {downloadHoroscope}
     		</div>;
     	}
-    
+
     	var more_astro;
-    	if(this.props.about.more_astro) 
+    	if(this.props.about.more_astro)
     	{
             var rashi,nakshatra,horo_match;
             if(this.props.about.more_astro.rashi) {
@@ -141,7 +141,7 @@ class KundliInfo extends React.Component {
                     </div>
                 </div>;
             }
-            if(this.props.about.more_astro.horo_match) 
+            if(this.props.about.more_astro.horo_match)
             {
                 horo_match = <div className="clearfix pt10">
                     <i className="vpro_sprite vpro_pin"></i>
@@ -164,7 +164,7 @@ class KundliInfo extends React.Component {
     	}
 
     	var kundliSection;
-    	if(this.props.about.city_country || this.props.about.date_time || this.props.about.more_astro) 
+    	if(this.props.about.city_country || this.props.about.date_time || this.props.about.more_astro)
     	{
     		kundliSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
     			<div className="fl">
@@ -179,8 +179,8 @@ class KundliInfo extends React.Component {
     	}
 
         var muslim_m;
-        if(this.props.about.muslim_m) 
-        {  
+        if(this.props.about.muslim_m)
+        {
             let htmlStr = "<div id='vpro_muslim_m'>", muslimData = this.props.about.muslim_m, keyArray = Object.keys(muslimData);
             for(var i=0; i<keyArray.length; i++) {
                 htmlStr += '<div class="f12 color1">'+keyArray[i]+'</div>';
@@ -205,7 +205,7 @@ class KundliInfo extends React.Component {
         }
 
         var Religious;
-        if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m) 
+        if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m)
         {
             Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
                 <div className="fl">
@@ -256,7 +256,7 @@ class KundliInfo extends React.Component {
                 </div>
             </div>
         }
-    	
+
     	return(
     		<div>
                 {astroLayer}
