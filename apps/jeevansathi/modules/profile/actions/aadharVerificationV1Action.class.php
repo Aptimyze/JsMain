@@ -61,7 +61,6 @@ class aadharVerificationV1Action extends sfActions
 			}
 		}		        
         $apiResponseHandlerObj->generateResponse();
-        die();
 		return sfView::NONE; 
 	}	
 }

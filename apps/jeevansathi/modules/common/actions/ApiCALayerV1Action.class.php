@@ -100,7 +100,6 @@ class ApiCALayerV1Action extends sfActions
         {
         	$layerData['ABOUT_ME_TEXT'] = $this->loginProfile->getYOURINFO();
 	    }
-	    
 
 				$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;

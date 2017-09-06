@@ -31,7 +31,6 @@ class aadharVerificationStatusV1Action extends sfActions
 		$apiResponseHandlerObj->setHttpArray($returnArr["RESPONSE"]);
 		$apiResponseHandlerObj->setResponseBody($returnArr);		
 		$apiResponseHandlerObj->generateResponse();
-		die();
 		return sfView::NONE;
 	}
 
