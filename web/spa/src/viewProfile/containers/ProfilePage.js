@@ -419,9 +419,9 @@ class ProfilePage extends React.Component {
           //console.log("p-3");
              photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         } else {
-          //console.log("p-4");
+          console.log("p-4");
             //himHer = "her";
-            photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
+            photoViewTemp = <div id="tempImage" className="fullwid bg18" style={{height: window.innerWidth}}></div>;
 
         }
         let backBtnView;
