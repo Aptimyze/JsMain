@@ -14,6 +14,7 @@ class QuickSearchBand extends SearchParamters
         const manglik_blank = '';
         const occupation_blank = '';
         const education_blank = '';
+        private $skipFields = array("GENDER","AGE","INCOME","HEIGHT","RELIGION","CASTE","CASTE_GROUP","MATCHALERTS_DATE_CLUSTER","HAVEPHOTO","MTONGUE","CITY_RES","COUNTRY_RES","STATE","MSTATUS");
 
 	public function __construct($loggedInProfileObj="")
         {
@@ -52,7 +53,24 @@ class QuickSearchBand extends SearchParamters
 		$searchParamsSetter['LHEIGHT'] = $jsonArr["LHEIGHT"];
 		$searchParamsSetter['HHEIGHT'] = $jsonArr["HHEIGHT"];
 
-
+                $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
+                $applyClusters = array_diff($solr_clusters,$this->skipFields);
+                foreach($applyClusters as $clusterFields){
+                        if($cluster = $jsonArr[$clusterFields]){
+                                if($clusterFields == "KNOWN_COLLEGE"){
+                                        if($cluster == "Any")
+                                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
+                                        else
+                                                $searchParamsSetter['KNOWN_COLLEGE'] = $cluster;
+                                }else{
+                                        $searchParamsSetter[$clusterFields] = $cluster;
+                                }
+                        }
+                }
+                
+                if($request->getParameter('edu_level_new'))
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
+                
 		if(isset($jsonArr["LINCOME"]) && isset($jsonArr["HINCOME"]))
                 {
                         $rArr["minIR"] = 0;
