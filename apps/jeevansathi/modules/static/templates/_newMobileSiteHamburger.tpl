@@ -29,8 +29,8 @@
                                 <div class="dispibl txtc wid32p">
                                     <a bind-slide=1  id="awaitingResponseLinkTop" href="/inbox/1/1" class="dispbl white f12">
                                         <i id="int_rec" style="margin: 0px;" class="hamSprite irIcon posrel">
-                                            ~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')` 
-                                            <div class="posabs newham_pos1"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE_NEW')`~/if`</div></div></div>
+                                            ~if $profileMemcacheObj->get('AWAITING_RESPONSE')` 
+                                            <div class="posabs newham_pos1"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">~if $profileMemcacheObj->get('AWAITING_RESPONSE')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE')`~/if`</div></div></div>
                                             ~/if` 
                                         </i>
                                         <div>Interests<br>Received</div>
