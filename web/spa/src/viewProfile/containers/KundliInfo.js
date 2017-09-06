@@ -15,7 +15,7 @@ class KundliInfo extends React.Component {
 
     componentDidMount() {
         if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
-            this.props.getGuna(this.props.profilechecksum);   
+            this.props.getGuna(this.props.profilechecksum,this.props.about.sameGender);   
         } 
     }
 
@@ -105,7 +105,7 @@ class KundliInfo extends React.Component {
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
     	{
-            var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
+               var urlString = "https://www.jeevansathi.com/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
         
             downloadHoroscope = <div>
     			<a href = {urlString}>
@@ -275,8 +275,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        getGuna: (profilechecksum) => {
-            let call_url = "/api/v1/profile/gunascore?oprofile="+profilechecksum;
+        getGuna: (profilechecksum,sameGender) => {
+            let call_url = "/api/v1/profile/gunascore?oprofile="+profilechecksum+"&sameGender="+sameGender;
             commonApiCall(call_url,{},'SHOW_GUNA','GET',dispatch,false);
         }
     }
