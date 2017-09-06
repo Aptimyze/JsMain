@@ -938,9 +938,7 @@ function aadharVerificationApi(aadhar, UserName){
   $("#CALButtonB1").hide();
 
   var Url = "/api/v1/profile/aadharVerification?name="+UserName+"&aid="+aadhar;
-  // Url = "http://local.admin/test1.php/?v=1";
   $.get(Url, function(data){
-    // console.log(data);
     if(data.responseStatusCode == 1){
       $("#cal_content_2").hide();
       $("#cal_content_1").show();
@@ -971,10 +969,8 @@ function updateCount(COUNT, COUNTER, UserName){
   var CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
   $("#cal_content_2").html(CardHtml);
   var Url  = "/api/v1/profile/aadharVerificationStatus?name="+UserName;
-  // Url = "http://local.admin/test1.php/?v=2";
   $.get(Url, function(data){
     // clearInterval(COUNTER);
-    // console.log(data);
     switch(data.VERIFIED){
       case "Y":
         clearInterval(COUNTER);
