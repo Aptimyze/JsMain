@@ -99,7 +99,7 @@ EOF;
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{
-						$command = JsConstants::$php5path ." -q ". JsConstants::$cronDocRoot." cron:ApiFaceDetectionTask ".$value["PROFILEID"]." ".$pid." ".$origPic." &";
+						$command = JsConstants::$php5path ." -q ". JsConstants::$cronDocRoot." cron:ApiFaceDetectionTask ".$value["PROFILEID"]." ".$pid." ".$origPic;
 							exec($command);
 						foreach(ProfilePicturesTypeEnum::$PICTURE_SIZES as $k =>$v)
 						{
