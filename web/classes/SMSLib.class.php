@@ -111,8 +111,6 @@ class SMSLib
     //Returns sms token value
     public function getTokenValue($messageToken, $tokenValue = array())
     {
-    	print_r($tokenValue);
-    	print_r("\n");
         if (!isset($tokenValue["DATA_TYPE"])) {
             $messageValue                          = $tokenValue;
             $messageValue["RECEIVER"]["USERNAME"]  = $tokenValue["USERNAME"];

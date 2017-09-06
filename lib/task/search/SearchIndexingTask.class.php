@@ -7,7 +7,7 @@ class SearchIndexingTask extends sfBaseTask
 {
 	private $searchEngine = 'solr';
 	private $outputFormat = 'array';
-        private $isPost = 0;
+        private $isPost = 1;
 
  	protected function configure()
   	{
