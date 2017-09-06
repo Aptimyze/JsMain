@@ -953,7 +953,7 @@ function aadharVerificationApi(aadhar, UserName){
        COUNTER = setInterval(function(){
         updateCount(COUNT, COUNTER, UserName);
         --COUNT;
-      }, 2500); 
+      }, 1000);
     }
   }, "json");
 }
