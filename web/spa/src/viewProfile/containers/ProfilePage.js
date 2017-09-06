@@ -43,7 +43,7 @@ class ProfilePage extends React.Component {
             dataLoaded: false,
             showHistory: false,
             profilechecksum: profilechecksum || "",
-            gender: "M",
+            gender: '',
             defaultPicData: "",
             defaultThumbNail: "",
             responseTracking:responseTracking,
@@ -65,8 +65,10 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
-        console.log('componentDidMount');
-        console.log(this.props);
+        //console.log('componentDidMount');
+        //console.log(this.props);
+        //console.log(localStorage.getItem('GENDER'));
+        //console.log(this.state.gender);
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
@@ -395,18 +397,30 @@ class ProfilePage extends React.Component {
 
     render()
     {
-        var himHer = "him",photoViewTemp,AboutViewTemp;
-        if(this.state.gender == "M" && this.state.ownView == false) {
-            himHer = "her";
+        let himHer = "him",photoViewTemp,AboutViewTemp;
+        let decideHimHer;
+        // console.log("=======");
+        // console.log(this.state);
+        // console.log(this.props);
+        // console.log("=======");
+        if(this.state.gender == "M" && this.state.ownView == false)
+        {
+            //console.log("p-1");
+            //himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
-        } else if(this.state.gender == "F" && this.state.ownView == false){
+        } else if(this.state.gender == "F" && this.state.ownView == false)
+        {
+           //console.log("p-2");
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
-        } else if(this.state.gender == "M" && this.state.ownView == true) {
+        } else if(this.state.gender == "M" && this.state.ownView == true)
+        {
+          //console.log("p-3");
              photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         } else {
-            himHer = "her";
+          //console.log("p-4");
+            //himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
         }
@@ -461,6 +475,31 @@ class ProfilePage extends React.Component {
 
         if(this.state.dataLoaded)
         {
+            // console.log(this.state.ownView);
+            // console.log(this.props.AboutInfo.gender);
+            if(this.state.ownView == false)
+            {
+                if(this.props.AboutInfo.gender == "Male")
+                {
+                  decideHimHer= "Him";
+                }
+                else
+                {
+                  decideHimHer = "Her";
+                }
+            }
+            else
+            {
+              if(this.props.AboutInfo.gender == "Male")
+              {
+                decideHimHer= "Him";
+              }
+              else
+              {
+                decideHimHer = "Her";
+              }
+            }
+
             document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
@@ -581,9 +620,15 @@ class ProfilePage extends React.Component {
                         </div></div>)}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
-                                <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">About  {himHer} </div>
-                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">Family</div>
-                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">Looking for</div>
+                                <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">
+                                  About  {decideHimHer}
+                                </div>
+                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">
+                                  Family
+                                </div>
+                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">
+                                  Looking for
+                                </div>
                                 <div className="clr"></div>
                             </div>
                         </div>
