@@ -56,7 +56,7 @@ class QuickSearchBand extends SearchParamters
                 $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
                 $applyClusters = array_diff($solr_clusters,$this->skipFields);
                 foreach($applyClusters as $clusterFields){
-                        if($cluster = $jsonArr[$clusterFields]){
+                        if($cluster == $jsonArr[$clusterFields]){
                                 if($clusterFields == "KNOWN_COLLEGE"){
                                         if($cluster == "Any")
                                                 $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
@@ -68,9 +68,11 @@ class QuickSearchBand extends SearchParamters
                         }
                 }
                 
-                if($request->getParameter('edu_level_new'))
-                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
                 
+                 if(isset($jsonArr['EDU_LEVEL_NEW']) && $jsonArr['EDU_LEVEL_NEW'] != "")
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $jsonArr['EDU_LEVEL_NEW'];
+
+                //print_r($searchParamsSetter);die;
 		if(isset($jsonArr["LINCOME"]) && isset($jsonArr["HINCOME"]))
                 {
                         $rArr["minIR"] = 0;
