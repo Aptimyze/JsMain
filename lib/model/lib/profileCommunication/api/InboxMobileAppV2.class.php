@@ -1009,7 +1009,7 @@ class InboxMobileAppV2
 	                		$profile[$count]["buttonDetailsJSMS"] = $buttonObj->getButtonArray(array('PHOTO'=> PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'],'CC_LISTING'=>$infoKey,'BOOKMARKED'=>$tupleObj->getIS_BOOKMARKED(),'IGNORED'=>$tupleObj->getIS_IGNORED()));
 						}
 						else{
-							$profile[$count]["buttonDetailsJSMS"] = ButtonResponseFinal::getListingButtons($infoKey, $source, $viewer,$type, $page,$countInitiate);
+							$profile[$count]["buttonDetails"] = $profile[$count]["buttonDetailsJSMS"] = ButtonResponseFinal::getListingButtons($infoKey, $source, $viewer,$type, $page,$countInitiate);
 						}
 					}
 					else
