@@ -148,7 +148,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
 
     public function getProfilesWithinDateRange($start_dt, $end_dt) {
         try {
-            $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND STATUS='DONE'";
+            $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND STATUS='DONE' AND AMOUNT>0";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
             $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
