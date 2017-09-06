@@ -1,4 +1,5 @@
-function GAMapper(GAEvent, extraParams={}){
+function GAMapper(GAEvent, extraParams)
+{
     try {
     	var PageName = "";
     	if(typeof(currentPageName) != "undefined"){
