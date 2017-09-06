@@ -56,7 +56,7 @@
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite homeIcon"></i>
-                            <a bind-slide=1  id="homeLink1" class="f17 white" href="/">Home</a>
+                            <a bind-slide=1  id="homeLink1" class=" white" href="/">Home</a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite searchIcon"></i>
@@ -68,16 +68,16 @@
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite savedSearchIcon"></i>
-                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class="f17 white">Saved Searches</a>
+                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class=" white">Saved Searches</a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite editProfileIcon"></i>
-                            <a bind-slide=1  href="/profile/viewprofile.php?ownview=1" id="editProfileLink" class="f17 white">Edit Profile</a>
+                            <a bind-slide=1  href="/profile/viewprofile.php?ownview=1" id="editProfileLink" class=" white">Edit Profile</a>
                         </li>
                         <li class='mb12'>
                             <div id="myMatchesParent" >
                                 <i class="hamSprite myMatchesIcon"></i>
-                                <div class=" ml10 f17 white dispibl">My Matches</div>
+                                <div class=" ml10  white dispibl">My Matches</div>
                                 <i id="expandMyMatches" class="hamSprite plusIcon fr"></i>
                             </div>
                             <ul id="myMatchesMinor"  style="margin-top: 12px" class="minorList dispnone f15" >
@@ -107,7 +107,7 @@
                         </li>
                         <li class='mb12'>
                             <div id="contactsParent"><i class="hamSprite myContactIcon"></i>
-                                <div id="myContactLink" class="f17 ml10 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
+                                <div id="myContactLink" class=" ml10 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
                             <ul id="contactsMinor" style="margin-top: 12px" class="minorList dispnone f15" >
                                 <li class='mb12'>
                                     <a bind-slide=1  id="intRecLink" href="/inbox/1/1" class="newS white">
@@ -139,18 +139,18 @@
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite shortlistedIcon"></i>
-                            <a bind-slide=1  href="/search/shortlisted" id="shortlistedLink" class="f17 white">Shortlisted
+                            <a bind-slide=1  href="/search/shortlisted" id="shortlistedLink" class=" white">Shortlisted
                             <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('BOOKMARK')` ~if $profileMemcacheObj->get('BOOKMARK')>99` 99+~else`~$profileMemcacheObj->get('BOOKMARK')`~/if`~/if`
                             </span>
                             </a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite phoneIcon"></i>
-                            <a bind-slide=1  href="/inbox/16/1" id="phoneLink" class="f17 white">Phonebook</a>
+                            <a bind-slide=1  href="/inbox/16/1" id="phoneLink" class=" white">Phonebook</a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite profileVisitorIcon"></i>
-                            <a bind-slide=1  href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" class="f17 white">Profile Visitors
+                            <a bind-slide=1  href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" class=" white">Profile Visitors
                                     <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('VISITORS_ALL')` ~if $profileMemcacheObj->get('VISITORS_ALL')>99` 99+~else`~$profileMemcacheObj->get('VISITORS_ALL')`~/if`~/if`</span>
                             </a>
                         </li>
@@ -209,7 +209,7 @@
                             <div class="txtc color9 mb15">~$MembershipMessage.top`</div>
                         </div>
                         ~/if`
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn f17 white bg7 mt15 fullwid lh50">~$MembershipMessage.bottom|upper`</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.bottom|upper`</a>
 
                     </div>
                     ~/if`
@@ -230,7 +230,7 @@
                         </li>
                         <li>
                             <i class="hamSprite homeIcon mt10Imp"></i>
-                            <a id="homeLink1" class="f17 white" href="/">Home</a>
+                            <a id="homeLink1" class=" white" href="/">Home</a>
                         </li>
                         <li>
                             <i class="hamSprite searchIcon"></i>
@@ -242,7 +242,7 @@
                         </li>
                         <li>
                             <i class="hamSprite editProfileIcon"></i>
-                            <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" class="f17 white">Browse By Community</a>
+                            <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" class=" white">Browse By Community</a>
                         </li>
 
                         <li>
