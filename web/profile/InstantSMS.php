@@ -33,7 +33,6 @@ class InstantSMS {
 	}
 	
 	private function setProfileDetails() {
-				
 		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,COUNTRY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
 		if(!in_array($this->smsKey,$this->settingIndependent))
 			$sql.=" and  (JPROFILE_ALERTS.SERVICE_SMS !=  'U' OR JPROFILE_ALERTS.SERVICE_SMS IS NULL)";
@@ -65,7 +64,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
                 }
                 if($this->varArray) 
                     $this->profileDetails = array_merge($this->profileDetails,$this->varArray);
-		//print_r($this->profileDetails);
 		
 	}	
 	private function inDNC() {
@@ -92,6 +90,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
+	
 		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
 		switch ($this->smsKey) {
@@ -168,7 +167,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	}		
 	
 	private function getMessage () {
-		
 		$DEFAULT_SUBSCRIPTION = "A";
 		$DEFAULT_GENDER = "A";
 		
@@ -181,6 +179,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		else $GENDER = "F";
 		
 		$sql = "SELECT MESSAGE, GENDER, SUBSCRIPTION, TIME_CRITERIA, CUSTOM_CRITERIA from newjs.SMS_TYPE WHERE SMS_TYPE = 'I' and (SUBSCRIPTION LIKE \"%".$SUBSCRIPTION."%\" OR SUBSCRIPTION = \"".$DEFAULT_SUBSCRIPTION."\") and GENDER IN ( \"".$GENDER."\", \"".$DEFAULT_GENDER."\") and  STATUS = 'Y' and SMS_KEY = '".$this->smsKey."'";
+	
 		if(in_array($this->customCriteria,array("0","1")))
 			$sql.=" AND CUSTOM_CRITERIA IN ('".$this->customCriteria."')";
 		$sql.=";";
@@ -262,7 +261,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$startToken = 1;
 				continue;
 			}
-			else if ($message[$i] == '}') { 
+			else if ($message[$i] == '}') {
 				if(in_array($this->smsKey,$this->otherProfileRequired))
 					$actualMessage .= $this->SMSLib->getTokenValue($messageToken,$this->otherProfileDetails);
 				else
@@ -278,13 +277,11 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 	//Returns sms text	
 	private function getSMS () {
-
 		$this->setProfileDetails();
 		$message = "";
 		if ($this->isWhitelistedProfile()) { 
 			$message = $this->getMessage();
 			$message = $this->getActualMessage($message);
-
 		}
 		return $message;
 		
@@ -311,13 +308,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
     //Send sms
     public function send($acc = "transaction")
     {
-        $message = $this->getSMS();
+    	$message = $this->getSMS();
         if ($message) {
-            include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
+        	
+        	include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
             $sent = "N";
-
             if (in_array($this->smsKey, $this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()) {
-                $sent         = "Y";
+            	$sent         = "Y";
                 $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
                 $xmlResponse  = $smsVendorObj->generateXml($this->profileid, $this->profileDetails['ISD'] . $this->profileDetails["PHONE_MOB"], $message, $this->smsSettings["SEND_TIME"]);
                 $smsVendorObj->send($xmlResponse, $acc);
