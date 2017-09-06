@@ -1008,6 +1008,7 @@ function get_aadharinput(){
 
 var nameErrorObj, aadharErrorObj, consentErrorObj;
 function manageClicks(clickType){
+  $("#cal_content_2").html('<div class="extraNumber"><img src="~sfConfig::get("app_img_url")`/images/colorbox/loader_big.gif"></div>');
   if(!nameErrorObj)
     nameErrorObj = $("#nameError");
   if(!aadharErrorObj)
