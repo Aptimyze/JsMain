@@ -618,6 +618,7 @@ if(CALayerShow!='0')
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
+$('body').css('overflow','hidden');
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
       if(CALayerShow==19)
@@ -625,7 +626,9 @@ $('body').prepend(response);
   showTimerForLightningCal(time);
 }
   if(CALayerShow==9) 
-      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');
+        $('body').css("overflow", "initial");
+        closeCurrentLayerCommon();});
   else
     $('.js-overlay').unbind('click');
 }
@@ -1044,7 +1047,10 @@ function criticalLayerButtonsAction(clickAction,button) {
                         data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
                     if(layerId!=13 || button!='B1')
+                    {
                         closeCurrentLayerCommon();
+                        $('body').css("overflow", "initial");
+                    }
                     if(layerId == 14)
                     {
                       $("#alternateEmailSentLayer").hide();

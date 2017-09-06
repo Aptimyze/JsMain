@@ -73,12 +73,12 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {//return 23;
+  {//return 24;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-    /* make sure no layer opens before one day */
+  /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
 
@@ -484,7 +484,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      if(!MobileCommon::isNewMobileSite() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];

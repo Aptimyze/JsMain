@@ -14,3 +14,5 @@ all:
     enable_login: off
   SocialSignin:
     enable_login: off
+  aadharVerification:
+    enable_login: off
