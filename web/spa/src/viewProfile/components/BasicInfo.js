@@ -64,8 +64,7 @@ export default class BasicInfo extends React.Component {
 	    				{this.props.about.location}
 	    			</li>
 	    			<li className="wid49p wspace" id="vpro_m_status" >
-	    				{this.props.about.m_status}&nbsp;
-	    				{have_child}
+	    				{this.props.about.m_status},{have_child}
 	    			</li>
   				</ul>
   				{myInfo}

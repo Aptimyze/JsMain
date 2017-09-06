@@ -568,7 +568,7 @@ class ProfilePage extends React.Component {
                     </div>
                     {invalidProfileView}
                     <div id="validProfile" className="">
-                      {this.props.pic ?
+                      {this.props.pic.pic_count>0 ?
                         (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
                             <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
                                 {photoView}
