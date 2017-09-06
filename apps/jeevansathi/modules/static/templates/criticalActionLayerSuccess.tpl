@@ -904,7 +904,10 @@ var aadhar = "";
 var COUNT = 10;
 var COUNTER;
 var CALInnerHtml;
+var TRYAGAINTXT = "Try Again";
+var TryAgainClick = false;
 function restoreContent(){
+  TryAgainClick = true;
   $("#aadharField").val("");
 
   $("#cal_content_2").hide();
@@ -917,8 +920,14 @@ function restoreContent(){
   aadharErrorObj = null;
   consentErrorObj = null;
 
-  $("#cal_content_2").html(`<div class='extraNumber'><img src="http://trunk.jeevansathi.com/images/colorbox/loader_big.gif"></div>`);
+  $("#cal_content_2").html('<div class="extraNumber"><img src="~sfConfig::get("app_img_url")`/images/colorbox/loader_big.gif"></div>');
 }
+
+$("#aadharField").keydown(function(e){
+  if(![37,38,39,40,8,46, 48,49,50,51,52,53,54,55,56,57].includes(e.which)){
+    e.preventDefault();return;
+  }
+  });
 
 function aadharVerificationApi(aadhar, UserName){
   // var CardHtml = `<div class='extraNumber'><img src="http://trunk.jeevansathi.com/images/colorbox/loader_big.gif"></div>`;
@@ -954,8 +963,8 @@ function aadharVerificationApi(aadhar, UserName){
 function updateCount(COUNT, COUNTER, UserName){
   if(COUNT <= 0){
     clearInterval(COUNTER);
-    $("#closeButtonCALayer").show();
-        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Request Timeout"+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">try again</span></div>';
+    if(!TryAgainClick)$("#closeButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Request Timeout"+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
     $("#cal_content_2").html(CardHtml);
     return;
   }
@@ -974,16 +983,16 @@ function updateCount(COUNT, COUNTER, UserName){
       break;
       case "N":
         clearInterval(COUNTER);
-        $("#closeButtonCALayer").show();
-        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">try again</span></div>';
+        if(!TryAgainClick)$("#closeButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
       break;
       case "P" :
         CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
       break;
       default:
         clearInterval(COUNTER);
-        $("#closeButtonCALayer").show();
-        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Something went wrong."+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">try again</span></div>';
+        if(!TryAgainClick)$("#closeButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Something went wrong."+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
         $("#cal_content_2").html(CardHtml);
     return;
       break;
@@ -1054,17 +1063,17 @@ function manageClicks(clickType){
 <div id="cal_content_1">
 <div class="wid470 mauto">
 <div class="f22">~$titleText`</div>
-<div class="f14 lh22">~$contentText`</div>
+<div class="f14 lh22">We are moving to a secure platform by verifying Aadhar of our users. Verify your Aadhar to appear as 'Aadhar Verified'.<br>Your Aadhar Number will not be shared with anyone.</div>
 <div class="clearfix" id="aadhar_input">
 <input type="text" name="" id="aadharField" size="12" maxlength="12" />
 
 </div>
 <div id="aadharError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Provide a valid Aadhar number</div>
 <div class="f13  mt5 txtc pb30">Aadhar details will be verified by government data</div>
-<div  class="f13  mt5 txtc">Your Name</div>
+<div  class="f12  mt5 txtc">Your Name (As per Aadhar Card)</div>
 <div class="pos-rel wid300 divcenter">
   <input type="text" id="nameInputCAL" class="f15 wid90p pa2 color11 txtc" value="~$NAME`" placeholder="Your name here">
-  <img onclick="$('#nameInputCAL').focus();" src="http://i.imgur.com/R9a0sre.png" class="pos-abs" style="cursor: pointer;right:9px;top:5px">
+  <img onclick="$('#nameInputCAL').focus();" src='~sfConfig::get("app_img_url")`/images/jspc/myjsImg/pencil.png' class="pos-abs" style="cursor: pointer;right:9px;top:5px">
 </div>
 <div id="nameError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Mention a valid name</div>
   <div id="consentError" class="bold f11 colrGrey mt5 txtc errCL1 fl disp-hidden">Consent is needed to verify</div>
@@ -1073,7 +1082,7 @@ function manageClicks(clickType){
 <div class="clearfix">
   <div style="display: inline-flex;">
   <div class="fl" style="width:5%"><input type="checkbox" id="consentCheckbox" checked="checked"></div>
-  <div id="consentText" class="wid94p bottom_fade f13" style="padding-bottom: 15px;text-align: center;cursor: pointer;" onclick="$(this).toggleClass('bottom_fade');$('#readmoreConsent').toggleClass('disp-hidden');">~$calObject.LEGAL_TEXT`
+  <div id="consentText" class="wid94p bottom_fade f13" style="line-height: 1.5; padding-bottom: 15px;text-align: center;cursor: pointer;" onclick="$(this).toggleClass('bottom_fade');$('#readmoreConsent').toggleClass('disp-hidden');">~$calObject.LEGAL_TEXT`
   </div>
   </div>
   <div id="readmoreConsent" onclick="$(this).toggleClass('disp-hidden');$('#consentText').toggleClass('bottom_fade');" class="bold  f11 colrGrey mt5 txtc errCL1" >read more</div>
