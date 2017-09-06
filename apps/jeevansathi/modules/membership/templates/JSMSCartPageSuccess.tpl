@@ -205,13 +205,9 @@
 				<!--end:total pay div-->
 				<div id="cartTaxText" class="rv2_colr2 fontlig f11 pt5 padl10">~$data.cart_tax_text`</div>
 				~if $data.currency eq '$'`
-				<div class="txtc pt7 f14 fontlig clearfix mauto wid80p">
-					<div class="fl">
-						<input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR">
-					</div>
-					<div class="fl" style="padding-left: 6px;">
-						I wish to pay with Indian card
-					</div>
+				<div class="txtc pt7 f14 fontlig clearfix">
+					<input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR">
+					<span class="pos-rel" style="display: inline-block; padding-left: 6px;">I wish to pay with Indian card</span>
 				</div>
 				~/if`
 				~if $data.apply_coupon_text`
