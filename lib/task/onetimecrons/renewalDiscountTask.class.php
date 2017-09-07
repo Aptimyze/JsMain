@@ -61,7 +61,7 @@ EOF;
 	                $rdLogObj->insert($profileid, $discount, $startDt, $discountExpiryDt);
 	            }
         	}
-        	unset($res,$details,$detailsArr,$purDet,$discount,);
+        	unset($res,$details,$detailsArr,$purDet,$discount);
 		}
 	}
 }
