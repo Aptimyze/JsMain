@@ -379,20 +379,31 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-        let same_url = false
-        if ( this.props.history.prevUrl )
+        let prevUrlListing = localStorage.getItem("prevUrlListing");
+        if (  prevUrlListing && !this.props.history.prevUrl )
         {
-            same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
-        }
-
-        if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
-        {
-            this.props.history.push("/myjs");
+            localStorage.removeItem("prevUrlListing");
+            window.location.href = prevUrlListing;
         }
         else
         {
-            this.props.history.push(this.props.history.prevUrl);
+            let same_url = false
+            if ( this.props.history.prevUrl )
+            {
+                same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
+            }
+            if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
+            {
+                this.props.history.push("/myjs");
+            }
+            else
+            {
+                this.props.history.push(this.props.history.prevUrl);
+            }
+            
         }
+
+
     }
 
     render()
