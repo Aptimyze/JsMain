@@ -40,6 +40,7 @@ class ProfilePage extends React.Component {
             showLoader: false,
             showPromo: false,
             tabArray: ["About","Family","Dpp"],
+            displayTab:["About","Family","Looking for"],
             dataLoaded: false,
             showHistory: false,
             profilechecksum: profilechecksum || "",
@@ -419,7 +420,7 @@ class ProfilePage extends React.Component {
             {
                 this.props.history.push(this.props.history.prevUrl);
             }
-            
+
         }
 
 
@@ -654,13 +655,13 @@ class ProfilePage extends React.Component {
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
                                 <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">
-                                  About  {decideHimHer}
+                                  {this.state.displayTab[0]}  {decideHimHer}
                                 </div>
                                 <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">
-                                  Family
+                                  {this.state.displayTab[1]}
                                 </div>
                                 <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">
-                                  Looking for
+                                  {this.state.displayTab[2]}
                                 </div>
                                 <div className="clr"></div>
                             </div>
