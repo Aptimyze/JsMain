@@ -351,7 +351,7 @@ LoginPage.propTypes = {
 const mapDispatchToProps = (dispatch) => {
     return{
         doLogin: (email,password,g_recaptcha_response,captcha) => {
-            let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password;
+            let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password+'&rememberme=Y';
             if ( g_recaptcha_response && captcha )
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
