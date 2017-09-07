@@ -61,10 +61,12 @@ class ProfilePage extends React.Component {
     }
 
     componentDidUpdate(prevprops) {
+      //  console.log('componentDidUpdate');
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
     }
     componentDidMount()
     {
+      //console.log('componentDidMount');
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
@@ -125,12 +127,15 @@ class ProfilePage extends React.Component {
             endX = e.changedTouches[0].clientX;
         });
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
+        //  console.log("touchned");
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
+              //console.log("s1");
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 _this.setState({
                     dataLoaded: false
                 });
+                _this.resetTab();
                 jsb9Fun.flushJSB9Obj(_this);
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.nextUrl);
@@ -138,12 +143,14 @@ class ProfilePage extends React.Component {
                 _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
                 _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
+              //console.log("s2");
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 jsb9Fun.flushJSB9Obj(_this);
                 _this.setState({
                     dataLoaded: false
                 });
+                _this.resetTab();
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.prevUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
@@ -214,6 +221,7 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
+       console.log('componentWillReceiveProps');
         if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
             this.setState({
                 showLoader:false
@@ -301,6 +309,7 @@ class ProfilePage extends React.Component {
     componentWillUnmount()
     {
         //this.props.fetchedProfilechecksum = "false";
+        //console.log("unmount");
         window.removeEventListener('scroll', this.setScrollPos);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
@@ -326,6 +335,7 @@ class ProfilePage extends React.Component {
 
     showTab(elem)
     {
+      //console.log("showtab");
       //console.log(elem);
       //console.log(this.state.tabArray);
         if(this.state.dataLoaded == true) {
@@ -336,6 +346,15 @@ class ProfilePage extends React.Component {
             document.getElementById("tab"+elem).classList.add("vpro_selectTab");
             document.getElementById(elem+"Tab").classList.remove("dn");
         }
+    }
+    resetTab()
+    {
+      //console.log("reset tab");
+      for(let i=0; i<this.state.tabArray.length; i++) {
+          document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
+
+      }
+      document.getElementById("tabAbout").classList.add("vpro_selectTab");
     }
     initHistory()
     {
@@ -430,7 +449,7 @@ class ProfilePage extends React.Component {
           //console.log("p-3");
              photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         } else {
-          console.log("p-4");
+          //console.log("p-4");
             //himHer = "her";
             photoViewTemp = <div id="tempImage" className="fullwid bg18" style={{height: window.innerWidth}}></div>;
 
@@ -486,6 +505,7 @@ class ProfilePage extends React.Component {
 
         if(this.state.dataLoaded)
         {
+            //console.log("data laoded") ;
             // console.log(this.state.ownView);
             // console.log(this.props.AboutInfo.gender);
             if(this.state.ownView == false)
@@ -510,6 +530,8 @@ class ProfilePage extends React.Component {
                 decideHimHer = "Her";
               }
             }
+
+
 
             document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
