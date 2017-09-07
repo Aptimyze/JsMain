@@ -285,7 +285,7 @@
                                     <div class="padall-15 fontlig">
 
                                     <div class="abuse_opt-sel f14 pb10 js-selectedOption"></div>
-                                    <textarea class="wid90p outlineBorderBoxNone js-AbuseOpenTextArea" placeholder="Provide Details" style="border:1px solid #bdbdbd; height:114px;padding:5px 10px"></textarea>
+                                    <textarea class="wid90p outlineBorderBoxNone js-AbuseOpenTextArea" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...." style="border:1px solid #bdbdbd; height:114px;padding:5px 10px"></textarea>
                                     <div class="f11 pb10 errcolr pb10 js-errorMsg disp-none"> *Please Enter The Comments (in atleast 25 characters) </div>
                                     <div class="pt10 pb10 pos-rel pl30 cursp js-abuseAttachment">
                                             <i class="attach pos-abs" style="top:13px; left:0"></i>

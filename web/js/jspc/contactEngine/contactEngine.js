@@ -1435,8 +1435,6 @@ function uploadAttachment()
                         },
             error   :  function ( response ) {
                             hideCommonLoader();
-                            fileObject.error = true;
-                            fileObject.errorMsg = "Something went wrong. Please try again";
                             ShowErrorMsg("Something went wrong. Please try again");
                         },
         };
