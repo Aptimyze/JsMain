@@ -40,6 +40,10 @@ EOF;
   {
 	if(!sfContext::hasInstance())
 		sfContext::createInstance($this->configuration);
+        
+        if(CommonUtility::runFeatureInDaytime(1,8)){
+                successfullDie();
+        }
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
 	$LockingService = new LockingService;
