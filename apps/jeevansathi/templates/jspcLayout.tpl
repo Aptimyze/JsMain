@@ -2,6 +2,7 @@
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
 ~assign var=action value= $sf_context->getActionName()`
 ~assign var=pageType value= $sf_request->getParameter('type')`
+~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
@@ -37,6 +38,7 @@
     ~minify_include_javascripts('top')`
     ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
     <script>
+    var currentPageName = "~$currentPageName`";
     var _rID = "~sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING')`";
         var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
@@ -54,7 +56,7 @@
                 var _gaq = _gaq || [];
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview']);
+                _gaq.push(['_trackPageview' , currentPageName || ""]);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -168,6 +170,7 @@
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
+
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->

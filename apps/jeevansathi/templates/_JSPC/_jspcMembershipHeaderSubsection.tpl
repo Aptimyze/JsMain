@@ -488,8 +488,8 @@ $(document).ready(function() {
     if(lightDiscText){
         $("#memMsgContent").hide();
         if(lightningRenew == "1"){
-            $("#discBanner").addClass("disp-none");
-        }
+                $("#discBanner").addClass("disp-none");
+            }
         $("#lightDisc").html(lightDiscText);
         $("#lightStrikePrice").html(priceStrike);
         $("#lightDiscPrice").html(discPrice);

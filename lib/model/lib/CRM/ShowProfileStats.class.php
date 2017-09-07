@@ -102,7 +102,7 @@ class ShowProfileStats
          */
         public function geCustomisedUsername()
         {
-		$nameOfUserObj =new incentive_NAME_OF_USER('newjs_slave');
+		$nameOfUserObj =new incentive_NAME_OF_USER('crm_slave');
 		$nameOfUser =$nameOfUserObj->getName($this->profileid);
 		$this->mainDataArr['PROFILE_NAME'] =$nameOfUser;
 	}
@@ -151,7 +151,7 @@ class ShowProfileStats
 	 */
 	private function getScore()
 	{
-		$adminPoolObj = new incentive_MAIN_ADMIN_POOL('newjs_slave');
+		$adminPoolObj = new incentive_MAIN_ADMIN_POOL('crm_slave');
 		$result = $adminPoolObj->get($this->profileid, 'PROFILEID', 'SCORE,ANALYTIC_SCORE');
 		$this->detailedDataArr['SCORE'] = $result['SCORE'];
 		$this->detailedDataArr['ANALYTIC_SCORE'] = $result['ANALYTIC_SCORE'];
@@ -236,7 +236,7 @@ class ShowProfileStats
 
 		// Membership Expiry Date
 		if ($mainMembership) {
-			$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
+			$serviceStatusObj = new BILLING_SERVICE_STATUS('crm_slave');
 			$expDate = $serviceStatusObj->getMaxExpiryDate($this->profileid);
 			if($expDate)
 				$membershipExpDate = date("M d, Y", strtotime($expDate));
@@ -278,7 +278,7 @@ class ShowProfileStats
 		$loginFrequency =$loginCount.'/ '.$ageOfRegistration;
 
 		if($searchReq){
-			$searchQueryObj = new MIS_SEARCHQUERY('newjs_slave');
+			$searchQueryObj = new MIS_SEARCHQUERY('crm_slave');
 			$searchFrequency = $searchQueryObj->performedSearchInLast10Days($this->profileid, $date10DayPrev);
 		}
 		$serviceRequirement = $this->serviceRequirement($havePhoto, $totalContacted, $lastLoginDt, $profilePercent, $searchFrequency, $ageOfRegistration, $date10DayPrev);
@@ -545,14 +545,15 @@ class ShowProfileStats
 		{
 			$profilememcacheObj = new ProfileMemcacheService($this->profileObj);
 			$contactByMeProfile = unserialize($profilememcacheObj->get('CONTACTED_BY_ME'));
-			foreach ($contactByMeProfile as $type=>$profileids)
-			{
-				foreach($profileids as $key=>$profileid)
+			if(is_array($contactByMeProfile)){
+				foreach ($contactByMeProfile as $type=>$profileids)
 				{
-					$profiles[] = $profileid;
+					foreach($profileids as $key=>$profileid)
+					{
+						$profiles[] = $profileid;
+					}
 				}
 			}
-
 			$this->detailedDataArr["CONTACTS_VIEWED"] = $profilememcacheObj->get("CONTACTS_VIEWED");
 			$viewLogObj = new JSADMIN_VIEW_CONTACTS_LOG();
 			$this->detailedDataArr["DIRECT_CONTACTS_VIEWED"] = $viewLogObj->totalContactsByViewer($this->profileid);
@@ -595,7 +596,8 @@ class ShowProfileStats
 		$ntimesObj = new NEWJS_JP_NTIMES();
 		$ntimes = $ntimesObj->getProfileViews($this->profileid);
 		$this->detailedDataArr["TOTAL_VIEW"] = $ntimes;
-		$this->detailedDataArr["EOI_RATIO"] = round((($this->detailedDataArr["CONTACTS"]["TOTAL_RECEIVED"]/$ntimes)*100),1);
+		if($ntimes)
+			$this->detailedDataArr["EOI_RATIO"] = round((($this->detailedDataArr["CONTACTS"]["TOTAL_RECEIVED"]/$ntimes)*100),1);
 	}
 
 	private function getMobileVerificaionStatus(){

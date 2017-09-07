@@ -69,6 +69,12 @@ if(paginationArray.length>1)
  * Populate Tuples in the SRP
  */
 function dataForSearchTuple(val,keyOfProfileType,resp) {
+
+  try{
+    currentPageName = resp.searchBasedParam;
+  }catch(err){
+    
+  }
   /**
    * tupleStructure variables loads default tuple structure.
    */

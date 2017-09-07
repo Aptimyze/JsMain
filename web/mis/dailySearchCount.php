@@ -232,7 +232,9 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'WMOD' => 'Match of day JSMS',
  'PMM'=>'PAID_MEMBERS_MAILER',
  'PM'=>'PAID_MEMBERS',
- 'APM'=>'Add Photo Mailer',);
+ 'APM'=>'Add Photo Mailer',
+ 'SPMA' => 'EOI_SIMILAR_PROFILES_MAIL_ACCEPTED',
+ 'SPMO' => 'EOI_SIMILAR_PROFILES_MAIL_OTHERS');
 
 
         $index=array('A','D','C','I','E');

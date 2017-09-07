@@ -919,8 +919,13 @@ var altEmail = '~$altEmail`';</script>
                 <div class="wid470 mauto">
                     <p class="f28">~$titleText`</p>
                     <p class="f14 pt25 lh22">~$contentText`</p>
+                  ~if $layerId == '26'`
+                <p class="f14"><br /><b>Note: </b><span>~$calObject.NOTE_TEXT2`</span></p>
+                ~/if`
+
                 </div>            
             </div>
+
         </div>
         <div class="clearfix">
             ~if $button1Text neq ''`<button id='CALButtonB1'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">~$button1Text`</button>~/if`
