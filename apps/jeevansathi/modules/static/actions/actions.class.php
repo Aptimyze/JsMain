@@ -480,7 +480,8 @@ class staticActions extends sfActions
             $this->time = floor($request->getParameter('time')/60);
             $this->symbol = $request->getParameter('symbol');
      }
-    
+     $key = 'calDisplayCount'.date('Y-m-d');
+     JsMemcache::getInstance()->incrCount($key);
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -522,20 +523,29 @@ public function executeCALRedirection($request){
   public function executePostWeddingServices(sfWebRequest $request)
   {
     $loginData = $request->getAttribute("loginData");
+    $this->finalResponse=array();
+     $loggedInProfileObj = LoggedInProfile::getInstance(); 
+    if($loggedInProfileObj->getPROFILEID()){
+      $loggedInProfileObj->getDetail($loggedInProfileObj->getPROFILEID(),"PROFILEID","*");
+
+      $this->city=strtolower($loggedInProfileObj->getDecoratedCity());
+    }
     if($loginData[PROFILEID])
     {
       $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
-      $authenticationLoginObj->logout($loginData[PROFILEID]);
+     // $authenticationLoginObj->logout($loginData[PROFILEID]);
       
     }
     $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
     $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
     if($result)
       $data=json_decode($result,true);
+
     if($data['isError']===false)
     { 
       $this->finalResponse['postServicesPage']=true;
       $this->finalResponse['servicesData']=$data['success'];
+      
     }
     else{
       $this->finalResponse['postServicesPage']=false;
@@ -545,6 +555,10 @@ public function executeCALRedirection($request){
     //Stopping Common functionality 
     $this->chat_hide = 1;
     $this->logoutChat = 1;
+    if(MobileCommon::isNewMobileSite()){
+      $this->setTemplate("mobPostWeddingServices");
+      $this->isMob=1;
+    }
   }
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
