@@ -55,7 +55,7 @@ EOF;
             $mailerLinks = $mailerServiceObj->getLinks();
             $this->smarty->assign('mailerLinks', $mailerLinks);
             $this->smarty->assign('mailerName', MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-            $widgetArray = Array("autoLogin" => true, "nameFlag" => true, "dppFlag" => false, "membershipFlag" => true, "openTrackingFlag" => true, "filterGenderFlag" => true, "sortPhotoFlag" => false, "logicLevelFlag" => false, "googleAppTrackingFlag" => false, "primaryMailGifFlag" => true, "alternateEmailSend" => true, "sortSubscriptionFlag" => true);
+            $widgetArray = Array("autoLogin" => true, "nameFlag" => true, "dppFlag" => false, "membershipFlag" => true, "openTrackingFlag" => true, "filterGenderFlag" => true, "sortPhotoFlag" => true, "logicLevelFlag" => false, "googleAppTrackingFlag" => false, "primaryMailGifFlag" => true, "alternateEmailSend" => true, "sortSubscriptionFlag" => false);
 
             foreach ($receivers as $sno => $values) {
                 $pid = $values["PROFILEID"];

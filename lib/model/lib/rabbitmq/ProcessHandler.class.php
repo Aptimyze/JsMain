@@ -185,7 +185,13 @@ class ProcessHandler
                                 $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
                                 $smsViewer->send();  
                                 JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
-                                 break; 
+                                 break;
+      case 'EXCLUSIVE_PROPOSAL_SMS' :
+      						$receiver = $body['RECEIVER'];
+      						$user = $body['USERNAME'];
+      						$tokenArr = array("USERNAME_ID"=>$user,"DESCRIPTION_LINK"=>$URL);
+      						CommonUtility::sendPlusTrackInstantSMS('EXCLUSIVE_PROPOSAL_SMS',$receiver,$tokenArr);
+      						
     }
   }
 public function sendAutoReminder($receiver,$sender){

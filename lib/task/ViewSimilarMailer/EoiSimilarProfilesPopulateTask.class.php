@@ -55,7 +55,7 @@ EOF;
                     $noOfEoi = count(explode(',', $val['Receivers']));
 
                     //insert profiles into populate table
-                    if (count($profilesToInsertForAUser) > 0) {
+                    if ($profilesToInsertForAUser[0] != NULL) {
                         $mailerToBeSentObj->setProfilesToSendMail($sender, $profilesToInsertForAUser, $noOfEoi, $typeOfEoi);
                     }
                 }
