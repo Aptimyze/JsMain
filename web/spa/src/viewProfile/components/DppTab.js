@@ -25,11 +25,11 @@ class DppTab extends React.Component {
                 return <div className="fr wid27p txtc VPmt5">
                     <div className="dashVP"></div>
                 </div>;
-            }   
+            }
         } else {
             return "";
         }
-        
+
     }
     showCompleteText(e) {
         e.target.classList.add("dispnone");
@@ -40,7 +40,7 @@ class DppTab extends React.Component {
            return <div>
                 <span>{str.substring(0, 50)}</span>
                 <span onClick={(e) => this.showCompleteText(e)} className="moreBtn color1"> ...more</span>
-                <div className="dispnone">{str.substring(50, str.length)}</div>
+                <span className="dispnone">{str.substring(50, str.length)}</span>
             </div>;
         } else {
             return str;
@@ -61,11 +61,11 @@ class DppTab extends React.Component {
         }
 
         var HisHer,self_gender;
-        if(this.props.about.gender == "Female") 
+        if(this.props.about.gender == "Female")
         {
             HisHer = "Her";
             self_gender = "He";
-        } else 
+        } else
         {
             HisHer = "His";
             self_gender = "She";
@@ -74,7 +74,7 @@ class DppTab extends React.Component {
         if(this.props.dpp_Ticks) {
             if(this.props.dpp_Ticks.matching) {
                 matchingCount = this.props.dpp_Ticks.matching.matchingCount;
-            }    
+            }
         }
         var totalCount = "";
         if(this.props.dpp_Ticks) {
@@ -83,13 +83,13 @@ class DppTab extends React.Component {
             }
         }
         var matching_header;
-        if(this.props.dpp_Ticks && this.state.loginStatus) 
+        if(this.props.dpp_Ticks && this.state.loginStatus)
         {
             matching_header = <div id="matchHeader" className="clearfix f13 fontlig">
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
-                    <span className="matching">{matchingCount}</span> of&nbsp; 
+                    <span className="matching">{matchingCount}</span> of&nbsp;
                     <span className="total">{totalCount}</span> matchings
                 </div>
                 <div className="clearfix pt10 pb10">
@@ -161,7 +161,7 @@ class DppTab extends React.Component {
                 {this.getStatusMark("dpp_manglik")}
             </div>
         }
-        
+
         var dpp_religion;
         if(this.props.dpp.dpp_religion)
         {

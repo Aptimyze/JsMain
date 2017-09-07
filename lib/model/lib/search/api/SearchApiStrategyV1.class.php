@@ -768,13 +768,14 @@ class SearchApiStrategyV1
 		}
 		if($key=='eoi_label')
 		{
-			if($value==self::contactNoLabel)		
-			{  
+			if($value==self::contactNoLabel)
+			{
 				$request = sfContext::getInstance()->getRequest();
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
 				$page = '';
 				if(MobileCommon::isApp() =="A" && $request->getParameter('API_APP_VERSION') >= 96)
 				$page['comingFromPage'] = 'search';
+				if($request->getParameter('JSMS_MYJS') == '1') $page['stype'] = SearchTypesEnums::MATCHALERT_MYJS_JSMS;
 				$value = ButtonResponseApi::getInitiateButton($page);
 			}
 			else

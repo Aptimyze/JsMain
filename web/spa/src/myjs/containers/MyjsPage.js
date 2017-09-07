@@ -77,9 +77,12 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+		if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.props.resetTimeStamp();
 			this.firstApiHits(this);
+		}
+		if(!this.props.myjsData.modFetched || !this.props.myjsData.ieFetched || !this.props.myjsData.irFetched || !this.props.myjsData.vaFetched || !this.props.myjsData.drFetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+			this.restApiHits(this);
 		}
 	}
 
@@ -175,31 +178,31 @@ export  class MyjsPage extends React.Component {
   	}
 
   	restApiHits(){
-  		if(!this.state.ieApi){
+  		if(!this.state.ieApi && !this.props.myjsData.ieFetched){
 		    this.props.hitApi_IE();
 		    this.setState({
 		    	ieApi: true
 		    });
 		}
-  		else if(!this.state.irApi){
+  		else if(!this.state.irApi && !this.props.myjsData.irFetched){
 		    this.props.hitApi_IR();
 		    this.setState({
 		    	irApi: true
 		    });
 		}
-  		else if(!this.state.modApi){
+  		else if(!this.state.modApi && !this.props.myjsData.modFetched){
 		    this.props.hitApi_MOD();
 		    this.setState({
 		    	modApi: true
 		    });
 		}
-		else if(!this.state.vaApi){
+		else if(!this.state.vaApi && !this.props.myjsData.vaFetched){
 		    this.props.hitApi_VA();
 		    this.setState({
 		    	vaApi: true
 		    });
 		}
- 		else if(!this.state.drApi){
+ 		else if(!this.state.drApi && !this.props.myjsData.drFetched){
 		    this.props.hitApi_DR();
 		    this.setState({
 		    drApi: true
@@ -216,7 +219,6 @@ export  class MyjsPage extends React.Component {
 			this.props.hitApi_IR(nextPage);
 		}
   	render() {
-
 		var promoView;
         if(this.state.showPromo == true)
         {
