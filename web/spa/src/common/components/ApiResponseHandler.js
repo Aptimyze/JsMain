@@ -85,10 +85,10 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
     }
     else {
-    
+
       return axios({
         method: callMethod,
-        url: CONSTANTS.API_SERVER +callUrl + checkSumURL,
+        url: CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
         data: {},
         headers: {
           'Accept': 'application/json',
