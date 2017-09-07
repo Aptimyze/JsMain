@@ -163,5 +163,7 @@ class SearchTypesEnums
     const PAID_MEMBERS_MAILER = "PMM";
     const PAID_MEMBERS = "PM";
     const ADD_PHOTO_MAILER = "APM";
+    const EOI_SIMILAR_PROFILES_MAIL_ACCEPTED = "SPMA";
+    const EOI_SIMILAR_PROFILES_MAIL_OTHERS = "SPMO";
 }
 ?>

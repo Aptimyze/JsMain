@@ -71,6 +71,7 @@ class feedbackActions extends sfActions
 			$tempArray['comments']=$value['OTHER_REASON'];
 			$tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
 			$tempArray['reportee_email']=$profileDetails[$value['REPORTEE']]['EMAIL'];
+            $tempArray['attachment_id'] = $value['ATTACHMENT_ID'];
 			$resultArr[]=$tempArray;
 			unset($tempArray);
 			# code...
@@ -226,6 +227,40 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
             echo json_encode($response);
             exit;
 
+  }
+  
+  /**
+   * 
+   */
+  public function executeGetAbuseAttachments($request)
+  {
+    $attachmentId = $request->getParameter('attachment_id');
+    if( $request->isMethod('POST') && false == is_null($attachmentId) && -1 != $attachmentId ) {
+      $storeObj = new FEEDBACK_ABUSE_ATTACHMENTS();
+      $result = $storeObj->getRecord($attachmentId);
+      
+      $result = $result[0];
+      if($result) {
+        $arrOut = array();
+        foreach($result as $key => $val) {
+          if(0 === strlen($val)) {
+            continue;
+          }
+          
+          $prefix = substr($val, 0, 2);
+          $imagePath = substr($val, 2);
+          if( $prefix == IMAGE_SERVER_ENUM::$appPicUrl ) {
+            $val = JsConstants::$applicationPhotoUrl.$imagePath;
+          } else if ( $prefix == IMAGE_SERVER_ENUM::$cloudUrl ){
+            $val = JsConstants::$httpsCloudUrl.$imagePath;
+          }
+          $arrOut[] = $val;
+        }
+      }
+    }
+    header("Content-type: application/json");
+    echo json_encode($arrOut);
+    die;
   }
 
 }

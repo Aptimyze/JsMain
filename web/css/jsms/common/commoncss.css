@@ -125,6 +125,9 @@ header, section, footer, aside, nav, article, figure {
 .btmo {
 	bottom:0px
 }
+.btm50 {
+	bottom: 50px
+}
 .border0 {
 	border:0px
 }
@@ -624,6 +627,7 @@ header, section, footer, aside, nav, article, figure {
 /*--- margin classes---*/
 .mr6{margin:6px}
 .mt1{margin-top:1px}
+.mt5{margin-top: 5px}
 .mt60{margin-top:60px}
 .mt10 {margin-top: 10px }
 .mrl0 {
@@ -707,6 +711,7 @@ header, section, footer, aside, nav, article, figure {
 .brdr20{border-top:1px solid #fbfbfb}
 .brdr21{border-top:1px solid #d4d4d4}
 .brdr22{border-top:1px solid #fff}
+.brdr23{border-top:1px solid #cbc9c9; }
 /*---fonts classes---*/
 .fb{font-weight:bold}
 .f11 {
@@ -1242,3 +1247,4 @@ border-radius: 32px;
 .pad-all10{
         padding:10px;
 }
+.setshare {top: 50%;transform: translate(-50%,-50%);left: 50%;}

@@ -733,6 +733,11 @@ class Membership
         if($memUpgrade != "NA" && $doneUpto!="MEM_DEACTIVATION"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
+
+        //Suspend previous old unlimited membership for new service
+        $membershipHandler = new MembershipHandler();
+        $membershipHandler->changeUnlimitedServiceStatusForNewService($this->billid,true,$this->profileid,$this->serviceid,$this->servefor);
+
         $this->setServiceActivation();
         $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
@@ -1370,7 +1375,11 @@ class Membership
                 $newjsConnObj->updateSubscriptionForId($this->subscription, $id);
             }
         }
-        
+        if(strpos($this->serviceid, 'X')!==false)
+        {
+            //add entry in EXCLUSIVE_MEMBERS TABLE
+            $this->addExclusiveMemberEntry();
+        }
         foreach ($this->assisted_arr as $k => $v) {
             if ($v == 'X') {
                 startAutoApply($this->profileid, $this->walkin);
@@ -1385,9 +1394,6 @@ class Membership
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
             SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
-
-            //add entry in EXCLUSIVE_MEMBERS TABLE
-            $this->addExclusiveMemberEntry();
         }
         
         $this->sendInstantSms();

@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
@@ -283,8 +283,8 @@ return 0;
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
                               {
-                                if(is_array($value['data']))                                  
-                                {      
+                                if(is_array($value['data']))
+                                {
                                   $show = 0;
                                   break;
                                 }
@@ -398,8 +398,8 @@ return 0;
                       }
                       break;
 
-                    case '19': 
-                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){ 
+                    case '19':
+                      if(!MobileCommon::isApp() || (MobileCommon::isApp() && self::CALAppVersionCheck('19',$request->getParameter('API_APP_VERSION'))) ){
                       $lightningCALObj = new LightningDeal();
                       $lightningCALData = $lightningCALObj->lightningDealCalAndOfferActivate($request);
                       if($lightningCALData != false){
@@ -411,10 +411,10 @@ return 0;
                         $request->setParameter('LIGHTNING_CAL_TIME',$lightningCALData['endTimeInSec']);
                         $request->setParameter('SYMBOL',$lightningCALData['currencySymbol']);
 
-                        $show=1;                      
+                        $show=1;
                         self::flushCALCacheData($profileid);
                       }
-                      }                      
+                      }
                     break;
 
                      case '21':
@@ -462,7 +462,7 @@ return 0;
 
                   case '20':
 
-                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION'))))
+                      if( (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION'))) && self::checkConditionForCityCAL($profileObj))
                       {
                           $show=1;
 
@@ -473,7 +473,7 @@ return 0;
 
                   case '25':
                     if(!MobileCommon::isApp() && !MobileCommon::isNewMobileSite()){
-                      if(in_array($profileObj->getRELIGION(), 
+                      if(in_array($profileObj->getRELIGION(),
                         array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
                         if(!($profileObj->getMANGLIK())) {
                           $show=1;
@@ -484,7 +484,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0)
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];
@@ -496,9 +496,19 @@ return 0;
                               $show=1;
                           }
                       }
-                      
-                      
+
+
                     break;
+
+                  case '26':
+
+                      if($profileObj->getACTIVATED()=='Y' && self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION')))
+                      {
+                          $len = strlen($profileObj->getYOURINFO());
+                          if(!$len || $len<100)
+                              $show=1;
+                      }
+                  break;
 
           default : return false;
         }
@@ -570,7 +580,7 @@ break;
                     'A' => '84',
 
                     'I' => '10.5'
-                    
+
                         ),
 
                 '19' => array(
@@ -598,9 +608,14 @@ break;
                     'I' => '5.4'
                         ),
 
-                  '24' => array(  
-                    'A' => '107'
-                        )        
+                  '24' => array(
+                    'A' => '107',
+                    'I' => '6.0'
+                        ) ,
+                  '26' => array(
+                    'A' => '109'
+                        )
+
 
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])

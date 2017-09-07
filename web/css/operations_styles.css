@@ -291,3 +291,11 @@ img.floatLeft { float: left; margin: 2px; }
 #allPicAction{width: 160px;float: right; position: fixed;top: 360px;right: 0px; background:#AAAA7E;padding: 10px;}
 #countDisplay{width: 100px;float: left; position: fixed;top: 100px; left:-10px; background:#AAAA7E;color: #fff;font-size: 50px;text-align: center;padding: 10px;}
 #formSubmit{width: 80%; height: 40px;}
+
+.srcolling{
+    width: 800px;
+    overflow: auto;
+    white-space: nowrap;
+    margin: 0 auto;
+
+}

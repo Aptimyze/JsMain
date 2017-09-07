@@ -42,6 +42,11 @@
             ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/welcomeCallsPage2?client=~$client`">Fill Preferential DPP for RB ( Custome RB )</a>
         </td>
     </tr>
+    <tr>
+        <td>
+            ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/clientFollowupHistory`">Client Followup History</a>
+        </td>
+    </tr>
     
     <tr class="formhead" align="center" width="100%">
         <td colspan="3"  height="30">

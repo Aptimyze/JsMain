@@ -36,6 +36,47 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                         throw new jsException($e);
                 }
         }
+        
+        /** This store function is used to get profiles vied by a user
+         * @param $viewedGender : Gender of profile viewed
+         * @param $viewed : Profile ID of viewed profile
+         * @return array array of profiled viewed by viewed profile ID
+         */
+        public function getViewedProfilesForMultipleViewed($viewedGender, $viewedArray) {
+                try {
+                        if($viewedGender!="MALE" and $viewedGender!="FEMALE" )
+                        {
+                        ValidationHandler::getValidationHandler("","Viewed Gender in viewSimilar_CONTACTS_CACHE_LEVEL -> getViewedProfiles is not set",1);
+                        }
+                        
+                        $i = 0;
+                        $viewedStr = "";
+                        foreach($viewedArray as $key=>$val){
+                            if($val)
+                                $viewedStr .= ":VIEWED".$i++.",";
+                        }
+                        
+                        $viewedStr = trim($viewedStr,',');
+                        if($viewedStr){
+                            $sql = "SELECT SQL_CACHE RECEIVER FROM viewSimilar.CONTACTS_CACHE_LEVEL1_" . $viewedGender . " WHERE SENDER IN (".$viewedStr.")";
+                            $prep = $this->db->prepare($sql);
+                            $i=0;
+                            
+                            foreach($viewedArray as $key=>$val){
+                                if($val)
+                                    $prep->bindValue(":VIEWED".$i++, $val, PDO::PARAM_INT);
+                            }
+                            
+                            $prep->execute();
+                            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                                    $contactsViewed[] = $row['RECEIVER'];
+                            }
+                        }
+                        return $contactsViewed;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
 
         /** This store function is used to get suggested profiles when user contacted min number of specified users
          * @param $viewedOppositeGender : Opposite gender of profiled viewed
@@ -89,13 +130,26 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                                 $whereString .= " AND PARTNER_HHEIGHT<=:".$key.") || PARTNER_HHEIGHT = '' || PARTNER_HHEIGHT IS NULL)" ;
                             else{
                                 $valArray = explode(" ",$value);
-                                $whereString.= "AND (";
+                                if($key == "MSTATUS")
+                                    $whereString .= " AND MSTATUS IN(";
+                                else
+                                    $whereString.= " AND (";
                                 $i=0;
                                 foreach($valArray as $k1=>$v1){
-                                        $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") OR ";
+                                        if($key == "MSTATUS")
+                                            $whereString .= ":".$key.$i++."," ;
+                                        else{
+                                            $whereString .= "FIND_IN_SET(:".$key.$i++.",".$key.") OR ";
+                                        }
                                 }
-                                $whereString = substr($whereString, 0, -4);
-                                $whereString .= " || ".$key."='' || ".$key." IS NULL)";
+                                if($key == "MSTATUS"){
+                                    $whereString = trim($whereString,',');
+                                    $whereString .= ")";
+                                }
+                                else{
+                                    $whereString = substr($whereString, 0, -4);
+                                    $whereString .= " || ".$key."='' || ".$key." IS NULL)";
+                                }
                             }
                             $value = "'".str_replace(",","','" , $value)."'";
                         }
@@ -105,16 +159,18 @@ class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
                             $sql .= "AND RECEIVER NOT IN (" . $inStatement2 . ")";
                         $sql .= $whereString;
                         $prep = $this->db->prepare($sql);
+                        //echo $sql;die;
                         foreach ($whereParams as $key=>$value){
                             if(in_array($key,array('lage','hage','LPARTNER_LAGE','LPARTNER_HAGE','HPARTNER_LAGE','HPARTNER_HAGE','LPARTNER_LHEIGHT','LPARTNER_HHEIGHT','HPARTNER_LHEIGHT','HPARTNER_HHEIGHT')))
                                 $prep->bindValue(":".$key,$value,PDO::PARAM_INT);
                             else{
                                 $valArray = explode(" ",$value);
                                 $c=0;
-                                foreach($valArray as $k1=>$v1)
+                                foreach($valArray as $k1=>$v1){
                                     $prep->bindValue(":".$key.$c++,$v1,PDO::PARAM_STR);
+                                }
                             }
-                        }//die;
+                        }
                         foreach ($viewedContactsStr as $key => $value) {
                                 $prep->bindValue(":VIEWEDSTR" . $i, $value, PDO::PARAM_LOB);
                                 $i++;

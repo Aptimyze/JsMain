@@ -1108,5 +1108,5 @@ die;
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
     }
-}
+    }
 ?>

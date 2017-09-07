@@ -438,6 +438,7 @@ $('#cls-astroComp').click(function(){
 });
 
 $('.js-searchTupleImage').click(function(){
+    GAMapper("GA_PROFILE_ALBUM");
     var photoData = $(this).attr("data");
     photoData = photoData.split(",");
 

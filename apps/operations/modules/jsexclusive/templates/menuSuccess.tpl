@@ -63,6 +63,15 @@ function passvalue(){
             &nbsp;&nbsp;~$pendingConcallsCount`
         </td>
     </tr>
+
+    <tr>
+        <td>
+            ~$num++`.&nbsp;&nbsp;<a href="/operations.php/jsexclusive/activeClientList">Active Client List</a>
+        </td>
+        <td>
+            &nbsp;&nbsp;~$activeClientsCount`
+        </td>
+    </tr>
     
     <tr>
         <td>

@@ -226,6 +226,7 @@ class ApiResponseHandler
 			$appPromotion =  JsConstants::$AndroidPromotion && !$request->getAttribute('AppLoggedInUser') && !MobileCommon::isAppWebView() && ($request->getParameter("iosWebview") != 1) ;
 		}
 		$output["appPromotion"] = $appPromotion;
+		$output["channelSource"] = MobileCommon::getFullChannelName();
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
