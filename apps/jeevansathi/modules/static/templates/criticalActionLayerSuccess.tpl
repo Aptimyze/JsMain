@@ -906,6 +906,7 @@ var COUNTER;
 var CALInnerHtml;
 var TRYAGAINTXT = "Try Again";
 var TryAgainClick = false;
+var AadharResponseShown = false;
 function restoreContent(){
   TryAgainClick = true;
   $("#aadharField").val("");
@@ -951,14 +952,14 @@ function aadharVerificationApi(aadhar, UserName){
       COUNT = 10;
        // updateCount(COUNT,COUNTER, UserName);
        COUNTER = setInterval(function(){
-        updateCount(COUNT, COUNTER, UserName);
+        updateCount( UserName);
         --COUNT;
       }, 1000);
     }
   }, "json");
 }
 
-function updateCount(COUNT, COUNTER, UserName){
+function updateCount( UserName){
   if(COUNT <= 0){
     clearInterval(COUNTER);
     if(!TryAgainClick)$("#closeButtonCALayer").show();
@@ -966,9 +967,8 @@ function updateCount(COUNT, COUNTER, UserName){
     $("#cal_content_2").html(CardHtml);
     return;
   }
-  var CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
-  $("#cal_content_2").html(CardHtml);
   var Url  = "/api/v1/profile/aadharVerificationStatus?name="+UserName;
+  if(COUNT%2 ==0)
   $.get(Url, function(data){
     // clearInterval(COUNTER);
     switch(data.VERIFIED){
@@ -976,28 +976,37 @@ function updateCount(COUNT, COUNTER, UserName){
         clearInterval(COUNTER);
         $("#okayButtonCALayer").show();
         CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'</div>';
+        $("#cal_content_2").html(CardHtml);
+        AadharResponseShown = true;
+        return;
       break;
       case "N":
         clearInterval(COUNTER);
         if(!TryAgainClick)$("#closeButtonCALayer").show();
         CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
+        $("#cal_content_2").html(CardHtml);
+        AadharResponseShown = true;
+        return;
       break;
       case "P" :
         CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
-      break;
-      default:
-        clearInterval(COUNTER);
-        if(!TryAgainClick)$("#closeButtonCALayer").show();
-        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Something went wrong."+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
         $("#cal_content_2").html(CardHtml);
-    return;
+        return;
       break;
+      // default:
+      //   clearInterval(COUNTER);
+      //   if(!TryAgainClick)$("#closeButtonCALayer").show();
+      //   CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Something went wrong."+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
+      //   $("#cal_content_2").html(CardHtml);
+      //   return;
+      // break;
     }
-    $("#cal_content_2").html(CardHtml);
-
- 
+    
   }, 'json');
-  
+  if(AadharResponseShown == false){
+    var CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
+    $("#cal_content_2").html(CardHtml);
+  }
   
 }
 function get_aadharinput(){
@@ -1005,9 +1014,21 @@ function get_aadharinput(){
   return $("#aadharField").val().split(' ').join('');
   
 }
-
+function trackingCAL(button/*B1/B2*/, layerId){
+  try{
+  Set_Cookie('calShown', 1, 1200);
+  var URL="/common/criticalActionLayerTracking?";
+  $.ajax({
+      url: URL,
+      type: "POST",
+      data: {"button":button,"layerId":layerId},
+  });
+  }catch(err){}
+}
 var nameErrorObj, aadharErrorObj, consentErrorObj;
 function manageClicks(clickType){
+  TryAgainClick = false;
+  AadharResponseShown = false;
   $("#cal_content_2").html('<div class="extraNumber"><img src="~sfConfig::get("app_img_url")`/images/colorbox/loader_big.gif"></div>');
   if(!nameErrorObj)
     nameErrorObj = $("#nameError");
@@ -1029,6 +1050,7 @@ function manageClicks(clickType){
           if($('#' + "consentCheckbox").is(":checked")){
             // $(".scrollableCAL").css({"height": "300px"});
             aadharVerificationApi(aadhar, UserName);
+            trackingCAL("B1", 24);
           }else{
             consentErrorObj.removeClass("disp-hidden");
           }
@@ -1041,13 +1063,13 @@ function manageClicks(clickType){
       }
     break;
     case "CALBUTTON2":
-      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/)
+      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/);
     break;
     case "SKIP":
-      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/)
+      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/);
     break;
     case "OKAY":
-      criticalLayerButtonsAction("close"/*clickAction*/,"B1"/*button*/)
+      criticalLayerButtonsAction("close"/*clickAction*/,""/*button*/);
 
     break;
   }
@@ -1060,7 +1082,7 @@ function manageClicks(clickType){
 <div id="cal_content_1">
 <div class="wid470 mauto">
 <div class="f22">~$titleText`</div>
-<div class="f14 lh22">We are moving to a secure platform by verifying Aadhaar of our users. Verify your Aadhar to appear as 'Aadhaar Verified'.<br>Your Aadhaar Number will not be shared with anyone.</div>
+<div class="f14 lh22">We are moving to a secure platform by verifying Aadhaar of our users. Verify your Aadhaar to appear as 'Aadhaar Verified'.<br>Your Aadhaar Number will not be shared with anyone.</div>
 <div class="clearfix" id="aadhar_input">
 <input type="text" name="" id="aadharField" size="12" maxlength="12" />
 
@@ -1085,7 +1107,7 @@ function manageClicks(clickType){
   <div id="readmoreConsent" onclick="$(this).toggleClass('disp-hidden');$('#consentText').toggleClass('bottom_fade');" class="bold  f11 colrGrey mt5 txtc errCL1" >read more</div>
 </div>
 </div>
-<div id="cal_content_2" class="disp-none"><div class='extraNumber'><img src="http://trunk.jeevansathi.com/images/colorbox/loader_big.gif"></div></div>
+<div id="cal_content_2" class="disp-none"><div class="extraNumber"><img src="~sfConfig::get('app_img_url')`/images/colorbox/loader_big.gif"></div></div>
 </div>
 </div>
 <div class="clearfix">
