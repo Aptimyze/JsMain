@@ -773,7 +773,7 @@ var altEmail = '~$altEmail`';</script>
       font-size: 20px;
       font-weight: 500;
       padding-left: 6px;
-      letter-spacing: 1.17em;
+      letter-spacing: 1.2167em;
 
       margin: auto;
       background: transparent;
@@ -790,7 +790,7 @@ var altEmail = '~$altEmail`';</script>
       background-size: 36px 1px;
       border: none;
       /*border-bottom: 1px solid;*/
-      font-family: monospace;
+      /*font-family: monospace;*/
     }
 .scrollableCAL{
   max-height: 420px; overflow-y: auto; overflow-x: hidden;
