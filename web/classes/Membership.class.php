@@ -720,9 +720,7 @@ class Membership
         } else {
             $this->generateBill($memUpgrade);
         }
-        //Start:JSC-2925:Changes for GST
-        $this->logTaxBreakup();
-        //End:JSC-2925:Changes for GST
+
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateReceiptParams();
         }
@@ -741,7 +739,9 @@ class Membership
         $this->setServiceActivation();
         $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
-        
+        //Start:JSC-2925:Changes for GST
+        $this->logTaxBreakup();
+        //End:JSC-2925:Changes for GST
         $this->checkIfDiscountExceeds($userObjTemp,$memUpgrade,$apiTempObj);
         if($memUpgrade != "NA"){
             $memHandlerObj = new MembershipHandler(false);
@@ -1257,6 +1257,7 @@ class Membership
                 if(is_array($newAmountArr)){
                     $this->amount = round($newAmountArr["AMOUNT"]*$share/100,2);
                     $this->discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
+                    $this->setCity_res("UP25");
                 }
                 $actualAmount = $this->amount + $this->discount;
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$actualAmount','$this->discount','$this->amount','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
@@ -1266,6 +1267,7 @@ class Membership
                     $net_price = round($newAmountArr["AMOUNT"]*$share/100,2);
                     $discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
                     $price = $net_price + $discount;
+                    $this->setCity_res("UP25");
                 }
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             }
