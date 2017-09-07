@@ -867,6 +867,37 @@ var altEmail = '~$altEmail`';</script>
 }
 </style>
 <script>
+String.prototype.aadhaarVerificationCheck = (function()
+    {
+        var d = [[0,1,2,3,4,5,6,7,8,9],
+                [1,2,3,4,0,6,7,8,9,5],
+                [2,3,4,0,1,7,8,9,5,6],
+                [3,4,0,1,2,8,9,5,6,7],
+                [4,0,1,2,3,9,5,6,7,8],
+                [5,9,8,7,6,0,4,3,2,1],
+                [6,5,9,8,7,1,0,4,3,2],
+                [7,6,5,9,8,2,1,0,4,3],
+                [8,7,6,5,9,3,2,1,0,4],
+                [9,8,7,6,5,4,3,2,1,0]];
+        var p = [[0,1,2,3,4,5,6,7,8,9],
+                [1,5,7,6,2,8,3,0,9,4],
+                [5,8,0,3,7,9,6,1,4,2],
+                [8,9,1,6,0,4,3,5,2,7],
+                [9,4,5,3,1,2,6,8,7,0],
+                [4,2,8,6,5,7,3,9,0,1],
+                [2,7,9,3,8,0,6,4,1,5],
+                [7,0,4,6,9,1,3,2,5,8]];
+        var j = [0,4,3,2,1,5,6,7,8,9];
+
+        return function()
+        {
+            var c = 0;
+            this.replace(/\D+/g,"").split("").reverse().join("").replace(/[\d]/g, function(u, i, o){
+                c = d[c][p[i&7][parseInt(u,10)]];
+            });
+            return (c === 0);
+        };
+    })();
 function validateUserName(name){
   var name_of_user=name;
   name_of_user = name_of_user.replace(/\./gi, " ");
@@ -1014,17 +1045,7 @@ function get_aadharinput(){
   return $("#aadharField").val().split(' ').join('');
   
 }
-function trackingCAL(button/*B1/B2*/, layerId){
-  try{
-  Set_Cookie('calShown', 1, 1200);
-  var URL="/common/criticalActionLayerTracking?";
-  $.ajax({
-      url: URL,
-      type: "POST",
-      data: {"button":button,"layerId":layerId},
-  });
-  }catch(err){}
-}
+
 var nameErrorObj, aadharErrorObj, consentErrorObj;
 function manageClicks(clickType){
   TryAgainClick = false;
@@ -1043,7 +1064,7 @@ function manageClicks(clickType){
   switch(clickType){
     case "CALBUTTON1":
       var aadhar = get_aadharinput();
-      if(aadhar.length == 12){
+      if(aadhar.length == 12 && aadhar.aadhaarVerificationCheck()){
         var UserName = $("#nameInputCAL").val();
         var nameError = validateUserName(UserName);
         if(!nameError.length){
