@@ -8,11 +8,11 @@
 class PhotoFaceDetection
 {
 	public static $FACE_DETECTION_SIZE_CONST = array(
-					    "ProfilePic120Url"=>array("MAX_FACE"=>"110","IDEAL_FACE"=>"90","HEIGHT_INCREASE"=>7),
-                                            "ProfilePic235Url"=>array("MAX_FACE"=>"210","IDEAL_FACE"=>"180","HEIGHT_INCREASE"=>15),
-                                            "ProfilePic450Url"=>array("MAX_FACE"=>"410","IDEAL_FACE"=>"200","HEIGHT_INCREASE"=>30),
-                                            "ProfilePicUrl"=>array("MAX_FACE"=>"135","IDEAL_FACE"=>"110","HEIGHT_INCREASE"=>13),
-                                            "MobileAppPicUrl"=>array("MAX_FACE"=>"410","IDEAL_FACE"=>"200","HEIGHT_INCREASE"=>30));
+					    "ProfilePic120Url"=>array("MAX_FACE"=>"110","IDEAL_FACE"=>"90","HEIGHT_INCREASE"=>7,"MIN_FACE"=>"75"),
+                                            "ProfilePic235Url"=>array("MAX_FACE"=>"210","IDEAL_FACE"=>"180","HEIGHT_INCREASE"=>15,"MIN_FACE"=>"75"),
+                                            "ProfilePic450Url"=>array("MAX_FACE"=>"410","IDEAL_FACE"=>"200","HEIGHT_INCREASE"=>30,"MIN_FACE"=>"75"),
+                                            "ProfilePicUrl"=>array("MAX_FACE"=>"135","IDEAL_FACE"=>"110","HEIGHT_INCREASE"=>13,"MIN_FACE"=>"75"),
+                                            "MobileAppPicUrl"=>array("MAX_FACE"=>"410","IDEAL_FACE"=>"200","HEIGHT_INCREASE"=>30,"MIN_FACE"=>"75"));
 
 	public function getSizesToCrop($pictureType)
 	{
