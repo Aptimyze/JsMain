@@ -41,7 +41,7 @@ EOF;
         $billOrd = new BILLING_ORDERS();
         
         // Fetching All payments within last 2 hours
-        $paidProfilesArr = $billPaymentDet->getProfilesWithinDateRange($start_time, $end_time);
+        $paidProfilesArr = $billPaymentDet->getProfilesWithinDateRangeNew($start_time, $end_time);
         
         //print_r(array($start_time, $end_time, $ind_start_time, $ind_end_time));
         
