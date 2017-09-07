@@ -435,6 +435,7 @@ private static $subjectArray=array(
 '1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
 '1879'=>array('MAIL_ID'=>'1879','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We were unable to reach you.Kindly authenticate your contact details'),
 '1859'=>array('MAIL_ID'=>'1859','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Submit your success story and get a free gift!'),
+'1883'=>array('MAIL_ID'=>'1883','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile ~$deletedUserName` has been deleted after you reported abuse'),
 );
 public static function getLink($Id){
 

@@ -416,6 +416,10 @@ class negativeTreatment
         );
         $profileDeleteObj->updateRecord($profileid, $startTime, $arrDeleteLogs);
         //End:JSC-2551: Mark Completion in logs
+        
+        //Start: JSI-3384
+        $this->negativeTreatmentMailer($profileid, $username);
+        //End: JSI-3384
     }
     
     public function checkEmail($email)
@@ -492,5 +496,49 @@ class negativeTreatment
         $top8Mailer->send();
         $emailLoggerObg = new incentive_NEGATIVE_DELETE_EMAIL_LOG();
         $emailLoggerObg->insertNegativeDeleteLogEntry($profileid);
+    }
+    
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $strUsername
+     * @return type
+     */
+    public function negativeTreatmentMailer($iProfileId, $strUsername) {
+      
+      $abuseLogStore = new REPORT_ABUSE_LOG();
+      $arrResult = $abuseLogStore->getListOfAllReporters($iProfileId, "15 days");
+      
+      if (null === $arrResult || 0 === count($arrResult) ) {
+        return ;
+      }
+      
+      $iMailerId = 1883;
+            
+      $arrUniqueIds = array();
+      foreach($arrResult as $result) {
+        
+        $profileId = $result['REPORTER'];
+        if( false === in_array($profileId, $arrUniqueIds) ) {
+          $arrUniqueIds[] = $profileId;
+        } else {
+          continue;
+        }
+        
+        $date = new DateTime($result['DATE']);
+        $strFormatedDate = $date->format('d M Y');
+        $reportAbuseSuccessMailer =new EmailSender(MailerGroup::REPORT_PHONE_INVALID_EMAIL, $iMailerId);
+        $tpl = $reportAbuseSuccessMailer->setProfileId( $profileId ); 
+        
+        //Set Dynamic Mailer Content
+        $smartyObj = $tpl->getSmarty();
+        $smartyObj->assign("deletedUserName", $strUsername);
+        $smartyObj->assign("dateOfReport", $strFormatedDate);
+        //Send Email
+        $reportAbuseSuccessMailer->send();
+        
+        unset($tpl);
+        unset($reportAbuseSuccessMailer);
+      }
     }
 }

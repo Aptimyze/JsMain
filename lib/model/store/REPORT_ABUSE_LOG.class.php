@@ -168,11 +168,41 @@ class REPORT_ABUSE_LOG extends TABLE
 		}
 	
 	}
-
-
-
-
-
+    
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $withInLastDays
+     * @return type
+     * @throws jsException
+     */
+    public function getListOfAllReporters($iProfileId, $withInLastDays=null) {
+      try{
+        $sql = "SELECT REPORTER, DATE FROM feedback.REPORT_ABUSE_LOG WHERE REPORTEE=:PID";
+        
+        if ( $withInLastDays ) {
+          $time = new DateTime();
+          
+          $time->sub(date_interval_create_from_date_string($withInLastDays));
+          $timeInLastDays = $time->format('Y-m-d H:i:s');
+          
+          $sql .= " AND DATE >= :WITH_IN_DAYS";
+        }
+        
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":PID",$iProfileId,PDO::PARAM_INT);
+        
+        if ( $withInLastDays ) {
+          $prep->bindValue(":WITH_IN_DAYS",$timeInLastDays,PDO::PARAM_STR);
+        }
+        $prep->execute();
+        $arrResult = $prep->fetchAll(PDO::FETCH_ASSOC);
+                
+        return $arrResult;
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
+    }
 
 }
 
