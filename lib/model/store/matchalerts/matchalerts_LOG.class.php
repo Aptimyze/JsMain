@@ -353,8 +353,10 @@ echo $sql."\n";
                 throw new jsException($ex);
             }
         }
-        public function insertLogRecords($receiverId, $userIds, $LogicLevel){
-          $date=MailerConfigVariables::getNoOfDays();
+        public function insertLogRecords($receiverId, $userIds, $LogicLevel,$date=""){
+                if($date == ""){
+                        $date=MailerConfigVariables::getNoOfDays();
+                }
           
           $sql_log="INSERT INTO matchalerts.LOG (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
           $userCounter = 1;
