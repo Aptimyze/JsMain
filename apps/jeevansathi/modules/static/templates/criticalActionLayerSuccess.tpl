@@ -1060,14 +1060,14 @@ function manageClicks(clickType){
 <div id="cal_content_1">
 <div class="wid470 mauto">
 <div class="f22">~$titleText`</div>
-<div class="f14 lh22">We are moving to a secure platform by verifying Aadhar of our users. Verify your Aadhar to appear as 'Aadhar Verified'.<br>Your Aadhar Number will not be shared with anyone.</div>
+<div class="f14 lh22">We are moving to a secure platform by verifying Aadhaar of our users. Verify your Aadhar to appear as 'Aadhaar Verified'.<br>Your Aadhaar Number will not be shared with anyone.</div>
 <div class="clearfix" id="aadhar_input">
 <input type="text" name="" id="aadharField" size="12" maxlength="12" />
 
 </div>
-<div id="aadharError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Provide a valid Aadhar number</div>
-<div class="f13  mt5 txtc pb30">Aadhar details will be verified by government data</div>
-<div  class="f12  mt5 txtc">Your Name (As per Aadhar Card)</div>
+<div id="aadharError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Provide a valid Aadhaar number</div>
+<div class="f13  mt5 txtc pb30">Aadhaar details will be verified by government data</div>
+<div  class="f12  mt5 txtc">Your Name (As per Aadhaar Card)</div>
 <div class="pos-rel wid300 divcenter">
   <input type="text" id="nameInputCAL" class="f15 wid90p pa2 color11 txtc" value="~$NAME`" placeholder="Your name here">
   <img onclick="$('#nameInputCAL').focus();" src='~sfConfig::get("app_img_url")`/images/jspc/myjsImg/pencil.png' class="pos-abs" style="cursor: pointer;right:9px;top:5px">
@@ -1094,7 +1094,7 @@ function manageClicks(clickType){
 <button  id='closeButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('SKIP');">Close</button>
 <button  id='okayButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('OKAY');">Okay</button>
 </div>
-<input type="hidden" id="CriticalActionlayerId" value="1">
+<input type="hidden" id="CriticalActionlayerId" value="24">
 <!--================================================================================================================================-->
 
 ~elseif $layerId == '25'`
