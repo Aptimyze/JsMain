@@ -72,7 +72,7 @@ class CriticalActionLayerTracking
    * @param- profile id, layer type
    * @return- boolean value to display layer or not 
    */
-  public static function getCALayerToShow($profileObj,$interestsPending)
+  public static function getCALayerToShow($profileObj,$interestsPending,$checkForIndependentCal='')
   {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
@@ -99,6 +99,8 @@ class CriticalActionLayerTracking
       if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
         return $value;
     }
+    if($checkForIndependentCal)
+      return 0;
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
 

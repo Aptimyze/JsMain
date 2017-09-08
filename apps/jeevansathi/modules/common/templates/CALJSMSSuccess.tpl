@@ -3,6 +3,8 @@
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';
+    var fromDetailedAction='~$fromDetailedAction`';
+    var redirectViewProfileUrl='~$redirectViewProfileUrl`';
     function validateAndSend()
     {
             var altEmailUser = ($("#altEmailInpCAL").val()).trim();

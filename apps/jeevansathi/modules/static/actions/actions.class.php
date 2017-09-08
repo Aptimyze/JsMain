@@ -494,6 +494,11 @@ public function executeCALRedirection($request){
       $loggedInProfileObj = LoggedInProfile::getInstance();
       $profileid=$loggedInProfileObj->getPROFILEID();
       $profileid=  intval($profileid);
+      if($request->getParameter("redirecPdUrl") && $request->getParameter("button")=='B2')
+      {
+        $url=$request->getParameter("redirecPdUrl");
+          header("Location: $url");die;
+      }
       $layerToDisplay=$request->getParameter("layerR");
       if($request->getParameter("button")=='B1') {
         if(MobileCommon::isNewMobileSite())
@@ -503,6 +508,8 @@ public function executeCALRedirection($request){
       }
       
       if(($request->getParameter("button")=='B2') && MobileCommon::isNewMobileSite()) {
+        if($request->getParameter("fromPdLightCal")==1)
+          $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');  
         $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');
       }
 

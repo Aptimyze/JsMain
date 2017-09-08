@@ -79,7 +79,7 @@ class detailedAction extends sfAction
 		$this->smarty=$smarty;
 		
 		//PD cal redirection for lightning deal on JSMS 
-		if(MobileCommon::isNewMobileSite()){
+		if(MobileCommon::isNewMobileSite() && $request->getParameter('fromPdLightCal')!=1){
 			ob_start();
 			$request->setParameter('calFromPD',1);
 			$request->setParameter('layerId',19);
@@ -92,6 +92,8 @@ class detailedAction extends sfAction
 			{  
 				$request->setAttribute('calObject',$calData['calObject']);
 				$request->setAttribute('gender',$this->loginProfile->getGENDER());
+				$request->setAttribute('fromDetailedAction',1);
+				$request->setAttribute('redirectViewProfileUrl',urlencode($_SERVER['REQUEST_URI']."&fromPdLightCal=1"));
 				sfContext::getInstance()->getController()->forward("common","CALJSMS");
 				die;
 			}
