@@ -42,7 +42,10 @@ class PhotoView extends React.Component {
                 }, this.state.timeToHide+100); 
             }
             else if(response.responseMessage== "Successful" && response.imageButtonDetail.label) {
-                document.getElementById("label1").innerHTML = response.imageButtonDetail.label;  
+                if(getCookie("AUTHCHECKSUM")) 
+                {
+                    document.getElementById("label1").innerHTML = response.imageButtonDetail.label;
+                }  
             }
         }
     }
@@ -56,7 +59,8 @@ class PhotoView extends React.Component {
                 e.target.classList.add("dn");
                 this.props.doPhotoAction(this.props.profilechecksum);
             } else {
-                e.target.innerHTML = "Please Login to Continue"
+                this.props.doPhotoAction(this.props.profilechecksum);
+                // e.target.innerHTML = "Please Login to Continue"
             }
         }
         
