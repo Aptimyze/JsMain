@@ -1045,7 +1045,7 @@ function get_aadharinput(){
   return $("#aadharField").val().split(' ').join('');
   
 }
-
+var isCalTrack = false;
 var nameErrorObj, aadharErrorObj, consentErrorObj;
 function manageClicks(clickType){
   TryAgainClick = false;
@@ -1064,14 +1064,18 @@ function manageClicks(clickType){
   switch(clickType){
     case "CALBUTTON1":
       var aadhar = get_aadharinput();
-      if(aadhar.length == 12 && aadhar.aadhaarVerificationCheck()){
+      if(aadhar.length == 12 ){
         var UserName = $("#nameInputCAL").val();
         var nameError = validateUserName(UserName);
         if(!nameError.length){
           if($('#' + "consentCheckbox").is(":checked")){
             // $(".scrollableCAL").css({"height": "300px"});
             aadharVerificationApi(aadhar, UserName);
-            trackingCAL("B1", 24);
+            /* if cal is not tracked then tracking */
+            if(isCalTrack == false){
+              trackingCAL("B1", 24);
+              isCalTrack = true;
+            }
           }else{
             consentErrorObj.removeClass("disp-hidden");
           }
