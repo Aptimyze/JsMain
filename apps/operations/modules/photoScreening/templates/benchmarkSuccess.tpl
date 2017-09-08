@@ -39,7 +39,7 @@ div.desc {
 
  
  <div id ="container">
-     <div id='content' class="marLeft15Per">
+     <div id='content' >
         <form id="form" method="post" onsubmit="formSubmit(this); return false;">
             <input type=hidden name="cid" value="~$cid`">
             <input type=hidden name="name" value="~$name`">
