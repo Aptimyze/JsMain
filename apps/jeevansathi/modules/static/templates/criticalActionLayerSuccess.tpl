@@ -1073,12 +1073,12 @@ function manageClicks(clickType){
         if(!nameError.length){
           if($('#' + "consentCheckbox").is(":checked")){
             // $(".scrollableCAL").css({"height": "300px"});
-            aadharVerificationApi(aadhar, UserName);
             /* if cal is not tracked then tracking */
             if(isCalTrack == false){
               trackingCAL("B1", 24);
               isCalTrack = true;
             }
+            aadharVerificationApi(aadhar, UserName);
           }else{
             consentErrorObj.removeClass("disp-hidden");
           }
