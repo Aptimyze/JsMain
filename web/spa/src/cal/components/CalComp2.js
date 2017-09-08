@@ -4,6 +4,7 @@ import CALCommonCall from './CommonCALFunctions';
 import Loader from "../../common/components/Loader";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 require ('../style/CALJSMS_css.css');
@@ -54,6 +55,17 @@ componentWillMount(){
       break;
   }
 
+  let index = skippableCALS.indexOf(this.props.calData.LAYERID);
+  if(index!=-1)
+  {
+    let dl=document.location.origin+document.location.pathname+document.location.search+"#cal";
+    history.pushState(null,"",dl);
+    var _this = this;
+    window.onpopstate= function(){
+      _this.criticalLayerButtonsAction(_this.props.calData.BUTTON2_URL_ANDROID,_this.props.calData.JSMS_ACTION2,'B2');
+      window.onpopstate= null;
+    }
+  }
 
 
 
@@ -140,7 +152,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
                        return;
                        }
                      else {
-                       CALCommonCall(url+'?&occupText='+occupText,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                       CALCommonCall(url+'&occupText='+occupText,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
                        this.CALButtonClicked=0;
                        return;
 

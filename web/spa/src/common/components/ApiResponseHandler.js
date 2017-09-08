@@ -56,14 +56,38 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           checkSumURL = data;
       }
     }
-
+    // console.log("shahjahan dispatch",dispatch);
+    // console.log("shahjahan prevDataUrl",localStorage.getItem("prevDataUrl"));
     if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl || localStorage.getItem("currentDataUrl") == callUrl &&  localStorage.getItem("currentData")) {
       let data;
       if(localStorage.getItem("prevDataUrl") == callUrl) {
-        data = JSON.parse(localStorage.getItem("prevData"))
+        console.log("shahjahan Getting from prevDataUrl.");
+        data = JSON.parse(localStorage.getItem("prevData"));
+
+        localStorage.setItem("nextData", localStorage.getItem("currentData"));
+        localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+        
+        localStorage.setItem("currentData", localStorage.getItem("prevData"));
+        localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
       } else if(localStorage.getItem("nextDataUrl") == callUrl) {
-        data = JSON.parse(localStorage.getItem("nextData"))
+        data = JSON.parse(localStorage.getItem("nextData"));
+        // console.log("shahjahan currentData",localStorage.getItem("currentData"))
+        // console.log("shahjahan currentDataUrl",localStorage.getItem("currentDataUrl"))
+        if( dispatch != "saveLocalNext")
+        {
+          console.log("shahjahan getting next data url.");
+          localStorage.setItem("prevData", localStorage.getItem("currentData"));
+          localStorage.setItem("prevDataUrl",localStorage.getItem("currentDataUrl"));
+
+          localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
+          localStorage.setItem("currentData", localStorage.getItem("nextData"));
+
+          localStorage.setItem("prevDataUrlForGuna", localStorage.getItem("currentDataUrlForGuna"));
+          localStorage.setItem("prevGuna", localStorage.getItem("currentGuna"));
+
+        }
       } else {
+        console.log("shahjahan getting currentdata");
         data = JSON.parse(localStorage.getItem("currentData"))
       }
       if(typeof dispatch == 'function')
@@ -74,17 +98,31 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           token: tupleID
         });
       }
-    } else if(reducer != "SAVE_INFO" && localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna")) {
+    } else if(reducer != "SAVE_INFO" && (localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna") || localStorage.getItem("prevDataUrlForGuna") == callUrl && localStorage.getItem("prevGuna"))  ) {
+      // console.log("shahjahan In guna if block.");
+      let dataGuna;
+      if ( localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna") )
+      {
+        dataGuna = JSON.parse(localStorage.getItem("currentGuna"));
+      }
+      else
+      {
+        dataGuna = JSON.parse(localStorage.getItem("prevGuna"));
+        localStorage.setItem("currentGuna", localStorage.getItem("prevGuna"));
+        localStorage.setItem("currentDataUrlForGuna", localStorage.getItem("prevDataUrlForGuna"));
+      }
+
       if(typeof dispatch == 'function')
       {
         dispatch({
           type: reducer,
-          payload: JSON.parse(localStorage.getItem("currentGuna"))
+          payload: dataGuna
         });
       }
 
     }
     else {
+      // console.log("shahjahan axios callUrl",callUrl);
 
       return axios({
         method: callMethod,
