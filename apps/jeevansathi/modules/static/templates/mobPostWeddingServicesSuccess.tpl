@@ -3,6 +3,11 @@
 	var userCity="~$city`";
 	var isMob="~$isMob`";
 	AppLoggedInUser=0;
+	 var defaultCityKey="";
+    var mapUserCity="";
+    var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
+	var cityCount=cityJson.length;
+
 	</script>
 <div id ="overlayHead" class="bg1">
 	<div class="txtc pad7">

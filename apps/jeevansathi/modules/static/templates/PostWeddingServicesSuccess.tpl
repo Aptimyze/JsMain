@@ -7,6 +7,10 @@ var logoutChat =~$logoutChat`;
 if(logoutChat) localStorage.setItem("cout","1");
 var userCity="~$city`";
 var isMob="~$isMob`";
+var defaultCityKey="";
+var mapUserCity="";
+var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
+var cityCount=cityJson.length;
 </script>
 <div class="">
   <div class="container mainwid  "> 

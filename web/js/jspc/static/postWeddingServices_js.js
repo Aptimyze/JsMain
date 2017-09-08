@@ -1,79 +1,9 @@
-$(document).ready(function() {
-    
-    var defaultCityKey="";
-    var mapUserCity=MapUserCityToUrbanClapCity(userCity);
-    
-    $("#jeevansathiLogo").addClass('ucl_bg1');
-    $("#poweredBy").attr("urltoredirect",finalResponse.servicesData.data.cross_selling_section.branding.redirect_url);
-    $("#ulExploreServices").attr("urltoredirect",finalResponse.servicesData.data.footer_section.cta.redirect_url);
-
-    var DefaultOtherCityHtml=' <div id="otherCityContent" class=" pt50  mb20 txtc fontlig ucl_color1">   {{otherCityContent}}     </div>';
-    $(".bg-4").removeClass('bg-4');
-    
-    if(isMob==1)
-      DefaultOtherCityHtml=' <div id="otherCityContent" class=" pt50  mb20 txtc fontlig ucl_color1">   {{otherCityContent}}     </div>';
-    $(".bg-4").removeClass('bg-4');
-
-  if(finalResponse)
-  {
-      if(isMob==1)
-        createCityDropDownList(finalResponse,mapUserCity);
-      else
-        createCityTabList(finalResponse,mapUserCity);
-  }
-
-  
- 
-  if(isMob==1)
-  {
-    $('#citiesListMob').change(function(){
-      var getID =  $(this).val();
-      if(getID!=="other")
-          createMobCityOptionsList(getID,finalResponse);
-        else{
-          finalOtherHtml=DefaultOtherCityHtml.replace(/\{\{otherCityContent\}\}/,cityJson[cityCount-1].description  );
-          $("#ulctabcontent").html(finalOtherHtml);
-        }
-    });
-  }
-  else
-  {
-      $('.js-tab').click(function(){
-      
-        $('.js-tab').each(function(){
-          $(this).removeClass('active');
-        });
-        $(this).addClass('active');
-        
-        
-        var getID = $(this).attr("id");
-        
-        $('.js-cont').each(function(){
-          $(this).removeClass('active');
-        });
-        
-        $('#'+getID).addClass('active');
-        
-        if(getID!=="other")
-          createCityOptionsList(getID,finalResponse);
-        else{
-          finalOtherHtml=DefaultOtherCityHtml.replace(/\{\{otherCityContent\}\}/,cityJson[cityCount-1].description  );
-          $("#ulctabcontent").html(finalOtherHtml);
-        }
-      });
-  }
- UrlRedirectionBinding();
-  
-  
-});
 
 function createCityOptionsList(cityId,optionsJson){
-  var cityOptionsJson=optionsJson.servicesData.data.cross_selling_section.categories[cityId];
- /* console.log(cityId);  
-  console.log(optionsJson);
-  console.log(cityOptionsJson);
-*/
-  var cityOptionsCount=cityOptionsJson.length;
+
+var cityOptionsJson=finalResponse.servicesData.data.cross_selling_section.categories[cityId];
+var cityOptionsCount=cityOptionsJson.length;
+
   var listOptionsHtml='<div id="{{id}}" style="width:190px;" class="fl txtc ulRedirectionUrlBinding cursp" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage " /><div class="fontmed pt25 ucl_color1 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f10 ">Over 4500+ professionals</div></div></div>';
   var outerDiv='<div class="mauto clearfix pt50" style="{{width}}">';
   var  closeOuterDiv='</div>';
@@ -110,10 +40,11 @@ var loopOf4='';
 }
 
 function createMobCityOptionsList(cityId,optionsJson){
-  var cityOptionsJson=optionsJson.servicesData.data.cross_selling_section.categories[cityId];
+  var cityOptionsJson=finalResponse.servicesData.data.cross_selling_section.categories[cityId];
+var cityOptionsCount=cityOptionsJson.length;
+
   var windowWidth=$(window).width();
-  var listWidth=windowWidth/2;
-  var cityOptionsCount=cityOptionsJson.length;
+  var listWidth=windowWidth/2;  
   var listOptionsHtml='<div id="{{id}}" style="width:'+listWidth+'px;" class="fl ulRedirectionUrlBinding txtc" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage" /><div class="fontmed pt25 color2 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f11 ">Over 4500+ professionals</div></div></div>';
   var outerDiv='<div class="mauto clearfix pt30" style="{{width}}">';
   var  closeOuterDiv='</div>';
@@ -180,14 +111,10 @@ function MapUserCityToUrbanClapCity(city)
     return "";
 }
 
-function createCityDropDownList(finalResponse,mapUserCity, defaultCityKey) {
- var cityOptionsJson= finalResponse.servicesData.data.cross_selling_section.cities;
-
+function createCityDropDownList(finalResponse,mapUserCity) {
       var combo = $("<select></select>").attr("id", "citiesListMob").addClass('ulcSelectMob ucl_bg1 color2 txtc');
 
-    $.each(cityOptionsJson, function (i, val) {
-      if(i==0)
-          defaultCityKey= val.key;
+    $.each(cityJson, function (i, val) {
         if(val.key==mapUserCity){
           defaultCityKey=val.key;
          combo.append("<option class='js-tab ' value="+val.key+">" + val.value + "</option>");
@@ -199,14 +126,15 @@ function createCityDropDownList(finalResponse,mapUserCity, defaultCityKey) {
 
     // OR
     $("#ucltab").append(combo);
-     if(defaultCityKey)
+     if(defaultCityKey){
+       $("#citiesListMob").val(defaultCityKey);
        createMobCityOptionsList(defaultCityKey,finalResponse);
+
+     }
 }
 
-function createCityTabList(finalResponse,mapUserCity,defaultCityKey){
+function createCityTabList(finalResponse,mapUserCity){
 var listCityHtml='<li id="{{id}}" class="js-tab cursp {{active}}" style="width:{{width}}"">{{cityName}}</li>';
-      var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
-      var cityCount=cityJson.length;
       var listCityHtmlfinal="";
       
       var key='';
@@ -248,3 +176,71 @@ function UrlRedirectionBinding()
     }
   });
 }
+
+$(document).ready(function() {
+  
+    mapUserCity=MapUserCityToUrbanClapCity(userCity);
+    defaultCityKey= cityJson[0].key;
+    $("#jeevansathiLogo").addClass('ucl_bg1');
+    $("#poweredBy").attr("urltoredirect",finalResponse.servicesData.data.cross_selling_section.branding.redirect_url);
+    $("#ulExploreServices").attr("urltoredirect",finalResponse.servicesData.data.footer_section.cta.redirect_url);
+
+    var DefaultOtherCityHtml=' <div id="otherCityContent" class=" pt50  mb20 txtc fontlig ucl_color1">   {{otherCityContent}}     </div>';
+    $(".bg-4").removeClass('bg-4');
+    
+    if(isMob==1)
+      DefaultOtherCityHtml=' <div id="otherCityContent" class=" pt50 padl10 padr10  mb20 txtc fontlig ucl_color1">   {{otherCityContent}}     </div>';
+    $(".bg-4").removeClass('bg-4');
+
+  if(finalResponse)
+  {
+      if(isMob==1)
+        createCityDropDownList(finalResponse,mapUserCity);
+      else
+        createCityTabList(finalResponse,mapUserCity);
+  }
+
+  
+ 
+  if(isMob==1)
+  {
+    $('#citiesListMob').change(function(){
+      var getID =  $(this).val();
+      if(getID!=="other")
+          createMobCityOptionsList(getID,finalResponse);
+        else{
+          finalOtherHtml=DefaultOtherCityHtml.replace(/\{\{otherCityContent\}\}/,cityJson[cityCount-1].description  );
+          $("#ulctabcontent").html(finalOtherHtml);
+        }
+    });
+  }
+  else
+  {
+      $('.js-tab').click(function(){
+      
+        $('.js-tab').each(function(){
+          $(this).removeClass('active');
+        });
+        $(this).addClass('active');
+        
+        
+        var getID = $(this).attr("id");
+        
+        $('.js-cont').each(function(){
+          $(this).removeClass('active');
+        });
+        
+        $('#'+getID).addClass('active');
+        
+        if(getID!=="other")
+          createCityOptionsList(getID,finalResponse);
+        else{
+          finalOtherHtml=DefaultOtherCityHtml.replace(/\{\{otherCityContent\}\}/,cityJson[cityCount-1].description  );
+          $("#ulctabcontent").html(finalOtherHtml);
+        }
+      });
+  }
+ UrlRedirectionBinding();
+  
+  
+});
