@@ -3020,4 +3020,17 @@ class MembershipHandler
         }
     }
 
+    public function getAmountForUSDtoINRpayment($billid,$orderid){
+        $purchasesObj = new BILLING_PURCHASES();
+        $ordersObj = new BILLING_ORDERS();
+        $orderDetails = $ordersObj->getOrderDetailsForId($orderid);
+        if(is_array($orderDetails) && $orderDetails["USD_TO_INR"]=='Y'){
+            $newAmountArr = array();
+            $newAmountArr["AMOUNT"] = $orderDetails["AMOUNT"];
+            $newAmountArr["DISCOUNT"] = $orderDetails["DISCOUNT"];
+            $purchasesObj->updateUSDtoINRflag('Y',$billid);
+        }
+        return $newAmountArr;
+    }
+
 }
