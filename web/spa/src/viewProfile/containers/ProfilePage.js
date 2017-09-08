@@ -505,7 +505,7 @@ class ProfilePage extends React.Component {
                           </CommHistory>
         }
 
-        var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView,showAlbumView;
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView,showAlbumView,stockImage;
 
         if(this.state.dataLoaded)
         {
@@ -574,7 +574,6 @@ class ProfilePage extends React.Component {
 
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
-
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
 
                 showAlbumView = this.props.pic.pic_count > 0 ?
@@ -592,10 +591,15 @@ class ProfilePage extends React.Component {
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
 
+                if(localStorage.getItem('GENDER') == "Male")
+                    stockImage = <i className="vpro_sprite female_nopro"></i>
+                else
+                    stockImage = <i className="vpro_sprite male_nopro"></i>
+
                 invalidProfileView = <div>
                     <div className="bg4 txtc" id="errorContent">
                         <div className="txtc setmid posfix fullwid" id="noProfileIcon">
-                            <i className="vpro_sprite female_nopro"></i>
+                           {stockImage}
                             <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
                         </div>
                     </div>
