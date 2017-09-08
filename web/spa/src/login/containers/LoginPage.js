@@ -69,6 +69,11 @@ class LoginPage extends React.Component {
         if ( this.props.MyProfile.AUTHCHECKSUM && getCookie('AUTHCHECKSUM')) {
             this.props.history.push('/myjs');
        }
+       if ( this.state.showCaptchDiv )
+       {
+            console.log("componentDidMount calling showCaptchDiv.");
+           this.addCaptchaDiv();
+       }
     }
 
     componentWillReceiveProps(nextProps)
@@ -99,6 +104,15 @@ class LoginPage extends React.Component {
                 this.showError(nextProps.MyProfile.responseMessage);
             }
        }
+    }
+
+    addCaptchaDiv()
+    {
+        document.getElementById("showCaptchDivId").innerHTML= '';
+        var script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        document.body.appendChild(script);
     }
 
     showError(inputString) {
@@ -174,6 +188,11 @@ class LoginPage extends React.Component {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
                 this.refs.Hamchild.getWrappedInstance().hideHam();
             }
+        }
+        if ( this.state.showCaptchDiv )
+        {
+            console.log("componentDidUpdate calling showCaptchDiv.");
+           this.addCaptchaDiv();
         }
     }
 
@@ -281,7 +300,7 @@ class LoginPage extends React.Component {
         let captchDiv ='';
         if(this.state.showCaptchDiv)
         {
-            captchDiv = <div className="captchaDiv pad2"><div className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
+            captchDiv = <div className="captchaDiv pad2"><div id="showCaptchDivId" className="g-recaptcha" data-sitekey={SITE_KEY}></div></div>;
         }
 
         let registeredMessageDiv = "";

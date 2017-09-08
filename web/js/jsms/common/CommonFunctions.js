@@ -291,6 +291,7 @@ function BindNextPage(){
 }
 function ShowNextPage(url,nottostore,transition)
 {
+	localStorage.setItem("prevUrlListing",window.location.href);
 	if(typeof(history.pushState)=='undefined')
 	{
 		document.location.href=url; 
