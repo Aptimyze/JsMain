@@ -1995,8 +1995,7 @@ function uploadAttachment()
     
     var SendAjax = function(fileObject, temp_attachment_id) {
         var apiUrl = "/api/v1/faq/abuseAttachment";
-        var uploadData = {"feed[attachment_1]" : fileObject.data};
-        formData = new FormData();
+        var formData = new FormData();
         formData.append("feed[attachment_1]", fileObject);
         
         if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
