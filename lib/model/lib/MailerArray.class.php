@@ -2,8 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-08-11
-
+	Created on 2017-09-08
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -436,6 +435,7 @@ private static $subjectArray=array(
 '1879'=>array('MAIL_ID'=>'1879','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We were unable to reach you.Kindly authenticate your contact details'),
 '1859'=>array('MAIL_ID'=>'1859','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Submit your success story and get a free gift!'),
 '1884'=>array('MAIL_ID'=>'1884','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile ~$deletedUserName` has been deleted after you reported abuse'),
+'1885'=>array('MAIL_ID'=>'1885','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Weekly Followup status Mail ~$date`'),
 );
 public static function getLink($Id){
 
