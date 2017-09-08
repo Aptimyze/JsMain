@@ -820,7 +820,7 @@ class photoScreeningActions extends sfActions {
 		$photoDataObj->initiate($this->name);
 		$profileDetails = $photoDataObj->get($this->name);
 		$arrImgOut = array();
-		$arrImgType = array('ProfilePic120Url', 'ProfilePic235Url', 'ProfilePic450Url', 'ProfilePicUrl');
+		$arrImgType = array('ProfilePicUrl','MobileAppPicUrl','ProfilePic120Url', 'ProfilePic235Url', 'ProfilePic450Url' );
 
 		if (false !== $profileDetails) {
 			foreach ($arrImgType as $key) {
