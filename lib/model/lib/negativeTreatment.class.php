@@ -513,7 +513,7 @@ class negativeTreatment
         return ;
       }
       
-      $iMailerId = 1883;
+      $iMailerId = 1884;
             
       $arrUniqueIds = array();
       foreach($arrResult as $result) {
