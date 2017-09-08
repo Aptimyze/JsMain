@@ -112,7 +112,7 @@ abstract class AbstractProfileCompletionScore {
         //If non numeric score or null then dont update
         if(!is_numeric(intval($iScore)) || !$iScore)
 		{
-			$subject = "ProfileCompletionScore : Score is non numeric score or null";
+			$subject = "ProfileCompletionScore : Score is non numeric score or null ::{$iScore}::";
             $szMailBody = "Profileid of user is : ".$this->m_objProfile->getPROFILEID();
             $szMailBody .= "\n\n'".print_r($this->m_objProfile,true)."'";
             

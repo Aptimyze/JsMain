@@ -28,7 +28,7 @@
                     <select name="followupStatus" id="followupStatus">
                         <option value="Y">Confirm</option>
                         <option value="N">Decline</option>
-                        <option value="F">Followup</option>
+                        <option value="F">Callback</option>
                     </select>
                 </td>
             </tr>
@@ -41,7 +41,7 @@
                         <option value="">Select</option>
                         <option value="Will check profile">Will check profile</option>
                         <option value="Not decided yet">Not decided yet</option>
-                        <option value="RNR/Switched off">RNR/Switched off</option>
+                        <option value="RNR/Switched off/Not reachable">RNR/Switched off/Not reachable</option>
                         <option value="Others">Others</option>
                     </select>
                 </td>
@@ -51,7 +51,7 @@
                     *Reason text:
                 </td>
                 <td>
-                    <textarea type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="resize:none;width: 287px;height: 50px;" class="crm-disabled" disabled></textarea>
+                    <textarea type="text" maxlength="200" id="reasonText" name="reasonText" value="" style="resize:none;width: 287px;height: 50px;" ></textarea>
                 </td>
             </tr>
             <tr class="fieldsnew">

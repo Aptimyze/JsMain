@@ -548,3 +548,27 @@ pre {
 .sendcross{background-position: -43px -223px; width: 18px;height: 14px;}
 .crosspos{top:25px; right:22px}
         
+.docattactlist ul{margin:0;padding:0}
+.docattactlist ul li{padding:5px;background-color:#dddddd; font-size:12px;padding:10px; position:relative;margin-top:6px}
+.attc_close {
+  
+  width: 15px;
+  height: 15px;
+  opacity: 1;
+}
+.attc_close:before, .attc_close:after {
+  position: absolute;
+  left: 0px;
+  content: ' ';
+  height: 15px;
+  width: 2px;
+  background-color: #696969;
+}
+.attc_close:before {
+  transform: rotate(45deg);
+}
+.attc_close:after {
+  transform: rotate(-45deg);
+}
+.abu_bck{background:url(IMG_URL/images/jspc/viewProfileImg/Abu_arrow.png) no-repeat; width:18px; height:18px}
+.attach{background:url(IMG_URL/images/jspc/viewProfileImg/att_layer.png) no-repeat; width:22px; height:12px}
