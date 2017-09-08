@@ -24,7 +24,7 @@ $error_msg = "Due to some temporary problem your request could not be processed.
 
 //$announce_to_email = "alok@jeevansathi.com";
 $announce_to_email = "vibhor.garg@jeevansathi.com";
-$DOL_CONV_RATE = 60;
+$DOL_CONV_RATE = 66;
 $tax_rate = billingVariables::TAX_RATE;
 $net_off_tax_rate = billingVariables::NET_OFF_TAX_RATE;
 $renew_discount_rate = 15;
