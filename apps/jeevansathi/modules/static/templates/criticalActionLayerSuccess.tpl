@@ -1087,7 +1087,7 @@ function manageClicks(clickType){
         }
       }else{
         // aadharErrorObj.removeClass("disp-hidden");
-        $("#aadharError").text("Provide a valid Aadhar number").removeClass("disp-hidden");
+        $("#aadharError").text("Provide a valid Aadhaar number").removeClass("disp-hidden");
       }
     break;
     case "CALBUTTON2":
