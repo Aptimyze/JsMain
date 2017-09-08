@@ -1775,7 +1775,17 @@ if(1)
 			echo '<br> $education_total_count $education_count $education_max_deviation $weight_education is '.$education_total_count.' '.$education_count.' '.$education_max_deviation.' '.$weight_education;
 			echo '<br> $occupation_total_count $occupation_count $occupation_max_deviation $weight_occupation is '.$occupation_total_count.' '.$occupation_count.' '.$occupation_max_deviation.' '.$weight_occupation;
 			echo '<br> $city_total_count $city_count $city_max_deviation $weight_city is '.$city_total_count.' '.$city_count.' '.$city_max_deviation.' '.$weight_city;*/
-		
+			$USEPERCENTAGE = true;
+			if($USEPERCENTAGE){
+				$TAIL = "_value_percentile_string";
+				$only_percentage = array("caste", "mtongue", "occupation", "education", "income", "height", "city", "age", "mstatus", "manglik");
+				foreach ($only_percentage as $value) {
+					${$value . $TAIL} ='|';
+					foreach (${$value . "_field"} as $key => $val){
+						${$value . $TAIL} .= $val['value'].'#'.$val['percent'].'|';
+					}
+				}
+			}
 
 		 
 				$insert_query="UPDATE twowaymatch.TRENDS SET USERNAME='".stripslashes($my_username)."',GENDER='$my_gender[$t]',INITIATED='$initiated',ACCEPTED='$accepted',DECLINED='$declined',W_CASTE='".$weight_caste."',CASTE_VALUE_PERCENTILE='".$caste_value_percentile_string."',W_MTONGUE='".$weight_mtongue."',MTONGUE_VALUE_PERCENTILE='".$mtongue_value_percentile_string."',W_AGE='".$weight_age."',AGE_VALUE_PERCENTILE='".$age_value_percentile_string."',W_INCOME='".$weight_income."',INCOME_VALUE_PERCENTILE='".$income_value_percentile_string."', W_HEIGHT='".$weight_height."',HEIGHT_VALUE_PERCENTILE='".$height_value_percentile_string."',W_EDUCATION='".$weight_education."',EDUCATION_VALUE_PERCENTILE='".$education_value_percentile_string."',W_OCCUPATION='".$weight_occupation."',OCCUPATION_VALUE_PERCENTILE='".$occupation_value_percentile_string."', W_CITY='".$weight_city."',CITY_VALUE_PERCENTILE='".$city_value_percentile_string."',W_MSTATUS='".$weight_mstatus."',MSTATUS_N_P='".$mstatus_adjusted_percentages_percentile['N']."',MSTATUS_M_P='".$mstatus_adjusted_percentages_percentile['M']."',W_MANGLIK='".$weight_manglik."',MANGLIK_M_P='".$manglik_adjusted_percentages_percentile['M']."',MANGLIK_N_P='".$manglik_adjusted_percentages_percentile['N']."', W_NRI='".$weight_country."',NRI_M_P='".$country_adjusted_percentages_percentile['NRI']."',NRI_N_P='".$country_adjusted_percentages_percentile['I']."',MAX_SCORE='".$max_score."',MAX_AGE_SCORE='".$max_age_score."',ENTRY_DT='".$today."',WEIGHT_ORDERING='".$weight_ordering."' WHERE PROFILEID='$my_profileid'";
