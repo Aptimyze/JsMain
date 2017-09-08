@@ -760,6 +760,9 @@ var altEmail = '~$altEmail`';</script>
 ~elseif $layerId == '24'`
 <!--================================================================================================================================-->
 <style>
+input::-ms-clear {
+    display: none;
+}
 #readmoreConsent{
   position: absolute;
   left: 47%;
