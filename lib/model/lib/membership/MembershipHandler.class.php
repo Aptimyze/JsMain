@@ -2290,13 +2290,10 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
-
         if (is_array($allocationDetails) && $allocationDetails) {
-            
             $profileIDArr = array_map(function($arr){ 
                                     return $arr['PROFILEID'];
                                 },$allocationDetails);
-            
             if(is_array($profileIDArr)){
                 $profileIDArr = array_unique($profileIDArr);
             }
