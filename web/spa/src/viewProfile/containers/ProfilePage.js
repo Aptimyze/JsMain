@@ -41,6 +41,7 @@ class ProfilePage extends React.Component {
             showPromo: false,
             tabArray: ["About","Family","Dpp"],
             displayTab:["About","Family","Looking for"],
+            GenderInfo: {"Him" :"Him", "Her":"Her","He":"He","She":"She","His":"His"},
             dataLoaded: false,
             showHistory: false,
             profilechecksum: profilechecksum || "",
@@ -430,10 +431,12 @@ class ProfilePage extends React.Component {
     {
         let himHer = "him",photoViewTemp,AboutViewTemp;
         let decideHimHer;
-        // console.log("=======");
-        // console.log(this.state);
+      //  console.log("=======");
+      //  console.log(this.state);
+      //  console.log(this.state.GenderInfo.He);
         // console.log(this.props);
         // console.log("=======");
+
         if(this.state.gender == "M" && this.state.ownView == false)
         {
             //console.log("p-1");
@@ -509,28 +512,36 @@ class ProfilePage extends React.Component {
             //console.log("data laoded") ;
             // console.log(this.state.ownView);
             // console.log(this.props.AboutInfo.gender);
+            //console.log(this.state.GenderInfo.Him);
+            //console.log(this.state.GenderInfo.Her);
             if(this.state.ownView == false)
             {
                 if(this.props.AboutInfo.gender == "Male")
                 {
-                  decideHimHer= "Him";
+                  //console.log("a1");
+                  decideHimHer= this.state.GenderInfo.Him;
+                  //console.log({decideHimHer});
                 }
                 else
                 {
-                  decideHimHer = "Her";
+                  //console.log("a2");
+                  decideHimHer = this.state.GenderInfo.Her;
+                  //console.log({decideHimHer});
                 }
             }
             else
             {
               if(this.props.AboutInfo.gender == "Male")
               {
-                decideHimHer= "Him";
+                decideHimHer= this.state.GenderInfo.Him;
               }
               else
               {
-                decideHimHer = "Her";
+                decideHimHer = this.state.GenderInfo.Her;
               }
             }
+            console.log("=====");
+            console.log({decideHimHer});
 
 
 
