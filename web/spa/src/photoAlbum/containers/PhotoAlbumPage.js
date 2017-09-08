@@ -32,7 +32,7 @@ export default class PhotoAlbumPage extends React.Component {
 
     let newPchksum, _this = this;
     let aChsum = getCookie('AUTHCHECKSUM');
-    console.log(aChsum);
+    //console.log(aChsum);
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
 
@@ -60,8 +60,8 @@ export default class PhotoAlbumPage extends React.Component {
   }
 
 componentDidUpdate(){
-  console.log('component did update');
-  console.log(this.state);
+  //console.log('component did update');
+  //console.log(this.state);
 if(!this.state.recAlbumlink || this.sliderBound || !this.state.showConditionalPhotoLayer ) return;
   this.sliderBound =1;
   let elem = document.getElementById('galleryContainer');
@@ -146,10 +146,10 @@ if(!this.state.recAlbumlink || this.sliderBound || !this.state.showConditionalPh
     }
     else
     {
-      console.log("a113");
-      console.log(this.state.getRes.albumUrls);
-      console.log("ajk");
-      console.log(this.state.getRes.showConditionalPhotoLayer);
+      //console.log("a113");
+      //console.log(this.state.getRes.albumUrls);
+      //console.log("ajk");
+      //console.log(this.state.getRes.showConditionalPhotoLayer);
 
       if(this.state.getRes.albumUrls == null)
       {

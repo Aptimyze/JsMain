@@ -240,7 +240,7 @@ class KundliInfo extends React.Component {
                     A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.
                 </div>;
             } else {
-                astroButton = <div id="astroButton" className = "astrob1 js-textAstro"  onClick={() => this.closeAstroLayer()}>
+                astroButton = <div id="astroButton" className = "js-textAstro txtc lh50"  onClick={() => this.closeAstroLayer()}>
                     OK
                 </div>;
                 astroText = <div className="astrob1 js-textAstro">
