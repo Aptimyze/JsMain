@@ -1067,7 +1067,7 @@ function manageClicks(clickType){
   switch(clickType){
     case "CALBUTTON1":
       var aadhar = get_aadharinput();
-      if(aadhar.length == 12 ){
+      if(aadhar.length == 12 && aadhar.aadhaarVerificationCheck()){
         var UserName = $("#nameInputCAL").val();
         var nameError = validateUserName(UserName);
         if(!nameError.length){
