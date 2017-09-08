@@ -1,6 +1,7 @@
 import React from 'react';
 import {removeClass, $i, $c} from '../../common/components/commonFunctions';
 import CALCommonCall from './CommonCALFunctions';
+import {skippableCALS} from './CommonCALFunctions';
 import Loader from "../../common/components/Loader";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
@@ -57,6 +58,17 @@ componentWillMount(){
 
 
   }
+  let index = skippableCALS.indexOf(this.props.calData.LAYERID);
+  if(index!=-1)
+  {
+    let dl=document.location.origin+document.location.pathname+document.location.search+"#cal";
+    history.pushState(null,"",dl);
+    var _this = this;
+    window.onpopstate= function(){
+      _this.criticalLayerButtonsAction(_this.props.calData.BUTTON2_URL_ANDROID,_this.props.calData.JSMS_ACTION2,'B2');
+      window.onpopstate= null;
+    }
+  }
 
 }
 
@@ -64,11 +76,6 @@ componentWillMount(){
 componentDidMount(){
   switch(this.props.calData.LAYERID)
   {
-      case '16':
-//        this.appendSuggestionsData("/static/getFieldData?k=occupation&dataType=json");
-        this.getSuggestions();
-        break;
-
       case '9':
       let val1 = $i("submitName").getBoundingClientRect().top, val2 = $i("skipBtn").getBoundingClientRect().top ;
 
@@ -407,7 +414,7 @@ return (<div>
 
   </div>
 
-  <div id="overlayMid" style={{height:(window.innerHeight-97)+'px'}} className="bg4 pad3 ">
+  <div id="overlayMid"  className="bg4 pad3 ">
       <div id="mainHeading" className="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
       <div id="dppDescription" className="txtc color8 fontlig f17">{this.state.suggDescriptionText}</div>
       <div id="dppSuggestions" className="mb30">{this.getSuggestions()}</div>
@@ -523,8 +530,9 @@ getSuggestions()
     for (var key in elem.data) {
         if(elem.data.hasOwnProperty(key)) {
               counter++;
-              let tempCount = counter;
-              childEle = (<div key ={key} style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',otherCounter,key)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
+              let suggValue = key;
+              let tempCount = counter,tempOtherCounter = otherCounter ;
+              childEle = (<div key ={key} style={!this.state.classCounter[tempCount] ? {} : this.suggStyle }  onClick={() => this.toggleClass(tempCount,elem,'other',tempOtherCounter,suggValue)} className={"suggestOption brdr18 fontreg txtc color8 f16 dispibl"}>{elem.data[key]}</div>);
               childEleArray.push(childEle);
               }
           }

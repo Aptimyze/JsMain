@@ -15,6 +15,7 @@ const MyjsReducer = (state={
 		state = {
 			...state,
 			apiData:action.payload,
+			calShown : false,
 			fetched : true
 		}
 		break;
