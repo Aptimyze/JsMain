@@ -962,7 +962,7 @@ $("#aadharField").keydown(function(e){
   });
 
 function aadharVerificationApi(aadhar, UserName){
-  // var CardHtml = `<div class='extraNumber'><img src="http://trunk.jeevansathi.com/images/colorbox/loader_big.gif"></div>`;
+  var CardHtml = "";
   $("#cal_content_1").hide();
   // $("#cal_content_2").html(CardHtml);
   $("#cal_content_2").show();
@@ -1137,7 +1137,6 @@ function manageClicks(clickType){
 <button  id='closeButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('SKIP');">Close</button>
 <button  id='okayButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('OKAY');">Okay</button>
 </div>
-<input type="hidden" id="CriticalActionlayerId" value="24">
 <!--================================================================================================================================-->
 
 ~elseif $layerId == '25'`
