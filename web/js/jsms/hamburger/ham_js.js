@@ -16,20 +16,21 @@ temp.animate({
     $(document).ready(function(){
         var settingsSum = 0,myMatchesSum = 0,contactSum = 0;
         $("#settingsMinor li").each(function(){
-            settingsSum += $(this).outerHeight() + 20;
+            settingsSum += $(this).outerHeight() + 12;
         })
         $("#myMatchesMinor li").each(function(){
-            myMatchesSum += $(this).outerHeight() + 20;
+            myMatchesSum += $(this).outerHeight() + 12;
         })
         $("#contactsMinor li").each(function(){
-            contactSum += $(this).outerHeight() + 20;
+            contactSum += $(this).outerHeight() + 12;
         })
+        console.log(myMatchesSum);
         $("#scrollElem").height((window.innerHeight -$("#bottomTab").height())+"px");
         $("#settingsParent").on("click",function(){
             if($("#settingsParent").hasClass('plusParent')) {
-                 $("#settingsMinor").hide(); 
+                  $("#settingsMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#settingsMinor").show();
+            	$("#settingsMinor").animate({height:settingsSum+'px','margin-top':'12px'},0);
             	setScroll($("#settingsParent").parent());
 //                $("#settingsMinor").height("0px");
             }
@@ -37,9 +38,9 @@ temp.animate({
         })
         $("#myMatchesParent").on("click",function(){
             if($("#myMatchesParent").hasClass('plusParent')) {
-                 $("#myMatchesMinor").hide(); 
+                 $("#myMatchesMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#myMatchesMinor").show();
+            	$("#myMatchesMinor").animate({height:myMatchesSum+'px','margin-top':'12px'},0);
             	setScroll($("#myMatchesParent").parent());
 //                $("#settingsMinor").height("0px");
             }
@@ -49,9 +50,9 @@ temp.animate({
         })
         $("#contactsParent").on("click",function(){
         	if($("#contactsParent").hasClass('plusParent')) {
-                 $("#contactsMinor").hide(); 
+                  $("#contactsMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#contactsMinor").show();
+            	$("#contactsMinor").animate({height:contactSum+'px','margin-top':'12px'},0);
             	setScroll($("#contactsParent").parent());
 //                $("#settingsMinor").height("0px");
             }

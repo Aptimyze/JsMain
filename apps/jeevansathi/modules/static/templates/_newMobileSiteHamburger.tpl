@@ -80,7 +80,7 @@
                                 <div class=" ml10  white dispibl">My Matches</div>
                                 <i id="expandMyMatches" class="hamSprite plusIcon fr"></i>
                             </div>
-                            <ul id="myMatchesMinor"  style="margin-top: 12px" class="minorList dispnone f15" >
+                            <ul id="myMatchesMinor"  style="height:0px" class="minorList f15" >
                                 <li class='mb12'>
                                     <a bind-slide=1  id="dppLink" href="/search/perform?partnermatches=1" class="newS white">Desired Partner Matches</a>
                                 </li>
@@ -108,7 +108,7 @@
                         <li class='mb12'>
                             <div id="contactsParent"><i class="hamSprite myContactIcon"></i>
                                 <div id="myContactLink" class=" ml10 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
-                            <ul id="contactsMinor" style="margin-top: 12px" class="minorList dispnone f15" >
+                            <ul id="contactsMinor" style="height: 0px" class="minorList  f15" >
                                 <li class='mb12'>
                                     <a bind-slide=1  id="intRecLink" href="/inbox/1/1" class="newS white">
                                         Interests Received
@@ -161,7 +161,7 @@
                                 <div id="settingsLink" class="ml10 dispibl white">Settings</div>
                                 <i id="expandSettings" class="hamSprite plusIcon fr"></i>
                             </div>
-                            <ul id="settingsMinor" style="margin-top: 12px" class="minorList dispnone f15">
+                            <ul id="settingsMinor" style="height: 0px" class="minorList f15">
                                 <li class='mb12'>
                                     <a bind-slide=1  id="recommendationLink" href="/profile/viewprofile.php?ownview=1#Dpp" class="newS white">Recommendation Settings</a>
                                 </li>
