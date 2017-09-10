@@ -32,7 +32,7 @@ export default class PhotoAlbumPage extends React.Component {
 
     let newPchksum, _this = this;
     let aChsum = getCookie('AUTHCHECKSUM');
-    console.log(aChsum);
+    //console.log(aChsum);
     //console.log(_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1));
      let str = _this.props.location.search.replace('profilechecksum','profileChecksum');
 
@@ -43,7 +43,7 @@ export default class PhotoAlbumPage extends React.Component {
      }
      else
      {
-      
+
        newPchksum = str;
      }
 
@@ -60,10 +60,14 @@ export default class PhotoAlbumPage extends React.Component {
   }
 
 componentDidUpdate(){
-if(!this.state.recAlbumlink || this.sliderBound) return;
+  //console.log('component did update');
+  //console.log(this.state);
+if(!this.state.recAlbumlink || this.sliderBound || !this.state.showConditionalPhotoLayer ) return;
   this.sliderBound =1;
   let elem = document.getElementById('galleryContainer');
-  //onstructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit,pagesrc)
+
+  //onstructor(parent,tupleObject,styleFunction,notMyjs,indexElevate,nextPageHit,pagesr
+
   this.obj = new MyjsSliderBinding(elem,this.state.getRes.albumUrls,{nxtSlideFun:this.incrCount.bind(this),prvSlideFun:this.decrCount.bind(this),styleFunction:this.alterCssStyle.bind(this)},1,'','',"Palbum");
   this.obj.initTouch();
 
@@ -131,6 +135,10 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
   render() {
 
+    let setAlbumDim;
+
+    console.log(this.state.recAlbumlink);
+
     if(!this.state.recAlbumlink){
       return(<div className="noData album bg14 posrel" style={this.state.screendim}>
                 <div className="posabs setmid"><img src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/></div>
@@ -138,52 +146,100 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
     }
     else
     {
+      //console.log("a113");
+      //console.log(this.state.getRes.albumUrls);
+      //console.log("ajk");
+      //console.log(this.state.getRes.showConditionalPhotoLayer);
+
+      if(this.state.getRes.albumUrls == null)
+      {
+        setAlbumDim = window.innerWidth;
+      }
+      else
+      {
+        setAlbumDim = window.innerWidth*this.state.getRes.albumUrls.length;
+      }
 
       let setcell={
         width: window.innerWidth
       }
       let setouter={
-        width : window.innerWidth*this.state.getRes.albumUrls.length,
+        width : setAlbumDim,
         height: window.innerHeight,
         display: "table"
       }
 
-      return(
-
-
-
-          <div className="posrel">
-            <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
-
-            <div className="posabs z1 bckpos1 fontlig f18 white">
-              {this.state.intialACount}/{this.state.getRes.albumUrls.length}
-            </div>
-
-
-            <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
-
-
-            {this.state.getRes.albumUrls.map((urllist, index) => {
-              return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
-                        <div className="posrel" style={this.state.screendim}>
-                        <img id={"albumLoader_"+index} className="loadrpos posabs setmid" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
-                        <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
-
-                        </div>
-                    </div>
-
-
-
-
-
-
-            })}
-
-            </div>
+      if(this.state.getRes.albumUrls == null)
+      {
+        return(
+          <div className="bg14 posrel disptbl"  style={setouter}>
+              <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
+              <div className="dispcell vertmid pad3 txtc white">
+                <p class="txtc">
+                  It has been while since you registered on Jeevansathi, hence we rquired you to add a photo to able to see other members album.
+                </p>
+                <p className="pt20 txtc">
+                  If you have privacy concerns,you can make your photo visible on only on acceptance thorugh privacy settings.
+                </p>
+              </div>
+              <div className="posabs bckpos2 fullwid">
+                <a href="/profile/viewprofile.php?ownview=1">
+                  <div className="bg7 f18 white lh30 fullwid dispbl txtc lh50">
+                    Upload Photo
+                  </div>
+                </a>
+              </div>
           </div>
+        )
+      }
+      else
+      {
+        return(
 
 
-          );
+
+            <div className="posrel">
+              <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
+
+              <div className="posabs z1 bckpos1 fontlig f18 white">
+                {this.state.intialACount}/{this.state.getRes.albumUrls.length}
+              </div>
+
+
+              <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
+
+
+              {this.state.getRes.albumUrls.map((urllist, index) => {
+                return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
+                          <div className="posrel" style={this.state.screendim}>
+                          <img id={"albumLoader_"+index} className="loadrpos posabs setmid" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+                          <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
+
+                          </div>
+                      </div>
+
+
+
+
+
+
+              })}
+
+              </div>
+            </div>
+
+
+            );
+      }
+
+
+
+
+
+
+
+
+
 
       }
     }
