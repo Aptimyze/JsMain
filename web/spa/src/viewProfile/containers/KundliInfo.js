@@ -183,8 +183,8 @@ class KundliInfo extends React.Component {
         {
             let htmlStr = "<div id='vpro_muslim_m'>", muslimData = this.props.about.muslim_m, keyArray = Object.keys(muslimData);
             for(var i=0; i<keyArray.length; i++) {
-                htmlStr += '<div class="f12 color1">'+keyArray[i]+'</div>';
-                htmlStr += '<div class="fontlig pb15">'+muslimData[keyArray[i]]+'</div>';
+                htmlStr += '<div class="f12 color1">'+muslimData[keyArray[i]].label+'</div>';
+                htmlStr += '<div class="fontlig pb15">'+muslimData[keyArray[i]].value+'</div>';
             }
             htmlStr += "</div>";
             muslim_m = <div dangerouslySetInnerHTML={{__html: htmlStr}} />
