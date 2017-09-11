@@ -176,7 +176,156 @@ class ExclusiveMatchMailer {
             }
         }
     }
+    public function getClientAndAgentForToday() {
+		$servicingObj = new billing_EXCLUSIVE_SERVICING();
+		$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+		$result = $servicingObj->getProfileIDandAgentNameForToday();
+		if(is_array($result)){
+			foreach ($result as $key => $value) {
+                $clientIdArr[] = $value["CLIENT_ID"];
+		    }
+		    $clientIdStr = implode(",", $clientIdArr);
+		    $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+		    foreach($clientNameArr as $key => $val){
+		            $nameTempArr[$val["PROFILEID"]] = $val;
+		    }
+			if (count($result)) {
+				$pswrdsObj = new jsadmin_PSWRDS();
+				$followupObj = new billing_EXCLUSIVE_FOLLOWUPS();
+				foreach ($result as $key => $value) {
+					$agentArr[$result[$key]['AGENT_USERNAME']] = $key;
+					$result[$key]['NAME'] = $nameTempArr[$key]['NAME'];
+					$result[$key]["DISPLAY"] = $nameTempArr[$key]['DISPLAY'];
+					$memberDetails = $followupObj -> followupHistoryForClient($result[$key]['AGENT_USERNAME'],$result[$key]['CLIENT_ID']);
+					$newResult[$key] = $memberDetails; 
+					$newResult[$key]["NAME"] = $nameTempArr[$key]["NAME"];
+					$newResult[$key]["DISPLAY"] = $nameTempArr[$key]["DISPLAY"];
+					$memberID = array_keys($memberDetails);
+					if(is_array($memberID)){
+						$jprofileObj = new JPROFILE("newjs_slave");
+						$memberIDStr = implode(",", $memberID);
+		                $memberUsername = $jprofileObj->getArray(array("PROFILEID" => $memberIDStr),"","","PROFILEID,USERNAME");
+		                $memberName = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+		                foreach ($memberName as $key => $value) {
+		                	$name[$value["PROFILEID"]]["NAME"] = $value["NAME"];
+		                	$name[$value["PROFILEID"]]["DISPLAY"] = $value["DISPLAY"]; 
+		                }
+		                if(is_array($memberUsername)){
+		                	foreach ($memberUsername as $key => $value) {
+		                		$usernames[$value["PROFILEID"]] = $value["USERNAME"];
+		                	}
+		                }
+					}
+				}
+				$agentDetail = $pswrdsObj->getAgentDetailsForMatchMail(array_keys($agentArr));
+				foreach ($agentDetail as $key => $value) {
+					$agentDetail[$key]["NAME"] = $value["FIRST_NAME"];
+					if($value["LAST_NAME"])
+						$agentDetail[$key]["NAME"] .= " ".$value["LAST_NAME"];
+					unset($agentDetail[$key]["FIRST_NAME"]);
+					unset($agentDetail[$key]["LAST_NAME"]);
+				}
+				foreach ($newResult as $key => $value) {
+					$newResult[$key]["AGENT_DETAIL"] = $agentDetail[$result[$key]["AGENT_USERNAME"]];
+					$flag=0;
+					// print_r($value);die;
+					foreach ($value as $k => $v) {
+						if(is_numeric($k))
+							$flag=1;
+						if(is_array($v)){
+							if($v["STATUS"] == "Y" || $v["STATUS"] == "N" || $v["STATUS"] == "F4"){
+								$updateArr[] = $v["ID"];
+							}
+
+							$newResult[$key][$k]["MEMBER_USERNAME"] = $usernames[$k];
+							$newResult[$key][$k]["NAME"] = $name[$k]["NAME"]; 
+							$newResult[$key][$k]["DISPLAY"] = $name[$k]["DISPLAY"];
+
+							if(!$v["FOLLOWUP1_DT"]){
+								unset($newResult[$key][$k][$v]);
+								continue;
+							}
+
+							if($v["FOLLOWUP_1"]){
+								$reason = explode("|", $v["FOLLOWUP_1"]);
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+									$reason[0] = "Non Contactable";
+								$newResult[$key][$k]["FOLLOWUP_1"] = $reason[0];
+							}
+
+							if($v["FOLLOWUP_2"]){
+								$reason = explode("|", $v["FOLLOWUP_2"]);
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+									$reason[0] = "Non Contactable";
+								$newResult[$key][$k]["FOLLOWUP_2"] = $reason[0];
+							} 
+
+							if (!$v["FOLLOWUP2_DT"]) {
+								if($v["STATUS"] == "Y"){
+									$newResult[$key][$k]["FOLLOWUP_1"] = "Confirmed";
+									continue;	
+								} else if ($v["STATUS"] == "N") {
+									$newResult[$key][$k]["FOLLOWUP_1"] = "Declined";
+									continue;
+								}
+							}
+							
+							if($v["FOLLOWUP_3"]){
+								$reason = explode("|", $v["FOLLOWUP_3"]);
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+									$reason[0] = "Non Contactable";
+								$newResult[$key][$k]["FOLLOWUP_3"] = $reason[0];
+							}
+
+							if (!$v["FOLLOWUP3_DT"]) {
+								if($v["STATUS"] == "Y"){
+									$newResult[$key][$k]["FOLLOWUP_2"] = "Confirmed";
+									continue;	
+								} else if ($v["STATUS"] == "N") {
+									$newResult[$key][$k]["FOLLOWUP_2"] = "Declined";
+									continue;
+								}
+							}
+							
+							if($v["FOLLOWUP_4"]){
+								$reason = explode("|", $v["FOLLOWUP_4"]);
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+									$reason[0] = "Non Contactable";
+								$newResult[$key][$k]["FOLLOWUP_4"] = $reason[0];
+							}
+
+							if (!$v["FOLLOWUP4_DT"]) {
+								if($v["STATUS"] == "Y"){
+									$newResult[$key][$k]["FOLLOWUP_3"] = "Confirmed";
+									continue;	
+								} else if ($v["STATUS"] == "N") {
+									$newResult[$key][$k]["FOLLOWUP_3"] = "Declined";
+									continue;
+								}
+							} else{
+								if($v["STATUS"] == "Y"){
+									$newResult[$key][$k]["FOLLOWUP_4"] = "Confirmed";
+									continue;	
+								} else if ($v["STATUS"] == "N") {
+									$newResult[$key][$k]["FOLLOWUP_4"] = "Declined";
+									continue;
+								}
+							}
+						}
+					}
+					if($flag==0)
+						unset($newResult[$key]);
+				}
+			}
+		}
+		if(is_array($updateArr)){
+			$updateStr = implode(",", $updateArr);
+			$followupObj->updateMailerFlag($updateStr);
+		}
+		return $newResult;
+	}
 }
 
 
 ?>
+

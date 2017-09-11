@@ -1,0 +1,5 @@
+type=command
+dependencies=MatchAlertPopulateTask
+command=${php5} ${docRoot}/symfony  alert:MatchAlertCalculation 15 13
+retries=3
+retry.backoff=60000
