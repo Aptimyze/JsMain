@@ -117,7 +117,7 @@ export class contactEnginePD extends React.Component{
         break;
 
         case 'WRITE_MESSAGE':
-            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:false});
         break;
 
         case 'REPORT_INVALID':
@@ -128,11 +128,15 @@ export class contactEnginePD extends React.Component{
             this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
           }
           else
-          {console.log(responseButtons,'responsebutton');
-          if(responseButtons.buttondetails.buttons){console.log('infirsst',responseButtons);
+          {
+          if(responseButtons.actiondetails.writemsgbutton){
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:true});
+
+          }
+          if(responseButtons.buttondetails.buttons){
             this.props.replaceOldButtons(responseButtons);}
           else if(responseButtons.buttondetails.button)
-          {console.log('insec',responseButtons);
+          {
             var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
             this.props.replaceSingleButton(newButtons);
           }
@@ -260,7 +264,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showMsgLayer)
       {
-        layer= (<WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
+        layer= (<WriteMessage bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
       }
       if(this.state.commonOvlayLayer)
       {
