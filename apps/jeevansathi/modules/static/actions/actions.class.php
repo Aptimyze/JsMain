@@ -533,7 +533,7 @@ public function executeCALRedirection($request){
     if($loginData[PROFILEID])
     {
       $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
-     // $authenticationLoginObj->logout($loginData[PROFILEID]);
+      $authenticationLoginObj->logout($loginData[PROFILEID]);
       
     }
     $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
