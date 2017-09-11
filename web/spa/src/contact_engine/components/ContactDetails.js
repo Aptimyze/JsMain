@@ -189,7 +189,7 @@ getMembershipOvlay(){
 getFooterButton(fButton){
   if(!fButton) return (<div></div>);
 return       (<div id="footerDiv" className="posfix fullwid btmo" style={{background:'black'}}>
-              <a href="#" id="skipLayer" className="f16 fontmed app_clrw txtc posSkip">Skip</a>
+              <div id="skipLayer" onClick={this.props.closeCDLayer} className="f16 fontmed app_clrw txtc posSkip">Skip</div>
               <div className="bg7">
 
               <a onClick={()=>this.props.bindAction(fButton)} id="footerButtonNew" className="fullwid dispbl lh50 txtc f17 fontlig white">{fButton.newlabel}</a>
