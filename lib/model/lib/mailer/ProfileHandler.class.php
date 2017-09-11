@@ -199,7 +199,10 @@ class ProfileHandler implements VariableHandler{
 		if($this->__profile_obj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="EVALUE")
 			$str = "eValue";
 		elseif ($this->__profile_obj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="ERISHTA")
-			$str = "eRishta";
+      $str = "eRishta";
+    elseif ($this->__profile_obj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="JSEXCLUSIVE")
+      $str = "JsExclusive";
+    
 		if($str)
 		return "| ".$str;
 		break;

@@ -939,4 +939,32 @@ class BILLING_PURCHASES extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function getDiscountDetail($billid,$serviceid){
+        try{
+            $sql = "SELECT DISCOUNT,ORDERID,DISCOUNT_PERCENT FROM billing.PURCHASES WHERE BILLID = :BILLID AND SERVICEID LIKE :SERVICEID";
+            $serviceid = "%".$serviceid."%";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID",$serviceid,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $prep->fetch();
+            return $result;
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function updateUSDtoINRflag($usdTOinr,$billid){
+        try{
+            $sql = "UPDATE billing.PURCHASES SET USD_TO_INR=:USDTOINR WHERE BILLID = :BILLID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":USDTOINR",$usdTOinr,PDO::PARAM_INT);
+            $prep->execute();
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
