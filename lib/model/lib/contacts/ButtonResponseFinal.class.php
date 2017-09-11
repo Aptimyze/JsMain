@@ -76,6 +76,7 @@ Class ButtonResponseFinal
 			$this->page["CHAT_GROUP"] = $type;
 		  //echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			$buttonsResponse = self::getButtons($source,$this->channel,$viewer,$type);
+			$responseArray = array();
 			foreach($buttonsResponse as $key=>$val)
 			{
 				if($val->TYPE == "TEXT")
@@ -121,6 +122,7 @@ Class ButtonResponseFinal
 		}
 //		echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$type;
 		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);//die;
+		$responseArray = array();
 		foreach($buttonsResponse as $key=>$val)
 		{
 			if($val->TYPE == "REMINDER")
