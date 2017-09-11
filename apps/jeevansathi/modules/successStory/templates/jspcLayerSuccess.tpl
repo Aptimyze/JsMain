@@ -249,9 +249,9 @@
         var errorLog = 0;
         var errorMessage = "";
         if(useCase == 'skipDelete') {
-            $("#formContainer").fadeOut(500);
-            $(window).scrollTop(0);
-            postWeddingServices();
+           // $("#formContainer").fadeOut(500);
+            //$(window).scrollTop(0);
+            window.location.href= "/static/PostWeddingServices";
             /*$("#skipContainer").fadeIn(500);            
             return errorLog;*/
         }
@@ -343,8 +343,8 @@
             $("ul.weddate").parent().removeClass('err');
         }
         if(useCase == 'verified'){
-            $("#formContainer").fadeOut(500);
-            postWeddingServices();
+            //$("#formContainer").fadeOut(2000);
+            window.location.href= "/static/PostWeddingServices";
             /*$("#resultContainer").fadeIn(500);*/
         } else {
             $('html,body').animate({scrollTop: $("#errorMessage").offset().top-20},1000);

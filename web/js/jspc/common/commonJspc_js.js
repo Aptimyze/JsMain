@@ -920,8 +920,3 @@ function updateMemTimerLightning(){
         $("#jspcMyjsS").html(s);
     }
 }
-
-function postWeddingServices()
-{
-    alert("asd");
-}

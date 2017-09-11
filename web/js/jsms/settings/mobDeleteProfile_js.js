@@ -72,7 +72,10 @@ function ajaxDelete(specifyReason,deleteReason)
     success: function(response) 
     {
       if(response.output=="Deleted Successfully"){
-        parent.location.href= "/static/PostWeddingServices";
+        if(deleteReason==1 || deleteReason==2 ||deleteReason==3)
+          parent.location.href= "/static/PostWeddingServices";
+        else
+          parent.location.href= "/static/logoutPage";
       }
       else 
       {
