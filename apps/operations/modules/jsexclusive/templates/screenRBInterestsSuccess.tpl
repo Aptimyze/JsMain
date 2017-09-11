@@ -20,7 +20,7 @@
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
 		<input type="hidden" name="clientIndex" value="~$clientIndex`">
 		<input type="hidden" name="clientId" value="~$clientId`">
-
+		<input type="hidden" name="clientUsername" value="~$clientData.clientUsername`">
  		<table border="0" align="center" width="80%" table-layout="auto" style="
     border-spacing: 10px;">
 			~if $pogRBInterestsPool` 
@@ -47,9 +47,11 @@
 				~/foreach`
 				<br>
 				<tr align="center">
-					<td class="label" colspan="2" height="20" style="background-color:Moccasin">
-						<input type="submit" name="submit" value="SUBMIT">
+					<td align="left" class="label" colspan="2" height="20" style="background-color:Moccasin">
+						<input type="submit" name="submit" value="SKIP">
+						<input type="submit" style="margin-left: 42%;" name="submit" value="SUBMIT">
 					</td>
+					
 				</tr>
 		    ~else if $showNextButton eq 'Y'`
 		    	<br>

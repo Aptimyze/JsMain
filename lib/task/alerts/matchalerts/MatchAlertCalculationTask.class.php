@@ -54,17 +54,22 @@ EOF;
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");
 		$flag=1;
-
 		do{
+                        $configObj = new MatchAlertsConfig();
 			/**
 			* Fetch Ids to be send.
 			*/
-                        
+                        if($configObj->isMatchAlertsForNonPeakHour() && $totalScripts == $configObj->instancePeak){
+                                successfullDie("Reached peak hour kill extra instance and start new");
+                        }elseif($configObj->isMatchAlertsForNonPeakHour() == false && $totalScripts == $configObj->instanceNonPeak){
+                                successfullDie("Reached non peak hour increase cron");
+                        }
+                        unset($configObj);
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
                         //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
-			if(is_array($arr))
+                       if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
 				{

@@ -6,6 +6,19 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION extends TABLE
     {
         parent::__construct($dbname);
     }
+
+    public function deleteVariableDiscount($pid)
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="DELETE FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION WHERE PROFILEID=:PROFILEID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+            $res->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
     
     public function getDiscountDetailsForProfile($profileid)
     {

@@ -287,7 +287,42 @@ abstract class JsPhotoScreen_Tracking
 		{
 			return false;
 		}
-
+		if($this->m_objProfile->getACTIVATED() != "Y" && $this->m_szOld_HavePhoto_Status == "U" && $arrUpdateValue["HAVEPHOTO"] == "Y")
+		{
+                        $pid = $this->m_objProfile->getPROFILEID();
+                        $city_res = $this->m_objProfile->getCITY_RES();
+                        $subscription = $this->m_objProfile->getSUBSCRIPTION();
+                        include_once (JsConstants::$docRoot."/jsadmin/ap_common.php");
+                        include_once (JsConstants::$docRoot."/profile/connect_db.php");
+                        include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+                        $db = connect_db();
+                        makeProfileLive($pid, $city_res, $subscription, 1);
+                        include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
+                        $sms=new InstantSMS("PROFILE_APPROVE",$pid);
+                        $sms->send();
+                        $sms=new InstantSMS("DETAIL_CONFIRM",$pid);
+                        $sms->send();
+                        $sms=new InstantSMS("MTONGUE_CONFIRM",$pid);
+                        $sms->send();
+                        try
+                        {
+                                $producerObj=new Producer();
+                                if($producerObj->getRabbitMQServerConnected())
+                                {
+                                        $sendMailData = array('process' => MessageQueues::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+                                        $producerObj->sendMessage($sendMailData);
+                                }
+                        }
+                        catch(Exception $e) {
+                        }
+			$jsadminObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+			$jsadminObj->insert($this->m_objProfile->getPROFILEID());
+			unset($jsadminObj);
+			$arrUpdateValue["ACTIVATED"] = "Y";
+			$arrUpdateValue["INCOMPLETE"] = "N";
+                        $arrUpdateValue["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
+			CommonFunction::sendWelcomeMailer($this->m_objProfile->getPROFILEID(),0);
+		}
 		$objPhotoScreeningService = new photoScreeningService($this->m_objProfile);
 		if($objPhotoScreeningService->isProfileScreened() == 0)
 		{
