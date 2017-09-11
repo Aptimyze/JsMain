@@ -7,7 +7,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         private $postParams = array();
         private $profileId;
         private $loggedInProfileObj;
-        public static $communityModelApi = "http://10.10.18.87:2233/commModelRecommendations_live";
+        public $timeout = 5000;
 
         public function __construct($loggedInProfileObj, $limit, $logicLevel) {
                 $this->profileId = $loggedInProfileObj->getPROFILEID();
@@ -29,7 +29,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                         $this->setCommunityPostParams();
                         $profilesArray = $this->sendCommunityPostRequest();
                         if($profilesArray != false){
-                                $profilesArray = explode(",",$profilesArray);
+                                $profilesArray = array_unique(array_filter(explode(",",$profilesArray)));
                                 if (is_array($profilesArray) && count($profilesArray) > 1) {
                                         $profilesArray = array_slice($profilesArray, 0, $this->limit);
                                         $this->logRecords($this->profileId, $profilesArray, $this->logicLevel, $this->limit, 0, $matchesSetting);
@@ -66,8 +66,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         }
 
         private function sendCommunityPostRequest() {
-                $timeout = 5000;
-                $urlToHit = self::$communityModelApi;
+                $urlToHit = JsConstants::$matchAlertsCommunityModelApi;
                 $postParams = json_encode($this->postParams);
                 $ch = curl_init($urlToHit);
                 $header[0] = "Accept: application/json";
@@ -76,9 +75,9 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $this->timeout);
                 curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
-                curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout * 10);
+                curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->timeout * 10);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 $output = curl_exec($ch);
                 $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
