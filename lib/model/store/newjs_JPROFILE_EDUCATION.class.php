@@ -317,10 +317,10 @@ d in the result
                 }
 		private function logFunctionCalling($funName)
     {return;
-      $key = __CLASS__.'_'.date('Y-m-d');
+      /*$key = __CLASS__.'_'.date('Y-m-d');
       JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));*/
     }
 }
 ?>

@@ -28,7 +28,7 @@ class PrivilegeFactory
 	 */
 		public static function getPrivObj($profileState)
 		{
-			if($profileState == "ERISHTA" || $profileState == "EVALUE" || $profileState == "AP")
+			if($profileState == "ERISHTA" || $profileState == "EVALUE" || $profileState == "AP" || $profileState == "JSEXCLUSIVE")
 				$privObj = new PaidPrivilege();
 			elseif($profileState == "FTO")
 				$privObj = new FTOPrivilege();

@@ -57,6 +57,10 @@ EOF;
        	unset($vdImpactObj);
        	unset($vdOfferDurationObj);
         
+        //delete expired extended vd
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
+        $vdExtendedObj->deleteDiscountEndingYesterday();
+        unset($vdExtendedObj);
         //*************  Variable discount cleanup process Ends   ****************
     }
 }

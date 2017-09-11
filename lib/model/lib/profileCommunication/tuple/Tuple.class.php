@@ -82,6 +82,7 @@ class Tuple {
         public $TYPE;
         public $SENDER;
         public $RECEIVER;
+        public $COMPLETE_VERIFICATION_STATUS;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -161,8 +162,20 @@ class Tuple {
         return $verificationSeal;
     }
     public function getVERIFICATION_STATUS()
+    {        
+        if($this->getVERIFICATION_SEAL())
+            return 1;
+        else
+            return 0;
+        
+    }
+    public function getGUNA() {
+        return $this->GUNA;
+    }
+
+    public function getCOMPLETE_VERIFICATION_STATUS()
     {
-        if(MobileCommon::isApp() == "A")
+        if(MobileCommon::isApp())
         {
             $aadharObj = new aadharVerification();
             $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
@@ -186,10 +199,6 @@ class Tuple {
             else
                 return 0;
         }
-        
-    }
-    public function getGUNA() {
-        return $this->GUNA;
     }
         public function setprofileObject($x) {
         $this->profileObject=$x;

@@ -450,8 +450,10 @@ class SearchApiDisplay
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
+                                
                 //aadhar verification part
-                  $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS']);
+                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$pid);
+
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
 				{
@@ -924,14 +926,14 @@ class SearchApiDisplay
                 return $label;
         }*/
 
-    public function getFinalVerificationStatus($verificationStatus)
+    public function getFinalVerificationStatus($verificationStatus,$pid)
     {
-    	if(MobileCommon::isAndroidApp())
+    	if(MobileCommon::isApp())
 		{
 			$aadharObj = new aadharVerification();
-   			$aadharArr = $aadharObj->getAadharDetails($this->viewerObj->getPROFILEID());   			
+   			$aadharArr = $aadharObj->getAadharDetails($pid);   			
    			unset($aadharObj);
-   			$aadharStatus = $aadharArr[$this->viewerObj->getPROFILEID()]["VERIFY_STATUS"];
+   			$aadharStatus = $aadharArr[$pid]["VERIFY_STATUS"];
    			if($verificationStatus == 1 && $aadharStatus == "Y")
 				return 3;   		
 			elseif($aadharStatus == "Y")
