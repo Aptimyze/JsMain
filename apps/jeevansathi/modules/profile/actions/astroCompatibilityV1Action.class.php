@@ -150,7 +150,9 @@ class astroCompatibilityV1Action extends sfActions
 				return SfView::NONE;
 				
 			}
+			return SfView::NONE;
 		}
+		return SfView::NONE;
 
 	}
 }
