@@ -2290,13 +2290,10 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
-
         if (is_array($allocationDetails) && $allocationDetails) {
-            
             $profileIDArr = array_map(function($arr){ 
                                     return $arr['PROFILEID'];
                                 },$allocationDetails);
-            
             if(is_array($profileIDArr)){
                 $profileIDArr = array_unique($profileIDArr);
             }
@@ -2637,10 +2634,16 @@ class MembershipHandler
                             $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
                         }
                         //update the success deactivate entry
-                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
+                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!="" && $params["NEW_ORDERID"] != "backend"){
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                             $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
+                        }
+                        elseif($params["NEW_ORDERID"] && $params["NEW_ORDERID"] == "backend"){
+                            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                            $lastInsertedId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$params["PROFILEID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$params["MEMBERSHIP"],"OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
+                            unset($upgradeOrdersObj);
+                            JsMemcache::getInstance()->set($params["PROFILEID"]."_BACK_UPGRADE",$lastInsertedId,3600);
                         }
                     }
                     unset($billingServStatObj);
@@ -2670,8 +2673,15 @@ class MembershipHandler
     * @outputs: none
     */
     function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
-        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();        
+        if($orderid == "backend"){
+            $id = JsMemcache::getInstance()->get($profileid."_BACK_UPGRADE");
+            $upgradeOrdersObj->updateOrderUpgradeEntryById($id,$updateArr);
+            JsMemcache::getInstance()->remove($profileid."_BACK_UPGRADE");            
+        }
+        else{
+            $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        }
         unset($upgradeOrdersObj);
         if($flushCache == true){
             $memCacheObject = JsMemcache::getInstance();
@@ -3008,6 +3018,19 @@ class MembershipHandler
                 }
             }
         }
+    }
+
+    public function getAmountForUSDtoINRpayment($billid,$orderid){
+        $purchasesObj = new BILLING_PURCHASES();
+        $ordersObj = new BILLING_ORDERS();
+        $orderDetails = $ordersObj->getOrderDetailsForId($orderid);
+        if(is_array($orderDetails) && $orderDetails["USD_TO_INR"]=='Y'){
+            $newAmountArr = array();
+            $newAmountArr["AMOUNT"] = $orderDetails["AMOUNT"];
+            $newAmountArr["DISCOUNT"] = $orderDetails["DISCOUNT"];
+            $purchasesObj->updateUSDtoINRflag('Y',$billid);
+        }
+        return $newAmountArr;
     }
 
 }

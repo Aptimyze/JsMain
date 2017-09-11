@@ -764,7 +764,7 @@ class misGenerationhandler
                     $headCountArr['FRANCHISEE_SALES']++;
                 }
             }
-            else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
+            else if(strpos($priv, 'ExcOB') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
                 $processWiseSale[$date]['OUTBOUND_TELE']+= $amount;
                 if($loginWithinRange){
                     $headCountArr['OUTBOUND_TELE']++;
