@@ -318,7 +318,7 @@ const mapDispatchToProps = (dispatch) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
      	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1','SET_DR_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&infoTypeId=7&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1','SET_DR_DATA','POST',dispatch);
 		},
      	hitApi_MOD: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1','SET_MOD_DATA','POST',dispatch);

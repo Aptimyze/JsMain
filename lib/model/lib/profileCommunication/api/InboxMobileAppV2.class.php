@@ -1342,6 +1342,7 @@ class InboxMobileAppV2
                                 "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_MS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_MS,
 
 				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_JSMS,
+				"ACCEPTANCES_SENT" => "responseTracking=".JSTrackingPageType::JSMS_ACC_SENT_LISTING,
 				);
                 }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;

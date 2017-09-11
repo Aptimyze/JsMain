@@ -171,14 +171,12 @@ render(){
                       }
 
                     }
-                  
+
 
 
 
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
-                  <input className="proChecksum"  type="hidden" value={tuple.profilechecksum}></input>
-
                   <div className="bg4 overXHidden" id="hideOnAction">
                     <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
                       <div className="pad16 scrollhid hgt140">
