@@ -20,18 +20,6 @@ export class contactEnginePD extends React.Component{
       showMessageOverlay:false,
       pageSource : this.props.pageSource
         };
-    this.actionUrl = {
-      "INITIATE":"/api/v2/contacts/postEOI",
-      "ACCEPT": "/api/v2/contacts/postAccept",
-      "DECLINE":"/api/v2/contacts/postNotInterested",
-      "REMINDER":"/api/v2/contacts/postSendReminder",
-      "WRITE_MESSAGE":"/api/v2/contacts/WriteMessage",
-      "CANCEL":"/api/v2/contacts/postCancelInterest",
-      "SHORTLIST":"/api/v1/common/AddBookmark",
-      "MESSAGE":"/api/v2/contacts/postWriteMessage",
-      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails",
-      "MEMBERSHIP":"/profile/mem_comparison.php"
-    };
   }
 
   componentDidMount(){
@@ -56,7 +44,11 @@ export class contactEnginePD extends React.Component{
       break;
 
       case 'MEMBERSHIP':
-        window.location=this.actionUrl[button.action];
+        window.location= CONSTANTS.CONTACT_ENGINE_API[button.action];
+      break;
+
+      case 'EDITPROFILE':
+        window.location= CONSTANTS.CONTACT_ENGINE_API[button.action];
       break;
 
       default:
@@ -289,7 +281,7 @@ getCommonOverLay(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
                           <div className="fullwid pad1 txtc" id="errorMsgOverlay">
                             <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
                           </div>
@@ -312,7 +304,7 @@ getCancelDeclineLayer(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
                           <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
                         </div>
                         <div className="fullwid pad18 txtc f16 opa80 fontlig white pt10 " id="confirmationOverlay" >
