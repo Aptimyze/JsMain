@@ -6,6 +6,8 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import axios from "axios";
+import Loader from "../../common/components/Loader";
+
 
 
 export default class ReportAbuse extends React.Component{
@@ -17,6 +19,7 @@ export default class ReportAbuse extends React.Component{
             selectText: "",
             insertError: false,
             errorMessage: "",
+            showLoader : false,
             timeToHide: 3000,
             tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
         }
@@ -27,7 +30,7 @@ export default class ReportAbuse extends React.Component{
       let topHeadHgt, bottomBtnHeight;
       topHeadHgt = document.getElementById('reportAbustop').clientHeight;
       bottomBtnHeight =document.getElementById('reportAbusbtm').clientHeight;
-      document.getElementById('reportAbuseMidDiv').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+      document.getElementById('js-reportAbuseMainScreen').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
     //  document.getElementById('reportAbuseScreen2').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
     }
 
@@ -66,11 +69,11 @@ export default class ReportAbuse extends React.Component{
   submitAbuse() {
     if(this.state.selectOption == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
-    } else if(document.getElementById("detailReasonsLayer").value == "") {
+    } else if(document.getElementById("detailReasonsLayer").value.trim() == "") {
         this.showError(ErrorConstantsMapping("enterComments"));
     } else {
 
-        let reason = document.getElementById("detailReasonsLayer").value;
+        let reason = document.getElementById("detailReasonsLayer").value.trim();
         let mainReason = this.state.selectText;
 
         // let feed = {};
@@ -82,7 +85,9 @@ export default class ReportAbuse extends React.Component{
         let _this = this;
 
         let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason;
-
+        _this.setState({
+          showLoader : true
+        });
         axios({
         method: 'POST',
         url: CONSTANTS.API_SERVER +  CONSTANTS.ABUSE_FEEDBACK_API + postData,
@@ -94,21 +99,24 @@ export default class ReportAbuse extends React.Component{
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
         },
       }).then( (response) => {
+          _this.setState({
+            showLoader : false
+          });
             _this.showError(response.data.message);
+            setTimeout(function(){
+            _this.closeAbuseLayer();
+          }, this.state.timeToHide+200);
         })
         .catch( (error) => {
           console.warn('Actions - fetchJobs - recreived error: ', error)
         })
-
-
-
     }
   }
 
   render(){
     let errorView,topviewAbuserLayer,abusiveListLayer,AbusiveButtonLayer;
 
-      let abuseList = ["Let Jeevansathi know what is wrong with this profile","One or more of Profile Details are incorrect","Photo on profile doesn't belong to the person","User is using abusive/indecent language"," User is stalking me with messages/calls","User is asking for money","User has no intent to marry","User is already married / engaged","User is not picking up phone calls","Person on Phone denied owning this profile","User's phone is switched off/not reachable","User's phone is invalid","Other reasons (please specify)"];
+      let abuseList = ["One or more of Profile Details are incorrect","Photo on profile doesn't belong to the person","User is using abusive/indecent language"," User is stalking me with messages/calls","User is asking for money","User has no intent to marry","User is already married / engaged","User is not picking up phone calls","Person on Phone denied owning this profile","User's phone is switched off/not reachable","User's phone is invalid","Other reasons (please specify)"];
 
 
     topviewAbuserLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportAbustop">
@@ -119,8 +127,8 @@ export default class ReportAbuse extends React.Component{
           </div>
       </div>
 
-    abusiveListLayer =   <div id="reportAbuseMidDiv" className="flowauto ce_rptabu_c">
-                            <div className="reportAbuseScreen clearfix" id="js-reportAbuseMainScreen">
+    abusiveListLayer =   <div id="reportAbuseMidDiv" className="ce_rptabu_c">
+                            <div className="flowauto reportAbuseScreen clearfix" id="js-reportAbuseMainScreen">
                                 <i className="mainsp ce_arow_new fl"></i>
                                 <div className="fl wid88p fontthin">
                                     <div className="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. </div>
@@ -150,6 +158,11 @@ export default class ReportAbuse extends React.Component{
     {
         errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
     }
+    let loaderView;
+    if(this.state.showLoader)
+    {
+      loaderView = <Loader show="page"></Loader>;
+    } 
 
 
     return(
@@ -157,6 +170,7 @@ export default class ReportAbuse extends React.Component{
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
           <div id="reportAbuseContainer">
+            {loaderView}
             {errorView}
             {topviewAbuserLayer}
             {abusiveListLayer}
