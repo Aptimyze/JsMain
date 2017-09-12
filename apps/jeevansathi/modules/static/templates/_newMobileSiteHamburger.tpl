@@ -16,7 +16,7 @@
       
       
 
-                        <li class="f13 pb8 fontlig">
+                        <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
                             <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
                             <div class="dispnone" id="appleAppDownloadLink1"><a bind-slide=1  style="margin-left:14px"  href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
                             <div class="dispibl mr10 fr">
@@ -171,8 +171,14 @@
                                 <li class='mb12'>
                                     <a bind-slide=1  id="changePassLink" href="/static/changePass" class="newS white">Change Password</a>
                                 </li>
-                                <li class='mb12'>   
-                                    <a bind-slide=1  id="hideProfileLink" href="/static/hideOption" class="newS white">~if LoggedInProfile::getInstance()->getACTIVATED() eq 'H'`Unhide Profile~else`Hide Profile~/if`</a>
+                                <li class='mb12'>
+                                ~if LoggedInProfile::getInstance()->getACTIVATED() eq 'H'`
+                                    <a bind-slide=1  id="hideProfileLink" href="/static/unHideOption" class="newS white">Unhide Profile</a>
+
+                                ~else`
+                                    <a bind-slide=1  id="hideProfileLink" href="/static/hideOption" class="newS white">Hide Profile</a>
+
+                                ~/if`   
                                 </li>
                                 <li class='mb12'>
                                     <a bind-slide=1  id="deleteProfileLink" href="/static/deleteOption" class="newS white">Delete Profile</a>
