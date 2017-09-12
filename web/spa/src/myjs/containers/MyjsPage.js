@@ -19,6 +19,7 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import AppPromo from "../../common/components/AppPromo";
+import ShowBrowserNotification from '../components/ShowBrowserNotification';
 
 
 require ('../style/jsmsMyjs_css.css');
@@ -274,6 +275,13 @@ export  class MyjsPage extends React.Component {
 		var style = {
      		height: window.innerHeight + "px"
     	};
+    	let ShowBrowserNotificationView = "";
+
+    	if ( this.props.myjsData.apiData.showBrowserNotification )
+    	{
+    		ShowBrowserNotificationView = <ShowBrowserNotification/>
+    	}
+
   		return(
   		<div id="MyjsPage" style={style}>
   			{promoView}
@@ -292,6 +300,7 @@ export  class MyjsPage extends React.Component {
 									{MyjsProfileVisitorView}
 									{dailyRecommendationsView}
 									{noDatablockView}
+									{ShowBrowserNotificationView}
 					</div>
 				</div>
 			</div>

@@ -251,7 +251,7 @@ class myjsActions extends sfActions
             $profileArray=$appV1obj->getProfileInfo($profileInfo);
             if($profileArray[strtolower("MY_PROFILE")])
               $appV1DisplayJson[strtolower("MY_PROFILE")] = $profileArray[strtolower("MY_PROFILE")];
-
+            $appV1DisplayJson['showBrowserNotification'] = $profileArray['showBrowserNotification'];
             $appV1DisplayJson['membership_message'] = $appV1obj->getBannerMessage($profileInfo);
         }
         //use it wisely

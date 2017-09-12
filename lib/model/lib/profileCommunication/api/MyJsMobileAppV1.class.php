@@ -272,6 +272,12 @@ $className = get_class($this);
 			
 			}
 		}
+		if ( MobileCommon::isNewMobileSite())
+		{
+			$notificationObj = new NotificationConfigurationFunc();				
+			$displayV1['showBrowserNotification'] = $notificationObj->showEnableNotificationLayer(LoggedInProfile::getInstance()->getPROFILEID());
+		}
+  		// die("Fasf");
 		return $displayV1;
   }
 
