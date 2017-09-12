@@ -35,9 +35,10 @@ class AuthFilter extends sfFilter {
 		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
 		if($request->getcookie('JS_MOBILE')=='Y'){
             $redirectUrl = CommonUtility::translateSiteLanguage($request);
-            if($redirectUrl != ""){
+        //commenting this since redirection happens later.
+            /*if($redirectUrl != ""){
             	$context->getController()->redirect($redirectUrl, array('request' => $request));
-            }
+            }*/
 		}
 		// End hindi switch code !
 
@@ -92,7 +93,15 @@ class AuthFilter extends sfFilter {
 				}
 				die();
 			}
-			header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
+			if($redirectUrl!= "")
+			{
+				header("Location:".JsConstants::$hindiTranslateURL);
+			}
+			else
+			{
+				header("Location:".$SITE_URL."/spa/dist/index.html#".$specificDomain[1]);
+			}
+
 			die;
 		}
 		/*SPA*/

@@ -40,7 +40,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
   </div>
 
   <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '20%'}}>
-<p id="ViewContactPreLayerTextNoNumber" style={{color: '#fff',textAlign: 'center'}}>{this.state.vCNoNumber}</p>
+<p id="ViewContactPreLayerTextNoNumber" dangerouslySetInnerHTML={{__html: this.state.vCNoNumber}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 {this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
 {this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{},id:'alternateNumber'})}
@@ -162,7 +162,7 @@ getMembershipOvlay(){
           <div className="memOverlay app_clrw" style={{paddingBottom:'50px'}}>
               <div className="txtc">
                   <div id="photoIDDiv" className="photoDiv">
-
+                    <img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/>
                   </div>
                   <div className="pad2 f16 fontlig" id="newErrMsg">{this.state.newErrMsg}</div>
                   <div className="pad20 f16 fontlig mt15" id="membershipheading">{this.state.memHeading}</div>
