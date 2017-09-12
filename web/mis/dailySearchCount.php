@@ -234,7 +234,10 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'PM'=>'PAID_MEMBERS',
  'APM'=>'Add Photo Mailer',
  'SPMA' => 'EOI_SIMILAR_PROFILES_MAIL_ACCEPTED',
- 'SPMO' => 'EOI_SIMILAR_PROFILES_MAIL_OTHERS');
+ 'SPMO' => 'EOI_SIMILAR_PROFILES_MAIL_OTHERS',
+ 'RAA' => 'Recent Activity Android',
+ 'RAI' => 'Recent Activity IOS'
+    );
 
 
         $index=array('A','D','C','I','E');

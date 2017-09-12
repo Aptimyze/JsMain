@@ -164,5 +164,7 @@ class SearchTypesEnums
     const ADD_PHOTO_MAILER = "APM";
     const EOI_SIMILAR_PROFILES_MAIL_ACCEPTED = "SPMA";
     const EOI_SIMILAR_PROFILES_MAIL_OTHERS = "SPMO";
+    const RECENT_ACTIVITY_IOS = "RAI";
+    const RECENT_ACTIVITY_ANDROID = "RAA";
 }
 ?>

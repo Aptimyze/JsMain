@@ -32,7 +32,10 @@ class QuickSearchBand extends SearchParamters
 		$json = $request->getParameter('json');
 		$jsonArr = json_decode($json,true);
 		$searchParamsSetter['SEARCH_TYPE'] = self::getSearchType($request->getParameter('MOBILE_SEARCH'));
-
+                
+                if(MobileCommon::isApp()=='I' && $request->getParameter('recent_activity') && $request->getParameter('recent_activity') == 1){
+                    $searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::RECENT_ACTIVITY_IOS;  
+                }
 
                 /** 
                 * If profile is logged in , then gender is of opposite gender
