@@ -335,27 +335,47 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 	 * 
 	 * @return list of agentName and profileIDs
 	 */
-	public function getProfileIDandAgentNameForMailing()	{
-		try {
-			$tomorrow = strtoupper(date('D',strtotime(' +1 day')));
-			$sql = "SELECT AGENT_USERNAME, CLIENT_ID 
-					FROM billing.EXCLUSIVE_SERVICING 
-					WHERE SERVICE_DAY = :tomorrow ;" ;
+    public function getProfileIDandAgentNameForMailing()    {
+        try {
+            $tomorrow = strtoupper(date('D',strtotime(' +1 day')));
+            $sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+                    FROM billing.EXCLUSIVE_SERVICING 
+                    WHERE SERVICE_DAY = :tomorrow ;" ;
 
-			$prep = $this->db->prepare($sql);
-			$prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
-			$prep->execute();
-			$prep->setFetchMode(PDO::FETCH_ASSOC);
-			
-			while ($res = $prep->fetch()) {
-				$result[$res['AGENT_USERNAME']][] = $res;
-			}
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            
+            while ($res = $prep->fetch()) {
+                $result[$res['AGENT_USERNAME']][] = $res;
+            }
 
-			return $result;
-		} catch (Exception $e) {
-			throw new jsException($e);
-		}
-	}
+            return $result;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getProfileIDandAgentNameForToday()    {
+        try {
+            $today = strtoupper(date('D',strtotime(' +0 day')));
+            $sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+                    FROM billing.EXCLUSIVE_SERVICING 
+                    WHERE SERVICE_DAY = :today ;" ;
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':today',$today,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($result = $prep->fetch()) {
+                $rows[$result["CLIENT_ID"]] = $result;
+            }
+            //print_r($rows);
+            return $rows;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 	 /** Function to update screening status
 	 *
 	 * @param   $agentUsername,$clientId,$screenedStatus='Y'

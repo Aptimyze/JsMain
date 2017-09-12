@@ -2290,13 +2290,10 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
-
         if (is_array($allocationDetails) && $allocationDetails) {
-            
             $profileIDArr = array_map(function($arr){ 
                                     return $arr['PROFILEID'];
                                 },$allocationDetails);
-            
             if(is_array($profileIDArr)){
                 $profileIDArr = array_unique($profileIDArr);
             }
@@ -3021,6 +3018,19 @@ class MembershipHandler
                 }
             }
         }
+    }
+
+    public function getAmountForUSDtoINRpayment($billid,$orderid){
+        $purchasesObj = new BILLING_PURCHASES();
+        $ordersObj = new BILLING_ORDERS();
+        $orderDetails = $ordersObj->getOrderDetailsForId($orderid);
+        if(is_array($orderDetails) && $orderDetails["USD_TO_INR"]=='Y'){
+            $newAmountArr = array();
+            $newAmountArr["AMOUNT"] = $orderDetails["AMOUNT"];
+            $newAmountArr["DISCOUNT"] = $orderDetails["DISCOUNT"];
+            $purchasesObj->updateUSDtoINRflag('Y',$billid);
+        }
+        return $newAmountArr;
     }
 
 }

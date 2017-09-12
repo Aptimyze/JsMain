@@ -637,13 +637,67 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
+    public function getDataFromTaxBreakUp($start,$endDt){
+    	try{
+    		$sql = "Select	tax_brk_up.BILLID,tax_brk_up.SGST,tax_brk_up.IGST,tax_brk_up.CGST,tax_brk_up.COUNTRY_RES,tax_brk_up.CITY_RES
+					from	billing.TAXBREAKUP tax_brk_up 
+					Where   tax_brk_up.ENTRY_DT>=:START_DATE AND tax_brk_up.ENTRY_DT<=:END_DATE";
+    		$prep = $this->db->prepare($sql);
+    		$prep->bindValue(":START_DATE", $start, PDO::PARAM_STR);
+    		$prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
+    		$prep->execute();
+    		while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+    			$profiles[$result["BILLID"]] = $result;
+    		}
+    		return $profiles;
+    	}catch(PDOException $e){
+    		throw new jsException($e);
+    		
+    	}
+    }
+    
     public function fetchFinanceData($startDt, $endDt, $device = 'other',$offset=0,$limit='')
     {
         try {
             if ($device == "other") {
-                $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.SUBSCRIPTION_START_DATE AS ASSD,pur_d.SUBSCRIPTION_END_DATE ASED,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0) ORDER BY p.ENTRY_DT";
+                $sql = "SELECT	pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE,
+								pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE,
+								ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE,p.MEM_UPGRADE 
+						
+						FROM	billing.PAYMENT_DETAIL pd,  billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p 
+
+						WHERE 	p.BILLID=pd.BILLID AND	p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
+								pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND
+								p.BILLID NOT IN 
+								(
+									SELECT	pd.BILLID 
+									
+									FROM	billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
+
+									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
+											pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND
+											pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0
+								)
+ 							ORDER BY p.ENTRY_DT";
             } else {
-                $sql = "SELECT pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE, ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0) ORDER BY p.ENTRY_DT";
+                $sql = "SELECT	pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, 
+								pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE,
+								ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE
+						
+						FROM	billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
+						
+						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
+								o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND 
+								pd.STATUS='DONE' AND pd.AMOUNT!=0 AND 
+								p.BILLID IN 
+								(
+									SELECT pd.BILLID 
+	
+									FROM	billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o 
+									
+									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
+											pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND 		pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0
+								) ORDER BY p.ENTRY_DT";
             }
             if($limit>0&& $offset>=0){
                 $sql.=" limit :OFFSET,:LIMIT";
@@ -668,9 +722,37 @@ class BILLING_PURCHASES extends TABLE
     {
         try {
             if ($device == "other") {
-                $sql = "SELECT count(*) AS COUNT FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+                $sql = "SELECT count(*) AS COUNT 
+
+						FROM   billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p
+
+						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID  
+       						 	AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND 
+								p.BILLID NOT IN (
+										SELECT	pd.BILLID
+
+ 									 	FROM	billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o
+
+ 	 									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND
+												pd.BILLID=pur_d.BILLID AND  o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE
+												AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0
+								)";
             } else {
-                $sql = "SELECT count(*) AS COUNT FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
+                $sql = "SELECT	count(*) AS COUNT 
+
+						FROM	billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
+						
+						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
+								o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND 
+								pd.STATUS='DONE' AND pd.AMOUNT!=0 AND 
+								p.BILLID IN (
+										SELECT	pd.BILLID
+ 
+										FROM	billing.PAYMENT_DETAIL pd,billing.PURCHASE_DETAIL pur_d,billing.PURCHASES p,billing.ORDERS o
+										WHERE 	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
+												pd.BILLID=pur_d.BILLID aND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND
+ 												pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0
+								)";
             }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DATE", $startDt, PDO::PARAM_STR);
@@ -853,6 +935,34 @@ class BILLING_PURCHASES extends TABLE
                 $result[$row["PROFILEID"]] = $row["USERNAME"];
             }
             return $result;
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getDiscountDetail($billid,$serviceid){
+        try{
+            $sql = "SELECT DISCOUNT,ORDERID,DISCOUNT_PERCENT FROM billing.PURCHASES WHERE BILLID = :BILLID AND SERVICEID LIKE :SERVICEID";
+            $serviceid = "%".$serviceid."%";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID",$serviceid,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $prep->fetch();
+            return $result;
+        }catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function updateUSDtoINRflag($usdTOinr,$billid){
+        try{
+            $sql = "UPDATE billing.PURCHASES SET USD_TO_INR=:USDTOINR WHERE BILLID = :BILLID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":USDTOINR",$usdTOinr,PDO::PARAM_INT);
+            $prep->execute();
         }catch (Exception $e){
             throw new jsException($e);
         }

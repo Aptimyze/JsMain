@@ -470,6 +470,7 @@ class ErrorHandler
 	 function checkViewedStatus()
 	 {
 		 $viewedObj=$this->contactHandlerObj->getViewed();
+		 $toBeType=$this->contactHandlerObj->getToBeType();
 		 //Underscreening
 		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()==Messages::YES)
 		 {
@@ -481,8 +482,11 @@ class ErrorHandler
 			 $error = Messages::getMessage(Messages::OTHER_INCOMPLETE,array(self::USERNAME=>$viewedObj->getUSERNAME()));
 		 }
 		 //hidden
-		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES)
+
+		if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES && 
+			$toBeType!=ContactHandler::CANCEL && $toBeType!=ContactHandler::DECLINE && $toBeType!=ContactHandler::CANCEL_CONTACT)
 		 {
+		 	
 			 $heshe="he";
 			 $hisher="his";
 			 if($viewedObj->getGENDER()=="F")
@@ -526,7 +530,12 @@ class ErrorHandler
 	function checkViewedHiddenProfile()
 	{
 		$error = '';
-		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		$toBeType=$this->contactHandlerObj->getToBeType();
+		if($toBeType==ContactHandler::CANCEL || $toBeType==ContactHandler::DECLINE || $toBeType==ContactHandler::CANCEL_CONTACT)
+		{
+			$error = '';	
+		}
+		elseif($this->contactHandlerObj->getViewed()->getActivated() == 'H')
 		{
 			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
 			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
