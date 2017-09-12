@@ -48,7 +48,15 @@ class LoginPage extends React.Component {
             this.state.showRegisterationMessage = true;        
         }
     }
-
+    componentWillMount() {
+        if ( document.cookie.indexOf(LOGIN_ATTEMPT_COOKIE) !== -1 )
+        {
+            this.setState ({
+                showCaptchDiv : true
+            })
+            this.addCaptchaDiv();
+        }
+    }
     componentDidMount() {
         jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
         let _this = this;
@@ -71,7 +79,6 @@ class LoginPage extends React.Component {
        }
        if ( this.state.showCaptchDiv )
        {
-            console.log("componentDidMount calling showCaptchDiv.");
            this.addCaptchaDiv();
        }
     }
@@ -108,11 +115,17 @@ class LoginPage extends React.Component {
 
     addCaptchaDiv()
     {
-        document.getElementById("showCaptchDivId").innerHTML= '';
-        var script = document.createElement("script");
-        script.src = "https://www.google.com/recaptcha/api.js";
-        script.async = true;
-        document.body.appendChild(script);
+        if ( this.state.showCaptchDiv || document.cookie.indexOf(LOGIN_ATTEMPT_COOKIE) !== -1 )
+        {
+            if ( document.getElementById("showCaptchDivId") != null )
+            {
+                document.getElementById("showCaptchDivId").innerHTML= '';
+            }
+            var script = document.createElement("script");
+            script.src = "https://www.google.com/recaptcha/api.js";
+            script.async = true;
+            document.body.appendChild(script);
+        }
     }
 
     showError(inputString) {
@@ -151,7 +164,7 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
-            this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha);
+            this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
             this.setState ({
                 showLoader : true
             })
@@ -188,11 +201,6 @@ class LoginPage extends React.Component {
             if(prevprops.location.search.indexOf("ham=1") != -1 && window.location.search.indexOf("ham=1") == -1) {
                 this.refs.Hamchild.getWrappedInstance().hideHam();
             }
-        }
-        if ( this.state.showCaptchDiv )
-        {
-            console.log("componentDidUpdate calling showCaptchDiv.");
-           this.addCaptchaDiv();
         }
     }
 
@@ -369,14 +377,21 @@ LoginPage.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        doLogin: (email,password,g_recaptcha_response,captcha) => {
+        doLogin: (email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
             let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password+'&rememberme=Y';
             if ( g_recaptcha_response && captcha )
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
 
-            commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch);
+            commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
+            {
+                console.log("response is:",response);
+                if ( response.responseStatusCode == 1)
+                {
+                    addCaptchaDiv();
+                }
+            });
         }
     }
 }

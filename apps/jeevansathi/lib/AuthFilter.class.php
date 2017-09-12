@@ -54,7 +54,7 @@ class AuthFilter extends sfFilter {
 		$specificSubDomain = explode('?',$specificDomain[1],2);
 		if($specificDomain[1] == '')
 			$spa = 1;
-		elseif(in_array($specificSubDomain[1],$nonSpaUrls))
+		elseif(in_array($specificSubDomain[1],$nonSpaUrls) || in_array(substr($specificSubDomain[1],0,9), $nonSpaUrls))
 			$spa = 0;
 		else {
 			foreach ($spaUrls as $url) {

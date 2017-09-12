@@ -20,18 +20,6 @@ export class contactEnginePD extends React.Component{
       showMessageOverlay:false,
       pageSource : this.props.pageSource
         };
-    this.actionUrl = {
-      "INITIATE":"/api/v2/contacts/postEOI",
-      "ACCEPT": "/api/v2/contacts/postAccept",
-      "DECLINE":"/api/v2/contacts/postNotInterested",
-      "REMINDER":"/api/v2/contacts/postSendReminder",
-      "WRITE_MESSAGE":"/api/v2/contacts/WriteMessage",
-      "CANCEL":"/api/v2/contacts/postCancelInterest",
-      "SHORTLIST":"/api/v1/common/AddBookmark",
-      "MESSAGE":"/api/v2/contacts/postWriteMessage",
-      "CONTACT_DETAIL":"/api/v2/contacts/contactDetails",
-      "MEMBERSHIP":"/profile/mem_comparison.php"
-    };
   }
 
   componentDidMount(){
@@ -56,7 +44,11 @@ export class contactEnginePD extends React.Component{
       break;
 
       case 'MEMBERSHIP':
-        window.location=this.actionUrl[button.action];
+        window.location= CONSTANTS.CONTACT_ENGINE_API[button.action];
+      break;
+
+      case 'EDITPROFILE':
+        window.location= CONSTANTS.CONTACT_ENGINE_API[button.action];
       break;
 
       default:
@@ -117,7 +109,7 @@ export class contactEnginePD extends React.Component{
         break;
 
         case 'WRITE_MESSAGE':
-            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true});
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:false});
         break;
 
         case 'REPORT_INVALID':
@@ -128,11 +120,15 @@ export class contactEnginePD extends React.Component{
             this.showLayerCommon({commonOvlayLayer:true,commonOvlayData:responseButtons.actiondetails});
           }
           else
-          {console.log(responseButtons,'responsebutton');
-          if(responseButtons.buttondetails.buttons){console.log('infirsst',responseButtons);
+          {
+          if(responseButtons.actiondetails.writemsgbutton){
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:true});
+
+          }
+          if(responseButtons.buttondetails.buttons){
             this.props.replaceOldButtons(responseButtons);}
           else if(responseButtons.buttondetails.button)
-          {console.log('insec',responseButtons);
+          {
             var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
             this.props.replaceSingleButton(newButtons);
           }
@@ -260,7 +256,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showMsgLayer)
       {
-        layer= (<WriteMessage username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
+        layer= (<WriteMessage bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.hideLayerCommon({showMsgLayer: false})}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
       }
       if(this.state.commonOvlayLayer)
       {
@@ -285,7 +281,7 @@ getCommonOverLay(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
                           <div className="fullwid pad1 txtc" id="errorMsgOverlay">
                             <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
                           </div>
@@ -308,7 +304,7 @@ getCancelDeclineLayer(actionDetails){
 
                 <div className="white fullwid" id="commonOverlayTop">
                         <div id="3DotProPic" style={{ paddingTop:'20%'}} className="txtc">
-                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
+                          <div id = "photoIDDiv" style={{border: '1px solid rgba(255,255,255,0.2)',  overflow:'hidden', width: '90px', height: '90px', borderRadius: '45px'}}><img id="ce_photo" src={this.props.profiledata.profileThumbNailUrl}  className="srp_box2 mr6"/></div>
                           <div className="pt20 white f18 fontthin" id="topMsg">{actionDetails.errmsglabel}</div>
                         </div>
                         <div className="fullwid pad18 txtc f16 opa80 fontlig white pt10 " id="confirmationOverlay" >

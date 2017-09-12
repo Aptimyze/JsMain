@@ -505,7 +505,7 @@ class ProfilePage extends React.Component {
                           </CommHistory>
         }
 
-        var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView;
+        var AboutView,FamilyView,DppView,Header = "View Profile",photoView,metaTagView='',invalidProfileView,contactEngineView,showAlbumView,stockImage;
 
         if(this.state.dataLoaded)
         {
@@ -574,16 +574,32 @@ class ProfilePage extends React.Component {
 
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
-
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
+
+                showAlbumView = this.props.pic.pic_count > 0 ?
+                        (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                            <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                                {photoView}
+                                {photoViewTemp}
+                            </div>
+                        </Link>) : (
+                          <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                            {photoView}
+                            {photoViewTemp}
+                        </div></div>)
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
 
+                if(localStorage.getItem('GENDER') == "Male")
+                    stockImage = <i className="vpro_sprite female_nopro"></i>
+                else
+                    stockImage = <i className="vpro_sprite male_nopro"></i>
+
                 invalidProfileView = <div>
                     <div className="bg4 txtc" id="errorContent">
                         <div className="txtc setmid posfix fullwid" id="noProfileIcon">
-                            <i className="vpro_sprite female_nopro"></i>
+                           {stockImage}
                             <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
                         </div>
                     </div>
@@ -622,6 +638,7 @@ class ProfilePage extends React.Component {
                     </div>
                 </div>
             </div>;
+            showAlbumView = <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid"></div>;
             setTimeout(function(){
                 var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
                 if(document.getElementById("animated-background")) {
@@ -652,17 +669,7 @@ class ProfilePage extends React.Component {
                     </div>
                     {invalidProfileView}
                     <div id="validProfile" className="">
-                    {this.props.pic ?
-                        (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
-                            <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
-                                {photoView}
-                                {photoViewTemp}
-                            </div>
-                        </Link>) : (
-                          <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
-                            {photoView}
-                            {photoViewTemp}
-                        </div></div>)}
+                    {showAlbumView}
                         <div id="tab" className="fullwid tabBckImage posabs mtn39">
                             <div id="tabContent" className="fullwid bg2 vpro_pad5 fontlig posrel">
                                 <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">

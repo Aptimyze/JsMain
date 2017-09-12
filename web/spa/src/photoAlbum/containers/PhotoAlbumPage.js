@@ -43,7 +43,7 @@ export default class PhotoAlbumPage extends React.Component {
      }
      else
      {
-      
+
        newPchksum = str;
      }
 
@@ -113,16 +113,39 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
   	}
 
 
-  _onLoad(e) {console.log(e.target.id);
-    let imgW_a, imgH_a, adjusted_height, getIDn;
-    imgW_a = e.target.offsetWidth;
-    imgH_a = e.target.offsetHeight;
-    getIDn = e.target.id.split("_");
-    adjusted_height = parseInt(window.innerWidth * ( imgH_a/imgW_a ));
-    document.getElementById(e.target.id).style.height = adjusted_height;
-    document.getElementById("albumLoader_"+getIDn[1]).style.display="none";
-    document.getElementById(e.target.id).style.visibility = "visible";
-  }
+    _onLoad(e) {
+      //console.log(e.target.id);
+      let imgW_a, imgH_a, adjusted_height, adjusted_width, getIDn;
+      imgW_a = e.target.offsetWidth;
+      imgH_a = e.target.offsetHeight;
+      getIDn = e.target.id.split("_");
+      let screenR = window.innerWidth/window.innerHeight;
+      let imageR = imgW_a/imgH_a;
+
+      if(screenR>imageR)
+      {
+        //console.log("p11");
+        adjusted_width = parseInt(  imgW_a * (window.innerHeight/imgH_a)        );
+        //console.log(adjusted_width);
+        document.getElementById(e.target.id).style.width = adjusted_width+"px";
+        document.getElementById(e.target.id).style.height = window.innerHeight+"px";
+
+
+      }
+      else
+      {
+        //console.log("p22");
+        adjusted_height = parseInt(window.innerWidth * ( imgH_a/imgW_a ));
+        document.getElementById(e.target.id).style.height = adjusted_height+"px";
+        document.getElementById(e.target.id).style.width = window.innerWidth+"px";
+      }
+
+
+
+
+      document.getElementById("albumLoader_"+getIDn[1]).style.display="none";
+      document.getElementById(e.target.id).style.visibility = "visible";
+    }
   goBack()
   {
       this.props.history.goBack();
@@ -152,7 +175,7 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
 
 
 
-          <div className="posrel">
+          <div className="posrel" style={{height:window.innerHeight}}>
             <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
 
             <div className="posabs z1 bckpos1 fontlig f18 white">
@@ -160,23 +183,17 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
             </div>
 
 
-            <div className="bg14" id="galleryContainer" style={this.state.sliderStyle} >
+            <div className="bg14 posabs" id="galleryContainer" style={this.state.sliderStyle} >
 
 
             {this.state.getRes.albumUrls.map((urllist, index) => {
               return <div  className="dispcell vertmid txtc" style={this.state.tupleWidth} key={index}>
                         <div className="posrel" style={this.state.screendim}>
                         <img id={"albumLoader_"+index} className="loadrpos posabs setmid" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
-                        <img id={"albumImage_"+index} style={this.state.tupleWidth} src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
+                        <img id={"albumImage_"+index}  src={urllist} onLoad={this._onLoad} className="imghid posabs setmid"  />
 
                         </div>
                     </div>
-
-
-
-
-
-
             })}
 
             </div>

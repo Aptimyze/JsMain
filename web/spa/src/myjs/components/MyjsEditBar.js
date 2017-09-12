@@ -128,45 +128,12 @@ componentWillUnmount(){
 
         <div className="cell brdr6 vtop pad13 editBarStyle4">
           <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Lifestyle">
-              <div className="editBarStyle5">
-                  <i className="mainsp lifestyle_2"></i>
-              </div>
-            </a>
-            <div className="f12 color7 fontlig">Lifestyle</div>
-          </div>
-        </div>
-
-        <div className="cell brdr6 vtop pad13 editBarStyle4">
-          <div className="txtc ">
               <a href="/profile/viewprofile.php?ownview=1#Album">
                 <div className="editBarStyle5">
                   <i className="mainsp camera"></i>
               </div>
             </a>
             <div className="f12 color7 fontlig">Photos</div>
-          </div>
-        </div>
-
-        <div className="cell brdr6 vtop pad13 editBarStyle4">
-          <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Education">
-                <div className="editBarStyle5">
-                  <i className="mainsp myjs_edu"></i>
-              </div>
-            </a>
-            <div className="f12 color7 fontlig">Education</div>
-          </div>
-        </div>
-
-        <div className="cell brdr6 vtop pad13 editBarStyle4">
-          <div className="txtc ">
-              <a href="/profile/viewprofile.php?ownview=1#Career">
-                <div className="editBarStyle5">
-                  <i className="mainsp myjs_career"></i>
-              </div>
-            </a>
-            <div className="f12 color7 fontlig">Career</div>
           </div>
         </div>
 
@@ -200,6 +167,39 @@ componentWillUnmount(){
               </div>
             </a>
             <div className="f12 color7 fontlig">Kundli</div>
+          </div>
+        </div>
+
+        <div className="cell brdr6 vtop pad13 editBarStyle4">
+          <div className="txtc ">
+              <a href="/profile/viewprofile.php?ownview=1#Career">
+                <div className="editBarStyle5">
+                  <i className="mainsp myjs_career"></i>
+              </div>
+            </a>
+            <div className="f12 color7 fontlig">Career</div>
+          </div>
+        </div>
+
+        <div className="cell brdr6 vtop pad13 editBarStyle4">
+          <div className="txtc ">
+              <a href="/profile/viewprofile.php?ownview=1#Education">
+                <div className="editBarStyle5">
+                  <i className="mainsp myjs_edu"></i>
+              </div>
+            </a>
+            <div className="f12 color7 fontlig">Education</div>
+          </div>
+        </div>
+
+        <div className="cell brdr6 vtop pad13 editBarStyle4">
+          <div className="txtc ">
+              <a href="/profile/viewprofile.php?ownview=1#Lifestyle">
+              <div className="editBarStyle5">
+                  <i className="mainsp lifestyle_2"></i>
+              </div>
+            </a>
+            <div className="f12 color7 fontlig">Lifestyle</div>
           </div>
         </div>
 

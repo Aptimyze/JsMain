@@ -183,8 +183,8 @@ class KundliInfo extends React.Component {
         {
             let htmlStr = "<div id='vpro_muslim_m'>", muslimData = this.props.about.muslim_m, keyArray = Object.keys(muslimData);
             for(var i=0; i<keyArray.length; i++) {
-                htmlStr += '<div class="f12 color1">'+keyArray[i]+'</div>';
-                htmlStr += '<div class="fontlig pb15">'+muslimData[keyArray[i]]+'</div>';
+                htmlStr += '<div class="f12 color1">'+muslimData[keyArray[i]].label+'</div>';
+                htmlStr += '<div class="fontlig pb15">'+muslimData[keyArray[i]].value+'</div>';
             }
             htmlStr += "</div>";
             muslim_m = <div dangerouslySetInnerHTML={{__html: htmlStr}} />
@@ -240,7 +240,7 @@ class KundliInfo extends React.Component {
                     A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.
                 </div>;
             } else {
-                astroButton = <div id="astroButton" className = "astrob1 js-textAstro"  onClick={() => this.closeAstroLayer()}>
+                astroButton = <div id="astroButton" className = "js-textAstro txtc lh50"  onClick={() => this.closeAstroLayer()}>
                     OK
                 </div>;
                 astroText = <div className="astrob1 js-textAstro">
