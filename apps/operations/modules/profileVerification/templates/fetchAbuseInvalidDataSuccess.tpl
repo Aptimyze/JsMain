@@ -55,10 +55,19 @@
                 }
             })
         }
-        
+    var finalUserName = '~$userName`';
+    if(finalUserName.length > 0){
+    	setTimeout(function(){
+    		sendAjax();
+    		$("#userName").val(finalUserName);
+    	}, 1000);
+    }
 	function sendAjax()
 	{	
 		userName=$('#userName').val();
+		if(finalUserName.length > 0){
+			userName =finalUserName;
+		}else
 		if(!userName){
 		$("#RAMainTable").hide();
 		$("#noUser").show();
