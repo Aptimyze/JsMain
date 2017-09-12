@@ -1,4 +1,4 @@
-export const API_SERVER = '';
+export const API_SERVER = 'http://testjs-15.infoedge.com';
 export const LOGIN_CALL_URL = '/api/v1/api/login';
 //Myjs # Head, Edit bar
 export const MYJS_CALL_URL = '/api/v1/myjs/perform';
