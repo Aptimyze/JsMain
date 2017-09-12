@@ -396,7 +396,7 @@ unset($deletePidArr);
 /*optimiztaion 2*/
 mysql_free_result($result);
 
-$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH))";
+$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 2 MONTH))";
 mysql_query($sql,$db) or die("8 ".mysql_error1($db));
 /*
 $sql = "SELECT count(*) AS C FROM SWAP";

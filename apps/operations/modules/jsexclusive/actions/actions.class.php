@@ -232,7 +232,7 @@ class jsexclusiveActions extends sfActions {
     public function executeClientFollowupHistory(sfWebRequest $request)
     {
         $agent = $request['name'];
-        $this->columnNamesArr = array("Member ID", "Added On(Date)", "Followup Status 1", "Followup Status 2", "Followup Status 3", "Followup Status 4");
+        $this->columnNamesArr = array("Member ID","Client ID" ,"Added On(Date)", "Followup Status 1", "Followup Status 2", "Followup Status 3", "Followup Status 4");
         $exclusiveObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_slave");
         $clientUsername = new JPROFILE("newjs_slave");
         $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
@@ -240,6 +240,7 @@ class jsexclusiveActions extends sfActions {
         if(is_array($clientfollowupArr)){
            foreach ($clientfollowupArr as $key => $value) {
                 $clientIdArr[] = $value["MEMBER_ID"];
+                $clientId[] = $value["CLIENT_ID"];
                 $dateOld = $value["ENTRY_DT"];
                 $dateOld = explode(" ", $dateOld);
                 $newDateArr[] = date("d-m-Y", strtotime($dateOld[0]));
@@ -277,11 +278,13 @@ class jsexclusiveActions extends sfActions {
                 }
             }
             $clientIdStr = implode(",", $clientIdArr);
+            //$clientName = implode(",", $clientId);
             $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
             foreach($clientNameArr as $key => $val){
                 $nameTempArr[$val["PROFILEID"]] = $val;
             }
             $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
+            $clientUserName = $clientUsername->getAllSubscriptionsArr($clientId);
             $count = count($newDateArr);
             for($i = 0; $i<$count; $i++){
                 $statusArr1[$i] = NULL;
@@ -360,6 +363,9 @@ class jsexclusiveActions extends sfActions {
                 $clientfollowupArr[$i]['FOLLOWUP3_DT'] = $newFollow3Arr[$i];
                 $clientfollowupArr[$i]['FOLLOWUP4_DT'] = $newFollow4Arr[$i];
                 $clientfollowupArr[$i]['USERNAME'] = $usernameArr[$clientfollowupArr[$i]['MEMBER_ID']]["USERNAME"];
+                
+                $clientfollowupArr[$i]['Client_User_Name'] = $clientUserName[$clientfollowupArr[$i]['CLIENT_ID']]["USERNAME"];
+                
                 $clientfollowupArr[$i]['STATUS1'] = $statusArr1[$i];
                 $clientfollowupArr[$i]['STATUS2'] = $statusArr2[$i];
                 $clientfollowupArr[$i]['STATUS3'] = $statusArr3[$i];
@@ -369,6 +375,7 @@ class jsexclusiveActions extends sfActions {
                 }
             }
             $this->dataArray = $clientfollowupArr; 
+           
         }
         unset($exclusiveObj,$clientUsername,$nameOfUserObj);
     }
