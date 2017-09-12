@@ -540,8 +540,8 @@ class ProfilePage extends React.Component {
                 decideHimHer = this.state.GenderInfo.Her;
               }
             }
-            console.log("=====");
-            console.log({decideHimHer});
+            // console.log("=====");
+            // console.log({decideHimHer});
 
 
 
@@ -574,19 +574,29 @@ class ProfilePage extends React.Component {
 
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
-                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>
+                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
 
-                showAlbumView = this.props.pic.pic_count > 0 ?
-                        (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
-                            <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
-                                {photoView}
-                                {photoViewTemp}
-                            </div>
-                        </Link>) : (
-                          <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
-                            {photoView}
-                            {photoViewTemp}
-                        </div></div>)
+                console.log(getCookie("AUTHCHECKSUM"));
+
+
+                showAlbumView = this.props.pic.pic_count == 0 ?
+                  (
+                    <div id="showAlbum"><div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                      {photoView}
+                      {photoViewTemp}
+                  </div></div>) : getCookie("AUTHCHECKSUM") ?
+                (<Link id="showAlbum" onClick={(e) => this.checkPhotoAlbum(e)}  to={"/social/MobilePhotoAlbum?profilechecksum="+this.state.profilechecksum}>
+                    <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                        {photoView}
+                        {photoViewTemp}
+                    </div>
+                </Link>) :
+                      (<Link id="showAlbum" to={"/login?prevUrl="+window.location.href}>
+                          <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid">
+                          {photoView}
+                          {photoViewTemp}
+                      </div>
+                      </Link>)
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
