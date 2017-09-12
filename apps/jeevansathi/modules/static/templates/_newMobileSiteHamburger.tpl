@@ -16,9 +16,9 @@
       
       
 
-                        <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
-                            <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
-                            <div class="dispnone" id="appleAppDownloadLink1"><a bind-slide=1  style="margin-left:14px"  href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
+                        <li class="f13 pb8 fontlig">
+                            <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a  href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
+                            <div class="dispnone" id="appleAppDownloadLink1"><a style="margin-left:14px"  href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
                             <div class="dispibl mr10 fr">
                                 <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white  mar0Imp">हिंदी में</div>
                             </div>
