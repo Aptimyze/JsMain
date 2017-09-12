@@ -24,7 +24,9 @@ temp.animate({
         $("#contactsMinor li").each(function(){
             contactSum += $(this).outerHeight() + 12;
         })
-        console.log(myMatchesSum);
+        contactSum-=20;
+        myMatchesSum-=20;
+        settingsSum-=20;
         $("#scrollElem").height((window.innerHeight -$("#bottomTab").height())+"px");
         $("#settingsParent").on("click",function(){
             if($("#settingsParent").hasClass('plusParent')) {
@@ -99,8 +101,7 @@ var scrollEnable=true;
 			enable_touch();
 			disable_scrolling();
 			$(this.hamid).addClass("hamShow");
-			$(this.pcontid).height(window.innerHeight+"px").addClass("scrollhid")
-           	$("#hamburger").addClass("hamShow");
+			$(this.pcontid).height(window.innerHeight+"px").addClass("scrollhid posrel");
             $("#hamView").addClass("z99 backShow").removeClass("dn"); 
 
 			var ele=this;
@@ -118,7 +119,7 @@ var scrollEnable=true;
 		{
 			enable_scrolling();
 			var ele=this;
-				$(ele.pcontid).height("100%").removeClass("scrollhid");
+				$(ele.pcontid).height("100%").removeClass("scrollhid posrel");
 	            $(ele.hamid).removeClass("hamShow");
 	            $("#hamView").removeClass("z99 backShow").addClass('dn');
 				startTouchEvents(10);

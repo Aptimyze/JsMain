@@ -74,7 +74,7 @@
                             <i class="hamSprite editProfileIcon"></i>
                             <a bind-slide=1  href="/profile/viewprofile.php?ownview=1" id="editProfileLink" class=" white">Edit Profile</a>
                         </li>
-                        <li class='mb12'>
+                        <li>
                             <div id="myMatchesParent" >
                                 <i class="hamSprite myMatchesIcon"></i>
                                 <div class=" ml10  white dispibl">My Matches</div>
@@ -105,7 +105,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class='mb12'>
+                        <li class='mt12'>
                             <div id="contactsParent"><i class="hamSprite myContactIcon"></i>
                                 <div id="myContactLink" class=" ml10 white ml15 dispibl">My Contacts</div><i id="expandContacts" class="hamSprite plusIcon fr"></i></div>
                             <ul id="contactsMinor" style="height: 0px" class="minorList  f15" >
@@ -137,7 +137,7 @@
                                 <li><a bind-slide=1  id="messagesLink" href="/inbox/17/1" class="newS white">Who Viewed My Contacts</a></li>
                             </ul>
                         </li>
-                        <li class='mb12'>
+                        <li class='mt12 mb12'>
                             <i class="hamSprite shortlistedIcon"></i>
                             <a bind-slide=1  href="/search/shortlisted" id="shortlistedLink" class=" white">Shortlisted
                             <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('BOOKMARK')` ~if $profileMemcacheObj->get('BOOKMARK')>99` 99+~else`~$profileMemcacheObj->get('BOOKMARK')`~/if`~/if`
@@ -209,6 +209,15 @@
 
                     </ul>
                     ~if $MembershipMessage.bottom`
+                    ~if strpos($MembershipMessage.top, 'FLASH') != false`
+                    <div id="bottomTab" class="mar0Imp posabs btmo fullwid">
+                        <div class="brdrTop pad150">
+                            <div class="txtc color9 mb15">~$MembershipMessage.bottom`</div>
+                        </div>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">FLASH DEAL | UPGRADE NOW</a>
+
+                    </div>
+                    ~else`
                     <div id="bottomTab" class="mar0Imp posabs btmo fullwid">
                         ~if $MembershipMessage.top`
                         <div class="brdrTop pad150">
@@ -218,6 +227,7 @@
                         <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.bottom|upper`</a>
 
                     </div>
+                    ~/if`
                     ~/if`
 
 <!--  Code moved Up to include Download App at top -->
