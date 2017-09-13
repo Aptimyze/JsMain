@@ -19,6 +19,8 @@ include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 //END
 include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 $db=connect_db();
+mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $db);
+
 $sql = "SELECT MAX( ENTRY_DT )  AS ENTRY_DT , PROFILEID,TYPE FROM newjs.ASTRO_PULLING_REQUEST WHERE PENDING IN ('Y','U') AND COUNTER < 3 GROUP BY PROFILEID";
 $res = mysql_query($sql,$db) or logError($sql,"ShowErrTemplate");
 $objReplace = ProfileReplaceLib::getInstance();

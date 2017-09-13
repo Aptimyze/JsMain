@@ -40,3 +40,5 @@ all:
     enable_login: on
   uploadDoc:
     enable_login: on
+  resetStaticKey:
+    enable_login: off

@@ -101,7 +101,7 @@ EOF;
     }
   ]
 }';
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDElIdYkcMqWcMolkRF9kTmrj8S35KrH1w";
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
 
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
