@@ -56,12 +56,7 @@
             })
         }
     var finalUserName = '~$userName`';
-    if(finalUserName.length > 0){
-    	setTimeout(function(){
-    		sendAjax();
-    		$("#userName").val(finalUserName);
-    	}, 1000);
-    }
+    
 	function sendAjax()
 	{	
 		userName=$('#userName').val();
@@ -136,6 +131,13 @@
 
 		})
 	}
+
+	$(document).ready(function(){
+		if(finalUserName.length > 0){
+			$("#userName").val(finalUserName);
+			sendAjax();
+		}
+	});
 
 	</script>
         		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
