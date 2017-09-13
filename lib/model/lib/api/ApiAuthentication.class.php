@@ -351,7 +351,7 @@ Abstract class ApiAuthentication
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
                         $queueArr['whichChannel'] = MobileCommon::getChannel();
-
+            $queueArr['latLoginDt']=$this->loginData["LAST_LOGIN_DT"];
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -816,6 +816,9 @@ Abstract class ApiAuthentication
 		if(!$profileId)return ;
 		$ip = $trackingData['ip'];
 		$currentTime = $trackingData['currentTime'];
+		//For trackig two months old data
+		
+      	
 		if($trackingData[misLoginTracking])
 		{
 			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
@@ -824,9 +827,19 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
-                        $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
-                        LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);  
-
+            $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
+            LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);
+            if($trackingData['latLoginDt']){
+            	$lastLoginDate=$trackingData['latLoginDt'];
+				$ContactTime=strtotime($lastLoginDate);
+	      		$time = time();
+      			$daysDiff  = floor(($time - $ContactTime)/(3600*24));
+            	if($daysDiff>=60)
+            	{
+	            	$dbOldProfileTrackingDbObj= new MIS_LOGIN_TRACKING_OLDPROFILES();
+            		$dbOldProfileTrackingDbObj->insert($profileId,$currentTime);
+            	}
+            }
                         
 		}
 		if($trackingData[logLoginHistoryTracking])
