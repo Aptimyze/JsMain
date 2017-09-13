@@ -178,7 +178,11 @@ textarea {
     -moz-background-size: cover;-o-background-size: cover; background-size: cover; }
 .ce_bdr1{border-bottom: 1px solid #cbc9c9;}
 .ce_rptabu_c{width: 200%; overflow: auto; transform: translate(0px, 0px); transition-duration: 600ms;}
-.ce_rptabu_d{transform: translate(-50%, 0px)}
+.ce_rptabu_d{
+  -webkit-transform:translate(-50%, 0px);
+  -ms-transform:translate(-50%, 0px);
+  transform: translate(-50%, 0px)
+}
 .ce_abu_tick{background-position: -195px -204px; width: 28px; height: 20px;  margin-left: 3px;}
 
 
