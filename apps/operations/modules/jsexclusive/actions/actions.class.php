@@ -243,12 +243,26 @@ class jsexclusiveActions extends sfActions {
                 $dateOld = $value["ENTRY_DT"];
                 $dateOld = explode(" ", $dateOld);
                 $newDateArr[] = date("d-m-Y", strtotime($dateOld[0]));
-                $date_1 = $value["FOLLOWUP1_DT"];
-                $date_2 = $value["FOLLOWUP2_DT"];
-                $date_3 = $value["FOLLOWUP3_DT"];
-                $date_4 = $value["FOLLOWUP4_DT"];
+                if(!($value["STATUS"]=="F0"))
+                	$date_1 = $value["FOLLOWUP1_DT"];
+                else 
+                	$date_1 = null;
+                
+                if(!($value["STATUS"]=="F1"))
+                	$date_2 = $value["FOLLOWUP2_DT"];
+                else
+                	$date_2 = null;
+                if(!($value["STATUS"]=="F2"))
+                	$date_3 = $value["FOLLOWUP3_DT"];
+                else
+                	$date_3 = null;
+                if(!($value["STATUS"]=="F3"))
+                	$date_4 = $value["FOLLOWUP4_DT"];
+                else
+                	$date_4 = null;
+                
                 if($date_1 != NULL && $date_1 != '0000-00-00'){
-                $date_1 = explode(" ", $date_1);
+               		$date_1 = explode(" ", $date_1);
                 $newFollow1Arr[] = date("d-m-Y", strtotime($date_1[0]));
                 }
                 else{
@@ -288,12 +302,85 @@ class jsexclusiveActions extends sfActions {
                 $statusArr2[$i] = NULL;
                 $statusArr3[$i] = NULL;
                 $statusArr4[$i] = NULL;
-                $followDate1 = $clientfollowupArr[$i]['FOLLOWUP1_DT'];
-                $followDate2 = $clientfollowupArr[$i]['FOLLOWUP2_DT'];
+                if(!($value["STATUS"]=="F0"))
+                	$date_1 = $value["FOLLOWUP1_DT"];
+                	else
+                		$date_1 = null;
+                
+                if(!($clientfollowupArr[$i]["STATUS"] == "F0"))		
+                	$followDate1 = $clientfollowupArr[$i]['FOLLOWUP1_DT'];
+                else 
+                	$followDate1 = null;
+                
+                if(!($clientfollowupArr[$i]["STATUS"] == "F1"))
+               		$followDate2 = $clientfollowupArr[$i]['FOLLOWUP2_DT'];
+            	else
+            		$followDate2 = null;
+                	
+                if(!($clientfollowupArr[$i]["STATUS"] == "F2"))
+                	$followDate3 = $clientfollowupArr[$i]['FOLLOWUP3_DT'];
+                else
+                	$followDate3 = null;
+                	
+                if(!($clientfollowupArr[$i]["STATUS"] == "F3"))
+                	$followDate4 = $clientfollowupArr[$i]['FOLLOWUP4_DT'];
+                else
+                	$followDate4 = null;
+                	
+                /* $followDate2 = $clientfollowupArr[$i]['FOLLOWUP2_DT'];
                 $followDate3 = $clientfollowupArr[$i]['FOLLOWUP3_DT'];
-                $followDate4 = $clientfollowupArr[$i]['FOLLOWUP4_DT'];
+                $followDate4 = $clientfollowupArr[$i]['FOLLOWUP4_DT']; */
+                	
+                	
                 $followupStatus = $clientfollowupArr[$i]['STATUS'];
-                if($followDate1 !=NULL && $followDate1 !='0000-00-00')
+                
+                if($followDate1 != null && $followDate1 !='0000-00-00' && $followDate2 != null && $followDate2 !='0000-00-00'){
+                	$statusArr1[$i] = 'Follow Up';
+                }else if($followDate1 != null && $followDate1 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr1[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr1[$i] = 'DECLINE';
+                	}else{
+                		$statusArr1[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate2 != null && $followDate2 !='0000-00-00' && $followDate3 != null && $followDate3 !='0000-00-00'){
+                	$statusArr2[$i] = 'Follow Up';
+                }else if($followDate2 != null && $followDate2 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr2[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr2[$i] = 'DECLINE';
+                	}else{
+                		$statusArr2[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate3 != null && $followDate3 !='0000-00-00' && $followDate4 != null && $followDate4 !='0000-00-00'){
+                	$statusArr3[$i] = 'Follow Up';
+                }else if($followDate3 != null && $followDate3 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr3[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr3[$i] = 'DECLINE';
+                	}else{
+                		$statusArr3[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate4 != null && $followDate4 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr4[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr4[$i] = 'DECLINE';
+                	}else{
+                		$statusArr4[$i] = 'Follow Up';
+                	}
+                }
+     
+                /* if($followDate1 !=NULL && $followDate1 !='0000-00-00')
                 {
                     $statusArr1[$i] = 'Follow Up';
                     if($followDate2 !=NULL && $followDate2 !='0000-00-00')
@@ -343,7 +430,7 @@ class jsexclusiveActions extends sfActions {
                     elseif ($followupStatus == 'N') {
                         $statusArr1[$i] = 'DECLINE';
                     }
-                }
+                } */
             }
             for ($i = 0; $i < $count; $i++) {
                 $clientfollowupArr[$i]['ENTRY_DT'] = $newDateArr[$i];
