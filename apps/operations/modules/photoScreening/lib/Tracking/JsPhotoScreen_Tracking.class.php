@@ -315,8 +315,10 @@ abstract class JsPhotoScreen_Tracking
                         }
                         catch(Exception $e) {
                         }
-			$jsadminObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
-			$jsadminObj->insert($this->m_objProfile->getPROFILEID());
+                        if($this->m_objProfile->getSCREENING() < 1099511627775){
+                            $jsadminObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+                            $jsadminObj->insert($this->m_objProfile->getPROFILEID());
+                        }
 			unset($jsadminObj);
 			$arrUpdateValue["ACTIVATED"] = "Y";
 			$arrUpdateValue["INCOMPLETE"] = "N";
