@@ -4,6 +4,7 @@ import CALCommonCall from './CommonCALFunctions';
 import Loader from "../../common/components/Loader";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+
 import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
@@ -258,11 +259,11 @@ return(
              <div className="pad0840 txtc fontlig f16">{this.props.calData.SUBTEXT}</div>
                 <div id="clickDiv" className="wid90p mar0auto bg4 hgt75 mt30 pad25" onClick={()=>{this.setState({showListOcc:true});}}>
                   <div id="selectDiv" className="dispibl wid90p color11 fontlig f18 vtop textTru">{this.state.selectedOption}</div>
-                  <div className="wid8p dispibl"><img className="fr" src={CONSTANTS.API_SERVER + "/images/jsms/commonImg/arrow.png" } /></div>
+                  <div className="wid8p dispibl"><img className="fr" src={API_SERVER_CONSTANTS.API_SERVER + "/images/jsms/commonImg/arrow.png" } /></div>
               </div>
               <div id="cityClickDiv" style={{display:this.state.slctdStateKey ? 'block' : 'none'}} className="wid90p mar0auto bg4 hgt75 mt30 pad25" onClick={()=>{this.setState({showCityList:true});}}>
                 <div id="citySelectDiv" className="dispibl wid90p color11 fontlig f18 vtop textTru">{this.state.selectedCity}</div>
-                <div className="wid8p dispibl"><img className="fr" src={CONSTANTS.API_SERVER + "/images/jsms/commonImg/arrow.png" } /></div>
+                <div className="wid8p dispibl"><img className="fr" src={API_SERVER_CONSTANTS.API_SERVER + "/images/jsms/commonImg/arrow.png" } /></div>
             </div>
               <div id="contText" style={{display:this.state.hideSelectText ? 'none' : 'block'}} className="fontlig f15 mt10 txtc">Select to continue</div>
               <div id="occInputDiv" className="mt30 txtc dn" style= {{ display : this.state.showInputOcc ? "block" : 'none' }}>

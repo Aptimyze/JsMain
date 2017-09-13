@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import {getCookie} from '../../common/components/CookieHelper';
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import axios from "axios";
 
 class KundliInfo extends React.Component {
@@ -57,7 +58,7 @@ class KundliInfo extends React.Component {
         }
         axios({
             method: "POST",
-            url: CONSTANTS.API_SERVER +call_url,
+            url: API_SERVER_CONSTANTS.API_SERVER +call_url,
             data: '',
             headers: {
               'Accept': 'application/json',

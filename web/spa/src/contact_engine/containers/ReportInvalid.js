@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import axios from "axios";
@@ -112,7 +113,7 @@ export default class ReportInvalid extends React.Component{
 
         axios({
         method: 'POST',
-        url: CONSTANTS.API_SERVER +  CONSTANTS.CONTACT_ENGINE_API.REPORT_INVALID_API + postData,
+        url: API_SERVER_CONSTANTS.API_SERVER +  CONSTANTS.CONTACT_ENGINE_API.REPORT_INVALID_API + postData,
         data: {},
         headers: {
           'Accept': 'application/json',

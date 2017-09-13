@@ -11,6 +11,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import AppPromo from "../../common/components/AppPromo";
 import axios from "axios";;
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import DropMain from "../../DropDown/containers/DropMain";
 
 
@@ -52,7 +53,7 @@ class SearchFormPage extends React.Component {
             let call_url = "/api/v1/search/populateDefaultValues";
             axios({
                 method: "POST",
-                url: CONSTANTS.API_SERVER +call_url+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
+                url: API_SERVER_CONSTANTS.API_SERVER +call_url+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
                 data: '',
                 headers: { 
                   'Accept': 'application/json',
@@ -65,7 +66,7 @@ class SearchFormPage extends React.Component {
             let call_url2 = "/api/v1/search/saveSearchCall?perform=listing&AUTHCHECKSUM="+ getCookie("AUTHCHECKSUM");
             axios({
                 method: "POST",
-                url: CONSTANTS.API_SERVER +call_url2+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
+                url: API_SERVER_CONSTANTS.API_SERVER +call_url2+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM"),
                 data: '',
                 headers: { 
                   'Accept': 'application/json',

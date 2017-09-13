@@ -1,4 +1,5 @@
 import * as CONSTANTS from '../../common/constants/apiConstants'
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import React from 'react';
 import {push} from 'react-router-redux';
 import {getCookie,setCookie,removeCookie} from "../../common/components/CookieHelper";
@@ -126,7 +127,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
       return axios({
         method: callMethod,
-        url: CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
+        url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
         data: {},
         headers: {
           'Accept': 'application/json',

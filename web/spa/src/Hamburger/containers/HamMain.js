@@ -5,6 +5,7 @@ import { getAndroidVersion, getIosVersion} from "../../common/components/commonF
 import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHelper';
 import axios from "axios";
 import * as CONSTANTS from '../../common/constants/apiConstants'
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import Loader from "../../common/components/Loader";
 import { connect } from "react-redux";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
@@ -86,7 +87,7 @@ class HamMain extends React.Component {
         this.setState({showLoader:true});
         this.hideHam(); 
 
-        axios.get(CONSTANTS.API_SERVER+"/static/logoutPage")
+        axios.get(API_SERVER_CONSTANTS.API_SERVER+"/static/logoutPage")
         .then(function(response){
             removeCookie("AUTHCHECKSUM");
             localStorage.clear();
