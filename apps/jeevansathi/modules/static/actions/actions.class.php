@@ -540,17 +540,16 @@ public function executeCALRedirection($request){
     $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
     if($result)
       $data=json_decode($result,true);
-
-    if($data['isError']===false)
-    { 
+    if($data['isError']===false || is_array($data['success']))
+    {      
       $this->finalResponse['postServicesPage']=true;
       $this->finalResponse['servicesData']=$data['success'];
-      
     }
     else{
       $this->finalResponse['postServicesPage']=false;
       $this->finalResponse['servicesData']="";
     }
+
     $this->finalResponse=json_encode($this->finalResponse);
     //Stopping Common functionality 
     $this->chat_hide = 1;

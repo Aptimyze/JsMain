@@ -1,16 +1,22 @@
 ~assign var=zedoValue value= $sf_request->getAttribute('zedo')`
 ~assign var=zedo value= $zedoValue["zedo"]`
 <script>
-var finalResponse= ~$finalResponse|decodevar`;
-var LoggedoutPage=1;
-var logoutChat =~$logoutChat`;
-if(logoutChat) localStorage.setItem("cout","1");
-var userCity="~$city`";
-var isMob="~$isMob`";
-var defaultCityKey="";
-var mapUserCity="";
-var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
-var cityCount=cityJson.length;
+ try {
+  var finalResponse= ~$finalResponse|decodevar`;
+  var LoggedoutPage=1;
+  var logoutChat =~$logoutChat`;
+  if(logoutChat) localStorage.setItem("cout","1");
+  var userCity="~$city`";
+  var isMob="~$isMob`";
+  var defaultCityKey="";
+  var mapUserCity="";
+  var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
+  var cityCount=cityJson.length;
+}
+catch(err) {
+  //console.log(err);
+        window.top.location.href = "/static/LogoutPage";
+    }
 </script>
 <div class="">
   <div class="container mainwid  "> 

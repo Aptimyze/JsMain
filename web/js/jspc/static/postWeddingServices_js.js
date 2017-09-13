@@ -4,7 +4,7 @@ function createCityOptionsList(cityId,optionsJson){
 var cityOptionsJson=finalResponse.servicesData.data.cross_selling_section.categories[cityId];
 var cityOptionsCount=cityOptionsJson.length;
 
-  var listOptionsHtml='<div id="{{id}}" style="width:190px;" class="fl txtc ulRedirectionUrlBinding cursp" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage " /><div class="fontmed pt25 ucl_color1 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f10 ">Over 4500+ professionals</div></div></div>';
+  var listOptionsHtml='<div id="{{id}}" style="width:190px;" class="fl txtc ulRedirectionUrlBinding cursp" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage " /><div class="fontmed pt25 ucl_color1 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f10 ">{{description}}</div></div></div>';
   var outerDiv='<div class="mauto clearfix pt50" style="{{width}}">';
   var  closeOuterDiv='</div>';
   var listCityOptionHtmlfinal="";
@@ -29,6 +29,10 @@ var loopOf4='';
         listCityHtml1=listCityHtml1.replace(/\{\{urlToRedirect\}\}/,cityOptionsJson[i].redirect_url);
         listCityHtml1=listCityHtml1.replace(/\{\{image\}\}/,cityOptionsJson[i].image_url);
         listCityHtml1=listCityHtml1.replace(/\{\{id\}\}/,cityOptionsJson[i].key_name);
+        if(cityOptionsJson[i].redirect_url)
+          listCityHtml1=listCityHtml1.replace(/\{\{description\}\}/,cityOptionsJson[i].description);
+        else
+          listCityHtml1=listCityHtml1.replace(/\{\{description\}\}/,'');
         listCityOptionHtmlfinal+=listCityHtml1;              
     }  
     if(width<760){
@@ -45,7 +49,7 @@ var cityOptionsCount=cityOptionsJson.length;
 
   var windowWidth=$(window).width();
   var listWidth=windowWidth/2;  
-  var listOptionsHtml='<div id="{{id}}" style="width:'+listWidth+'px;" class="fl ulRedirectionUrlBinding txtc" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage" /><div class="fontmed pt25 color2 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f11 ">Over 4500+ professionals</div></div></div>';
+  var listOptionsHtml='<div id="{{id}}" style="width:'+listWidth+'px;" class="fl ulRedirectionUrlBinding txtc" urltoredirect="{{urlToRedirect}}"> <div class="pt10"><img src="{{image}}" class="ulcImage" /><div class="fontmed pt25 color2 f15 ">{{contentHeading}}</div><div class="fontlig pt5 ucl_color1 f11 ">{{description}}</div></div></div>';
   var outerDiv='<div class="mauto clearfix pt30" style="{{width}}">';
   var  closeOuterDiv='</div>';
   var listCityOptionHtmlfinal="";
@@ -70,6 +74,10 @@ var loopOf2='';
         listCityHtml1=listCityHtml1.replace(/\{\{urlToRedirect\}\}/,cityOptionsJson[i].redirect_url);
         listCityHtml1=listCityHtml1.replace(/\{\{image\}\}/,cityOptionsJson[i].image_url);
         listCityHtml1=listCityHtml1.replace(/\{\{id\}\}/,cityOptionsJson[i].key_name);
+        if(cityOptionsJson[i].redirect_url)
+          listCityHtml1=listCityHtml1.replace(/\{\{description\}\}/,cityOptionsJson[i].description);
+        else
+          listCityHtml1=listCityHtml1.replace(/\{\{description\}\}/,'');
         listCityOptionHtmlfinal+=listCityHtml1;              
     }  
     if(width<windowWidth){
