@@ -1,6 +1,6 @@
 
 ~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
-    <div id="hamburger" class="white posfix wid90p fullheight"> 
+    <div id="hamburger" style="width:85%" class="white posfix fullheight"> 
 
   <div id="outerHamDiv"  >
       
@@ -17,8 +17,8 @@
       
 
                         <li class="f13 pb8 fontlig">
-                            <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a  href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
-                            <div class="dispnone" id="appleAppDownloadLink1"><a style="margin-left:14px"  href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
+                            <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a  href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl">Download  App | 3MB only </a></div>
+                            <div class="dispnone" id="appleAppDownloadLink1"><a style="margin-left:14px"  href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl">Download iOS App </a></div>
                             <div class="dispibl mr10 fr">
                                 <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white  mar0Imp">हिंदी में</div>
                             </div>
@@ -285,4 +285,4 @@
 
   </div>
 </div>
-    <div id="hamView" class="fullwid darkView fullheight hamView dn"></div>
+    <div id="hamView" style="opacity:0.5;" class="fullwid darkView fullheight hamView dn"></div>
