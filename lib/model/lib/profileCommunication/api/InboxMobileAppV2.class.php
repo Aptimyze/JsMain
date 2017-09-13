@@ -800,6 +800,8 @@ class InboxMobileAppV2
 	{//print_r($profileId);die;
 		//echo "bb";die;
 //print_r($displayObj); die;
+		//added by Sanyam
+		$request = sfContext::getInstance()->getRequest();
 
 		$infoKey = key($displayObj);
 		//print_r($displayObj[$infoKey]["TUPLES"]);die;
@@ -855,7 +857,7 @@ class InboxMobileAppV2
                                  $timeTextAppend = 'on '.$timeTextAppend;
                                }
                                if($infoKey=="NOT_INTERESTED" || $infoKey=="NOT_INTERESTED_BY_ME"){
-																	$profile[$count]["timetext"] = $timeText;
+                               	$profile[$count]["timetext"] = $timeText;
 
                                }else if($infoKey=="MATCH_ALERT"){
                                   $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT())." ".$timeTextAppend;
@@ -869,8 +871,15 @@ class InboxMobileAppV2
                                   $profile[$count]["timetext"] = ucfirst ($timeText);
                                   $profile[$count]["time"] = ucfirst ($timeText);
                                 }
+                                	if(MobileCommon::isNewMobileSite() && $request->getParameter("JSMS_MYJS"))
+                                	{
+                                		$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),'ProfilePic120Url',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
 
-                                  $profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                	}
+                                	else
+                                	{
+                                		$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                	}                                 
 
                                 if(!$v[$vv]){
                                         $value = null;
