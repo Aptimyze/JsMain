@@ -17,7 +17,7 @@ class aadharVerificationEnums
 	const NOTVERIFIED = "N";
 	const AADHARLENGTH = 12;
 	const IMPROPERFORMAT = "Aadhaar Id is not in proper format";
-	const NOTVERIFIEDMSG = "Given Aadhaar number does not match with profile details";
+	const NOTVERIFIEDMSG = "Name on the profile does not match with name on Aadhaar number provided";
 	const STATUSPENDINGMSG = "Status Pending";
 	const AADHARVERIFIED = "Aadhaar number is verified";
 	public static $headerArrForStatus = array('apiKey:786c16d4-9b01-42bd-a64d-b8d046abb52b');

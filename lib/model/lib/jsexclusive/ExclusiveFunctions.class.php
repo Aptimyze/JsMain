@@ -234,6 +234,21 @@ class ExclusiveFunctions{
                 foreach($arr as $key => $val){
                     $params["MEMBER_ID"] = $val;
                     $exclusiveFollowupObj->insertIntoExclusiveFollowups($params);
+                    $mailerInfo = array();
+                    $mailerInfo[0]["MEMBER_ID"] = $val;
+                    $mailerInfo[0]["CLIENT_ID"] = $client;
+                    $agentUsernames = array();
+                    $agentUsernames[] = $agent;
+                    $pswrdsObj = new jsadmin_PSWRDS();
+                    $agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentUsernames);
+                    $mailerInfo[0]["EMAIL"] = $agentDetail[$agent]["EMAIL"];
+                    $mailerInfo[0]["PHONE"] = $agentDetail[$agent]["PHONE"];
+                    $mailerInfo[0]["NAME"] = $agentDetail[$agent]["FIRST_NAME"];
+                    $mailerInfo[0]["STATUS"] = "F0";
+                    if ($lastName = $agentDetail[$agent]["LAST_NAME"])
+                        $mailerInfo[0]["NAME"] .= " ".$lastName;
+                    $result = $this->getProfilesToSendProposalMail($mailerInfo);
+                    $this->sendProposalMail($result);
                 }
             }
         }
@@ -327,7 +342,7 @@ class ExclusiveFunctions{
         $currentDt = date("Y-m-d");
         if(empty($params["date1"])){
             if($params["followupStatus"]=='F'){
-                $params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
+                $params["date1"] = date('Y-m-d',strtotime($currentDt));
             }
             else{
                 $params["date1"] = $currentDt;
@@ -336,21 +351,25 @@ class ExclusiveFunctions{
       	else if($params["followupStatus"]=='Y' || $params["followupStatus"]=='N'){
       		$params["date1"] = $currentDt;
       	}
-      	else if($params["date1"]==$currentDt){
-      		$params["date1"] = date('Y-m-d',strtotime($currentDt . "+1 day"));
-      	}
+      	/* else if($params["date1"]==$currentDt){
+      		$params["date1"] = date('Y-m-d',strtotime($currentDt));
+      	} */
 
         $updateArr = array();
         switch($params["followUpDetails"]["STATUS"]){
             case "F0":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F1";
-                    $updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_1"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                   // $updateArr["FOLLOWUP_1"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    	$updateArr["FOLLOWUP_1"] = $params["reason"]."|".$params["reasonText"];
                     $updateArr["FOLLOWUP2_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_1"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N' || $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_1"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -360,12 +379,16 @@ class ExclusiveFunctions{
             case "F1":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F2";
-                    $updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                     $updateArr["FOLLOWUP3_DT"] = $params["date1"];
+                    //$updateArr["FOLLOWUP_2"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_2"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    	$updateArr["FOLLOWUP_2"] = $params["reason"]."|".$params["reasonText"];
+                    $updateArr["FOLLOWUP3_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_2"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_2"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -375,12 +398,16 @@ class ExclusiveFunctions{
             case "F2":
                 if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F3";
-                    $updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                     $updateArr["FOLLOWUP4_DT"] = $params["date1"];
+                    //$updateArr["FOLLOWUP_3"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_3"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    $updateArr["FOLLOWUP_3"] = $params["reason"]."|".$params["reasonText"];
+                    $updateArr["FOLLOWUP4_DT"] = $params["date1"];
                 }
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_3"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_3"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -388,13 +415,17 @@ class ExclusiveFunctions{
                 $updateArr["FOLLOWUP3_DT"] = $currentDt;
                 break;
             case "F3":
-                if($params["followupStatus"]=='F'){
+            	if($params["followupStatus"]=='F'){
                     $updateArr["STATUS"] = "F4";
-                    $updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
-                }
+                    //$updateArr["FOLLOWUP_4"] = ($params["reason"]=="Others"?$params["reasonText"]:$params["reason"]);
+                    //$updateArr["FOLLOWUP_4"] = $params["reason"];
+                    //if(!empty($params["reasonText"]))
+                    $updateArr["FOLLOWUP_4"] = $params["reason"]."|".$params["reasonText"];
+            	}
                 else{
-                	if($params["followupStatus"]=='N'){
-                		$updateArr["FOLLOWUP_4"] = $params["reasonText"];
+                	if($params["followupStatus"]=='N'|| $params["followupStatus"]=='Y'){
+                		//if(!empty($params["reasonText"]))
+                			$updateArr["FOLLOWUP_4"] = "|".$params["reasonText"];
                 	}
                     $updateArr["STATUS"] = $params["followupStatus"];
                 }
@@ -418,9 +449,8 @@ class ExclusiveFunctions{
                 $rmDetails =$exServicingObj->checkBioData($profileid);
 		$rmName =$rmDetails['AGENT_USERNAME'];
 		$pswrdsObj =new jsadmin_PSWRDS('newjs_masterRep');
-		$executiveDetails =$pswrdsObj->getExecutiveDetails($rmName);	
-		$phone =$executiveDetails['PHONE'];
-		return $phone;
+		$executiveDetails =$pswrdsObj->getExecutiveDetails($rmName);		
+		return $executiveDetails;
 	}
 
     public function deleteEntryFromExclusiveServicing($profileid,$flag,$billid=0) {
@@ -437,5 +467,154 @@ class ExclusiveFunctions{
             }
         }
 	}
+	
+	public function addDataToRedisObject($key,$value){
+		JsMemcache::getInstance()->lpush($key,$value);
+	}
+	
+	public  function deleteRedisKey($Key){
+		JsMemcache::getInstance()->delete($Key);
+	}
+
+	public function getReceiverAndAgentDetailsforProposalMail(){
+        $followupObj = new billing_EXCLUSIVE_FOLLOWUPS();
+        $result = $followupObj->getDetailsForProposalMail();
+
+        if (!is_array($result))
+            $result = array();
+
+        $agentUsernames = array();
+        foreach ($result as $key=>$value){
+            if(!in_array($value["AGENT_USERNAME"],$agentUsernames))
+                $agentUsernames[]=$value["AGENT_USERNAME"];
+        }
+        if (!empty($agentUsernames)){
+            $pswrdsObj = new jsadmin_PSWRDS();
+            $agentDetail = $pswrdsObj->getAgentDetailsForMatchMail($agentUsernames);
+        }
+
+        if (!is_array($agentDetail))
+            $agentDetail = array();
+
+        foreach ($result as $key=>$value){
+            $agentUserName = $value["AGENT_USERNAME"];
+            $result[$key]["EMAIL"] = $agentDetail[$agentUserName]["EMAIL"];
+            $result[$key]["PHONE"] = $agentDetail[$agentUserName]["PHONE"];
+            $result[$key]["NAME"] = $agentDetail[$agentUserName]["FIRST_NAME"];
+            if ($lastName = $agentDetail[$agentUserName]["LAST_NAME"])
+                $result[$key]["NAME"] .= " ".$lastName;
+        }
+
+        $result = $this->getProfilesToSendProposalMail($result);
+
+        return $result;
+    }
+
+    public function sendProposalMail($mailerInfo){
+	    if(!is_array($mailerInfo) || empty($mailerInfo))
+	        return false;
+
+	    foreach ($mailerInfo as $key=>$value){
+            $userIdArr[] = $value["USER1"];
+        }
+        $userIdStr = implode(",",$userIdArr);
+        $nameOfUserObj = new incentive_NAME_OF_USER();
+        $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $userIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+
+        foreach ($nameOfUserArr as $key=>$value){
+            $userNameArr[$value["PROFILEID"]] = $value;
+        }
+
+	    $producerObj = new Producer();
+        if($producerObj->getRabbitMQServerConnected()){
+            foreach ($mailerInfo as $key=>$value){
+                $pid = $value["USER1"];
+                $name = $userNameArr[$pid]["NAME"];
+                $display = $userNameArr[$pid]["DISPLAY"];
+                $agentName = $value["AGENT_NAME"];
+                $agentPhone = $value["AGENT_PHONE"];
+                $userName = $value["USERNAME"];
+                $subjectAndBody = $this->subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$userName);
+                $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
+                    'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
+                        'RECEIVER'=>$value["RECEIVER"],
+                    	'USERNAME'=>$userName,
+                        'AGENT_NAME'=>$value["AGENT_NAME"],
+                        'AGENT_EMAIL'=>$value["AGENT_EMAIL"],
+                        'USER1'=>$value["USER1"],
+                        'AGENT_PHONE'=>$value["AGENT_PHONE"],
+                        'SUBJECT'=>$subjectAndBody["subject"],
+                        'BODY'=>$subjectAndBody["body"]),
+                    'redeliveryCount'=>0 );
+                $this->updateStatusForProposalMail($value["RECEIVER"],$value["USER1"],'U');
+                $producerObj->sendMessage($sendMailData);
+            }
+        }
+    }
+
+    public function subjectAndBodyForProposalMail($pid,$name,$display,$agentName,$userName){
+        $subject = "Marriage Proposal of JS Exclusive Client (";
+        if($display == "Y")
+            $subject .= $name.",";
+        $subject .= "Profile ID: ".$userName.")";
+        $email["subject"] = $subject;
+
+        $body = "Hi, This is $agentName from Jeevansathi Exclusive team reaching out to you on behalf of my Client as they are interested in your profile and want to proceed further.<br><br>We will get in touch with you soon to discuss about this profile and take next steps.<br><br>Please find below the details of our Exclusive client (";
+        if($display == "Y")
+            $body .= $name.",";
+        $body .= "Profile ID: $userName). For more details kindly view the full profile on Jeevansathi.com";
+        $email["body"] = $body;
+
+        return $email;
+    }
+
+    public function updateStatusForProposalMail($receiver,$user,$status){
+        $date = date("Y-m-d",strtotime(' +1 day'));
+        $proposalMailerObj = new billing_ExclusiveProposalMailer();
+        $proposalMailerObj->updateStatus($receiver,$user,$status,$date);
+    }
+
+
+    public function getClientBioData($client){
+        $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+        $biodata = $exclusiveServicingObj->checkBioData($client);
+        $biodataLocation = $biodata['BIODATA_LOCATION'];
+        $clientBioData = array();
+        if($biodata == false || $biodataLocation == null){
+            $clientBioData["isUploaded"] = false;
+            $clientBioData["BIODATA"] = "";
+            $clientBioData["FILENAME"] = "";
+            return $clientBioData;
+        } else{
+            $clientBioData["isUploaded"] = true;
+        }
+        $ext = end(explode('.', $biodataLocation));
+        $file = "BioData-$this->client.".$ext;
+        $xlData=file_get_contents($biodataLocation);
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        $clientBioData["BIODATA"] = $xlData;
+        $clientBioData["FILENAME"] = $file;
+        return $clientBioData;
+    }
+
+    public function getProfilesToSendProposalMail($mailerArr){
+        foreach($mailerArr as $key=>$value){
+            $clientID = $value["CLIENT_ID"];
+            $clientProfileObj = new Operator;
+            $res = $clientProfileObj->getDetail($clientID,"PROFILEID","PROFILEID,USERNAME");
+            $mailerArr[$key]["USERNAME"] = $res["USERNAME"];
+        }
+        $proposalObj = new billing_ExclusiveProposalMailer();
+        $proposalObj->insertMailLog($mailerArr);
+        $result = $proposalObj->getProfilesToSendProposalMail();
+        if(!is_array($result))
+            $result = array();
+        return $result;
+    }
 }
 ?>

@@ -36,8 +36,6 @@ if(authenticated($cid))
                         $res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
                 } else {
                     $msg = "Search for : " . $username. "\n\n";
-                    $msg = print_r($_SERVER,true);
-                    mail("kunal.test02@gmail.com"," web/jsadmin/searchpage_userdetails in USE",$msg);
                     die("Username not found in database");
                 }
 	}	

@@ -963,6 +963,7 @@ public function executePerformV2(sfWebRequest $request)
 			
 			$infoId = $request->getParameter("searchId")?$request->getParameter("searchId"):$request->getParameter("infoTypeId");
 			$request->setParameter("infoTypeId",$infoId);
+
 			$request->setParameter("searchId",$infoId);
 			$request->setParameter("pageNo",$request->getParameter("currentPage")?$request->getParameter("currentPage"):1);
 			$request->setParameter("fromPage","contacts");
@@ -1008,6 +1009,9 @@ public function executePerformV2(sfWebRequest $request)
 				$this->title=$ResponseArr['subtitle'];
 				$this->title2=$ResponseArr['title2'];
 				$this->infotypeid2=$ResponseArr['infotypeid2'];
+				
+				$request->setParameter("currentPageName", $ResponseArr['infotype']);
+
 				$this->infotype=$ResponseArr['infotype'];
                                 $this->visitorAllOrMatching = $ResponseArr['visitorAllOrMatching'];
 				$this->noresultmessage = $ResponseArr["noresultmessage"];

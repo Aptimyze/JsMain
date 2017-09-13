@@ -31,6 +31,7 @@ list($year1,$month1,$day1)=explode('-',$today);
 $date1=$year1."-".$month1."-".$day1." 00:00:00";
 $date2=$year1."-".$month1."-".$day1." 23:59:59";
 
+$inactivityPeriodThreshold = date("Y-m-d", mktime(0, 0, 0, date("m")-3,date("d"),date("Y"))); /* for past 3 months */
 
 if(1)
 {
@@ -178,8 +179,10 @@ if(1)
 			
 			$profileid_str='';
 
+			$time_clause = "TIME>='$inactivityPeriodThreshold'"; /*time clause*/
+
 			$sendersIn=$row1["PROFILEID"];
-			$contactResult=getResultSet("RECEIVER,TYPE",$sendersIn,'','','','',"'C','E'",'','','','','','',"Y");
+			$contactResult=getResultSet("RECEIVER,TYPE",$sendersIn,'','','','',"'C','E'",$time_clause,'','','','','',"Y");
 			if(is_array($contactResult))
 			{
 				foreach($contactResult as $key=>$value)
@@ -196,7 +199,7 @@ if(1)
 			}
 			$receiversIn=$row1["PROFILEID"];
 			$typeIn="'A'";
-			$contactResult=getResultSet("SENDER",'','',$receiversIn,'',$typeIn,'','','','','','','',"Y");
+			$contactResult=getResultSet("SENDER",'','',$receiversIn,'',$typeIn,'',$time_clause,'','','','','',"Y");
 			if(is_array($contactResult))
                         {
                                 foreach($contactResult as $key=>$value)

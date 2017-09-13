@@ -2023,11 +2023,13 @@ class MembershipHandler
 
     public function addVariableDiscountProfiles()
     {
+
         $vdDurationObj         = new billing_VARIABLE_DISCOUNT_DURATION("newjs_masterRep");
         $vdPoolTechObj         = new billing_VARIABLE_DISCOUNT_POOL_TECH("newjs_masterRep");
         $vdObj                 = new billing_VARIABLE_DISCOUNT();
         $vdOfferDurationObj    = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $vdDurationPoolTechObj = new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH("newjs_masterRep");
+        $vdExtendedObj = new billing_EXTENDED_VARIABLE_DISCOUNT();
         $jprofileObj           = new JPROFILE('newjs_slave');
         $vdProfilesArr         = array();
 
@@ -2040,7 +2042,9 @@ class MembershipHandler
 
         //if(strtotime($endDate) >= strtotime($todayDate)){
 	if ((strtotime($startDate) == strtotime($todayDate)) && $statusVd!='Y') {
-            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles();
+            //confirm filter required in main vd??
+            $vdProfilesArr = $vdPoolTechObj->fetchVdPoolTechProfiles("'".discountType::WELCOME_DISCOUNT."'");
+
             foreach ($vdProfilesArr as $key => $profileid) {
 
                 // paid condition check
@@ -2050,19 +2054,36 @@ class MembershipHandler
                 }
 
                 // get discount details
-                $discountArr = $vdDurationPoolTechObj->getDiscountArr($profileid);
-                if (is_array($discountArr)) {
-                    $discount = max($discountArr);
+                $discountArr = $vdDurationPoolTechObj->getTechDiscountDetails($profileid);
+             
+                if (is_array($discountArr) && is_array($discountArr[0]) && $discountArr[1]) {
+                    $discount = $discountArr[1];
                 }
 
-                unset($discountArr);
                 // add discount
                 if ($discount) {
-                    $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
-                    $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    
+                    //check if already VD-welcome discount is active for this profile
+                    $existingVDEntries = $vdObj->getDiscountDetails($profileid,discountType::WELCOME_DISCOUNT);
+                    
+                    if(in_array(discountType::WELCOME_DISCOUNT,memDiscountTypes::$allowVDExtension) && is_array($existingVDEntries) && is_array($discountArr[0]) && $existingVDEntries["EDATE"]<$endDate){
+                        $extendedStartDt = $startDate;
+                        if($startDate<=$existingVDEntries["EDATE"]){
+                            $extendedStartDt = date("Y-m-d",strtotime($existingVDEntries["EDATE"]." +1 day"));
+                        }
+                        $vdExtendedObj->addVDDurationServiceWise(array("discounts"=>$discountArr[0],"PROFILEID"=>$profileid,"DISCOUNT"=>$discount,"SDATE"=>$extendedStartDt,"EDATE"=>$endDate,"ENTRY_DT"=>$activationDt));
+                        unset($extendedStartDt);
+                    }
+                    else{
+                        $vdObj->addVDProfile($profileid, $discount, $startDate, $endDate, $activationDt);
+                        $vdOfferDurationObj->addVdOfferDuration($profileid);
+                    }
+                    unset($existingVDEntries);
                 }
+                unset($discountArr);
             }
         }
+    unset($vdExtendedObj);
     }
 
     public function calculateVariableRenewalDiscount($profileid)
@@ -2269,13 +2290,10 @@ class MembershipHandler
     {
         $exclusiveObj      = new billing_EXCLUSIVE_MEMBERS();
         $allocationDetails = $exclusiveObj->getExclusiveMembers("PROFILEID,DATE_FORMAT(BILLING_DT, '%d/%m/%Y %H:%i:%s') AS BILLING_DT,ASSIGNED_TO,BILL_ID", $assigned, $orderBy);
-
         if (is_array($allocationDetails) && $allocationDetails) {
-            
             $profileIDArr = array_map(function($arr){ 
                                     return $arr['PROFILEID'];
                                 },$allocationDetails);
-            
             if(is_array($profileIDArr)){
                 $profileIDArr = array_unique($profileIDArr);
             }
@@ -2616,10 +2634,16 @@ class MembershipHandler
                             $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
                         }
                         //update the success deactivate entry
-                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
+                        if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!="" && $params["NEW_ORDERID"] != "backend"){
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                             $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
+                        }
+                        elseif($params["NEW_ORDERID"] && $params["NEW_ORDERID"] == "backend"){
+                            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                            $lastInsertedId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$params["PROFILEID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$params["MEMBERSHIP"],"OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
+                            unset($upgradeOrdersObj);
+                            JsMemcache::getInstance()->set($params["PROFILEID"]."_BACK_UPGRADE",$lastInsertedId,3600);
                         }
                     }
                     unset($billingServStatObj);
@@ -2649,8 +2673,15 @@ class MembershipHandler
     * @outputs: none
     */
     function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
-        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();        
+        if($orderid == "backend"){
+            $id = JsMemcache::getInstance()->get($profileid."_BACK_UPGRADE");
+            $upgradeOrdersObj->updateOrderUpgradeEntryById($id,$updateArr);
+            JsMemcache::getInstance()->remove($profileid."_BACK_UPGRADE");            
+        }
+        else{
+            $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        }
         unset($upgradeOrdersObj);
         if($flushCache == true){
             $memCacheObject = JsMemcache::getInstance();
@@ -2900,7 +2931,7 @@ class MembershipHandler
         $sendSMSForDiscount = true;  //SMS to be sent
         
         $discountDetails = array("discountPercent"=>$discountPercent,"startDate"=>$startDate,"endDate"=>$endDate,"entryDate"=>$entryDt,"DISC1"=>$discountPercent,"DISC2"=>$discountPercent,"DISC3"=>$discountPercent,"DISC6"=>$discountPercent,"DISC12"=>$discountPercent,"DISCL"=>$discountPercent);
-        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount);
+        $vdObj->activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMailForDiscount,$sendSMSForDiscount,discountType::WELCOME_DISCOUNT);
         
         $commWelDiscLogObj = new billing_COMMUNITY_WELCOME_DISCOUNT_LOG();
         $commWelDiscLogObj->addEntry($profileid,$discountPercent,$startDate,$endDate,$community,$entryDt);
@@ -2987,6 +3018,19 @@ class MembershipHandler
                 }
             }
         }
+    }
+
+    public function getAmountForUSDtoINRpayment($billid,$orderid){
+        $purchasesObj = new BILLING_PURCHASES();
+        $ordersObj = new BILLING_ORDERS();
+        $orderDetails = $ordersObj->getOrderDetailsForId($orderid);
+        if(is_array($orderDetails) && $orderDetails["USD_TO_INR"]=='Y'){
+            $newAmountArr = array();
+            $newAmountArr["AMOUNT"] = $orderDetails["AMOUNT"];
+            $newAmountArr["DISCOUNT"] = $orderDetails["DISCOUNT"];
+            $purchasesObj->updateUSDtoINRflag('Y',$billid);
+        }
+        return $newAmountArr;
     }
 
 }
