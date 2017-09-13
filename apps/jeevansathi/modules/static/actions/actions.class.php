@@ -480,8 +480,6 @@ class staticActions extends sfActions
             $this->time = floor($request->getParameter('time')/60);
             $this->symbol = $request->getParameter('symbol');
      }
-     $key = 'calDisplayCount'.date('Y-m-d');
-     JsMemcache::getInstance()->incrCount($key);
     $this->setTemplate("criticalActionLayer");
   }
 
