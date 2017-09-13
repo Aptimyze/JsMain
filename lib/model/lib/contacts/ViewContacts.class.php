@@ -107,7 +107,7 @@ class ViewContacts extends ContactEvent{
 		if (is_array($draftsArray)) {
 		$this->component->drafts = $this->component->cancelDrafts = $draftsArray;
 		}
-		if($this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="EVALUE" && $privArr[0]['CONTACT_DETAIL']['VISIBILITY']=='Y')
+		if(($this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="EVALUE"|| $this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="JSEXCLUSIVE") && $privArr[0]['CONTACT_DETAIL']['VISIBILITY']=='Y')
 		{
 			$evalueTrackingObj = new EvalueTracking();
 			if(strcmp($_SERVER['REDIRECT_URL'],"/profile/viewprofile.php")==0)

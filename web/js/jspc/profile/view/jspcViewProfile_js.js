@@ -438,6 +438,7 @@ $('#cls-astroComp').click(function(){
 });
 
 $('.js-searchTupleImage').click(function(){
+    GAMapper("GA_PROFILE_ALBUM");
     var photoData = $(this).attr("data");
     photoData = photoData.split(",");
 
@@ -473,7 +474,7 @@ $('.js-overlay').fadeOut(200,"linear",function(){
 };
 
 $('#reportAbuseCross').bind('click',closeReportAbuseLayer);
-
+$('.js-abuseAttachment').off('click').on('click', attachAbuseDocument);
 
 }
 
@@ -592,10 +593,14 @@ var isValid = false;
       if($(this).hasClass('selected')) { 
         mainReason = $(this).find(".reason").html();
         if($(this).hasClass("openBox")) {
-         reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
+         //reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
+        reason=$('.js-AbuseOpenTextArea').val().trim();
         if(!reason || reason.length < 25) {
-            $(this).find('#errorText').removeClass('disp-none');
+            $('.js-errorMsg').removeClass('disp-none');
+            //$(this).find('#errorText').removeClass('disp-none');
             isValid = true;
+        } else {
+            $('.js-errorMsg').addClass('disp-none');
         }
       }
     }
@@ -603,6 +608,27 @@ var isValid = false;
     if(isValid == true) {
       return;
     }
+
+var bUploadSuccessFul = false;
+if(arrReportAbuseFiles.length) {
+    showCommonLoader();
+    var bResult = uploadAttachment();
+    if( false == bResult )
+        return ;
+    
+    for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+        if(arrReportAbuseFiles[itr].hasOwnProperty("uploded") || 
+                arrReportAbuseFiles[itr].uploded == false || 
+                (arrReportAbuseFiles[itr].hasOwnProperty("error") && arrReportAbuseFiles[itr].error == true) ) {
+            bUploadSuccessFul = false;
+            break;
+        }
+        bUploadSuccessFul = true;
+    }
+    if(false === bUploadSuccessFul)
+        return bUploadSuccessFul;
+}
+    
 $('.js-overlay').unbind('click');
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
@@ -618,11 +644,18 @@ reason=$.trim(reason);
 feed.category='Abuse';
 feed.mainReason=mainReason;
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
+if( bUploadSuccessFul ) {
+    feed.attachment = 1;
+    feed.temp_attachment_id = arrReportAbuseFiles['tempAttachmentId'] ;
+}
+
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST'
-
+ajaxConfig.error=function(response) {
+    hideCommonLoader();
+}
 ajaxConfig.success=function(response){
 	$('#reportAbuse-layer').fadeOut(300,"linear");
 
@@ -658,3 +691,22 @@ jQuery.myObj.ajax(ajaxConfig);
 
 }
 
+$('.js-abuseBack').on('click',function() {
+    $('.js-reportAttachLayer').addClass('disp-none');
+    
+    //Clear Text
+    $('.js-selectedOption').html("");
+    $('.js-AbuseOpenTextArea').val("");
+    
+    //Clear already attached docs
+    arrReportAbuseFiles = [];
+    var photoNode = document.getElementById("previewContainer");
+    while (photoNode.hasChildNodes()) {
+        photoNode.removeChild(photoNode.lastChild);
+    }
+    
+   $("#previewContainer").append("<div class='abuse_opt-sel f11 pb10 errcolr js-attachError'></div>");
+    
+    $('.js-reportOptionLayer').find('.selected').removeClass('selected');
+    $('.js-reportOptionLayer').removeClass('disp-none');
+})

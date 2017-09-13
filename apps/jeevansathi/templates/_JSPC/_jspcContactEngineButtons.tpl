@@ -331,6 +331,7 @@
                     			</div>
                                  <p style='white-space:pre;' class="pt6 txtl js-phoneContactCC disp-none"><span>Phone </span><span class='js-timeToCallCC'></span> :  <span class='js-phoneValuesCC'></span></p>
                     			<p class="pt10 txtl js-emailContactCC disp-none"><span>Email id:     </span>    <span class='js-emailValueCC'></span></p>
+                          <p class="pt6 txtl js-relationshipPhoneCC disp-none"><span>Relationship Manager's phone no:     </span>    <span class='js-relationshipPhoneCC'></span></p>
                             </div>                          
                        		<!--end:view contact-->                       
                         </div>

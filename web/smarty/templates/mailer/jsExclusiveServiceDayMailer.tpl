@@ -74,7 +74,7 @@
               </tr>
               <tr>  
                       <td valign="top"><br /><font color="#000000">
-                              As discussed on the call, I would just like to outline how we would help you find your perfect life partner. We would request your involvement at each step to help us facilitate the process
+                              As discussed on the call, I would just like to outline how we would help you find your perfect life partner. We would request your involvement at each step to help us facilitate the process.
                       </font></td>
               </tr>
               <tr>

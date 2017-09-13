@@ -145,7 +145,7 @@ class ContactDetailsV1Action extends sfAction
 					if(MobileCommon::isApp()=="A" && $this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_PCS)
 					{
 						unset($responseArray);					
-						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "21";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -159,20 +159,20 @@ class ContactDetailsV1Action extends sfAction
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
-						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made contact details visible. Upgrade to eValue to make your phone/email visible to all matching profiles";
+						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made contact details visible. Upgrade to ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." to make your phone/email visible to all matching profiles";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
 					}
 				}
 			}
 			elseif ($this->contactObj->getTYPE() != "A") {
-				if ($this->Profile->getPROFILE_STATE()->getPaymentStates()->getEVALUE()) {
+				if ($this->Profile->getPROFILE_STATE()->getPaymentStates()->getEVALUE() || $this->Profile->getPROFILE_STATE()->getPaymentStates()->getJSEXCLUSIVE()) {
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
 					if ($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID()) {
-						$responseArray["contactdetailmsg"] = "There would be no deduction in number of contacts you can view as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>eValue</b> Member.";
+						$responseArray["contactdetailmsg"] = "There would be no deduction in number of contacts you can view as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()."</b> Member.";
 					} else {
-						$responseArray["contactdetailmsg"] = "You can View Contact Details as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>eValue</b> Member.";
+						$responseArray["contactdetailmsg"] = "You can View Contact Details as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()."</b> Member.";
 					}
 				}
 			}
@@ -506,6 +506,12 @@ class ContactDetailsV1Action extends sfAction
 				$responseArray["contact4"]["label"]  = "Email";
 				$responseArray["contact4"]["action"] = "MAIL";
 				$responseArray["contact4"]["iconid"] = IdToAppImagesMapping::MAILICON;
+			}
+			if (strstr($value["LABEL"], "Relationship manager")) {
+				$responseArray["contact5"]["value"]  = $value["VALUE"];
+				$responseArray["contact5"]["label"]  = $value['LABEL'];
+				$responseArray["contact5"]["action"] = "CALL";
+				$responseArray["contact5"]["iconid"] = IdToAppImagesMapping::PHONEICON;
 			}
 		}
 		return $responseArray;

@@ -71,6 +71,9 @@ class ContactMailer
 				$paidStatus = "eValue";
 			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 				$paidStatus = "eRishta";
+			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
+				$paidStatus = "JsExclusive";
+
 			$smartyObj->assign("paidStatus",$paidStatus);
 		}
 		$havePhoto = $receiver->getHAVEPHOTO();
@@ -122,6 +125,8 @@ class ContactMailer
 				$paidStatus = "eValue";
 			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 				$paidStatus = "eRishta";
+			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
+				$paidStatus = "JsExclusive";
 			$smartyObj->assign("paidStatus",$paidStatus);
 		}
 		
@@ -444,6 +449,8 @@ $emailSender = new EmailSender(MailerGroup::EOI, 1756);
 		$paidStatus = "eValue";
 	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
+	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
+				$paidStatus = "JsExclusive";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
 	$smartyObj->assign("count", 1);

@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID','THUMBNAIL_PIC','availforchat');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID','THUMBNAIL_PIC','availforchat','COMPLETE_VERIFICATION_STATUS');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -342,6 +342,42 @@ class SearchApiStrategyV1
                         $searchSummaryObj = new SearchService();
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
+                        
+                        if(MobileCommon::isAndroidApp()){
+                                $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
+                                if($clusterIndex != ""){
+                                        if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
+                                                eval('$clusterLVal = $SearchParamtersObj->getL'.$clusterIndex.'();');
+                                                eval('$clusterHVal = $SearchParamtersObj->getH'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>"L".$clusterIndex,"value"=>$clusterLVal),"1"=>array("key"=>"H".$clusterIndex,"value"=>$clusterHVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }else{
+                                                $key = $clusterIndex;
+                                                if($clusterIndex == "EDUCATION_GROUPING"){
+                                                        $clusterIndex = "EDU_LEVEL_NEW";
+                                                        $key = "EDU_LEVEL_NEW";
+                                                }elseif($clusterIndex == "OCCUPATION_GROUPING"){
+                                                        $clusterIndex = "OCCUPATION";
+                                                        $key = "OCCUPATION";
+                                                }elseif($clusterIndex == "COUNTRY_RES"){
+                                                        $key = "LOCATION";
+                                                }elseif($clusterIndex == "CITY_RES"){
+                                                        $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "HAVEPHOTO"){
+                                                        $key = "PHOTO";
+                                                }elseif($clusterIndex == "CASTE_GROUP"){
+                                                        $key = "CASTE";
+                                                }elseif($clusterIndex == "STATE"){
+                                                        $key = "LOCATION_CITIES";
+                                                }elseif($clusterIndex == "LAST_ACTIVITY"){
+                                                        $clusterIndex = "ONLINE";
+                                                }
+                                                eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
+                                                $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
+                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
+                                        }
+                                }
+                        }
                 }
                 $featuredProfileArrNew = array();
                // echo '<pre>';

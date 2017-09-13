@@ -73,7 +73,7 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not 
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
-  {
+  {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
@@ -351,7 +351,7 @@ return 0;
                               sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
                               $layerData = ob_get_contents();
                               ob_end_clean();
-                              $dppSugg=json_decode($layerData,true);
+                              $dppSugg=json_decode($layerData,true);//print_r($dppSugg);die;
                               if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value) 
@@ -463,7 +463,7 @@ return 0;
 
                   case '20':
 
-                      if(self::checkConditionForCityCAL($profileObj) && (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION')))) 
+                      if( (      !MobileCommon::isApp() || self::CALAppVersionCheck('20',$request->getParameter('API_APP_VERSION'))) && self::checkConditionForCityCAL($profileObj)) 
                       {  
                           $show=1;
                            
@@ -471,6 +471,44 @@ return 0;
                       
                       
                     break;
+                  case '25':
+                    if(!MobileCommon::isApp()){
+                      if(in_array($profileObj->getRELIGION(), 
+                        array(1/*hindu*/, 9/*jain*/, 4/*sikh*/, 7/*buddhist*/))){
+                        if(!($profileObj->getMANGLIK())) {
+                          $show=1;
+                        }
+                      }
+                    }
+                  break;
+
+                  case '24':
+
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      {
+                          $nameData=(new NameOfUser())->getNameData($profileid);
+                          $nameOfUser=$nameData[$profileid]['NAME'];
+                          if($nameOfUser)
+                          {
+                            $aadhaarObj = new aadharVerification();
+                            $details = $aadhaarObj->getAadharDetails($profileid)[$profileid];
+                            if(!$details[AADHAR_NO] || $details[VERIFY_STATUS]=='N')
+                              $show=1;
+                          }
+                      }
+                      
+                      
+                    break;
+
+                  case '26':
+
+                      if($profileObj->getACTIVATED()=='Y' && self::CALAppVersionCheck('26',$request->getParameter('API_APP_VERSION'))) 
+                      {
+                          $len = strlen($profileObj->getYOURINFO());
+                          if(!$len || $len<100)
+                              $show=1;
+                      }
+                  break;
 
           default : return false;
         }
@@ -567,7 +605,16 @@ break;
                   '20' => array(  
                     'A' => '99',
                     'I' => '5.4'
+                        ),
+
+                  '24' => array(  
+                    'A' => '107',
+                    'I' => '6.0'
+                        ) ,
+                  '26' => array(  
+                    'A' => '109'
                         )        
+       
 
           );
       if($versionArray[$calID][$isApp] && $appVersion >= $versionArray[$calID][$isApp])

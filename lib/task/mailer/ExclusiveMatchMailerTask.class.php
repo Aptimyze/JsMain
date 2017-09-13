@@ -88,6 +88,7 @@ EOF;
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
                     if ($flag) {
                     	$this->updateStatus($pid,'Y');
+                        $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);
                     } else {
                     	$this->updateStatus($pid,'N');
                     }

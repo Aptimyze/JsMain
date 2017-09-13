@@ -314,12 +314,14 @@ class negativeTreatment
             $delete_reason    = 'Other reasons';
             $specify_reason   = 'Negative List';
             foreach ($this->profileArr as $key => $profileid) {
-                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED');
+                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED,EMAIL');
                 $profileid = $jProfile['PROFILEID'];
                 $activated = $jProfile['ACTIVATED'];
                 $username  = $jProfile['USERNAME'];
+                $email     = $jProfile['EMAIL'];
                 if ($profileid && $activated != 'D') {
                     // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
+                    $this->sendEmailOnDelete($profileid,$username,$email);
                     $this->deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username);
                     $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
@@ -414,6 +416,10 @@ class negativeTreatment
         );
         $profileDeleteObj->updateRecord($profileid, $startTime, $arrDeleteLogs);
         //End:JSC-2551: Mark Completion in logs
+        
+        //Start: JSI-3384
+        $this->negativeTreatmentMailer($profileid, $username);
+        //End: JSI-3384
     }
     
     public function checkEmail($email)
@@ -479,6 +485,60 @@ class negativeTreatment
 	if($status1>=1 || $status2>=1)
 		return true;
 	return;
-    }	
-
+    }
+    public function sendEmailOnDelete($profileid, $username, $email) {
+        $subject = "Your Profile $username has been deleted due to terms of use violation";
+        //print_r("\nUsername : $username\nEmail: $email\nProfile: $profileid\n<br>Subject: $subject<br>\n");
+        $top8Mailer = new EmailSender(MailerGroup::TOP8, '1858');
+        $tpl = $top8Mailer->setProfileId($profileid);
+        $tpl->getSmarty()->assign("toName", $username);
+        $tpl->setSubject($subject);
+        $top8Mailer->send();
+        $emailLoggerObg = new incentive_NEGATIVE_DELETE_EMAIL_LOG();
+        $emailLoggerObg->insertNegativeDeleteLogEntry($profileid);
+    }
+    
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $strUsername
+     * @return type
+     */
+    public function negativeTreatmentMailer($iProfileId, $strUsername) {
+      
+      $abuseLogStore = new REPORT_ABUSE_LOG();
+      $arrResult = $abuseLogStore->getListOfAllReporters($iProfileId, "15 days");
+      
+      if (null === $arrResult || 0 === count($arrResult) ) {
+        return ;
+      }
+      
+      $iMailerId = 1884;
+            
+      $arrUniqueIds = array();
+      foreach($arrResult as $result) {
+        
+        $profileId = $result['REPORTER'];
+        if( false === in_array($profileId, $arrUniqueIds) ) {
+          $arrUniqueIds[] = $profileId;
+        } else {
+          continue;
+        }
+        
+        $date = new DateTime($result['DATE']);
+        $strFormatedDate = $date->format('d M Y');
+        $reportAbuseSuccessMailer =new EmailSender(MailerGroup::REPORT_PHONE_INVALID_EMAIL, $iMailerId);
+        $tpl = $reportAbuseSuccessMailer->setProfileId( $profileId ); 
+        
+        //Set Dynamic Mailer Content
+        $smartyObj = $tpl->getSmarty();
+        $smartyObj->assign("deletedUserName", $strUsername);
+        $smartyObj->assign("dateOfReport", $strFormatedDate);
+        //Send Email
+        $reportAbuseSuccessMailer->send();
+        
+        unset($tpl);
+        unset($reportAbuseSuccessMailer);
+      }
+    }
 }

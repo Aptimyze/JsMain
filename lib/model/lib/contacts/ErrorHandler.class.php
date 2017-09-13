@@ -62,6 +62,8 @@ class ErrorHandler
 	const LIMIT = 'LIMIT';
 	const PAID_FILTERED_INTEREST_NOT_SENT = 'PAID_FILTERED_INTEREST_NOT_SENT';
 	const PAID_FILTERED_INTEREST_SENT = 'PAID_FILTERED_INTEREST_SENT';
+	const FREE_FILTERED_INTEREST_NOT_SENT = 'FREE_FILTERED_INTEREST_NOT_SENT';
+	const FREE_FILTERED_INTEREST_SENT = 'FREE_FILTERED_INTEREST_SENT';
 	const REMINDER_SENT_BEFORE_TIME = 'REMINDER_SENT_BEFORE_TIME';
 	const SECOND_REMINDER_BEFORE_TIME ='SECOND_REMINDER_BEFORE_TIME';
 	/**
@@ -319,11 +321,11 @@ class ErrorHandler
 		{
 				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
 				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-				{					
+				{				
+
+					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();								
 					if($this->checkPaid())
-					{	
-							$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
-							
+					{								
 							if($this->interestNotSent())
 							{
 								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
@@ -342,9 +344,29 @@ class ErrorHandler
 							}
 
 					}
-					$error = Messages::FILTERED;
+					else
+					{
+							if($this->interestNotSent())
+							{
+								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::FREE_FILTERED_INTEREST_NOT_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);	
+								return false;
+							}
+							else
+							{ 
+								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::FREE_FILTERED_INTEREST_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
+
+					}
+					/*$error = Messages::FILTERED;
 					$this->setErrorMessage($error);
-					return false;
+					return false;*/
 				}			
 		}
 		
@@ -448,6 +470,7 @@ class ErrorHandler
 	 function checkViewedStatus()
 	 {
 		 $viewedObj=$this->contactHandlerObj->getViewed();
+		 $toBeType=$this->contactHandlerObj->getToBeType();
 		 //Underscreening
 		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()==Messages::YES)
 		 {
@@ -459,8 +482,11 @@ class ErrorHandler
 			 $error = Messages::getMessage(Messages::OTHER_INCOMPLETE,array(self::USERNAME=>$viewedObj->getUSERNAME()));
 		 }
 		 //hidden
-		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES)
+
+		if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES && 
+			$toBeType!=ContactHandler::CANCEL && $toBeType!=ContactHandler::DECLINE && $toBeType!=ContactHandler::CANCEL_CONTACT)
 		 {
+		 	
 			 $heshe="he";
 			 $hisher="his";
 			 if($viewedObj->getGENDER()=="F")
@@ -504,7 +530,12 @@ class ErrorHandler
 	function checkViewedHiddenProfile()
 	{
 		$error = '';
-		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		$toBeType=$this->contactHandlerObj->getToBeType();
+		if($toBeType==ContactHandler::CANCEL || $toBeType==ContactHandler::DECLINE || $toBeType==ContactHandler::CANCEL_CONTACT)
+		{
+			$error = '';	
+		}
+		elseif($this->contactHandlerObj->getViewed()->getActivated() == 'H')
 		{
 			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
 			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));

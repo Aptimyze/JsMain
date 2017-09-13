@@ -2,8 +2,8 @@
 
 var feedBackVal = "~$feedbackValue`";
 var redirectLink = "~$redirectLink`";
-
-if(feedBackVal == 'Y')
+var fromVspMail = "~$fromVspMail`";
+if(feedBackVal == 'Y' || fromVspMail == 1)
 {
 	setTimeout(function()
 	{
@@ -31,8 +31,8 @@ else
 }
 </script>
 
-~if $feedbackValue eq Y`
-	<span id="feedbackYes" style="font-size:18px;padding: 20px;display: block;">Thank you for your feedback, redirecting to Daily Recommendations...</span>
+~if $feedbackValue eq Y || $fromVspMail`
+	<span id="feedbackYes" style="font-size:18px;padding: 20px;display: block;">Thank you for your feedback, redirecting to ~if $fromVspMail`jeevansathi.com~else`Daily Recommendations...~/if`</span>
 ~else`
         ~if $feedbackValue eq Z`
                 <span id="feedbackNo" style="font-size:18px;padding: 20px;display: block;">The matches you received were as per your 'Desired Partner Profile'.Looks like you have not set your 'Desired Partner Profile' correctly.

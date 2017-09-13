@@ -106,3 +106,10 @@ avgProcessingTimeQueueSuccess :
       title:	  MIS-Jeevansathi.com 
       stylesheets:	 [operations_jeevansathi]
       javascripts: 	 []
+
+benchmarkSuccess:
+  metas:
+    title:        Test Page
+  stylesheets:    [operations_jeevansathi, operations_styles]
+  javascripts:    [photoScreening_js]
+  layout: layout

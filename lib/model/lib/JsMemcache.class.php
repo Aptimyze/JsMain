@@ -61,6 +61,7 @@ class JsMemcache extends sfMemcacheCache{
 				if(JsConstants::$memoryCachingSystem=='redis')
 				{
 					$this->client = new Predis\Client(JsConstants::$ifSingleRedis);
+					$this->client2 = new Predis\Client(JsConstants::$ifSingleRedis2);
 				}
 				elseif(JsConstants::$memoryCachingSystem=='redisSentinel')
 				{
@@ -77,7 +78,7 @@ class JsMemcache extends sfMemcacheCache{
 			}
 			catch (Exception $e) {
 				$this->client = NULL;
-				jsException::log("C-redisClusters".$e->getMessage());
+				jsException::log("C-redisClusters($key)".$e->getMessage());
 			}
 		}
 		else
@@ -140,11 +141,11 @@ class JsMemcache extends sfMemcacheCache{
 						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
 					if($retryCount == 1)
-						jsException::log("S-redisClusters  ->".$key." -- ".$this->get($key));
+						jsException::log("S-redisClusters($key)  ->".$key." -- ".$this->get($key));
 				}
 				catch (Exception $e)
 				{
-					jsException::log("S-redisClusters  ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+					jsException::log("S-redisClusters($key)  ->".$key." -- ".$e->getMessage()."  ".$retryCount);
 					self::$instance == null;
 					self::getInstance();
 					if($retryCount==0)
@@ -186,7 +187,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("G-redisClusters".$e->getMessage());
+					jsException::log("G-redisClusters($key)".$e->getMessage());
 					self::$instance == null;
 					self::getInstance();
 					if($retryCount==0)
@@ -214,7 +215,7 @@ class JsMemcache extends sfMemcacheCache{
 	/**
 	 * Remove $key from redis/memcache
 	 */
-	public function delete($key,$throwException=false)
+	public function delete($key,$throwException=false,$bucket='')
 	{
 		if(self::isRedis())
 		{
@@ -232,14 +233,19 @@ class JsMemcache extends sfMemcacheCache{
 					}
 					return false;
 					 */
-					$this->client->del($key);
+					if($bucket=='2'){
+						$this->client2->del($key);
+					}
+					else{
+						$this->client->del($key);
+					}
 				}
 				catch (Exception $e)
 				{
 					if($throwException) {
 						throw $e;
 					}
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -279,7 +285,7 @@ class JsMemcache extends sfMemcacheCache{
 					if($throwException) {
 						throw $e;
 					}
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -297,7 +303,24 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
+				}
+			}
+		}
+	}
+	public function lrange($key,$test1,$test2)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					return $this->client->lrange($key,$test1,$test2);
+				}
+				catch (Exception $e)
+				{
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -315,7 +338,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 					return false;
 				}
 			}
@@ -333,7 +356,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -351,7 +374,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -369,7 +392,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("D-redisClusters".$e->getMessage());
+					jsException::log("D-redisClusters($key)".$e->getMessage());
 				}
 			}
 		}
@@ -383,7 +406,7 @@ class JsMemcache extends sfMemcacheCache{
 	 * @return mixed
 	 * @throws Exception
 	 */
-    public function setHashObject($key,$arrValue,$expiryTime=3600,$throwException = false)
+    public function setHashObject($key,$arrValue,$expiryTime=3600,$throwException = false,$bucket='')
     {
         if(self::isRedis())
         {
@@ -391,16 +414,24 @@ class JsMemcache extends sfMemcacheCache{
             {
                 try
                 {
-                    $result = $this->client->hmset($key, $arrValue);
-                    $this->client->expire($key, $expiryTime);
-					return $result->__toString();
+		    if($bucket=='2')
+		    {
+                    	$result = $this->client2->hmset($key, $arrValue);
+                    	$this->client2->expire($key, $expiryTime);
+		    }
+		    else
+		    {
+                    	$result = $this->client->hmset($key, $arrValue);
+                    	$this->client->expire($key, $expiryTime);
+		    }
+		    return $result->__toString();
                 }
                 catch (Exception $e)
                 {
 					if ($throwException) {
 						throw $e;
 					}
-                    jsException::log("HS-redisClusters".$e->getMessage());
+                    jsException::log("HS-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -430,7 +461,7 @@ class JsMemcache extends sfMemcacheCache{
 					if ($throwException) {
 						throw $e;
 					}
-                    jsException::log("HS-redisClusters".$e->getMessage());
+                    jsException::log("HS-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -452,7 +483,7 @@ class JsMemcache extends sfMemcacheCache{
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HG-redisClusters".$e->getMessage());
+                    jsException::log("HG-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -475,7 +506,7 @@ class JsMemcache extends sfMemcacheCache{
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HGM-redisClusters".$e->getMessage());
+                    jsException::log("HGM-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -485,7 +516,7 @@ class JsMemcache extends sfMemcacheCache{
      * @param $key
      * @return mixed
      */
-    public function getHashAllValue($key)
+    public function getHashAllValue($key,$opt="",$bucket="")
     {
         if(self::isRedis())
         {
@@ -493,11 +524,15 @@ class JsMemcache extends sfMemcacheCache{
             {
                 try
                 {
-                    return $this->client->hgetall($key);
+		    if($bucket=='2'){
+			return $this->client2->hgetall($key);
+		    }
+		    else
+			return $this->client->hgetall($key);
                 }
                 catch (Exception $e)
                 {
-                    jsException::log("HG-redisClusters".$e->getMessage());
+                    jsException::log("HG-redisClusters($key)".$e->getMessage());
                 }
             }
         }
@@ -506,7 +541,7 @@ class JsMemcache extends sfMemcacheCache{
 	public function incrCount($key)
 	{
 		if(self::isRedis())
-		{
+			{
 			if($this->client)
 			{
 				try
@@ -515,7 +550,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters incr".$e->getMessage());
+					jsException::log("HG-redisClusters($key) incr".$e->getMessage());
 				}
 			}
 		}
@@ -587,7 +622,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters hincrBy".$e->getMessage());
+					jsException::log("HG-redisClusters($key) hincrBy".$e->getMessage());
 				}
 			}
 		}
@@ -615,7 +650,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters getMultiHashByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) getMultiHashByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -627,14 +662,19 @@ class JsMemcache extends sfMemcacheCache{
    * @param type $arrFields
    * @return type
    */
-  public function getMultipleHashFieldsByPipleline($arrKey, $arrFields)
+  public function getMultipleHashFieldsByPipleline($arrKey, $arrFields,$bucket="")
   {
     if(self::isRedis())
 		{
 			if($this->client)
 			{
 				try{
-				          $pipe = $this->client->pipeline();
+		    			  if($bucket=='2'){
+					          $pipe = $this->client2->pipeline();
+					  }
+					  else{
+					          $pipe = $this->client->pipeline();
+					  }
 				          foreach($arrKey as $key) {
 				            $pipe->hmget($key, $arrFields);
 				          }
@@ -658,7 +698,7 @@ class JsMemcache extends sfMemcacheCache{
 				}
 				catch (Exception $e)
 				{
-					jsException::log("HG-redisClusters getMultiHashFieldsByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) getMultiHashFieldsByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -671,14 +711,19 @@ class JsMemcache extends sfMemcacheCache{
    * @param type $throwException
    * @return type
    */
-  public function setMultipleHashByPipleline($arrHashes, $expiryTime=3600,$throwException = false)
+  public function setMultipleHashByPipleline($arrHashes, $expiryTime=3600,$throwException = false,$bucket="")
   {
     if(self::isRedis())
 		{
 			if($this->client)
 			{
 				try{
-				          $pipe = $this->client->pipeline();
+					  if($bucket=='2'){
+					          $pipe = $this->client2->pipeline();
+					  }
+					  else{
+					          $pipe = $this->client->pipeline();
+					  }
 				          foreach($arrHashes as $key=>$value) {
 				        	  $pipe->hmset($key, $value);
 					          $pipe->expire($key, $expiryTime);
@@ -692,7 +737,7 @@ class JsMemcache extends sfMemcacheCache{
 				        if($throwException){
 				            throw $e;
 					}
-					jsException::log("HG-redisClusters setMultipleHashByPipleline".$e->getMessage());
+					jsException::log("HG-redisClusters($key) setMultipleHashByPipleline".$e->getMessage());
 				}
 			}
 		}
@@ -706,19 +751,23 @@ class JsMemcache extends sfMemcacheCache{
    * @return type
    * @throws Exception
    */
-    public function hdel($key, $fields, $throwException = false)
+    public function hdel($key, $fields, $throwException = false,$bucket="")
     {
         if (self::isRedis()) {
             if ($this->client) {
                 try {
-                    $response = $this->client->hdel($key, $fields);
+		    if($bucket=='2'){
+	                    $response = $this->client2->hdel($key, $fields);
+		    }
+		    else
+	                    $response = $this->client->hdel($key, $fields);
                     return $response;
                 }
                 catch (Exception $e) {
                     if ($throwException) {
                         throw $e;
                     }
-                    jsException::log("HG-redisClusters hdel" . $e->getMessage());
+                    jsException::log("HG-redisClusters($key) hdel" . $e->getMessage());
                 }
             }
         }
@@ -736,7 +785,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -757,7 +806,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -777,7 +826,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -797,7 +846,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -815,7 +864,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -833,7 +882,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -851,7 +900,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -882,7 +931,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -901,7 +950,7 @@ class JsMemcache extends sfMemcacheCache{
   			}
   			catch (Exception $e)
   			{
-  				jsException::log("HG-redisClusters".$e->getMessage());
+  				jsException::log("HG-redisClusters($key)".$e->getMessage());
   			}
   		}
   	}
@@ -978,7 +1027,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  				catch (Exception $e)
  				{
- 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 					jsException::log("S-redisClusters($key) TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
  				}
  			}
  		}
@@ -1002,7 +1051,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  				catch (Exception $e)
  				{
- 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 					jsException::log("S-redisClusters($key) TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
  				}
  			}
  		}

@@ -15,7 +15,7 @@ class ProfileCacheLib
      * @var Object
      */
     private static $instance = null;
-
+    const REDIS_BUCKET_2=2;
     /**
      * Const
      */
@@ -312,7 +312,7 @@ class ProfileCacheLib
         }
 
         $stTime = $this->createNewTime();
-        $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
+        $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key),'',self::REDIS_BUCKET_2);
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
 
@@ -583,7 +583,7 @@ class ProfileCacheLib
         $iTryCount = 0;
         do {
             try{
-                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME,true);
+                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME,true,self::REDIS_BUCKET_2);
                 $bSuccess = true;
             } catch (Exception $ex) {
                 $bSuccess = false;
@@ -639,7 +639,7 @@ class ProfileCacheLib
         $iTryCount = 0;
         do {
             try{
-                JsMemcache::getInstance()->delete($szKey,true);
+                JsMemcache::getInstance()->delete($szKey,true,self::REDIS_BUCKET_2);
                 $this->logDelCount();
                 $bSuccess = true;
             } catch (Exception $ex) {
@@ -669,11 +669,12 @@ class ProfileCacheLib
      */
     private function logDelCount()
     {
-        $key = 'cacheDeleteCount'.date('Y-m-d');
+    return;
+       /* $key = 'cacheDeleteCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
     }
     
     /**
@@ -684,7 +685,7 @@ class ProfileCacheLib
      */
     public function checkProfileData($iProfileId,$fields="")
     {
-      $data = JsMemcache::getInstance()->getHashAllValue(ProfileCacheConstants::PROFILE_CACHE_PREFIX.$iProfileId);
+      $data = JsMemcache::getInstance()->getHashAllValue(ProfileCacheConstants::PROFILE_CACHE_PREFIX.$iProfileId,'',self::REDIS_BUCKET_2);
       $allowedFields = explode(",", $fields);
       $bAllFields = false;
       if(count($allowedFields) && in_array('ALL',$allowedFields)){
@@ -737,7 +738,7 @@ class ProfileCacheLib
         $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
         
         //Get Records from Cache
-        $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+        $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields,self::REDIS_BUCKET_2);
         
         //Check data
         if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
@@ -820,7 +821,7 @@ class ProfileCacheLib
         $iTryCount = 0;
         do {
             try{
-                $arrResult = JsMemcache::getInstance()->setMultipleHashByPipleline($arrData, ProfileCacheConstants::CACHE_EXPIRE_TIME, true);
+                $arrResult = JsMemcache::getInstance()->setMultipleHashByPipleline($arrData, ProfileCacheConstants::CACHE_EXPIRE_TIME, true,self::REDIS_BUCKET_2);
                 $bSuccess = true;
             } catch (Exception $ex) {
                 $bSuccess = false;
@@ -991,7 +992,7 @@ class ProfileCacheLib
         $iTryCount = 0;
         do {
             try{
-                $result = JsMemcache::getInstance()->hdel($szKey, $arrFields, true);
+                $result = JsMemcache::getInstance()->hdel($szKey, $arrFields, true,self::REDIS_BUCKET_2);
                 $bSuccess =  true;
             } catch (Exception $ex) {
                 $bSuccess = false;
@@ -1081,7 +1082,7 @@ class ProfileCacheLib
       $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
       
       //Get Records from Cache
-      $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+      $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields,self::REDIS_BUCKET_2);
 
       if(!isset($arrResponse))
         return false;

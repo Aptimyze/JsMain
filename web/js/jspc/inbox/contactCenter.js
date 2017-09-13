@@ -178,6 +178,11 @@ if(typeof response.searchid!="undefined")
     	uploadRequestParamArr["ccnavigator"]=response.ccnavigator;
     }
 	//show horroscope/photo request option if requests tab is selected
+	try{
+		currentPageName = response['infotype'];
+	}catch(err){
+		
+	}
 	showRequestsSubTypeListings(response,uploadRequestParamArr);
 	
        	//typeOfApi='';

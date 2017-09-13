@@ -716,6 +716,11 @@ class registerActions extends sfActions
     public function executeCustomreg(sfWebRequest $request)
     {
 		$loginData=$request->getAttribute("loginData");
+		$source  = $request->getParameter("source");
+				
+		//setting cookie
+		setcookie("source", $source, time() + 7200, "/");
+		
 		//IF User is login then redirect to site
 		if(is_numeric($loginData[PROFILEID]))
 		{

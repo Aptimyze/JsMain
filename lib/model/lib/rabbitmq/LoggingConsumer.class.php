@@ -126,9 +126,29 @@ class LoggingConsumer
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
     $body['profileId'] = intval($body['profileId']);
+    $key=$body['profileId']."_loggedIn";
+    $date = date("Y-m-d");
     try
     {
         ApiAuthentication::completeLoginTracking($body);
+        if($body['misLoginTracking'] && ($body['websiteVersion']=="N" || $body['websiteVersion']=="I"))
+        {
+          file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/LoginTracking".$date.".txt",$body['websiteVersion']."===Not to be stored\n",FILE_APPEND);
+        }
+        elseif($body['profileId'])
+        {
+          $alreadyLoggedIn=JsMemcache::getInstance()->get($key);
+          if($alreadyLoggedIn===false ||$alreadyLoggedIn==null) {
+            JsMemcache::getInstance()->set($key,1,10);
+            $WebAuthentication = new WebAuthentication;
+            $loginData=$WebAuthentication->setPaymentGatewayAuthchecksum($body['profileId']);
+            $authURL = 'http://auth.js.jsb9.net:8390/auth/v1/chat?authchecksum='.$loginData["AUTHCHECKSUM"];
+            $postParams = (array("aasduthchecksum"=>$loginData["AUTHCHECKSUM"]));
+                $result=CommonUtility::sendCurlPostRequest($authURL,$postParams);
+            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/LoginTracking".$date.".txt",$result."\n",FILE_APPEND);
+          }
+        }
+    
     }     
     
     catch (Exception $exception) 

@@ -155,7 +155,28 @@ class crmAllocationActions extends sfActions
   // allocate the profile to the agent by Outbound Process
   public function executeAgentAllocation(sfWebRequest $request)
   {	
-        $this->cid      	=$request->getParameter("cid");
+	$agentAllocDetailsObj   =new AgentAllocationDetails();
+
+	// Dialer Handler Check
+        $from_dialer =$request->getParameter("from_dialer");
+        if($from_dialer==1){
+                if(isset($_COOKIE["CRM_LOGIN"]))
+                        $this->cid = $_COOKIE["CRM_LOGIN"];
+		elseif(isset($_COOKIE["CRM_NOTIFICATION_AGENTID"]))
+			$this->cid = $_COOKIE["CRM_NOTIFICATION_AGENTID"];
+
+                $agent_name =$request->getParameter("agent_name");
+                if($this->cid){
+                        $this->agentName =$agentAllocDetailsObj->fetchAgentName($this->cid);
+                }
+                if($agent_name!=$this->agentName){
+                        $this->forward('commoninterface','CrmLogin');
+                }               
+        }
+	// Dialer Check Ends
+
+	if(!$this->cid) 
+                $this->cid 	=$request->getParameter("cid");
 	$this->profileid	=$request->getParameter("profileid");
 	$this->subMethod	=$request->getParameter("subMethod");
 	$this->orders		=$request->getParameter("orders");		
@@ -169,13 +190,14 @@ class crmAllocationActions extends sfActions
 	$processObj		=new PROCESS();
 	$crmUtilityObj          =new crmUtility();	
 	$agentBucketHandlerObj  =new AgentBucketHandler();
-	$agentAllocDetailsObj   =new AgentAllocationDetails();
+	//$agentAllocDetailsObj =new AgentAllocationDetails();
 
 
         $checksum               =md5($this->profileid)."i".$this->profileid;
 	if($checksum != $pchecksum && $pchecksum != '')
 		die('SORRY !!! YOU CANNOT PROCEED FURTHER.');
-        $this->agentName        =$agentAllocDetailsObj->fetchAgentName($this->cid);
+	if(!$this->agentName)
+		$this->agentName        =$agentAllocDetailsObj->fetchAgentName($this->cid);
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
         $processObj->setProcessName('Allocation');
         $processObj->setMethod('OUTBOUND');
@@ -270,6 +292,7 @@ class crmAllocationActions extends sfActions
         $this->setTemplate('agentAllocation');
 
 	//JSC-1684
+        $privilege =explode("+",$privilege);
         if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('OPR',$privilege))
                 $this->online_payment=1;
         if(in_array('FPSUP',$privilege)||in_array('INBSUP',$privilege)||in_array('LTFHD',$privilege)||in_array('LTFSUP',$privilege)||in_array('MgrFld',$privilege)||in_array('SLHD',$privilege)||in_array('SLHDO',$privilege)||in_array('SLMGR',$privilege)||in_array('SLMNTR',$privilege)||in_array('SLSMGR',$privilege)||in_array('SLSUP',$privilege)||in_array('SupFld',$privilege)||in_array('SUPPRM',$privilege)||in_array('ExPmSr',$privilege)||in_array('CSEXEC',$privilege))
@@ -836,7 +859,6 @@ class crmAllocationActions extends sfActions
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
-
   	//active tab
   	$this->tabChosenDetails = exclusiveMemberList::$TYPE_TABID_MAPPING[$type];
   	//horizontal tab details
@@ -865,7 +887,7 @@ class crmAllocationActions extends sfActions
 	  	if($inputArr["exAction"]=="UNASSIGN")
 	  	{
 	  		$exObj->updateExclusiveMemberAssignment($profileid,NULL,"0000-00-00",$billid);
-	  		$exServicingObj->removeExclusiveClientEntry($inputArr["assignedToUsername"],$profileid);
+	  		$exServicingObj->removeExclusiveClientEntry($profileid,$inputArr["assignedToUsername"]);
 	  	}
 	  	else if($inputArr["exAction"]=="ASSIGN")
 	  	{
@@ -875,7 +897,7 @@ class crmAllocationActions extends sfActions
 	  		$refTime = date("Y-m-d",strtotime(crmCommonConfig::$jsexclusiveReferenceDt));
 	  		
 	  		if(!empty($bill_dttime) && $bill_dttime>=$refTime){
-	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d')));
+	  			$exServicingObj->addExclusiveServicingClient(array("AGENT_USERNAME"=>$inputArr["executiveDetails"]["USERNAME"],"CLIENT_ID"=>$profileid,"ASSIGNED_DT"=>date('Y-m-d'),"BILLID"=>$billid));
 	  		}
 	  		//send mail to profile in case of assignment if flag true
 	  		if($sendAssignMailer==true)

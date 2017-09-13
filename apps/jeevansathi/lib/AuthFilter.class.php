@@ -81,7 +81,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore") || HandlingCommonReqDatabaseId::isMasterMasterDone())
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore")  || strstr($requestUri,"common/resetStaticKey") || strstr($requestUri,"api/v3/register/staticTablesData") || HandlingCommonReqDatabaseId::isMasterMasterDone())
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -95,6 +95,12 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('FirstCall', 1);
 				
 				// Code to execute after the action execution, before the rendering
+				//Stopping from going to oldMobileSite
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop() && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
+					$context->getController()->forward("static", "oldMobileSite");
+					die;
+				}
+
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -112,12 +118,17 @@ class AuthFilter extends sfFilter {
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
-		
+                                
+                                if(MobileCommon::isNewMobileSite())
+                                    $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
+                                
 				$request->setAttribute('loginData', $data);
 				if ($data[PROFILEID]) $login = true;
 				else $login = false;
 				$request->setAttribute('login', $login);
 				$request->setAttribute('profileid', $data[PROFILEID]);
+				$request->setAttribute('gender', $data[GENDER]);
+
 				$ipAddress = CommonFunction::getIP();
 
 				///////// check for currency and ip address
@@ -197,8 +208,6 @@ class AuthFilter extends sfFilter {
 								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
 							}
 
-
-
 							if($phoneVerified!="Y")
 							{
 								
@@ -245,9 +254,10 @@ class AuthFilter extends sfFilter {
 				if($login)
 				{
 					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					if(JsMemcache::getInstance()->get($key))
+					$kundliData=JsMemcache::getInstance()->get($key);
+					if($kundliData)
                                         {
-                                                $kundli_link = JsMemcache::getInstance()->get($key);
+                                                $kundli_link = $kundliData;
                                         }
 					else
 					{
@@ -288,7 +298,6 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);
 				$request->setAttribute('activated', $data[ACTIVATED]);
-				$request->setAttribute('gender', $data[GENDER]);
 				if($data[PROFILEID])
 				$request->setAttribute('AJAX_CALL_MEMCACHE',Header::checkMemcacheUpdated($data["PROFILEID"]));
 				if ($request->getParameter("ID_CHECKED")) $request->setParameter("ID_CHECKED", urlencode($request->getParameter("ID_CHECKED")));
@@ -369,9 +378,8 @@ class AuthFilter extends sfFilter {
 					$request->setParameter('showKundliList', 1);
 				}
 			}
-                        if(MobileCommon::isNewMobileSite())
-                            $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
 		}
+                
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();
 		$r_n_u_m = $revisionObj->getLatestRevision();
@@ -397,7 +405,8 @@ class AuthFilter extends sfFilter {
       		$lastDayFlag=false;
 
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null || JsMemcache::getInstance()->get($profileid."_appPromo")===false)
+			$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
+			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
@@ -419,7 +428,7 @@ class AuthFilter extends sfFilter {
 			}
 			else
 			{
-				return JsMemcache::getInstance()->get($profileid."_appPromo");
+				return $appPromo;
 			}
 		}
 		else

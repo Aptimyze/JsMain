@@ -264,7 +264,9 @@ if(isset($data))
 		if($sort=='Mode')
 			$sql.=" ORDER BY b.SOURCE ";
 		$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
-
+		
+		$purchaseObj = new BILLING_PURCHASES('newjs_slave');
+		$taxData = $purchaseObj->getDataFromTaxBreakUp($start_dt, $end_dt);
 		// Fetch data in coresponding to search
 		while($row=mysql_fetch_array($res))
 		{
@@ -343,7 +345,7 @@ if(isset($data))
 			$arr[$i]['deposit_dt']=$row['DEPOSIT_DT'];
 			$arr[$i]['deposit_branch']=$row['DEPOSIT_BRANCH'];
 			$arr[$i]['transaction_number']=$row['TRANS_NUM'];
-
+	
 			if($row['COLLECTED']=="P")
 				$arr[$i]['collection_status']="Pending";
 			else
@@ -351,6 +353,18 @@ if(isset($data))
 
 			$arr[$i]['invoice_no']=$row['INVOICE_NO'];
 			$arr[$i]['discount_type'] = memDiscountTypes::$discountArr[$row['DISCOUNT_TYPE']];
+			
+			//Adding tax and city entries
+			$billid = $row['BILLID'];
+			
+			$arr[$i]['SGST'] = $taxData[$billid]["SGST"];
+			$arr[$i]['IGST'] = $taxData[$billid]["IGST"];
+			$arr[$i]['CGST'] = $taxData[$billid]["CGST"];
+			$arr[$i]['CITY_RES'] = $taxData[$billid]["CITY_RES"];
+			$StateCity = $arr[$i]['CITY_RES'];
+			$arr[$i]["CITY_RES"] = FieldMap::getFieldLabel("city",$StateCity);
+			$StateCity = substr($StateCity, 0, 2);
+			$arr[$i]["STATE_RES"] = FieldMap::getFieldLabel("state_india",$StateCity);
 			$i++;
 		}
 

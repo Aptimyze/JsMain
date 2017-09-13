@@ -41,6 +41,11 @@ function hideReportAbuse(){
   var mainEle=$("#reportAbuseContainer");
 	if(mainEle.css('display')!='none'){
     $("#commonOverlayTop").show();
+    arrReportAbuseFiles = [];
+    var photoNode = document.getElementById("photoDiv");
+    while (photoNode.hasChildNodes()) {
+        photoNode.removeChild(photoNode.lastChild);
+    }
     mainEle.hide();
   return true;  
   }
@@ -50,6 +55,11 @@ function hideReportAbuse(){
 }
 
 function reportAbuse(index) {
+    
+    $("#attachDiv").addClass("dn");
+    $("#attachTitle").unbind().bind('click',attachAbuseDocument);    
+    $("#attachDiv").css('max-height',Math.round(window.innerHeight/2.5) + 'px');
+    
     if(typeof(buttonSt)!='undefined' )
         $("#photoReportAbuse").attr("src", buttonSt.photo.url);
     else {
@@ -64,7 +74,7 @@ mainEle.show();
 
 var el=$("#reportAbuseMidDiv");
 el.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
-
+$("#reportAbuseMidDiv").removeClass("scrollhidImp")
 var div = document.createElement('div');
             // css transition properties
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
@@ -95,6 +105,13 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
 $("#js-otherReasonsLayer").removeClass('dispnone').val('');
+
+$("#attachDiv").removeClass("dn");
+var elem=$("#reportAbuseMidDiv");
+elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+$("#attachDiv").width(window.innerWidth-40);
+$("#reportAbuseMidDiv").addClass("scrollhidImp");
+
 }
 
 mainReasonAbuse=$(this).text();
@@ -116,6 +133,27 @@ if(RAOtherReasons)
 else {
 	if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
 }
+var bUploadSuccessFul = false;
+if(arrReportAbuseFiles.length) {
+    setTimeout(function(){
+        $("#contactLoader,#loaderOverlay").show();
+    },0);
+    var bResult = uploadAttachment();
+    if( false == bResult )
+        return ;
+    
+    for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+        if(arrReportAbuseFiles[itr].hasOwnProperty("uploded") || 
+                arrReportAbuseFiles[itr].uploded == false || 
+                (arrReportAbuseFiles[itr].hasOwnProperty("error") && arrReportAbuseFiles[itr].error == true) ) {
+            bUploadSuccessFul = false;
+            break;
+        }
+        bUploadSuccessFul = true;
+    }
+    if(false === bUploadSuccessFul)
+        return bUploadSuccessFul;
+}
 
 var feed={};
 reason=$.trim(reason);
@@ -124,6 +162,10 @@ mainReasonAbuse = $.trim(mainReasonAbuse);
 feed.category='Abuse';
 feed.mainReason = mainReasonAbuse;
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+if( bUploadSuccessFul ) {
+    feed.attachment = 1;
+    feed.temp_attachment_id = arrReportAbuseFiles['tempAttachmentId'] ;
+}
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
@@ -138,7 +180,15 @@ $.ajax({
 		data: ajaxData,
 		//crossDomain: true,
 		success: function(result){  
+                                        arrReportAbuseFiles = [];
+                                        bUploadAttachmentInProgress = false;
+                                        bUploadingDone = false
+                                        
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                                        var photoNode = document.getElementById("photoDiv");
+                                        while (photoNode.hasChildNodes()) {
+                                            photoNode.removeChild(photoNode.lastChild);
+                                        }
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
                     if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
@@ -444,6 +494,15 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 
 function performAction(action, tempParams, index,isPrime,fromButton)
 {
+  /* GA tracking action on contactEngine */
+  if((typeof action != "undefined")&&(typeof actionDetail[action] != "undefined")){
+    GAMapper("GA_CONTACT_ENGINE", {"actionDetail": actionDetail[action]});
+  }else{
+    /* default case when action not found */
+    GAMapper("GA_CONTACT_ENGINE");
+  }
+  
+
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
 		tempParams['actionName']            ="MessageHandle";
@@ -1272,6 +1331,18 @@ if(result.actiondetails.bottommsg2){
             $("#msgIcon").show();
                 }
         }
+         if(result.actiondetails.contact9){
+    $("#relationshipManageVal").hide();
+               // $("#alternateVal").hide();
+                $("#relationshipManager").show();
+                 $("#relationshipManagerVal").show();$("#relationshipManagerVal").html(result.actiondetails.contact9.value);
+        if (result.actiondetails.contact9.iconid){ 
+                   $("#relationshipManagerIcon > a").attr('href','tel:'+result.actiondetails.contact9.value.toString());
+            $("#relationshipManagerIcon").show();
+        }
+    
+    
+    }
     }
     
     
@@ -1760,4 +1831,244 @@ $.ajax({
 historyStoreObj.push(hideReportInvalid,"#reportInvalid");
 
 
+}
+
+var arrReportAbuseFiles = [];
+var bUploadAttachmentInProgress = false;
+var bUploadingDone = false;
+/**
+ * 
+ */
+function attachAbuseDocument(event) {
+
+    var dom = $("<input>",{id:"file", type:"file", accept : ".jpg,.bmp,.jpeg,.gif,.png", multiple:"multiple"});
+    var MAX_FILE_SIZE_IN_MB = 6;
+    
+    var onCrossClick = function() {
+        var result = [];
+        var self = $(this);
+        for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+            if(arrReportAbuseFiles[itr].myId == self.attr('id')) {
+                
+                //If file is already uploaded then remove from server also
+                if( "undefined" != typeof arrReportAbuseFiles.tempAttachmentId && arrReportAbuseFiles[itr].uploaded ) {
+                    
+                    var formData = new FormData();                    
+                    var apiUrl = "/api/v1/faq/abuseDeleteAttachment"; 
+                    
+                    formData.append('feed[attachment_id]', arrReportAbuseFiles['tempAttachmentId'] );
+                    formData.append('feed[file_name]', arrReportAbuseFiles[itr].name );
+                    setTimeout(function(){
+                        $("#contactLoader,#loaderOverlay").show();
+                    },0);
+                    
+                    $.ajax({
+                        url     : apiUrl,
+                        method  : 'POST',
+                        data    : formData,
+                        async   : true,
+                        cache: false,
+                        processData: false,
+                        success : function ( response ) {
+                                        $("#contactLoader,#loaderOverlay").hide();
+                                        if(response.responseStatusCode == 0) {
+                                           self.parent().remove();
+                                        } else {
+                                            result.push(arrReportAbuseFiles[itr]);
+                                            ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                        }
+                                    },
+                        error   :  function ( response ) {
+                                       $("#contactLoader,#loaderOverlay").hide();
+                                       result.push(arrReportAbuseFiles[itr]);
+                                       ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                       return ;
+                                    },
+                    });
+                }else {
+                    self.parent().remove();
+                }
+                
+                continue;
+            }
+            
+            result.push(arrReportAbuseFiles[itr]);
+        }
+        if(arrReportAbuseFiles.tempAttachmentId) {
+            result.tempAttachmentId = arrReportAbuseFiles.tempAttachmentId;
+        }
+        arrReportAbuseFiles = result;
+    }
+    
+    
+    /**
+     * 
+     */
+    var createPhotoPreview = function(fileObject) {
+        /**
+         *  <div class="photoEach txtc pad3">
+                <i class="reportIcon closeIcon crossPosition"></i>
+                <img width="80%" height="100px" src="<IMG PATH>" />
+                <div class="f12 white mt5">
+                image_name.jpg
+                </div>
+            </div>
+         */
+        var previewDom = $("<div />", {"class" : "photoEach txtc pad3"});
+        var closeIcon = $("<i />", {"class" : "reportIcon closeIcon crossPosition", "id" : fileObject.myId});
+        closeIcon.on('click',onCrossClick);
+        
+        previewDom.append(closeIcon);
+        
+        var imgDom = $("<img />", {"width" : "80%", "height" : "100px"});
+        previewDom.append(imgDom);
+        previewDom.append( $( "<div />", {"class" : "f12 white mt5"} ).html(fileObject.name) );
+        
+        var reader = new FileReader();
+        reader.onload = (function(imgDom) { return function(e) { imgDom[0].src = e.target.result; }; })(imgDom);
+        reader.readAsDataURL(fileObject);
+        
+        $("#photoDiv").append(previewDom);
+        return previewDom;
+    }
+    
+    /**
+     * 
+     */
+    var onFileChange = function(event) {
+        var existingLength = arrReportAbuseFiles.length;
+   
+        var validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+        
+        //loop on files .. do basic checks like size, type
+        $.each( this.files, function( key, file ) {
+            
+            if( ( file.size / 1048576 ).toFixed(1) > MAX_FILE_SIZE_IN_MB ) {
+                ShowTopDownError([file.name + ' You can attach a proof less than 6 MB in size'], 2000);
+                return ;
+            }
+            
+            if( validFileTypes.indexOf(file.type) == -1 ) {
+                ShowTopDownError([file.name + ' Invalid type of attachment'], 2000);
+                return ;
+            }
+            
+            if( arrReportAbuseFiles.length >= 5 ) {
+                ShowTopDownError(['You can attach maximum 5 proofs'], 2000);
+                return ;
+            }
+          
+            arrReportAbuseFiles.push(file);
+        });
+        
+        if(arrReportAbuseFiles.length == 0) {
+            ShowTopDownError(['No valid attachments'], 2000);
+            return ;
+        }
+        
+        var iterator = 1;
+        arrReportAbuseFiles.forEach( function (file) { 
+            if(file.hasOwnProperty('preview') === false) {
+                file.myId = iterator;
+                createPhotoPreview(file);
+            }
+            file.preview = true;
+            iterator++;
+        });
+    }
+    
+    dom.on('change',onFileChange);
+    dom.trigger("click");
+    
+}
+
+/**
+ * 
+ */
+
+function uploadAttachment()
+{   
+   
+    /**
+     * 
+     */
+    
+    var SendAjax = function(fileObject, temp_attachment_id) {
+        var apiUrl = "/api/v1/faq/abuseAttachment";
+        var formData = new FormData();
+        formData.append("feed[attachment_1]", fileObject);
+        
+        if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
+              isNaN( temp_attachment_id ) == false
+                ) {
+            formData.append("feed[attachment_id]", temp_attachment_id);
+        }
+        
+        return $.ajax({
+            url     : apiUrl,
+            method  : 'POST',
+            data    : formData,
+            async   : true,
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend:function(){
+                bUploadAttachmentInProgress = true;
+            },
+              complete:function(){
+                bUploadAttachmentInProgress = false;
+            },
+            success : function ( response ) {
+                            if(response.responseStatusCode == 0) {
+                               if(file.hasOwnProperty('error')) {
+                                   delete file.error;
+                               }
+                               arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
+                               fileObject.uploaded = true;
+                            } else {
+                                fileObject.error = true
+                                ShowTopDownError( [ response.message ], 2000 );                                
+                            }
+                        },
+            error   :  function ( response ) {
+                            $("#contactLoader,#loaderOverlay").hide();
+                            fileObject.error = true;
+                            ShowTopDownError( [ "Something went wrong. Please try again" ], 2000 );
+                        },
+        });
+    }
+    
+    if(0 == arrReportAbuseFiles.length) {
+        return true;
+    }
+
+    if(bUploadAttachmentInProgress == true) {
+        setTimeout(function(){uploadAttachment()},20); return false;
+    }
+    var len = arrReportAbuseFiles.length ;
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if( file.hasOwnProperty("uploaded") == false || file.uploaded == false  ) {
+                if(( file.hasOwnProperty('error') && file.error == true )) {
+                    setTimeout(function(){
+                        $("#contactLoader,#loaderOverlay").hide();
+                    },0);
+                    return false;
+                 }
+                var tempId = (typeof arrReportAbuseFiles['tempAttachmentId'] == "undefined") ? "" : arrReportAbuseFiles['tempAttachmentId'] ;
+                SendAjax( file, tempId );
+                setTimeout(function(){uploadAttachment()},20);return false;
+            }
+    }
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if(file.hasOwnProperty("uploaded") == false || file.uploaded == false) {
+            return false;
+        }
+    }
+    if(false == bUploadingDone) {
+        bUploadingDone = true;
+        $("#reportAbuseSubmit").trigger('click');
+    }
+    return true;
 }

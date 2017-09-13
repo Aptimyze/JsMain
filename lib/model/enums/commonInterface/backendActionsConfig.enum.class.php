@@ -14,7 +14,7 @@ class exclusiveMemberList
 											"PENDING"=>array("TABID"=>1,"ACTION"=>"ASSIGN","NAME"=>"Pending customers")
 											);
 	//public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Matches","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
-	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Height","Religion/Caste","Annual Income","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Sales Person","Executive","Action");
+	public static $displayColumnsNames = array("Client Name","Username","Age","Gender","Marital Status","Religion/Caste","Annual Income","Contact No","Email","Billing Date","Service Duration","Service Expiry Date","Executive","Action");
 
 	public static $specificColumnMapping = array("HEIGHT"=>"height_without_meters","RELIGION"=>"religion","CASTE"=>"caste_without_religion","INCOME"=>"income_map","SERVICEID"=>"SERVICE_DURATION");
 
@@ -61,6 +61,9 @@ class fsoInterfaceDisplay
 class crmCommonConfig
 {
 	public static $useCrmMemcache = false;
+
+	public static $jsexlusiveFollowUpColumns = array("","Client","Client Name","Member","Member Phone No 1","Member Phone No 2","RM","Followup Status 1","Followup Status 2","Followup Status 3","Action");
+	public static $followupslimit = 3000;
 	public static $jsexclusiveReferenceDt = "2017-08-01";
 }
 

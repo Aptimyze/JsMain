@@ -52,6 +52,7 @@ class searchActions extends sfActions
 	*/
 	public function executePerform(sfWebRequest $request)
 	{
+
 		if(!in_array($request->getParameter("callingSource"),array('ap','ap_eoi','myjs','sms')) )
 			MobileCommon::forwardmobilesite($this,'','',1);
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsSearchUrl);
@@ -546,7 +547,7 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-                                                JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
+                                                //JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
 						/*unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
@@ -631,6 +632,7 @@ class searchActions extends sfActions
 		$params["SearchType"]= $this->searchBasedParam;
 		$params["Count"]=$this->noOfResults;
 		$title = SearchTitleAndTextEnums::getTitle($params);
+
 		$this->setTitle($title);
 		$this->heading = SearchTitleAndTextEnums::getHeading($params);
 		$this->subHeading = SearchTitleAndTextEnums::getSubHeading($params);
@@ -1743,11 +1745,11 @@ class searchActions extends sfActions
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-
+				$request->setParameter("currentPageName", $resultArr['searchBasedParam']);
 
         		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
-                $respObj->setHttpArray($statusArr);//print_r($resultArr);
+                $respObj->setHttpArray($statusArr);
                 $respObj->setResponseBody($resultArr);
                 $respObj->generateResponse();    
                       

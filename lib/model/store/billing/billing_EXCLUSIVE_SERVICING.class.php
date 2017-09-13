@@ -32,7 +32,36 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             throw new jsException($e);
         }
     }
-
+    public function getActiveClientCount($agentUsername) {
+        try {
+            $sql = "SELECT COUNT(1) AS CNT FROM billing.EXCLUSIVE_SERVICING where AGENT_USERNAME =:AGENT_USERNAME";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+            $res->execute();
+            if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                return $result['CNT'];
+            }
+            return NULL;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getActiveClientInfo($agentUsername) {
+        if($agentUsername){
+            try {
+                $sql = "SELECT CLIENT_ID,ASSIGNED_DT,SERVICE_DAY,BILLID FROM billing.EXCLUSIVE_SERVICING where AGENT_USERNAME =:AGENT_USERNAME";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+                $res->execute();
+                while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                    $clientInfo[] =$result; 
+                }
+                return $clientInfo;
+            } catch (Exception $e) {
+                throw new jsException($e);
+            }
+        }
+    }
     /**
      * Function to get profile details from EXCLUSIVE_SERVICING table
      *
@@ -65,12 +94,12 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
      */
     public function checkBioData($profileid) {
         try {
-            $sql = "SELECT BIODATA_LOCATION,BIODATA_UPLOAD_DT FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID";
+            $sql = "SELECT BIODATA_LOCATION,BIODATA_UPLOAD_DT,AGENT_USERNAME FROM billing.EXCLUSIVE_SERVICING where CLIENT_ID = :CLIENTID LIMIT 1";
             $res = $this->db->prepare($sql);
             $res->bindValue(":CLIENTID", $profileid, PDO::PARAM_STR);
             $res->execute();
             if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
-                return array($result['BIODATA_LOCATION'], $result['BIODATA_UPLOAD_DT']);
+                return $result;
             }
             return false;
         } catch (Exception $e) {
@@ -252,12 +281,13 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		{
 			if(is_array($params) && $params)
 			{
-				$sql = "INSERT IGNORE INTO billing.EXCLUSIVE_SERVICING (ID,AGENT_USERNAME,CLIENT_ID,ASSIGNED_DT,ENTRY_DT) VALUES(NULL,:AGENT_USERNAME,:CLIENT_ID,:ASSIGNED_DT,:ENTRY_DT)";
+				$sql = "INSERT IGNORE INTO billing.EXCLUSIVE_SERVICING (ID,AGENT_USERNAME,CLIENT_ID,ASSIGNED_DT,ENTRY_DT,BILLID) VALUES(NULL,:AGENT_USERNAME,:CLIENT_ID,:ASSIGNED_DT,:ENTRY_DT,:BILLID)";
 				$res = $this->db->prepare($sql);
 				$res->bindValue(":AGENT_USERNAME", $params["AGENT_USERNAME"], PDO::PARAM_STR);
 				$res->bindValue(":CLIENT_ID", $params["CLIENT_ID"], PDO::PARAM_INT);
 				$res->bindValue(":ASSIGNED_DT", $params["ASSIGNED_DT"], PDO::PARAM_STR);
 				$res->bindValue(":ENTRY_DT", date("Y-m-d H:i:s"), PDO::PARAM_STR);
+				$res->bindValue(":BILLID",$params["BILLID"],PDO::PARAM_INT);
 				$res->execute();
 			}
 		}
@@ -273,17 +303,23 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 	 * @param   $agentUsername,$clientId
 	 * @return  none
 	 */ 
-	public function removeExclusiveClientEntry($agentUsername,$clientId)
+	public function removeExclusiveClientEntry($clientId,$agentUsername="",$billid=0)
 	{
 		try
 		{
-		  if($clientId && $agentUsername)
+		  if($clientId)
 		  {
-		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID AND AGENT_USERNAME=:AGENT_USERNAME AND SCREENED_STATUS=:SCREENED_STATUS";
-		    
+		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID AND SCREENED_STATUS=:SCREENED_STATUS";
+		    if(!empty($agentUsername))
+		        $sql.= " AND AGENT_USERNAME=:AGENT_USERNAME";
+		    if($billid != 0)
+		        $sql.= " AND BILLID=:BILLID";
 		    $res = $this->db->prepare($sql);
 		    $res->bindValue(":CLIENT_ID", $clientId, PDO::PARAM_INT);
-		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+		    if(!empty($agentUsername))
+    		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+		    if($billid != 0)
+                $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
 		    $res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
 		    $res->execute();
 		  }
@@ -299,27 +335,47 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 	 * 
 	 * @return list of agentName and profileIDs
 	 */
-	public function getProfileIDandAgentNameForMailing()	{
-		try {
-			$tomorrow = strtoupper(date('D',strtotime(' +1 day')));
-			$sql = "SELECT AGENT_USERNAME, CLIENT_ID 
-					FROM billing.EXCLUSIVE_SERVICING 
-					WHERE SERVICE_DAY = :tomorrow ;" ;
+    public function getProfileIDandAgentNameForMailing()    {
+        try {
+            $tomorrow = strtoupper(date('D',strtotime(' +1 day')));
+            $sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+                    FROM billing.EXCLUSIVE_SERVICING 
+                    WHERE SERVICE_DAY = :tomorrow ;" ;
 
-			$prep = $this->db->prepare($sql);
-			$prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
-			$prep->execute();
-			$prep->setFetchMode(PDO::FETCH_ASSOC);
-			
-			while ($res = $prep->fetch()) {
-				$result[$res['AGENT_USERNAME']][] = $res;
-			}
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':tomorrow',$tomorrow,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            
+            while ($res = $prep->fetch()) {
+                $result[$res['AGENT_USERNAME']][] = $res;
+            }
 
-			return $result;
-		} catch (Exception $e) {
-			throw new jsException($e);
-		}
-	}
+            return $result;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getProfileIDandAgentNameForToday()    {
+        try {
+            $today = strtoupper(date('D',strtotime(' +0 day')));
+            $sql = "SELECT AGENT_USERNAME, CLIENT_ID 
+                    FROM billing.EXCLUSIVE_SERVICING 
+                    WHERE SERVICE_DAY = :today ;" ;
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':today',$today,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($result = $prep->fetch()) {
+                $rows[$result["CLIENT_ID"]] = $result;
+            }
+            //print_r($rows);
+            return $rows;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 	 /** Function to update screening status
 	 *
 	 * @param   $agentUsername,$clientId,$screenedStatus='Y'
@@ -344,6 +400,23 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		  throw new jsException($e);
 		}
 	}
+
+    /** Function to reset screening status for all rows
+     *
+     * @param   none
+     * @return  none
+     */
+    public function resetScreenedStatusAll(){
+        try{
+            $sql = "UPDATE billing.EXCLUSIVE_SERVICING SET SCREENED_STATUS=:SCREENED_STATUS WHERE SCREENED_STATUS = 'Y'";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":SCREENED_STATUS",'N', PDO::PARAM_STR);
+            $res->execute();
+        }
+        catch(Exception $e){
+          throw new jsException($e);
+        }
+    }
         
             /**
      * Function to get count of users/clients assigned to a particular agent for each service day
@@ -360,6 +433,47 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             $res->execute();
             while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
                 $output[$result['SERVICE_DAY']] = $result['CNT'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    
+
+    public function getDayWiseAssignedAgent($agent,$day){
+        try{
+            $sql = "SELECT distinct CLIENT_ID FROM billing.EXCLUSIVE_SERVICING WHERE AGENT_USERNAME = :AGENT_USERNAME AND SERVICE_DAY = :SERVICE_DAY";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT_USERNAME", $agent,PDO::PARAM_STR);
+            $res->bindValue(":SERVICE_DAY", $day,PDO::PARAM_STR);
+            $res->execute();
+            while($result = $res->fetch(PDO::FETCH_ASSOC)){
+                $output[] = $result;
+            }
+            return $output;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+     /* Function to get detail for a client id to check if it exists in the system
+     *
+     * @param   $agent ID
+     * @return  array of rows
+     */
+    public function getAllDataForClient($clientid,$billid=0) {
+        try {
+            $sql = "SELECT * FROM billing.EXCLUSIVE_SERVICING";
+            $sql = $sql . " WHERE CLIENT_ID =:CLIENTID";
+            if($billid!=0)
+                $sql.= " AND BILLID =:BILLID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":CLIENTID", $clientid, PDO::PARAM_STR);
+            if($billid!=0)
+                $res->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $res->execute();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result;
             }
             return $output;
         } catch (Exception $e) {

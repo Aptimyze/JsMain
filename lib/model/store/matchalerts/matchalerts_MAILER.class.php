@@ -158,7 +158,10 @@ class matchalerts_MAILER extends TABLE
                 }
                 return $output;
     	}
-        public function insertLogRecords($receiverId, $profileIds, $LogicLevel,$frequency){
+        public function insertLogRecords($receiverId, $profileIds, $LogicLevel,$frequency,$date=""){
+                if($date == ""){
+                        $date = date('Y-m-d');
+                }
           $sql="INSERT INTO matchalerts.MAILER (RECEIVER";
           $n=count($profileIds);
           $userValues = '';
@@ -173,7 +176,7 @@ class matchalerts_MAILER extends TABLE
           $res->bindValue(":RECEIVER_ID", $receiverId, PDO::PARAM_INT);
           $res->bindValue(":FREQUENCY", $frequency, PDO::PARAM_INT);
           $res->bindValue(":LOGIC_USED",$LogicLevel,PDO::PARAM_INT);
-          $res->bindValue(":DATE",date('Y-m-d'),PDO::PARAM_INT);
+          $res->bindValue(":DATE",$date,PDO::PARAM_INT);
           
           $userCounter = 1;
           foreach($profileIds as $userId){

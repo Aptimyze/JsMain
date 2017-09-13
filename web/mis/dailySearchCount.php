@@ -221,7 +221,7 @@ $searchKeyArray=array('L'=>'View similar from home page',
 'MAV'=>'MATCHING_VISITORS_ANDROID',
 'BN4'=>'Community_Model_Matchalerts',
 'BN5'=>'Dpp_Relaxation_Matchalerts',
-'BN&'=>'LastSearch_Matchalerts',
+'BN7'=>'LastSearch_Matchalerts',
 'MAA'=>'EOI-Android MatchAlert Notification',
 'JJA'=>'EOI-Android Just Join Notification',
 'ICP'=>'VIEW_SIMILAR_IOS_ON_PD',
@@ -232,7 +232,9 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'WMOD' => 'Match of day JSMS',
  'PMM'=>'PAID_MEMBERS_MAILER',
  'PM'=>'PAID_MEMBERS',
- 'APM'=>'Add Photo Mailer',);
+ 'APM'=>'Add Photo Mailer',
+ 'SPMA' => 'EOI_SIMILAR_PROFILES_MAIL_ACCEPTED',
+ 'SPMO' => 'EOI_SIMILAR_PROFILES_MAIL_OTHERS');
 
 
         $index=array('A','D','C','I','E');
