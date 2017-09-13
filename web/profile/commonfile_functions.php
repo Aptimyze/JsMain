@@ -572,7 +572,7 @@ $js_arr[]=array("jspc/common/jqueryRangeSlider"   => "6");
 $js_arr[]=array("jspc/search/inview"   => "5");
 $js_arr[]=array("jspc/photo/photoRequest_js"   => "9");
 $js_arr[]=array("jspc/common/jquery_equalheights" => "2");
-$js_arr[]=array("jspc/common/photoAlbum"    => "12");
+$js_arr[]=array("jspc/common/photoAlbum"     => "13");
 $js_arr[]=array("jspc/search/saveSearch"   => "4");
 $js_arr[]=array("jspc/search/relaxCriteria"   => "4");
 $js_arr[]=array("jspc/search/search"   => "57");
