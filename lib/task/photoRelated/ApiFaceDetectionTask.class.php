@@ -117,10 +117,10 @@ EOF;
 		if (!empty($response["faceAnnotations"])) {
 			$otherdata = $response["faceAnnotations"][0];
 			$cordinates = $otherdata["boundingPoly"]["vertices"];
-			$x = $cordinates[0]["x"];
-			$y = $cordinates[0]["y"];
-			$h = $cordinates[2]["y"] - $cordinates[0]["y"];
-			$w = $cordinates[1]["x"] - $cordinates[0]["x"];
+			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
+			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
+			$h = $cordinates[2]["y"] - $y;
+			$w = $cordinates[1]["x"] - $x;
 			$cord = $w . "x" . $h . "+" . $x . "+" . $y;
 		}
 		return $cord;
