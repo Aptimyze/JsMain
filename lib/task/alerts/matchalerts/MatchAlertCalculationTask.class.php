@@ -55,16 +55,10 @@ EOF;
                 $todayDate = date("Y-m-d H:i:s");
 		$flag=1;
 		do{
-                        $configObj = new MatchAlertsConfig();
+                        $this->killInstances($totalScripts);
 			/**
 			* Fetch Ids to be send.
 			*/
-                        if($configObj->isMatchAlertsForNonPeakHour() && $totalScripts == $configObj->instancePeak){
-                                successfullDie("Reached peak hour kill extra instance and start new");
-                        }elseif($configObj->isMatchAlertsForNonPeakHour() == false && $totalScripts == $configObj->instanceNonPeak){
-                                successfullDie("Reached non peak hour increase cron");
-                        }
-                        unset($configObj);
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
@@ -73,6 +67,7 @@ EOF;
 			{
 				foreach($arr as $profileid=>$v)
 				{
+                                  $this->killInstances($totalScripts);
                                   if($v["HASTRENDS"] != 1)
                                     $v["HASTRENDS"] = 0;
 					/**
@@ -193,5 +188,14 @@ EOF;
                 }
                 else
                     return false;
+        }
+        private function killInstances($totalScripts){
+                $configObj = new MatchAlertsConfig();
+                if($configObj->isMatchAlertsForNonPeakHour() && $totalScripts == $configObj->instancePeak){
+                        successfullDie("Reached peak hour kill extra instance and start new");
+                }elseif($configObj->isMatchAlertsForNonPeakHour() == false && $totalScripts == $configObj->instanceNonPeak){
+                        successfullDie("Reached non peak hour increase cron");
+                }
+                unset($configObj);
         }
 }
