@@ -1,0 +1,4 @@
+type=command
+dependencies=MatchAlertCommunityModelTask
+command=${php5} ${docRoot}/symfony  alert:MatchAlertCommunity 2 0
+

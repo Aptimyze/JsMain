@@ -79,7 +79,7 @@ class SolrRequest implements RequestHandleInterface
 			$pid = str_replace(' ','',$pid);
 			$pid = str_replace(',',' ',$pid);
 		}
-                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
+                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>";
                 foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
                         $index = array_search($solrUrl, JsConstants::$solrServerUrls);
                         if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){

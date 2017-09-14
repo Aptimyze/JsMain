@@ -188,10 +188,17 @@
                 <td align=center>Currency</td>
                 <td align=center>List Price</td>
                 <td align=center>Amount</td>
+                <td align=center>SGST</td>
+                <td align=center>IGST</td>
+                <td align=center>CGST</td>
                 <td align=center>Deferrable Flag</td>
                 <td align=center>ASSD(Actual Service Start Date)</td>
                 <td align=center>ASED(Actual Service End Date)</td>
                 <td align=center>Invoice No</td>
+                <td align=center>Country</td>
+                <td align=center>State</td>
+                <td align=center>City</td>
+                <td align=center>Upgrade</td>
             </tr>
             ~foreach from=$rawData item=profileArr`
             <tr style="background-color:Moccasin">
@@ -207,10 +214,17 @@
                 <td align=center><font color="#000">~$profileArr.CUR_TYPE`</font></td>
                 <td align=center><font color="#000">~$profileArr.PRICE`</font></td>
                 <td align=center><font color="#000">~$profileArr.AMOUNT`</font></td>
+                <td align=center><font color="#000">~$profileArr.SGST`</font></td>
+                <td align=center><font color="#000">~$profileArr.IGST`</font></td>
+                <td align=center><font color="#000">~$profileArr.CGST`</font></td>
                 <td align=center><font color="#000">~$profileArr.DEFERRABLE`</font></td>
                 <td align=center><font color="#000">~$profileArr.ASSD`</font></td>
                 <td align=center><font color="#000">~$profileArr.ASED`</font></td>
                 <td align=center><font color="#000">~$profileArr.INVOICE_NO`</font></td>
+            	<td align=center><font color="#000">~$profileArr.COUNTRY_RES`</font></td>
+            	<td align=center><font color="#000">~$profileArr.STATE_RES`</font></td>
+            	<td align=center><font color="#000">~$profileArr.CITY_RES`</font></td>
+            	<td align=center><font color="#000">~$profileArr.MEM_UPGRADE`</font></td>
             </tr>
             ~/foreach`
             <tr align="CENTER">

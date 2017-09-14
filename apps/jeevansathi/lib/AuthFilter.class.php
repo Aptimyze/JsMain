@@ -81,7 +81,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore") || HandlingCommonReqDatabaseId::isMasterMasterDone())
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore")  || strstr($requestUri,"common/resetStaticKey") || strstr($requestUri,"api/v3/register/staticTablesData") || HandlingCommonReqDatabaseId::isMasterMasterDone() || strstr($requestUri,"/api/v1/api/hamburgerDetails") || strstr($requestUri,"/api/v2/common/engagementcount"))
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -318,8 +318,7 @@ class AuthFilter extends sfFilter {
 					//	throw new sfStopException();
 					die;
 					}
-				}
-            
+				}            
             
 
                		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
