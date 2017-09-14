@@ -97,12 +97,13 @@ if ($type == "DELTA" || $type == "FULL" || ($type == "PID" && $gender == "M")) {
         }
 }
 
-// after posting data initiate commit on all servers
-curlPostCommitData();
-
 if($type == "DELTA"){
         deleteHiddenDeletedProfiles();
 }
+
+// after posting data initiate commit on all servers
+curlPostCommitData();
+
 function deleteHiddenDeletedProfiles(){
         $deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
         $profilesArr = $deletedHiddenProfilesObj->getProfiles();
@@ -168,11 +169,13 @@ function curlPostJsonData($profiles) {
 function curlPostCommitData() {
         global $errorMsg, $errorServer;
         $timeout = 50000;
+        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/solrCommit.txt";
         $append = "/update?commit=true&wt=json";
         foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
                 $index = array_search($solrUrl, JsConstants::$solrServerUrls);
                 if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
                         $urlToHit = $solrUrl.$append;
+                        file_put_contents($fileName, date("Y-m-d H:i:s", strtotime("now")).':: M-'.$urlToHit."\n", FILE_APPEND);
                         $ch = curl_init($urlToHit);
                         $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
 						curl_setopt($ch, CURLOPT_HEADER, $header);
@@ -191,6 +194,7 @@ function curlPostCommitData() {
                                 $errorMsg[] = $unserialzedOutput->error->msg. " IN COMMIT";
                                 $errorServer[] = $k;
                         }
+                        sleep(120);
                 }
         }
         if(!empty($errorMsg)){
