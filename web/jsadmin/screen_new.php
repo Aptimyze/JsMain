@@ -37,22 +37,22 @@ if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
 	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREEN_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
-			exit("Please refresh after 5 secondsss.");
-		} else $memcacheObj->setDataToMem(5, $key, 1);
+		if ($memcacheObj->get($key)) {
+			exit("Please refresh after 5 seconds.");
+		} else $memcacheObj->set( $key, 5,2);
 		unset($memcacheObj);
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREENED_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
-			$memcacheObj->setDataToMem(2, $key, 2);
+		if ($memcacheObj->get($key)) {
+			$memcacheObj->set( $key, 2,2);
 			exit("Please dont click on submit button again and again.");
-		} else $memcacheObj->setDataToMem(2, $key, 2);
+		} else $memcacheObj->set($key, 2,2);
 		unset($memcacheObj);
 	}
 	
@@ -1605,10 +1605,9 @@ function getAge($newDob) {
   }
 function unsetMemcache5Sec($user)
 {
-                include_once ("../classes/Memcache.class.php");
-                $memcacheObj = new UserMemcache;
+                include_once ("../../lib/model/lib/JsMemcache.class.php");
+                $memcacheObj = new JsMemcache;
                 $key = "PROF_SCREEN_USER_" . $user;
-		//$memcacheObj->setDataToMem(0, $key, 0);
 		$memcacheObj->remove($key);
                 unset($memcacheObj);
 }
