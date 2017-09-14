@@ -67,7 +67,7 @@ EOF;
                                 if ($emptyFlag >= 5) {
                                         $flag = 0;
                                 } else {
-                                        sleep(300);
+                                        sleep(600);
                                 }
                         }
                 } while ($flag);
