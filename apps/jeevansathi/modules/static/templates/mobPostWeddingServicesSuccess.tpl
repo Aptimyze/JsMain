@@ -8,6 +8,7 @@
     var mapUserCity="";
     var cityJson=finalResponse.servicesData.data.cross_selling_section.cities;
 	var cityCount=cityJson.length;
+}
 catch(err) {
   //console.log(err);
         window.top.location.href = "/static/LogoutPage";
