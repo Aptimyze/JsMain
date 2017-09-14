@@ -158,7 +158,7 @@
                         <li class='mb12'>
                             <div id="settingsParent">
                                 <i class="hamSprite settingsIcon"></i>
-                                <div id="settingsLink" class="ml10 dispibl white">Settings</div>
+                                <div id="settingsLink" class="ml10 dispibl white">Settings & Assistance</div>
                                 <i id="expandSettings" class="hamSprite plusIcon fr"></i>
                             </div>
                             <ul id="settingsMinor" style="height: 0px" class="minorList f15">
