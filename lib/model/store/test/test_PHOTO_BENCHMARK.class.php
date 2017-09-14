@@ -94,7 +94,7 @@ class test_PHOTO_BENCHMARK extends TABLE {
 	public function initiate($name)
 	{
 		try{
-			$sql = "UPDATE test.PHOTO_BENCHMARK set owner = :NAME where edit IS NULL and OWNER IS NULL LIMIT 1";
+			$sql = "UPDATE test.PHOTO_BENCHMARK set owner = :NAME where edit IS NULL and OWNER IS NULL AND facedetected = 1 LIMIT 1";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":NAME",$name,PDO::PARAM_STR);
 			$res->execute();

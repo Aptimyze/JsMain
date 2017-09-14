@@ -884,6 +884,9 @@ $screeningValMainAdmin = 0;
 						$username = $myrow['USERNAME'];
 						$subscribe = $myrow['SUBSCRIPTION'];
 						$screening_val = $myrow['SCREENING'];
+						if ($val == "new") {
+							$screening_val = "0";
+						}
 						$sql_i = "INSERT IGNORE INTO jsadmin.MAIN_ADMIN (PROFILEID, USERNAME, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, ALLOTED_TO, SCREENING_TYPE, SUBSCRIPTION_TYPE, SCREENING_VAL) values('$profileid','" . addslashes($username) . "','$receivetime','$submittime','" . date("Y-m-d H:i") . "', '$user','O', '$subscribe','$screening_val')";
 						mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 						if (mysql_affected_rows_js()) {
@@ -916,6 +919,9 @@ $screeningValMainAdmin = 0;
 							$username = $myrow['USERNAME'];
 							$subscribe = $myrow['SUBSCRIPTION'];
 							$screening_val = $myrow['SCREENING'];
+							if ($val == "new") {
+								$screening_val = "0";
+							}
 							$sql_i = "INSERT IGNORE INTO jsadmin.MAIN_ADMIN (PROFILEID, USERNAME, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, ALLOTED_TO, SCREENING_TYPE, SUBSCRIPTION_TYPE, SCREENING_VAL) values('$profileid','" . addslashes($username) . "','$receivetime','$submittime','" . date("Y-m-d H:i") . "', '$user','O', '$subscribe','$screening_val')";
 							mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
@@ -955,6 +961,19 @@ $screeningValMainAdmin = 0;
 			$sql = "SELECT USERNAME, SCREENING,AGE,COUNTRY_RES,CITY_RES,MANGLIK,MTONGUE,RELIGION,CASTE,SUBCASTE,COUNTRY_BIRTH,CITY_BIRTH,GOTHRA,NAKSHATRA,MESSENGER_ID,YOURINFO,FAMILYINFO,SPOUSE,CONTACT,EDUCATION,EDU_LEVEL_NEW,PHONE_RES,PHONE_MOB,EMAIL,JOB_INFO,FATHER_INFO,SIBLING_INFO,PARENTS_CONTACT,ANCESTRAL_ORIGIN,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,RELATION,SOURCE,SUBSCRIPTION,GENDER,MSTATUS,DTOFBIRTH,PHOTO_DISPLAY,PHONE_FLAG,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,GOTHRA_MATERNAL,INCOME from newjs.JPROFILE where activatedKey=1 and PROFILEID=$profileid";
 			$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 			$myrow = mysql_fetch_array($result);
+
+			//----------------jugad--------------------
+			if($myrow["USERNAME"]==""){
+				$sql = "DELETE FROM jsadmin.MAIN_ADMIN WHERE PROFILEID=$profileid AND SCREENING_TYPE='O'";
+				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
+
+				$oldUrl = curPageURL();
+				//$memcacheObj->setDataToMem(5,$key,0);
+				unsetMemcache5Sec($user);
+				header("Location:".$oldUrl);die;
+			}
+			//----------------jugad--------------------
+
 			//**********************query added by Aman for screening Recheck on 15-05-2007*******************************************//
 			//Added by Vibhor
 			$sql_name = "SELECT NAME from incentive.NAME_OF_USER where PROFILEID=$profileid";
@@ -1559,5 +1578,19 @@ function unsetMemcache5Sec($user)
                 $key = "PROF_SCREEN_USER_" . $user;
 		$memcacheObj->setDataToMem(0, $key, 0);
                 unset($memcacheObj);
+}
+function curPageURL() {
+            $pageURL = 'http';
+            if(isset($_SERVER["HTTPS"]))
+            if ($_SERVER["HTTPS"] == "on") {
+                $pageURL .= "s";
+            }
+            $pageURL .= "://";
+            if ($_SERVER["SERVER_PORT"] != "80") {
+                $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+            } else {
+                $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+            }
+            return $pageURL;
 }
 ?>
