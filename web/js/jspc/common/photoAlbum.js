@@ -297,6 +297,10 @@ function ajaxCallForAlbum(username,profilechecksum){
                 $("#commonOverlay").css('display','block');
                 $("#commonOverlay").css('background-color','rgba(0, 0, 0, 0.94)');
                 $("#conditionalPhotoLayer").css('display','block');
+                $("#commonOverlay").click(function(event){
+                    if(!$(event.target).parents('div#actualconditionalLayer').length)
+                        closeConditionalLayer();
+                });
             }
             else
             {

@@ -27,7 +27,7 @@ div.desc {
 }
 
 .marLeft15Per {
-    margin-left: 15%
+
 }
 
 .marLeft35Per {
