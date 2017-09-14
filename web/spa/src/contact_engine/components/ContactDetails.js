@@ -47,7 +47,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
 <p id="ViewContactPreLayerTextNoNumber" dangerouslySetInnerHTML={{__html: this.state.vCNoNumber}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 {this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
-{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{},id:'alternateNumber'})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:false,label:'Alternate No.',style:{},id:'alternateNumber'})}
 {this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:false,label:'Email',style:{},id:'email'})}
 
   {this.state.emailInfo}
@@ -77,10 +77,13 @@ componentDidMount(){
   console.log("ComponentDidMount  viw contact");
   console.log(this.state.cdOHeight);
   //$("#contactDetailOverlay").height($("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top);
-  let getOffset = (ele)=> document.getElementById(ele).getBoundingClientRect().top;
+  let getOffset = (ele)=> document.getElementById(ele).clientHeight;
   console.log(getOffset('bottomElement'));
   console.log(getOffset('contactDetailOverlay'));
-  this.setState({cdOHeight:(getOffset('bottomElement')-getOffset('contactDetailOverlay')) });
+  // this.setState({cdOHeight:(getOffset('bottomElement')-getOffset('contactDetailOverlay')) });
+  this.setState({
+   cdOHeight:(document.getElementById("ProfilePage").clientHeight - (getOffset('bottomElement')+ getOffset('contactDetailOverlay') )  ) 
+ });
 //  $("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top
 }
 
