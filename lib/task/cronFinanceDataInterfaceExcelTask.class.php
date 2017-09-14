@@ -40,10 +40,12 @@ EOF;
         $purchaseObj = new BILLING_PURCHASES('newjs_slave');
         $this->serviceData = $billServObj->getFinanceDataServiceNames();
         $this->rawData = $purchaseObj->fetchFinanceData($start_date, $end_date, $device);
-        $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
+        $taxData = $purchaseObj->getDataFromTaxBreakUp($start_date, $end_date);
+        $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\tCountry\tCity\tState\tUpgrade\tSGST\tIGST\tCGST\r\n";
+        JsMemcache::getInstance()->set("bharat",$headerString);
         if ($this->rawData && is_array($this->rawData)) {
             foreach ($this->rawData as $k => $v) {
-                $dataString = $dataString . $v["ENTRY_DT"] . "\t";
+            	$dataString = $dataString . $v["ENTRY_DT"] . "\t";
                 $dataString = $dataString . $v["BILLID"] . "\t";
                 $dataString = $dataString . $v["RECEIPTID"] . "\t";
                 $dataString = $dataString . $v["PROFILEID"] . "\t";
@@ -55,10 +57,52 @@ EOF;
                 $dataString = $dataString . $v["CUR_TYPE"] . "\t";
                 $dataString = $dataString . $v["PRICE"] . "\t";
                 $dataString = $dataString . $v["AMOUNT"] . "\t";
+                
                 $dataString = $dataString . $v["DEFERRABLE"] . "\t";
                 $dataString = $dataString . $v["ASSD"] . "\t";
                 $dataString = $dataString . $v["ASED"] . "\t";
-                $dataString = $dataString . $v["INVOICE_NO"] . "\r\n";
+                $dataString = $dataString . $v["INVOICE_NO"] . "\t";
+            	
+                $billid = $v["BILLID"];//$this->rawData[$v["BILLID"]];
+               	$country = FieldMap::getFieldLabel("country",$taxData[$billid]["COUNTRY_RES"]);
+                $dataString = $dataString . $country . "\t";
+                
+                $StateCity = $taxData[$billid]["CITY_RES"];
+                $city = FieldMap::getFieldLabel("city",$StateCity);
+                $dataString = $dataString . $city . "\t";
+                
+                $StateCity = substr($StateCity, 0, 2);
+                $state= FieldMap::getFieldLabel("state_india",$StateCity);
+                $dataString = $dataString . $state . "\t";
+                
+                if(!empty($v["MEM_UPGRADE"])){
+                	$upgrade = "Y";
+                }else{
+                	$upgrade = "N";
+                }
+                $dataString = $dataString . $upgrade . "\t";
+                $amount = $v["AMOUNT"];
+                $SGST=$taxData[$billid]["SGST"];
+                $actualAmount = ($amount * 100)/(118);
+                if($SGST > 0){
+                	
+                	$SGST = ($actualAmount*$SGST)/100;
+                }
+                $dataString = $dataString . $SGST . "\t";
+                
+                
+                $IGST=$taxData[$billid]["IGST"];
+                if($IGST > 0){
+                	$IGST = ($actualAmount* $IGST)/100;
+                }
+                
+                $dataString = $dataString . $IGST . "\t";
+                $CGST=$taxData[$billid]["CGST"];
+                if($CGST > 0){
+                	$CGST = ($amount * $CGST)/100;
+                }
+                $dataString = $dataString . $CGST . "\r\n";
+                
             }
         }
         $xlData = $headerString . $dataString;
