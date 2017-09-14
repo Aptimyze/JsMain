@@ -1193,7 +1193,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="btype")
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
-		$output=$this->getField("mstatus");
+		$output=$this->getMstatus();
 		if($k=="p_havechild")
                     $output=$this->getField("children");
                 if($k=="parent_city_same")
@@ -1349,6 +1349,21 @@ if($k=="state_res")
 	  //$Arr[0]=array(array("0:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM"));
 	  return $Arr;
   }
+  
+  private function getMstatus()
+  {
+  	$arr=FieldMap::getFieldLabel('mstatus','',1);
+  	foreach($arr as $key=>$val)
+  	{
+  		if ($key == "M")
+  		{
+  			continue;	// JSM-4631
+  		}
+  		$output[0][]=array($key=>$val);
+  	}
+  	return $output;
+  }
+  
   private function getTimeToCall()
   {
 	  $temp=array("12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM");
