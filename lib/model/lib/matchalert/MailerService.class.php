@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='',$attach='',$fileName='')
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='',$attach='',$fileName='',$from='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -57,8 +57,8 @@ class MailerService
 			if (!empty($alias) && is_string($alias)) {
 				$senderDetails["ALIAS"] = $alias;
 			}
-			if (!empty($alternateEmailID) && is_string($alternateEmailID)) {
-				$senderDetails["SENDER"] = $alternateEmailID;
+			if (!empty($from) && is_string($from)) {
+				$senderDetails["SENDER"] = $from;
 			}
             $bccList = $this->getBccMailList($mailerName);
                 	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,$bccList,$attach,'',$fileName,'','1','',$senderDetails["ALIAS"]);
