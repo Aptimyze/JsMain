@@ -104,6 +104,9 @@ if($type == "DELTA"){
         deleteHiddenDeletedProfiles();
 }
 
+$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/solrCommit.txt";
+file_put_contents($fileName,"\n".'Commit Started at -'.date("Y-m-d H:i:s", strtotime("now"))."\n", FILE_APPEND);
+
 // after posting data initiate commit on all servers
 curlPostCommitData();
 
