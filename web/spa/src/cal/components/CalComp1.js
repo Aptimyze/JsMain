@@ -8,9 +8,11 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
 import {validateEmail}  from "../../common/components/commonValidations";
+import { connect } from "react-redux";
+
 require ('../style/CALJSMS_css.css');
 
-export default class calComp1 extends React.Component{
+export  class calComp1 extends React.Component{
 constructor(props){
 
   super(props);
@@ -61,13 +63,9 @@ componentWillMount(){
   let index = skippableCALS.indexOf(this.props.calData.LAYERID);
   if(index!=-1)
   {
-    let dl=document.location.origin+document.location.pathname+document.location.search+"#cal";
-    history.pushState(null,"",dl);
-    var _this = this;
-    window.onpopstate= function(){
-      _this.criticalLayerButtonsAction(_this.props.calData.BUTTON2_URL_ANDROID,_this.props.calData.JSMS_ACTION2,'B2');
-      window.onpopstate= null;
-    }
+    this.props.historyObject.push(()    =>
+          this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')
+      ,'#cal');
   }
 
 }
@@ -172,13 +170,11 @@ criticalLayerButtonsAction(url,clickAction,button) {
                return true;
              })
             }
-            else
-              CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-            return;
           break;
     }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-    return;
+    console.log('truepala');
+    return true;
 
 }
 
@@ -220,7 +216,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
     return ( <div> <div style={{padding: '25px 0 8% 0'}}>
       <div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')}>{this.props.calData.BUTTON1}</div>
       </div>
-      <div id='CALButtonB2' onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}  style={{color:'#cccccc', paddingTop: '12%'}} className="pdt15 pb10 txtc white f14">{this.props.calData.BUTTON2}</div>
+      <div id='CALButtonB2' onClick={() => this.props.historyObject.pop()}  style={{color:'#cccccc', paddingTop: '12%'}} className="pdt15 pb10 txtc white f14">{this.props.calData.BUTTON2}</div>
     </div>
   );
   return(  <div style={{padding: '25px 0 8% 0'}}>
@@ -245,7 +241,7 @@ getNameCAL(){
       {this.namePrivacyCALButtonClick()}
     </div>
 
-    <div id="skipBtn"  style = {this.state.skipStyle} onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')} className="f14 fontlig txtc app_clrw pt35p">{this.props.calData.BUTTON2}</div>
+    <div id="skipBtn"  style = {this.state.skipStyle} onClick={() => this.props.historyObject.pop()} className="f14 fontlig txtc app_clrw pt35p">{this.props.calData.BUTTON2}</div>
 
     <div  type="submit" id="submitName" onClick={()=>this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')} className="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">{this.props.calData.BUTTON1}</div>
   </div>
@@ -335,7 +331,7 @@ getAlternateEmailCAL(){
           <div className="pt10 f15 fontlig fullwid txtc colr8A">{this.props.calData.TEXTUNDERINPUT}</div>
            <div className="pad_new app_clrw f14 txtc">{this.props.calData.SUBTITLE}</div>
 
-          <div id="CALButton" className="f14 fontlig txtc colr8A" style={{paddingTop: '115px'}}><span id ="CALButtonB2" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}>{this.props.calData.BUTTON2NEW}</span></div>
+          <div id="CALButton" className="f14 fontlig txtc colr8A" style={{paddingTop: '115px'}}><span id ="CALButtonB2" onClick={() => this.props.historyObject.pop()}>{this.props.calData.BUTTON2NEW}</span></div>
 
           <div onClick={()=>this.validateAltEmailAndSave()} type="submit" id="submitAltEmail" className="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">{this.props.calData.BUTTON1NEW}</div>
         </div>
@@ -408,7 +404,7 @@ return (<div>
       <div className="txtc pad15">
           <div className="posrel">
               <div className="fontthin f19 white">Desired Partner Profile</div>
-              <i id="closeFromDesiredPartnerProfile" className=" posabs mainsp srch_id_cross " style={{right:'0', top:'0px'}} onClick={()=>this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')}></i>
+              <i id="closeFromDesiredPartnerProfile" className=" posabs mainsp srch_id_cross " style={{right:'0', top:'0px'}} onClick={()=>this.props.historyObject.pop()}></i>
           </div>
       </div>
 
@@ -621,9 +617,16 @@ commonApiCall('/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,{},'','PO
       }, this.state.timeToHide+100);
   }
 
-
-
-
-
-
 }
+const mapStateToProps = (state) => {
+    return{
+      historyObject : state.historyReducer.historyObject
+
+    }
+}
+const mapDispatchToProps = (state) => {
+    return{
+
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(calComp1)

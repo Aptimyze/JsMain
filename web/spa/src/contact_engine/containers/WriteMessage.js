@@ -1,3 +1,4 @@
+
 require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
@@ -57,20 +58,22 @@ export class WriteMessage extends React.Component{
 
 
   sendMessage() {
-
-    this.showLoaderDiv();
     let message = document.getElementById("writeMessageTxtId").value;
+    if(message.trim()=='')return;
+    this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
     var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message;
     let _this=this;
     this.props.sendMessageApi('/api/v2/contacts/postWriteMessage','MESSAGE',url).then((response)=>{
+    let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
+
     _this.setState({
       showLoader:false,
-      writeMessageText:"",
-      showCloseLayer: true
+      showCloseLayer: this.props.fromEOI ? true : false,
+      messages : messages
     });
-    document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
+//    document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
     e.scrollTop =  e.scrollHeight;
 
   });
@@ -139,7 +142,7 @@ getWriteMsg_innerView(){
                                       return(
                                           <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
                                             <span>{msg.message}</span>
-                                            <span className="dispbl f12 color1 pt5 white">{msg.timeTxt}</span>
+                                            <span className="dispbl f12 color1 pt5">{msg.timeTxt}</span>
                                           </div>
                                       );
                                     });
@@ -195,7 +198,7 @@ getWriteMsg_buttonView(){
                           <div className="fl wid80p com_pad3">
                             <textarea id="writeMessageTxtId" defaultValue = {this.state.writeMessageText} className="fullwid lh15 inp_1 white"></textarea>
                           </div>
-                          <div onClick={() => this.sendMessage(this.props.fromEOI)} className="fr com_pad4">
+                          <div onClick={() => this.sendMessage()} className="fr com_pad4">
                             <div className="color2 f16 fontlig">Send</div>
                           </div>
                         </div>);
@@ -203,13 +206,15 @@ return WriteMsg_buttonView;
 }
   render(){
 
-  var loaderView;
+  let loaderView;
         if(this.state.showLoader)
         {
-          loaderView = <Loader show="div"></Loader>;
+          loaderView = <Loader show="page"></Loader>;
         }
 
   return(
+    <div>
+      {loaderView}
       <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid">
@@ -228,6 +233,7 @@ return WriteMsg_buttonView;
 
         </div>
       </div>
+    </div>
     );
   }
 }
