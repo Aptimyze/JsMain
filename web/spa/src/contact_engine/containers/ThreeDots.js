@@ -44,11 +44,12 @@ class ThreeDots extends React.Component{
       showIgnoreLayer:false,
       showIgnoreLayerMessage:'',
       ignoreButton:{},
-      tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
+      tupleDim : {'height': document.getElementById("ProfilePage").clientHeight}
     };
-    console.log(props,'---------');
+
 
   }
+
   getThreeDotLayer() {
     this.setState({
       showLayer: true
@@ -84,7 +85,7 @@ class ThreeDots extends React.Component{
 
       break;
       case 'IGNORE':
-      console.log('3 dot callback');
+      // console.log('3 dot callback');
         if ( jsonOb.button.params.indexOf("&ignore=0") !== -1)
         {
           this.props.changeButton({'button':jsonOb.response.button_after_action.buttons.others[jsonOb.index]},jsonOb.index);
@@ -118,6 +119,7 @@ class ThreeDots extends React.Component{
 
 
   closeAbuseLayer() {
+
     document.getElementById("vpro_tapoverlay").classList.remove("dn");
   }
 
@@ -129,13 +131,14 @@ class ThreeDots extends React.Component{
   }
 
   componentDidMount(){
-    //console.log('did mount');
-    //console.log(document.getElementById("commonOverlayTop").offsetHeight);
+
     if(document.getElementById("commonOverlayTop").offsetHeight> window.innerWidth)
     {
       document.getElementById("overlaysecond_threedot").style.overflow = "auto";
       document.getElementById("commonOverlayTop").style.margin = "20px 0";
     }
+
+
   }
 
 
@@ -145,6 +148,8 @@ class ThreeDots extends React.Component{
   }
 
   render(){
+
+
 
     var reportAbuseView;
     var showIgnoreLayerView;
@@ -161,14 +166,14 @@ class ThreeDots extends React.Component{
       showIgnoreLayerView = <BlockPage message={this.state.showIgnoreLayerMessage} profileThumbNailUrl={this.props.profileThumbNailUrl} closeBlockPageLayer={() => this.closeBlockPageLayer()} unblock = {() => this.manageThreeDotsButton(this.state.ignoreButton,3)}/>
       document.getElementById("vpro_tapoverlay").classList.add("dn");
     }
-      var buttons = this.props.buttondata.buttons;console.log('buttt',buttons);
+      var buttons = this.props.buttondata.buttons;
       var loaderView;
       if(this.state.showLoader)
       {
         loaderView = <Loader show="page"></Loader>;
       }
 
-        return (<div className="posabs ce-bg ce_top1 ce_z101 scrollhid" id="overlayove_threedot" style={this.state.tupleDim}>
+        return (<div className="posabs ce-bg ce_top1 ce_z101 scrollhid fullwid" id="overlayove_threedot" style={this.state.tupleDim}>
                   <a href="#"  className="ce_overlay ce_z102" > </a>
                     <div className="posabs ce_z103 ce_top1 fullwid" id="overlaysecond_threedot" style={this.state.tupleDim}>
 
