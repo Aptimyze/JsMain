@@ -149,8 +149,38 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           case "8":
             window.location.href="/phone/jsmsDisplay";
             break;
-          default:
+          case "0":
+          case "1":
+          case "10":
             break;
+          default:
+            if ( response.data.responseMessage )
+            {
+              let message = response.data.responseMessage;
+              let parent = document.createElement("div");
+              parent.id = "ApiResponseHeaderTopError";
+
+              let child = document.createElement("div");
+              child.id = "TopError";
+              child.innerHTML = "<div class = 'fullwid top0 posfix' style='height: 10px;top:0px;z-index:101;'><div class = 'pad12_e white f15 op1'>"+response.data.responseMessage+"</div></div>";
+              parent.appendChild(child);
+
+              if ( document.getElementById("ApiResponseHeaderTopError") != null)
+              {
+                document.getElementById("ApiResponseHeaderTopError").classList.remove("dn");
+              }
+              else
+              {
+                document.body.insertBefore(parent,document.body.childNodes[0]);
+              }
+
+              setTimeout(function () {
+                document.getElementById("ApiResponseHeaderTopError").className += " dn";
+              },2000)
+            }
+
+            break;
+
         }
         if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
         {
