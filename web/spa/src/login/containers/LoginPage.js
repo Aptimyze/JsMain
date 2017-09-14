@@ -43,9 +43,9 @@ class LoginPage extends React.Component {
         let prevUrl = window.location.href.split("prevUrl=")[1];
         if ( prevUrl )
         {
-            prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
+            prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.\-]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
             props.history.prevUrl = "/"+prevUrl;
-            this.state.showRegisterationMessage = true;        
+            this.state.showRegisterationMessage = true;
         }
     }
     componentWillMount() {
@@ -152,7 +152,7 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        
+
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -346,7 +346,7 @@ class LoginPage extends React.Component {
                                             {captchDiv}
                                             {buttonView}
                                             {appDownloadView}
-                                            
+
 
                                             <div className="txtc pad2">
                                                 <a id="hindiLink" href={CONSTANTS.HINDI_SITE} className="f16 white fontlig">हिंदी में</a>
