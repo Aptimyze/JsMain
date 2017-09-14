@@ -20,6 +20,9 @@ $type = $argv[1];
 $pid = $argv[2];
 $gender = $argv[3];
 
+$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/solrCommit.txt";
+file_put_contents($fileName,"\n".'Started at -'.date("Y-m-d H:i:s", strtotime("now"))."\n", FILE_APPEND);
+
 $lastIndexOn = date("Y-m-d H:i:s", strtotime($lastModifiedOn));
 
 if ($type == "PID") {
