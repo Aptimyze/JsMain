@@ -480,7 +480,6 @@ class staticActions extends sfActions
             $this->time = floor($request->getParameter('time')/60);
             $this->symbol = $request->getParameter('symbol');
      }
-    
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -525,6 +524,46 @@ public function executeCALRedirection($request){
       die;
     }
 
+//PostWeddingServices page
+  public function executePostWeddingServices(sfWebRequest $request)
+  {
+    $loginData = $request->getAttribute("loginData");
+    $this->finalResponse=array();
+     $loggedInProfileObj = LoggedInProfile::getInstance(); 
+    if($loggedInProfileObj->getPROFILEID()){
+      $loggedInProfileObj->getDetail($loggedInProfileObj->getPROFILEID(),"PROFILEID","*");
+
+      $this->city=strtolower($loggedInProfileObj->getDecoratedCity());
+    }
+    if($loginData[PROFILEID])
+    {
+      $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
+      $authenticationLoginObj->logout($loginData[PROFILEID]);
+      
+    }
+    $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
+    $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
+    if($result)
+      $data=json_decode($result,true);
+    if($data['isError']===false || is_array($data['success']))
+    {      
+      $this->finalResponse['postServicesPage']=true;
+      $this->finalResponse['servicesData']=$data['success'];
+    }
+    else{
+      $this->finalResponse['postServicesPage']=false;
+      $this->finalResponse['servicesData']="";
+    }
+
+    $this->finalResponse=json_encode($this->finalResponse);
+    //Stopping Common functionality 
+    $this->chat_hide = 1;
+    $this->logoutChat = 1;
+    if(MobileCommon::isNewMobileSite()){
+      $this->setTemplate("mobPostWeddingServices");
+      $this->isMob=1;
+    }
+  }
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {

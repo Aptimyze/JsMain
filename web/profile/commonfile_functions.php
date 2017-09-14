@@ -255,6 +255,7 @@ $css_arr[]=array("default"    => "2");
 $css_arr[]=array(" /JSNotificationExtension/JSnotification/desktop-notify"    => "2");
 $css_arr[]=array("apps/jeevansathi/modules/common/templates/CALJSMSSuccess"   => "1");
 $css_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
+$css_arr[]=array("jspc/static/postWeddingServices_css"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -723,6 +724,7 @@ $js_arr[]=array("jsms/login/uploadDocument_js"       => "5");
 $js_arr[]=array("jspc/login/uploadDoc_js"       => "5");
 $js_arr[]=array("/JSNotificationExtension/JSnotification/client"    => "2");
 $js_arr[]=array("jsms/settings/privacySettings_js"  => "2");
+$js_arr[]=array("jspc/static/postWeddingServices_js"   => "1");
 $js_arr[]=array("photoScreening_js"   => "2");
 $js_arr[]=array("apps/jeevansathi/templates/_jsms3DotLayer"   => "1");
 return $js_arr;
