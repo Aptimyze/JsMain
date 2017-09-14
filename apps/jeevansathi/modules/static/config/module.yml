@@ -52,6 +52,8 @@ all:
     enable_login: off 
   LogoutPage:
     enable_login: off
+  PostWeddingServices:
+    enable_login: off
   searchIdExpire:
     enable_login: off
   redirectToOldJsms:

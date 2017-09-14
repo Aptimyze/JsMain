@@ -101,9 +101,9 @@ EOF;
     protected function getSubjectAndBody($totalProfiles,$senderCount) {
         $subject = array();
         
-        $matchStr = " interests";
-        if ($count == 1) {
-            $matchStr = " interest";
+        $matchStr = " interests/acceptances";
+        if ($senderCount == 1) {
+            $matchStr = " interest/acceptance";
         }
         $dateStr = '';
         $subject["subject"] = "You sent $senderCount $matchStr last week, now connect with these profiles similar to them .";

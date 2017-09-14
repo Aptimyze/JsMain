@@ -10,6 +10,8 @@
                 ~foreach from=$dataArray item=value key=clientid`
 			<tr align="CENTER" bgcolor="#fbfbfb" id="asd">
 				<td height="21" width="10%" align="CENTER">~$value.USERNAME` ~if $value.CLIENT_NAME` <br>(~$value.CLIENT_NAME`) ~/if`</td>
+				<td height="21" width="10%" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$value.CLIENT_ID`" target="_blank">~$value.Client_User_Name`</td>
+                
                 <td height="21" width="10%" align="CENTER">~$value.ENTRY_DT`</a></td>
                 <td height="21" width="20%" align="CENTER">~$value.FOLLOWUP1_DT` ~if $value.STATUS1`||<br>~$value.STATUS1`~/if` ~if $value.FOLLOWUP_1` ||<br>~$value.FOLLOWUP_1` ~/if`</td>
                 <td height="21" width="20%" align="CENTER">~$value.FOLLOWUP2_DT` ~if $value.STATUS2`||<br>~$value.STATUS2`~/if` ~if $value.FOLLOWUP_2`||<br>~$value.FOLLOWUP_2` ~/if`</td>

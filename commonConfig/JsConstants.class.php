@@ -34,6 +34,7 @@ public static $all =
 
 		"jquery"             => 'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
 		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
+		"matchAlertsCommunityModelApi" => "http://10.10.18.87:2233/commModelRecommendations_live",
 		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
     	"androidChatNew"=>'array("chatOn"=>true,"flushLocalStorage"=>false,"xmppBackgroundConnectionTimeout"=>300000)',
 	];
@@ -222,6 +223,7 @@ public static $dev =
 		/**Kibana constants**/
 
 		"kibana" =>  "array('ELK_SERVER' =>'elkjs.js.jsb9.net', 'ELASTIC_PORT' => '9200', 'KIBANA_PORT'=>'5601','AURA_SERVER' => 'es.aura.resdex.com','AURA_PORT'=>'9203')",
+                "matchAlertsCommunityModelApi" => "http://10.10.18.87:2233/commModelRecommendations_live",
 	];
 
 public static $test = 
@@ -400,6 +402,7 @@ public static $test =
 		"communicationServiceUrl" => "http://172.16.3.203:8390",
 		"profileServiceUrl" => "http://172.16.3.187:8290",
 		"presenceServiceUrl" => "http://192.168.120.70:8290",
-        "chatNotificationService" => "http://192.168.120.239:8490"
+                "chatNotificationService" => "http://192.168.120.239:8490",
+                "matchAlertsCommunityModelApi" => "http://10.10.18.87:2233/commModelRecommendations_live"
 	];
 }
