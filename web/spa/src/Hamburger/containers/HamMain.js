@@ -27,10 +27,11 @@ class HamMain extends React.Component {
     {
         let newHref;
         if(getCookie("AUTHCHECKSUM")) {
-            newHref = translateURL+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM");
+            newHref = translateURL+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
         } else {
             newHref = translateURL;
         }
+        console.log(newHref);
         if(translateURL.indexOf('hindi')!=-1){
             setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         } else {

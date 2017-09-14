@@ -52,7 +52,7 @@ class AuthFilter extends sfFilter {
 		$specificDomain = str_replace($originalArray, $replaceArray, $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		$specificSubDomain = explode('?',$specificDomain[1],2);
-		if($specificDomain[1] == '')
+		if($specificDomain[1] == '' || $request->getParameter("newRedirect"))
 			$spa = 1;
 		elseif(in_array($specificSubDomain[1],$nonSpaUrls) || in_array(substr($specificSubDomain[1],0,9), $nonSpaUrls))
 			$spa = 0;
@@ -64,7 +64,7 @@ class AuthFilter extends sfFilter {
 		    	}
 		    }
 		}
-		if( MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
+		if(MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
 			//bot section here.
 			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs-2.1.1/bin/phantomjs";
 			$phantomCrawler =  JsConstants::$docRoot."/spa/phantomCrawler.js";
@@ -95,7 +95,7 @@ class AuthFilter extends sfFilter {
 			}
 			if($redirectUrl!= "")
 			{
-				header("Location:".JsConstants::$hindiTranslateURL);
+				header("Location:".JsConstants::$hindiTranslateURL."/spa/dist/index.html#"."?AUTHCHECKSUM=".$request->getParameter('AUTHCHECKSUM'));
 			}
 			else
 			{

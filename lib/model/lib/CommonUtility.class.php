@@ -1038,6 +1038,10 @@ die;
                 }
             }
 		} else {
+				if($request->getParameter('newRedirect'))
+				{
+					return 1;
+				}
 			if($request->getcookie("redirected_hindi_new")=='Y'){
 				@setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
 				return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
