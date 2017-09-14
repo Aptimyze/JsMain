@@ -41,8 +41,8 @@ if($l!=''){
     fwrite($file,$stringToWrite."\n");
     $res = mysql_query($sql,$db) or die(mysql_error($db));
 }
+$l = implode(",",$arrAct);
 if($l!=''){
-    $l = implode(",",$arrAct);
     $sql = "DELETE FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO WHERE PROFILEID IN ($l)";
     $file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/proScreening2.txt","a");
     $stringToWrite = $l."\n";
