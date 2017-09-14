@@ -287,7 +287,7 @@ abstract class JsPhotoScreen_Tracking
 		{
 			return false;
 		}
-		if($this->m_objProfile->getACTIVATED() != "Y" && $this->m_szOld_HavePhoto_Status == "U" && $arrUpdateValue["HAVEPHOTO"] == "Y")
+		if(($this->m_objProfile->getACTIVATED() == "U" || $this->m_objProfile->getACTIVATED() == "N") && $this->m_szOld_HavePhoto_Status == "U" && $arrUpdateValue["HAVEPHOTO"] == "Y")
 		{
                         $pid = $this->m_objProfile->getPROFILEID();
                         $city_res = $this->m_objProfile->getCITY_RES();
