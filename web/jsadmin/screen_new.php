@@ -619,7 +619,7 @@ $screeningValMainAdmin = 0;
 					$smarty->assign("from_screening", 1);
 				}
 			} else {
-				$msg = "User $username is already screened<br><br>";
+				$msg = "User $username is already screened 1<br><br>";
 				$find_sql = "SELECT SUBMITED_TIME,ALLOTED_TO FROM jsadmin.MAIN_ADMIN_LOG where PROFILEID='$pid' AND SCREENING_TYPE='O' ORDER BY SUBMITED_TIME DESC LIMIT 0,1";
 				$find_result = mysql_query_decide($find_sql);
 				$find_row = mysql_fetch_assoc($find_result);
@@ -629,7 +629,7 @@ $screeningValMainAdmin = 0;
 				mysql_query_decide($ins_sql) or die(mysql_error_js());
 			}
 		} else {
-			$msg = "User $username is already screened<br><br>";
+			$msg = "User $username is already screened 2<br><br>";
 			$find_sql = "SELECT SUBMITED_TIME,ALLOTED_TO FROM jsadmin.MAIN_ADMIN_LOG where PROFILEID='$pid' AND SCREENING_TYPE='O' ORDER BY SUBMITED_TIME DESC LIMIT 0,1";
 			$find_result = mysql_query_decide($find_sql);
 			$find_row = mysql_fetch_assoc($find_result);
