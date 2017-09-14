@@ -25,7 +25,7 @@ export class MyjsShowVisitors extends React.Component{
             return (
                 <div className="fl pl_a" key={profiles.profilechecksum}>
                   <Link  to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.responseMessage.tracking}&total_rec=${tupleValues.length}&actual_offset=${index}&searchid=${this.props.responseMessage.searchid}&contact_id=nan`}>
-                    <img className="myjsdim1" src={profiles.buttonDetailsJSMS.photo.url}/>
+                    <img className="myjsdim1" src={profiles.photo.url}/>
                   </Link>
                 </div>
             )
