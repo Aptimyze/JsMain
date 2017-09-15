@@ -11,6 +11,7 @@ const ProfileReducer = (state={
 	historyData: [],
 	profileId: '',
 	show_gunascore: "",
+	astroSent: "",
 	gunaScore: [],
 	pageInfo: [],
 	fetchedProfilechecksum: false,
@@ -33,6 +34,7 @@ const ProfileReducer = (state={
 			dpp_Ticks:action.payload.dpp_Ticks,
 			profileId:action.payload.page_info.profilechecksum,
 			show_gunascore: action.payload.show_gunascore,
+			astroSent: action.payload.astroSent,
 			pageInfo: action.payload.page_info,
 			fetchedProfilechecksum: action.payload.about.username,
 			buttonDetails: action.payload.buttonDetails

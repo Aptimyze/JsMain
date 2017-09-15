@@ -567,17 +567,14 @@ class ProfilePage extends React.Component {
                 {
                      Header = this.props.AboutInfo.username;
                 }
-
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
+                
+                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
 
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
 
-                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
-
-                console.log(getCookie("AUTHCHECKSUM"));
-
+                metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;                
 
                 showAlbumView = this.props.pic.pic_count == 0 ?
                   (
@@ -719,6 +716,7 @@ const mapStateToProps = (state) => {
        dpp_Ticks: state.ProfileReducer.dpp_Ticks,
        profileId: state.ProfileReducer.profileId,
        show_gunascore:state.ProfileReducer.show_gunascore,
+       astroSent: state.ProfileReducer.astroSent,
        fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
        pageInfo: state.ProfileReducer.pageInfo,
        myjsData: state.MyjsReducer,
