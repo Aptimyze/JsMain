@@ -858,6 +858,7 @@ $key = $lockingObj->semgetLock(5678);
 				if ($val == "new") $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL=0 AND SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
 				else $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL>0 AND  SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
 echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($row = mysql_fetch_array($res)) {
 					do {
@@ -889,6 +890,7 @@ echo "<!--";echo $sql;echo "-->";
 				if ($val == "new") $sql = "SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') UNION SELECT J.PROFILEID, J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC;";
 				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (jp.ACTIVATED='Y' AND A.PROFILEID IS NULL)  AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
 echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($myrow = mysql_fetch_array($result)) {
 					do {
@@ -929,6 +931,7 @@ echo "<!--";echo $sql;echo "-->";
 					if ($val == "new") $sql = "SELECT J.PROFILEID, J.ACTIVATED,USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 UNION SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 ORDER BY ENTRY_DT ASC";
 					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (ACTIVATED='Y' AND A.PROFILEID IS NULL) AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
 echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 					$result = mysql_query_decide($sql) or die(mysql_error_js());
 					if ($myrow = mysql_fetch_array($result)) {
 						do {
@@ -968,7 +971,11 @@ echo "<!--";echo $sql;echo "-->";
 				}
 			} if ($email_profileid != "") $profileid = $email_profileid;
 			}
-//Release Lock                  
+//Release Lock         
+if($ankit){ 
+$ankit11 = implode("-----------",$ankit);
+file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/screen1.txt",$profileid."--".$ankit11."\n\n",FILE_APPEND);
+}
 $lockingObj->semreleaseLock(5678);
 //Release Lock
 			
