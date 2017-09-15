@@ -37,22 +37,22 @@ if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
 	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREEN_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
+		if ($memcacheObj->get($key)) {
 			exit("Please refresh after 5 seconds.");
-		} else $memcacheObj->setDataToMem(5, $key, 5);
+		} else $memcacheObj->set( $key, 5,2);
 		unset($memcacheObj);
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREENED_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
-			$memcacheObj->setDataToMem(2, $key, 2);
+		if ($memcacheObj->get($key)) {
+			$memcacheObj->set( $key, 2,2);
 			exit("Please dont click on submit button again and again.");
-		} else $memcacheObj->setDataToMem(2, $key, 2);
+		} else $memcacheObj->set($key, 2,2);
 		unset($memcacheObj);
 	}
 	
@@ -63,7 +63,7 @@ if (authenticated($cid)) {
 //        }
             
 	if ($Submit || $Submit1) {
-		
+		unsetMemcache5Sec($user);
 		$check = screening_recheck($pid);
 		if ($check == 1) {
 			$Submit = 0;
@@ -72,6 +72,7 @@ if (authenticated($cid)) {
 		} else delete_temp_screening($pid);
 	}
 	if ($Submit) {
+		
 		
 		$PROFILECHECKSUM = md5($pid) . "i" . $pid;
 			$echecksum = $protect_obj->js_encrypt($PROFILECHECKSUM,$to);
@@ -629,6 +630,8 @@ $screeningValMainAdmin = 0;
 				mysql_query_decide($ins_sql) or die(mysql_error_js());
 			}
 		} else {
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/screen.txt","activated:".$activated."preactivated".$preactivated."screening_val:".$screening_val."activatedWithoutYourInfo:".$activatedWithoutYourInfo."\n\n",FILE_APPEND);
+
 			$msg = "User $username is already screened 2<br><br>";
 			$find_sql = "SELECT SUBMITED_TIME,ALLOTED_TO FROM jsadmin.MAIN_ADMIN_LOG where PROFILEID='$pid' AND SCREENING_TYPE='O' ORDER BY SUBMITED_TIME DESC LIMIT 0,1";
 			$find_result = mysql_query_decide($find_sql);
@@ -844,10 +847,18 @@ $screeningValMainAdmin = 0;
 			$time = time();
 			$now = date('Y-m-d H:i:s', $time);
 			$flag = $j = 0;
+
+//Get A Lock
+$lockingObj = new LockingService;
+$key = $lockingObj->semgetLock(5678);
+//Get A Lock
+
 			if(!$profileid){
 			if ($email_profileid == "") {
 				if ($val == "new") $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL=0 AND SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
 				else $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL>0 AND  SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($row = mysql_fetch_array($res)) {
 					do {
@@ -867,14 +878,19 @@ $screeningValMainAdmin = 0;
 								}
 								$stop = 1;
 								break;
-							} else $stop = 0;
+							} else {
+							$stop = 0;
+							$profileid = '';
+							}
 						}
 					}
 					while ($row = mysql_fetch_array($res));
 				}
 			} if (!$stop && $email_profileid == "") {
-				if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') UNION SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC;";
+				if ($val == "new") $sql = "SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') UNION SELECT J.PROFILEID, J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC;";
 				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (jp.ACTIVATED='Y' AND A.PROFILEID IS NULL)  AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($myrow = mysql_fetch_array($result)) {
 					do {
@@ -884,6 +900,7 @@ $screeningValMainAdmin = 0;
 						$username = $myrow['USERNAME'];
 						$subscribe = $myrow['SUBSCRIPTION'];
 						$screening_val = $myrow['SCREENING'];
+						$activated_1 = $myrow['ACTIVATED'];
 						if ($val == "new") {
 							$screening_val = "0";
 						}
@@ -894,7 +911,7 @@ $screeningValMainAdmin = 0;
 //								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
                                                             $activatedWithoutYourInfoCase = $myrow['PROID'];
-            if(!$activatedWithoutYourInfoCase){
+            if(!$activatedWithoutYourInfoCase || $activated_1=='N'){
                 markProfileUnderScreening($profileid);
                 $smarty->assign("activatedWithoutYourInfo", 0);
             }
@@ -903,13 +920,18 @@ $screeningValMainAdmin = 0;
 							}
 							$stop = 1;
 							break;
-						} else $stop = 0;
+						} else {
+						$stop = 0;
+						$profileid = '';
+						}
 					}
 					while ($myrow = mysql_fetch_array($result));
 				}
 				if (!$stop) {
-					if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 UNION SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 ORDER BY ENTRY_DT ASC";
+					if ($val == "new") $sql = "SELECT J.PROFILEID, J.ACTIVATED,USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 UNION SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 ORDER BY ENTRY_DT ASC";
 					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (ACTIVATED='Y' AND A.PROFILEID IS NULL) AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 					$result = mysql_query_decide($sql) or die(mysql_error_js());
 					if ($myrow = mysql_fetch_array($result)) {
 						do {
@@ -919,6 +941,7 @@ $screeningValMainAdmin = 0;
 							$username = $myrow['USERNAME'];
 							$subscribe = $myrow['SUBSCRIPTION'];
 							$screening_val = $myrow['SCREENING'];
+							$activated_1 = $myrow['ACTIVATED'];
 							if ($val == "new") {
 								$screening_val = "0";
 							}
@@ -929,7 +952,7 @@ $screeningValMainAdmin = 0;
 //									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
                                                                     $activatedWithoutYourInfoCase = $myrow['PROID'];
-            if(!$activatedWithoutYourInfoCase){
+            if(!$activatedWithoutYourInfoCase || $activated_1=='N'){
                   markProfileUnderScreening($profileid);
                   $smarty->assign("activatedWithoutYourInfo", 0);
             }
@@ -938,13 +961,23 @@ $screeningValMainAdmin = 0;
 								}
 								$stop = 1;
 								break;
-							} else $stop = 0;
+							} else{ 
+								$profileid='';
+								$stop = 0;
+							}
 						}
 						while ($myrow = mysql_fetch_array($result));
 					}
 				}
 			} if ($email_profileid != "") $profileid = $email_profileid;
 			}
+//Release Lock         
+if($ankit){ 
+$ankit11 = implode("-----------",$ankit);
+file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/screen1.txt",$profileid."--".$ankit11."\n\n",FILE_APPEND);
+}
+$lockingObj->semreleaseLock(5678);
+//Release Lock
 			
 			if (!$profileid) {
 				$msg.= "<br><p align=\"center\"><a href=\"screen_new.php?user=$user&cid=$cid&val=$val\">";
@@ -968,6 +1001,12 @@ $screeningValMainAdmin = 0;
 				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 
 				$oldUrl = curPageURL();
+$lavesh  = $_GET["lavesh"];
+if($lavesh)
+	$lavesh+=1;
+else
+	$lavesh=1;
+$oldUrl.="&lavesh=$lavesh";
 				//$memcacheObj->setDataToMem(5,$key,0);
 				unsetMemcache5Sec($user);
 				header("Location:".$oldUrl);die;
@@ -1573,10 +1612,10 @@ function getAge($newDob) {
   }
 function unsetMemcache5Sec($user)
 {
-                include_once ("../classes/Memcache.class.php");
-                $memcacheObj = new UserMemcache;
+                include_once ("../../lib/model/lib/JsMemcache.class.php");
+                $memcacheObj = new JsMemcache;
                 $key = "PROF_SCREEN_USER_" . $user;
-		$memcacheObj->setDataToMem(0, $key, 0);
+		$memcacheObj->remove($key);
                 unset($memcacheObj);
 }
 function curPageURL() {

@@ -140,6 +140,9 @@ class JsMemcache extends sfMemcacheCache{
 					else
 						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
+                                        if($lifetime == 2){
+                                            $this->client->expire($key, $lifeTime);
+                                        }
 					if($retryCount == 1)
 						jsException::log("S-redisClusters($key)  ->".$key." -- ".$this->get($key));
 				}

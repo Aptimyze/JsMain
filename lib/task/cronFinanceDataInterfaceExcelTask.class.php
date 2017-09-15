@@ -99,7 +99,7 @@ EOF;
                 $dataString = $dataString . $IGST . "\t";
                 $CGST=$taxData[$billid]["CGST"];
                 if($CGST > 0){
-                	$CGST = ($amount * $CGST)/100;
+                	$CGST = ($actualAmount* $CGST)/100;
                 }
                 $dataString = $dataString . $CGST . "\r\n";
                 
