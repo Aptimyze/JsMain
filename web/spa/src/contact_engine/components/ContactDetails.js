@@ -78,12 +78,11 @@ componentDidMount(){
   console.log(this.state.cdOHeight);
   //$("#contactDetailOverlay").height($("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top);
   let getOffset = (ele)=> document.getElementById(ele).clientHeight;
-  console.log(getOffset('bottomElement'));
-  console.log(getOffset('contactDetailOverlay'));
-  // this.setState({cdOHeight:(getOffset('bottomElement')-getOffset('contactDetailOverlay')) });
+  let sum = getOffset('3DotProPic')+  getOffset('errorMsgOverlay') + getOffset('bottomElement');
   this.setState({
-   cdOHeight:(document.getElementById("ProfilePage").clientHeight - (getOffset('bottomElement')+ getOffset('contactDetailOverlay') )  ) 
+   cdOHeight:(document.getElementById("ProfilePage").clientHeight - parseInt(sum)  ) 
  });
+
 //  $("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top
 }
 
