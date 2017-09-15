@@ -318,7 +318,12 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
-        let newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        let newHref;
+        if(getCookie("AUTHCHECKSUM")) {
+            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        } else {
+             newHref = CONSTANTS.HINDI_SITE;
+        }
 
         return (
             <div className="scrollhid" id="LoginPage">

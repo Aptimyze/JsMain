@@ -455,7 +455,12 @@ class HamMain extends React.Component {
             appText = "Download iOS App ";
         }
 
-        let newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        let newHref;
+        if(getCookie("AUTHCHECKSUM")) {
+            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        } else {
+             newHref = CONSTANTS.HINDI_SITE;
+        }
         let listingView = <div id="listing" className="overflowhidden">
             <ul id="scrollElem" className="fontreg white listingHam posrel fullheight overAutoHidden">
                 <li className="brdrBtm f14 pb8 fontlig">
