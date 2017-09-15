@@ -132,7 +132,7 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("comHistoryOverlay")!=undefined))
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null))
           {
             console.log("not");
             return;
