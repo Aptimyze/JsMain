@@ -298,6 +298,34 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
   		throw new jsException($e);
 	}
   }
+  public function followupHistoryForClient($agent,$clientid)
+  {
+  	try {
+  		$sql = "SELECT ID,CLIENT_ID,MEMBER_ID,FOLLOWUP_1,FOLLOWUP_2,FOLLOWUP_3,FOLLOWUP_4,FOLLOWUP1_DT,FOLLOWUP2_DT,FOLLOWUP3_DT,FOLLOWUP4_DT,CONCALL_ACTUAL_DT,STATUS FROM billing.EXCLUSIVE_FOLLOWUPS"
+                            . " WHERE AGENT_USERNAME=:AGENT"
+                            . " AND CLIENT_ID=:CLIENTID AND MAILER=:MAILER";
+		    $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
+            $res->bindValue(":CLIENTID", $clientid, PDO::PARAM_INT);
+            $res->bindValue(":MAILER", 'Y', PDO::PARAM_STR);
+		    $res->execute();
+		    while($result=$res->fetch(PDO::FETCH_ASSOC)){
+		        $rows[$result['MEMBER_ID']] = $result;
+		    }
+		    return $rows;
+  	} catch (Exception $e) {
+  		throw new jsException($e);
+  	}
+  }
 
+  public function updateMailerFlag($idArr){
+  	try{
+  		$sql = "UPDATE billing.EXCLUSIVE_FOLLOWUPS SET MAILER = 'N' WHERE ID IN ($idArr)";
+  		$prep = $this->db->prepare($sql);
+  		$prep->execute();
+  	}catch(Exception $e){
+  		throw new jsException($e);
+  	}
+  }
 }
 ?>

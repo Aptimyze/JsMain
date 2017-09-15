@@ -1034,4 +1034,15 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
                         }
                 }
     }
+        public function executeResetStaticKey($request)
+        {               
+                $memObject = JsMemcache::getInstance();
+                $memObject->remove('STATIC_TABLES_CACHED_ON');
+                $memObject->remove('STATIC_TABLES_CACHED_DATA');
+                
+                $respObj = ApiResponseHandler::getInstance();
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();   
+                die();
+        }
 }

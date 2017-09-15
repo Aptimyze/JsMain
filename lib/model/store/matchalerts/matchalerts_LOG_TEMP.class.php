@@ -37,8 +37,10 @@ class matchalerts_LOG_TEMP extends TABLE
 		}
                return $COUNT;
         }
-        public function insertLogRecords($receiverId, $userIds, $LogicLevel){
-          $date=MailerConfigVariables::getNoOfDays();
+        public function insertLogRecords($receiverId, $userIds, $LogicLevel,$date = ""){
+          if($date == ""){
+                $date=MailerConfigVariables::getNoOfDays();
+           }
           
           $sql_log="INSERT INTO matchalerts.LOG_TEMP (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
           $userCounter = 1;

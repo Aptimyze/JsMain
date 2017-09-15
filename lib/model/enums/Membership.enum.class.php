@@ -630,7 +630,7 @@ class VariableParams
         "Priority Customer service",
         "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
-    public static $DOL_CONV_RATE = 60;
+    public static $DOL_CONV_RATE = 66;
     
     public static $apiPageFiveHelpText = array(
         "text1" => "Got any Questions about Paying Online?",

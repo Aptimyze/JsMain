@@ -32,10 +32,10 @@ class ApiFaceDetectionTask extends sfBaseTask
 		$this->name = 'ApiFaceDetectionTask';
 		$this->briefDescription = 'detect face from main pic of a profile and get images of all required sizes';
 		$this->detailedDescription = <<<EOF
-	This cron runs every half an hour to get non screened images and detect face for them and create new required size image which will be verified during screening .
-	Call it with:
+        This cron runs every half an hour to get non screened images and detect face for them and create new required size image which will be verified during screening .
+        Call it with:
 
-	  [php symfony cron:ApiFaceDetectionTask profileId pictureId imagePath] 
+          [php symfony cron:ApiFaceDetectionTask profileId pictureId imagePath] 
 EOF;
 	}
 
@@ -55,6 +55,7 @@ EOF;
 		$profileObj = Operator::getInstance("", $profileid);
 		$profileObj->getDetail("", "", "HAVEPHOTO");
 		$pictureServiceObj = new PictureService($profileObj);
+		$this->rotateImageFile($origPic);
 		unset($profilesUpdate);
 		$faceDetected = false;
 		$imageT = PictureFunctions::getImageFormatType($origPic);
@@ -79,6 +80,29 @@ EOF;
 		unset($profileObj);
 		unset($pictureServiceObj);
 	}
+	public function rotateImageFile($filename)
+	{
+		$exif = exif_read_data($filename);
+		$img = imagecreatefromstring(file_get_contents($filename));
+		if ($img && $exif && isset($exif['Orientation']))
+		{
+			$ort = $exif['Orientation'];
+
+			if ($ort == 6 || $ort == 5)
+				$img = imagerotate($img, 270, null);
+			if ($ort == 3 || $ort == 4)
+				$img = imagerotate($img, 180, null);
+			if ($ort == 8 || $ort == 7)
+				$img = imagerotate($img, 90, null);
+
+			if ($ort == 5 || $ort == 4 || $ort == 7)
+				imageflip($img, IMG_FLIP_HORIZONTAL);
+		}
+		if ($imageFormatType == "gif")
+			imagegif($img, $filename);
+		else
+			imagejpeg($img, $filename);
+	}
 
 	public function getPictureCoordinates($picturePath)
 	{
@@ -101,7 +125,7 @@ EOF;
     }
   ]
 }';
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDElIdYkcMqWcMolkRF9kTmrj8S35KrH1w";
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
 
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -112,15 +136,16 @@ EOF;
 		curl_close($ch);
 
 		$result = json_decode($result, true);
+		print_r($result);
 		$response = $result["responses"][0];
 		$cord = null;
 		if (!empty($response["faceAnnotations"])) {
 			$otherdata = $response["faceAnnotations"][0];
 			$cordinates = $otherdata["boundingPoly"]["vertices"];
-			$x = $cordinates[0]["x"];
-			$y = $cordinates[0]["y"];
-			$h = $cordinates[2]["y"] - $cordinates[0]["y"];
-			$w = $cordinates[1]["x"] - $cordinates[0]["x"];
+			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
+			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
+			$h = $cordinates[2]["y"] - $y;
+			$w = $cordinates[1]["x"] - $x;
 			$cord = $w . "x" . $h . "+" . $x . "+" . $y;
 		}
 		return $cord;

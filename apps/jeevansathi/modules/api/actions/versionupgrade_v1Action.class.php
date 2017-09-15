@@ -17,7 +17,8 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-			" Critical Bug fixes and performance enhancements"            
+			" Upload screenshots while reporting abuse
+			 Critical bug fixes and enhancements "            
         );
 	public function execute($request)
 	{	
