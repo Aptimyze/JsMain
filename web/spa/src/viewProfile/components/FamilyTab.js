@@ -106,7 +106,7 @@ class FamilyTab extends React.Component {
     		</div>;
     	}
 
-    	var caste;
+    	let caste;
     	if(this.props.family.caste)
     	{
     		caste = <div>
@@ -117,18 +117,18 @@ class FamilyTab extends React.Component {
     		</div>;
     	}
 
-    	var mathab;
+    	let mathab;
     	if(this.props.family.mathab)
     	{
     		mathab = <div>
-    			<div className="f12 color1">Ma'thab</div>
+    			<div className="f12 color1" dangerouslySetInnerHTML={"Ma'thab"}></div>
             	<div className="fontlig pb15" id="vpro_mathab" >
             		{this.props.family.mathab}
             	</div>
     		</div>;
     	}
 
-    	var diocese;
+    	let diocese;
     	if(this.props.family.diocese)
     	{
     		diocese = <div>
@@ -180,6 +180,7 @@ class FamilyTab extends React.Component {
 
     	return(
     		<div id="FamilyTab" className="mb56 dn pad5 bg4 fontlig color3 clearfix f14">
+				<div className="hgt10"></div>
 				{FamilyData}
 			</div>
     	);

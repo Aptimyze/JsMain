@@ -38,7 +38,7 @@ componentWillUnmount() {
 
  componentWillReceiveProps(nextProps){
     this.setState({
-      total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
+      total : nextProps.listingName == 'match_alert'?nextProps.listing.no_of_results:nextProps.listing.total
     })
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
    {
@@ -178,7 +178,7 @@ render(){
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <div className="bg4 overXHidden" id="hideOnAction">
-                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}`}>
+                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}${tuple.buttonDetails.buttons[0].params}`}>
                       <div className="pad16 scrollhid hgt140">
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">

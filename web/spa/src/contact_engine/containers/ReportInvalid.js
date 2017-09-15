@@ -80,13 +80,13 @@ export default class ReportInvalid extends React.Component{
 
     if(this.state.selectValue == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
-    } else if( this.state.selectValue == "5" && document.getElementById("detailReasonsLayer").value == "") {
+    } else if( this.state.selectValue == "5" && document.getElementById("detailReasonsLayer").value.trim() == "") {
         this.showError(ErrorConstantsMapping("EnterReason"));
     } else {
       let otherReasonValue = '';
       if ( this.state.selectValue == "5" )
       {
-        otherReasonValue = document.getElementById("detailReasonsLayer").value; 
+        otherReasonValue = document.getElementById("detailReasonsLayer").value.trim(); 
       }
     
         let profilechecksum = this.props.profilechecksum;

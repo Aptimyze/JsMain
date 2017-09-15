@@ -129,7 +129,20 @@ class ProfilePage extends React.Component {
             endX = e.changedTouches[0].clientX;
         });
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
-        //  console.log("touchned");
+          // console.log('swipe in');
+          // console.log(e)
+          // console.log(document.getElementById("comHistoryOverlay"));
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("comHistoryOverlay")!=undefined))
+          {
+            console.log("not");
+            return;
+          }
+          else {
+
+
+         console.log("touchned");
+
+
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
               //console.log("s1");
                 document.getElementById("swipePage").classList.add("animateLeft");
@@ -159,6 +172,8 @@ class ProfilePage extends React.Component {
                 _this.refs.GAchild.trackJsEventGA("jsms","prevProfileVisit","")
                 _this.props.showProfile(_this, _this.state.prevDataApi);
             }
+          }
+
         });
     }
 
@@ -572,7 +587,7 @@ class ProfilePage extends React.Component {
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
 
-                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo}></DppTab>;
+                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
 
