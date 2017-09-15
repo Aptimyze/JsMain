@@ -39,14 +39,16 @@ EOF;
 
         $vspLibObj = new ViewSimilarProfilesMailer();
         foreach ($profileArr as $key => $val) {
-            $noOfEois = $val['INTERESTS_SENT'];
-            $typeOfEois = $val['TYPE'];
-            unset($val['INTEREST_SENT']);
-            unset($val['TYPE']);
-            $calculatedProfiles = $vspLibObj->getSimilarProfilesForMailer($key, $val);
-            if (count($calculatedProfiles) > 0) {
-                $MailerTableObj = new viewSimilar_MAILER();
-                $MailerTableObj->insertProfiles($key,$calculatedProfiles,$noOfEois,$typeOfEois);
+            if($key%99<50){
+                $noOfEois = $val['INTERESTS_SENT'];
+                $typeOfEois = $val['TYPE'];
+                unset($val['INTEREST_SENT']);
+                unset($val['TYPE']);
+                $calculatedProfiles = $vspLibObj->getSimilarProfilesForMailer($key, $val);
+                if (count($calculatedProfiles) > 0) {
+                    $MailerTableObj = new viewSimilar_MAILER();
+                    $MailerTableObj->insertProfiles($key,$calculatedProfiles,$noOfEois,$typeOfEois);
+                }
             }
             $profilesToSendMailObj->updateIsCalculated($key);
         }
