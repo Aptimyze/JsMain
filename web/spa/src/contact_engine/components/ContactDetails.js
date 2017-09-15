@@ -55,7 +55,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
 
 <div className="posfix btmo fullwid" id="bottomElement">
   <div className="pt15">
-      <div className="txtc"><a href="#" className={"pb20 white fontlig f16 "+this.state.bottomMsgShow} dangerouslySetInnerHTML={{__html: this.state.bottomMsgText}} id="bottomMsg"></a></div>
+      <div className="txtc"><a href={this.props.actionDetails.bottommsgurl} className={"pb20 white fontlig f16 "+this.state.bottomMsgShow} dangerouslySetInnerHTML={{__html: this.state.bottomMsgText}} id="bottomMsg"></a></div>
       <div className={"brdr22 white txtc f16 pad2 fontlig "+this.state.closeLyrShow} id="closeLayer" onClick={()=>this.props.closeCDLayer()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
         <a href="#" className="white txtc f16 pad2 fontlig " id="neverMindLayer" onClick={this.props.closeCDLayer} style={this.state.nevMindStyle} >Never Mind</a>
         <a href="javascript:void(0);" className={"brdr23_contact dispbl color2 txtc f16 pad2 fontlig "+this.state.memShow} id="membershipMessageCE" >{this.state.memText}</a>
