@@ -97,6 +97,10 @@ Class ButtonResponseFinal
 			$params["channel"] = $this->channel;
 			$responseArray = $this->getLogoutButtonArray($params);
 		}
+		$restResponseArray=self::jsmsRestButtonsrrayNew($params);
+				$responseArray["photo"]=$restResponseArray["photo"];
+				$responseArray["topmsg"]=$restResponseArray["topmsg"];
+				$responseArray["infobtnlabel"]=$restResponseArray["infobtnlabel"];
 
 		$finalResponse = self::buttonDetailsMerge($responseArray);
 		return $finalResponse;
@@ -694,6 +698,138 @@ Class ButtonResponseFinal
 		$buttons = self::buttonMerge($button);
 		return $buttons;
 	}
+
+
+	public function jsmsRestButtonsrrayNew($params)
+        {
+        	//var_dump($viewer);
+        	//$loginProfile = LoggedInProfile::getInstance('newjs_master');
+        	//print_r($logInProfile);die;
+        	//$otherProfile =  new Profile("", $otherProfileID);
+        	//print_r($otherProfileObj);die;
+        	//$this->contactObj        = new Contacts($loginProfile, $otherProfile);
+        	//print_r($this->contactObj->getTYPE());die;
+			//print_r($this->contactHandlerObj);die;
+			//print_r($this->contactHandlerObj->getViewer()->getPROFILEID());die;
+			if($this->loginProfile->getPROFILEID())
+			{
+			$date           = date_create($this->contactObj->getTIME());
+			$date           = date_format($date, 'jS M Y');
+			if ($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+			{
+				//print_r($this->contactObj->getTYPE());die;
+				switch ($this->contactObj->getTYPE()) {
+					case ContactHandler::NOCONTACT:
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"){
+							$restResponseArray["topmsg"] = "";
+							$restResponseArray["topmsg2"] = "Interest will be delivered once your profile is screened";
+						}
+						//echo "NOCONTACT";
+						break;
+
+						case ContactHandler::INITIATED:
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						if($this->contactObj->getSEEN()=="Y")
+							$restResponseArray["topmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has seen your interest & is yet to reply";
+						else
+							$restResponseArray["topmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." is yet to read your interest";
+						if ($this->contactObj->getCOUNT() >= ErrorHandler::REMINDER_COUNT)
+							$restResponseArray["infobtnlabel"] = "You cannot send more than 2 reminders, you may call the user directly";
+						//echo "INITIATE";
+						break;
+						case ContactHandler::CANCEL_CONTACT:
+						//echo "string";die;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["infobtnlabel"] = "You Cancelled your interest on " . $date;
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+
+						case ContactHandler::ACCEPT:
+						$restResponseArray["topmsg"] = "Interact with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+						{
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+							$restResponseArray["canwrite"] = 1;
+						}
+						} else {
+							$restResponseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$restResponseArray["infobtnvalue"]  = "";
+							$restResponseArray["infobtnaction"] = "MEMBERSHIP";
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						}
+						break;
+
+						case ContactHandler::DECLINE:
+						$restResponseArray["infobtnlabel"] = "They declined interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$responseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+
+						case ContactHandler::CANCEL:
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						$restResponseArray["infobtnlabel"] = "You cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+					}
+
+				}
+			else
+			{//print_r(ContactHandler::INITIATED);die;
+				switch ($this->contactObj->getTYPE()) {
+				case ContactHandler::NOCONTACT:
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						//if ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y")
+						//echo "NOCONTACT";
+						break;
+				case ContactHandler::INITIATED:
+
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+				case ContactHandler::CANCEL_CONTACT:
+					$restResponseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+					case ContactHandler::ACCEPT:
+					$restResponseArray["topmsg"] = "Interact with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+							$restResponseArray["canwrite"] = 1;
+						} else {
+							$restResponseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$restResponseArray["infobtnvalue"]  = "";
+							$restResponseArray["infobtnaction"] = "MEMBERSHIP";
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						}
+						break;
+					case ContactHandler::DECLINE:
+					$restResponseArray["infobtnlabel"] = "You declined interest on " . $date;
+						$restResponseArray["topmsg"] = "Changed your mind? Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+					case ContactHandler::CANCEL:
+					$restResponseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+				}
+
+
+
+			}
+			}
+		else
+		{
+			$responseArray = $this->getNewLogoutButtonArray(array("USERNAME"=>$this->otherProfile->getUSERNAME(),"PHOTO"=>array("url"=>$params["PHOTO"])));
+			//var_dump($responseArray);die;
+			$restResponseArray = self::buttonDetailsMerge($responseArray);
+		}
+			//print_r($restResponseArray);die;
+			return $restResponseArray;
+        }
 
 public function getExtraText($button){
 	$arr = array();

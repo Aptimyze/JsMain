@@ -158,7 +158,7 @@ class ThreeDots extends React.Component{
                       <div id="photoIDDiv" className="photoDiv">
                         <img id="ce_photo" className="srp_box2 mr6" src={this.props.profileThumbNailUrl} />
                       </div>
-                      <div className="f14 white fontlig opa80 pt10" id="topMsg">Connect with {this.props.username}</div>
+                      <div className="f14 white fontlig opa80 pt10" id="topMsg">{this.props.buttondata.topmsg}</div>
                     </div>;
 
 
