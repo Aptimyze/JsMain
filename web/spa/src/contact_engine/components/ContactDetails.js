@@ -14,8 +14,6 @@ var newState = this.getContactDetails(nextProps.actionDetails);
 this.setState({...newState});
 }
 render(){
-  console.log('render');
-  console.log(this.state.cdOHeight);
 
 return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
@@ -254,9 +252,9 @@ else
   else
       topMsg2TextShow = 'dispnone';
 
-  if(actiondetails.topmsg)
+  if(this.props.topmsg)
   {
-    topMsgText = actiondetails.contactdetailmsg,
+    topMsgText = this.props.topmsg,
     topMsgTextShow = '';
   }
   else
