@@ -36,7 +36,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
         </div>
     </div>
 <div className={"fullwid fontlig pad1 pt30 " + this.state.cdOvlayShow} id="contactDetailOverlay" style={{overflowY: 'auto', height:this.state.cdOHeight}}>
-  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Phone No.',style:this.state.c1Style,id:'mobile'})}
+  {this.getPhoneSection({contact:this.props.actionDetails.contact1,contact_message:this.props.actionDetails.contact1_message,showReportInvalid:true,label:'Mobile No.',style:this.state.c1Style,id:'mobile'})}
   <div className={"pt15 " + this.state.vCPreLayerShow} id="ViewContactPreLayer" style={{paddingTop: '20%'}}>
 <p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
@@ -277,7 +277,9 @@ else
 
     }
         if(actiondetails.footerbutton!=null){
-          if(actiondetails.footerbutton.action)nevMindStyle={display:'block'};
+          if(actiondetails.footerbutton.action=='MEMBERSHIP')
+            nevMindStyle={display:'block'};
+          else closeLyrShow = '';
           c1Style = {display:'none'};
           footerBShow = 'dispbl';
           footerBText = actiondetails.footerbutton.label;
