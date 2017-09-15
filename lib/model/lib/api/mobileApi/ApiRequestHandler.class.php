@@ -162,9 +162,9 @@ class ApiRequestHandler
 		$profileid = $request->getAttribute('profileid');
 		$loginData = $request->getAttribute('loginData');
 		if ($profileid) {
-			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData") {
+			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData"|| ($output["moduleName"]=='social' && $request->getParameter("fromAppRegistration")==1)) {
 			}
-			if (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
+			elseif (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
 				$request->setParameter('sectionFlag', "incomplete");
 				$output["moduleName"] = "profile";
 				$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["editprofile"][$request->getParameter("version")];
