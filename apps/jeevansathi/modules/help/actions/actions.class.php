@@ -54,7 +54,27 @@ class helpActions extends sfActions
       
       $helpQueries = new jsadmin_HELP_USER_QUERIES();
       $helpQueries->insert($paramsArr);
-      
+
+      //Mail to bug@jeevansathi.com for creating freshdesk ticket -- JSC-3301
+      $loginProfile = LoggedInProfile::getInstance();
+      if($loginProfile->getPROFILEID()){
+          $profileID = $loginProfile->getPROFILEID();
+      } else{
+          $jprofileObj = new JPROFILE();
+          $row = $jprofileObj->get($paramsArr['username'],"USERNAME","PROFILEID,USERNAME");
+          $profileID = $row["PROFILEID"];
+      }
+      $nameOfUserObj = new incentive_NAME_OF_USER();
+      $nameArr = $nameOfUserObj->getArray(array("PROFILEID"=>$profileID), "", "", "PROFILEID,NAME,DISPLAY");
+      if($nameArr[0]["DISPLAY"] == "Y")
+          $name = $nameArr[0]["NAME"];
+      else
+          $name = "";
+      $msg="Name: $name<BR>Username: ".$paramsArr['username']."<BR>Message: " .nl2br(htmlspecialchars($paramsArr['query']));
+      $subject="Jeevansathi Query [".$paramsArr['category']."]";
+      SendMail::send_email("bug@jeevansathi.com",$msg,$subject,$paramsArr['email']);
+      //End JSC-3301
+
       $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $apiObj->setResponseBody($result);
       $apiObj->generateResponse();
