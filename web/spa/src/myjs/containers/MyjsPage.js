@@ -72,18 +72,29 @@ export  class MyjsPage extends React.Component {
 			hamApi: false,
 			showPromo: false,
 			deviceHeight: window.innerHeight,
-			stopApiHit: 0
+			stopApiHit: 0,
+			hitAll: 0
 		}
   	}
 
   	componentDidMount()
   	{
-		if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+  		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.props.resetTimeStamp();
 			this.firstApiHits(this);
-		}
-		if(!this.props.myjsData.modFetched || !this.props.myjsData.ieFetched || !this.props.myjsData.irFetched || !this.props.myjsData.vaFetched || !this.props.myjsData.drFetched || this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
+			this.props.myjsData.ieFetched = false;
+			this.setState({
+				hitAll: 1
+			})
 			this.restApiHits(this);
+		}
+		else {
+			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
+				this.firstApiHits(this);
+			}
+			if(!this.props.myjsData.modFetched || !this.props.myjsData.ieFetched || !this.props.myjsData.irFetched || !this.props.myjsData.vaFetched || !this.props.myjsData.drFetched){
+				this.restApiHits(this);
+			}
 		}
 	}
 
@@ -99,9 +110,29 @@ export  class MyjsPage extends React.Component {
 
 	componentWillReceiveProps(nextProps)
 	{
-		// this.callEventListner();
-		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !this.state.stopApiHit)
-			this.restApiHits(this);
+		if(this.state.hitAll){
+			if(!this.state.irApi)
+				this.props.myjsData.irFetched = false;
+			else if(!this.state.modApi)
+				this.props.myjsData.modFetched = false;
+			else if(!this.state.vaApi)
+				this.props.myjsData.vaFetched = false;
+			else if(!this.state.drApi)
+				this.props.myjsData.drFetched = false;
+			else{
+				this.setState({
+					hitAll: 0
+				})
+			}
+			if(!this.state.stopApiHit)
+				this.restApiHits(this);
+		}
+		else{
+			// this.callEventListner();
+			if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !this.state.stopApiHit)
+				this.restApiHits(this);
+		}
+
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
 			showLoader : false
@@ -160,7 +191,7 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-  		window.addEventListener('scroll', (event) => {this.restApiHits()});
+   		window.addEventListener('scroll', (event) => {this.restApiHits()});
   	}
 
   	firstApiHits(){
@@ -179,7 +210,7 @@ export  class MyjsPage extends React.Component {
   	}
 
   	restApiHits(){
-  		if(!this.state.ieApi && !this.props.myjsData.ieFetched){
+   		if(!this.state.ieApi && !this.props.myjsData.ieFetched){
 		    this.props.hitApi_IE();
 		    this.setState({
 		    	ieApi: true
