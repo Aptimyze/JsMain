@@ -16,7 +16,7 @@ class DppTab extends React.Component {
     }
 
     getStatusMark(type) {
-        if(this.props.dpp_Ticks && this.state.loginStatus) {
+        if(this.props.dpp_Ticks && this.state.loginStatus && !this.props.checkOwnView) {
             if(this.props.dpp_Ticks[type].STATUS == "gnf") {
                 return <div className="fr wid27p txtc VPmt5">
                     <div className="checkmarkVP"></div>
@@ -50,7 +50,7 @@ class DppTab extends React.Component {
 
     render() {
 
-        var about_partner;
+        let about_partner='';
         if(this.props.dpp.about_partner) {
             about_partner = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_about_partner">{this.props.dpp.about_partner}</div>
         } else {
@@ -70,20 +70,20 @@ class DppTab extends React.Component {
             HisHer = "His";
             self_gender = "She";
         }
-        var matchingCount = "";
+        let matchingCount = "";
         if(this.props.dpp_Ticks) {
             if(this.props.dpp_Ticks.matching) {
                 matchingCount = this.props.dpp_Ticks.matching.matchingCount;
             }
         }
-        var totalCount = "";
+        let totalCount = "";
         if(this.props.dpp_Ticks) {
             if(this.props.dpp_Ticks.matching) {
                 totalCount = this.props.dpp_Ticks.matching.totalCount;
             }
         }
-        var matching_header;
-        if(this.props.dpp_Ticks && this.state.loginStatus)
+        let matching_header='';
+        if(this.props.dpp_Ticks && this.state.loginStatus && !this.props.checkOwnView)
         {
             matching_header = <div id="matchHeader" className="clearfix f13 fontlig">
                 <div className="fl color2 VPwid28p">{HisHer} Preference</div>
@@ -103,7 +103,7 @@ class DppTab extends React.Component {
             </div>;
         }
 
-        var dpp_height;
+        let dpp_height='';
         if(this.props.dpp.dpp_height)
         {
             dpp_height = <div className="clearfix js-countFields">
@@ -115,7 +115,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_age;
+        let dpp_age='';
         if(this.props.dpp.dpp_age)
         {
             dpp_age = <div className="clearfix js-countFields">
@@ -126,7 +126,7 @@ class DppTab extends React.Component {
                 {this.getStatusMark("dpp_age")}
             </div>
         }
-        var dpp_marital_status;
+        let dpp_marital_status='';
         if(this.props.dpp.dpp_marital_status)
         {
             dpp_marital_status = <div className="clearfix js-countFields">
@@ -138,7 +138,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_have_child;
+        let dpp_have_child='';
         if(this.props.dpp.dpp_have_child && this.props.dpp.dpp_marital_status != "Never Married" && this.props.dpp.dpp_marital_status != "")
         {
             dpp_have_child = <div className="clearfix js-countFields">
@@ -150,7 +150,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_manglik;
+        let dpp_manglik='';
         if(this.props.dpp.dpp_manglik)
         {
             dpp_manglik = <div className="clearfix js-countFields">
@@ -162,7 +162,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_religion;
+        let dpp_religion='';
         if(this.props.dpp.dpp_religion)
         {
             dpp_religion = <div className="clearfix js-countFields">
@@ -174,7 +174,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_mtongue;
+        let dpp_mtongue='';
         if(this.props.dpp.dpp_mtongue)
         {
             dpp_mtongue = <div className="clearfix js-countFields">
@@ -186,7 +186,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_caste;
+        let dpp_caste='';
         if(this.props.dpp.dpp_caste)
         {
             dpp_caste = <div className="clearfix js-countFields">
@@ -198,7 +198,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_city;
+        let dpp_city='';
         if(this.props.dpp.dpp_city)
         {
             dpp_city = <div className="clearfix js-countFields">
@@ -210,7 +210,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_country;
+        let dpp_country='';
         if(this.props.dpp.dpp_country)
         {
             dpp_country = <div className="clearfix js-countFields">
@@ -222,7 +222,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_edu_level;
+        let dpp_edu_level='';
         if(this.props.dpp.dpp_edu_level)
         {
             dpp_edu_level = <div className="clearfix js-countFields">
@@ -234,7 +234,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_occupation;
+        let dpp_occupation='';
         if(this.props.dpp.dpp_occupation)
         {
             dpp_occupation = <div className="clearfix js-countFields">
@@ -246,7 +246,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_earning;
+        let dpp_earning='';
         if(this.props.dpp.dpp_earning)
         {
             dpp_earning = <div className="clearfix js-countFields">
@@ -258,7 +258,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_diet;
+        let dpp_diet='';
         if(this.props.dpp.dpp_diet)
         {
             dpp_diet = <div className="clearfix js-countFields">
@@ -270,7 +270,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_smoke;
+        let dpp_smoke='';
         if(this.props.dpp.dpp_smoke)
         {
             dpp_smoke = <div className="clearfix js-countFields">
@@ -282,7 +282,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_drink;
+        let dpp_drink='';
         if(this.props.dpp.dpp_drink)
         {
             dpp_drink = <div className="clearfix js-countFields">
@@ -294,7 +294,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_complexion;
+        let dpp_complexion='';
         if(this.props.dpp.dpp_complexion)
         {
             dpp_complexion = <div className="clearfix js-countFields">
@@ -306,7 +306,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_btype;
+        let dpp_btype='';
         if(this.props.dpp.dpp_btype)
         {
             dpp_btype = <div className="clearfix js-countFields">
@@ -318,7 +318,7 @@ class DppTab extends React.Component {
             </div>
         }
 
-        var dpp_handi;
+        let dpp_handi='';
         if(this.props.dpp.dpp_handi)
         {
             dpp_handi = <div className="clearfix js-countFields">

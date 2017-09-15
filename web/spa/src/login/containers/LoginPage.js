@@ -43,9 +43,9 @@ class LoginPage extends React.Component {
         let prevUrl = window.location.href.split("prevUrl=")[1];
         if ( prevUrl )
         {
-            prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
+            prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.\-]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
             props.history.prevUrl = "/"+prevUrl;
-            this.state.showRegisterationMessage = true;        
+            this.state.showRegisterationMessage = true;
         }
     }
     componentWillMount() {
@@ -152,7 +152,7 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        
+
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -318,6 +318,13 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
+        let newHref;
+        if(getCookie("AUTHCHECKSUM")) {
+            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        } else {
+             newHref = CONSTANTS.HINDI_SITE;
+        }
+
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>
@@ -346,10 +353,10 @@ class LoginPage extends React.Component {
                                             {captchDiv}
                                             {buttonView}
                                             {appDownloadView}
-                                            
+
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLink" href={CONSTANTS.HINDI_SITE} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={() => this.translateSite(CONSTANTS.HINDI_SITE)} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
@@ -361,7 +368,18 @@ class LoginPage extends React.Component {
             </div>
         );
     }
+
+    translateSite(translateURL)
+    {
+        if(translateURL.indexOf('hindi')!=-1){
+            setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
+        } else {
+            setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
+        }
+    }
 }
+
+
 
 const mapStateToProps = (state) => {
     return{

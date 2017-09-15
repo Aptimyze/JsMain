@@ -1,1 +1,1 @@
-export const API_SERVER = 'http://branch1.jeev.com';
+export const API_SERVER = '';

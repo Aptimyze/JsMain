@@ -5,6 +5,8 @@ export default class ContactDetails extends React.Component{
   constructor(props){
     super(props);
     this.state=this.getContactDetails(this.props.actionDetails);
+    this.state.tupleDim = {width:'100%','height': document.getElementById("ProfilePage").clientHeight};
+
   }
 
 componentWillReceiveProps(nextProps){
@@ -12,10 +14,12 @@ var newState = this.getContactDetails(nextProps.actionDetails);
 this.setState({...newState});
 }
 render(){
+  console.log('render');
+  console.log(this.state.cdOHeight);
 
-return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',height:window.innerHeight}}>
+return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
-            <div className={"posabs ce_z103 ce_top1 fullwid " +this.state.commonOverlayShow} style={this.state.tupleDim}>
+            <div className={"posabs ce_z103 ce_top1 fullwid "} style={this.state.tupleDim}>
 
 <div className="white fullwid" id="commonOverlayTop">
 
@@ -43,7 +47,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
 <p id="ViewContactPreLayerTextNoNumber" dangerouslySetInnerHTML={{__html: this.state.vCNoNumber}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 {this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
-{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:true,label:'Alternate No.',style:{},id:'alternateNumber'})}
+{this.getPhoneSection({contact:this.props.actionDetails.contact3,contact_message:this.props.actionDetails.contact3_message,showReportInvalid:false,label:'Alternate No.',style:{},id:'alternateNumber'})}
 {this.getEmailInfo({contact:this.props.actionDetails.contact4,contact_message:this.props.actionDetails.contact4_message,showReportInvalid:false,label:'Email',style:{},id:'email'})}
 
   {this.state.emailInfo}
@@ -70,9 +74,16 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={{width:'100%',heigh
 }
 
 componentDidMount(){
+  console.log("ComponentDidMount  viw contact");
+  console.log(this.state.cdOHeight);
   //$("#contactDetailOverlay").height($("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top);
-  let getOffset = (ele)=> document.getElementById(ele).getBoundingClientRect().top;
-  this.setState({cdOHeight:(getOffset('bottomElement')-getOffset('contactDetailOverlay')) });
+  let getOffset = (ele)=> document.getElementById(ele).clientHeight;
+  console.log(getOffset('bottomElement'));
+  console.log(getOffset('contactDetailOverlay'));
+  // this.setState({cdOHeight:(getOffset('bottomElement')-getOffset('contactDetailOverlay')) });
+  this.setState({
+   cdOHeight:(document.getElementById("ProfilePage").clientHeight - (getOffset('bottomElement')+ getOffset('contactDetailOverlay') )  ) 
+ });
 //  $("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top
 }
 

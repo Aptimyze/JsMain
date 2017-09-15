@@ -21,17 +21,17 @@ export default class ReportInvalid extends React.Component{
             errorMessage: "",
             showLoader : false,
             timeToHide: 3000,
-            tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
+            tupleDim : {'height': document.getElementById("ProfilePage").clientHeight}
         }
     }
 
     componentDidMount(){
+      console.log("afvabdv",document.getElementById("ProfilePage").clientHeight);
       //  document.getElementById("reportInvalidMidDiv").style.height = (window.innerHeight - 50)+"px";
       let topHeadHgt, bottomBtnHeight;
-      topHeadHgt = document.getElementById('reportAbustop').clientHeight;
-      bottomBtnHeight =document.getElementById('reportAbusbtm').clientHeight;
-      document.getElementById('reportInvalidMidDiv').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
-    //  document.getElementById('reportInvalidScreen2').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+      topHeadHgt = document.getElementById('reportInvalidtop').clientHeight;
+      bottomBtnHeight =document.getElementById('reportInvalidbtm').clientHeight;
+      document.getElementById('js-reportInvalidMainScreen').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
     }
 
     closeInvalidLayer() {
@@ -73,7 +73,6 @@ export default class ReportInvalid extends React.Component{
                 insertError : false,
                 errorMessage : ""
             });
-            _this.props.closeInvalidLayer();
         }, this.state.timeToHide+100);
     }
 
@@ -81,13 +80,13 @@ export default class ReportInvalid extends React.Component{
 
     if(this.state.selectValue == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
-    } else if( this.state.selectValue == "5" && document.getElementById("detailReasonsLayer").value == "") {
+    } else if( this.state.selectValue == "5" && document.getElementById("detailReasonsLayer").value.trim() == "") {
         this.showError(ErrorConstantsMapping("EnterReason"));
     } else {
       let otherReasonValue = '';
       if ( this.state.selectValue == "5" )
       {
-        otherReasonValue = document.getElementById("detailReasonsLayer").value; 
+        otherReasonValue = document.getElementById("detailReasonsLayer").value.trim(); 
       }
     
         let profilechecksum = this.props.profilechecksum;
@@ -126,6 +125,9 @@ export default class ReportInvalid extends React.Component{
             showLoader : false
           });
           _this.showError(response.data.message);
+          setTimeout(function () {
+            _this.props.closeInvalidLayer();
+          }, this.state.timeToHide+100)
              
         })
         .catch( (error) => {
@@ -140,8 +142,8 @@ export default class ReportInvalid extends React.Component{
 
     let InvalidList = [{"key":6,"text":"The number does not exist "}, {"key":1,"text":"Switched off / Not reachable"}, {"key":2,"text":"Not an account holder's phone"}, {"key":4,"text":"Not picking up "}, {"key":3,"text":"Already married / engaged "}, {"key":5,"text":"Other reasons (please specify)"}];
     
-
-    topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportAbustop">
+    console.log("report invalid this.props",this.props);
+    topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportInvalidtop">
           <div className="posrel fullwid ">
               <img id="photoReportInvalid" className="srp_box3 fl dispibl" src={this.props.profileThumbNailUrl} />
               <div className="white fontthin f19 txtc dispibl wid70p pt20">Report Invalid</div>
@@ -150,7 +152,7 @@ export default class ReportInvalid extends React.Component{
       </div>
 
     invalidListLayer =   <div id="reportInvalidMidDiv" className="flowauto ce_rptabu_c">
-                            <div className="reportInvalidScreen clearfix" id="js-reportInvalidMainScreen">
+                            <div className="flowauto reportInvalidScreen clearfix" id="js-reportInvalidMainScreen">
                                 <i className="mainsp ce_arow_new fl"></i>
                                 <div className="fl wid88p fontthin">
                                     <div className="white fullwid dispibl dashedBorder pad18">Report Invalid</div>
@@ -171,7 +173,7 @@ export default class ReportInvalid extends React.Component{
                             </div>
                          </div>;
 
-    invalidButtonLayer = <div className="fullwid posfix btm0" id="reportAbusbtm">
+    invalidButtonLayer = <div className="fullwid posfix btm0" id="reportInvalidbtm">
         <div onClick={() => this.submitInvalid()} id="reportInvalidSubmit" className="bg7 white lh30 fullwid dispbl txtc lh50">Report Invalid</div>
     </div>
 
@@ -186,9 +188,9 @@ export default class ReportInvalid extends React.Component{
       loaderView = <Loader show="page"></Loader>;
     } 
 
-
+    console.log("reportInvalidbtm",this.state.tupleDim);
     return(
-      <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+      <div id="hgkj" className="posabs ce-bg ce_top1 ce_z101 fullwid" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
           <div id="reportInvalidContainer">
