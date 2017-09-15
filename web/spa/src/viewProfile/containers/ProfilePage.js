@@ -68,11 +68,12 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
-      //console.log('componentDidMount');
+        console.log('componentDidMount');
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
         //console.log(this.state.gender);
+        window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
