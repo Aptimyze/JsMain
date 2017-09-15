@@ -85,7 +85,7 @@ EOF;
 //                     $file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
 //                     fwrite($file,$msg);
                     //Sending mail and tracking sent status
-                    $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
+                    $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName,'','',$agentEmail);
                     if ($flag) {
                     	$this->updateStatus($pid,'Y');
                         $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);

@@ -398,7 +398,7 @@
             $("#errorMessage").removeClass('colorNew').addClass('color2').html('Invalid photo<br>');
         }
         if(useCase == 'verified'){
-            window.location.href = "/P/logout.php";
+            window.location.href = "/static/PostWeddingServices";
         } else {
             $('html,body').animate({scrollTop: $("#errorMessage").offset().top-20},1000);
             $("#errorMessage").removeClass('colorNew').addClass('color2');
