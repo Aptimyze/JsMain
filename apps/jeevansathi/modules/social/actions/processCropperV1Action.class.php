@@ -48,6 +48,10 @@ class processCropperV1Action extends sfActions
 		{
 			$profileInfo['PICTUREID'] = $k;
 			$profileInfo['picSizeVariants'] = $v;
+			foreach($v as $k1=>$v1)
+			{
+				$profileInfo['picSizeVariants'][$k1]= PictureFunctions::getCloudOrApplicationCompleteUrl($v1);
+			}
 		}
                 if(is_array($profilesUpdate))
                         $output = $pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
