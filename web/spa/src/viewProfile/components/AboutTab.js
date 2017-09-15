@@ -8,12 +8,12 @@ class AboutTab extends React.Component {
 	constructor(props) {
         super();
     }
-    render() {
+    render() {      
     	return (
 		    <div id="AboutTab" className="mb56">
 				  <BasicInfo about = {this.props.about}/>
           <CareerInfo about = {this.props.about}/>
-  				<KundliInfo username = {this.props.about.username} show_gunascore={this.props.show_gunascore} profilechecksum={this.props.profilechecksum} about = {this.props.about}/>
+  				<KundliInfo username = {this.props.about.username} show_gunascore={this.props.show_gunascore} profilechecksum={this.props.profilechecksum} about = {this.props.about} astroSent ={this.props.astroSent} />
   				<LifestyleInfo about = {this.props.about} life = {this.props.life}/>
 			</div>
     	);

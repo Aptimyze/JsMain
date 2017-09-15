@@ -272,7 +272,7 @@ getOverLayDataDisplay(){
                     profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
-        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop()} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
+        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop()} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} topmsg={this.props.buttondata.topmsg} />);
 
       if(this.state.showReportInvalid)
       {

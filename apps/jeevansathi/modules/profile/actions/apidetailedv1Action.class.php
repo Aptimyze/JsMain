@@ -324,6 +324,8 @@ class apidetailedv1Action extends sfAction
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
 		}
+		//adding an extra flag which was in detailedAction but was missing from the api
+		$out["astroSent"] = $this->checkIfAstroSent();
 		return $out;
 	}
 
@@ -544,5 +546,27 @@ class apidetailedv1Action extends sfAction
 		$countArr["matchingCount"] =$matchingCount;
 		return $countArr;
 	}
+
+	public function checkIfAstroSent()
+    {    	
+    	$astroObj = new astroReport();
+    	$flag = $astroObj->getActualReportFlag($this->loginProfile->getPROFILEID(),$this->profile->getPROFILEID());					
+    	if($flag)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		$count = $astroObj->getNumberOfActualReportSent($this->loginProfile->getPROFILEID());					
+    		if($count >= "100")
+    		{
+    			return 0;
+    		}
+    		else
+    		{
+    			return 1;
+    		}
+    	}	
+    }
 }
 ?>
