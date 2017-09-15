@@ -20,6 +20,22 @@ logoutPageSuccess:
   javascripts: [jspc/common/hslider,jspc/logout/hpjs]
   layout: jspcLayout
 
+PostWeddingServicesSuccess:
+  metas:
+    title:        Jeevansathi Matrimonials- Post wedding services
+
+  stylesheets:    [jspc/static/postWeddingServices_css]
+  javascripts: [jspc/common/hslider,jspc/static/postWeddingServices_js]
+  layout: jspcLayout
+
+mobPostWeddingServicesSuccess:
+  metas:
+    title:        Jeevansathi Matrimonials- Post wedding services
+
+  stylesheets:    [jspc/static/postWeddingServices_css]
+  javascripts: [jspc/static/postWeddingServices_js]
+  layout: jsmsMobLayout
+
 _callHelp:
   has_layout:  false
 

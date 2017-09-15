@@ -348,6 +348,7 @@ else {
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
+        
         if(layerId==9 && button=='B1')
                     {   
                         var newNameOfUser='',privacyShowName='';
@@ -532,7 +533,17 @@ else {
                             });
                         return;
                     }
+                    if(layerId==19){
+                        if(typeof(fromDetailedAction)!='undefined' && fromDetailedAction==1)
+                        {
+                            if(button=='B2')
+                            {
+                                if(typeof(redirectViewProfileUrl)!='undefined' && redirectViewProfileUrl)
+                                   CALParams="&redirecPdUrl="+redirectViewProfileUrl;
+                            }
 
+                        }
+                    }
         if(button == 'B2'){
             GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
         }else if(button == "B1"){
