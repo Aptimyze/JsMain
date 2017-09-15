@@ -2995,11 +2995,14 @@ class MembershipHandler
             foreach ($mtongueKeys as $k=>$v){
                 foreach ($value as $kk=>$vv){
                     $mainMem = rtrim(preg_replace('/[^a-zA-Z]/', '', $kk),"L");
-                    if(in_array($mainMem,$memArray))
+                    if(!empty($userObj) && $userObj!="" && $userObj->profileid && $userObj->mtongue !=$v)
+                        continue;
+                    else if(in_array($mainMem,$memArray))
                         $minPriceArr[$v][$mainMem][$kk]=$vv;
                 }
             }
         }
+
         $membership = array();
         foreach ($minPriceArr as $key=>$value){
             foreach ($value as $k=>$v){
