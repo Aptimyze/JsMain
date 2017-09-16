@@ -27,6 +27,13 @@ require ('../style/jsmsMyjs_css.css');
 
 
 export class CheckDataPresent extends React.Component{
+
+constructor(props){
+	super(props);
+}
+	componentDidMount(){
+	this.props.restApiFun();	
+}
 	render(){
 
 
@@ -64,16 +71,9 @@ export  class MyjsPage extends React.Component {
 		this.state=
 		{
 			myjsApi: false,
-			irApi: false,
-			modApi: false,
-			ieApi: false,
-			drApi: false,
-			vaApi: false,
 			hamApi: false,
 			showPromo: false,
-			deviceHeight: window.innerHeight,
-			stopApiHit: 0,
-			hitAll: 0
+			deviceHeight: window.innerHeight
 		}
   	}
 
@@ -82,27 +82,23 @@ export  class MyjsPage extends React.Component {
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.props.resetTimeStamp();
 			this.firstApiHits(this);
-			this.props.myjsData.ieFetched = false;
-			this.setState({
-				hitAll: 1
-			})
-			this.restApiHits(this);
+			this.ieApi = false;
+			this.irApi = false;
+			this.modApi = false;
+			this.vaApi = false;
+			this.drApi = false;			
 		}
 		else {
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
 				this.firstApiHits(this);
 			}
-			if(!this.props.myjsData.modFetched || !this.props.myjsData.ieFetched || !this.props.myjsData.irFetched || !this.props.myjsData.vaFetched || !this.props.myjsData.drFetched){
-				this.restApiHits(this);
-			}
 		}
 	}
 
+
 	componentDidUpdate(){
-		if(this.isScreenFull() && !this.state.stopApiHit){
-			this.setState({
-				stopApiHit: 1
-			})
+		if(this.props.myjsData.modFetched){
+			this.restApiHits(this);
 		}
 		this.callEventListner();
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
@@ -110,27 +106,8 @@ export  class MyjsPage extends React.Component {
 
 	componentWillReceiveProps(nextProps)
 	{
-		if(this.state.hitAll){
-			if(!this.state.irApi)
-				this.props.myjsData.irFetched = false;
-			else if(!this.state.modApi)
-				this.props.myjsData.modFetched = false;
-			else if(!this.state.vaApi)
-				this.props.myjsData.vaFetched = false;
-			else if(!this.state.drApi)
-				this.props.myjsData.drFetched = false;
-			else{
-				this.setState({
-					hitAll: 0
-				})
-			}
-			if(!this.state.stopApiHit)
-				this.restApiHits(this);
-		}
-		else{
-			// this.callEventListner();
-			if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !this.state.stopApiHit)
-				this.restApiHits(this);
+		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !nextProps.myjsData.ieFetched){
+			this.restApiHits(this);
 		}
 
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
@@ -210,37 +187,39 @@ export  class MyjsPage extends React.Component {
   	}
 
   	restApiHits(){
-   		if(!this.state.ieApi && !this.props.myjsData.ieFetched){
-		    this.props.hitApi_IE();
-		    this.setState({
-		    	ieApi: true
-		    });
+  		if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched){
+  			 return;
+  		}
+   		if(!this.props.myjsData.ieFetched){
+   			if(!this.ieApi){
+   				this.ieApi = true;
+		 		this.props.hitApi_IE();
+			}
 		}
-  		else if(!this.state.irApi && !this.props.myjsData.irFetched){
-		    this.props.hitApi_IR();
-		    this.setState({
-		    	irApi: true
-		    });
+  		else if(!this.props.myjsData.irFetched){
+  			if(!this.irApi){
+  				this.irApi = true;
+		    	this.props.hitApi_IR();
+		    }
 		}
-  		else if(!this.state.modApi && !this.props.myjsData.modFetched){
-		    this.props.hitApi_MOD();
-		    this.setState({
-		    	modApi: true
-		    });
+  		else if(!this.props.myjsData.modFetched){
+  			if(!this.modApi){
+  				this.modApi = true;
+		    	this.props.hitApi_MOD();
+		    }
 		}
-		else if(!this.state.vaApi && !this.props.myjsData.vaFetched){
-		    this.props.hitApi_VA();
-		    this.setState({
-		    	vaApi: true
-		    });
+		else if(!this.props.myjsData.vaFetched){
+			if(!this.vaApi){
+				this.vaApi = true;
+		    	this.props.hitApi_VA();
+		    }
 		}
- 		else if(!this.state.drApi && !this.props.myjsData.drFetched){
-		    this.props.hitApi_DR();
-		    this.setState({
-		    drApi: true
-		    });
+ 		else if(!this.props.myjsData.drFetched){
+ 			if(!this.drApi){
+		    	this.drApi = true;
+		    	this.props.hitApi_DR();
+		    }
 		}
-
   	}
 
 		hitIRforPagination(){
@@ -280,26 +259,26 @@ export  class MyjsPage extends React.Component {
 	    }
 
 			if(this.props.myjsData.ieFetched){
-	    	var interestExpView = <CheckDataPresent fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
+	    	var interestExpView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
 	    }
 
 	    if(this.props.myjsData.irFetched && this.props.myjsData.apiDataIR.profiles){
-	    	var interestRecView = <MyjsSlider apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
+	    	var interestRecView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
 	    }
 
 	    if(this.props.myjsData.modFetched && this.props.myjsData.apiDataMOD.profiles){
-	    	var matchOfTheDayView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
+	    	var matchOfTheDayView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
 	    }
 	    if(this.props.myjsData.vaFetched ){
-	    	var MyjsProfileVisitorView = <CheckDataPresent fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
+	    	var MyjsProfileVisitorView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched && this.props.myjsData.apiDataDR.profiles)
 	    {
-				var dailyRecommendationsView = <MyjsSlider cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
+				var dailyRecommendationsView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
 			if(   (this.props.myjsData.drFetched)&& (this.props.myjsData.vaFetched)&& (this.props.myjsData.irFetched) )
 			{
-				var noDatablockView=<NodataBlock data={this.props.myjsData}/>
+				var noDatablockView=<NodataBlock restApiFun={this.restApiHits.bind(this)} data={this.props.myjsData}/>
 			}
 
 		this.trackJsb9 = 1;

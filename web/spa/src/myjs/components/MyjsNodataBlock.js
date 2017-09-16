@@ -4,8 +4,11 @@ import React from "react";
 let i=0;
 
 export class SetNodataHtml extends React.Component{
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+  }
+  componentDidMount(){
+    this.props.restApiFun();
   }
   render(){
 

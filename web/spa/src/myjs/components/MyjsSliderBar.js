@@ -30,6 +30,7 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
+  this.props.restApiFun();
   this.bindSlider();
 }
 componentWillUnmount() {
