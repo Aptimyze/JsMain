@@ -68,11 +68,12 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
-      //console.log('componentDidMount');
+        console.log('componentDidMount');
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
         //console.log(this.state.gender);
+        window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
             urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
@@ -132,7 +133,7 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("comHistoryOverlay")!=undefined))
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null))
           {
             console.log("not");
             return;
@@ -583,16 +584,13 @@ class ProfilePage extends React.Component {
                      Header = this.props.AboutInfo.username;
                 }
 
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo}></AboutTab></div>;
+                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
 
                 DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
-
-                console.log(getCookie("AUTHCHECKSUM"));
-
 
                 showAlbumView = this.props.pic.pic_count == 0 ?
                   (
@@ -734,6 +732,7 @@ const mapStateToProps = (state) => {
        dpp_Ticks: state.ProfileReducer.dpp_Ticks,
        profileId: state.ProfileReducer.profileId,
        show_gunascore:state.ProfileReducer.show_gunascore,
+       astroSent: state.ProfileReducer.astroSent,
        fetchedProfilechecksum: state.ProfileReducer.fetchedProfilechecksum,
        pageInfo: state.ProfileReducer.pageInfo,
        myjsData: state.MyjsReducer,

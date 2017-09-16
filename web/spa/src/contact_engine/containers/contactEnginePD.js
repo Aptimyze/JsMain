@@ -140,7 +140,31 @@ export class contactEnginePD extends React.Component{
           }
 
         break;
+
+
       }
+      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1)
+      {
+        var similarProfileCheckSumTemp = window.location.search.split('similarOf=');
+        if(typeof similarProfileCheckSumTemp[1]!="undefined" && similarProfileCheckSumTemp[1])
+          var similarProfileCheckSum = similarProfileCheckSumTemp[1].split("&")[0];
+        else
+          var similarProfileCheckSum = "";
+        if(typeof NAVIGATOR=="undefined" || !NAVIGATOR)
+          var NAVIGATOR="";
+            if(typeof getNAVIGATOR == "function" && NAVIGATOR==""){
+                NAVIGATOR = getNAVIGATOR();
+            }
+        if(this.canIShowNext(similarProfileCheckSum,this.props.profiledata.profilechecksum))
+                    {
+                        window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1";
+                    }
+      }
+
+      if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button){
+        this.props.replaceSingleButton(Array(responseButtons.buttondetails));
+      }
+
     }
   }
   render(){
@@ -248,7 +272,7 @@ getOverLayDataDisplay(){
                     profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
-        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop()} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
+        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop()} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} topmsg={this.props.buttondata.topmsg} />);
 
       if(this.state.showReportInvalid)
       {
@@ -326,6 +350,40 @@ getCancelDeclineLayer(actionDetails){
   setFrontButtonDisplay(object){
     this.setState({frontButton:object});
   }
+
+  canIShowNext(parentUsername,username)
+  {
+return false;
+  	let SessionStorageView = new SessionStorage;
+  	var str = SessionStorageView.getUserData("viewSim4");
+  	var newString='';
+          if(str && parentUsername)
+          {
+                  if(str.indexOf(',')!='-1')
+                  {
+                          var res = str.split(",");
+                          if(res[0]== parentUsername)
+                          {
+                                  newString = res[0]+","+username;
+                          }
+  			else
+  			{
+  				return false;
+  			}
+                  }
+  		else if(str!=username)
+  		{
+                  	newString = parentUsername+","+username;
+  		}
+          }
+          else{
+  		newString = username;
+  }
+  	if(newString)
+  		SessionStorageView.storeUserData("viewSim4",newString);
+  	return true;
+  }
+
 
 }
 

@@ -213,25 +213,28 @@ return WriteMsg_buttonView;
         }
 
   return(
-    <div>
+    <div id="WriteMsgComponent">
       {loaderView}
-      <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
-        <a href="#"  className="ce_overlay ce_z102" > </a>
-        <div className="posabs ce_z103 ce_top1 fullwid">
+      <div className="posfix ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+        <div className="posrel">
+          <a href="#"  className="ce_overlay ce_z102" > </a>
 
-            <div className="pad18 brdr4" id="comm_headerMsg">
-              {this.getWriteMsg_topView()}
-            </div>
+          <div className="posabs ce_z103 ce_top1 fullwid">
+              <div className="pad18 brdr4" id="comm_headerMsg">
+                {this.getWriteMsg_topView()}
+              </div>
 
-            <div className="message_con ce_scoll1" onScroll={this.WrieMsgScrollEvent} id="msgId">
-              {this.getWriteMsg_innerView()}
-            </div>
+              <div className="message_con ce_scoll1" onScroll={this.WrieMsgScrollEvent} id="msgId">
+                {this.getWriteMsg_innerView()}
+              </div>
 
-            <div id="parentFootId">
-              {this.getWriteMsg_buttonView()}
-            </div>
+              <div id="parentFootId">
+                {this.getWriteMsg_buttonView()}
+              </div>
+          </div>
 
         </div>
+
       </div>
     </div>
     );

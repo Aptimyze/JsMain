@@ -168,12 +168,6 @@ class ContactDetailsV2Action extends sfAction
 								$responseArray["footerbutton"]["action"] = "EDITPROFILE";
 								$responseArray["footerbutton"]["text"] = "";
 								$responseArray["footerbutton"]["enable"] = true;
-								$responseArray["contact1"]["value"]      = "blur";
-								$responseArray["contact1"]["label"]      = "Phone No.";
-								$responseArray["contact1"]["action"]     = null;
-								$responseArray["contact4"]["value"]      = "blur";
-								$responseArray["contact4"]["label"]      = "Email";
-								$responseArray["contact4"]["action"]     = null;
 							}
 							else
 								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.<a href='/profile/viewprofile.php?ownview=1' class='colr5'> Update Profile";

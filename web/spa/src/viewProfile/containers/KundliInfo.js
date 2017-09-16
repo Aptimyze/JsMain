@@ -51,20 +51,40 @@ class KundliInfo extends React.Component {
         this.setState({
             showAstroLayer:true,
             astroType: type
-        });
-        let call_url = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+this.props.profilechecksum+"&sendMail=1&sampleReport=1&username="+this.props.username;
+        });        
+        let call_url;
+        let clickedElem = false;
+        if(type == "astroMem")
+        {
+            call_url = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+this.props.profilechecksum+"&sendMail=1&username="+this.props.username;
+        }
+        else
+        {
+            call_url = "/api/v1/profile/astroCompatibility?otherProfilechecksum="+this.props.profilechecksum+"&sendMail=1&sampleReport=1&username="+this.props.username;
+        }
         if(getCookie('AUTHCHECKSUM')){
            call_url += "&AUTHCHECKSUM="+getCookie('AUTHCHECKSUM');
         }
-        axios({
-            method: "POST",
-            url: API_SERVER_CONSTANTS.API_SERVER +call_url,
-            data: '',
-            headers: {
-              'Accept': 'application/json',
-              'withCredentials':true
-            },
-        });
+        if(type !="astroMem")
+        {
+            axios({
+                method: "POST",
+                url: API_SERVER_CONSTANTS.API_SERVER +call_url,
+                data: '',
+                headers: {
+                  'Accept': 'application/json',
+                  'withCredentials':true
+              },
+          });
+        }
+        else
+        {
+            if(this.props.astroSent == 1 && clickedElem == false)
+            {
+                clickedElem = true;                
+                window.location.href = API_SERVER_CONSTANTS.API_SERVER +call_url;
+            }
+        }
     }
 
     render() {
