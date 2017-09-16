@@ -76,7 +76,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         // console.log("shahjahan currentDataUrl",localStorage.getItem("currentDataUrl"))
         if( dispatch != "saveLocalNext")
         {
-          console.log("shahjahan getting next data url.");
           localStorage.setItem("prevData", localStorage.getItem("currentData"));
           localStorage.setItem("prevDataUrl",localStorage.getItem("currentDataUrl"));
 
@@ -88,7 +87,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
         }
       } else {
-        console.log("shahjahan getting currentdata");
         data = JSON.parse(localStorage.getItem("currentData"))
       }
       if(typeof dispatch == 'function')
@@ -221,6 +219,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         return response.data;
       })
       .catch( (error) => {
+        if(typeof dispatch == 'function')
+        {
+          dispatch({
+            type: reducer,
+            payload: {},
+            token: tupleID
+          });
+        }
         console.warn('Actions - fetchJobs - recreived error: ', error)
       })
     }

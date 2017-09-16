@@ -104,7 +104,7 @@ componentWillUnmount(){
   render(){
     var editBarView = this.props.profileInfo.incomplete.map((options,index) => {
                        return (
-                           <div className="cell brdr6 vtop pad13 editBarStyle4">
+                           <div key={index} className="cell brdr6 vtop pad13 editBarStyle4">
             <div className="txtc ">
             <a href={options.url}>
                 <div className="editBarStyle5">
