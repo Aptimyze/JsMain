@@ -79,7 +79,6 @@ const MyjsReducer = (state={
 			break;
 			case 'SPLICE_MYJS_DATA':
 			var arr,key;
-			console.log(action.payload);
 				switch(action.payload.infotype)
 				{
 					case 'INTEREST_RECEIVED':
@@ -110,17 +109,24 @@ const MyjsReducer = (state={
 				case 'RESET_MYJS_TIMESTAMP':
 
 				let value = action.payload.value ? action.payload.value  : new Date().getTime();
-				if(value==-1)
+				if(value==-1){
 					state = {
 						...state,
 						fetched :false,
+						ieFetched : false,
+						irFetched : false,
+						modFetched : false,
+						vaFetched : false,
+						drFetched : false,
 						timeStamp : value
 						}
-				else
+				}
+				else{
 					state = {
 						...state,
 						timeStamp : value
 						}
+				}
 				break;
 				case 'SET_CAL_SHOWN':
 					state = {
