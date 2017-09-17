@@ -29,23 +29,23 @@ class PhotoView extends React.Component {
         if(document.getElementById("label1")) {
             document.getElementById("label1").classList.remove("dn");
             if(response.actionDetails && response.actionDetails.errmsglabel)
-                {   
+                {
                     this.setState ({
                         insertError : true,
                         errorMessage : response.actionDetails.errmsglabel
-                })    
-                setTimeout(function(){ 
+                })
+                setTimeout(function(){
                     _this.setState ({
                         insertError : false,
                         errorMessage : ""
-                    })     
-                }, this.state.timeToHide+100); 
+                    })
+                }, this.state.timeToHide+100);
             }
             else if(response.responseMessage== "Successful" && response.imageButtonDetail.label) {
-                if(getCookie("AUTHCHECKSUM")) 
+                if(getCookie("AUTHCHECKSUM"))
                 {
                     document.getElementById("label1").innerHTML = response.imageButtonDetail.label;
-                }  
+                }
             }
         }
     }
@@ -63,29 +63,36 @@ class PhotoView extends React.Component {
                 // e.target.innerHTML = "Please Login to Continue"
             }
         }
-        
+
     }
     showVerification(e) {
         e.preventDefault();
         this.setState({
-            showVerified: true   
+            showVerified: true
         });
     }
     closeOverlay() {
         this.setState({
-            showVerified: false   
-        });   
+            showVerified: false
+        });
     }
     handleImageLoaded() {
         this.props.imageLoaded();
     }
     handleImageError() {
-        document.getElementById("profilePic").src = this.props.defaultPhoto;   
+      console.log()
+      if(this.props.genderPic=="Male")
+      {
+         document.getElementById("profilePic").src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto";
+      }
+      else {
+         document.getElementById("profilePic").src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
+      }
     }
 
     render() {
         var errorView;
-        if(this.state.insertError)          
+        if(this.state.insertError)
         {
           errorView = <TopError timeToHide={this.state.timeToHide} message={this.state.errorMessage}></TopError>;
         }
@@ -114,7 +121,7 @@ class PhotoView extends React.Component {
                 <div className="disptbl">
                     <div className="dispcell txtc">
                         <div id="label1"  onClick={(e) => this.requestPhoto(e)} className="white fontthin f18 lh30 dispbl txtc bgTransGrey srp_pad1">
-                            {this.props.picData.label}   
+                            {this.props.picData.label}
                         </div>
                     </div>
                 </div>
@@ -124,11 +131,11 @@ class PhotoView extends React.Component {
                 <div className="disptbl">
                     <div className="dispcell txtc">
                         <div id="label1"  className="white fontthin f18 lh30 dispbl txtc bgTransGrey srp_pad1">
-                            {this.props.picData.label}   
+                            {this.props.picData.label}
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         }
 
         var verificationView;
@@ -137,8 +144,8 @@ class PhotoView extends React.Component {
             verificationView =  <div className="posabs srp_pos3 searchNavigation showDetails" id="id1">
                 <div id="album1">
                     <div className="bg13 opa50 txtc white opa70 fontreg crBoxIcon">
-                        <div className="pt8" onClick={(e) => this.showVerification(e)}> 
-                            <i className="mainsp verified"></i> 
+                        <div className="pt8" onClick={(e) => this.showVerification(e)}>
+                            <i className="mainsp verified"></i>
                         </div>
                     </div>
                 </div>
@@ -162,7 +169,7 @@ class PhotoView extends React.Component {
                 {errorView}
                 {verifyLayer}
                 <div id="picContent">
-                    <img id="profilePic" onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />    
+                    <img id="profilePic" onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />
                     <div className="posabs fullwid vpro_40PerTop fullheight txtc">
                         {loaderView}
                     </div>
