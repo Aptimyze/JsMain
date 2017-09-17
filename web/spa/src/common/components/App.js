@@ -44,7 +44,6 @@ class App extends React.Component
     let AUTHCHECKSUM_FROM_GET = getParameterByName(window.location.href,"AUTHCHECKSUM");
     if (AUTHCHECKSUM_FROM_GET != null && AUTHCHECKSUM_FROM_GET != '')
     {
-      console.log("AUTHCHECKSUM isn",AUTHCHECKSUM_FROM_GET);
       setCookie("AUTHCHECKSUM",AUTHCHECKSUM_FROM_GET);
     }
     this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
