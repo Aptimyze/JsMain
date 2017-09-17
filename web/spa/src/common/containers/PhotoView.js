@@ -21,8 +21,9 @@ class PhotoView extends React.Component {
     componentWillReceiveProps(nextProps) {
         let response = nextProps.photoAction;
         let _this = this;
-        response.responseMessage = "Successful";
-        response.imageButtonDetail = {label : "Photo Requested"};
+        response.responseMessage = nextProps.photoAction.responseMessage;
+        if(response.responseMessage == 'Successful')
+            response.imageButtonDetail = {label : nextProps.photoAction.imageButtonDetail.label};
         this.setState({
             showLoader:false
         });
