@@ -1,12 +1,11 @@
 
 require ('../style/contact.css')
 import React from "react";
-import { connect } from "react-redux";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import Loader from "../../common/components/Loader";
 
-export class WriteMessage extends React.Component{
+export default class WriteMessage extends React.Component{
   constructor(props){
     super(props);
       let lastSent = this.props.buttonData.actiondetails ?(this.props.buttonData.actiondetails.lastsent ? this.props.buttonData.actiondetails.lastsent : "") : "";
@@ -14,7 +13,7 @@ export class WriteMessage extends React.Component{
         showLoader: false,
         tupleDim : {'width' : window.innerWidth,'height': window.innerHeight},
         nxtdata: this.props.buttonData.hasNext,
-        messages : this.props.buttonData.messages,
+        messages : this.props.buttonData.messages ? this.props.buttonData.messages :[] ,
         writeMessageText : lastSent,
         lastMsgID : this.props.buttonData.MSGID,
         lastChatID : this.props.buttonData.CHATID
@@ -63,9 +62,9 @@ export class WriteMessage extends React.Component{
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
-    var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message;
-    let _this=this;
-    this.props.sendMessageApi('/api/v2/contacts/postWriteMessage','MESSAGE',url).then((response)=>{
+    var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
+    let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    commonApiCall(api,url,'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
     _this.setState({
@@ -107,7 +106,7 @@ export class WriteMessage extends React.Component{
   {
    return (<div className="posrel clearfix fontthin ce_hgt1">
       <div className="posabs com_left1">
-        <img id="imageId" src={this.props.buttonData.viewed} className="com_brdr_radsrp ce_dim1"/>
+        <img id="imageId" src={this.props.fromEOI ? this.props.buttonData.buttondetails.photo.url : this.props.buttonData.viewed} className="com_brdr_radsrp ce_dim1"/>
       </div>
       <div className="posabs com_right1">
         <i className="mainsp com_cross" onClick={this.props.closeWriteMsgLayer}></i>
@@ -126,7 +125,7 @@ getWriteMsg_innerView(){
           }
           else
           {
-            if(this.state.messages != null)
+            if(this.state.messages.length)
             {
               WrtieMsg_historydiv =  this.state.messages.map((msg,index)=>{
                                       let msg_class1;
@@ -141,7 +140,7 @@ getWriteMsg_innerView(){
 
                                       return(
                                           <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
-                                            <span>{msg.message}</span>
+                                            <span>{msg.message.replace(/\n/g,"<br />")}</span>
                                             <span className="dispbl f12 color1 pt5">{msg.timeTxt}</span>
                                           </div>
                                       );
@@ -150,13 +149,12 @@ getWriteMsg_innerView(){
           }
           else {
             WrtieMsg_historydiv = <div className="com_pad1_new fontlig f16 white" id="presetMessageDispId" key="nomsg">
-              <span id="presetMessageTxtId">{"Start the conversation by writing a message."}</span>
+              <span id="presetMessageTxtId">{this.props.fromEOI ? this.props.buttonData.actiondetails.draftmessage : "Start the conversation by writing a message."}</span>
              <span className="dispbl f12 color1 pt5 white" id="presetMessageStatusId"></span>
             </div>
 
           }
-          WriteMsg_appendmsg = <div id="writeMsgDisplayId" key="newMsgSent"></div>;
-          WriteMsg_innerView=[WrtieMsg_historydiv,WriteMsg_appendmsg];
+          WriteMsg_innerView=WrtieMsg_historydiv;
         }
 
   return WriteMsg_innerView;
@@ -240,18 +238,3 @@ return WriteMsg_buttonView;
     );
   }
 }
-
-const mapStateToProps = (state) => {
-    return{
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return{
-        sendMessageApi: (api,action,url) => {
-          return commonApiCall(api,url,action,'POST',dispatch,true);
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(WriteMessage)

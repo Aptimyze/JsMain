@@ -15,6 +15,11 @@
 .msg_srp {
     background-position: -204px -24px;
     width: 22px;
+    height: 14px;
+}
+.msg_srp2 {
+    background-position: -227px -24px;
+    width: 28px;
     height: 20px;
 }
 .mainsp {

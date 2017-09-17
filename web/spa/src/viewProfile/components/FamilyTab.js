@@ -8,6 +8,11 @@ class FamilyTab extends React.Component {
         }
     }
     render() {
+			let space='';
+			if(this.props.checkUC)
+			{
+				 space=	<div className="bg4" style={{'height':'60px'}}></div>;
+			}
 
     	var myfamily;
     	if(this.props.family.myfamily)
@@ -182,6 +187,7 @@ class FamilyTab extends React.Component {
     		<div id="FamilyTab" className="mb56 dn pad5 bg4 fontlig color3 clearfix f14">
 				<div className="hgt10"></div>
 				{FamilyData}
+				{space}
 			</div>
     	);
     }

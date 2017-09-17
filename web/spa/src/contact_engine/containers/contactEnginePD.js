@@ -122,7 +122,8 @@ export class contactEnginePD extends React.Component{
           else
           {
           if(responseButtons.actiondetails.writemsgbutton){
-            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:true},'showMsgLayer');
+            let onClose = actionButton.action=='INITIATE' ? this.goToViewSimilar.bind(this) : null;
+            this.showLayerCommon({showWriteMsgLayerData:responseButtons,showMsgLayer: true,fromEOI:true, onClose : onClose},'showMsgLayer');
 
           }
           if(responseButtons.buttondetails.buttons){
@@ -143,27 +144,15 @@ export class contactEnginePD extends React.Component{
 
 
       }
-      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1)
-      {
-        var similarProfileCheckSumTemp = window.location.search.split('similarOf=');
-        if(typeof similarProfileCheckSumTemp[1]!="undefined" && similarProfileCheckSumTemp[1])
-          var similarProfileCheckSum = similarProfileCheckSumTemp[1].split("&")[0];
-        else
-          var similarProfileCheckSum = "";
-        if(typeof NAVIGATOR=="undefined" || !NAVIGATOR)
-          var NAVIGATOR="";
-            if(typeof getNAVIGATOR == "function" && NAVIGATOR==""){
-                NAVIGATOR = getNAVIGATOR();
-            }
-        if(this.canIShowNext(similarProfileCheckSum,this.props.profiledata.profilechecksum))
-                    {
-                        window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1";
-                    }
+      if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button && responseButtons.buttondetails.button.label.indexOf('Saved')!=-1){
+        this.props.replaceSingleButton(Array(responseButtons.buttondetails.button));
       }
 
-      if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button){
-        this.props.replaceSingleButton(Array(responseButtons.buttondetails));
+      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1)
+      {
+        this.goToViewSimilar();
       }
+
 
     }
   }
@@ -212,7 +201,7 @@ if(primaryButton.enable==true)
 
     return (<div id="buttons1" className="view_ce fullwid">
       <div className="fullwid bg7 txtc pad5new posrel" onClick={() => this.bindAction(primaryButton,0)}>
-        <div className="wid60p">
+        <div className="fontlig f13 white cursp dispbl">
           <i className={cssMap[primaryButton.iconid]}></i>
           <div className="white">{primaryButton.label}</div>
         </div>
@@ -281,7 +270,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showMsgLayer)
       {
-        layer= (<WriteMessage bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>this.props.historyObject.pop()}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
+        layer= (<WriteMessage  bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>{this.props.historyObject.pop();if(this.state.onClose)this.state.onClose();}}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
       }
       if(this.state.commonOvlayLayer)
       {
@@ -351,39 +340,9 @@ getCancelDeclineLayer(actionDetails){
     this.setState({frontButton:object});
   }
 
-  canIShowNext(parentUsername,username)
-  {
-return false;
-  	let SessionStorageView = new SessionStorage;
-  	var str = SessionStorageView.getUserData("viewSim4");
-  	var newString='';
-          if(str && parentUsername)
-          {
-                  if(str.indexOf(',')!='-1')
-                  {
-                          var res = str.split(",");
-                          if(res[0]== parentUsername)
-                          {
-                                  newString = res[0]+","+username;
-                          }
-  			else
-  			{
-  				return false;
-  			}
-                  }
-  		else if(str!=username)
-  		{
-                  	newString = parentUsername+","+username;
-  		}
-          }
-          else{
-  		newString = username;
-  }
-  	if(newString)
-  		SessionStorageView.storeUserData("viewSim4",newString);
-  	return true;
-  }
-
+goToViewSimilar(){
+  window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1";
+}
 
 }
 

@@ -78,7 +78,7 @@ class postNotInterestedv2Action extends sfAction
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
 			$thumbNail = null;
-		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
+		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ProfilePic120Url',1,$this->Profile->getGENDER());
 		unset($pictureServiceObj);
 		unset($profilePicObj);
 		if($this->contactEngineObj->messageId)

@@ -92,7 +92,7 @@ class postEOIv2Action extends sfAction
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
 			$thumbNail = null;
-		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
+		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ProfilePic120Url',1,$this->Profile->getGENDER());
 		unset($pictureServiceObj);
 		unset($profilePicObj);
 		$pictureServiceObj=new PictureService($this->loginProfile);
@@ -101,7 +101,7 @@ class postEOIv2Action extends sfAction
 			$ownthumbNail = $profilePicObj->getThumbailUrl();
 		if(!$ownthumbNail)
 			$ownthumbNail = null;
-		$ownthumbNail = PictureFunctions::mapUrlToMessageInfoArr($ownthumbNail,'ThumbailUrl',1);
+		$ownthumbNail = PictureFunctions::mapUrlToMessageInfoArr($ownthumbNail,'ProfilePic120Url',1,$this->loginProfile->getGENDER());
 		$ownthumbNail = $ownthumbNail['url'];
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);

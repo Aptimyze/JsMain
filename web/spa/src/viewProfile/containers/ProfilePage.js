@@ -28,6 +28,7 @@ class ProfilePage extends React.Component {
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
+        let stype = getParameterByName(window.location.href,"stype");
         let ownView = false;
         if(getParameterByName(window.location.href,"preview") == 1) {
             ownView = true;
@@ -49,16 +50,22 @@ class ProfilePage extends React.Component {
             defaultPicData: "",
             defaultThumbNail: "",
             responseTracking:responseTracking,
+            stype:stype,
             disablePhotoLink: false,
             callApi: false,
             listingName: "",
-            ownView:ownView
+            ownView:ownView,
+            ucbrowser:false
+
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
         if(props.fetchedProfilechecksum != false) {
             this.state.callApi = true;
+        }
+        if (navigator.userAgent.indexOf(' UCBrowser/') >= 0) {
+          this.state.ucbrowser = true;
         }
     }
 
@@ -69,6 +76,7 @@ class ProfilePage extends React.Component {
     componentDidMount()
     {
         console.log('componentDidMount');
+        //alert(navigator.userAgent);
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
@@ -76,15 +84,16 @@ class ProfilePage extends React.Component {
         window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
-            urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking;
+            urlString = "?profilechecksum="+this.state.profilechecksum+"&responseTracking="+this.state.responseTracking+"&stype="+this.state.stype;
         } else if(getParameterByName(window.location.href,"username") != null) {
-            urlString = "?username="+getParameterByName(window.location.href,"username");
+            urlString = "?username="+getParameterByName(window.location.href,"username")+"&responseTracking="+this.state.responseTracking+"&stype="+this.state.stype;
         }
         else {
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
+            let stype = getParameterByName(window.location.href,"stype");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -94,9 +103,13 @@ class ProfilePage extends React.Component {
             } else if(contact_id != undefined) {
                 urlString += "&contact_id=" + contact_id;
             }
+            if(stype != undefined){
+                urlString += "&stype=" + stype;
+            }
         }
 
         this.props.showProfile(this, urlString);
+
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -181,8 +194,8 @@ class ProfilePage extends React.Component {
     setNextPrevLink() {
 
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
-            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1);
-            let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec;
+            let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1) + "&stype=" +this.state.stype;
+            let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
 
             if(this.state.searchid != 1 && this.state.searchid != null){
                 nextUrl += "&searchid=" + this.state.searchid;
@@ -203,8 +216,8 @@ class ProfilePage extends React.Component {
             });
         }
         if (parseInt(this.state.actual_offset) != 0) {
-            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1);
-            let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec;
+            let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&stype=" + this.state.stype;
+            let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
             if(this.state.searchid != 1 && this.state.searchid != null){
                 prevUrl += "&searchid=" + this.state.searchid;
                 prevDataApi += "&searchid=" + this.state.searchid;
@@ -267,6 +280,7 @@ class ProfilePage extends React.Component {
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
+            let stype = getParameterByName(window.location.href,"stype");
 
             if(total_rec == "undefined") {
                 total_rec = "20";
@@ -285,7 +299,8 @@ class ProfilePage extends React.Component {
                 total_rec:total_rec,
                 responseTracking:responseTracking,
                 searchid:searchid,
-                callApi: false
+                callApi: false,
+                stype: stype
             },this.setNextPrevLink);
             let picData;
             if(!nextProps.pic) {
@@ -584,11 +599,11 @@ class ProfilePage extends React.Component {
                      Header = this.props.AboutInfo.username;
                 }
 
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent}></AboutTab></div>;
+                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
 
-                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
+                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo} checkUC={this.state.ucbrowser}></FamilyTab>;
 
-                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView}></DppTab>;
+                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView} checkUC={this.state.ucbrowser}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
 
@@ -713,6 +728,7 @@ class ProfilePage extends React.Component {
                     {FamilyView}
                     {DppView}
                 </div>
+
                 {contactEngineView}
             </div>
         );

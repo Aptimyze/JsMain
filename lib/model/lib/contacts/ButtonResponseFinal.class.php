@@ -821,12 +821,6 @@ Class ButtonResponseFinal
 
 			}
 			}
-		else
-		{
-			$responseArray = $this->getNewLogoutButtonArray(array("USERNAME"=>$this->otherProfile->getUSERNAME(),"PHOTO"=>array("url"=>$params["PHOTO"])));
-			//var_dump($responseArray);die;
-			$restResponseArray = self::buttonDetailsMerge($responseArray);
-		}
 			//print_r($restResponseArray);die;
 			return $restResponseArray;
         }

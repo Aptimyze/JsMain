@@ -148,15 +148,15 @@ class StaticPhotoUrls
 
 	const noPhotoMaleMobileAppPicUrl = '/images/picture/450x600_m.png?noPhoto';
 	const noPhotoFemaleMobileAppPicUrl = '/images/picture/450x600_f.png?noPhoto';
-	const noPhotoMaleProfilePic120Url = '/images/picture/120x120_m.png?noPhoto';
-	const noPhotoFemaleProfilePic120Url = '/images/picture/120x120_f.png?noPhoto';
+	const noPhotoMaleProfilePic120Url = '/images/picture/120x120_m.png?request';
+	const noPhotoFemaleProfilePic120Url = '/images/picture/120x120_f.png?request';
 	const noPhotoMaleProfilePic235Url = '/images/picture/235x235_m.png?noPhoto';
 	const noPhotoFemaleProfilePic235Url = '/images/picture/235x235_f.png?noPhoto';
 	const noPhotoMaleProfilePic450Url = '/images/picture/450x450_m.png?noPhoto';
 	const noPhotoFemaleProfilePic450Url = '/images/picture/450x450_f.png?noPhoto';
 
-	
-	
+
+
 	const contactAcceptedPhotoMaleProfilePicUrl = '/P/ser4_images/ic_photo_vis_if_b_150.gif';
 	const contactAcceptedPhotoFemaleProfilePicUrl = '/P/ser4_images/ic_photo_vis_if_g_150.gif';
 	const contactAcceptedPhotoMaleMobileProfilePicUrl = '/P/ser4_images/ic_photo_vis_if_b_150.gif';
