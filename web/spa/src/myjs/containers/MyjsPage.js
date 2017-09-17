@@ -236,27 +236,41 @@ export  class MyjsPage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-  		if(!this.props.myjsData.fetched){
-	         return (<div><Loader show="page"></Loader></div>)
-	    }
-			if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
+  		// if(!this.props.myjsData.fetched){
+	   //       return (<div><Loader show="page"></Loader></div>)
+	   //  }
+	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
 				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
-	    }
+	    }	    
 
-  		if(this.props.myjsData.fetched)
+	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
+  		if(this.props.myjsData.fetched){
+
+			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+
+			EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+
+			if(this.props.myjsData.apiData.membership_message!=null){
+			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
+			}
+
+  			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+	    }
+	    else{
+	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
+
+			EditBarView = <EditBar cssProps={this.state.cssProps}/>
+
+			if(this.props.myjsData.apiData.membership_message!=null)
 			{
+			 	membershipmessageView = <MyjsOcbLayer/>
+			}
 
-				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+  			AcceptCountView =  <AcceptCount/>
 
-				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
-
-				if(this.props.myjsData.apiData.membership_message!=null)
-				{
-				 	var membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
-				}
-
-  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
+
 
 			if(this.props.myjsData.ieFetched){
 	    	var interestExpView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
@@ -304,6 +318,7 @@ export  class MyjsPage extends React.Component {
 									{EditBarView}
 									{membershipmessageView}
 									{AcceptCountView}
+									{LoaderView}			
 									{interestExpView}
 									{interestRecView}
 									{matchOfTheDayView}
