@@ -51,6 +51,11 @@ class DppTab extends React.Component {
     render() {
 
         let about_partner='';
+				let space='';
+				if(this.props.checkUC)
+				{
+					 space=	<div className="bg4" style={{'height':'60px'}}></div>;
+				}
         if(this.props.dpp.about_partner) {
             about_partner = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_about_partner">{this.props.dpp.about_partner}</div>
         } else {
@@ -332,7 +337,7 @@ class DppTab extends React.Component {
 
     	return(
     		<div id="DppTab" className="dn mb56">
-				<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
+					<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}
                     {dpp_height}
@@ -354,7 +359,8 @@ class DppTab extends React.Component {
                     {dpp_complexion}
                     {dpp_btype}
                     {dpp_handi}
-                </div>
+										{space}
+          </div>
 			</div>
     	);
     }

@@ -54,13 +54,18 @@ class ProfilePage extends React.Component {
             disablePhotoLink: false,
             callApi: false,
             listingName: "",
-            ownView:ownView
+            ownView:ownView,
+            ucbrowser:false
+
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
         if(props.fetchedProfilechecksum != false) {
             this.state.callApi = true;
+        }
+        if (navigator.userAgent.indexOf(' UCBrowser/') >= 0) {
+          this.state.ucbrowser = true;
         }
     }
 
@@ -71,6 +76,7 @@ class ProfilePage extends React.Component {
     componentDidMount()
     {
         console.log('componentDidMount');
+        //alert(navigator.userAgent);
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
@@ -103,6 +109,7 @@ class ProfilePage extends React.Component {
         }
 
         this.props.showProfile(this, urlString);
+
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -592,11 +599,11 @@ class ProfilePage extends React.Component {
                      Header = this.props.AboutInfo.username;
                 }
 
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent}></AboutTab></div>;
+                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
 
-                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
+                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo} checkUC={this.state.ucbrowser}></FamilyTab>;
 
-                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView}></DppTab>;
+                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView} checkUC={this.state.ucbrowser}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
 
@@ -721,6 +728,7 @@ class ProfilePage extends React.Component {
                     {FamilyView}
                     {DppView}
                 </div>
+
                 {contactEngineView}
             </div>
         );
