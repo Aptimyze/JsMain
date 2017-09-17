@@ -212,9 +212,26 @@ getContactDetails(actiondetails){
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
   memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
   c1Style = {};
+
+      if(actiondetails.contactdetailmsg){
+        topMsg2Text = actiondetails.contactdetailmsg,
+        topMsg2TextShow = '';
+  }
+  else
+      topMsg2TextShow = 'dispnone';
+
+  if(this.props.topmsg)
+  {
+    topMsgText = this.props.topmsg;
+    topMsgTextShow = '';
+  }
+  else
+    topMsgTextShow = 'dispnone';
+
     if(actiondetails.errmsglabel)
     {
-    topMsg2Text = actiondetails.errmsglabel ;
+    topMsg2Text = actiondetails.errmsglabel;
+    topMsg2TextShow = ''; 
     var memText, memShow;
 
     if(actiondetails.footerbutton && actiondetails.footerbutton.text)
@@ -245,20 +262,6 @@ else
 
       }
 
-    if(actiondetails.contactdetailmsg){
-        topMsg2Text = actiondetails.contactdetailmsg,
-        topMsg2TextShow = '';
-  }
-  else
-      topMsg2TextShow = 'dispnone';
-
-  if(this.props.topmsg)
-  {
-    topMsgText = this.props.topmsg,
-    topMsgTextShow = '';
-  }
-  else
-    topMsgTextShow = 'dispnone';
 
   if(actiondetails.bottommsg){
     bottomMsgShow = 'dispibl';
@@ -277,7 +280,7 @@ else
 
     }
         if(actiondetails.footerbutton!=null){
-          if(actiondetails.footerbutton.action=='MEMBERSHIP')
+          if(actiondetails.footerbutton.action=='MEMBERSHIP' || actiondetails.footerbutton.action=='CONTACT_DETAIL')
             nevMindStyle={display:'block'};
           else closeLyrShow = '';
           c1Style = {display:'none'};
