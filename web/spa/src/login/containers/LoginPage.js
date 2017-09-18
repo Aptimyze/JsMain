@@ -355,8 +355,8 @@ class LoginPage extends React.Component {
                                             {appDownloadView}
 
 
-                                            <div className="txtc pad2" onClick = {() => this.translateSite(CONSTANTS.HINDI_SITE)}>
-                                                <a id="hindiLinkOnLogin" href={newHref} classNkame="f16 white fontlig">हिंदी में</a>
+                                            <div className="txtc pad2">
+                                                <a id="hindiLinkOnLogin" href={newHref} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>

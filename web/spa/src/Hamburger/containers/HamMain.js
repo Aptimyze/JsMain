@@ -461,7 +461,7 @@ class HamMain extends React.Component {
                     <div className="wid49p dispibl">
                         <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                     </div>
-                    <div className="wid49p dispibl" onClick = {() => this.translateSite(CONSTANTS.HINDI_SITE)}>
+                    <div className="wid49p dispibl">
                         <a id="hindiLink" href={newHref}  className="white fr mar0Imp">Hindi Version</a>
                     </div>
                 </li>
