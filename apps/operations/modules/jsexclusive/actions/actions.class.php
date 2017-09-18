@@ -437,14 +437,30 @@ class jsexclusiveActions extends sfActions {
             }
             for ($i = 0; $i < $count; $i++) {
                 $clientfollowupArr[$i]['ENTRY_DT'] = $newDateArr[$i];
+                
                 $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_1']);
-                $clientfollowupArr[$i]['FOLLOWUP_1'] = $followupArr[$i][0];
-                $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_2']);
+             	$clientfollowupArr[$i]['FOLLOWUP_1'] = $followupArr[$i][0];
+             	if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+             		$clientfollowupArr[$i]['FOLLOWUP_1'] = $clientfollowupArr[$i]['FOLLOWUP_1'].'('.$followupArr[$i][1].')';
+             	}
+             	
+             	$followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_2']);
                 $clientfollowupArr[$i]['FOLLOWUP_2'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_2'] = $clientfollowupArr[$i]['FOLLOWUP_2'].'('.$followupArr[$i][1].')';
+                }
+                
                 $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_3']);
                 $clientfollowupArr[$i]['FOLLOWUP_3'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_3'] = $clientfollowupArr[$i]['FOLLOWUP_3'].'('.$followupArr[$i][1].')';
+                }
+                
                 $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_4']);
                 $clientfollowupArr[$i]['FOLLOWUP_4'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_4'] = $clientfollowupArr[$i]['FOLLOWUP_4'].'('.$followupArr[$i][1].')';
+                }
                 $clientfollowupArr[$i]['FOLLOWUP1_DT'] = $newFollow1Arr[$i];
                 $clientfollowupArr[$i]['FOLLOWUP2_DT'] = $newFollow2Arr[$i];
                 $clientfollowupArr[$i]['FOLLOWUP3_DT'] = $newFollow3Arr[$i];

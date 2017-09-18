@@ -624,7 +624,7 @@ class Services
             return $serviceid;
         }
     }
-    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop',$mtongue="-1") {
+    public function getLowestActiveMainMembership($serviceArr = "", $device='desktop',$mtongue=array(-1=>"default")) {
         $billingServicesObj = new billing_SERVICES('newjs_slave');
         $output = $billingServicesObj->getLowestActiveMainMembership($serviceArr, $device,$mtongue);
         return $output;
