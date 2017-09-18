@@ -515,7 +515,7 @@ $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"     => "67");
 $js_arr[]=array("jsms/login/mobForgotPass_js"   => "16");
 $js_arr[]=array("jsms/login/resetPass_js"   => "5");
-$js_arr[]=array("jsms/hamburger/ham_js"   => "59");
+$js_arr[]=array("jsms/hamburger/ham_js"   => "60");
 $js_arr[]=array("jsms/settings/mobChangePass_js"   => "5");
 $js_arr[]=array("jsms/404/mob404_js" => "2");
 $js_arr[]=array("jsms/search/searchByProfileId_js"   => "8");
