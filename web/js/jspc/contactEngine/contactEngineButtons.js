@@ -215,16 +215,23 @@ Button.prototype.setPostActionData= function(data) {
 }
 
 Button.prototype.post= function() {
-
 this.actionDetails=this.data.actiondetails;
 this.buttonDetails=this.data.buttondetails;
 	
 //remove layer after send_Message overlay
 if((this.name=="SEND_MESSAGE"|| this.name=="WRITE_MESSAGE") && this.data.isSent)
 {
-  var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
-  contactLayerDiv.addClass("disp-none");
-	contactLayerDiv.html("");
+  	var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
+	superdata = contactLayerDiv.attr('superdata');
+	if(superdata){
+		var contactLayerDivParent = contactLayerDiv.parent();
+		contactLayerDiv.remove();
+		contactLayerDivParent.append(getLimitWarningTemplate(superdata));
+		cECloseBinding();
+	}else{
+  		contactLayerDiv.addClass("disp-none");
+		contactLayerDiv.html("");
+	}
 }
 
 if(this.name=='REMOVE'){
@@ -244,6 +251,8 @@ return;
 		innerLayerHtml=this.displayObj.postDisplay(this.data,this.profileChecksum,this.error);  
 		this.parent.find('#contactEngineLayerDiv').remove();
 		this.parent.prepend(innerLayerHtml);
+		if(typeof this.data.actiondetails.limitWarning != "undefined")
+		this.parent.find('#contactEngineLayerDiv').attr('superdata', this.profileChecksum);
 
 		
 	if(typeof(this.actionDetails.lastsent)!='undefined' && this.actionDetails.lastsent)

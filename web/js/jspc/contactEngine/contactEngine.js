@@ -3,6 +3,7 @@ var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"
 var PAGETYPE='';   
 var ignoreLayerOpened=3; //for IgnoredLayer on VDP
 var currentActionLayer="";
+var WARNING= new Object();
 var buttonsCssMap={'INITIATE':{'enable':'mailicon','disable':'msgsendicon'},
               'SHORTLIST':{'enable':'staricon','disable':'staractive2'},
               'CONTACT_DETAIL':{'enable':'callicon','disable':'callicon'},
@@ -408,8 +409,17 @@ ContactEngineCard.prototype.postDisplay = function(Obj,profileChecksum,isError){
 			}
 			else if(Obj.actiondetails.writemsgbutton!=undefined)
 			{
-			  currentActionLayer="Message";
-			  return postCommonMessageLayer(Obj,profileChecksum,this.name);
+				currentActionLayer="Message";
+				if(typeof Obj.actiondetails.limitWarning != "undefined"){
+					var contactedUser = Obj.actiondetails.limitWarning.contactedUser;
+					WARNING[contactedUser]  = Obj.actiondetails.limitWarning;
+					WARNING.pageSource = this.name;
+				}
+				return postCommonMessageLayer(Obj,profileChecksum,this.name);
+			}
+			else if(typeof Obj.actiondetails.limitWarning != "undefined"){
+				currentActionLayer = "limitWarning";
+				return postCommonWarningLayer(Obj, profileChecksum, this.name);
 			}
 			else if(Obj.actiondetails.footerbutton!=null)
 			{
@@ -433,6 +443,71 @@ function postDisplayError(pageSource)
 		return FinalHtml=$("#postCCErrorCommonLayer").html();
 	else
 		return FinalHtml=$("#postCommonErrorLayer").html();
+}
+function getLimitWarningTemplate(CheckSum){
+	/* CASE FOR PAID MEMBER */
+	var Data = WARNING[CheckSum];
+	var templateID = "postCommonErrorLayer";
+	var contentDiv = "disp-cell";
+	if(WARNING.pageSource == "CC"){
+		templateID = "postCCErrorCommonLayer";
+		contentDiv = "js-genericMsg";
+	}
+	var template = $("#"+templateID).clone();
+	var textToShow = "<b>Please Note</b>: You have already sent "+
+	Data.count+
+	" out of "+
+	Data.limit+
+	" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+	We encourage you to send interests only to people where you match most\
+	 of the preferences mentioned in their partner preference.<br/><br/>"+
+	"<a href='/static/page/disclaimer' class='colr5' target='_blank'>Click Here</a> to know more about Interest Limits";
+	template.find("."+contentDiv).html(textToShow);
+	if(WARNING.pageSource == "CC"){
+		template.find("."+contentDiv).css({"font-size": "11px"});
+		template.find('span').removeClass("disp-none");
+		template.find('i').addClass("disp-none");
+	}
+	return template;
+}
+function postCommonWarningLayer(Obj, profilechecksum,pageSource){
+	/* CASE FOR FREE MEMBER */
+	/* Has two cases: 1 where limit is day/month/week type 2 where overall limit is type*/
+	var templateID = "postCommonErrorLayer";
+	var contentDiv = "disp-cell";
+	if(pageSource == "CC"){
+		templateID = "postCCErrorCommonLayer";
+		contentDiv = "js-genericMsg";
+	}
+	var template = $("#"+templateID).clone();
+	var textToShow = "";
+	if(Obj.actiondetails.limitWarning.type == "OVERALL"){
+		textToShow = "<b>Please Note</b>: You have already sent "+
+		Obj.actiondetails.limitWarning.count+
+		" out of "+
+		Obj.actiondetails.limitWarning.limit+
+		" interests allowed on your account.<br>\
+		We encourage you to send interests only to people where you match most\
+		 of the preferences mentioned in their partner preference.";
+	}else{
+		textToShow = "<b>Please Note</b>: You have already sent "+
+		Obj.actiondetails.limitWarning.count+
+		" out of "+
+		Obj.actiondetails.limitWarning.limit+
+		" interests allowed till the "+Obj.actiondetails.limitWarning.text+" ending "+Obj.actiondetails.limitWarning.expiry+".<br/>\
+		We encourage you to send interests only to people where you match most\
+		 of the preferences mentioned in their partner preference.<br/><br/>"+
+		"<a href='/static/page/disclaimer#limitsTable' class='colr5' target='_blank'>Click Here</a> to know more about Interest Limits";
+	}
+	
+
+	template.find("."+contentDiv).html(textToShow);
+
+	if(pageSource == "CC"){
+		template.find('span').removeClass("disp-none");
+		template.find('i').addClass("disp-none");
+	}
+	return template;
 }
 
 function postCommonMessageLayer(Obj,profileChecksum,pageSource)
@@ -829,8 +904,13 @@ $(".closeContactDetailLayer").bind('click',function() {
 				$("#jsCcVSP-"+arr[1]).css("display","");
 		}
 	}
-	
+	var layerDivParent = layerDiv.parent();
+	superdata = layerDiv.attr('superdata');
 	layerDiv.remove();
+	if(superdata){
+	layerDivParent.append(getLimitWarningTemplate(superdata));
+	cECloseBinding();
+	}
 	return false;
 	});
 	

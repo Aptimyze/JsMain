@@ -785,6 +785,55 @@ class ErrorHandler
 			    }
 				$this->setErrorType('LIMIT','TOTAL');
 			}
+
+			$PERCENTAGETHRESHOLD = 1;
+			$percentages = array(
+				array(
+					"type" => "DAILY",
+					"text" => "day",
+					"value" => (100*$today_initiated) / $limitArr["DAY_LIMIT"],
+					"count" => $today_initiated,
+					"limit" => $limitArr["DAY_LIMIT"],
+					"expiry" => date('F j,Y')
+					),
+
+				array(
+					"type" => "WEEKLY",
+					"text" => "week",
+					"value" => (100*$monthly_initiated) / $limitArr["WEEKLY_LIMIT"],
+					"count" => $monthly_initiated,
+					"limit" => $limitArr["WEEKLY_LIMIT"],
+					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("WEEK")))
+					),
+				array(
+					"type" => "MONTHLY",
+					"text" => "month",
+					"value" => (100*$weekly_initiated) / $limitArr["MONTH_LIMIT"],
+					"count" => $weekly_initiated,
+					"limit" => $limitArr["MONTH_LIMIT"],
+					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("MONTH")))
+					),
+				array(
+					"type" => "OVERALL",
+					"text" => "total",
+					"value" =>  (100* $total_contacts) / $limitArr["OVERALL_LIMIT"],
+					"count" => $total_contacts, "limit" => $limitArr["OVERALL_LIMIT"])
+			);
+
+			$indexes = array();
+			foreach ($percentages as $key => $row)
+			{
+				$indexes[$key] = $row['value'];
+			}
+			array_multisort($indexes, SORT_DESC, $percentages);
+			// die(var_dump($percentages));
+			foreach ($percentages as $percentage) {
+				if($percentage['value'] > $PERCENTAGETHRESHOLD){
+					$this->contactHandlerObj->setContactLimitWarning($percentage);
+					break;
+				}
+			}
+			// die(var_dump($this->contactHandlerObj->getContactLimitWarning($PERCENTAGE)));
 		/*	else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
 			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));
