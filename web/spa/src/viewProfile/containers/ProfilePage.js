@@ -410,9 +410,18 @@ class ProfilePage extends React.Component {
 
     imageLoaded()
     {
-        document.getElementById("showAbout").classList.remove("dn");
-        document.getElementById("showPhoto").classList.remove("dn");
-        document.getElementById("tempImage").classList.add("dn");
+        if ( document.getElementById("showAbout") !== null )
+        {
+            document.getElementById("showAbout").classList.remove("dn");
+        }
+        if ( document.getElementById("showPhoto") !== null )
+        {
+            document.getElementById("showPhoto").classList.remove("dn");
+        }
+        if ( document.getElementById("tempImage") !== null) 
+        {
+            document.getElementById("tempImage").classList.add("dn");
+        }
     }
 
     showError(inputString) {
