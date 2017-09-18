@@ -8,8 +8,8 @@ export const performAction = (data) =>
 {
     if(!data.button.enable)return false;
     var params = (data.button.params ? data.button.params : "") + (data.extraParams ? data.extraParams: "");
-    var url = `&${params}&profilechecksum=${data.profilechecksum}`;
-    return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[data.button.action],url,'','POST').then((response)=>{if(typeof data.callBFun=='function') data.callBFun(response);});
+    var url = `?&${params}&profilechecksum=${data.profilechecksum}`;
+    return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[data.button.action]+url,{},'','POST').then((response)=>{if(typeof data.callBFun=='function') data.callBFun(response);});
 }
 
 export const cssMap={'001':'mainsp msg_srp2','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};

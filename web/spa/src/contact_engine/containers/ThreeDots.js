@@ -1,7 +1,6 @@
 require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
-import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import { performAction,cssMap } from "./contactEngine.js";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import {getCookie} from '../../common/components/CookieHelper';

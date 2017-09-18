@@ -309,7 +309,7 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 }
 getCityStateData(url){
 
-commonApiCall(url,'','','POST','',false).then((response) => {
+commonApiCall(url,{},'','POST','',false).then((response) => {
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
   var countryTemp = response.country_res[0];
