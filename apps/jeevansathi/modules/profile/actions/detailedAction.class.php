@@ -70,7 +70,6 @@ class detailedAction extends sfAction
 		$this->suggAlgoNoOfResultsToBeShownAtATime = sfConfig::get('mod_profile_detailed_suggAlgoNoOfResultsToBeShownAtATime');
 		
 		//$LibObj = new JsLib_Profile_Detailed;
-		global $smarty,$data;
 		
 		//Contains login credentials
 		$this->loginData=$data=$request->getAttribute("loginData");
@@ -79,7 +78,6 @@ class detailedAction extends sfAction
 		$this->profile=Profile::getInstance("newjs_masterRep");
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
-		$this->smarty=$smarty;
 		
 		//PD cal redirection for lightning deal on JSMS 
 		if(MobileCommon::isNewMobileSite() && $request->getParameter('fromPdLightCal')!=1){
@@ -101,6 +99,8 @@ class detailedAction extends sfAction
 				die;
 			}
 		}
+		global $smarty,$data;
+		$this->smarty=$smarty;
 
                 // VA Whitelisting
                 //whiteListing of parameters
