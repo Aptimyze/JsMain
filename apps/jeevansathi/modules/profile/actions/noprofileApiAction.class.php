@@ -176,7 +176,7 @@ class noprofileApiAction extends sfAction
 		
 		$infoOut['about']['username'] = $this->TopUsername;		
 		$infoOut['page_info']['page_offset'] = $iOffset;
-		
+		$infoOut['about']['gender'] = $gender;
 		$respObj->setHttpArray($arrOut);
 		$respObj->setResponseBody($infoOut);
 		$respObj->generateResponse();
