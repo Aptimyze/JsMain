@@ -30,8 +30,8 @@ class HamMain extends React.Component {
         } else {
             setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
         }
-        return true;
     }
+
     componentWillReceiveProps(nextProps)
     {
         if(this.state.bellResponse == "notDefined") {
@@ -446,7 +446,7 @@ class HamMain extends React.Component {
         } else if(getIosVersion()) {
             urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
             appText = "Download iOS App ";
-        }
+        }      
 
         let newHref;
         if(getCookie("AUTHCHECKSUM")) {
@@ -462,7 +462,7 @@ class HamMain extends React.Component {
                         <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                     </div>
                     <div className="wid49p dispibl">
-                        <a id="hindiLink" href={newHref} className="white fr mar0Imp">Hindi Version</a>
+                        <a id="hindiLink" href={newHref}  className="white fr mar0Imp">Hindi Version</a>
                     </div>
                 </li>
                 {startingTuple}
