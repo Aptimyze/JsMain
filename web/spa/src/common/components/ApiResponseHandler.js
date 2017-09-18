@@ -194,14 +194,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         return response.data;
       })
       .catch( (error) => {
-        if(typeof dispatch == 'function')
-        {
-          dispatch({
-            type: reducer,
-            payload: {},
-            token: tupleID
-          });
-        }
+        // if(typeof dispatch == 'function')
+        // {
+        //   dispatch({
+        //     type: reducer,
+        //     payload: {},
+        //     token: tupleID
+        //   });
+        // }
         console.warn('Actions - fetchJobs - recreived error: ', error)
       })
     }
