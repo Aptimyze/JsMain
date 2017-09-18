@@ -17,6 +17,9 @@ class ViewSimilarProfilesMailer {
         $loginProfile->getDetail('', '', '*');
 
         $viewerGenderChar = $loginProfile->getGENDER();
+        
+        if($loginProfile->getACTIVATED() != 'Y')
+            return array();
 
         if ($viewerGenderChar == 'M') {
             $viewedGender = 'FEMALE';

@@ -80,7 +80,28 @@ class detailedAction extends sfAction
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
 		$this->smarty=$smarty;
-                
+		
+		//PD cal redirection for lightning deal on JSMS 
+		if(MobileCommon::isNewMobileSite() && $request->getParameter('fromPdLightCal')!=1){
+			ob_start();
+			$request->setParameter('calFromPD',1);
+			$request->setParameter('layerId',19);
+			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+			$layerData = ob_get_contents();
+			ob_end_clean();
+			$layerData = json_decode($layerData, true);
+			$calData['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+			if ($calData['calObject'])
+			{  
+				$request->setAttribute('calObject',$calData['calObject']);
+				$request->setAttribute('gender',$this->loginProfile->getGENDER());
+				$request->setAttribute('fromDetailedAction',1);
+				$request->setAttribute('redirectViewProfileUrl',urlencode($_SERVER['REQUEST_URI']."&fromPdLightCal=1"));
+				sfContext::getInstance()->getController()->forward("common","CALJSMS");
+				die;
+			}
+		}
+
                 // VA Whitelisting
                 //whiteListing of parameters
                 //DetailActionLib::whiteListParams($request);

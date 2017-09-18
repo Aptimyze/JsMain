@@ -137,7 +137,7 @@ class ProcessHandler
               //fwrite($file,$msg);
               //die;
               //Sending mail and tracking sent status
-              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName,$bioData,$fileName);
+              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName,$bioData,$fileName,$agentEmail);
               if ($flag) {
                   $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
               } else {
