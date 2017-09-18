@@ -17,7 +17,6 @@ class ApiFeedbackV1Action extends sfActions
 	*/
 	public function execute($request)
 	{
-		
 		$loginData=$request->getAttribute("loginData");
 		if($loginData[PROFILEID])
 		{
@@ -25,6 +24,22 @@ class ApiFeedbackV1Action extends sfActions
 			$loginProfile->getDetail($loginData['PROFILEID'],"PROFILEID");
 			$this->USERNAME=$loginData[USERNAME];
 		}
+       
+        $arrFeed = $request->getParameter("feed");
+        $valResonCode = $this->forwardToReportInvalid( $request );
+//        $msg = $valResonCode === false ? "false " : $valResonCode;
+//        LoggingManager::getInstance("mylog")->logThis(LoggingEnums::LOG_INFO ,print_r( $request->getParameterHolder()->getAll() , true)); 
+        if( false !== $valResonCode ) {
+          $val = $valResonCode;
+          
+          $request->setParameter( "reasonCode", $val );
+          $request->setParameter( "profilechecksum", $this->getOtherProfileCheckSum( $request ) );
+          $request->setParameter( "mobile", "Y");
+          $request->setParameter( "phone", "N");      
+          
+          $this->forward("phone","ReportInvalid");       
+        }
+        
 		$feedBackObj = new FAQFeedBack(1);
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 
@@ -68,5 +83,69 @@ class ApiFeedbackV1Action extends sfActions
 		//$this->tracepath = $feedBackObj->getTracePath();
 		die;
 	}
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function forwardToReportInvalid( $request ){
+      
+      //For Rest Channel
+      $arrAllowedReason = array(
+       'user\'s phone is switched off/not reachable'   => 1 , 
+       'user is not picking up phone calls'            => 4 ,
+      );
 
+       //Please Refer FAQFeedback::$REASON_MAP
+       //15 is user is not picking up phone calls
+       //17 is user\'s phone is switched off/not reachable
+      $arrAllowedAndroidReason = array(15 => 4, 17 => 1);
+
+      $forwardToReportInvalid = false;
+      $returnValue = false;
+              
+      $androidReasonMap = $request->getParameter('reason_map');
+      if(MobileCommon::isAndroidApp() && false == is_null($androidReasonMap) && isset( $arrAllowedAndroidReason[ $androidReasonMap ] ) ) {
+        $returnValue = $arrAllowedAndroidReason [ $request->getParameter('reason_map') ];
+      }
+
+      $arrFeed = $request->getParameter("feed");
+
+      if( false === $forwardToReportInvalid && isset( $arrAllowedReason [ trim ( strtolower( $arrFeed['mainReason'] ) ) ] ) ) {
+        $returnValue = $arrAllowedReason [ trim ( strtolower( $arrFeed['mainReason'] ) ) ];
+      }
+      
+      return $returnValue;
+    }
+    
+    /**
+     * 
+     * @param type $request
+     * @return type
+     */
+    private function getOtherProfileCheckSum( $request ) {
+      
+      $otherProfileCheckSum = $request->getParameter( "profilechecksum" );
+      //Awful Check!!
+      if(MobileCommon::isIOSApp() && null == $otherProfileCheckSum ) {
+        $feed=$request->getParameter('feed');
+        $reason=$feed['message'];
+
+        $pos=strpos($reason,':');
+        $reasonNew=trim(substr($reason,$pos+1));
+
+        $pos2=strpos($reason,'by');
+        $arr2=split(' ',trim(substr($reason,$pos2+2)));
+
+        $otherUsername=trim($arr2[0]);
+
+        $otherProfile=new Profile();
+        $otherProfile->getDetail($otherUsername,"USERNAME");
+
+        $otherProfileId=$otherProfile->getPROFILEID(); 
+
+        $otherProfileCheckSum = JsCommon::createChecksumForProfile($otherProfileId);
+      }
+      return $otherProfileCheckSum;
+    }
 }
