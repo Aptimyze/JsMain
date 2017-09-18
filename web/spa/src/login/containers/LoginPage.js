@@ -318,13 +318,6 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
-        let newHref;
-        if(getCookie("AUTHCHECKSUM")) {
-            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
-        } else {
-             newHref = CONSTANTS.HINDI_SITE;
-        }
-
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>
@@ -356,7 +349,7 @@ class LoginPage extends React.Component {
 
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href="{newHref}" classNkame="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href="#" onClick = {() => this.translateSite(translateURL)} classNkame="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
@@ -371,11 +364,20 @@ class LoginPage extends React.Component {
 
     translateSite(translateURL)
     {
+        let newHref;
+        if(getCookie("AUTHCHECKSUM")) {
+            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
+        } else {
+             newHref = CONSTANTS.HINDI_SITE;
+        }
+
         if(translateURL.indexOf('hindi')!=-1){
             setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         } else {
             setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
         }
+
+        window.location.href = newHref;
     }
 }
 
