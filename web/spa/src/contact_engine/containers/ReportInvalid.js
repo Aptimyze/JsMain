@@ -43,13 +43,13 @@ export default class ReportInvalid extends React.Component{
 
         let items = ul.getElementsByTagName("li");
 
-        for (let i = 0; i < items.length; i++) 
+        for (let i = 0; i < items.length; i++)
         {
           items[i].getElementsByTagName("i")[0].classList.add("dn");
         }
 
         e.target.getElementsByTagName("i")[0].classList.remove("dn");
-       
+
         this.setState({
             selectValue: e.target.attributes.getNamedItem('data-value').value
         })
@@ -85,9 +85,9 @@ export default class ReportInvalid extends React.Component{
       let otherReasonValue = '';
       if ( this.state.selectValue == "5" )
       {
-        otherReasonValue = document.getElementById("detailReasonsLayer").value.trim(); 
+        otherReasonValue = document.getElementById("detailReasonsLayer").value.trim();
       }
-    
+
         let profilechecksum = this.props.profilechecksum;
 
         let _this = this;
@@ -127,7 +127,7 @@ export default class ReportInvalid extends React.Component{
           setTimeout(function () {
             _this.props.closeInvalidLayer();
           }, this.state.timeToHide+100)
-             
+
         })
         .catch( (error) => {
           console.warn('Actions - fetchJobs - recreived error: ', error)
@@ -140,7 +140,7 @@ export default class ReportInvalid extends React.Component{
     let _this = this;
 
     let InvalidList = [{"key":6,"text":"The number does not exist "}, {"key":1,"text":"Switched off / Not reachable"}, {"key":2,"text":"Not an account holder's phone"}, {"key":4,"text":"Not picking up "}, {"key":3,"text":"Already married / engaged "}, {"key":5,"text":"Other reasons (please specify)"}];
-    
+
     console.log("report invalid this.props",this.props);
     topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportInvalidtop">
           <div className="posrel fullwid ">
@@ -185,11 +185,11 @@ export default class ReportInvalid extends React.Component{
     if(this.state.showLoader)
     {
       loaderView = <Loader show="page"></Loader>;
-    } 
+    }
 
-    console.log("reportInvalidbtm",this.state.tupleDim);
+  //  console.log("reportInvalidbtm",this.state.tupleDim);
     return(
-      <div id="hgkj" className="posabs ce-bg ce_top1 ce_z101 fullwid" style={this.state.tupleDim}>
+      <div id="ReportInvalid" className="posabs ce-bg ce_top1 ce_z101 fullwid scrollhid" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
           <div id="reportInvalidContainer">
