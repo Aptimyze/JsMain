@@ -146,7 +146,7 @@ export default class ReportInvalid extends React.Component{
     topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportInvalidtop">
           <div className="posrel fullwid ">
               <img id="photoReportInvalid" className="srp_box3 fl dispibl" src={this.props.profileThumbNailUrl} />
-              <div className="white fontthin f19 txtc dispibl wid70p pt20">Report Invalid</div>
+              <div className="white fontthin f19 txtc dispibl wid70p pt20">Reason for reporting invalid</div>
               <i onClick={() => this.closeInvalidLayer()} className="mainsp com_cross mar200 fr"></i>
           </div>
       </div>

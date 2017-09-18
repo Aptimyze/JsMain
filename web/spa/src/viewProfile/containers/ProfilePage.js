@@ -146,7 +146,7 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null))
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null) )
           {
             console.log("not");
             return;
@@ -155,12 +155,10 @@ class ProfilePage extends React.Component {
 
 
          console.log("touchned");
-         console.log("next",_this.state.nextUrl);
-         console.log("prev",_this.state.prevUrl);
 
 
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
-              console.log("s1");
+              //console.log("s1");
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 _this.setState({
@@ -173,9 +171,8 @@ class ProfilePage extends React.Component {
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
                 _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
                 _this.props.showProfile(_this, _this.state.nextDataApi);
-            }
-             else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
-              console.log("s2");
+            } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
+              //console.log("s2");
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
                 jsb9Fun.flushJSB9Obj(_this);
@@ -195,12 +192,8 @@ class ProfilePage extends React.Component {
     }
 
     setNextPrevLink() {
-        console.log("nxtprv====");
-        console.log(this.state.actual_offset);
-        console.log(this.state.total_rec);
-        if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1)
-        {
-            console.log("nxtprv 1");
+
+        if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
             let nextUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) + 1) + "&stype=" +this.state.stype;
             let nextDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) + 1)+ "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
 
@@ -216,21 +209,13 @@ class ProfilePage extends React.Component {
                 nextUrl,
                 nextDataApi
             });
-        }
-        else
-        {
-            console.log("nxtprv 2");
+        } else {
             this.setState({
                 nextUrl: "",
                 nextDataApi: ""
             });
         }
-        console.log(parseInt(this.state.actual_offset));
-        console.log(this.state.actual_offset);
-        //console.log( (parseInt(this.state.actual_offset) != 0) || (this.state.actual_offset!=null) );
-        if ( (parseInt(this.state.actual_offset) < 1) || (this.state.actual_offset!=null))
-        {
-          console.log("nxtprv 3");
+        if (parseInt(this.state.actual_offset) != 0) {
             let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&stype=" + this.state.stype;
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
             if(this.state.searchid != 1 && this.state.searchid != null){
@@ -246,7 +231,6 @@ class ProfilePage extends React.Component {
                 prevDataApi
             });
         } else {
-          console.log("nxtprv 4");
             this.setState({
                 prevUrl: "",
                 prevDataApi: ""
@@ -270,13 +254,11 @@ class ProfilePage extends React.Component {
     {
        console.log('componentWillReceiveProps');
         if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
-          console.log('componentWillReceiveProps 1');
             this.setState({
                 showLoader:false
             });
         }
         else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
-          console.log('componentWillReceiveProps 2');
             this.setState({
                 showLoader:false
             });
@@ -291,7 +273,6 @@ class ProfilePage extends React.Component {
             this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
         }
         else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
-          console.log('componentWillReceiveProps 3');
 
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
@@ -351,8 +332,6 @@ class ProfilePage extends React.Component {
         }
         else if(nextProps.location.search != this.props.location.search && this.state.dataLoaded == true)
         {
-          console.log('componentWillReceiveProps 4');
-          console.log(this.props.history.prevUrl);
             if(this.props.history.prevUrl) {
               this.props.history.push(this.props.history.prevUrl);
             }
