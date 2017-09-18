@@ -25,8 +25,7 @@ constructor(props){
     showSubmitButton: false
 
   }
-
-
+  this.CALID = this.props.calData.LAYERID;
 }
 
 
@@ -154,26 +153,26 @@ criticalLayerButtonsAction(url,clickAction,button) {
               CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
             return;
           break;
+
+          case '13':
+          if(button=='B1')
+          {
+            CALCommonCall(url,clickAction).then(()=>{this.CALButtonClicked=0;});
+            return;
+          }
+          break;
+
           case '14':
-            if(button=='B1')
-            {
-              commonApiCall('/api/v1/profile/sendEmailVerLink?emailType=2',{},'','POST').then((response) =>
-              {
-                  if(response.responseStatusCode==1)
-                  {
-                  this.showError(response.responseMessage);
-                  this.CALButtonClicked=0;
-                  return false;
-                  }
-               this.CALButtonClicked=0;
-               this.setState({emailVeriConfirmation:true,altEmailMessage:response.responseMessage});
-               return true;
-             })
-            }
+          if(button=='B1')
+          {
+
+            this.sendEmailConfirmationLink();
+            return;
+
+          }
           break;
     }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-    console.log('truepala');
     return true;
 
 }
@@ -350,7 +349,7 @@ if(this.state.emailVeriConfirmation)
         <div className="fontlig">
         <div className="pad_new app_clrw f20 txtc" style={{'paddingTop':'12%'}} >Email Verification</div>
            <div className="pad_new app_clrw f14 txtc" id="altEmailMsg" style={{paddingLeft: '20px',paddingRight: '20px'}}>{this.state.altEmailMessage}</div>
-           <div id="CALButtonB3" style={{paddingTop:'55%'}} onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'')}  className="pad_new app_clrw f16 txtc">OK</div>
+           <div id="CALButtonB3" style={{paddingTop:'55%'}} onClick={() => this.props.myjsObj()}  className="pad_new app_clrw f16 txtc">OK</div>
         </div>
 
         </div>
@@ -384,6 +383,7 @@ validateAltEmailAndSave()
             this.CALButtonClicked=0;
             return false;
             }
+         this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1');
          let msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
          this.CALButtonClicked=0;
          this.setState({emailVeriConfirmation:true,altEmailMessage:msg});
@@ -392,7 +392,20 @@ validateAltEmailAndSave()
 }
 
 
+sendEmailConfirmationLink(){
+  commonApiCall('/api/v1/profile/sendEmailVerLink?emailType=2',{},'','POST').then((response) =>
+  {
+      if(response.responseStatusCode==1)
+      {
+      this.showError(response.responseMessage);
+      return false;
+      }
+   CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
+   this.setState({emailVeriConfirmation:true,altEmailMessage:response.responseMessage});
+   return true;
+ });
 
+}
 
 /////////////////////////alternate EMAIL CAL ends
 
