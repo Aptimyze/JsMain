@@ -126,7 +126,7 @@ class FamilyTab extends React.Component {
     	if(this.props.family.mathab)
     	{
     		mathab = <div>
-    			<div className="f12 color1" dangerouslySetInnerHTML={"Ma'thab"}></div>
+    			<div className="f12 color1" dangerouslySetInnerHTML={{__html: "Ma'thab"}}></div>
             	<div className="fontlig pb15" id="vpro_mathab" >
             		{this.props.family.mathab}
             	</div>
