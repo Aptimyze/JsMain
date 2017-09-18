@@ -628,8 +628,7 @@ class ProfilePage extends React.Component {
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
-
-                if(localStorage.getItem('GENDER') == "Male")
+                if(this.props.AboutInfo.gender == "F")
                     stockImage = <i className="vpro_sprite female_nopro"></i>
                 else
                     stockImage = <i className="vpro_sprite male_nopro"></i>
