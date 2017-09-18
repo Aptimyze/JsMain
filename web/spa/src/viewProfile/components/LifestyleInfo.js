@@ -44,7 +44,7 @@ export default class LifestyleInfo extends React.Component {
                     <div className="f12 color1">Skills</div>  
                     <div className="fontlig pb15">
                         <div id="i_cook">{this.props.life.skills_speaks}</div>
-                        <div id="i_cook">{this.props.life.i_cook}</div>
+                        <div id="i_cook">{this.props.life.skills_i_cook}</div>
                     </div>
                 </div>
             }

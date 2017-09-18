@@ -8,7 +8,7 @@ import Loader from "../../common/components/Loader";
 import AppPromo from "../../common/components/AppPromo";
 import { withRouter } from 'react-router';
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
-import {getCookie} from '../../common/components/CookieHelper';
+import {getCookie,setCookie} from '../../common/components/CookieHelper';
 import {SITE_KEY,VERIFY_URL} from "../../common/constants/CaptchConstants";
 import {LOGIN_ATTEMPT_COOKIE} from "../../common/constants/CommonConstants";
 import * as CONSTANTS from '../../common/constants/apiConstants';
@@ -356,7 +356,7 @@ class LoginPage extends React.Component {
 
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={() => this.translateSite(CONSTANTS.HINDI_SITE)} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href="{newHref}" classNkame="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>

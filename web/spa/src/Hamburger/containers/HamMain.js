@@ -25,19 +25,12 @@ class HamMain extends React.Component {
 
     translateSite(translateURL)
     {
-        // let newHref;
-        // if(getCookie("AUTHCHECKSUM")) {
-        //     newHref = translateURL+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
-        // } else {
-        //     newHref = translateURL;
-        // }
-        // console.log(newHref);
         if(translateURL.indexOf('hindi')!=-1){
             setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         } else {
             setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
         }
-        //window.location.href = newHref;
+        return true;
     }
     componentWillReceiveProps(nextProps)
     {
@@ -461,6 +454,7 @@ class HamMain extends React.Component {
         } else {
              newHref = CONSTANTS.HINDI_SITE;
         }
+
         let listingView = <div id="listing" className="overflowhidden">
             <ul id="scrollElem" className="fontreg white listingHam posrel fullheight overAutoHidden">
                 <li className="brdrBtm f14 pb8 fontlig">
@@ -468,7 +462,7 @@ class HamMain extends React.Component {
                         <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                     </div>
                     <div className="wid49p dispibl">
-                        <a id="hindiLink" href={newHref} onClick={() => this.translateSite(CONSTANTS.HINDI_SITE)}  className="white fr mar0Imp">Hindi Version</a>
+                        <a id="hindiLink" href={newHref} className="white fr mar0Imp">Hindi Version</a>
                     </div>
                 </li>
                 {startingTuple}
