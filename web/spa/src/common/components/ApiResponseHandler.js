@@ -18,21 +18,11 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
       if ( callUrl.indexOf("?") == -1 )
       {
-
-
-            checkSumURL = '?AUTHCHECKSUM='+aChsum;
-
-        
-
+        checkSumURL = '?AUTHCHECKSUM='+aChsum;
       }
       else
       {
-
-
-          checkSumURL = '&AUTHCHECKSUM='+aChsum;
-
-        
-
+        checkSumURL = '&AUTHCHECKSUM='+aChsum;
       }
     }
     else
@@ -111,7 +101,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       return axios({
         method: callMethod,
         url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
-        data: {},
+        data: Object.keys(data).map((i) => i+'='+data[i]).join('&'),
         headers: {
           'Accept': 'application/json',
           'withCredentials':true,
