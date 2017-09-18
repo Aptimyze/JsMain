@@ -20,7 +20,7 @@ class FamilyTab extends React.Component {
     		myfamily = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_myfamily" dangerouslySetInnerHTML={{__html:this.props.family.myfamily}} />;
     	} else
     	{
-    		myfamily = <div class="hgt10"></div>;
+    		myfamily = <div className="hgt10"></div>;
     	}
 
     	var family_bg;
