@@ -39,7 +39,7 @@ export default class PhotoAlbumPage extends React.Component {
      if(aChsum)
      {
 
-       newPchksum = "&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
+       newPchksum = "?&"+_this.props.location.search.replace('profilechecksum','profileChecksum').substr(1);
      }
      else
      {
@@ -48,7 +48,7 @@ export default class PhotoAlbumPage extends React.Component {
      }
 
 
-     commonApiCall(CONSTANTS.PHOTALBUM_API,newPchksum,'','POST').then(function(response){
+     commonApiCall(CONSTANTS.PHOTALBUM_API+newPchksum,{},'','POST').then(function(response){
           //console.log('albumdata', response);
           _this.setState({
                       getRes: response,

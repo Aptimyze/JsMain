@@ -1,4 +1,3 @@
-import { commonApiCall } from "../../common/components/ApiResponseHandler";
 
 export default class MyjsSliderBinding  {
   constructor(parent,tupleObject,funObj,notMyjs,indexElevate,nextPageHit,pagesrc)

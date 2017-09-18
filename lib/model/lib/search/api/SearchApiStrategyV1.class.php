@@ -86,8 +86,7 @@ class SearchApiStrategyV1
 	* @return array search respone in format for api
 	*/
 	public function convertResponseToApiFormat($loggedInProfileObj,$searchClustersArray,$searchId,$SearchParamtersObj,$relaxedResults="",$casteMappingCnt="",$casteMappingCastes="",$currentPage,$noOfPages,$request,$relaxCriteria)
-	{
-            
+	{            
 		if($request->getParameter("myJs")==1)
 			$this->photoType= 'ProfilePic120Url';
 		if($request->getParameter("searchBasedParam"))
@@ -190,7 +189,7 @@ class SearchApiStrategyV1
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		if($request->getParameter("androidMyjsNew")==1){
+		if($request->getParameter("androidMyjsNew")==1 || $request->getParameter("fromSPA")==1){
 			$this->photoType= 'ProfilePic120Url';
 		}
 		else

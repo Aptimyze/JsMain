@@ -62,9 +62,9 @@ export default class WriteMessage extends React.Component{
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
-    var url = '&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
+    var url = '?&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
     let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
-    commonApiCall(api,url,'','').then((response)=>{
+    commonApiCall(api+url,{},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
     _this.setState({
@@ -80,8 +80,8 @@ export default class WriteMessage extends React.Component{
 
   showMessagesOnScroll(e){
     if(!this.state.nxtdata)return;
-    var url = `&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
-    commonApiCall('/api/v2/contacts/WriteMessage',url,'WRITE_MESSAGE','POST').then((response)=>{
+    var url = `?&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
+    commonApiCall('/api/v2/contacts/WriteMessage'+url,{},'WRITE_MESSAGE','POST').then((response)=>{
       this.scrollHeight = document.getElementById('msgId').scrollHeight;
       let messages = response.messages.concat(this.state.messages);
       this.setState({
