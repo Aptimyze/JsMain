@@ -1,5 +1,8 @@
 
-~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
+                     <!--start:top header hamburger-->
+
+       ~if $loggedIn`
+       ~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
     <div id="hamburger" style="width:85%" class="white posfix fullheight"> 
 
   <div id="outerHamDiv"  >
@@ -9,9 +12,7 @@
 
       
       <div id="newHamlist" class="hamlist hampad1" > 
-                     <!--start:top header hamburger-->
 
-       ~if $loggedIn`
                     <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden"> 
       
       
@@ -229,55 +230,6 @@
                     </div>
                     ~/if`
                     ~/if`
-
-<!--  Code moved Up to include Download App at top -->
-    
-        <!--end:edit profile-->
-      
-       ~else`
-   <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden"> 
-
-                        <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
-                            <div id="appDownloadLink1" class="dispnone"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a></div>
-                            <div class="dispnone" id="appleAppDownloadLink1"><a bind-slide=1   href="/static/appredirect?type=jsmsHamburger&channel=iosLayer" target="_blank" class="white fl mar0Imp">Download iOS App </a></div>
-                            <div class="fr mr10 dispibl">
-                                <div id="hindiLink" onclick="translateSite('http://js.mox.net.in');" class="white  mar0Imp">हिंदी में</div>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="hamSprite homeIcon mt10Imp"></i>
-                            <a id="homeLink1" class=" white" href="/">Home</a>
-                        </li>
-                        <li>
-                            <i class="hamSprite searchIcon"></i>
-                            <a id="searchLink" class="white" href="/search/topSearchBand?isMobile=Y">Search</a>
-                        </li>
-                        <li>
-                            <i class="hamSprite searchProfileIcon"></i>
-                            <a id="searchProfileIdLink" href="/search/searchByProfileId" class="white">Search by Profile ID</a>
-                        </li>
-                        <li>
-                            <i class="hamSprite editProfileIcon"></i>
-                            <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" class=" white">Browse By Community</a>
-                        </li>
-
-                        <li>
-                            <div id="settingsParent">
-                                <i class="hamSprite settingsIcon"></i>
-                                <div id="settingsLink" class="ml15 dispibl white">Settings & Assistance</div>
-                                <i id="expandSettings" class="hamSprite plusIcon fr"></i>
-                            </div>
-                            <ul id="settingsMinor" style="margin-top: 12px;" class="dispnone minorList f15">
-                                <li><a id="switchLink" href="/?desktop=Y" class="white">Switch to Desktop Site</a></li>
-                                <li><a id="contactUsLink" href="/contactus/index" class="white">Contact Us</a></li>
-                                <li><a id="privacyPolicyLink" href="/static/page/privacypolicy" class="white">Privacy Policy</a></li>
-                                <li><a id="termsLink" href="/static/page/disclaimer" class="white">Terms of use</a></li>
-                                <li><a id="fraudLink" href="/static/page/fraudalert" class="white">Fraud Alert</a></li>
-                            </ul>
-                        </li>
-        </ul>
-        <!--end:login-->
-        ~/if`
          </div>
             
         <!--start:edit profile-->
@@ -286,3 +238,65 @@
   </div>
 </div>
     <div id="hamView" style="opacity:0.5;" class="fullwid darkView fullheight hamView dn"></div>
+
+<!--  Code moved Up to include Download App at top -->
+    
+        <!--end:edit profile-->
+      
+       ~else`
+<div id="hamburger" class="white posfix wid90p fullheight">
+    <div id="outerHamDiv">
+        <div id="mainHamDiv">
+            <div id="newHamlist" class="hamlist hampad1">
+                <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;margin-left:0px" class="fontreg white listingHam overAutoHidden">
+                    <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
+                        <div id="appDownloadLink1" class="dispnone"><a href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a>
+                        </div>
+                        <div class="dispnone" id="appleAppDownloadLink1"><a href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a>
+                        </div>
+                        <div class="fr dispibl">
+                            <div id="hindiLink" onclick="translateSite(\'http://js.mox.net.in\');" class="white mar0Imp">हिंदी में</div>
+                        </div>
+                    </li>
+                    <div style="height: 1px;padding: 0px 20px;">
+                        <div style="background-color: white;height: 1px;opacity: .5;"></div>
+                    </div>
+                    <li class="mb12"><i class="hamSprite homeIcon mt10Imp"></i><a id="homeLink1" class="white" href="/">Home</a>
+                    </li>
+                    <li class="mb12"><i class="hamSprite searchIcon"></i><a id="searchLink" class="white" href="/search/topSearchBand?isMobile=Y">Search</a>
+                    </li>
+                    <li class="mb12"><i class="hamSprite searchProfileIcon"></i><a id="searchProfileIdLink" href="/search/searchByProfileId" class="white">Search by Profile ID</a>
+                    </li>
+                    <li class="mb12"><i class="hamSprite editProfileIcon"></i><a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" class="white">Browse By Community</a>
+                    </li>
+                    <li class="mb12">
+                        <div id="settingsParent"><i class="hamSprite settingsIcon"></i>
+                            <div id="settingsLink" class="ml10 dispibl white">Settings & Assistance</div><i id="expandSettings" class="hamSprite plusIcon fr"></i>
+                        </div>
+                        <ul id="settingsMinor" class="minorList f15" style="margin-top: 12px;padding-left:40px;height:0px;">
+                            <li class="mb12 "><a id="contactUsLink" href="/contactus/index" class="newS white">Contact Us</a>
+                            </li>
+                            <li class="mb12"><a id="privacyPolicyLink" href="/static/page/privacypolicy" class="newS white">Privacy Policy</a>
+                            </li>
+                            <li class="mb12"><a id="termsLink" href="/static/page/disclaimer" class="newS white">Terms of use</a>
+                            </li>
+                            <li class="mb12"><a id="fraudLink" href="/static/page/fraudalert" class="newS white">Fraud Alert</a>
+                            </li>
+                            <li class="mb12"><a id="switchLink" href="/?desktop=Y" class="newS white">Switch to Desktop Site</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div id="bottomTab" class="mar0Imp posabs btm0 fullwid">
+                    <div class="brdrTop pad150 fontreg">
+                        <div class="dispibl wid49p pad16"><a id="homeLink2" class="hamBtnLoggedOut bg10 lh40 br6 white" href="/">LOGIN</a>
+                        </div>
+                        <div class="dispibl wid49p pad16"><a class="bg7 br6 lh40 white hamBtnLoggedOut" href="/register/page1?source=mobreg4">REGISTER</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="hamView" class="fullwid darkView fullheight hamView dn"></div>        ~/if`

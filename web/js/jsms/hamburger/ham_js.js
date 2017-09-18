@@ -186,6 +186,8 @@ $("[hamburgermenu]").each(function(){
 $("#hamTollFree").bind("click",function(ev){
 			window.location.href="tel://18004196299";
 		});	
+
+if(getIosVersion()){
 (function () {
     var _overlay = document.getElementById('scrollElem');
     var _clientY = null; // remember Y position on touch start
@@ -225,3 +227,4 @@ $("#hamTollFree").bind("click",function(ev){
         return _overlay.scrollHeight - _overlay.scrollTop <= _overlay.clientHeight;
     }
 }())
+}
