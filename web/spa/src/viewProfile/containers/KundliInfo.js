@@ -51,7 +51,7 @@ class KundliInfo extends React.Component {
         this.setState({
             showAstroLayer:true,
             astroType: type
-        });        
+        });
         let call_url;
         let clickedElem = false;
         if(type == "astroMem")
@@ -81,14 +81,16 @@ class KundliInfo extends React.Component {
         {
             if(this.props.astroSent == 1 && clickedElem == false)
             {
-                clickedElem = true;                
+                clickedElem = true;
                 window.location.href = API_SERVER_CONSTANTS.API_SERVER +call_url;
             }
         }
     }
 
     render() {
-    	var city_country;
+    	let city_country;
+			//console.log("kundli");
+			//console.log(this.props.about);
     	if(this.props.about.city_country)
     	{
     		city_country = <div>
@@ -98,7 +100,7 @@ class KundliInfo extends React.Component {
             	</div>
     		</div>;
     	}
-    	var date_time;
+    	let date_time;
     	if(this.props.about.date_time)
     	{
     		date_time = <div>
@@ -128,12 +130,11 @@ class KundliInfo extends React.Component {
     	{
                var urlString = "/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
 
-            downloadHoroscope = <div>
-    			<a href = {urlString}>
+            downloadHoroscope = <a href = {urlString}>
                     <button id="downloadHoroscope" className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
                 </a>
-                {AstroReport}
-    		</div>
+
+
     	}
 
     	var horoscope;
@@ -172,27 +173,18 @@ class KundliInfo extends React.Component {
             }
 
     		more_astro = <div>
-    			<div className="f12 color1">More</div>
-            	<div className="fontlig pb15">
-            	{rashi}
-            	{nakshatra}
-            	{horoscope}
-            	{horo_match}
-            	<div className="clearfix" id="gunaScore">
-                </div>
-            	</div>
-    		</div>;
+    									<div className="f12 color1">More</div>
+					            	<div className="fontlig pb15">
+					            	{rashi}
+					            	{nakshatra}
+					            	</div>
+    								</div>;
     	}
 
     	var kundliSection;
     	if(this.props.about.city_country || this.props.about.date_time || this.props.about.more_astro)
     	{
-    		kundliSection = <div className="pad5 bg4 fontlig color3 clearfix f14">
-    			<div className="fl">
-    				<i className="vpro_sprite vpro_kund"></i>
-    			</div>
-      			<div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
-      			<div className="clr hgt10"></div>
+    		kundliSection = <div>
       			{city_country}
       			{date_time}
       			{more_astro}
@@ -280,10 +272,23 @@ class KundliInfo extends React.Component {
 
     	return(
     		<div>
-                {astroLayer}
-    			{kundliSection}
-  				{Religious}
+          {astroLayer}
+
+					<div className="pad5 bg4 fontlig color3 clearfix f14">
+						<div className="clearfix">
+								  <i className="vpro_sprite vpro_kund fl"></i>
+									<div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
+						</div>
+						{kundliSection}
+						<div id="chk" className="clearfix pb20 pt20">
+               {downloadHoroscope}
+               {AstroReport}
+          	</div>
+						<div className="clearfix" id="gunaScore"></div>
+  					{Religious}
     		</div>
+
+				</div>
     	);
     }
 }

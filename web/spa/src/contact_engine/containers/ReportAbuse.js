@@ -43,7 +43,7 @@ export default class ReportAbuse extends React.Component{
 
         let items = ul.getElementsByTagName("li");
 
-        for (let i = 0; i < items.length; i++) 
+        for (let i = 0; i < items.length; i++)
         {
           items[i].getElementsByTagName("i")[0].classList.add("dn");
         }
@@ -172,11 +172,11 @@ export default class ReportAbuse extends React.Component{
     if(this.state.showLoader)
     {
       loaderView = <Loader show="page"></Loader>;
-    } 
+    }
 
 
     return(
-      <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+      <div className="posabs ce-bg ce_top1 ce_z101 scrollhid" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
           <div id="reportAbuseContainer">
