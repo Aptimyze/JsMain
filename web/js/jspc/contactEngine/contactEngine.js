@@ -461,7 +461,7 @@ function getLimitWarningTemplate(CheckSum){
 	" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
 	We encourage you to send interests only to people where you match most\
 	 of the preferences mentioned in their partner preference.<br/><br/>"+
-	"<a href='/static/page/disclaimer' class='colr5' target='_blank'>Click Here</a> to know more about Interest Limits";
+	"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
 	template.find("."+contentDiv).html(textToShow);
 	if(WARNING.pageSource == "CC"){
 		template.find("."+contentDiv).css({"font-size": "11px"});
@@ -497,7 +497,7 @@ function postCommonWarningLayer(Obj, profilechecksum,pageSource){
 		" interests allowed till the "+Obj.actiondetails.limitWarning.text+" ending "+Obj.actiondetails.limitWarning.expiry+".<br/>\
 		We encourage you to send interests only to people where you match most\
 		 of the preferences mentioned in their partner preference.<br/><br/>"+
-		"<a href='/static/page/disclaimer#limitsTable' class='colr5' target='_blank'>Click Here</a> to know more about Interest Limits";
+		"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
 	}
 	
 
