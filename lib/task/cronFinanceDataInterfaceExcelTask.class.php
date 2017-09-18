@@ -35,11 +35,20 @@ EOF;
         $device = $memcacheValue['DEVICE'];
         $mainKey = $memcacheValue['MAINKEYNAME'];
         $fileName = $memcacheValue['FILENAME'];
+        
+        if(strtotime($start_date) > strtotime("2017-03-31")){
+            $table = "PAYMENT_DETAIL_NEW";
+            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+        }
+        else{
+            $table = "PAYMENT_DETAIL";
+            $condition = "='DONE'";
+        }
         // Data fetch logic
         $billServObj = new billing_SERVICES('newjs_slave');
         $purchaseObj = new BILLING_PURCHASES('newjs_slave');
         $this->serviceData = $billServObj->getFinanceDataServiceNames();
-        $this->rawData = $purchaseObj->fetchFinanceData($start_date, $end_date, $device);
+        $this->rawData = $purchaseObj->fetchFinanceData($start_date, $end_date, $device, 0,'',$table, $condition);
         $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
         if ($this->rawData && is_array($this->rawData)) {
             foreach ($this->rawData as $k => $v) {
