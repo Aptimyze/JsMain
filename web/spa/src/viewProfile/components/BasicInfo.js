@@ -11,7 +11,7 @@ export default class BasicInfo extends React.Component {
       if(this.props.about.m_status == 'Never Married')
 			  have_child = this.props.about.have_child;
       else
-        have_child = ","+this.props.about.have_child;
+        have_child = ", "+this.props.about.have_child;
     	}
 
     	var myInfo = <div className='hgt10'></div>;
