@@ -178,7 +178,7 @@ export  class MyjsPage extends React.Component {
 		    	myjsApi: true
 		    });
 		}
-  		if(!this.state.hamApi){
+  		else if(!this.state.hamApi){
 		    this.props.hitApi_Ham();
 		    this.setState({
 		    	hamApi: true
