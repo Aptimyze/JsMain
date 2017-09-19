@@ -114,16 +114,22 @@ height: 20px;}
     width: 27px;
     background-position: -54px -191px;
 }
+
+ @media (min-width: 280px) and (max-width: 320px) {
+  .fontHam{font-size: 14px;}
+  .plusIcon {
+    height: 27px;
+    width: 22px;
+    background-position: -13px -196px;
+}
+ }
+@media (min-width: 321px) {
+.fontHam{font-size: 16px;}
 .plusIcon {
     height: 27px;
     width: 27px;
     background-position: -13px -196px;
 }
- @media (min-width: 280px) and (max-width: 320px) {
-  .fontHam{font-size: 14px;}
- }
-@media (min-width: 321px) {
-.fontHam{font-size: 16px;}
     
 }
 .plusParent .plusIcon {
