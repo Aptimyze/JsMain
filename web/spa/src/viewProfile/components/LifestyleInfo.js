@@ -129,9 +129,9 @@ export default class LifestyleInfo extends React.Component {
 	  			{fav_book}
 	  			{fav_movies}
 	  			{fav_cuisine}
-                <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>
+            }    
+            <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>
     		</div>;
-            }
     	}
     	return(
     		<div>
