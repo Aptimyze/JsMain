@@ -400,7 +400,7 @@ const mapDispatchToProps = (dispatch) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_IE_DATA','POST',dispatch);
         },
         hitApi_Ham: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL3+'?&API_APP_VERSION=94',{},'SET_HAM_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch);
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
 				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})

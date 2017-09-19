@@ -562,7 +562,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         getHamData: () => {
-            commonApiCall(CONSTANTS.MYJS_CALL_URL3+'?API_APP_VERSION=94',{},'SET_HAM_DATA','POST',dispatch);
+            commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch);
         }
     }
 }

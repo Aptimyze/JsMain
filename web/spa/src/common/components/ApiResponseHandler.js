@@ -32,30 +32,33 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           checkSumURL = data;
       }
     }
-    // console.log("shahjahan dispatch",dispatch);
-    // console.log("shahjahan prevDataUrl",localStorage.getItem("prevDataUrl"));
+
     if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl || localStorage.getItem("currentDataUrl") == callUrl &&  localStorage.getItem("currentData")) {
       let data;
       if(localStorage.getItem("prevDataUrl") == callUrl) {
-        console.log("shahjahan Getting from prevDataUrl.");
+        // console.log("shahjahan Getting from prevDataUrl.");
         data = JSON.parse(localStorage.getItem("prevData"));
 
         localStorage.setItem("nextData", localStorage.getItem("currentData"));
         localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
-
-        localStorage.setItem("currentData", localStorage.getItem("prevData"));
-        localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
+        if ( localStorage.getItem("prevDataUrl") != null  )
+        {
+          localStorage.setItem("currentData", localStorage.getItem("prevData"));
+          localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
+        }
       } else if(localStorage.getItem("nextDataUrl") == callUrl) {
         data = JSON.parse(localStorage.getItem("nextData"));
-        // console.log("shahjahan currentData",localStorage.getItem("currentData"))
-        // console.log("shahjahan currentDataUrl",localStorage.getItem("currentDataUrl"))
-        if( dispatch != "saveLocalNext")
+        if( dispatch != "saveLocalNext" )
         {
           localStorage.setItem("prevData", localStorage.getItem("currentData"));
           localStorage.setItem("prevDataUrl",localStorage.getItem("currentDataUrl"));
 
-          localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
-          localStorage.setItem("currentData", localStorage.getItem("nextData"));
+          if ( localStorage.getItem("nextDataUrl") != null )
+          {
+            localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
+            localStorage.setItem("currentData", localStorage.getItem("nextData"));
+          }
+
 
           localStorage.setItem("prevDataUrlForGuna", localStorage.getItem("currentDataUrlForGuna"));
           localStorage.setItem("prevGuna", localStorage.getItem("currentGuna"));
@@ -173,9 +176,22 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         if(typeof dispatch == 'function')
         {
           if(reducer == "SHOW_INFO") {
+            if ( localStorage.getItem("currentData") != null )
+            {
+              localStorage.setItem("nextData", localStorage.getItem("currentData"));
+            }
+            if ( localStorage.getItem("currentData") != null )
+            {
+              localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+``            }
+
             localStorage.setItem("currentData", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrl",callUrl)
+            localStorage.setItem("currentDataUrl",callUrl);
           } else if(reducer == "SHOW_GUNA") {
+            
+            // localStorage.setItem("", localStorage.getItem("currentData"));
+            // localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+
             localStorage.setItem("currentGuna", JSON.stringify(response.data));
             localStorage.setItem("currentDataUrlForGuna",callUrl)
           }
@@ -194,6 +210,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         return response.data;
       })
       .catch( (error) => {
+        console.warn('Actions - fetchJobs - recreived error: ', error)
         if(typeof dispatch == 'function')
         {
           dispatch({
@@ -202,7 +219,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             token: tupleID
           });
         }
-        console.warn('Actions - fetchJobs - recreived error: ', error)
       })
     }
 }

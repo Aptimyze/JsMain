@@ -521,6 +521,8 @@ class DetailedViewApi
             if($viewerProfile)
             {
             	$selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();
+            	if(!$selfHavePhoto)
+            		$selfHavePhoto = "N";
             	if($selfHavePhoto != "N")
             	{
             		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);

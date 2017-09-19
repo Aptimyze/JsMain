@@ -82,7 +82,6 @@ export class contactEnginePD extends React.Component{
     }
     else
     {
-
       switch(actionButton.action)
       {
         case 'SHORTLIST':
@@ -148,7 +147,7 @@ export class contactEnginePD extends React.Component{
         this.props.replaceSingleButton(Array(responseButtons.buttondetails.button));
       }
 
-      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1)
+      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1 && !responseButtons.actiondetails.errmsglabel)
       {
         this.goToViewSimilar();
       }
