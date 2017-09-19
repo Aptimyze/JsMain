@@ -191,7 +191,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         doPhotoAction: (profilechecksum) => {
-            let call_url = "/api/v1/social/requestPhoto?profilechecksum="+profilechecksum;
+            let call_url = "/api/v1/social/requestPhoto?profileChecksum="+profilechecksum;
             commonApiCall(call_url,{},'PHOTO_ACTION','GET',dispatch,false);
         }
     }
