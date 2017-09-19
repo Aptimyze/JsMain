@@ -30,7 +30,7 @@ temp.animate({
         $("#scrollElem").height((window.innerHeight -$("#bottomTab").height())+"px");
         $("#settingsParent").on("click",function(){
             if($("#settingsParent").hasClass('plusParent')) {
-                  $("#settingsMinor").animate({height:'0px','margin-top':'0px'},0); 
+                  $("#settingsMinor").animate({height:'0px','margin': '0', 'padding': '0','padding-top': '0px','padding-left': '0px'},0);
             } else {
                 if(window.outerWidth>320)
             	   $("#settingsMinor").animate({height:settingsSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);
@@ -44,7 +44,7 @@ temp.animate({
         })
         $("#myMatchesParent").on("click",function(){
             if($("#myMatchesParent").hasClass('plusParent')) {
-                 $("#myMatchesMinor").animate({height:'0px','margin-top':'0px'},0); 
+                 $("#myMatchesMinor").animate({height:'0px','margin': '0', 'padding': '0','padding-top': '0px','padding-left': '0px'},0);
             } else {
             	 if(window.outerWidth>320)
                    $("#myMatchesMinor").animate({height:myMatchesSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);
@@ -59,7 +59,7 @@ temp.animate({
         })
         $("#contactsParent").on("click",function(){
         	if($("#contactsParent").hasClass('plusParent')) {
-                  $("#contactsMinor").animate({height:'0px','margin-top':'0px'},0); 
+                  $("#contactsMinor").animate({height:'0px','margin': '0', 'padding': '0','padding-top': '0px','padding-left': '0px'},0); 
             } else {
                  if(window.outerWidth>320)
                 	$("#contactsMinor").animate({height:contactSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);

@@ -210,12 +210,12 @@
 
                     </ul>
                     ~if $MembershipMessage.bottom`
-                    ~if strpos($MembershipMessage.top, 'FLASH') != false`
+                    ~if $MembershipMessage.top eq 'FLASH DEAL'`
                     <div id="bottomTab" class="mar0Imp posabs btmo fullwid">
                         <div class="brdrTop pad150">
                             <div class="txtc color9 mb15">~$MembershipMessage.bottom`</div>
                         </div>
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.top|upper` | UPGRADE NOW</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lhHam">~$MembershipMessage.top|upper` | UPGRADE NOW</a>
 
                     </div>
                     ~else`
@@ -225,7 +225,7 @@
                             <div class="txtc color9 mb15">~$MembershipMessage.top`</div>
                         </div>
                         ~/if`
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.bottom|upper`</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lhHam">~$MembershipMessage.bottom|upper`</a>
 
                     </div>
                     ~/if`

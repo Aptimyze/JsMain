@@ -122,7 +122,12 @@ height: 20px;}
     width: 22px;
     background-position: -13px -196px;
 }
+.pad150 {
+    padding: 10px 0px 0px 0px;
+}
+.lhHam{line-height:30px;}
  }
+}
 @media (min-width: 321px) {
 .fontHam{font-size: 16px;}
 .plusIcon {
@@ -130,7 +135,10 @@ height: 20px;}
     width: 27px;
     background-position: -13px -196px;
 }
-    
+ .pad150 {
+    padding: 15px 0px 0px 0px;
+}
+.lhHam{line-height:50px;}   
 }
 .plusParent .plusIcon {
     height: 27px;
@@ -254,9 +262,7 @@ height: 20px;}
 .mb15 {
     margin-bottom: 15px;
 }
-.pad150 {
-    padding: 15px 0px 0px 0px;
-}
+
 .mb12 {
     margin-bottom: 12px;
 }
