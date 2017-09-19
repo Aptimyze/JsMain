@@ -94,7 +94,7 @@ class apiActions extends sfActions
 		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
 		 $forwardingArray =ApiRequestHandler::getInstance($request)->getModuleAndActionName($request);
 		 $respObj = ApiResponseHandler::getInstance();
-		if($appVersion>=94){
+		if($appVersion>=94 || MobileCommon::isNewMobileSite()){
 			$hamburgerDetails = HamburgerApp::getHamburgerDetails($request->getAttribute('profileid'),$request->getParameter("version"),$forwardingArray);
 			$respObj->setHamburgerDetails($hamburgerDetails);
 		}
