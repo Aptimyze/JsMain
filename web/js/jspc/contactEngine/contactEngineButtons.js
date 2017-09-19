@@ -226,7 +226,7 @@ if((this.name=="SEND_MESSAGE"|| this.name=="WRITE_MESSAGE") && this.data.isSent)
 	if(superdata){
 		var contactLayerDivParent = contactLayerDiv.parent();
 		contactLayerDiv.remove();
-		contactLayerDivParent.append(getLimitWarningTemplate(superdata));
+		contactLayerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
 		cECloseBinding();
 	}else{
   		contactLayerDiv.addClass("disp-none");

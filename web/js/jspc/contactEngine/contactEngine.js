@@ -419,7 +419,7 @@ ContactEngineCard.prototype.postDisplay = function(Obj,profileChecksum,isError){
 			}
 			else if(typeof Obj.actiondetails.limitWarning != "undefined"){
 				currentActionLayer = "limitWarning";
-				return postCommonWarningLayer(Obj, profileChecksum, this.name);
+				return postCommonWarningLayer(Obj.actiondetails.limitWarning, profileChecksum, this.name, "FREE");
 			}
 			else if(Obj.actiondetails.footerbutton!=null)
 			{
@@ -444,35 +444,8 @@ function postDisplayError(pageSource)
 	else
 		return FinalHtml=$("#postCommonErrorLayer").html();
 }
-function getLimitWarningTemplate(CheckSum){
-	/* CASE FOR PAID MEMBER */
-	var Data = WARNING[CheckSum];
-	var templateID = "postCommonErrorLayer";
-	var contentDiv = "disp-cell";
-	if(WARNING.pageSource == "CC"){
-		templateID = "postCCErrorCommonLayer";
-		contentDiv = "js-genericMsg";
-	}
-	var template = $("#"+templateID).clone();
-	var textToShow = "<b>Please Note</b>: You have already sent "+
-	Data.count+
-	" out of "+
-	Data.limit+
-	" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
-	We encourage you to send interests only to people where you match most\
-	 of the preferences mentioned in their partner preference.<br/><br/>"+
-	"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
-	template.find("."+contentDiv).html(textToShow);
-	if(WARNING.pageSource == "CC"){
-		template.find("."+contentDiv).css({"font-size": "11px"});
-		template.find('span').removeClass("disp-none");
-		template.find('i').addClass("disp-none");
-	}
-	return template;
-}
-function postCommonWarningLayer(Obj, profilechecksum,pageSource){
-	/* CASE FOR FREE MEMBER */
-	/* Has two cases: 1 where limit is day/month/week type 2 where overall limit is type*/
+
+function postCommonWarningLayer(Data, profilechecksum,pageSource, userType){
 	var templateID = "postCommonErrorLayer";
 	var contentDiv = "disp-cell";
 	if(pageSource == "CC"){
@@ -481,31 +454,51 @@ function postCommonWarningLayer(Obj, profilechecksum,pageSource){
 	}
 	var template = $("#"+templateID).clone();
 	var textToShow = "";
-	if(Obj.actiondetails.limitWarning.type == "OVERALL"){
-		textToShow = "<b>Please Note</b>: You have already sent "+
-		Obj.actiondetails.limitWarning.count+
+	if(userType === "FREE"){
+		/* CASE FOR FREE MEMBER */
+		/* Has two cases: 1 where limit is day/month/week type 2 where overall limit is type*/
+		if(Data.type == "OVERALL"){
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed on your account.<br>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.";
+		}else{
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.<br/><br/>"+
+			"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
+		}
+		
+
+		template.find("."+contentDiv).html(textToShow);
+
+		if(pageSource == "CC"){
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
+	}else if(userType === "PAID"){
+		/* CASE FOR PAID MEMBER */
+		var textToShow = "<b>Please Note</b>: You have already sent "+
+		Data.count+
 		" out of "+
-		Obj.actiondetails.limitWarning.limit+
-		" interests allowed on your account.<br>\
-		We encourage you to send interests only to people where you match most\
-		 of the preferences mentioned in their partner preference.";
-	}else{
-		textToShow = "<b>Please Note</b>: You have already sent "+
-		Obj.actiondetails.limitWarning.count+
-		" out of "+
-		Obj.actiondetails.limitWarning.limit+
-		" interests allowed till the "+Obj.actiondetails.limitWarning.text+" ending "+Obj.actiondetails.limitWarning.expiry+".<br/>\
+		Data.limit+
+		" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
 		We encourage you to send interests only to people where you match most\
 		 of the preferences mentioned in their partner preference.<br/><br/>"+
 		"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
-	}
-	
-
-	template.find("."+contentDiv).html(textToShow);
-
-	if(pageSource == "CC"){
-		template.find('span').removeClass("disp-none");
-		template.find('i').addClass("disp-none");
+		template.find("."+contentDiv).html(textToShow);
+		if(pageSource == "CC"){
+			template.find("."+contentDiv).css({"font-size": "11px"});
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
 	}
 	return template;
 }
@@ -908,7 +901,7 @@ $(".closeContactDetailLayer").bind('click',function() {
 	superdata = layerDiv.attr('superdata');
 	layerDiv.remove();
 	if(superdata){
-	layerDivParent.append(getLimitWarningTemplate(superdata));
+	layerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
 	cECloseBinding();
 	}
 	return false;
