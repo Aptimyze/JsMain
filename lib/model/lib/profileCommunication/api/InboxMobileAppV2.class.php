@@ -873,7 +873,14 @@ class InboxMobileAppV2
                                 }
                                 	if(MobileCommon::isNewMobileSite() && $request->getParameter("JSMS_MYJS"))
                                 	{
-                                		$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),'ProfilePic120Url',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                		if($infoKey == "VISITORS")
+                                		{
+                                			$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                		}
+                                		else
+                                		{
+                                			$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),'ProfilePic120Url',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                		}
 
                                 	}
                                 	else
