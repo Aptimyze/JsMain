@@ -145,7 +145,7 @@ export default class ReportInvalid extends React.Component{
     topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportInvalidtop">
           <div className="posrel fullwid ">
               <img id="photoReportInvalid" className="srp_box3 fl dispibl" src={this.props.profileThumbNailUrl} />
-              <div className="white fontthin f19 txtc dispibl wid70p pt20">Reason for reporting invalid</div>
+              <div className="white fontthin f19 txtc dispibl wid70p pt20">Report Invalid</div>
               <i onClick={() => this.closeInvalidLayer()} className="mainsp com_cross mar200 fr"></i>
           </div>
       </div>
@@ -154,7 +154,7 @@ export default class ReportInvalid extends React.Component{
                             <div className="flowauto reportInvalidScreen clearfix" id="js-reportInvalidMainScreen">
                                 <i className="mainsp ce_arow_new fl"></i>
                                 <div className="fl wid88p fontthin">
-                                    <div className="white fullwid dispibl dashedBorder pad18">Report Invalid</div>
+                                    <div className="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid</div>
                                     <ul id="invalidList" className="f16 fontthin white mb70">
                                         {InvalidList.map(function(name, index){
                                             return <li key={index}  className="reportInvalidOption dispibl dashedBorder pad18 fullwid">
