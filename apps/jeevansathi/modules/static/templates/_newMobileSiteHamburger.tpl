@@ -215,7 +215,7 @@
                         <div class="brdrTop pad150">
                             <div class="txtc color9 mb15">~$MembershipMessage.bottom`</div>
                         </div>
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">FLASH DEAL | UPGRADE NOW</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.top|upper` | UPGRADE NOW</a>
 
                     </div>
                     ~else`
