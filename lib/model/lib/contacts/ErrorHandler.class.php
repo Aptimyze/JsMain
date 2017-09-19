@@ -786,7 +786,7 @@ class ErrorHandler
 				$this->setErrorType('LIMIT','TOTAL');
 			}
 
-			$percentageThreshold = 80;
+			$percentageThreshold = 8;
 			$percentages = array(
 				array(
 					"type" => "DAILY",
@@ -828,7 +828,7 @@ class ErrorHandler
 			array_multisort($indexes, SORT_DESC, $percentages);
 			// die(var_dump($percentages));
 			foreach ($percentages as $percentage) {
-				if($percentage['value'] > $PERCENTAGETHRESHOLD){
+				if($percentage['value'] > $percentageThreshold){
 					$this->contactHandlerObj->setContactLimitWarning($percentage);
 					break;
 				}
