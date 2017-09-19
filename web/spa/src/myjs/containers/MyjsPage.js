@@ -32,7 +32,7 @@ constructor(props){
 	super(props);
 }
 	componentDidMount(){
-	this.props.restApiFun();	
+	this.props.restApiFun();
 }
 	render(){
 
@@ -86,13 +86,15 @@ export  class MyjsPage extends React.Component {
 			this.irApi = false;
 			this.modApi = false;
 			this.vaApi = false;
-			this.drApi = false;			
+			this.drApi = false;
 		}
 		else {
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
 				this.firstApiHits(this);
 			}
 		}
+		this.checkforgap("mount");
+
 	}
 
 
@@ -219,8 +221,35 @@ export  class MyjsPage extends React.Component {
 		    	this.drApi = true;
 		    	this.props.hitApi_DR();
 		    }
+				this.checkforgap("lastcall");
 		}
   	}
+		checkforgap(param)
+		{
+      let ele=document.getElementById("JBrowserGap");
+      if (navigator.userAgent.indexOf('SamsungBrowser/') >= 0)
+			{
+
+					ele.style.height="100px";
+          if(param=="mount")
+    			{
+    				//alert("in mpunt");
+    				if(ele.classList.contains("dn") )
+    				{
+    					ele.classList.remove("dn");
+    				}
+    			}
+    			else if(param=="lastcall")
+    			{
+
+    				if(!ele.classList.contains("dn") )
+    				{
+    					ele.classList.add("dn");
+    				}
+    			}
+			}
+
+		}
 
 		hitIRforPagination(){
 			if(this.props.myjsData.apiDataIR.nextpossible!='true' || this.props.myjsData.apiDataIR.paginationHit)return;
@@ -241,7 +270,7 @@ export  class MyjsPage extends React.Component {
 	   //  }
 	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
 				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
-	    }	    
+	    }
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
   		if(this.props.myjsData.fetched){
@@ -318,7 +347,7 @@ export  class MyjsPage extends React.Component {
 									{EditBarView}
 									{membershipmessageView}
 									{AcceptCountView}
-									{LoaderView}			
+									{LoaderView}
 									{interestExpView}
 									{interestRecView}
 									{matchOfTheDayView}
@@ -327,6 +356,7 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
+					<div id="JBrowserGap"></div>
 				</div>
 			</div>
 		</div>

@@ -42,7 +42,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
         localStorage.setItem("nextData", localStorage.getItem("currentData"));
         localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
-        
+
         localStorage.setItem("currentData", localStorage.getItem("prevData"));
         localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
       } else if(localStorage.getItem("nextDataUrl") == callUrl) {
@@ -101,7 +101,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
       return axios({
         method: callMethod,
         url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
-        data: Object.keys(data).map((i) => i+'='+data[i]).join('&'),
+        data: data!=null ? Object.keys(data).map((i) => i+'='+data[i]).join('&') : '',
         headers: {
           'Accept': 'application/json',
           'withCredentials':true,
