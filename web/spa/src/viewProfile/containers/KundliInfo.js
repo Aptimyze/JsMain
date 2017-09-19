@@ -6,9 +6,10 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import axios from "axios";
 
+const RELIGIONARR = ["1","4","7","9"];
 class KundliInfo extends React.Component {
 	constructor(props) {
-        super();
+        super();        
         this.state = {
             showAstroLayer:false
         };
@@ -172,13 +173,13 @@ class KundliInfo extends React.Component {
                 </div>
             }
 
-    		more_astro = <div>
-    									<div className="f12 color1">More</div>
-					            	<div className="fontlig pb15">
-					            	{rashi}
-					            	{nakshatra}
-					            	</div>
-    								</div>;
+            more_astro = <div>
+            <div className="f12 color1">More</div>
+            <div className="fontlig pb15">
+            {rashi}
+            {nakshatra}
+            </div>
+            </div>;
     	}
 
     	var kundliSection;
@@ -220,7 +221,7 @@ class KundliInfo extends React.Component {
         var Religious;
         if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m)
         {
-            Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
+            Religious = <div className=" bg4 fontlig color3 clearfix f14">
                 <div className="fl">
                     <i className="vpro_sprite vpro_kund"></i>
                 </div>
@@ -270,25 +271,32 @@ class KundliInfo extends React.Component {
             </div>
         }
 
+        let horoAndAstroSection = "";        
+        if(RELIGIONARR.includes(this.props.about.religionId))
+        {
+            horoAndAstroSection = <div>
+            <div className="clearfix pb20 pt20">
+            {downloadHoroscope}
+            {AstroReport}
+            </div>
+            <div className="clearfix" id="gunaScore"></div></div>;
+        }
     	return(
     		<div>
           {astroLayer}
 
-					<div className="pad5 bg4 fontlig color3 clearfix f14">
-						<div className="clearfix">
-								  <i className="vpro_sprite vpro_kund fl"></i>
-									<div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
-						</div>
-						{kundliSection}
-						<div id="chk" className="clearfix pb20 pt20">
-               {downloadHoroscope}
-               {AstroReport}
-          	</div>
-						<div className="clearfix" id="gunaScore"></div>
-  					{Religious}
-    		</div>
+          <div className="pad5 bg4 fontlig color3 clearfix f14">
+          <div className="clearfix">
+          <i className="vpro_sprite vpro_kund fl"></i>
+          <div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
+          <div className="clr hgt10"></div>
+          </div>
+          {kundliSection}
+          {horoAndAstroSection}
+          {Religious}
+          </div>
 
-				</div>
+          </div>
     	);
     }
 }

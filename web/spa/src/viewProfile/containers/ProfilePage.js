@@ -97,14 +97,14 @@ class ProfilePage extends React.Component {
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
+            if(stype != undefined){
+                urlString += "&stype=" + stype;
+            }
             if(searchid != 1 && searchid != null)
             {
                 urlString += "&searchid=" + searchid;
             } else if(contact_id != undefined) {
                 urlString += "&contact_id=" + contact_id;
-            }
-            if(stype != undefined){
-                urlString += "&stype=" + stype;
             }
         }
 
