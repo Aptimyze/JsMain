@@ -36,7 +36,7 @@
 
   <i class="pos_fix layersZ sprite2 sprclose closepht cursp" id="conditionalLayerClose" style="top:5%;right:5%"></i>
 
-  <div class="pos_fix layersZ fontlig setshare  wid1000">
+  <div class="pos_fix layersZ fontlig setshare  wid1000" id="actualconditionalLayer">
     <div class="f17 fontlig colrw">
     <div class="txtc f15">
       <p class="pb15">It has been a while since you registered on Jeevansathi, hence we require you to add a photo to be able to see other members' album.</p>

@@ -297,9 +297,11 @@ function ajaxDelete(optionVal,specifyReason)
                         {
 
                           if(response=="success redirect")
-                          window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
-                        else
-                          window.location.href= "/static/logoutPage";
+                            window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
+                          else if(optionVal=="I found my match from other website" || optionVal=="I found my match elsewhere" ||optionVal=='I found my match on Jeevansathi.com')
+                            window.location.href= "/static/PostWeddingServices";
+                          else
+                            window.location.href= "/static/logoutPage";
                         }
                         
                       });

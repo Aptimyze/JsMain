@@ -123,7 +123,7 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 				$( "#"+messageKeyName).removeClass("cursp bg_pink contactEngineIcon").addClass("bg10");
 				$( "#"+messageKeyName).unbind();
 			}
-           else if((data.name=="INITIATE" || data.name=="REMINDER") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
+           else if((data.name=="INITIATE" || data.name=="REMINDER" || data.name=="ACCEPT") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
 			{
 				var stypeViewSimilar='V';
 				if(data.name=="ACCEPT")

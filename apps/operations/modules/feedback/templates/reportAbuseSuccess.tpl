@@ -1,18 +1,22 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td class='RACount'></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled value='Download'></td></tr>";
+	var cid='~$cid`';
+	var fetchAbusePageUrl = "/operations.php/profileVerification/fetchAbuseInvalidData/?userName="
+	var showStatsPageUrl = "/operations.php/commoninterface/ShowProfileStats?cid="+cid+"&profileid=";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td><a class='RAreportee' target='_blank'></a></td><td class='RAreporteeEmail'></td><td><a class='RAreporter' target='_blank'></a></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td><a class='RACount' target='_blank'></a></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled value='Download'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
-		tempHtml.find('.RAreportee').text(rowJson.reportee_id);
+		tempHtml.find('.RAreportee').text(rowJson.reportee_id).attr('href', showStatsPageUrl+rowJson.reportee);
 		tempHtml.find('.RAreporteeEmail').text(rowJson.reportee_email);
-		tempHtml.find('.RAreporter').text(rowJson.reporter_id);
+		tempHtml.find('.RAreporter').text(rowJson.reporter_id).attr('href', showStatsPageUrl+rowJson.reporter);
 		tempHtml.find('.RAreporterEmail').text(rowJson.reporter_email);
 		tempHtml.find('.RAcategory').text(rowJson.reason);
 		tempHtml.find('.RAOther').text(rowJson.comments);
 		tempHtml.find('.RADate').text(rowJson.timestamp);
-		tempHtml.find('.RACount').text(rowJson.count);
+		tempHtml.find('.RACount').text(rowJson.count).attr('href', fetchAbusePageUrl+rowJson.reportee_id);
+		tempHtml.attr('title', rowJson.reportee_id);
                 if(rowJson.attachment_id != -1) {
                     tempHtml.find('.attach_id').prop('disabled',false).attr('id',rowJson.attachment_id);
                 }
