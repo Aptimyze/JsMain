@@ -16,13 +16,13 @@ temp.animate({
     $(document).ready(function(){
         var settingsSum = 0,myMatchesSum = 0,contactSum = 0;
         $("#settingsMinor li").each(function(){
-            settingsSum += $(this).outerHeight() + 12;
+            settingsSum += $(this).outerHeight() + 15;
         })
         $("#myMatchesMinor li").each(function(){
-            myMatchesSum += $(this).outerHeight() + 12;
+            myMatchesSum += $(this).outerHeight() + 15;
         })
         $("#contactsMinor li").each(function(){
-            contactSum += $(this).outerHeight() + 12;
+            contactSum += $(this).outerHeight() + 15;
         })
         contactSum-=20;
         myMatchesSum-=20;
@@ -32,7 +32,11 @@ temp.animate({
             if($("#settingsParent").hasClass('plusParent')) {
                   $("#settingsMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#settingsMinor").animate({height:settingsSum+'px','margin-top':'12px'},0);
+                if(window.outerWidth>320)
+            	   $("#settingsMinor").animate({height:settingsSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);
+                else
+                    $("#settingsMinor").animate({height:settingsSum+'px','margin': '0', 'padding': '0','padding-top': '20px','padding-left': '10px'},0);
+
             	setScroll($("#settingsParent").parent());
 //                $("#settingsMinor").height("0px");
             }
@@ -42,7 +46,10 @@ temp.animate({
             if($("#myMatchesParent").hasClass('plusParent')) {
                  $("#myMatchesMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#myMatchesMinor").animate({height:myMatchesSum+'px','margin-top':'12px'},0);
+            	 if(window.outerWidth>320)
+                   $("#myMatchesMinor").animate({height:myMatchesSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);
+                else
+                    $("#myMatchesMinor").animate({height:myMatchesSum+'px','margin': '0', 'padding': '0','padding-top': '20px','padding-left': '10px'},0);
             	setScroll($("#myMatchesParent").parent());
 //                $("#settingsMinor").height("0px");
             }
@@ -54,7 +61,11 @@ temp.animate({
         	if($("#contactsParent").hasClass('plusParent')) {
                   $("#contactsMinor").animate({height:'0px','margin-top':'0px'},0); 
             } else {
-            	$("#contactsMinor").animate({height:contactSum+'px','margin-top':'12px'},0);
+                 if(window.outerWidth>320)
+                	$("#contactsMinor").animate({height:contactSum+'px','margin': '0', 'padding': '0','padding-top': '12px','padding-left': '40px'},0);
+                else
+                    $("#contactsMinor").animate({height:contactSum+'px','margin': '0', 'padding': '0','padding-top': '20px','padding-left': '10px'},0);
+
             	setScroll($("#contactsParent").parent());
 //                $("#settingsMinor").height("0px");
             }
