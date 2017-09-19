@@ -40,8 +40,18 @@ class ApiFeedbackV1Action extends sfActions
           $this->forward("phone","ReportInvalid");       
         }
         
+        $apiResponseHandlerObj=ApiResponseHandler::getInstance();
+        
+        //if request does not contain user specified message, then prompt an error
+        if ( false === $this->isMessageAvailable ( $request ) ) {
+          $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+          $apiResponseHandlerObj->setResponseBody( array("message" => "User specified message is missing."));
+          $apiResponseHandlerObj->generateResponse();
+          die;
+        }
+        
 		$feedBackObj = new FAQFeedBack(1);
-		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		
 
 		$success=false;
 		$result=$feedBackObj->ProcessData($request);
@@ -147,5 +157,27 @@ class ApiFeedbackV1Action extends sfActions
         $otherProfileCheckSum = JsCommon::createChecksumForProfile($otherProfileId);
       }
       return $otherProfileCheckSum;
+    }
+    
+    /**
+     * 
+     * @param type $request
+     * @return boolean
+     */
+    private function isMessageAvailable ( $request ) {
+      
+      $msg = $request->getParameter("other_reason");
+      //In Android Channel, other_reason key have the message specified by user in open text field
+      if(MobileCommon::isAndroidApp() && ( is_null ($msg) || 0 === strlen($msg)) ) {
+        return false;
+      }
+
+      $arrFeed = $request->getParameter("feed");
+      //In Other Channels, feed[message] contains the message specified by user in open text field
+      if(false === MobileCommon::isAndroidApp() && is_null($arrFeed['message'])) {
+        return false;
+      }
+      
+      return true;
     }
 }
