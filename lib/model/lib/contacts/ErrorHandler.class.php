@@ -786,7 +786,7 @@ class ErrorHandler
 				$this->setErrorType('LIMIT','TOTAL');
 			}
 
-			$percentageThreshold = 8;
+			$percentageThreshold = 80;
 			$percentages = array(
 				array(
 					"type" => "DAILY",
