@@ -42,7 +42,13 @@ EOF;
 		sfContext::createInstance($this->configuration);
         
         if(CommonUtility::runFeatureInDaytime(1,8)){
-                successfullDie();
+                $memObject = JsMemcache::getInstance();
+                $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
+                unset($memObject);
+                if($tableEmpty == 1){
+                }else{
+                        successfullDie();
+                }
         }
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
