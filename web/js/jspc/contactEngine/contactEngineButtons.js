@@ -125,13 +125,16 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 			}
            else if((data.name=="INITIATE" || data.name=="REMINDER") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
 			{
+				var stypeViewSimilar='V';
+				if(data.name=="ACCEPT")
+					stypeViewSimilar='CA';
 				var queryStringParams=window.location.href.slice(window.location.href.indexOf('?') + 1);
 				var url = '/search/viewSimilarProfile';
                                 var form = $("<form action='" + url + "' method='post'>" +
                                    "<input type='hidden' name='profilechecksum' value='" + ProCheckSum + "' />"+
                                     "<input type='hidden' name='SIM_USERNAME' value='" + ViewedUserName + "' />"+
                                     "<input type='hidden' name='queryStringParams' value='" + queryStringParams + "' />"+
-                                     "<input type='hidden' name='Stype' value='V'/>"+
+                                     "<input type='hidden' name='Stype' value='"+stypeViewSimilar+"'/>"+
                                      
                                      "<input id='hiddenVspInput' type='hidden' name='actions_buttons' value='' /></form>"); $('body').append(form);
                                      $("#hiddenVspInput").val(JSON.stringify(response));
