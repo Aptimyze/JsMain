@@ -248,7 +248,7 @@
     <div id="outerHamDiv">
         <div id="mainHamDiv">
             <div id="newHamlist" class="hamlist hampad1">
-                <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;margin-left:0px" class="fontreg white listingHam overAutoHidden fontHam">
+                <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;margin-left:0px ;padding:0px" class="fontreg white listingHam overAutoHidden fontHam">
                     <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
                         <div id="appDownloadLink1" class="dispnone"><a href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a>
                         </div>
