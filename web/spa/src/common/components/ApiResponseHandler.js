@@ -32,30 +32,33 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           checkSumURL = data;
       }
     }
-    // console.log("shahjahan dispatch",dispatch);
-    // console.log("shahjahan prevDataUrl",localStorage.getItem("prevDataUrl"));
+
     if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl || localStorage.getItem("currentDataUrl") == callUrl &&  localStorage.getItem("currentData")) {
       let data;
       if(localStorage.getItem("prevDataUrl") == callUrl) {
-        console.log("shahjahan Getting from prevDataUrl.");
+        // console.log("shahjahan Getting from prevDataUrl.");
         data = JSON.parse(localStorage.getItem("prevData"));
 
         localStorage.setItem("nextData", localStorage.getItem("currentData"));
         localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
-
-        localStorage.setItem("currentData", localStorage.getItem("prevData"));
-        localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
+        if ( localStorage.getItem("prevDataUrl") != null  )
+        {
+          localStorage.setItem("currentData", localStorage.getItem("prevData"));
+          localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
+        }
       } else if(localStorage.getItem("nextDataUrl") == callUrl) {
         data = JSON.parse(localStorage.getItem("nextData"));
-        // console.log("shahjahan currentData",localStorage.getItem("currentData"))
-        // console.log("shahjahan currentDataUrl",localStorage.getItem("currentDataUrl"))
-        if( dispatch != "saveLocalNext")
+        if( dispatch != "saveLocalNext" )
         {
           localStorage.setItem("prevData", localStorage.getItem("currentData"));
           localStorage.setItem("prevDataUrl",localStorage.getItem("currentDataUrl"));
 
-          localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
-          localStorage.setItem("currentData", localStorage.getItem("nextData"));
+          if ( localStorage.getItem("nextDataUrl") != null )
+          {
+            localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
+            localStorage.setItem("currentData", localStorage.getItem("nextData"));
+          }
+
 
           localStorage.setItem("prevDataUrlForGuna", localStorage.getItem("currentDataUrlForGuna"));
           localStorage.setItem("prevGuna", localStorage.getItem("currentGuna"));
@@ -155,45 +158,73 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             break;
 
         }
-        if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
+        try
         {
-          recordDataReceived(containerObj,new Date().getTime());
-          setJsb9Key(containerObj,response.data.jsb9Key);
-          recordServerResponse(containerObj,response.data.apiTimeTracking);
-        }
-        if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
-          setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
-          if ( response.data.GENDER && response.data.USERNAME )
+
+          if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
           {
-            localStorage.setItem('GENDER',response.data.GENDER);
-            localStorage.setItem('USERNAME',response.data.USERNAME);
+            recordDataReceived(containerObj,new Date().getTime());
+            setJsb9Key(containerObj,response.data.jsb9Key);
+            recordServerResponse(containerObj,response.data.apiTimeTracking);
           }
+          if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined')
+          {
+            setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
+
+            if ( response.data.GENDER && response.data.USERNAME )
+            {
+              localStorage.setItem('GENDER',response.data.GENDER);
+              localStorage.setItem('USERNAME',response.data.USERNAME);
+            }
+          }
+          if(typeof dispatch == 'function')
+          {
+            if(reducer == "SHOW_INFO")
+            {
+              if ( localStorage.getItem("currentData") != null )
+              {
+                localStorage.setItem("nextData", localStorage.getItem("currentData"));
+              }
+              if ( localStorage.getItem("currentData") != null )
+              {
+                localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+              }
+              localStorage.setItem("currentData", JSON.stringify(response.data));
+              localStorage.setItem("currentDataUrl",callUrl);
+            }
+            else if(reducer == "SHOW_GUNA")
+            {
+
+              localStorage.setItem("currentGuna", JSON.stringify(response.data));
+              localStorage.setItem("currentDataUrlForGuna",callUrl)
+            }
+            dispatch({
+              type: reducer,
+              payload: response.data,
+              token: tupleID
+            });
+          }
+          else if(dispatch == "saveLocalNext")
+          {
+              localStorage.setItem("nextData", JSON.stringify(response.data));
+              localStorage.setItem("nextDataUrl",callUrl)
+          }
+          else if(dispatch == "saveLocalPrev")
+          {
+              localStorage.setItem("prevData", JSON.stringify(response.data));
+              localStorage.setItem("prevDataUrl",callUrl)
+          }
+          return response.data;
         }
-        if(typeof dispatch == 'function')
+        catch (e)
         {
-          if(reducer == "SHOW_INFO") {
-            localStorage.setItem("currentData", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrl",callUrl)
-          } else if(reducer == "SHOW_GUNA") {
-            localStorage.setItem("currentGuna", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrlForGuna",callUrl)
-          }
-          dispatch({
-            type: reducer,
-            payload: response.data,
-            token: tupleID
-          });
-        } else if(dispatch == "saveLocalNext") {
-            localStorage.setItem("nextData", JSON.stringify(response.data));
-            localStorage.setItem("nextDataUrl",callUrl)
-        } else if(dispatch == "saveLocalPrev") {
-            localStorage.setItem("prevData", JSON.stringify(response.data));
-            localStorage.setItem("prevDataUrl",callUrl)
+            console.log(e);
         }
-        return response.data;
+
       })
       .catch( (error) => {
+        console.warn('Actions - ApiResponseHandler - recreived error: ', error)
         if(typeof dispatch == 'function')
         {
           dispatch({
@@ -202,7 +233,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             token: tupleID
           });
         }
-        console.warn('Actions - fetchJobs - recreived error: ', error)
       })
     }
 }
