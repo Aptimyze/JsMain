@@ -181,6 +181,7 @@ export  class MyjsPage extends React.Component {
 		    });
 		}
   		else if(!this.state.hamApi){
+				console.log("ham apu");
 		    this.props.hitApi_Ham();
 		    this.setState({
 		    	hamApi: true
@@ -227,7 +228,7 @@ export  class MyjsPage extends React.Component {
 		checkforgap(param)
 		{
       let ele=document.getElementById("JBrowserGap");
-      if (navigator.userAgent.indexOf('SamsungBrowser/') >= 0)
+      if ( (navigator.userAgent.indexOf('SamsungBrowser/') >= 0) || (navigator.userAgent.indexOf(' UCBrowser/') >= 0) )
 			{
 
 					ele.style.height="100px";
@@ -290,12 +291,7 @@ export  class MyjsPage extends React.Component {
 
 			EditBarView = <EditBar cssProps={this.state.cssProps}/>
 
-			if(this.props.myjsData.apiData.membership_message!=null)
-			{
-			 	membershipmessageView = <MyjsOcbLayer/>
-			}
-
-  			AcceptCountView =  <AcceptCount/>
+			AcceptCountView =  <AcceptCount/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }

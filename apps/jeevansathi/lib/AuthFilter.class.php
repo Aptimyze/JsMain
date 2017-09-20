@@ -44,6 +44,7 @@ class AuthFilter extends sfFilter {
 
 		/*SPA*/
 
+		if(MobileCommon::isNewMobileSite()){
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view');
 		$nonSpaUrls = array('ownview=1');
 		$spa = 0;
@@ -63,6 +64,7 @@ class AuthFilter extends sfFilter {
 		        	break;
 		    	}
 		    }
+		}
 		}
 		if(MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
 			//bot section here.
