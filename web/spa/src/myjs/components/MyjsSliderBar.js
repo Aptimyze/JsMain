@@ -17,7 +17,7 @@ export class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth},
       loaderStyles:[],
       divStyles:[],
-      total : props.listingName == 'match_alert'?props.listing.no_of_results:props.listing.total,
+      total_count : props.listingName == 'match_alert'?props.listing.no_of_results:props.listing.total,
       MyjsThumb:''
     }
   }
@@ -38,10 +38,18 @@ componentWillUnmount() {
 }
 
  componentWillReceiveProps(nextProps){
-
+    alert(nextProps.listingName);
+    alert(nextProps.lisiting.total);
+    try(){
+      alert('setState');
     this.setState({
-      total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
-    })
+      total_count : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
+    });
+  }
+  catch(e){
+    alert(e);
+  }
+  alert(this.state.total_count);
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
    {
      this.setState({
@@ -126,7 +134,7 @@ render(){
           <div className="fullwid pb10">
             <div className="fl color7">
               <span className="f17 fontlig">{this.props.title}</span>
-              <span id='matchAlert_count' className="opa50 f14">{" "+this.state.total}</span>
+              <span id='matchAlert_count' className="opa50 f14">{" "+this.state.total_count}</span>
             </div>
             <div className="fr pt5"> <a href={this.props.url} className="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
             <div className="clr"></div>
@@ -185,7 +193,7 @@ render(){
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <div className="bg4 overXHidden" id="hideOnAction">
-                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.total}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`}>
+                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.total_count}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`}>
                       <div className="pad16 scrollhid hgt140">
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
