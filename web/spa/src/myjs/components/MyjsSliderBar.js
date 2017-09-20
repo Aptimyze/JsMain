@@ -38,6 +38,7 @@ componentWillUnmount() {
 }
 
  componentWillReceiveProps(nextProps){
+
     this.setState({
       total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
     })
@@ -54,32 +55,39 @@ componentWillUnmount() {
 
 }
 removeMyjsTuple(index){
-  let e = document.getElementById(this.props.listing.infotype+"_"+index);
-  let transitionEvent = this.whichTransitionEvent();
-  let _this=this;
-  let eventfun = function() {
-    e.removeEventListener(transitionEvent, eventfun);
-    _this.props.spliceIndex(_this.props.listing.infotype,index);
-  };
-  transitionEvent && e.addEventListener(transitionEvent, eventfun);
-  this.setState((prevState)=>{prevState.divStyles[index] = 'setop0';return prevState; });
-}
-whichTransitionEvent(){
-    let t;
-    let el = document.createElement('fakeelement');
-    let transitions = {
-      'transition':'transitionend',
-      'OTransition':'oTransitionEnd',
-      'MozTransition':'transitionend',
-      'WebkitTransition':'webkitTransitionEnd'
-    }
 
-    for(t in transitions){
-        if( el.style[t] !== undefined ){
-            return transitions[t];
-        }
-    }
+  let e = document.getElementById(this.props.listing.infotype+"_"+index);
+  let _this=this;
+  this.setState((prevState)=>{prevState.divStyles[index] = 'setop0';return prevState; });
+  setTimeout(function(){_this.props.spliceIndex(_this.props.listing.infotype,index); }, 1000);
+
+
+  // let e = document.getElementById(this.props.listing.infotype+"_"+index);
+  // let transitionEvent = this.whichTransitionEvent();
+  // let _this=this;
+  // let eventfun = function() {
+  //   e.removeEventListener(transitionEvent, eventfun);
+  //   _this.props.spliceIndex(_this.props.listing.infotype,index);
+  // };
+  // transitionEvent && e.addEventListener(transitionEvent, eventfun);
+  // this.setState((prevState)=>{prevState.divStyles[index] = 'setop0';return prevState; });
 }
+// whichTransitionEvent(){
+//     let t;
+//     let el = document.createElement('fakeelement');
+//     let transitions = {
+//       'transition':'transitionend',
+//       'OTransition':'oTransitionEnd',
+//       'MozTransition':'transitionend',
+//       'WebkitTransition':'webkitTransitionEnd'
+//     }
+//
+//     for(t in transitions){
+//         if( el.style[t] !== undefined ){
+//             return transitions[t];
+//         }
+//     }
+// }
 
 bindSlider(){
   if( this.state.sliderBound || !this.props.fetched || !this.props.listing.profiles)return;
@@ -110,8 +118,6 @@ render(){
     return <div></div>;
   }
 
-
-//  var loaderStyles = [], divStyles=[];
   return(
 
       <div>
