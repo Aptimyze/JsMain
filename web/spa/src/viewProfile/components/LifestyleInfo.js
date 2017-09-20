@@ -6,7 +6,7 @@ export default class LifestyleInfo extends React.Component {
     }
     render() {   
 
-    	var LifestyleSection;
+    	var LifestyleSection, handledView;
     	if(this.props.life)
     	{
             var lifestyle,res_status,assets,skills,hobbies,interest,dress_style,fav_tv_show,fav_book,fav_movies,fav_cuisine;
