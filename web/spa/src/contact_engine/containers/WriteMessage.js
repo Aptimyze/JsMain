@@ -62,9 +62,9 @@ export default class WriteMessage extends React.Component{
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
-    var url = '?&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
+    var url = '?&profilechecksum='+this.props.profilechecksum+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
     let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
-    commonApiCall(api+url,{},'','').then((response)=>{
+    commonApiCall(api+url,{draft:message},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
     _this.setState({
@@ -80,6 +80,7 @@ export default class WriteMessage extends React.Component{
 
   showMessagesOnScroll(e){
     if(!this.state.nxtdata)return;
+    this.showLoaderDiv();
     var url = `?&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
     commonApiCall('/api/v2/contacts/WriteMessage'+url,{},'WRITE_MESSAGE','POST').then((response)=>{
       this.scrollHeight = document.getElementById('msgId').scrollHeight;
@@ -88,7 +89,8 @@ export default class WriteMessage extends React.Component{
         nxtdata:response.hasNext,
         messages:messages,
         lastMsgID : response.MSGID,
-        lastChatID : response.CHATID
+        lastChatID : response.CHATID,
+        showLoader:false
  });
     });
   }
@@ -140,7 +142,7 @@ getWriteMsg_innerView(){
 
                                       return(
                                           <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
-                                            <span>{msg.message.replace(/\n/g,"<br />")}</span>
+                                            <span dangerouslySetInnerHTML={{__html: msg.message.replace(/\n/g,"<br />")}}></span>
                                             <span className="dispbl f12 color1 pt5">{msg.timeTxt}</span>
                                           </div>
                                       );
@@ -207,7 +209,7 @@ return WriteMsg_buttonView;
   let loaderView;
         if(this.state.showLoader)
         {
-          loaderView = <Loader show="page"></Loader>;
+          loaderView = <Loader show="writeMessageComp"  loaderStyles={{width: '100%',top: window.outerHeight/2 - 35 +'px'}}></Loader>;
         }
 
   return(

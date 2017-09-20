@@ -312,12 +312,7 @@ export  class MyjsPage extends React.Component {
 
 			EditBarView = <EditBar cssProps={this.state.cssProps}/>
 
-			if(this.props.myjsData.apiData.membership_message!=null)
-			{
-			 	membershipmessageView = <MyjsOcbLayer/>
-			}
-
-  			AcceptCountView =  <AcceptCount/>
+			AcceptCountView =  <AcceptCount/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
