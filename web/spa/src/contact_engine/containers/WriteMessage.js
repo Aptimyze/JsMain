@@ -62,9 +62,9 @@ export default class WriteMessage extends React.Component{
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
-    var url = '?&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
+    var url = '?&profilechecksum='+this.props.profilechecksum+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
     let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
-    commonApiCall(api+url,{},'','').then((response)=>{
+    commonApiCall(api+url,{draft:message},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
     _this.setState({
@@ -140,7 +140,7 @@ getWriteMsg_innerView(){
 
                                       return(
                                           <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
-                                            <span>{msg.message.replace(/\n/g,"<br />")}</span>
+                                            <span dangerouslySetInnerHTML={{__html: msg.message.replace(/\n/g,"<br />")}}></span>
                                             <span className="dispbl f12 color1 pt5">{msg.timeTxt}</span>
                                           </div>
                                       );

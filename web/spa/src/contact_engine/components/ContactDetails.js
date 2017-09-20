@@ -210,7 +210,7 @@ getContactDetails(actiondetails){
   bottomMsgShow='dispnone',bottomMsgText='',bottomMsgredirectFun=()=>{},bottomMsgShow2={display:'none'},
   bottomMsgText2='', nevMindStyle={display:'none'}, vCPreLayerShow='dispnone', vCPreLayerNoNumShow='dispnone',footerBShow='dispnone',
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
-  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
+  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone',oPrice, lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
   c1Style = {};
 
       if(actiondetails.contactdetailmsg){
@@ -307,12 +307,12 @@ else
               var mO2 = actiondetails.offer.membershipOfferMsg2;
               if(typeof(actiondetails.strikedprice) != "undefined" && actiondetails.strikedprice != null)
               {
-                var oPrice = actiondetails.strikedprice;
-                var oPShow = '';
+                oPrice = actiondetails.strikedprice;
+                oPShow = '';
               }
 
 
-              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={this.state.oPShow}>{this.state.oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
+              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={this.oPShow}>{this.oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
             </div>);
             }
             else if(typeof(actiondetails.lowestoffer) != "undefined" && actiondetails.lowestoffer != null)
