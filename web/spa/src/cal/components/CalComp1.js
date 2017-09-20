@@ -154,14 +154,6 @@ criticalLayerButtonsAction(url,clickAction,button) {
             return;
           break;
 
-          case '13':
-          if(button=='B1')
-          {
-            CALCommonCall(url,clickAction).then(()=>{this.CALButtonClicked=0;});
-            return;
-          }
-          break;
-
           case '14':
           if(button=='B1')
           {
@@ -383,9 +375,8 @@ validateAltEmailAndSave()
             this.CALButtonClicked=0;
             return false;
             }
-         this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1');
+         CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
          let msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
-         this.CALButtonClicked=0;
          this.setState({emailVeriConfirmation:true,altEmailMessage:msg});
          return true;
        })
