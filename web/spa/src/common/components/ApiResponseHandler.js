@@ -129,6 +129,9 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           case "1":
           case "10":
             break;
+          case "5":
+            window.location.href="/phone/ConsentMessage";
+            break;
           default:
             if ( response.data.responseMessage )
             {
@@ -158,73 +161,59 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             break;
 
         }
-        try
+        if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
         {
-
-
-          if(typeof trackJsb9 != 'undefined' && typeof containerObj != 'undefined' && trackJsb9===true)
-          {
-            recordDataReceived(containerObj,new Date().getTime());
-            setJsb9Key(containerObj,response.data.jsb9Key);
-            recordServerResponse(containerObj,response.data.apiTimeTracking);
-          }
-          if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined')
-          {
-            setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
-
-            if ( response.data.GENDER && response.data.USERNAME )
-            {
-              localStorage.setItem('GENDER',response.data.GENDER);
-              localStorage.setItem('USERNAME',response.data.USERNAME);
-            }
-          }
-          if(typeof dispatch == 'function')
-          {
-            if(reducer == "SHOW_INFO")
-            {
-              if ( localStorage.getItem("currentData") != null )
-              {
-                localStorage.setItem("nextData", localStorage.getItem("currentData"));
-              }
-              if ( localStorage.getItem("currentData") != null )
-              {
-                localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
-              }
-              localStorage.setItem("currentData", JSON.stringify(response.data));
-              localStorage.setItem("currentDataUrl",callUrl);
-            }
-            else if(reducer == "SHOW_GUNA")
-            {
-
-              localStorage.setItem("currentGuna", JSON.stringify(response.data));
-              localStorage.setItem("currentDataUrlForGuna",callUrl)
-            }
-            dispatch({
-              type: reducer,
-              payload: response.data,
-              token: tupleID
-            });
-          }
-          else if(dispatch == "saveLocalNext")
-          {
-              localStorage.setItem("nextData", JSON.stringify(response.data));
-              localStorage.setItem("nextDataUrl",callUrl)
-          }
-          else if(dispatch == "saveLocalPrev")
-          {
-              localStorage.setItem("prevData", JSON.stringify(response.data));
-              localStorage.setItem("prevDataUrl",callUrl)
-          }
-          return response.data;
+          recordDataReceived(containerObj,new Date().getTime());
+          setJsb9Key(containerObj,response.data.jsb9Key);
+          recordServerResponse(containerObj,response.data.apiTimeTracking);
         }
-        catch (e)
+        if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
+          setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
+
+          if ( response.data.GENDER && response.data.USERNAME )
+          {
+            localStorage.setItem('GENDER',response.data.GENDER);
+            localStorage.setItem('USERNAME',response.data.USERNAME);
+          }
+        }
+        if(typeof dispatch == 'function')
         {
-            console.log(e);
-        }
+          if(reducer == "SHOW_INFO") {
+            if ( localStorage.getItem("currentData") != null )
+            {
+              localStorage.setItem("nextData", localStorage.getItem("currentData"));
+            }
+            if ( localStorage.getItem("currentData") != null )
+            {
+              localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+``            }
 
+            localStorage.setItem("currentData", JSON.stringify(response.data));
+            localStorage.setItem("currentDataUrl",callUrl);
+          } else if(reducer == "SHOW_GUNA") {
+            
+            // localStorage.setItem("", localStorage.getItem("currentData"));
+            // localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
+
+            localStorage.setItem("currentGuna", JSON.stringify(response.data));
+            localStorage.setItem("currentDataUrlForGuna",callUrl)
+          }
+          dispatch({
+            type: reducer,
+            payload: response.data,
+            token: tupleID
+          });
+        } else if(dispatch == "saveLocalNext") {
+            localStorage.setItem("nextData", JSON.stringify(response.data));
+            localStorage.setItem("nextDataUrl",callUrl)
+        } else if(dispatch == "saveLocalPrev") {
+            localStorage.setItem("prevData", JSON.stringify(response.data));
+            localStorage.setItem("prevDataUrl",callUrl)
+        }
+        return response.data;
       })
       .catch( (error) => {
-        console.warn('Actions - ApiResponseHandler - recreived error: ', error)
+        console.warn('Actions - fetchJobs - recreived error: ', error)
         if(typeof dispatch == 'function')
         {
           dispatch({
