@@ -8,7 +8,10 @@ export default class BasicInfo extends React.Component {
     	let have_child = "";
     	if(this.props.about.have_child)
     	{
-			have_child = this.props.about.have_child;
+      if(this.props.about.m_status == 'Never Married')
+			  have_child = this.props.about.have_child;
+      else
+        have_child = ", "+this.props.about.have_child;
     	}
 
     	var myInfo = <div className='hgt10'></div>;
@@ -64,7 +67,7 @@ export default class BasicInfo extends React.Component {
 	    				{this.props.about.location}
 	    			</li>
 	    			<li className="wid49p wspace" id="vpro_m_status" >
-	    				{this.props.about.m_status},{have_child}
+	    				{this.props.about.m_status}{have_child}
 	    			</li>
   				</ul>
   				{myInfo}

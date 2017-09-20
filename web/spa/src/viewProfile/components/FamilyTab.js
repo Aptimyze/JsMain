@@ -8,6 +8,11 @@ class FamilyTab extends React.Component {
         }
     }
     render() {
+			let space='';
+			if(this.props.checkUC)
+			{
+				 space=	<div className="bg4" style={{'height':'60px'}}></div>;
+			}
 
     	var myfamily;
     	if(this.props.family.myfamily)
@@ -15,7 +20,7 @@ class FamilyTab extends React.Component {
     		myfamily = <div className="fontlig pad20 wordBreak vpro_lineHeight" id="vpro_myfamily" dangerouslySetInnerHTML={{__html:this.props.family.myfamily}} />;
     	} else
     	{
-    		myfamily = <div class="hgt10"></div>;
+    		myfamily = <div className="hgt10"></div>;
     	}
 
     	var family_bg;
@@ -121,7 +126,7 @@ class FamilyTab extends React.Component {
     	if(this.props.family.mathab)
     	{
     		mathab = <div>
-    			<div className="f12 color1" dangerouslySetInnerHTML={"Ma'thab"}></div>
+    			<div className="f12 color1" dangerouslySetInnerHTML={{__html: "Ma'thab"}}></div>
             	<div className="fontlig pb15" id="vpro_mathab" >
             		{this.props.family.mathab}
             	</div>
@@ -182,6 +187,7 @@ class FamilyTab extends React.Component {
     		<div id="FamilyTab" className="mb56 dn pad5 bg4 fontlig color3 clearfix f14">
 				<div className="hgt10"></div>
 				{FamilyData}
+				{space}
 			</div>
     	);
     }

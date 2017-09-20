@@ -54,13 +54,18 @@ class ProfilePage extends React.Component {
             disablePhotoLink: false,
             callApi: false,
             listingName: "",
-            ownView:ownView
+            ownView:ownView,
+            ucbrowser:false
+
         };
         if(localStorage.getItem('GENDER') == "F") {
             this.state.gender =  "F";
         }
         if(props.fetchedProfilechecksum != false) {
             this.state.callApi = true;
+        }
+        if (navigator.userAgent.indexOf(' UCBrowser/') >= 0) {
+          this.state.ucbrowser = true;
         }
     }
 
@@ -71,6 +76,7 @@ class ProfilePage extends React.Component {
     componentDidMount()
     {
         console.log('componentDidMount');
+        //alert(navigator.userAgent);
         //console.log('componentDidMount');
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
@@ -91,18 +97,19 @@ class ProfilePage extends React.Component {
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
+            if(stype != undefined){
+                urlString += "&stype=" + stype;
+            }
             if(searchid != 1 && searchid != null)
             {
                 urlString += "&searchid=" + searchid;
             } else if(contact_id != undefined) {
                 urlString += "&contact_id=" + contact_id;
             }
-            if(stype != undefined){
-                urlString += "&stype=" + stype;
-            }
         }
 
         this.props.showProfile(this, urlString);
+
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
@@ -139,7 +146,7 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null))
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
           {
             console.log("not");
             return;
@@ -403,9 +410,18 @@ class ProfilePage extends React.Component {
 
     imageLoaded()
     {
-        document.getElementById("showAbout").classList.remove("dn");
-        document.getElementById("showPhoto").classList.remove("dn");
-        document.getElementById("tempImage").classList.add("dn");
+        if ( document.getElementById("showAbout") !== null )
+        {
+            document.getElementById("showAbout").classList.remove("dn");
+        }
+        if ( document.getElementById("showPhoto") !== null )
+        {
+            document.getElementById("showPhoto").classList.remove("dn");
+        }
+        if ( document.getElementById("tempImage") !== null) 
+        {
+            document.getElementById("tempImage").classList.add("dn");
+        }
     }
 
     showError(inputString) {
@@ -582,7 +598,7 @@ class ProfilePage extends React.Component {
                      contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
-                photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic}  /></div>;
+                photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;
 
                 if(this.props.AboutInfo.name_of_user)
                 {
@@ -592,11 +608,11 @@ class ProfilePage extends React.Component {
                      Header = this.props.AboutInfo.username;
                 }
 
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent}></AboutTab></div>;
+                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
 
-                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo}></FamilyTab>;
+                FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo} checkUC={this.state.ucbrowser}></FamilyTab>;
 
-                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView}></DppTab>;
+                DppView = <DppTab selfPicUrl={this.props.AboutInfo.selfThumbail} about={this.props.AboutInfo} dpp_Ticks={this.props.dpp_Ticks}  dpp={this.props.DppInfo} checkOwnView={this.state.ownView} checkUC={this.state.ucbrowser}></DppTab>;
 
                 metaTagView = <MetaTagComponents page="ProfilePage" meta_tags={this.props.pageInfo.meta_tags}/>;
 
@@ -621,8 +637,7 @@ class ProfilePage extends React.Component {
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
-
-                if(localStorage.getItem('GENDER') == "Male")
+                if(this.props.AboutInfo.gender == "F")
                     stockImage = <i className="vpro_sprite female_nopro"></i>
                 else
                     stockImage = <i className="vpro_sprite male_nopro"></i>
@@ -721,6 +736,7 @@ class ProfilePage extends React.Component {
                     {FamilyView}
                     {DppView}
                 </div>
+
                 {contactEngineView}
             </div>
         );

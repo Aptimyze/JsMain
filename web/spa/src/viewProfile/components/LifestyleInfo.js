@@ -6,7 +6,7 @@ export default class LifestyleInfo extends React.Component {
     }
     render() {   
 
-    	var LifestyleSection;
+    	var LifestyleSection, handledView;
     	if(this.props.life)
     	{
             var lifestyle,res_status,assets,skills,hobbies,interest,dress_style,fav_tv_show,fav_book,fav_movies,fav_cuisine;
@@ -44,7 +44,7 @@ export default class LifestyleInfo extends React.Component {
                     <div className="f12 color1">Skills</div>  
                     <div className="fontlig pb15">
                         <div id="i_cook">{this.props.life.skills_speaks}</div>
-                        <div id="i_cook">{this.props.life.i_cook}</div>
+                        <div id="i_cook">{this.props.life.skills_i_cook}</div>
                     </div>
                 </div>
             }
@@ -128,15 +128,17 @@ export default class LifestyleInfo extends React.Component {
 	  			{fav_tv_show}
 	  			{fav_book}
 	  			{fav_movies}
-	  			{fav_cuisine}
-                <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>
+	  			{fav_cuisine}                
     		</div>;
             }
+            if(this.props.about.posted_by)
+                handledView = <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>;
     	}
     	return(
     		<div>
     			{LifestyleSection}
-    		</div>
+                {handledView}    
+    		</div>            
     	);
     }
 }

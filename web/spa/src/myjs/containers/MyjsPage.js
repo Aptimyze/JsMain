@@ -32,7 +32,7 @@ constructor(props){
 	super(props);
 }
 	componentDidMount(){
-	this.props.restApiFun();	
+	this.props.restApiFun();
 }
 	render(){
 
@@ -86,13 +86,15 @@ export  class MyjsPage extends React.Component {
 			this.irApi = false;
 			this.modApi = false;
 			this.vaApi = false;
-			this.drApi = false;			
+			this.drApi = false;
 		}
 		else {
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
 				this.firstApiHits(this);
 			}
 		}
+		this.checkforgap("mount");
+
 	}
 
 
@@ -178,7 +180,7 @@ export  class MyjsPage extends React.Component {
 		    	myjsApi: true
 		    });
 		}
-  		if(!this.state.hamApi){
+  		else if(!this.state.hamApi){
 		    this.props.hitApi_Ham();
 		    this.setState({
 		    	hamApi: true
@@ -219,8 +221,35 @@ export  class MyjsPage extends React.Component {
 		    	this.drApi = true;
 		    	this.props.hitApi_DR();
 		    }
+				this.checkforgap("lastcall");
 		}
   	}
+		checkforgap(param)
+		{
+      let ele=document.getElementById("JBrowserGap");
+      if (navigator.userAgent.indexOf('SamsungBrowser/') >= 0)
+			{
+
+					ele.style.height="100px";
+          if(param=="mount")
+    			{
+    				//alert("in mpunt");
+    				if(ele.classList.contains("dn") )
+    				{
+    					ele.classList.remove("dn");
+    				}
+    			}
+    			else if(param=="lastcall")
+    			{
+
+    				if(!ele.classList.contains("dn") )
+    				{
+    					ele.classList.add("dn");
+    				}
+    			}
+			}
+
+		}
 
 		hitIRforPagination(){
 			if(this.props.myjsData.apiDataIR.nextpossible!='true' || this.props.myjsData.apiDataIR.paginationHit)return;
@@ -236,27 +265,41 @@ export  class MyjsPage extends React.Component {
             promoView = <AppPromo parentComp="others" removePromoLayer={() => this.removePromoLayer()} ></AppPromo>;
         }
 
-  		if(!this.props.myjsData.fetched){
-	         return (<div><Loader show="page"></Loader></div>)
-	    }
-			if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
+  		// if(!this.props.myjsData.fetched){
+	   //       return (<div><Loader show="page"></Loader></div>)
+	   //  }
+	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
 				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
 
-  		if(this.props.myjsData.fetched)
-			{
+	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
+  		if(this.props.myjsData.fetched){
 
-				var MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
+			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
-				var EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
+			EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
 
-				if(this.props.myjsData.apiData.membership_message!=null)
-				{
-				 	var membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
-				}
+			if(this.props.myjsData.apiData.membership_message!=null){
+			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
+			}
 
-  			var AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
+	    else{
+	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
+
+			EditBarView = <EditBar cssProps={this.state.cssProps}/>
+
+			if(this.props.myjsData.apiData.membership_message!=null)
+			{
+			 	membershipmessageView = <MyjsOcbLayer/>
+			}
+
+  			AcceptCountView =  <AcceptCount/>
+
+  			LoaderView = <div><Loader show="page"></Loader></div>
+	    }
+
 
 			if(this.props.myjsData.ieFetched){
 	    	var interestExpView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
@@ -304,6 +347,7 @@ export  class MyjsPage extends React.Component {
 									{EditBarView}
 									{membershipmessageView}
 									{AcceptCountView}
+									{LoaderView}
 									{interestExpView}
 									{interestRecView}
 									{matchOfTheDayView}
@@ -312,6 +356,7 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
+					<div id="JBrowserGap"></div>
 				</div>
 			</div>
 		</div>
@@ -337,25 +382,25 @@ const mapDispatchToProps = (dispatch) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
      	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1,'&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1','SET_DR_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch);
 		},
      	hitApi_MOD: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1','SET_MOD_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_MOD_DATA','POST',dispatch);
         },
   	    hitApi_IR: (nextPage) => {
 					let reducerName = '';
 					if(typeof nextPage == 'undefined'){ nextPage=1;reducerName = 'SET_IR_DATA';}
 					else { reducerName = 'SET_IR_PAGINATION';}
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=1&pageNo='+nextPage+'&caching=1&JSMS_MYJS=1',reducerName,'POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=1&pageNo='+nextPage+'&caching=1&JSMS_MYJS=1',{},reducerName,'POST',dispatch);
         },
         hitApi_VA: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1','SET_VA_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1',{},'SET_VA_DATA','POST',dispatch);
         },
         hitApi_IE: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2,'&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1','SET_IE_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_IE_DATA','POST',dispatch);
         },
         hitApi_Ham: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,'&API_APP_VERSION=94','SET_HAM_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch);
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
 				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})

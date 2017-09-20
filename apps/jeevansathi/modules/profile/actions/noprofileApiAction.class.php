@@ -128,7 +128,7 @@ class noprofileApiAction extends sfAction
 			if($hidden=="N" || $hidden=="U" || $hidden=="P")
 				$this->MESSAGE=sfConfig::get("app_profile_screened");
 			elseif($hidden=="H")
-				$this->MESSAGE="The profile with this ID is hidden";
+				$this->MESSAGE=sfConfig::get("app_profile_hidden");
 			elseif($hidden=="D")
 				$this->MESSAGE =  "The profile with this ID is deleted";
 		}
@@ -176,7 +176,7 @@ class noprofileApiAction extends sfAction
 		
 		$infoOut['about']['username'] = $this->TopUsername;		
 		$infoOut['page_info']['page_offset'] = $iOffset;
-		
+		$infoOut['about']['gender'] = $gender;
 		$respObj->setHttpArray($arrOut);
 		$respObj->setResponseBody($infoOut);
 		$respObj->generateResponse();

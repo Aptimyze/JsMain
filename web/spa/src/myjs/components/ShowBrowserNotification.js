@@ -7,8 +7,8 @@ import { commonApiCall } from "../../common/components/ApiResponseHandler";
 export default class ShowBrowserNotification extends React.Component
 {
 	notificationLayerActionBrowser(option){
-		var url = `&active=${option}`;
-    	return commonApiCall(CONSTANTS.BROWSWER_NOTIFICATION,url,'','POST').then((response) =>
+		var url = `?&active=${option}`;
+    	return commonApiCall(CONSTANTS.BROWSWER_NOTIFICATION+url,{},'','POST').then((response) =>
 		{
 			document.getElementById("notifBar").className = " dn";
 			if ( option == "Y" )

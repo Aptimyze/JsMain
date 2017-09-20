@@ -1,7 +1,6 @@
 require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
-import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import TopError from "../../common/components/TopError"
@@ -40,17 +39,27 @@ export default class ReportAbuse extends React.Component{
     }
 
     listSelected(e) {
+        let ul = document.getElementById("abuseList");
+
+        let items = ul.getElementsByTagName("li");
+
+        for (let i = 0; i < items.length; i++)
+        {
+          items[i].getElementsByTagName("i")[0].classList.add("dn");
+        }
         e.target.getElementsByTagName("i")[0].classList.remove("dn");
-        console.log(e.target.innerText)
         this.setState({
             selectOption: e.target.id,
             selectText: e.target.innerText
         })
-        setTimeout(function(){
-          document.getElementById("reportAbuseMidDiv").classList.add("ce_rptabu_d");
-          //  document.getElementById("reportAbuseScreen2").classList.add("animateLeftSlow");
-          //  document.getElementById("reportAbuseMidDiv").classList.add("dn");
-        },300);
+          if (e.target.id != "opt9" && e.target.id != "opt7")
+          {
+            setTimeout(function(){
+              document.getElementById("reportAbuseMidDiv").classList.add("ce_rptabu_d");
+              //  document.getElementById("reportAbuseScreen2").classList.add("animateLeftSlow");
+              //  document.getElementById("reportAbuseMidDiv").classList.add("dn");
+            },300);
+          }
 
     }
     showError(inputString) {
@@ -70,7 +79,7 @@ export default class ReportAbuse extends React.Component{
   submitAbuse() {
     if(this.state.selectOption == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
-    } else if(document.getElementById("detailReasonsLayer").value.trim() == "") {
+    } else if(document.getElementById("detailReasonsLayer").value.trim().length < 25 && this.state.selectOption != "opt7" && this.state.selectOption != "opt9") {
         this.showError(ErrorConstantsMapping("enterComments"));
     } else {
 
@@ -133,7 +142,7 @@ export default class ReportAbuse extends React.Component{
                                 <i className="mainsp ce_arow_new fl"></i>
                                 <div className="fl wid88p fontthin">
                                     <div className="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. </div>
-                                    <ul className="f16 fontthin white mb70">
+                                    <ul className="f16 fontthin white mb70" id="abuseList">
                                         {abuseList.map(function(name, index){
                                             return <li key={index} className="reportAbuseOption dispibl dashedBorder pad18 fullwid">
                                                 <div onClick={(e) => this.listSelected(e)} id={"opt"+index} className="fullwid posrel abuseLi">
@@ -163,11 +172,11 @@ export default class ReportAbuse extends React.Component{
     if(this.state.showLoader)
     {
       loaderView = <Loader show="page"></Loader>;
-    } 
+    }
 
 
     return(
-      <div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+      <div className="posabs ce-bg ce_top1 ce_z101 scrollhid" style={this.state.tupleDim}>
         <a href="#"  className="ce_overlay ce_z102" > </a>
         <div className="posabs ce_z103 ce_top1 fullwid" style={this.state.tupleDim}>
           <div id="reportAbuseContainer">

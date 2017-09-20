@@ -4,6 +4,7 @@ import CALCommonCall from './CommonCALFunctions';
 import Loader from "../../common/components/Loader";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 
 import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"
@@ -309,7 +310,7 @@ commonApiCall(url,{},'','POST','',false).then((response) => {
 }
 getCityStateData(url){
 
-commonApiCall(url,'','','POST','',false).then((response) => {
+commonApiCall(url,{},'','POST','',false).then((response) => {
   var stateTemp = response.state_res[0];
   var cityTemp = response.city_res_jspc;
   var countryTemp = response.country_res[0];

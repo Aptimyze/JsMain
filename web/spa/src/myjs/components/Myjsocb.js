@@ -119,6 +119,9 @@ export default class MyjsOcbLayer extends React.Component {
   						<div className="f24 white">
                   <div dangerouslySetInnerHTML={{__html:this.props.Ocb_data.top}} />
               </div>
+              <div className="f14 white">
+                          <div dangerouslySetInnerHTML={{__html: this.props.Ocb_data.extra}} />
+              </div>
   						<div className="f14 white">
                   <div dangerouslySetInnerHTML={{__html:this.props.Ocb_data.bottom}} />
               </div>

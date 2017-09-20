@@ -1,7 +1,6 @@
 require ('../style/contact.css')
 import React from "react";
 import { connect } from "react-redux";
-import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
