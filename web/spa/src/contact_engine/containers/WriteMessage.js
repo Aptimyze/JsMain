@@ -80,6 +80,7 @@ export default class WriteMessage extends React.Component{
 
   showMessagesOnScroll(e){
     if(!this.state.nxtdata)return;
+    this.showLoaderDiv();
     var url = `?&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
     commonApiCall('/api/v2/contacts/WriteMessage'+url,{},'WRITE_MESSAGE','POST').then((response)=>{
       this.scrollHeight = document.getElementById('msgId').scrollHeight;
@@ -88,7 +89,8 @@ export default class WriteMessage extends React.Component{
         nxtdata:response.hasNext,
         messages:messages,
         lastMsgID : response.MSGID,
-        lastChatID : response.CHATID
+        lastChatID : response.CHATID,
+        showLoader:false
  });
     });
   }
@@ -207,7 +209,7 @@ return WriteMsg_buttonView;
   let loaderView;
         if(this.state.showLoader)
         {
-          loaderView = <Loader show="page"></Loader>;
+          loaderView = <Loader show="writeMessageComp"  loaderStyles={{width: '100%',top: window.outerHeight/2 - 35 +'px'}}></Loader>;
         }
 
   return(
