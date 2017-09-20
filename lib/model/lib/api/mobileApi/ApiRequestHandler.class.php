@@ -177,12 +177,12 @@ class ApiRequestHandler
 				else if($output['moduleName']!="register" && $output['moduleName']!="static" && $output["moduleName"] != "phone" )
 				{
 					$isApp = MobileCommon::isApp();
-					if($isApp || $request->getParameter("fromSPA"))
+					if($isApp)
 					{
 						$versionArr = array('A'=>107,'I'=>5.9);
 						$showConsentMsg = '';
 						$appVersion = $request->getParameter("API_APP_VERSION"); 
-						if (( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid) || $request->getParameter("fromSPA"))
+						if (( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid))
 						{
 							$memObject=JsMemcache::getInstance();
 							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
