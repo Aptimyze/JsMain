@@ -1,7 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Pankaj1
+ * @brief This class is used to handle a image parameter detection using Google Vision API
+ * User: Pankaj Khandelwal
  * Date: 20/09/17
  * Time: 2:37 PM
  */
@@ -9,7 +9,13 @@
 class GoogleVisionApi
 {
 
-	public function getPictureCoordinates($picturePath,$imageFormatType){
+	/**
+	 * @brief This function call Google Vision API to detect face
+	 * @param $picturePath
+	 * @param $imageFormatType
+	 * @return Face co-ordinates
+	 */
+	public function getPictureCoordinates($picturePath, $imageFormatType){
 		PictureFunctions::setHeaders();
 
 		//COPY into temp to avoid original image corruption
@@ -32,22 +38,22 @@ class GoogleVisionApi
 			//die;
 		}
 		$img = file_get_contents($picturePath);
-		$imdata = base64_encode($img);
+		$imgData = base64_encode($img);
 
 		$data = '{
-    "requests": [
-    {
-      "image": {
-        "content": "' . $imdata . '"
-      },
-      "features": [
-        {
-          "type": "FACE_DETECTION"
-        }
-      ]
-    }
-  ]
-}';
+				    "requests": [
+				    {
+				      "image": {
+				        "content": "' . $imgData . '"
+				      },
+				      "features": [
+				        {
+				          "type": "FACE_DETECTION"
+				        }
+				      ]
+				    }
+				  ]
+				}';
 		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
 
 		$ch = curl_init($url);
@@ -62,8 +68,8 @@ class GoogleVisionApi
 		$response = $result["responses"][0];
 		$cord = null;
 		if (!empty($response["faceAnnotations"])) {
-			$otherdata = $response["faceAnnotations"][0];
-			$cordinates = $otherdata["boundingPoly"]["vertices"];
+			$otherData = $response["faceAnnotations"][0];
+			$cordinates = $otherData["boundingPoly"]["vertices"];
 			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
 			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
 			$h = $cordinates[2]["y"] - $y;
@@ -74,7 +80,12 @@ class GoogleVisionApi
 	}
 
 
-	public function rotateImageFile($filename,$imageFormatType)
+	/**
+	 * @brief This function detect the image orientation and rotate them if needed.
+	 * @param $filename
+	 * @param $imageFormatType
+	 */
+	public function rotateImageFile($filename, $imageFormatType)
 	{
 		$exif = exif_read_data($filename);
 		$img = imagecreatefromstring(file_get_contents($filename));

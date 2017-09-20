@@ -52,7 +52,7 @@ EOF;
 		$totalScripts = $arguments["totalScripts"]; // total no of scripts
 	        $currentScript = $arguments["currentScript"]; // current script number
 	        
-	    if(CommonUtility::hideFeaturesForUptime())
+	   if(CommonUtility::hideFeaturesForUptime())
 			successfullDie();
 
 
@@ -96,7 +96,7 @@ EOF;
 						copy($value["OriginalPicUrl"],$origPic);
 					}
 					$googleVisionObj = new GoogleVisionApi();
-					$outputGot = $googleVisionObj->getPictureCoordinates($origPic);
+					$outputGot = $googleVisionObj->getPictureCoordinates($origPic,$imageT);
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{
