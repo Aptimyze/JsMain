@@ -13,7 +13,7 @@
       
       <div id="newHamlist" class="hamlist hampad1" > 
 
-                    <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden"> 
+                    <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden fontHam"> 
       
       
 
@@ -210,12 +210,12 @@
 
                     </ul>
                     ~if $MembershipMessage.bottom`
-                    ~if strpos($MembershipMessage.top, 'FLASH') != false`
+                    ~if $MembershipMessage.top eq 'FLASH DEAL'`
                     <div id="bottomTab" class="mar0Imp posabs btmo fullwid">
                         <div class="brdrTop pad150">
                             <div class="txtc color9 mb15">~$MembershipMessage.bottom`</div>
                         </div>
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">FLASH DEAL | UPGRADE NOW</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lhHam">~$MembershipMessage.top|upper` | UPGRADE NOW</a>
 
                     </div>
                     ~else`
@@ -225,7 +225,7 @@
                             <div class="txtc color9 mb15">~$MembershipMessage.top`</div>
                         </div>
                         ~/if`
-                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lh50">~$MembershipMessage.bottom|upper`</a>
+                        <a bind-slide=1  href="/profile/mem_comparison.php" id="membershipLink" class="hamBtn  white bg7 mt15 fullwid lhHam">~$MembershipMessage.bottom|upper`</a>
 
                     </div>
                     ~/if`
@@ -248,7 +248,7 @@
     <div id="outerHamDiv">
         <div id="mainHamDiv">
             <div id="newHamlist" class="hamlist hampad1">
-                <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;margin-left:0px" class="fontreg white listingHam overAutoHidden">
+                <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;margin-left:0px ;padding:0px" class="fontreg white listingHam overAutoHidden fontHam">
                     <li style="padding: 10px 20px;" class="f13 pb8 fontlig">
                         <div id="appDownloadLink1" class="dispnone"><a href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl mar0Imp">Download  App | 3MB only </a>
                         </div>
