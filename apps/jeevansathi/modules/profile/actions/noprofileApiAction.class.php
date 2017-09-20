@@ -124,7 +124,7 @@ class noprofileApiAction extends sfAction
 		else if($iErrorID == 2)
 		{
 			$hidden=$this->profile->getACTIVATED();
-		
+			
 			if($hidden=="N" || $hidden=="U" || $hidden=="P")
 				$this->MESSAGE=sfConfig::get("app_profile_screened");
 			elseif($hidden=="H")
@@ -177,6 +177,8 @@ class noprofileApiAction extends sfAction
 		$infoOut['about']['username'] = $this->TopUsername;		
 		$infoOut['page_info']['page_offset'] = $iOffset;
 		$infoOut['about']['gender'] = $gender;
+		$infoOut['about']['loginRequired'] = $this->LOGIN_REQUIRED;
+		
 		$respObj->setHttpArray($arrOut);
 		$respObj->setResponseBody($infoOut);
 		$respObj->generateResponse();
