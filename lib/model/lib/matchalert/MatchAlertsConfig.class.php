@@ -6,7 +6,7 @@ class MatchAlertsConfig
 	public $timeRangeEnd = 9;
         private $solrUrl = array('0'=>'solrServerProxyUrl','1'=>"solrServerLoggedOut",'2'=>"solrServerProxyUrl1");
         
-        public $instanceNonPeak = 18;
+        public $instanceNonPeak = 19;
         public $instancePeak = 9;
         public function isMatchAlertsForNonPeakHour(){
                 $nonPeak = CommonUtility::runFeatureInDaytime($this->timeRangeStart, $this->timeRangeEnd);
@@ -16,8 +16,8 @@ class MatchAlertsConfig
         public function changeSolrForNonPeak(){
                 $nonPeak = CommonUtility::runFeatureInDaytime($this->timeRangeStart, $this->timeRangeEnd);
                 if($nonPeak == true){
-                        $random = rand(1, 5);
-                        if($random%2==0){
+                        $random = rand(1, 1000000);
+                        if($random%999999==0){
                                 $varNAme = $this->solrUrl[1];
                         }else{
                                 $varNAme = $this->solrUrl[2];

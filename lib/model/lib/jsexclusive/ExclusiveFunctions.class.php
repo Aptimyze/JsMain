@@ -229,7 +229,8 @@ class ExclusiveFunctions{
                 $params["ENTRY_DT"] = $todaysDate;
                 $params["CLIENT_ID"] = $client;
                 $params["AGENT_USERNAME"] = $agent;
-                $params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                //$params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                $params["FOLLOWUP1_DT"] = date('Y-m-d');
                 $params["STATUS"] = "F0";
                 foreach($arr as $key => $val){
                     $params["MEMBER_ID"] = $val;
