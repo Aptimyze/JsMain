@@ -418,7 +418,7 @@ class ProfilePage extends React.Component {
         {
             document.getElementById("showPhoto").classList.remove("dn");
         }
-        if ( document.getElementById("tempImage") !== null) 
+        if ( document.getElementById("tempImage") !== null)
         {
             document.getElementById("tempImage").classList.add("dn");
         }
@@ -440,25 +440,34 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
+        console.log("1");
+
         let prevUrlListing = localStorage.getItem("prevUrlListing");
+        console.log(prevUrlListing);
+        console.log(this.props.history.prevUrl);
         if (  prevUrlListing && !this.props.history.prevUrl )
         {
+          console.log("2");
             localStorage.removeItem("prevUrlListing");
             window.location.href = prevUrlListing;
         }
         else
         {
+          console.log("3");
             let same_url = false
             if ( this.props.history.prevUrl )
             {
+              console.log("4");
                 same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
             }
             if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
             {
+              console.log("5");
                 this.props.history.push("/myjs");
             }
             else
             {
+              console.log("6");
                 this.props.history.push(this.props.history.prevUrl);
             }
 
@@ -637,25 +646,47 @@ class ProfilePage extends React.Component {
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
-                if(this.props.AboutInfo.gender == "F")
-                    stockImage = <i className="vpro_sprite female_nopro"></i>
-                else
-                    stockImage = <i className="vpro_sprite male_nopro"></i>
-
-                invalidProfileView = <div>
-                    <div className="bg4 txtc" id="errorContent">
-                        <div className="txtc setmid posfix fullwid" id="noProfileIcon">
-                           {stockImage}
-                            <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
-                        </div>
-                    </div>
-                </div>;
                 if(this.props.AboutInfo.username) {
                     Header = this.props.AboutInfo.username;
                 } else {
                     Header = "Profile not found";
                 }
-                metaTagView = <MetaTagComponents page="ProfileNotFound" />
+                if(this.props.AboutInfo.loginRequired)
+                {
+
+                    invalidProfileView = <div className="txtc r_vpro_pad1">
+                    <div className="f16 fontlig color13 pb20"> To view this profile </div>
+
+                    <a href="/login">
+                    <i className="vpro_sprite vpro_login"></i>
+                    <div className="f14 color2 fontlig">Login</div>
+                    </a>
+                    <div className="r_vpro_pad2"></div>
+
+                    <a href="/register/page1?source=mobreg6" >
+                    <i className="vpro_sprite vpro_regis"></i>
+                    <div className="f1  4 color2 fontlig">Register</div>
+                    </a>
+                    </div>;
+                }
+                else
+                {
+                    if(this.props.AboutInfo.gender == "F")
+                        stockImage = <i className="vpro_sprite female_nopro"></i>
+                    else
+                        stockImage = <i className="vpro_sprite male_nopro"></i>
+
+                    invalidProfileView = <div>
+                    <div className="bg4 txtc" id="errorContent">
+                    <div className="txtc setmid posfix fullwid" id="noProfileIcon">
+                    {stockImage}
+                    <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
+                    </div>
+                    </div>
+                    </div>;
+                    metaTagView = <MetaTagComponents page="ProfileNotFound" />
+                }
+
             }
 
         }
