@@ -5,6 +5,8 @@
  * Date: 20/09/17
  * Time: 2:37 PM
  */
+include_once(JsConstants::$cronDocRoot . '/amq/vendor/autoload.php');
+use Vision as vs;
 
 class GoogleVisionApi
 {
@@ -37,43 +39,26 @@ class GoogleVisionApi
 			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com",$picturePath,"Face detection error2");
 			//die;
 		}
-		$img = file_get_contents($picturePath);
-		$imgData = base64_encode($img);
 
-		$data = '{
-				    "requests": [
-				    {
-				      "image": {
-				        "content": "' . $imgData . '"
-				      },
-				      "features": [
-				        {
-				          "type": "FACE_DETECTION"
-				        }
-				      ]
-				    }
-				  ]
-				}';
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
-
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = curl_exec($ch);
-		curl_close($ch);
-
-		$result = json_decode($result, true);
-		$response = $result["responses"][0];
-		$cord = null;
-		if (!empty($response["faceAnnotations"])) {
-			$otherData = $response["faceAnnotations"][0];
-			$cordinates = $otherData["boundingPoly"]["vertices"];
-			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
-			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
-			$h = $cordinates[2]["y"] - $y;
-			$w = $cordinates[1]["x"] - $x;
+		$vision = new \Vision\Vision(
+			"AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg",
+			[
+				// See a list of all features in the table below
+				// Feature, Limit
+				new \Vision\Feature(\Vision\Feature::FACE_DETECTION, 100),
+			]
+		);
+		$response = $vision->request(
+			new \Vision\Image($picturePath)
+		);
+		$faces = $response->getFaceAnnotations();
+		if(is_array($faces)) {
+			$face = $faces[0];
+			$cordinates = $face->getBoundingPoly()->getVertices();
+			$x = $cordinates[0]->getX() ? $cordinates[0]->getX() : 0;
+			$y = $cordinates[0]->getY() ? $cordinates[0]->getY() : 0;
+			$h = $cordinates[2]->getY() - $y;
+			$w = $cordinates[1]->getX() - $x;
 			$cord = $w . "x" . $h . "+" . $x . "+" . $y;
 		}
 		return $cord;
@@ -107,6 +92,67 @@ class GoogleVisionApi
 			imagegif($img, $filename);
 		else
 			imagejpeg($img, $filename);
+	}
+
+	public function getPictureDetails($picturePath){
+		PictureFunctions::setHeaders();
+
+		//COPY into temp to avoid original image corruption
+
+		if(!file_exists($picturePath))
+		{
+			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com",$picturePath,"Face detection error");
+			//die;
+		}
+
+		$vision = new \Vision\Vision(
+			"AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg",
+			[
+				// See a list of all features in the table below
+				// Feature, Limit
+				new \Vision\Feature(\Vision\Feature::FACE_DETECTION, 100),
+				new \Vision\Feature(\Vision\Feature::SAFE_SEARCH_DETECTION,10),
+				new \Vision\Feature(\Vision\Feature::LABEL_DETECTION),100,
+			]
+		);
+		$response = $vision->request(
+			new \Vision\Image($picturePath)
+		);
+		$labels = $response->getLabelAnnotations();
+		foreach ($labels as $label)
+		{
+			$desc[] = $label->getDescription();
+		}
+		$labelText = implode(",",$desc);
+		$safes = $response->getSafeSearchAnnotation();
+		$adult = $safes->getAdult();
+		$spoof = $safes->getSpoof();
+		$violence = $safes->getViolence();
+		$faces = $response->getFaceAnnotations();
+		if(is_array($faces))
+		{
+			foreach($faces as $face)
+			{
+				$cordinates = null;
+				$cord = null;
+				$cordinates = $face->getBoundingPoly()->getVertices();
+				$x = $cordinates[0]->getX() ? $cordinates[0]->getX() : 0;
+				$y = $cordinates[0]->getY() ? $cordinates[0]->getY() : 0;
+				$h = $cordinates[2]->getY() - $y;
+				$w = $cordinates[1]->getX() - $x;
+				$cord = $w . "x" . $h . "+" . $x . "+" . $y;
+				echo "Blurred:  ".$face->getBlurredLikelihood()."\n";
+				echo "Tilt Angle:  ".$face->getTiltAngle()."\n";
+				echo "Roll Angle:  ".$face->getRollAngle()."\n";
+				echo "Pan Angle:  ".$face->getPanAngle()."\n";
+				echo "UnderExposed:  ".$face->getUnderExposedLikelihood()."\n";
+			}
+		}
+		else{
+			$noFace = true;
+		}
+
+		die;
 	}
 
 }
