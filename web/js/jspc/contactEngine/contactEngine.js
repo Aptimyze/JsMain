@@ -3,6 +3,7 @@ var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"
 var PAGETYPE='';   
 var ignoreLayerOpened=3; //for IgnoredLayer on VDP
 var currentActionLayer="";
+var WARNING= new Object();
 var buttonsCssMap={'INITIATE':{'enable':'mailicon','disable':'msgsendicon'},
               'SHORTLIST':{'enable':'staricon','disable':'staractive2'},
               'CONTACT_DETAIL':{'enable':'callicon','disable':'callicon'},
@@ -408,8 +409,17 @@ ContactEngineCard.prototype.postDisplay = function(Obj,profileChecksum,isError){
 			}
 			else if(Obj.actiondetails.writemsgbutton!=undefined)
 			{
-			  currentActionLayer="Message";
-			  return postCommonMessageLayer(Obj,profileChecksum,this.name);
+				currentActionLayer="Message";
+				if(typeof Obj.actiondetails.limitWarning != "undefined"){
+					var contactedUser = Obj.actiondetails.limitWarning.contactedUser;
+					WARNING[contactedUser]  = Obj.actiondetails.limitWarning;
+					WARNING.pageSource = this.name;
+				}
+				return postCommonMessageLayer(Obj,profileChecksum,this.name);
+			}
+			else if(typeof Obj.actiondetails.limitWarning != "undefined"){
+				currentActionLayer = "limitWarning";
+				return postCommonWarningLayer(Obj.actiondetails.limitWarning, profileChecksum, this.name, "FREE");
 			}
 			else if(Obj.actiondetails.footerbutton!=null)
 			{
@@ -433,6 +443,64 @@ function postDisplayError(pageSource)
 		return FinalHtml=$("#postCCErrorCommonLayer").html();
 	else
 		return FinalHtml=$("#postCommonErrorLayer").html();
+}
+
+function postCommonWarningLayer(Data, profilechecksum,pageSource, userType){
+	var templateID = "postCommonErrorLayer";
+	var contentDiv = "disp-cell";
+	if(pageSource == "CC"){
+		templateID = "postCCErrorCommonLayer";
+		contentDiv = "js-genericMsg";
+	}
+	var template = $("#"+templateID).clone();
+	var textToShow = "";
+	if(userType === "FREE"){
+		/* CASE FOR FREE MEMBER */
+		/* Has two cases: 1 where limit is day/month/week type 2 where overall limit is type*/
+		if(Data.type == "OVERALL"){
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed on your account.<br>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.";
+		}else{
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.<br/><br/>"+
+			"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
+		}
+		
+
+		template.find("."+contentDiv).html(textToShow);
+
+		if(pageSource == "CC"){
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
+	}else if(userType === "PAID"){
+		/* CASE FOR PAID MEMBER */
+		var textToShow = "<b>Please Note</b>: You have already sent "+
+		Data.count+
+		" out of "+
+		Data.limit+
+		" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+		We encourage you to send interests only to people where you match most\
+		 of the preferences mentioned in their partner preference.<br/><br/>"+
+		"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
+		template.find("."+contentDiv).html(textToShow);
+		if(pageSource == "CC"){
+			template.find("."+contentDiv).css({"font-size": "11px"});
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
+	}
+	return template;
 }
 
 function postCommonMessageLayer(Obj,profileChecksum,pageSource)
@@ -829,8 +897,13 @@ $(".closeContactDetailLayer").bind('click',function() {
 				$("#jsCcVSP-"+arr[1]).css("display","");
 		}
 	}
-	
+	var layerDivParent = layerDiv.parent();
+	superdata = layerDiv.attr('superdata');
 	layerDiv.remove();
+	if(superdata){
+	layerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
+	cECloseBinding();
+	}
 	return false;
 	});
 	
