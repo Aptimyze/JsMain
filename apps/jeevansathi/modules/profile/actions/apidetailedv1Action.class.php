@@ -265,11 +265,12 @@ class apidetailedv1Action extends sfAction
 		{
 			$arrPass['page_source'] = "VDP_VSP";
 		}
+		$arrPass[isIgnored] = $this->IGNORED ? 1 :0;
 		$out["buttonDetails"] = null;
 		if($this->loginProfile->getPROFILEID() != $this->profile->getPROFILEID())
 		{
 			$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
-			
+
 			if(MobileCommon::isIOSApp())
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORED"=>$this->IGNORED));
 			else
