@@ -308,7 +308,6 @@ export  class MyjsPage extends React.Component {
   			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
 	    else{
-	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
