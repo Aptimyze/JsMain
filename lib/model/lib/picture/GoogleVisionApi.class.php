@@ -94,7 +94,7 @@ class GoogleVisionApi
 			imagejpeg($img, $filename);
 	}
 
-	public function getPictureDetails($picturePath){
+	public function getPictureDetails($picturePath, $iPicId, $iProfileId){
 		PictureFunctions::setHeaders();
 
 		//COPY into temp to avoid original image corruption
@@ -123,14 +123,33 @@ class GoogleVisionApi
 		{
 			$desc[] = $label->getDescription();
 		}
-		$labelText = implode(",",$desc);
+        
+        $faces = $response->getFaceAnnotations();
+		$arrPicData['LABEL'] = implode(",",$desc);
 		$safes = $response->getSafeSearchAnnotation();
-		$adult = $safes->getAdult();
-		$spoof = $safes->getSpoof();
-		$violence = $safes->getViolence();
-		$faces = $response->getFaceAnnotations();
-		if(is_array($faces))
+		$arrPicData['ADULT'] = $safes->getAdult();
+		$arrPicData['SPOOF'] = $safes->getSpoof();
+		$arrPicData['VIOLENCE'] = $safes->getViolence();
+        $arrPicData['FACE_COUNT'] = is_array($faces) ? count($faces) : 0;
+        
+        $arrPicData['PICTUREID'] = $iPicId;
+        $arrPicData['PROFILEID'] = $iProfileId;
+//        $arrPicData['SCREENED_ID'] = ""; //TODO
+//        $arrPicData['SCREEN_STATUS'] = ""; //TODO
+//        $arrPicData['AGE'] = ""; //TODO
+//        $arrPicData['GENDER'] = ""; //TODO
+//        $arrPicData['INAPPROPIATE'] = ""; //TODO
+//        $arrPicData['SIGNATURE'] = ""; //TODO
+        
+        $storeObjApiResp = new PICTURE_PICTURE_API_RESPONSE();
+        //TODO : $arrPicData
+        $iPicId = $storeObjApiResp->insertRecord($arrPicData);
+        
+		
+		if($iPicId && is_array($faces))
 		{
+            $storeObjFaceResp = new PICTURE_FACE_RESPONSE();
+            $arrFaceIds = array();
 			foreach($faces as $face)
 			{
 				$cordinates = null;
@@ -141,11 +160,17 @@ class GoogleVisionApi
 				$h = $cordinates[2]->getY() - $y;
 				$w = $cordinates[1]->getX() - $x;
 				$cord = $w . "x" . $h . "+" . $x . "+" . $y;
-				echo "Blurred:  ".$face->getBlurredLikelihood()."\n";
-				echo "Tilt Angle:  ".$face->getTiltAngle()."\n";
-				echo "Roll Angle:  ".$face->getRollAngle()."\n";
-				echo "Pan Angle:  ".$face->getPanAngle()."\n";
-				echo "UnderExposed:  ".$face->getUnderExposedLikelihood()."\n";
+                                
+                $arrData['CORD'] = $cord; 
+                $arrData['BLUR'] = $face->getBlurredLikelihood();
+                $arrData['PAN_ANGLE'] = $face->getPanAngle();
+                $arrData['ROLL_ANGLE'] = $face->getRollAngle();
+                $arrData['TILT_ANGLE'] = $face->getTiltAngle();
+                $arrData['UNDEREXPOSED'] = $face->getUnderExposedLikelihood();
+                
+                $arrData['PICTUREID'] = $iPicId;
+                
+                $storeObjFaceResp->insertRecord($arrData);
 			}
 		}
 		else{
