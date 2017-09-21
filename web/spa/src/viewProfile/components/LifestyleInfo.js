@@ -132,7 +132,8 @@ export default class LifestyleInfo extends React.Component {
     		</div>;
             }
             if(this.props.about.posted_by)
-                handledView = <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div>;
+                handledView = <div className="pad5 bg4 fontlig color3 clearfix f14">
+            <div className="f12 color1 pb20 wordBreak" id="vpro_posted_by">{this.props.about.posted_by}</div></div>;
     	}
     	return(
     		<div>
