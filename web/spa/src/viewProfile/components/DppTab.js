@@ -363,6 +363,7 @@ class DppTab extends React.Component {
                     {dpp_handi}
 										{space}
           </div>
+          <div className="space30"></div>
 			</div>
     	);
     }
