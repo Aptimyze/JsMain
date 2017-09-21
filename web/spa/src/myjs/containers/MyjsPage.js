@@ -310,10 +310,6 @@ export  class MyjsPage extends React.Component {
 	    else{
 	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
 
-			EditBarView = <EditBar cssProps={this.state.cssProps}/>
-
-			AcceptCountView =  <AcceptCount/>
-
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
 

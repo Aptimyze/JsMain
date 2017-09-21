@@ -112,7 +112,28 @@ export default class MyjsOcbLayer extends React.Component {
       return i;
   }
 
+  
+  getIosVersion(ua)
+ {
+  //return false;
+  var ua = ua || navigator.userAgent;
+  var match= ua.match(/(iPhone);/i);
+  //console.log(match);
+  var OsVersion=ua.match(/OS\s[0-9.]*/i);
+  //console.log(OsVersion);
+  if(match==null)
+  return false;
+  else if(OsVersion==null)
+  {
+  return false
+  }
+  else if(OsVersion[0].substring(3,5)>=7)
+  return true;
+  else
+  return false;
 
+}
+  
   render(){
 
 

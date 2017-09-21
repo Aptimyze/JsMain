@@ -9,6 +9,8 @@ export const performAction = (data) =>
     if(!data.button.enable)return false;
     var params = (data.button.params ? data.button.params : "") + (data.extraParams ? data.extraParams: "");
     var url = `?&${params}&profilechecksum=${data.profilechecksum}`;
+    localStorage.removeItem('currentDataUrl');
+    localStorage.removeItem('currentData');
     return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[data.button.action]+url,{},'','POST').then((response)=>{if(typeof data.callBFun=='function') data.callBFun(response);});
 }
 

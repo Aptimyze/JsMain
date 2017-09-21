@@ -14,7 +14,13 @@ class VerifiedVisit extends React.Component {
             documentsVerified: "",
             dataLoaded: false  
         };
-        props.showVerifiedData(props.profilechecksum);   
+        props.showVerifiedData(props.profilechecksum);
+
+    }
+
+    componentWillMount() {
+        // console.log(this.props);
+        this.props.historyObject.push(()=>this.closeOverlay(),"#layer");
     }
 
     componentWillReceiveProps(nextProps)
@@ -32,9 +38,10 @@ class VerifiedVisit extends React.Component {
         e.preventDefault();
         window.location.href = "https://www.jeevansathi.com/static/jsmsVerificationStaticPage";
     }
-    closeOverlay(e) {
-        e.preventDefault();
+    closeOverlay() {
+        // e.preventDefault();
         this.props.closeOverlay();
+        return true;
     }
     preventOverlay(e) {
         e.preventDefault();
@@ -64,7 +71,7 @@ class VerifiedVisit extends React.Component {
                     </div>
                     {docsData}
                 </div>
-                <div onClick={(e) => this.closeOverlay(e)} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
+                <div onClick={(e) => this.props.historyObject.pop()} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
                     <span className="okClick dispibl wid150">Ok</span>
                 </div>
                 </div>
@@ -74,7 +81,8 @@ class VerifiedVisit extends React.Component {
 }
 const mapStateToProps = (state) => {
     return{
-       verifiedData: state.verifiedVisitReducer.verifiedData
+       verifiedData: state.verifiedVisitReducer.verifiedData,
+       historyObject : state.historyReducer.historyObject
     }
 }
 
