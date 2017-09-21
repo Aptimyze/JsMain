@@ -298,12 +298,16 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
             $pObj->getDetail($loginData['PROFILEID'], "PROFILEID","PASSWORD,EMAIL");
             $this->emailStr=$pObj->getPROFILEID();
+            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+
             
         }
         public function executeDeleteOption(sfWebRequest $request) {
         	//print_r("expression");die;
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
+            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+
         }
 
         public function executeHideOption(sfWebRequest $request) 
@@ -311,6 +315,8 @@ class staticActions extends sfActions
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
+          $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+
         }
 
         public function executeUnHideOption(sfWebRequest $request) 
@@ -318,6 +324,8 @@ class staticActions extends sfActions
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
+          $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+
         }
 
         public function executeUnHideResult(sfWebRequest $request) 
@@ -1151,7 +1159,8 @@ public function executeAppredirect(sfWebRequest $request)
     //print_R($this->profileDetail);die;
     $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
     $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
-    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;    
+    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
+    $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
   }
 	private function getFieldMapData($szKey)
 	{
