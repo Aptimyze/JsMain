@@ -137,7 +137,8 @@ if(1)
 	for($t=0;$t<1;$t++)
 	{
 		$records=0;
-
+		$abFactor = 5;
+		$usePercentageFlag = false;
 		for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 		{
 		$myDbName=$slave_activeServers[$serverId];
@@ -1775,8 +1776,11 @@ if(1)
 			echo '<br> $education_total_count $education_count $education_max_deviation $weight_education is '.$education_total_count.' '.$education_count.' '.$education_max_deviation.' '.$weight_education;
 			echo '<br> $occupation_total_count $occupation_count $occupation_max_deviation $weight_occupation is '.$occupation_total_count.' '.$occupation_count.' '.$occupation_max_deviation.' '.$weight_occupation;
 			echo '<br> $city_total_count $city_count $city_max_deviation $weight_city is '.$city_total_count.' '.$city_count.' '.$city_max_deviation.' '.$weight_city;*/
-			$USEPERCENTAGE = true;
-			if($USEPERCENTAGE){
+			if((($my_profileid % $abFactor) == 0) && $usePercentageFlag){
+				// logging PROFILEID in table to rollback
+				$qry = "INSERT INTO MIS.3DTRENDS_LOG(PROFILEID) values('$my_profileid')";
+				mysql_query($qry, $db2);
+				// new values
 				$TAIL = "_value_percentile_string";
 				$only_percentage = array("caste", "mtongue", "occupation", "education", "income", "height", "city", "age", "mstatus", "manglik");
 				foreach ($only_percentage as $value) {
