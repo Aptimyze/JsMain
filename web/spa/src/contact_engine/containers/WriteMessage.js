@@ -18,7 +18,8 @@ export default class WriteMessage extends React.Component{
         lastMsgID : this.props.buttonData.MSGID,
         lastChatID : this.props.buttonData.CHATID
     };
-    this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
+
+        this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
 
   }
 
@@ -63,7 +64,8 @@ export default class WriteMessage extends React.Component{
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
     var url = '?&profilechecksum='+this.props.profilechecksum+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
-    let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    var _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    this.dontCall=1;
     commonApiCall(api+url,{draft:message},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
@@ -73,13 +75,15 @@ export default class WriteMessage extends React.Component{
       messages : messages
     });
 //    document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
-    e.scrollTop =  e.scrollHeight;
+      e.scrollTop =  e.scrollHeight;
 
+      setTimeout(()=>{_this.dontCall=0;},2500);
   });
 }
 
   showMessagesOnScroll(e){
     if(!this.state.nxtdata)return;
+    this.showLoaderDiv();
     var url = `?&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
     commonApiCall('/api/v2/contacts/WriteMessage'+url,{},'WRITE_MESSAGE','POST').then((response)=>{
       this.scrollHeight = document.getElementById('msgId').scrollHeight;
@@ -88,12 +92,13 @@ export default class WriteMessage extends React.Component{
         nxtdata:response.hasNext,
         messages:messages,
         lastMsgID : response.MSGID,
-        lastChatID : response.CHATID
+        lastChatID : response.CHATID,
+        showLoader:false,
  });
     });
   }
   WrieMsgScrollEvent(){
-
+    if(this.dontCall==1)return;
     let e = document.getElementById('msgId');
 
     if(e.scrollTop==0)
@@ -125,6 +130,7 @@ getWriteMsg_innerView(){
           }
           else
           {
+
             if(this.state.messages.length)
             {
               WrtieMsg_historydiv =  this.state.messages.map((msg,index)=>{
@@ -207,7 +213,7 @@ return WriteMsg_buttonView;
   let loaderView;
         if(this.state.showLoader)
         {
-          loaderView = <Loader show="page"></Loader>;
+          loaderView = <Loader show="writeMessageComp"  loaderStyles={{width: '100%',top: window.outerHeight/2 - 35 +'px'}}></Loader>;
         }
 
   return(

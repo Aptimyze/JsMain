@@ -477,7 +477,7 @@ return (<div style={{backgroundColor: '#09090b',height: window.innerHeight}}>
               </ul>
 </div>
 <div style={{padding: '25px 0 8% 0'}}>
-<div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')}>{this.calData.BUTTON2}</div>
+<div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')}>{this.calData.BUTTON1}</div>
 </div>
 <div id='CALButtonB2' onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')} style={{color:'#cccccc', paddingTop: '20px'}} className="pdt15 pb10 txtc white f14">{this.calData.BUTTON2}</div>
 
