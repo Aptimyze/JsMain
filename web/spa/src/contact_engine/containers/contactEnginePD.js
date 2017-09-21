@@ -86,7 +86,7 @@ export class contactEnginePD extends React.Component{
       {
         case 'SHORTLIST':
           var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-          this.props.replaceSingleButton(newButtons);
+          this.props.replaceSingleButton(newButtons,responseButtons.buttondetails.topmsg);
           break;
         case 'IGNORE':
             if(actionButton.params.indexOf("ignore=0")!=-1)
@@ -98,9 +98,6 @@ export class contactEnginePD extends React.Component{
               this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   },'showBlockLayer');
             }
             this.props.replaceOldButtons(responseButtons);
-
-            //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-            //this.props.replaceSingleButton(newButtons);
         break;
 
         case 'CONTACT_DETAIL':
@@ -130,7 +127,7 @@ export class contactEnginePD extends React.Component{
           else if(responseButtons.buttondetails.button)
           {
             var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-            this.props.replaceSingleButton(newButtons);
+            this.props.replaceSingleButton(newButtons,responseButtons.buttondetails.topmsg);
           }
           }
           // for decline and cancel cases
@@ -144,7 +141,7 @@ export class contactEnginePD extends React.Component{
 
       }
       if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button && responseButtons.buttondetails.button.label.indexOf('Saved')!=-1){
-        this.props.replaceSingleButton(Array(responseButtons.buttondetails.button));
+        this.props.replaceSingleButton(Array(responseButtons.buttondetails.button),responseButtons.buttondetails.topmsg);
       }
 
       if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1 && !responseButtons.actiondetails.errmsglabel)
@@ -362,10 +359,10 @@ const mapDispatchToProps = (dispatch) => {
             payload: {newButtonDetails:newButtons.buttondetails}
           });
         },
-        replaceSingleButton: (newButtons) => {
+        replaceSingleButton: (newButtons,topMsg) => {
           dispatch({
             type: 'REPLACE_BUTTON',
-            payload: {newButtons:newButtons}
+            payload: {newButtons:newButtons,topMsg:topMsg}
           });
         }
 

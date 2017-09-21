@@ -118,7 +118,7 @@ class postNotInterestedv2Action extends sfAction
       }
       else {
 //        $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("VDP","M","R","D");
-        $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+        $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
         $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
         $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
       }
