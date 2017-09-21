@@ -9,6 +9,7 @@ constructor(){
 	this.History=[];
 	var _this=this;
 	window.onpopstate = function(event) {
+		if((document.location.href).indexOf("#")==-1) return;
 	    if(event.state)
 	    {
 

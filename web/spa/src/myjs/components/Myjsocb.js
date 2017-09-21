@@ -12,13 +12,76 @@ export default class MyjsOcbLayer extends React.Component {
 
 
   componentDidMount(){
-    
+
 
     this.showTimerForLightningCal();
 
 
   }
+  getIosVersion(ua) {
+	//return false;
+	var ua = ua || navigator.userAgent;
+	var match= ua.match(/(iPhone);/i);
+	//console.log(match);
+	var OsVersion=ua.match(/OS\s[0-9.]*/i);
+	//console.log(OsVersion);
+	if(match==null)
+		return false;
+	else if(OsVersion==null)
+	{
+		return false
+	}
+	else if(OsVersion[0].substring(3,5)>=7)
+		return true;
+	else
+		return false;
 
+}
+
+  showTimerForLightningCal(param) {
+
+    let cT,eT;
+
+    if(this.getIosVersion())
+    {
+      cT = new Date(this.props.ocb_currentT.replace(/\s+/g, 'T'));
+      eT = new Date(this.props.Ocb_data.expiryDate.replace(/\s+/g, 'T'));
+    }
+    else
+    {
+      cT = new Date(this.props.ocb_currentT);
+      eT = new Date(this.props.Ocb_data.expiryDate);
+    }
+
+
+
+    let lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
+
+    if(!lightningDealExpiryInSec)
+        return;
+    let currentTime=new Date();
+    let expiryDate=new Date();
+    expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
+
+    if(expiryDate<currentTime) return;
+    let timeDiffInSeconds=(expiryDate-currentTime)/1000;
+    if (timeDiffInSeconds>48*60*60) return;
+
+
+    let temp=timeDiffInSeconds;
+    let timerSeconds=temp%60;
+    temp=Math.floor(temp/60);
+    let timerMinutes=temp%60;
+    temp=Math.floor(temp/60);
+    let timerHrs=temp;
+    this.memTimerExtraDays=Math.floor(timerHrs/24);
+    this.memTimerTime=new Date();
+    this.memTimerTime.setHours(timerHrs);
+    this.memTimerTime.setMinutes(timerMinutes);
+    this.memTimerTime.setSeconds(timerSeconds);
+    let thisObject= this;
+    this.memTimer=setInterval(this.updateMemTimer.bind(thisObject),1000);
+  }
 
   updateMemTimer()
   {
@@ -70,60 +133,6 @@ export default class MyjsOcbLayer extends React.Component {
   return false;
 
 }
-
- showTimerForLightningCal(param)
- {
-   try
-   {
-     let cT,eT;
-
-     if(this.getIosVersion())
-     {
-       var cT = new Date(current.replace(/\s+/g, 'T'));
-       var eT = new Date(membershipPlanExpiry.replace(/\s+/g, 'T'));
-     }
-     else
-     {
-       var cT = new Date(current);
-       var eT = new Date(membershipPlanExpiry);
-     }
-
-     cT = new Date(this.props.ocb_currentT);
-     eT = new Date(this.props.Ocb_data.expiryDate);
-
-     let lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
-
-     if(!lightningDealExpiryInSec)
-         return;
-     let currentTime=new Date();
-     let expiryDate=new Date();
-     expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
-
-     if(expiryDate<currentTime) return;
-     let timeDiffInSeconds=(expiryDate-currentTime)/1000;
-     if (timeDiffInSeconds>48*60*60) return;
-
-
-     let temp=timeDiffInSeconds;
-     let timerSeconds=temp%60;
-     temp=Math.floor(temp/60);
-     let timerMinutes=temp%60;
-     temp=Math.floor(temp/60);
-     let timerHrs=temp;
-     this.memTimerExtraDays=Math.floor(timerHrs/24);
-     this.memTimerTime=new Date();
-     this.memTimerTime.setHours(timerHrs);
-     this.memTimerTime.setMinutes(timerMinutes);
-     this.memTimerTime.setSeconds(timerSeconds);
-     let thisObject= this;
-     this.memTimer=setInterval(this.updateMemTimer.bind(thisObject),1000);
-   }
-   catch (e)
-   {
-      // alert("ecpection from showTimerForLightningCal"+ e);
-   }
-
- }
   
   render(){
 
