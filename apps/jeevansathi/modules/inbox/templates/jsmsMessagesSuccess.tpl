@@ -21,6 +21,10 @@ $(document).ready(function() {
         
 
 })
+function setLocalStorageUrl()
+{
+  localStorage.setItem("prevUrlListing",window.location.href);
+}
 </script>
 
 <div>
@@ -57,7 +61,7 @@ $(document).ready(function() {
 <div class="disptbl fullwid bg4 pad5" id='noMsgDiv' ><div class="dispcell txtc vertmid" ><div><img src="~$IMG_URL`/images/jsms/commonImg/face.png"></div><div class="pt10"></div><div class="f14 fontlig">~$firstResponse.noresultmessage`</div></div></div> 
 ~else`
 ~foreach from=$firstResponse.profiles item=tupleInfo key=id`
-              <div class="~if $id is even`bg5~else`bg4~/if` pad18" >
+              <div class="~if $id is even`bg5~else`bg4~/if` pad18" onClick="setLocalStorageUrl()">
                   
                   
     <div class="fullwid">
