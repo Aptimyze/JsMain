@@ -31,7 +31,7 @@ class KundliInfo extends React.Component {
     {
         let htmlStr = "<div class='fl'><i class='vpro_sprite vpro_pin'></i></div>",colorClass,szHisHer;
         if(nextProps.gunaScore.responseMessage == "Successful" && nextProps.gunaScore.SCORE) {
-            if(nextProps.gunaScore.SCORE >18) {
+            if(nextProps.gunaScore.SCORE >=18) {
                 colorClass = "greenText";
             } else {
                 colorClass = "redText";
