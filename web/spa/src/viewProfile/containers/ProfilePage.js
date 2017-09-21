@@ -252,7 +252,6 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-       console.log('componentWillReceiveProps');
         if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
             this.setState({
                 showLoader:false
@@ -342,7 +341,6 @@ class ProfilePage extends React.Component {
     componentWillUnmount()
     {
         //this.props.fetchedProfilechecksum = "false";
-        //console.log("unmount");
         window.removeEventListener('scroll', this.setScrollPos);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
@@ -368,9 +366,6 @@ class ProfilePage extends React.Component {
 
     showTab(elem)
     {
-      //console.log("showtab");
-      //console.log(elem);
-      //console.log(this.state.tabArray);
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
                 document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
@@ -382,7 +377,6 @@ class ProfilePage extends React.Component {
     }
     resetTab()
     {
-      //console.log("reset tab");
       for(let i=0; i<this.state.tabArray.length; i++) {
           document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
 
@@ -440,34 +434,26 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
-        //console.log("1");
 
         let prevUrlListing = localStorage.getItem("prevUrlListing");
-        //console.log(prevUrlListing);
-        //console.log(this.props.history.prevUrl);
         if (  prevUrlListing && !this.props.history.prevUrl )
         {
-          //console.log("2");
             localStorage.removeItem("prevUrlListing");
             window.location.href = prevUrlListing;
         }
         else
         {
-          //console.log("3");
             let same_url = false
             if ( this.props.history.prevUrl )
             {
-              //console.log("4");
                 same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
             }
             if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
             {
-              //console.log("5");
                 this.props.history.push("/myjs");
             }
             else
             {
-              //console.log("6");
                 this.props.history.push(this.props.history.prevUrl);
             }
 
@@ -480,30 +466,19 @@ class ProfilePage extends React.Component {
     {
         let himHer = "him",photoViewTemp,AboutViewTemp;
         let decideHimHer;
-      //  console.log("=======");
-      //  console.log(this.state);
-      //  console.log(this.state.GenderInfo.He);
-        // console.log(this.props);
-        // console.log("=======");
 
         if(this.state.gender == "M" && this.state.ownView == false)
         {
-            //console.log("p-1");
-            //himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
         } else if(this.state.gender == "F" && this.state.ownView == false)
         {
-           //console.log("p-2");
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         } else if(this.state.gender == "M" && this.state.ownView == true)
         {
-          //console.log("p-3");
              photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         } else {
-          //console.log("p-4");
-            //himHer = "her";
             photoViewTemp = <div id="tempImage" className="fullwid bg18" style={{height: window.innerWidth}}></div>;
 
         }
@@ -558,24 +533,15 @@ class ProfilePage extends React.Component {
 
         if(this.state.dataLoaded)
         {
-            //console.log("data laoded") ;
-            // console.log(this.state.ownView);
-            // console.log(this.props.AboutInfo.gender);
-            //console.log(this.state.GenderInfo.Him);
-            //console.log(this.state.GenderInfo.Her);
             if(this.state.ownView == false)
             {
                 if(this.props.AboutInfo.gender == "Male")
                 {
-                  //console.log("a1");
                   decideHimHer= this.state.GenderInfo.Him;
-                  //console.log({decideHimHer});
                 }
                 else
                 {
-                  //console.log("a2");
                   decideHimHer = this.state.GenderInfo.Her;
-                  //console.log({decideHimHer});
                 }
             }
             else
@@ -589,9 +555,6 @@ class ProfilePage extends React.Component {
                 decideHimHer = this.state.GenderInfo.Her;
               }
             }
-            // console.log("=====");
-            // console.log({decideHimHer});
-
 
 
             document.getElementById("swipePage").classList.remove("animateLeft");
