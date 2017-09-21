@@ -170,7 +170,7 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-   		window.addEventListener('scroll', (event) => {this.restApiHits()});
+   		window.addEventListener('scroll', (event) => {this.restApiHits(event)});
   	}
 
   	firstApiHits(){
@@ -181,7 +181,6 @@ export  class MyjsPage extends React.Component {
 		    });
 		}
   		else if(!this.state.hamApi){
-				console.log("ham apu");
 		    this.props.hitApi_Ham();
 		    this.setState({
 		    	hamApi: true
@@ -189,42 +188,64 @@ export  class MyjsPage extends React.Component {
 		}
   	}
 
-  	restApiHits(){
-  		if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched){
-  			 return;
-  		}
-   		if(!this.props.myjsData.ieFetched){
-   			if(!this.ieApi){
-   				this.ieApi = true;
-		 		this.props.hitApi_IE();
+  	restApiHits()
+		{
+			try
+			{
+				if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched)
+				{
+					 return;
+				}
+				if(!this.props.myjsData.ieFetched)
+				{
+					if(!this.ieApi)
+					{
+						this.ieApi = true;
+					this.props.hitApi_IE();
+					}
+				}
+				else if(!this.props.myjsData.irFetched)
+				{
+					if(!this.irApi)
+					{
+						this.irApi = true;
+						this.props.hitApi_IR();
+					}
+				}
+				else if(!this.props.myjsData.modFetched)
+				{
+					if(!this.modApi)
+					{
+						this.modApi = true;
+						this.props.hitApi_MOD();
+					}
+				}
+				else if(!this.props.myjsData.vaFetched)
+				{
+					if(!this.vaApi)
+					{
+						this.vaApi = true;
+							this.props.hitApi_VA();
+					}
+				}
+				else if(!this.props.myjsData.drFetched)
+				{
+					if(!this.drApi)
+					{
+						this.drApi = true;
+						this.props.hitApi_DR();
+					}
+					this.checkforgap("lastcall");
+				}
 			}
+
+
+			catch(e)
+			{
+				console.log("excpection coming from restapi"+e);
+			}
+
 		}
-  		else if(!this.props.myjsData.irFetched){
-  			if(!this.irApi){
-  				this.irApi = true;
-		    	this.props.hitApi_IR();
-		    }
-		}
-  		else if(!this.props.myjsData.modFetched){
-  			if(!this.modApi){
-  				this.modApi = true;
-		    	this.props.hitApi_MOD();
-		    }
-		}
-		else if(!this.props.myjsData.vaFetched){
-			if(!this.vaApi){
-				this.vaApi = true;
-		    	this.props.hitApi_VA();
-		    }
-		}
- 		else if(!this.props.myjsData.drFetched){
- 			if(!this.drApi){
-		    	this.drApi = true;
-		    	this.props.hitApi_DR();
-		    }
-				this.checkforgap("lastcall");
-		}
-  	}
 		checkforgap(param)
 		{
       let ele=document.getElementById("JBrowserGap");
@@ -288,10 +309,6 @@ export  class MyjsPage extends React.Component {
 	    }
 	    else{
 	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
-
-			EditBarView = <EditBar cssProps={this.state.cssProps}/>
-
-			AcceptCountView =  <AcceptCount/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }

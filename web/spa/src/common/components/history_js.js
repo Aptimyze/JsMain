@@ -16,13 +16,12 @@ constructor(){
 	        if(_this.History.length>0){
 	            _this.pop();}
 	        else
-	           document.location.reload();
+	           history.back();
 	    }
 	    else{
 			if((document.location.href).indexOf("/viewprofile.php")!=-1 && !ISBrowser("UC"))
 			{
-				//if(historyStoreObj.History.length>0)
-				//	historyStoreObj.pop();
+				history.back();
 			}
 		}
 	};

@@ -25,8 +25,11 @@ export default class PhotoAlbumPage extends React.Component {
       }
       this.CssFix();
 
-
+      if(!getCookie("AUTHCHECKSUM")){
+        window.location.href="/login?prevUrl=";        
+      }
   }
+
   componentDidMount(){
 
 

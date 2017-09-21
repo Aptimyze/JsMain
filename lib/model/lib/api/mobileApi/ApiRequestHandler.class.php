@@ -207,7 +207,6 @@ class ApiRequestHandler
 
 		}
 
-
 		return $output;
 	}
 
