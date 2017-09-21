@@ -9,75 +9,108 @@ class CommHistory extends React.Component {
     constructor(props) {
     	super();
     	this.state = {
-    		showLoader: true
-    	} 
+    		showLoader: true,
+        tupleDim : {'width' : window.innerWidth,'height': window.innerHeight},
+    	}
     }
     componentDidMount() {
     	window.addEventListener('scroll', (event) => {
     		event.preventDefault();
     	})
-    	document.getElementById("comHistoryOverlay").style.height = window.innerHeight+"px";
-    	document.getElementById("commHistoryScroller").style.height = (window.innerHeight - 110) + "px";  
-    	document.getElementById("commHistoryScroller").style.width = (window.innerWidth) + "px";  
-        this.props.showHistory(this.props.profileId); 
+    	// document.getElementById("comHistoryOverlay").style.height = window.innerHeight+"px";
+    	// document.getElementById("commHistoryScroller").style.height = (window.innerHeight - 110) + "px";
+    	// document.getElementById("commHistoryScroller").style.width = (window.innerWidth) + "px";
+      //console.log(window.outerHeight - document.getElementById("commHistory_header").clientHeight);
+      document.getElementById("commHistoryScroller").style.height = window.outerHeight - document.getElementById("commHistory_header").clientHeight+"px";
+        this.props.showHistory(this.props.profileId);
     }
     componentWillReceiveProps(nextProps)
     {
-        if(nextProps.historyData.history == null) {
-			document.getElementById("commHistoryScroller").innerHTML += "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'>Your interaction with "+ this.props.username + " will appear here.</div></div>";
-    	} else {
-    		let htmlString = "", data = nextProps.historyData.history;
-    		for(var i=0; i< data.length; i++) {
-    			if(data[i].ismine == true) {
-    				htmlString += "<div id='comm_"+i+"' class='vpro_padl'>";
-    				htmlString += "<div class='fontlig f14 white txtr padr15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
-    			}
-				else {
-					htmlString += "<div id='comm_"+i+"' class='vpro_padr'>";
-					htmlString += "<div class='fontlig f14 white txtl padl15'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div>";
-				}  
-				htmlString+= "<div class='vpro_padr'><div class='brdr4'></div></div>"
-    		}
-    		document.getElementById("commHistoryScroller").innerHTML += htmlString;
-    	}
-    	this.setState ({
-            showLoader : false
-        }); 
+        try
+        {
+          if(nextProps.historyData.history == null)
+          {
+  			       document.getElementById("commHistoryScroller").innerHTML += "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'>Your interaction with "+ this.props.username + " will appear here.</div></div>";
+      	  }
+          else
+          {
+              let htmlString='';
+              let data = nextProps.historyData.history;
+
+      		    for(var i=0; i< data.length; i++)
+              {
+      			       if(data[i].ismine == true)
+                   {
+      				           htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3 txtr'>";
+      				           htmlString += "<div class='fontlig f14 white'>"+data[i].message+"</div>";
+                         htmlString += "<div class='dispbl color1 f12 pt5'>"+ data[i].header+"&nbsp;"+data[i].time+"</div>";
+                         htmlString += "</div></div>";
+      			       }
+  				         else
+                   {
+                     htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3 txtl'>";
+                     htmlString += "<div class='fontlig f14 white'>"+data[i].message+"</div>";
+                     htmlString += "<div class='dispbl color1 f12 pt5'>"+ data[i].header+"&nbsp;"+data[i].time+"</div>";
+                     htmlString += "</div></div>";
+  				          }
+
+      		    }
+              console.log(htmlString);
+      		      document.getElementById("commHistoryScroller").innerHTML += htmlString;
+      	  }
+      	  this.setState ({
+              showLoader : false
+          });
+        }
+        catch(e)
+        {
+          console.log("1. excpection from communication history: "+ e);
+        }
     }
     closeHistory(){
-    	this.props.closeHistory();	
+    	this.props.closeHistory();
     }
+    getcommHistory_topView()
+    {
+     return (<div className="posrel clearfix fontthin ce_hgt1">
+        <div className="posabs com_left1">
+          <img id="imageId" src={this.props.profileThumbNailUrl} className="com_brdr_radsrp ce_dim1"/>
+        </div>
+        <div className="posabs com_right1">
+          <i className="mainsp com_cross"  onClick={() => this.closeHistory()}></i>
+        </div>
+        <div className="txtc f19 white pt10" id="usernameId">{this.props.username}</div>
+      </div>);
+  }
+
     render() {
     	var loaderView;
-    	if(this.state.showLoader) 
+    	if(this.state.showLoader)
     	{
     		loaderView = <Loader show="page"></Loader>;
     	}
 		return(
-			<div id="comHistoryOverlay" className="posabs dispbl scrollhid">
-			{loaderView}
-				<div className="posabs vpro_tapoverlay">
-					<div className="posrel fullwid z105">
-						<div className="pad18 brdr4" id="comm_header">
-							<div className="posrel clearfix fontthin">
-								<div className="posabs com_left1"> 
-									<img src={this.props.profileThumbNailUrl} className="com_brdr_radsrp wid50 hgt50" />
-								</div>
-								<div className="posabs com_right1"> 
-									<i id="comCloseBtn" onClick={() => this.closeHistory()} className="mainsp com_cross cursp"></i>
-								</div>
-								<div className="txtc f19 white pt10">
-									{this.props.username}
-								</div>
-							</div>
-						</div>
-						<div id="commHistoryScroller">
-							
-						</div>
-					</div>
-				</div>
-                <img src="https://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" className="classimg1 vpro_pos1 posfix z100" />
-			</div>
+		    <div id="comHistoryOverlay">
+            <div className="posfix ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+              <div className="posrel">
+                <a href="#"  className="ce_overlay ce_z102" > </a>
+                <div className="posabs ce_z103 ce_top1 fullwid">
+
+                  <div className="pad18 brdr4" id="commHistory_header">
+                    {this.getcommHistory_topView()}
+                  </div>
+
+                  <div className="ce_scoll1" id="commHistoryScroller">
+
+
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+        </div>
 		);
 	}
 }
@@ -97,4 +130,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(CommHistory)
-
