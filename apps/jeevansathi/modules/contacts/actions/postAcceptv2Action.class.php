@@ -189,7 +189,7 @@ class postAcceptv2Action extends sfAction
     }
     else
     {
-      $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+      $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
       $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
       $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
     }
