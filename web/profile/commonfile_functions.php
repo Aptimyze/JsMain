@@ -621,8 +621,8 @@ $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                  
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"            => "82");
 $js_arr[]=array("jspc/success_story/foggy"   => "4");
 $js_arr[]=array("jspc/success_story/resizeIe"   => "4");
-$js_arr[]=array("jspc/contactEngine/contactEngine"          => "70");
-$js_arr[]=array("jspc/contactEngine/contactEngineButtons"     => "34");
+$js_arr[]=array("jspc/contactEngine/contactEngine"           => "71");
+$js_arr[]=array("jspc/contactEngine/contactEngineButtons"      => "35");
 $js_arr[]=array("jspc/search/advancedSearch"   => "25");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"   => "16");
 $js_arr[]=array("jspc/success_story/jqueryFilestyle"   => "4");
