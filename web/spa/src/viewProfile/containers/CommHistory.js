@@ -41,13 +41,17 @@ class CommHistory extends React.Component {
               {
       			       if(data[i].ismine == true)
                    {
-      				           htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3'>";
-      				           htmlString += "<div class='fontlig f14 white txtr'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div></div>";
+      				           htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3 txtr'>";
+      				           htmlString += "<div class='fontlig f14 white'>"+data[i].message+"</div>";
+                         htmlString += "<div class='dispbl color1 f12 pt5'>"+ data[i].header+"&nbsp;"+data[i].time+"</div>";
+                         htmlString += "</div></div>";
       			       }
   				         else
                    {
-  					              htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3'>";
-  					              htmlString += "<div class='fontlig f14 white txtl'>"+data[i].message+"<span class='dispbl f12 pt5'>"+data[i].time+"</span></div></div></div>";
+                     htmlString += "<div id='comm_"+i+"' class='brdr4'><div class='pad3 txtl'>";
+                     htmlString += "<div class='fontlig f14 white'>"+data[i].message+"</div>";
+                     htmlString += "<div class='dispbl color1 f12 pt5'>"+ data[i].header+"&nbsp;"+data[i].time+"</div>";
+                     htmlString += "</div></div>";
   				          }
 
       		    }
