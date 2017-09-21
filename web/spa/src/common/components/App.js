@@ -49,8 +49,8 @@ class App extends React.Component
     this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
     this.props.MyProfile.GENDER  = localStorage.getItem('GENDER');
     this.props.MyProfile.USERNAME  = localStorage.getItem('USERNAME');
-    // localStorage.removeItem("currentData");
-    // localStorage.removeItem("currentDataUrl");
+    localStorage.removeItem("currentData");
+    localStorage.removeItem("currentDataUrl");
   }
 
 
