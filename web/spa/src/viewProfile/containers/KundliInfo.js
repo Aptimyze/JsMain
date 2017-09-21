@@ -237,7 +237,7 @@ class KundliInfo extends React.Component {
         if(this.state.showAstroLayer == true) {
             if(this.state.astroType == "astroCompMem") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
@@ -246,7 +246,7 @@ class KundliInfo extends React.Component {
                 </div>;
             } else if(this.state.astroType == "freeAstroComp") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
