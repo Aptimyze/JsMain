@@ -100,11 +100,11 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     }
     else {
       // console.log("shahjahan axios callUrl",callUrl);
-
+      let params2 = typeof data=='object' ? (Object.keys(data).map((i) => i+'='+encodeURIComponent(data[i])).join('&'))  : '';
       return axios({
         method: callMethod,
         url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
-        data: data!=null ? Object.keys(data).map((i) => i+'='+data[i]).join('&') : '',
+        data: params2,
         headers: {
           'Accept': 'application/json',
           'withCredentials':true,

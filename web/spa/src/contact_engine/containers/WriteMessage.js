@@ -18,7 +18,8 @@ export default class WriteMessage extends React.Component{
         lastMsgID : this.props.buttonData.MSGID,
         lastChatID : this.props.buttonData.CHATID
     };
-    this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
+
+        this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
 
   }
 
@@ -63,7 +64,8 @@ export default class WriteMessage extends React.Component{
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
     var url = '?&profilechecksum='+this.props.profilechecksum+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
-    let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    var _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    this.dontCall=1;
     commonApiCall(api+url,{draft:message},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
@@ -73,8 +75,9 @@ export default class WriteMessage extends React.Component{
       messages : messages
     });
 //    document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
-    e.scrollTop =  e.scrollHeight;
+      e.scrollTop =  e.scrollHeight;
 
+      setTimeout(()=>{_this.dontCall=0;},2500);
   });
 }
 
@@ -90,12 +93,12 @@ export default class WriteMessage extends React.Component{
         messages:messages,
         lastMsgID : response.MSGID,
         lastChatID : response.CHATID,
-        showLoader:false
+        showLoader:false,
  });
     });
   }
   WrieMsgScrollEvent(){
-
+    if(this.dontCall==1)return;
     let e = document.getElementById('msgId');
 
     if(e.scrollTop==0)
@@ -127,6 +130,7 @@ getWriteMsg_innerView(){
           }
           else
           {
+
             if(this.state.messages.length)
             {
               WrtieMsg_historydiv =  this.state.messages.map((msg,index)=>{
