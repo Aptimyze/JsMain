@@ -338,7 +338,7 @@ class DppTab extends React.Component {
         }
 
     	return(
-    		<div id="DppTab" className="dn mb56">
+    		<div id="DppTab" className="dn">
 					<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}
@@ -363,7 +363,7 @@ class DppTab extends React.Component {
                     {dpp_handi}
 										{space}
           </div>
-          <div className="space30"></div>
+          <div className="space70"></div>
 			</div>
     	);
     }

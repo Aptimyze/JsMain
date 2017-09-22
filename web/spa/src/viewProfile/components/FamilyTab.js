@@ -184,11 +184,11 @@ class FamilyTab extends React.Component {
     	}
 
     	return(
-    		<div id="FamilyTab" className="mb56 dn pad5 bg4 fontlig color3 clearfix f14">
+    		<div id="FamilyTab" className="dn pad5 bg4 fontlig color3 clearfix f14">
 				<div className="hgt10"></div>
 				{FamilyData}
 				{space}
-                <div className="space30"></div>
+                <div className="space70"></div>
 			</div>
     	);
     }
