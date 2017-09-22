@@ -9,8 +9,8 @@ class DppTab extends React.Component {
             loginStatus = true;
         }
         this.state = {
-            selfPicUrl : props.selfPicUrl || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
-            partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif",
+            selfPicUrl : props.selfPicUrl || "/images/60x60_m.jpg",
+            partnerPicUrl : props.about.thumbnailPic || "/images/60x60_f.jpg",
             loginStatus
         };
     }
@@ -92,7 +92,7 @@ class DppTab extends React.Component {
         {
             matching_header = <div id="matchHeader" className="clearfix f13 fontlig">
                 <div className = "clearfix">
-                <div className="fl color2 VPwid28p">{HisHer} Preference</div>
+                <div className="fl color2 VPwid35p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
                 </div>
@@ -338,7 +338,7 @@ class DppTab extends React.Component {
         }
 
     	return(
-    		<div id="DppTab" className="dn mb56">
+    		<div id="DppTab" className="dn">
 					<div className="pad5 bg4 fontlig color3 clearfix f14 fullheight">
                     {about_partner}
                     {matching_header}
@@ -363,7 +363,7 @@ class DppTab extends React.Component {
                     {dpp_handi}
 										{space}
           </div>
-          <div className="space30"></div>
+          <div className="space70"></div>
 			</div>
     	);
     }

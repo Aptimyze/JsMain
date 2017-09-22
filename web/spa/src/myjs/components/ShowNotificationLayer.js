@@ -28,6 +28,7 @@ export default class ShowNotificationLayer extends React.Component {
 
     }
   render(){
+    console.log('ShowNotificationLayer');
   	 if(!this.props.fetched){
   	 	return <div></div>;
 	    }

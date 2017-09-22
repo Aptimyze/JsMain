@@ -150,6 +150,7 @@ class HamMain extends React.Component {
 
     render() 
     {
+        console.log('hamMain');
         let loaderView;
         if(this.state.showLoader)
         {

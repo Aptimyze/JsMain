@@ -32,8 +32,8 @@ this.setState({bounceAnimation:" bounceIn animated "});
 }
 
   render(){
-    console.log(this.props);
-    if(!this.props.fetched) {
+    console.log('MyjsAcceptancecount');
+    if(!this.props.hamFetched) {
         return <div></div>;
       }
     let bgsetAcc,bgsetJust,ValAcc,ValJust;
