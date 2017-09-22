@@ -384,7 +384,7 @@ class myjsActions extends sfActions
               		$length=count($this->apiData['my_profile']['incomplete']);
               		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;	
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
-                        $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
+			$this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage','Y');
 
                    $this->currentTime = date('Y-m-d H:i:s');
@@ -621,13 +621,22 @@ class myjsActions extends sfActions
 				$this->videoLinkLayer='N';
         
         $this->currentTime = date('Y-m-d H:i:s');
-		//enable JPSC notifications layer depending on user earlier registered or not
+	//enable JPSC notifications layer depending on user earlier registered or not
        	$notificationObj = new NotificationConfigurationFunc();
-        $this->showEnableNotificationsLayer = $notificationObj->showEnableNotificationLayer($this->profileid);
+	$notifArr =$notificationObj->showEnableNotificationLayer($this->profileid);
+        $this->showEnableNotificationsLayer 	=$notifArr['showLayer'];
+        $this->notifEnabled 			=$notifArr['enabled'];
+	if($this->notifEnabled){
+		$this->browserNotificationRegistered =1;
+		$this->browserNotificationCookie =$request->getcookie("browserNotificationCookie");
+		if($this->browserNotificationCookie!='Y'){
+			@setcookie('browserNotificationCookie','Y',time()+(86400*2), "/","localhost");
+		}
+	}			
         unset($notificationObj);
 
-		$this->setTemplate("_jspcMyjs/jspcPerform");
-		sfContext::getInstance()->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMyJSPageUrl);
+	$this->setTemplate("_jspcMyjs/jspcPerform");
+	sfContext::getInstance()->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMyJSPageUrl);
 
 	}
 

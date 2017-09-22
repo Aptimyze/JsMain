@@ -646,6 +646,7 @@ $js_arr[]=array("jsms/settings/mobDeleteProfile_js"     => "21");
 $js_arr[]=array("sw"    => "13");
 $js_arr[]=array("commonExpiration_js"   => "12");
 $js_arr[]=array("main"   => "7");
+$js_arr[]=array("main_sw_register.js"   => "1");
 $js_arr[]=array("jsms/common/verificationIcon_js"   => "6");
 $js_arr[]=array("jsms/settings/settings_js"   => "5");
 $js_arr[]=array("rippleEffectCommon_js"   => "6");
