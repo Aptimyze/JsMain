@@ -233,7 +233,10 @@ criticalLayerButtonsAction(url,clickAction,button) {
                      return;
                 });
                 return;
+        break;
 
+        case '19':
+          if(typeof this.props.myjsApiHit=='function')this.props.myjsApiHit();
         break;
       }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});

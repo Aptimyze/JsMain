@@ -296,7 +296,7 @@ export  class MyjsPage extends React.Component {
 	   //       return (<div><Loader show="page"></Loader></div>)
 	   //  }
 	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
-				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
+				 return (<CalObject myjsApiHit={this.props.hitApi_MYJS.bind(this)} calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
