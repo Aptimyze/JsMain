@@ -12,17 +12,49 @@ export default class MyjsOcbLayer extends React.Component {
 
 
   componentDidMount(){
-    
 
-    this.showTimerForLightningCal();
-
+    if(this.props.Ocb_data.top == "FLASH DEAL")
+    {
+      this.showTimerForLightningCal();
+    }
 
   }
+  getIosVersion(ua) {
+	//return false;
+	var ua = ua || navigator.userAgent;
+	var match= ua.match(/(iPhone);/i);
+	//console.log(match);
+	var OsVersion=ua.match(/OS\s[0-9.]*/i);
+	//console.log(OsVersion);
+	if(match==null)
+		return false;
+	else if(OsVersion==null)
+	{
+		return false
+	}
+	else if(OsVersion[0].substring(3,5)>=7)
+		return true;
+	else
+		return false;
+
+}
 
   showTimerForLightningCal(param) {
 
-    let cT = new Date(this.props.ocb_currentT);
-    let eT = new Date(this.props.Ocb_data.expiryDate);
+    let cT,eT;
+
+    if(this.getIosVersion())
+    {
+      cT = new Date(this.props.ocb_currentT.replace(/\s+/g, 'T'));
+      eT = new Date(this.props.Ocb_data.expiryDate.replace(/\s+/g, 'T'));
+    }
+    else
+    {
+      cT = new Date(this.props.ocb_currentT);
+      eT = new Date(this.props.Ocb_data.expiryDate);
+    }
+
+
 
     let lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
 
@@ -81,9 +113,30 @@ export default class MyjsOcbLayer extends React.Component {
       return i;
   }
 
+  
+  getIosVersion(ua)
+ {
+  //return false;
+  var ua = ua || navigator.userAgent;
+  var match= ua.match(/(iPhone);/i);
+  //console.log(match);
+  var OsVersion=ua.match(/OS\s[0-9.]*/i);
+  //console.log(OsVersion);
+  if(match==null)
+  return false;
+  else if(OsVersion==null)
+  {
+  return false
+  }
+  else if(OsVersion[0].substring(3,5)>=7)
+  return true;
+  else
+  return false;
 
+}
+  
   render(){
-
+    console.log('MyjsOcbLayer');
 
     let ocbview;
       if(this.props.Ocb_data.top == "FLASH DEAL")

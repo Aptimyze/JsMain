@@ -31,7 +31,7 @@ class KundliInfo extends React.Component {
     {
         let htmlStr = "<div class='fl'><i class='vpro_sprite vpro_pin'></i></div>",colorClass,szHisHer;
         if(nextProps.gunaScore.responseMessage == "Successful" && nextProps.gunaScore.SCORE) {
-            if(nextProps.gunaScore.SCORE >18) {
+            if(nextProps.gunaScore.SCORE >=18) {
                 colorClass = "greenText";
             } else {
                 colorClass = "redText";
@@ -149,7 +149,7 @@ class KundliInfo extends React.Component {
     	var more_astro;
     	if(this.props.about.more_astro)
     	{
-            var rashi,nakshatra,horo_match;
+            var rashi,nakshatra;
             if(this.props.about.more_astro.rashi) {
                 rashi =  <div className="clearfix">
                     <div className="fontlig vpro_wordwrap" id="vpro_more_astro_rashi" >
@@ -164,18 +164,10 @@ class KundliInfo extends React.Component {
                     </div>
                 </div>;
             }
-            if(this.props.about.more_astro.horo_match)
-            {
-                horo_match = <div className="clearfix pt10">
-                    <i className="vpro_sprite vpro_pin"></i>
-                    <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
-                    </div>
-                </div>
-            }
 
             more_astro = <div>
             <div className="f12 color1">More</div>
-            <div className="fontlig pb15">
+            <div className="fontlig">
             {rashi}
             {nakshatra}
             </div>
@@ -237,7 +229,7 @@ class KundliInfo extends React.Component {
         if(this.state.showAstroLayer == true) {
             if(this.state.astroType == "astroCompMem") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
@@ -246,7 +238,7 @@ class KundliInfo extends React.Component {
                 </div>;
             } else if(this.state.astroType == "freeAstroComp") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
@@ -271,7 +263,16 @@ class KundliInfo extends React.Component {
             </div>
         }
 
-        let horoAndAstroSection = "";        
+        let horoAndAstroSection = ""; 
+        let horo_match = "";
+        if(this.props.about.more_astro.horo_match)
+        {
+            horo_match = <div className="clearfix pt30">
+            <i className="vpro_sprite vpro_pin"></i>
+            <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
+            </div>
+            </div>
+        }       
         if(RELIGIONARR.includes(this.props.about.religionId))
         {
             horoAndAstroSection = <div>
@@ -279,7 +280,8 @@ class KundliInfo extends React.Component {
             {downloadHoroscope}
             {AstroReport}
             </div>
-            <div className="clearfix" id="gunaScore"></div></div>;
+            {horo_match}
+            <div className="clearfix pb15" id="gunaScore"></div></div>;
         }
     	return(
     		<div>

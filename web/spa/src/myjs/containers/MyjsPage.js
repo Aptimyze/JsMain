@@ -111,6 +111,11 @@ export  class MyjsPage extends React.Component {
 		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !nextProps.myjsData.ieFetched){
 			this.restApiHits(this);
 		}
+		else{
+			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
+				this.firstApiHits(this);
+			}
+		}
 
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
 		this.setState ({
@@ -291,11 +296,12 @@ export  class MyjsPage extends React.Component {
 	   //       return (<div><Loader show="page"></Loader></div>)
 	   //  }
 	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
-				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
+				 return (<CalObject myjsApiHit={this.props.hitApi_MYJS.bind(this)} calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
-  		if(this.props.myjsData.fetched){
+  		if(this.props.myjsData.fetched && this.props.myjsData.hamFetched){
+  			console.log('MyjsPage');
 
 			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
@@ -308,7 +314,6 @@ export  class MyjsPage extends React.Component {
   			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
 	    else{
-	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
