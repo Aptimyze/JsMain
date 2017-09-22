@@ -340,6 +340,7 @@ var xhrReq={}
 var timer=300;
 function SingleTonNextPage(data,nottostore,url,transition)
 {
+   window.location.href = url;return;
    var random=Math.random();
    $.each(cancelUrl,function(key,value)
    {
