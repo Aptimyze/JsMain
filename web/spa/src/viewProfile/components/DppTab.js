@@ -9,8 +9,8 @@ class DppTab extends React.Component {
             loginStatus = true;
         }
         this.state = {
-            selfPicUrl : props.selfPicUrl || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif",
-            partnerPicUrl : props.about.thumbnailPic || "https://static.jeevansathi.com/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif",
+            selfPicUrl : props.selfPicUrl || "/images/60x60_m.jpg",
+            partnerPicUrl : props.about.thumbnailPic || "/images/60x60_f.jpg",
             loginStatus
         };
     }

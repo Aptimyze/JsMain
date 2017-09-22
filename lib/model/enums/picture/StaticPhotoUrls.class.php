@@ -7,10 +7,10 @@ class StaticPhotoUrls
 	const nonLoggedInPhotoMaleMobileProfilePicUrl = '/P/images/ser2/login_to_view_photo_big_b.gif';
 	const nonLoggedInPhotoFemaleMobileProfilePicUrl = '/P/images/ser2/login_to_view_photo_big_g.gif';
 
-	const nonLoggedInPhotoMaleThumbailUrl = '/P/ser4_images/mobilejs/ic_login_to_view_b_60x60.gif';
-	const nonLoggedInPhotoFemaleThumbailUrl = '/P/ser4_images/mobilejs/ic_login_to_view_g_60x60.gif';
-	const nonLoggedInPhotoMaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_login_to_view_b_60x60.gif';
-	const nonLoggedInPhotoFemaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_login_to_view_g_60x60.gif';
+	const nonLoggedInPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const nonLoggedInPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const nonLoggedInPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const nonLoggedInPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 	const nonLoggedInPhotoMaleSearchPicUrl = '/P/ser4_images/ic_login_to_view_b_100.gif';
 	const nonLoggedInPhotoFemaleSearchPicUrl = '/P/ser4_images/ic_login_to_view_g_100.gif';
@@ -35,10 +35,10 @@ class StaticPhotoUrls
 	const underScreeningPhotoMaleMobileProfilePicUrl = '/P/images/ser2/photocomming_b.gif';
 	const underScreeningPhotoFemaleMobileProfilePicUrl = '/P/images/ser2/photocomming_g.gif';
 
-	const underScreeningPhotoMaleThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_coming_b_60x60.gif';
-	const underScreeningPhotoFemaleThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_coming_g_60x60.gif';
-	const underScreeningPhotoMaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_coming_b_60x60.gif';
-	const underScreeningPhotoFemaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_coming_g_60x60.gif';
+	const underScreeningPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const underScreeningPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const underScreeningPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const underScreeningPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 	const underScreeningPhotoMaleSearchPicUrl = '/P/ser4_images/ic_photo_coming_b_100.gif';
 	const underScreeningPhotoFemaleSearchPicUrl = '/P/ser4_images/ic_photo_coming_g_100.gif';
@@ -63,10 +63,10 @@ class StaticPhotoUrls
 	const filteredPhotoMaleMobileProfilePicUrl = '/P/ser4_images/ic_filtered_b_150.gif';
 	const filteredPhotoFemaleMobileProfilePicUrl = '/P/ser4_images/ic_filtered_g_150.gif';
 
-	const filteredPhotoMaleThumbailUrl = '/P/ser4_images/mobilejs/ic_filtered_b_60x60.gif';
-	const filteredPhotoFemaleThumbailUrl = '/P/ser4_images/mobilejs/ic_filtered_g_60x60.gif';
-	const filteredPhotoMaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_filtered_b_60x60.gif';
-	const filteredPhotoFemaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_filtered_g_60x60.gif';
+	const filteredPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const filteredPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const filteredPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const filteredPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 	const filteredPhotoMaleSearchPicUrl = '/P/ser4_images/ic_filtered_b_100.gif';
 	const filteredPhotoFemaleSearchPicUrl = '/P/ser4_images/ic_filtered_g_100.gif';
@@ -99,10 +99,10 @@ class StaticPhotoUrls
         const requestPhotoFemaleMobileProfile = '/P/images/ser2/Request-Female.gif';
 
 
-	const requestPhotoMaleThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif';
-	const requestPhotoFemaleThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif';
-	const requestPhotoMaleMobileThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif';
-	const requestPhotoFemaleMobileThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif';
+	const requestPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const requestPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const requestPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const requestPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 	const requestPhotoMaleSearchPicUrl = '/P/ser4_images/ic_request_photo_b_100new.gif';
 	const requestPhotoFemaleSearchPicUrl = '/P/ser4_images/ic_request_photo_g_100new.gif';
@@ -131,10 +131,10 @@ class StaticPhotoUrls
 	const noPhotoMaleMobileProfilePicUrl = '';
 	const noPhotoFemaleMobileProfilePicUrl = '';
 
-	const noPhotoMaleThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif';
-	const noPhotoFemaleThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif';
-	const noPhotoMaleMobileThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_b_60x60.gif';
-	const noPhotoFemaleMobileThumbailUrl = '/profile/ser4_images/mobilejs/ic_no_photo_g_60x60.gif';
+	const noPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const noPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const noPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const noPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 
 	const noPhotoMaleSearchPicUrl = '';
@@ -162,10 +162,10 @@ class StaticPhotoUrls
 	const contactAcceptedPhotoMaleMobileProfilePicUrl = '/P/ser4_images/ic_photo_vis_if_b_150.gif';
 	const contactAcceptedPhotoFemaleMobileProfilePicUrl = '/P/ser4_images/ic_photo_vis_if_g_150.gif';
 
-	const contactAcceptedPhotoMaleThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_vis_if_b_60x60.gif';
-	const contactAcceptedPhotoFemaleThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_vis_if_g_60x60.gif';
-	const contactAcceptedPhotoMaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_vis_if_b_60x60.gif';
-	const contactAcceptedPhotoFemaleMobileThumbailUrl = '/P/ser4_images/mobilejs/ic_photo_vis_if_g_60x60.gif';
+	const contactAcceptedPhotoMaleThumbailUrl = '/images/60x60_m.jpg';
+	const contactAcceptedPhotoFemaleThumbailUrl = '/images/60x60_f.jpg';
+	const contactAcceptedPhotoMaleMobileThumbailUrl = '/images/60x60_m.jpg';
+	const contactAcceptedPhotoFemaleMobileThumbailUrl = '/images/60x60_f.jpg';
 
 	const contactAcceptedPhotoMaleSearchPicUrl = '/P/ser4_images/ic_photo_vis_if_b_100.gif';
 	const contactAcceptedPhotoFemaleSearchPicUrl = '/P/ser4_images/ic_photo_vis_if_g_100.gif';
