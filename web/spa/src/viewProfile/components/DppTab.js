@@ -92,7 +92,7 @@ class DppTab extends React.Component {
         {
             matching_header = <div id="matchHeader" className="clearfix f13 fontlig">
                 <div className = "clearfix">
-                <div className="fl color2 VPwid28p">{HisHer} Preference</div>
+                <div className="fl color2 VPwid35p">{HisHer} Preference</div>
                 <div className="fr color2 VPwid25p">Matches you</div>
                 <div className="fl color13 VPwid46p txtc">
                 </div>
