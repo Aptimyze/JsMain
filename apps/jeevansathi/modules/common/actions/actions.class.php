@@ -727,6 +727,15 @@ class commonActions extends sfActions
     {
 
         $calObject=$request->getAttribute('calObject');
+        
+        if($request->getAttribute('fromDetailedAction'))
+        {
+            $this->fromDetailedAction=1;
+            if($request->getAttribute('redirectViewProfileUrl'))
+                $this->redirectViewProfileUrl=$request->getAttribute('redirectViewProfileUrl');
+            else
+                $this->redirectViewProfileUrl='';
+        }
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
         $this->dppSuggestions = json_encode($calObject['dppSuggObject']);
@@ -1034,4 +1043,15 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
                         }
                 }
     }
+        public function executeResetStaticKey($request)
+        {               
+                $memObject = JsMemcache::getInstance();
+                $memObject->remove('STATIC_TABLES_CACHED_ON');
+                $memObject->remove('STATIC_TABLES_CACHED_DATA');
+                
+                $respObj = ApiResponseHandler::getInstance();
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();   
+                die();
+        }
 }

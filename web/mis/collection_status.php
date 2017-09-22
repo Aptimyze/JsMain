@@ -378,7 +378,20 @@ if(isset($data))
 			
 			//Adding tax and city entries
 			$billid = $row['BILLID'];
-			
+			$amount = $row['AMOUNT'];
+			$actualAmount = ($amount * 100)/(118);
+			$SGS = $taxData[$billid]["SGST"];
+			$CGS = $taxData[$billid]["CGST"];
+			$IGS = $taxData[$billid]["IGST"];
+			if($SGS>0){
+				$SGS = ($actualAmount*$SGS)/100;
+			}
+			if($IGS>0){
+				$IGS = ($actualAmount*$IGS)/100;
+			}
+			if($CGS>0){
+				$CGS = ($actualAmount*$CGS)/100;
+			}
 			$arr[$i]['SGST'] = $taxData[$billid]["SGST"];
 			$arr[$i]['IGST'] = $taxData[$billid]["IGST"];
 			$arr[$i]['CGST'] = $taxData[$billid]["CGST"];
@@ -387,6 +400,9 @@ if(isset($data))
 			$arr[$i]["CITY_RES"] = FieldMap::getFieldLabel("city",$StateCity);
 			$StateCity = substr($StateCity, 0, 2);
 			$arr[$i]["STATE_RES"] = FieldMap::getFieldLabel("state_india",$StateCity);
+			$arr[$i]['CGS'] = $CGS;
+			$arr[$i]['IGS'] = $IGS;
+			$arr[$i]['SGS'] = $SGS;
 			$i++;
 		}
 
@@ -430,7 +446,7 @@ if(isset($data))
                         $dataSet3 ="Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH then TRANSACTION NUMBER is Easy Bill Reference ID)";
                         $dataSet4 ="Collection-Status";
 		
-			$dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number","invoice_no"=>"Invoice-No","orderid"=>"Order-ID","gateway"=>"Gateway","approved_by"=>"Approved By","discount_type"=>"Discount Type");
+                        $dataHeader =array("entry_dt"=>"Entry-Dt","client"=>"Username","country"=>"User Country","saleid"=>"Bill-Id","receiptid"=>"Receipt-Id","mode"=>"Mode","type"=>"Type","amt"=>"Amount","cd_num"=>"Cheque/DD-No","sale_by"=>"Sale-By","entry_by"=>"Entry-By","deposit_branch"=>"Deposit-Branch","collection_status"=>"Collection-Status","transaction_number"=>"Transaction-Number","invoice_no"=>"Invoice-No","orderid"=>"Order-ID","gateway"=>"Gateway","approved_by"=>"Approved By","discount_type"=>"Discount Type","SGS"=>"SGST","IGS"=>"IGST","CGS"=>"CGST","CITY_RES"=>"CITY_RES","STATE_RES"=>"STATE_RES");
 
 			$totrec =count($arr);
 			for($i=0; $i<$totrec; $i++)

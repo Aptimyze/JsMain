@@ -79,7 +79,7 @@ class SolrRequest implements RequestHandleInterface
 			$pid = str_replace(' ','',$pid);
 			$pid = str_replace(',',' ',$pid);
 		}
-                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
+                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>";
                 foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
                         $index = array_search($solrUrl, JsConstants::$solrServerUrls);
                         if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
@@ -485,7 +485,7 @@ class SolrRequest implements RequestHandleInterface
                         }
                         if($loggedInProfileObj->getMSTATUS())
                         {
-                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),1,0),";
+                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),11,0),"; /*1 changed to 11 to ensure no tagging, just removal*/
                         }
                         if($loggedInProfileObj->getRELIGION())
                         {

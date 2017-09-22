@@ -48,7 +48,7 @@
 <p class="pt20"> 32. All members of jeevansathi.com are restricted to the following number of contacts they can make via the "Express Interest" option on the Jeevansathi.com site.</p>
 
 
-<p class="pt20"> <table border="1">
+<p class="pt20"> <table border="1" id="limitsTable">
 <tbody><tr>
 <td></td> <td>Free Member</td> <td>Paid Member</td> <td>Ever Paid</td> <td>Paid Member with Response Booster</td>
 </tr>

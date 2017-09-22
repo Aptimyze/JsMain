@@ -7,13 +7,25 @@ $db =connect_db();
 $db_slave =connect_db();
 
 $ts=time();
-$ts-=24*60*60;
+$hour = date("H",$ts);
+if($hour == "00"){
+    $ts-=24*60*60;
 
-$today=date("Y-m-d",$ts);
-//$today ="2017-04-27";
+    $today=date("Y-m-d",$ts);
+	//$today ="2017-04-27";
 
-$st_date=$today." 00:00:00";
-$end_date=$today." 23:59:59";
+    $st_date=$today." 00:00:00";
+    $end_date=$today." 23:59:59";
+} else{
+    $today=date("Y-m-d",$ts);
+    //$today ="2017-04-28";
+	$st_date = $today." 00:00:00";
+	$end_date = $today." ".date("H:i:s",$ts);
+}
+
+//Delete entry from table MIS.SERVICE_DETAIL
+$deleteSQL = "DELETE FROM MIS.SERVICE_DETAILS WHERE ENTRY_DT = '$today'";
+$deleteRES = mysql_query_decide($deleteSQL,$db) or die("$deleteSQL".mysql_error_js($db));
 
 /* Section for newly purchased services */
 $sql ="SELECT COUNT(*) cnt,A.SERVICEID,B.CENTER, MEM_UPGRADE AS UPGRADE FROM billing.SERVICE_STATUS AS A JOIN billing.PURCHASES AS B ON A.BILLID=B.BILLID WHERE B.ENTRY_DT BETWEEN '$st_date' AND '$end_date' AND B.STATUS='DONE' GROUP BY A.SERVICEID,CENTER,MEM_UPGRADE";

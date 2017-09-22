@@ -144,6 +144,16 @@ class ContactHandler
   
   private $responseTracking;
 
+
+  private $contactLimitWarning;
+
+  public  function getContactLimitWarning(){
+    return $this->contactLimitWarning;
+  }
+  public  function setContactLimitWarning($warning){
+    $this->contactLimitWarning = $warning;
+  }
+
 /*
 * This function update the default value while creation object
 * @param Profile $viewerObj 

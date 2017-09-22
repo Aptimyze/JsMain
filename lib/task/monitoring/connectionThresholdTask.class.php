@@ -48,32 +48,35 @@ EOF;
 
     protected function execute($arguments = array(), $options = array())
     {      
+// all read access credentials for limited users only
+                $user = "js_db_monitor";
+                $password = "jsdbm0n1t0R";
       // server configuration array with threshold value is indexed at 'threshold'
-	$SERVER_ARR[]=array("master",MysqlDbConstants::$masterDDL["HOST"],MysqlDbConstants::$masterDDL["USER"],MysqlDbConstants::$masterDDL["PASS"],MysqlDbConstants::$masterDDL["PORT"],'threshold'=>self::$thresholdValue['master']);
-       $SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1DDL["HOST"],MysqlDbConstants::$shard1DDL["USER"],MysqlDbConstants::$shard1DDL["PASS"],MysqlDbConstants::$shard1DDL["PORT"],'threshold'=>self::$thresholdValue['shard1']);
-       $SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2DDL["HOST"],MysqlDbConstants::$shard2DDL["USER"],MysqlDbConstants::$shard2DDL["PASS"],MysqlDbConstants::$shard2DDL["PORT"],'threshold'=>self::$thresholdValue['shard2']);
-       $SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3DDL["HOST"],MysqlDbConstants::$shard3DDL["USER"],MysqlDbConstants::$shard3DDL["PASS"],MysqlDbConstants::$shard3DDL["PORT"],'threshold'=>self::$thresholdValue['shard3']);
-       $SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1SlaveDDL["HOST"],MysqlDbConstants::$shard1SlaveDDL["USER"],MysqlDbConstants::$shard1SlaveDDL["PASS"],MysqlDbConstants::$shard1SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
-       $SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2SlaveDDL["HOST"],MysqlDbConstants::$shard2SlaveDDL["USER"],MysqlDbConstants::$shard2SlaveDDL["PASS"],MysqlDbConstants::$shard2SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
-       $SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3SlaveDDL["HOST"],MysqlDbConstants::$shard3SlaveDDL["USER"],MysqlDbConstants::$shard3SlaveDDL["PASS"],MysqlDbConstants::$shard3SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
+	$SERVER_ARR[]=array("master",MysqlDbConstants::$masterDDL["HOST"],$user,$password,MysqlDbConstants::$masterDDL["PORT"],'threshold'=>self::$thresholdValue['master']);
+       $SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1DDL["HOST"],$user,$password,MysqlDbConstants::$shard1DDL["PORT"],'threshold'=>self::$thresholdValue['shard1']);
+       $SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2DDL["HOST"],$user,$password,MysqlDbConstants::$shard2DDL["PORT"],'threshold'=>self::$thresholdValue['shard2']);
+       $SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3DDL["HOST"],$user,$password,MysqlDbConstants::$shard3DDL["PORT"],'threshold'=>self::$thresholdValue['shard3']);
+       $SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1SlaveDDL["HOST"],$user,$password,MysqlDbConstants::$shard1SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
+       $SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2SlaveDDL["HOST"],$user,$password,MysqlDbConstants::$shard2SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
+       $SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3SlaveDDL["HOST"],$user,$password,MysqlDbConstants::$shard3SlaveDDL["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
 //       $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsDDL["HOST"],MysqlDbConstants::$alertsDDL["USER"],MysqlDbConstants::$alertsDDL["PASS"],MysqlDbConstants::$alertsDDL["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
        
       //$SERVER_ARR[]=array("master",MysqlDbConstants::$master["HOST"],MysqlDbConstants::$master["USER"],MysqlDbConstants::$master["PASS"],MysqlDbConstants::$master["PORT"],'threshold'=>self::$thresholdValue['master']);
-      $SERVER_ARR[]=array("masterRep",MysqlDbConstants::$masterRep["HOST"],MysqlDbConstants::$masterRep["USER"],MysqlDbConstants::$masterRep["PASS"],MysqlDbConstants::$masterRep["PORT"],'threshold'=>self::$thresholdValue['masterRep']);
+      $SERVER_ARR[]=array("masterRep",MysqlDbConstants::$masterRep["HOST"],$user,$password,MysqlDbConstants::$masterRep["PORT"],'threshold'=>self::$thresholdValue['masterRep']);
       //$SERVER_ARR[]=array("shard1",MysqlDbConstants::$shard1["HOST"],MysqlDbConstants::$shard1["USER"],MysqlDbConstants::$shard1["PASS"],MysqlDbConstants::$shard1["PORT"],'threshold'=>self::$thresholdValue['shard1']);
       //$SERVER_ARR[]=array("shard2",MysqlDbConstants::$shard2["HOST"],MysqlDbConstants::$shard2["USER"],MysqlDbConstants::$shard2["PASS"],MysqlDbConstants::$shard2["PORT"],'threshold'=>self::$thresholdValue['shard2']);
       //$SERVER_ARR[]=array("shard3",MysqlDbConstants::$shard3["HOST"],MysqlDbConstants::$shard3["USER"],MysqlDbConstants::$shard3["PASS"],MysqlDbConstants::$shard3["PORT"],'threshold'=>self::$thresholdValue['shard3']);
-     $SERVER_ARR[]=array("shard1Rep",MysqlDbConstants::$shard1Rep["HOST"],MysqlDbConstants::$shard1Rep["USER"],MysqlDbConstants::$shard1Rep["PASS"],MysqlDbConstants::$shard1Rep["PORT"],'threshold'=>self::$thresholdValue['shard1Rep']);
-     $SERVER_ARR[]=array("shard2Rep",MysqlDbConstants::$shard2Rep["HOST"],MysqlDbConstants::$shard2Rep["USER"],MysqlDbConstants::$shard2Rep["PASS"],MysqlDbConstants::$shard2Rep["PORT"],'threshold'=>self::$thresholdValue['shard2Rep']);
-     $SERVER_ARR[]=array("shard3Rep",MysqlDbConstants::$shard3Rep["HOST"],MysqlDbConstants::$shard3Rep["USER"],MysqlDbConstants::$shard3Rep["PASS"],MysqlDbConstants::$shard3Rep["PORT"],'threshold'=>self::$thresholdValue['shard3Rep']);
+     $SERVER_ARR[]=array("shard1Rep",MysqlDbConstants::$shard1Rep["HOST"],$user,$password,MysqlDbConstants::$shard1Rep["PORT"],'threshold'=>self::$thresholdValue['shard1Rep']);
+     $SERVER_ARR[]=array("shard2Rep",MysqlDbConstants::$shard2Rep["HOST"],$user,$password,MysqlDbConstants::$shard2Rep["PORT"],'threshold'=>self::$thresholdValue['shard2Rep']);
+     $SERVER_ARR[]=array("shard3Rep",MysqlDbConstants::$shard3Rep["HOST"],$user,$password,MysqlDbConstants::$shard3Rep["PORT"],'threshold'=>self::$thresholdValue['shard3Rep']);
      
      //$SERVER_ARR[]=array("shard1Slave",MysqlDbConstants::$shard1Slave["HOST"],MysqlDbConstants::$shard1Slave["USER"],MysqlDbConstants::$shard1Slave["PASS"],MysqlDbConstants::$shard1Slave["PORT"],'threshold'=>self::$thresholdValue['shard1Slave']);
      //$SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],MysqlDbConstants::$shard2Slave["USER"],MysqlDbConstants::$shard2Slave["PASS"],MysqlDbConstants::$shard2Slave["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
      //$SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],MysqlDbConstants::$shard3Slave["USER"],MysqlDbConstants::$shard3Slave["PASS"],MysqlDbConstants::$shard3Slave["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
      
-      $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],MysqlDbConstants::$viewSimilar["USER"],MysqlDbConstants::$viewSimilar["PASS"],MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
-      $SERVER_ARR[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],MysqlDbConstants::$bmsSlave["USER"],MysqlDbConstants::$bmsSlave["PASS"],MysqlDbConstants::$bmsSlave["PORT"],'threshold'=>self::$thresholdValue['bmsSlave']);
-      $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],MysqlDbConstants::$alertsSlave["USER"],MysqlDbConstants::$alertsSlave["PASS"],MysqlDbConstants::$alertsSlave["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
+//      $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],$user,$password,MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
+      $SERVER_ARR[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],$user,$password,MysqlDbConstants::$bmsSlave["PORT"],'threshold'=>self::$thresholdValue['bmsSlave']);
+      $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],$user,$password,MysqlDbConstants::$alertsSlave["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
       
       $serverArrayCount = count($SERVER_ARR);
       for ($i = 0; $i < $serverArrayCount; $i++) {    

@@ -196,6 +196,7 @@ class RequestHandlerConfig
  		"api" => array("versionupgrade" => array("v1" => "N", "v2" => "N", "v3" => "N"),
  			"hamburgerDetails" => array("v1" => "N", "v2" => "N", "v3" => "N"),
 		),
+		"social" => array("getMultiUserPhoto" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+                ),
 	);
-
 }
