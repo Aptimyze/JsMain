@@ -301,7 +301,6 @@ export  class MyjsPage extends React.Component {
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
   		if(this.props.myjsData.fetched && this.props.myjsData.hamFetched){
-  			console.log('MyjsPage');
 
 			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
@@ -311,7 +310,7 @@ export  class MyjsPage extends React.Component {
 			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
 			}
 
-  			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			AcceptCountView =  <AcceptCount  hamFetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
 	    else{
 
