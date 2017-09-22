@@ -103,7 +103,7 @@ export default class MyjsHeadHTML extends React.Component
                     </div>
                 </div>
             </div>
-            <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched = {this.props.hamFetched}  />
+            <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched = {this.props.fetched}  />
             <div id="darkSection" className="posabs"></div>
 
         </div>
