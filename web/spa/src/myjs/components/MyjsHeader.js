@@ -74,6 +74,7 @@ export default class MyjsHeadHTML extends React.Component
     }
 
   render(){
+      console.log('MyJsHeader');
       return(
           <div className="posrel">
             <HamMain bellResponse={this.props.bellResponse} ref="Hamchild" page="others"></HamMain>
@@ -102,7 +103,7 @@ export default class MyjsHeadHTML extends React.Component
                     </div>
                 </div>
             </div>
-            <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched = {this.props.fetched}  />
+            <ShowNotificationLayer bellResponse={this.props.bellResponse} fetched = {this.props.hamFetched}  />
             <div id="darkSection" className="posabs"></div>
 
         </div>

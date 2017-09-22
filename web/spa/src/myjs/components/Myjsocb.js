@@ -13,9 +13,10 @@ export default class MyjsOcbLayer extends React.Component {
 
   componentDidMount(){
 
-
-    this.showTimerForLightningCal();
-
+    if(this.props.Ocb_data.top == "FLASH DEAL")
+    {
+      this.showTimerForLightningCal();
+    }
 
   }
   getIosVersion(ua) {
@@ -135,7 +136,7 @@ export default class MyjsOcbLayer extends React.Component {
 }
   
   render(){
-
+    console.log('MyjsOcbLayer');
 
     let ocbview;
       if(this.props.Ocb_data.top == "FLASH DEAL")
