@@ -1776,6 +1776,7 @@ if(1)
 			echo '<br> $education_total_count $education_count $education_max_deviation $weight_education is '.$education_total_count.' '.$education_count.' '.$education_max_deviation.' '.$weight_education;
 			echo '<br> $occupation_total_count $occupation_count $occupation_max_deviation $weight_occupation is '.$occupation_total_count.' '.$occupation_count.' '.$occupation_max_deviation.' '.$weight_occupation;
 			echo '<br> $city_total_count $city_count $city_max_deviation $weight_city is '.$city_total_count.' '.$city_count.' '.$city_max_deviation.' '.$weight_city;*/
+			/* NOTE: abFactor has to be an ODD NUMBER */
 			if((($my_profileid % $abFactor) == 0) && $usePercentageFlag){
 				// logging PROFILEID in table to rollback
 				$qry = "INSERT INTO MIS.3DTRENDS_LOG(PROFILEID) values('$my_profileid')";
