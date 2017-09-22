@@ -301,6 +301,7 @@ export  class MyjsPage extends React.Component {
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
   		if(this.props.myjsData.fetched && this.props.myjsData.hamFetched){
+  			console.log('MyjsPage');
 
 			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 

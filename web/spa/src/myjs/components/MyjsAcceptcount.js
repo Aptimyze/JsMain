@@ -32,7 +32,7 @@ this.setState({bounceAnimation:" bounceIn animated "});
 }
 
   render(){
-    console.log(this.props);
+    console.log('MyjsAcceptancecount');
     if(!this.props.fetched) {
         return <div></div>;
       }
