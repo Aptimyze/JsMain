@@ -188,6 +188,7 @@ class FamilyTab extends React.Component {
 				<div className="hgt10"></div>
 				{FamilyData}
 				{space}
+                <div className="space70"></div>
 			</div>
     	);
     }
