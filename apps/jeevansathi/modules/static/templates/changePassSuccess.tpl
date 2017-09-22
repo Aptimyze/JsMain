@@ -3,7 +3,7 @@
   <div id="overlayHead" class="bg1 txtc pad15 topheadM">
     <div class="posrel">
       <div class="f20 white fontthin" id="test">Change Password </div>
-      <a href="/static/settings" bind-slide="2"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
+      <a href="~$referer`" bind-slide="2"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
   </div>
   <!--end:top--> 
   <div id="errDiv" style="display: none" class="fullwid set_err_bg txtc white f14 lh40">

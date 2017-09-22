@@ -3,7 +3,7 @@
 	<div id="overlayHead" class="bg1 txtc pad15">
 		<div class="posrel lh30">
 			<div class="fontthin f20 white">Your Password</div>
-			<a href="/static/settings"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+			<a href="~$referer`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
 		</div>
 	</div>
 	
