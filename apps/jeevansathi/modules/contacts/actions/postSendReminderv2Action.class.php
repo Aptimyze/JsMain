@@ -243,7 +243,8 @@ class postSendReminderv2Action extends sfAction
         }
         else
           {
-            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R");
+            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R",'',$this->contactHandlerObj->getContactObj()->getCount());
+//            $finalresponseArray['buttondetails']['buttons'][0] = $responseButtonArray["button"];
             $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
       			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
             $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];

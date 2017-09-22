@@ -141,6 +141,7 @@ export class contactEnginePD extends React.Component{
 
       }
       if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button && responseButtons.buttondetails.button.label.indexOf('Saved')!=-1){
+        this.underScreened = 1;
         this.props.replaceSingleButton(Array(responseButtons.buttondetails.button),responseButtons.buttondetails.topmsg);
       }
 
@@ -247,7 +248,7 @@ hideLayerCommon(data){
 getOverLayDataDisplay(){
 
     let layer = [];
-      if(this.state.showThreeDots)
+      if(this.state.showThreeDots && !this.underScreened)
         layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.props.historyObject.pop()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
         layer= (<ReportAbuse
