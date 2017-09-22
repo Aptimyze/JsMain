@@ -118,6 +118,7 @@ const MyjsReducer = (state={
 						modFetched : false,
 						vaFetched : false,
 						drFetched : false,
+						hamFetched:false,
 						timeStamp : value
 						}
 				}
