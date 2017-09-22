@@ -93,6 +93,7 @@ class billing_PAYMENT_DETAIL_NEW extends TABLE{
             $prep->bindValue(":COLLECTED", $params["COLLECTED"],PDO::PARAM_STR);
             $prep->bindValue(":COLLECTED_BY", $params["COLLECTED_BY"],PDO::PARAM_STR);
             $prep->bindValue(":COLLECTION_DATE", $params["COLLECTION_DATE"],PDO::PARAM_STR);
+            $prep->bindValue(":RECEIPTID", $params["RECEIPTID"],PDO::PARAM_INT);
             $prep->execute();
         } catch (Exception $ex) {
             throw new jsException($ex);
