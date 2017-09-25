@@ -69,7 +69,9 @@
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite savedSearchIcon"></i>
-                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class=" white">Saved Searches</a>
+                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class=" white">Saved Searches
+                                <span class="f12 album_color1 ml15">~if $savedSearchCount`~$savedSearchCount`~/if`</span>
+                            </a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite editProfileIcon"></i>
@@ -113,9 +115,11 @@
                                 <li class='mb12'>
                                     <a bind-slide=1  id="intRecLink" href="/inbox/1/1" class="newS white">
                                         Interests Received
-                                        <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')` ~if $profileMemcacheObj->get('AWAITING_RESPONSE_NEW')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE_NEW')`~/if`~/if`</span></a>
+                                        <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('AWAITING_RESPONSE')` ~if $profileMemcacheObj->get('AWAITING_RESPONSE')>99` 99+~else`~$profileMemcacheObj->get('AWAITING_RESPONSE')`~/if`~/if`</span></a>
                                 </li>
-                                <li class='mb12'><a bind-slide=1  id="intSentLink" href="/inbox/6/1" class="newS white">Interests Sent</a></li>
+                                <li class='mb12'><a bind-slide=1  id="intSentLink" href="/inbox/6/1" class="newS white">Interests Sent
+                                    <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('NOT_REP')` ~if $profileMemcacheObj->get('NOT_REP')>99` 99+~else`~$profileMemcacheObj->get('NOT_REP')`~/if`~/if`</span>
+                                </a></li>
                                 <li class='mb12'>
                                     <a bind-slide=1  id="filtIntLink" href="/inbox/12/1" class="newS white">
                                         Filtered Interests
