@@ -80,7 +80,6 @@ export  class MyjsPage extends React.Component {
   	componentDidMount()
   	{
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
-			this.props.resetTimeStamp();
 			this.firstApiHits(this);
 			this.ieApi = false;
 			this.irApi = false;
@@ -307,7 +306,7 @@ export  class MyjsPage extends React.Component {
 			EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
 
 			if(this.props.myjsData.apiData.membership_message!=null){
-			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
+			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} timeDiff={new Date().getTime() - this.props.timeStamp} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
 			}
 
   			AcceptCountView =  <AcceptCount  hamFetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
@@ -386,6 +385,7 @@ const mapStateToProps = (state) => {
     return{
      myjsData: state.MyjsReducer,
 	   Jsb9Reducer : state.Jsb9Reducer,
+		 timeStamp : state.MyjsReducer.timeStamp
 
     }
 }
