@@ -180,8 +180,8 @@ getMembershipOvlay(){
                       <li className="tick pad21" id="subheading3">{this.state.sH3}</li>
                   </ul>
                   <div id="MembershipOfferExists" className={this.state.mOExists} >
-                      <div className="pad45_0 f16 fontlig" id="membershipOfferMsg1"></div>
-                      <div className="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
+                      <div className="pad45_0 f16 fontlig" id="membershipOfferMsg1">{this.state.mO1}</div>
+                      <div className="f16 pad20 fontmed" id="membershipOfferMsg2">{this.state.mO2}</div>
                   </div>
               {this.state.lowestOfferDiv}
               </div>
@@ -312,7 +312,7 @@ else
               }
 
 
-              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={this.oPShow}>{this.oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
+              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={oPShow}>{oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
             </div>);
             }
             else if(typeof(actiondetails.lowestoffer) != "undefined" && actiondetails.lowestoffer != null)
