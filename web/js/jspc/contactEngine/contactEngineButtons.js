@@ -125,13 +125,16 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 			}
            else if((data.name=="INITIATE" || data.name=="REMINDER" || data.name=="ACCEPT") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
 			{
+				var stypeViewSimilar='V';
+				if(data.name=="ACCEPT")
+					stypeViewSimilar='CA';
 				var queryStringParams=window.location.href.slice(window.location.href.indexOf('?') + 1);
 				var url = '/search/viewSimilarProfile';
                                 var form = $("<form action='" + url + "' method='post'>" +
                                    "<input type='hidden' name='profilechecksum' value='" + ProCheckSum + "' />"+
                                     "<input type='hidden' name='SIM_USERNAME' value='" + ViewedUserName + "' />"+
                                     "<input type='hidden' name='queryStringParams' value='" + queryStringParams + "' />"+
-                                     "<input type='hidden' name='Stype' value='V'/>"+
+                                     "<input type='hidden' name='Stype' value='"+stypeViewSimilar+"'/>"+
                                      
                                      "<input id='hiddenVspInput' type='hidden' name='actions_buttons' value='' /></form>"); $('body').append(form);
                                      $("#hiddenVspInput").val(JSON.stringify(response));
@@ -215,16 +218,23 @@ Button.prototype.setPostActionData= function(data) {
 }
 
 Button.prototype.post= function() {
-
 this.actionDetails=this.data.actiondetails;
 this.buttonDetails=this.data.buttondetails;
 	
 //remove layer after send_Message overlay
 if((this.name=="SEND_MESSAGE"|| this.name=="WRITE_MESSAGE") && this.data.isSent)
 {
-  var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
-  contactLayerDiv.addClass("disp-none");
-	contactLayerDiv.html("");
+  	var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
+	superdata = contactLayerDiv.attr('superdata');
+	if(superdata){
+		var contactLayerDivParent = contactLayerDiv.parent();
+		contactLayerDiv.remove();
+		contactLayerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
+		cECloseBinding();
+	}else{
+  		contactLayerDiv.addClass("disp-none");
+		contactLayerDiv.html("");
+	}
 }
 
 if(this.name=='REMOVE'){
@@ -244,6 +254,8 @@ return;
 		innerLayerHtml=this.displayObj.postDisplay(this.data,this.profileChecksum,this.error);  
 		this.parent.find('#contactEngineLayerDiv').remove();
 		this.parent.prepend(innerLayerHtml);
+		if(typeof this.data.actiondetails.limitWarning != "undefined")
+		this.parent.find('#contactEngineLayerDiv').attr('superdata', this.profileChecksum);
 
 		
 	if(typeof(this.actionDetails.lastsent)!='undefined' && this.actionDetails.lastsent)
