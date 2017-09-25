@@ -584,7 +584,7 @@ if (isset($data)) //successful login
         }
 
         if (in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportAbuse\">Fetch Report Abuse Data</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportAbuse?user=$user&cid=$cid\">Fetch Report Abuse Data</a>";
         }
         if (in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/profileVerification/InappropriateUsers\">Fetch Inappropriate Users Data</a>";

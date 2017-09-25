@@ -9,10 +9,19 @@ class PaymentState
 	const ERISHTA = "ERISHTA";
 	const EVALUE = "EVALUE";
 	const FREE = "FREE";
+	const JSEXCLUSIVE = "JSEXCLUSIVE";
+	const EADVANTAGE = "EADVANTAGE";
+	const FTO_TEXT = "fto";
+	const ERISHTA_TEXT = "eRishta";
+	const EVALUE_TEXT = "eValue";
+	const FREE_TEXT = "Free";
+	const EADVANTAGE_TEXT = "eAdvantage";
+	const JSEXCLUSIVE_TEXT = "JsExclusive";
 	private $EVALUE;
 	private $ERISHTA;
 	private $FTO;
 	private $FREE;
+	private $JSEXCLUSIVE;
 	private $AP;
 
 	public function __construct(Profile $profile,$ftoState='')
@@ -36,10 +45,11 @@ getters and setters of class payment state
 	public function getERISHTA() { return $this->ERISHTA; }
 	public function getEVALUE() { return $this->EVALUE; }
 	public function getFREE() { return $this->FREE; }
+	public function getJSEXCLUSIVE() { return $this->JSEXCLUSIVE; }
 	public function getAP() { return $this->AP; }
 	public function isPAID()	
 	{
-		if($this->ERISHTA||$this->EVALUE)
+		if($this->ERISHTA||$this->EVALUE || $this->JSEXCLUSIVE)
 			return true;
 		else
 			return false;
@@ -56,7 +66,14 @@ Desc: constructor logic
 		$this->FTO = false;
 		$subscription =	 $profile->getSUBSCRIPTION();
 		if(strstr($subscription,"F,D") || strstr($subscription,"D,F") || strstr($subscription,"D"))
+		{
 			$this->EVALUE = true;
+			if(strpos($subscription,"N") !== false){
+				$this->EADVANTAGE = true;
+			}
+		}
+		elseif(MembershipHandler::isEligibleForRBHandling($profile->getPROFILEID()))
+			$this->JSEXCLUSIVE = true;
 		elseif(strstr($subscription,"F"))
 			$this->ERISHTA = true;
 		elseif(($ftoStateObj->getState()==FTOStateTypes::FTO_ELIGIBLE) || 
@@ -80,6 +97,8 @@ Desc: returns current status of the profile in form of string
 			return PaymentState::EVALUE;
 		if($this->FREE)
 			return PaymentState::FREE;
+		if($this->JSEXCLUSIVE)
+			return PaymentState::JSEXCLUSIVE;
 	}
 	public static function IsJsExclusiveMember($subscription)
 	{
@@ -87,6 +106,23 @@ Desc: returns current status of the profile in form of string
 			return true;
 		
 		return false;
+	}
+	public function getPaymentStatusText()
+	{
+		if($this->FTO)
+			return PaymentState::FTO_TEXT;
+		if($this->ERISHTA)
+			return PaymentState::ERISHTA_TEXT;
+		if($this->EVALUE){
+			if($this->EADVANTAGE)
+				return PaymentState::EADVANTAGE_TEXT;
+			else
+				return PaymentState::EVALUE_TEXT;
+		}
+		if($this->FREE)
+			return PaymentState::FREE_TEXT;
+		if($this->JSEXCLUSIVE)
+			return PaymentState::JSEXCLUSIVE_TEXT;
 	}
 }
 ?>

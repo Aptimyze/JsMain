@@ -999,7 +999,24 @@ class crmInterfaceActions extends sfActions
                 $this->totalRec=$totalRec;
                 //Get records within offset and limit as calculated above in pagination code
                 $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit);
-
+                $taxData = $purchaseObj->getDataFromTaxBreakUp($this->start_date, $this->end_date);
+				$rows = count($this->rawData);	
+                for($i=0;$i<$rows;$i++){
+                	$billid = $this->rawData[$i]["BILLID"];
+                	$this->rawData[$i]["COUNTRY_RES"] = FieldMap::getFieldLabel("country",$taxData[$billid]["COUNTRY_RES"]);
+                	$StateCity = $taxData[$billid]["CITY_RES"];
+                	$this->rawData[$i]["CITY_RES"] = FieldMap::getFieldLabel("city",$StateCity);
+                	$StateCity = substr($StateCity, 0, 2);
+                	$this->rawData[$i]["STATE_RES"] = FieldMap::getFieldLabel("state_india",$StateCity);
+                	if(!empty($this->rawData[$i]["MEM_UPGRADE"])){
+                		$this->rawData[$i]["MEM_UPGRADE"] = "Y";
+                	}else{
+                		$this->rawData[$i]["MEM_UPGRADE"] = "N";
+                	}
+                	$this->rawData[$i]["SGST"]=$taxData[$billid]["SGST"];
+                	$this->rawData[$i]["IGST"]=$taxData[$billid]["IGST"];
+                	$this->rawData[$i]["CGST"]=$taxData[$billid]["CGST"];
+                }
                 //Start:JSC-2667: Commented as change in legacy data not required 
                 //$this->rawData      = $this->filterData($this->rawData);
                 //End:JSC-2667: Commented as change in legacy data not required 

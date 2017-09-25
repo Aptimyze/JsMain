@@ -139,7 +139,12 @@ class postEOIv1Action extends sfAction
 			else
 			{
 				$redirection = "false";
-			}	
+			}
+			if(is_array($this->contactEngineObj->contactHandler->getContactLimitWarning()))
+			{
+				$responseArray["limitWarning"] = $this->contactEngineObj->contactHandler->getContactLimitWarning();
+				$responseArray["limitWarning"]["contactedUser"] = $request->getParameter("profilechecksum");
+			}
 		}
 		else
 		{

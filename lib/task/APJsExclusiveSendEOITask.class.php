@@ -55,11 +55,11 @@ EOF;
 			{
 				$senderProfileObj = new Profile();
 				$senderProfileId = $val['CLIENT_ID'];
-				$senderProfileObj->getDetail($senderProfileId, "PROFILEID");
+				$senderProfileObj->getDetail($senderProfileId, "PROFILEID","*");
 				
 				$recProfileObj = new Profile();
 				$recProfileId = $val['MEMBER_ID'];
-				$recProfileObj->getDetail($recProfileId, "PROFILEID");
+				$recProfileObj->getDetail($recProfileId, "PROFILEID","*");
 				$contactEngineObj = $this->sendEOI($senderProfileObj, $recProfileObj);
 			                           
 				if($contactEngineObj){

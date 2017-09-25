@@ -236,8 +236,8 @@ $searchKeyArray=array('L'=>'View similar from home page',
  'SPMA' => 'EOI_SIMILAR_PROFILES_MAIL_ACCEPTED',
  'SPMO' => 'EOI_SIMILAR_PROFILES_MAIL_OTHERS',
  'RAA' => 'Recent Activity Android',
- 'RAI' => 'Recent Activity IOS'
-    );
+ 'RAI' => 'Recent Activity IOS',
+ 'CA' => 'ACCEPT_SIMILAR_PROFILES_PC');
 
 
         $index=array('A','D','C','I','E');

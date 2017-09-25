@@ -480,7 +480,6 @@ class staticActions extends sfActions
             $this->time = floor($request->getParameter('time')/60);
             $this->symbol = $request->getParameter('symbol');
      }
-    
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -494,6 +493,11 @@ public function executeCALRedirection($request){
       $loggedInProfileObj = LoggedInProfile::getInstance();
       $profileid=$loggedInProfileObj->getPROFILEID();
       $profileid=  intval($profileid);
+      if($request->getParameter("redirecPdUrl") && $request->getParameter("button")=='B2')
+      {
+        $url=$request->getParameter("redirecPdUrl");
+          header("Location: $url");die;
+      }
       $layerToDisplay=$request->getParameter("layerR");
       if($request->getParameter("button")=='B1') {
         if(MobileCommon::isNewMobileSite())
@@ -503,6 +507,8 @@ public function executeCALRedirection($request){
       }
       
       if(($request->getParameter("button")=='B2') && MobileCommon::isNewMobileSite()) {
+        if($request->getParameter("fromPdLightCal")==1)
+          $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');  
         $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');
       }
 
@@ -518,6 +524,46 @@ public function executeCALRedirection($request){
       die;
     }
 
+//PostWeddingServices page
+  public function executePostWeddingServices(sfWebRequest $request)
+  {
+    $loginData = $request->getAttribute("loginData");
+    $this->finalResponse=array();
+     $loggedInProfileObj = LoggedInProfile::getInstance(); 
+    if($loggedInProfileObj->getPROFILEID()){
+      $loggedInProfileObj->getDetail($loggedInProfileObj->getPROFILEID(),"PROFILEID","*");
+
+      $this->city=strtolower($loggedInProfileObj->getDecoratedCity());
+    }
+    if($loginData[PROFILEID])
+    {
+      $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
+      $authenticationLoginObj->logout($loginData[PROFILEID]);
+      
+    }
+    $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
+    $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
+    if($result)
+      $data=json_decode($result,true);
+    if($data['isError']===false || is_array($data['success']))
+    {      
+      $this->finalResponse['postServicesPage']=true;
+      $this->finalResponse['servicesData']=$data['success'];
+    }
+    else{
+      $this->finalResponse['postServicesPage']=false;
+      $this->finalResponse['servicesData']="";
+    }
+
+    $this->finalResponse=json_encode($this->finalResponse);
+    //Stopping Common functionality 
+    $this->chat_hide = 1;
+    $this->logoutChat = 1;
+    if(MobileCommon::isNewMobileSite()){
+      $this->setTemplate("mobPostWeddingServices");
+      $this->isMob=1;
+    }
+  }
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
@@ -1193,7 +1239,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="btype")
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
-		$output=$this->getField("mstatus");
+		$output=$this->getMstatus();
 		if($k=="p_havechild")
                     $output=$this->getField("children");
                 if($k=="parent_city_same")
@@ -1349,6 +1395,21 @@ if($k=="state_res")
 	  //$Arr[0]=array(array("0:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM"));
 	  return $Arr;
   }
+  
+  private function getMstatus()
+  {
+  	$arr=FieldMap::getFieldLabel('mstatus','',1);
+  	foreach($arr as $key=>$val)
+  	{
+  		if ($key == "M")
+  		{
+  			continue;	// JSM-4631
+  		}
+  		$output[0][]=array($key=>$val);
+  	}
+  	return $output;
+  }
+  
   private function getTimeToCall()
   {
 	  $temp=array("12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM");

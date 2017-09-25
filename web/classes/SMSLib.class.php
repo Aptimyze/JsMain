@@ -124,6 +124,13 @@ class SMSLib
         }
 
         switch ($messageToken) {
+        	case "DESCRIPTION_LINK" :
+        		$longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $tokenValue[USERNAME_ID]. "&CMGFRMMMMJS=mobile";
+        			return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
+        			
+        	case "USERNAME_ID": 
+        		$USERNAME_ID= $tokenValue[USERNAME_ID];
+        		return $USERNAME_ID;
             case "FIELD_LIST":
                     $FIELD_LIST = $this->getVariables("FIELD_LIST");
                     $fieldsList = strlen($tokenValue['editedFields']) <= $FIELD_LIST["maxlength"] ? $tokenValue['editedFields'] : substr($tokenValue['editedFields'], 0, $FIELD_LIST["maxlength"] - 2) . "..";
@@ -404,7 +411,7 @@ class SMSLib
             case "URL_OTHER_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&stype=" . SearchTypesEnums::CONTACT_DETAIL_SMS;
                 return $this->getShortURL($longURL, $messageValue["PROFILEID"], '', 'Y');
-
+    
             case "URL_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile";
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);

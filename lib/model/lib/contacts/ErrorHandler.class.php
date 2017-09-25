@@ -470,6 +470,7 @@ class ErrorHandler
 	 function checkViewedStatus()
 	 {
 		 $viewedObj=$this->contactHandlerObj->getViewed();
+		 $toBeType=$this->contactHandlerObj->getToBeType();
 		 //Underscreening
 		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()==Messages::YES)
 		 {
@@ -481,8 +482,11 @@ class ErrorHandler
 			 $error = Messages::getMessage(Messages::OTHER_INCOMPLETE,array(self::USERNAME=>$viewedObj->getUSERNAME()));
 		 }
 		 //hidden
-		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES)
+
+		if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES && 
+			$toBeType!=ContactHandler::CANCEL && $toBeType!=ContactHandler::DECLINE && $toBeType!=ContactHandler::CANCEL_CONTACT)
 		 {
+		 	
 			 $heshe="he";
 			 $hisher="his";
 			 if($viewedObj->getGENDER()=="F")
@@ -526,7 +530,12 @@ class ErrorHandler
 	function checkViewedHiddenProfile()
 	{
 		$error = '';
-		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		$toBeType=$this->contactHandlerObj->getToBeType();
+		if($toBeType==ContactHandler::CANCEL || $toBeType==ContactHandler::DECLINE || $toBeType==ContactHandler::CANCEL_CONTACT)
+		{
+			$error = '';	
+		}
+		elseif($this->contactHandlerObj->getViewed()->getActivated() == 'H')
 		{
 			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
 			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
@@ -776,6 +785,55 @@ class ErrorHandler
 			    }
 				$this->setErrorType('LIMIT','TOTAL');
 			}
+
+			$percentageThreshold = 80;
+			$percentages = array(
+				array(
+					"type" => "DAILY",
+					"text" => "day",
+					"value" => (100*($today_initiated + 1)) / $limitArr["DAY_LIMIT"],
+					"count" => $today_initiated+1,
+					"limit" => $limitArr["DAY_LIMIT"],
+					"expiry" => date('F j,Y')
+					),
+
+				array(
+					"type" => "WEEKLY",
+					"text" => "week",
+					"value" => (100*($monthly_initiated + 1)) / $limitArr["WEEKLY_LIMIT"],
+					"count" => $monthly_initiated+1,
+					"limit" => $limitArr["WEEKLY_LIMIT"],
+					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("WEEK")))
+					),
+				array(
+					"type" => "MONTHLY",
+					"text" => "month",
+					"value" => (100*($weekly_initiated + 1)) / $limitArr["MONTH_LIMIT"],
+					"count" => $weekly_initiated+1,
+					"limit" => $limitArr["MONTH_LIMIT"],
+					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("MONTH")))
+					),
+				array(
+					"type" => "OVERALL",
+					"text" => "total",
+					"value" =>  (100* ($total_contacts + 1)) / $limitArr["OVERALL_LIMIT"],
+					"count" => $total_contacts+1, "limit" => $limitArr["OVERALL_LIMIT"])
+			);
+
+			$indexes = array();
+			foreach ($percentages as $key => $row)
+			{
+				$indexes[$key] = $row['value'];
+			}
+			array_multisort($indexes, SORT_DESC, $percentages);
+			// die(var_dump($percentages));
+			foreach ($percentages as $percentage) {
+				if($percentage['value'] > $percentageThreshold){
+					$this->contactHandlerObj->setContactLimitWarning($percentage);
+					break;
+				}
+			}
+			// die(var_dump($this->contactHandlerObj->getContactLimitWarning($PERCENTAGE)));
 		/*	else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
 			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));

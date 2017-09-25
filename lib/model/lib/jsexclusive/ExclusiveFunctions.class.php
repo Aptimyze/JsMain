@@ -229,7 +229,8 @@ class ExclusiveFunctions{
                 $params["ENTRY_DT"] = $todaysDate;
                 $params["CLIENT_ID"] = $client;
                 $params["AGENT_USERNAME"] = $agent;
-                $params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                //$params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                $params["FOLLOWUP1_DT"] = date('Y-m-d');
                 $params["STATUS"] = "F0";
                 foreach($arr as $key => $val){
                     $params["MEMBER_ID"] = $val;
@@ -538,6 +539,7 @@ class ExclusiveFunctions{
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
                         'RECEIVER'=>$value["RECEIVER"],
+                    	'USERNAME'=>$userName,
                         'AGENT_NAME'=>$value["AGENT_NAME"],
                         'AGENT_EMAIL'=>$value["AGENT_EMAIL"],
                         'USER1'=>$value["USER1"],
