@@ -23,7 +23,14 @@ $(document).ready(function() {
 })
 function setLocalStorageUrl()
 {
-  localStorage.setItem("prevUrlListing",window.location.href);
+  try
+  {
+    localStorage.setItem("prevUrlListing",window.location.href);
+  }
+  catch(e)
+  {
+    console.log(e);
+  }
 }
 </script>
 

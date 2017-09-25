@@ -160,6 +160,12 @@ if($('#noMsgDiv').length){
 }
 function setLocalStorageUrl()
 {
-	localStorage.setItem("prevUrlListing",window.location.href);
+	try
+	{
+		localStorage.setItem("prevUrlListing",window.location.href);
+	}
+	catch(e)
+	{
+	}
 }
 </script>
