@@ -3,7 +3,7 @@
     <div class="bg1 txtc pad15 topheadM">
         <div class="posrel">
             <div class="f20 white fontthin" id="test">Contact Us</div>
-            <a href="/profile/mainmenu.php"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+            <a href="~$referer`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
         </div>
     </div>
     <!--end:top--> 
