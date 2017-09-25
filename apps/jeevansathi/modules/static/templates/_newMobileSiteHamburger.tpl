@@ -69,7 +69,9 @@
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite savedSearchIcon"></i>
-                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class=" white">Saved Searches</a>
+                            <a bind-slide=1  href="/search/MobSaveSearch" id="savedSearchLink" class=" white">Saved Searches
+                                <span class="f12 album_color1 ml15">~if $savedSearchCount`~$savedSearchCount`~/if`</span>
+                            </a>
                         </li>
                         <li class='mb12'>
                             <i class="hamSprite editProfileIcon"></i>
