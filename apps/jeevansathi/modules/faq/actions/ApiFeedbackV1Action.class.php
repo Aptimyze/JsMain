@@ -154,7 +154,7 @@ class ApiFeedbackV1Action extends sfActions {
    * @return boolean
    */
   private function isMessageAvailable($request) {
-
+    return true;
     $msg = $request->getParameter("other_reason");
     //In Android Channel, other_reason key have the message specified by user in open text field
     if (MobileCommon::isAndroidApp() && ( is_null($msg) || 0 === strlen($msg))) {
