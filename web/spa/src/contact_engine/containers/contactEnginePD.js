@@ -251,10 +251,10 @@ getOverLayDataDisplay(){
       if(this.state.showThreeDots && !this.underScreened)
         layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.props.historyObject.pop()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
-        layer= (<ReportAbuse
+        layer= (<ReportAbuse setBlockButton={this.setBlockButton.bind(this)}
                     username={this.props.profiledata.username}
                     profilechecksum={this.props.profiledata.profilechecksum}
-                    closeAbuseLayer={() => this.props.historyObject.pop()}
+                    closeAbuseLayer={() => {this.props.historyObject.pop();this.props.historyObject.pop();}}
                     profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
@@ -333,8 +333,8 @@ getCancelDeclineLayer(actionDetails){
           </div>
 );
 }
-  setFrontButtonDisplay(object){
-    this.setState({frontButton:object});
+  setBlockButton(object){
+    this.props.replaceSingleButton(Array({label: "Unblock", params: "&ignore=0", iconid: "ignore", primary: "true", secondary: null,enable:true}));
   }
 
 goToViewSimilar(){
