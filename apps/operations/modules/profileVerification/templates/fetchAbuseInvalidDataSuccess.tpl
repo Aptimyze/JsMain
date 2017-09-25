@@ -55,10 +55,14 @@
                 }
             })
         }
-        
+    var finalUserName = '~$userName`';
+    
 	function sendAjax()
 	{	
 		userName=$('#userName').val();
+		if(finalUserName.length > 0){
+			userName =finalUserName;
+		}else
 		if(!userName){
 		$("#RAMainTable").hide();
 		$("#noUser").show();
@@ -127,6 +131,13 @@
 
 		})
 	}
+
+	$(document).ready(function(){
+		if(finalUserName.length > 0){
+			$("#userName").val(finalUserName);
+			sendAjax();
+		}
+	});
 
 	</script>
         		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 

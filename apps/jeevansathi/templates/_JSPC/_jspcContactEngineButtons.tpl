@@ -351,7 +351,9 @@
 
 
 
-<div id="postCCErrorCommonLayer"><div id ="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero"><i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
+<div id="postCCErrorCommonLayer"><div id ="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
+<span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close disp-none"></span>
+<i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
                       <div class="disp-tbl fullwid cch2n">
                         <div class="disp-cell vmid txtc">
                           <p class="txtc f15 js-genericMsg color11">Something went wrong, please try again later</p>

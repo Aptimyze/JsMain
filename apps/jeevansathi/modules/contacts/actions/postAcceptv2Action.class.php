@@ -101,12 +101,14 @@ class postAcceptv2Action extends sfAction
 			}
 			else
 			{
-				$responseArray["notused"]= "true";
+					$responseArray["notused"]= "true";
 			}
+			$responseArray["redirect"]= true;
 		}
 		else
 		{
 			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			$responseArray["redirect"]= false;
 			if($errorArr["PROFILE_IGNORE"] == 2)
 			{
 				$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
@@ -155,13 +157,15 @@ class postAcceptv2Action extends sfAction
 				$responseArray["footerbutton"]["label"] = "complete your profile";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "COMPLETEPROFILE";
-				$responseArray["headerlabel"] = "Your Profile is Incomplete";					
+				$responseArray["headerlabel"] = "Your Profile is Incomplete";
+				$responseArray["redirect"]= true;				
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
 				$responseArray["errmsglabel"] = "Expession of interest will be delivered only when Profile is live";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["redirect"]= true;
 			}
 			else
 			{
