@@ -15,7 +15,7 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
         $this->DISABLED_BIND_TYPE = "STR";
     }
     
-    public function getRegId($profileId = '', $agentId='', $channel = '', $entryDate){
+    public function getRegId($profileId = '', $agentId='', $channel = ''){
         try{
             if($profileId){
                 $str = " AND PROFILEID = :PROFILEID";
@@ -34,9 +34,8 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
                 }
                 $str.= ")";
             }
-            $sql = "SELECT CHANNEL,AGENTID, PROFILEID, REG_ID FROM MOBILE_API.`BROWSER_NOTIFICATION_REGISTRATION` WHERE  ENTRY_DT>=:ENTRY_DT AND ACTIVATED = 'Y' AND DISABLED = 'N'$str";
+            $sql = "SELECT CHANNEL,AGENTID, PROFILEID, REG_ID FROM MOBILE_API.`BROWSER_NOTIFICATION_REGISTRATION` WHERE  ACTIVATED = 'Y' AND DISABLED = 'N'$str";
             $prep = $this->db->prepare($sql);
-	    $prep->bindValue(":ENTRY_DT",$entryDate,PDO::PARAM_STR); 
             if($profileId){
                 $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
             }
@@ -165,7 +164,7 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
                 }
                 $insertColumns = substr($insertColumns, 0,-1);
                 $insertValues = substr($insertValues, 0,-1);
-                $sql = "REPLACE INTO MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION(".$insertColumns.") VALUES (".$insertValues.")";
+                $sql = "INSERT IGNORE INTO MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION(".$insertColumns.") VALUES (".$insertValues.")";
                 $prep = $this->db->prepare($sql);
                 foreach ($paramsArr as $key => $value) {
                     $prep->bindValue(":".$key,$value,constant('PDO::PARAM_'.$this->{$key.'_BIND_TYPE'}));

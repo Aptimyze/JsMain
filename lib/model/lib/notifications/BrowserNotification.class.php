@@ -74,12 +74,10 @@ class BrowserNotification{
      * @return : registration id array
      */
     public function getChannelWiseRegId($processObj){
-	$todayDate =date("Y-m-d");
-	$entryDate =date("Y-m-d", strtotime("$todayDate -30 days"))." 00:00:00";
         $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_masterRep");
         $channel = $processObj->getchannel();
         if($channel){
-            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel, $entryDate);
+            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel);
         }
         return $regIdArr;
     }
@@ -332,7 +330,7 @@ class BrowserNotification{
     }
     
     public function getAllNotificationsTemplate(){
-        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_slave");
+        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_masterRep");
         $notificationArr = $notificationsTempObj->getAll();
         foreach($notificationArr as $notificationName => $value){
             foreach($value as $key => $val){

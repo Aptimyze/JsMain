@@ -1,4 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0, hamJsLoaded=0,hamJsLoading=0;
+var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
 
 
 
@@ -192,7 +192,7 @@ function jsmsMyjsReady() {
      
     setBrowseBand();
         
-///        $("#hamburger").width($(window).width());
+        $("#hamburger").width($(window).width());
      $(".setWidth").width($(window).width());
         
 //        if (parseInt(awaitingResponseCount)) {
@@ -274,17 +274,16 @@ function closeHam()
     
 
                 $("#hamburgerIcon").bind("click", function() {
-			if(hamJsLoaded == 0 && hamJsLoading == 0){ 
-								hamJsLoading=1;
+			if($("#hamburger").length == 0){ 
                                 $(".loaderSmallIcon").addClass("loaderimg").removeClass("dn");
                                 $("#hamIc").hide();
-                               // var htmlStr = '<div id="hamburger" class="hamburgerCommon dn fullwid"><div><div id="outerHamDiv" class="fullwid outerdiv"><div id="mainHamDiv" class="wid76p" style="float:left;"><div id="newHamlist" class="hamlist hampad1"><div id="HamMenu" class="fontlig padHamburger"><div class="fl fullwid pt7"><div class="dispibl txtc  newham_wid32p"><a bind-slide=1 href="/inbox/1/1" class="dispbl white f12"> <i id="int_rec" class="int_rec newham_icons1 posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl newham_count txtc" ><div class="vertmid dispcell">1</div></div></div></i><div>Interests <br/> Received</div></a></div><div class="dispibl txtc newham_wid32p"><a bind-slide=1 href="/inbox/2/1" class="dispbl white f12"><i id="acc_mem" class="acc_mem newham_icons1 posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">2</div></div></div></i><div>All<br/>Acceptances</div></a></div><div class="dispibl txtc newham_wid32p"><a bind-slide=1 href="/search/perform?justJoinedMatches=1" class="dispbl white f12"><i id="just_join" class="just_join newham_icons1  posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl white f12 newham_count txtc" ><div class="vertmid dispcell"></div></div></div></i><div>Just Joined <br/> Matches</div></a></div></div><div class="clr"></div></div><div class="brdr9_ham"><div class="newham_pad1 lh25"><div id="memTop" class="white fb1 fontrobbold f15"></div><a id="memBottom" href="/profile/mem_comparison.php" bind-slide=1 class="white f16">Upgrade Membership</a></div></div><div class="brdr9_ham pt20"><ul class="fontlig"><li><a href="#" onclick="translateSite(\'http://hindi.jeevansathi.com\');" bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li></li><li><div id=\'appDownloadLink1\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger\';" bind-slide=1 class="white">Download App | 3MB only</a></div><!--end:listing6--><!--start:listing7--><div id=\'appleAppDownloadLink1\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></div><!--end:listing6--></li><li><div  onclick="closeHam();"  class="white" style="font-size: 17px;">Home</div></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li><li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/search/MobSaveSearch" bind-slide=1 id="SAVE_SEARCH" class="white">Saved Searches <span class="dispibl padl10 opa70 f12 dn"></span></a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">My Matches</li><li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 id="JUST_JOINED_COUNT" class="white">Just Joined Matches <span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches</a></li><li><a href="/inbox/7/1" bind-slide=1 id="MATCHALERT" class="white">Daily Recommendations <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches</a></li><li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches <span class ="dispibl padl10 f12 white opa50">New</span></a></li><li><a href="/search/perform?twowaymatch=1" bind-slide=1 class="white">Mutual Matches</a></li><li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li><li><a href="/search/visitors?matchedOrAll=A" bind-slide=1 id="VISITOR_ALERT" class="white">Profile Visitors <span class="dispibl padl10 opa70 f12 dn"></span></a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">My Contacts</li><li><a href="/inbox/1/1" bind-slide=1 id="AWAITING_RESPONSE" class="white">Interests Received <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/12/1" bind-slide=1 id="FILTERED" class="white">Filtered Interests <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/2/1" bind-slide=1 id="ACCEPTED_MEMBERS" class="white">All Acceptances<span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/16/1" bind-slide=1 class="white">Phonebook</a></li><li><a href="/inbox/17/1" bind-slide=1 class="white">Who Viewed My Contacts</a></li><li><a href="/search/shortlisted" bind-slide=1 id="BOOKMARK" class="white">Shortlisted Profiles <span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/inbox/4/1" bind-slide=1 id="MESSAGE_NEW" class="white">Messages<span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/inbox/11/1" bind-slide=1 class="white">Declined Members</a></li><li><a href="/inbox/20/1" bind-slide=1 class="white">Blocked/Ignored Members</a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">More</li><li><a href="/help/index" bind-slide=1 class="white">Help</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div></div></div><div id="hamProfile" class="dn posfix ham_pos3"><a bind-slide=1 href="/profile/viewprofile.php?ownview=1" class="dispbl fontlig f12 ham_color2"><i class="icons1 posabs ham_icon3 ham_pos4"></i><div class="pt10 txtc"><img id="profileImg" src="IMG_URL/images/jsms/commonImg/3_4_NoFemalePhoto.jpg" style="height:50px; width:50px;" class="ham_imgbrdr brdr18" /></div><div class="lh25">Edit Profile</div></a></div></div></div></div>';
-                               //  $("#perspective").append(htmlStr);
+                               var htmlStr = '<div id="hamburger" class="hamburgerCommon dn fullwid"><div><div id="outerHamDiv" class="fullwid outerdiv"><div id="mainHamDiv" class="wid76p" style="float:left;"><div id="newHamlist" class="hamlist hampad1"><div id="HamMenu" class="fontlig padHamburger"><div class="fl fullwid pt7"><div class="dispibl txtc  newham_wid32p"><a bind-slide=1 href="/inbox/1/1" class="dispbl white f12"> <i id="int_rec" class="int_rec newham_icons1 posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl newham_count txtc" ><div class="vertmid dispcell">1</div></div></div></i><div>Interests <br/> Received</div></a></div><div class="dispibl txtc newham_wid32p"><a bind-slide=1 href="/inbox/2/1" class="dispbl white f12"><i id="acc_mem" class="acc_mem newham_icons1 posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl white f12 newham_count txtc"><div class="vertmid dispcell">2</div></div></div></i><div>All<br/>Acceptances</div></a></div><div class="dispibl txtc newham_wid32p"><a bind-slide=1 href="/search/perform?justJoinedMatches=1" class="dispbl white f12"><i id="just_join" class="just_join newham_icons1  posrel"><div class="posabs newham_pos1 dn"><div class="bg7 disptbl white f12 newham_count txtc" ><div class="vertmid dispcell"></div></div></div></i><div>Just Joined <br/> Matches</div></a></div></div><div class="clr"></div></div><div class="brdr9_ham"><div class="newham_pad1 lh25"><div id="memTop" class="white fb1 fontrobbold f15"></div><a id="memBottom" href="/profile/mem_comparison.php" bind-slide=1 class="white f16">Upgrade Membership</a></div></div><div class="brdr9_ham pt20"><ul class="fontlig"><li><a href="#" onclick="translateSite(\'http://hindi.jeevansathi.com\');" bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li></li><li><div id=\'appDownloadLink1\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger\';" bind-slide=1 class="white">Download App | 3MB only</a></div><!--end:listing6--><!--start:listing7--><div id=\'appleAppDownloadLink1\' style=\'display:none\'><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></div><!--end:listing6--></li><li><div  onclick="closeHam();"  class="white" style="font-size: 17px;">Home</div></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li><li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/search/MobSaveSearch" bind-slide=1 id="SAVE_SEARCH" class="white">Saved Searches <span class="dispibl padl10 opa70 f12 dn"></span></a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">My Matches</li><li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 id="JUST_JOINED_COUNT" class="white">Just Joined Matches <span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches</a></li><li><a href="/inbox/7/1" bind-slide=1 id="MATCHALERT" class="white">Daily Recommendations <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches</a></li><li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches <span class ="dispibl padl10 f12 white opa50">New</span></a></li><li><a href="/search/perform?twowaymatch=1" bind-slide=1 class="white">Mutual Matches</a></li><li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li><li><a href="/search/visitors?matchedOrAll=A" bind-slide=1 id="VISITOR_ALERT" class="white">Profile Visitors <span class="dispibl padl10 opa70 f12 dn"></span></a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">My Contacts</li><li><a href="/inbox/1/1" bind-slide=1 id="AWAITING_RESPONSE" class="white">Interests Received <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/12/1" bind-slide=1 id="FILTERED" class="white">Filtered Interests <span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/2/1" bind-slide=1 id="ACCEPTED_MEMBERS" class="white">All Acceptances<span class="dispibl padl10 opa70 f12 dn"></span> </a></li><li><a href="/inbox/16/1" bind-slide=1 class="white">Phonebook</a></li><li><a href="/inbox/17/1" bind-slide=1 class="white">Who Viewed My Contacts</a></li><li><a href="/search/shortlisted" bind-slide=1 id="BOOKMARK" class="white">Shortlisted Profiles <span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/inbox/4/1" bind-slide=1 id="MESSAGE_NEW" class="white">Messages<span class="dispibl padl10 opa70 f12 dn"></span></a></li><li><a href="/inbox/11/1" bind-slide=1 class="white">Declined Members</a></li><li><a href="/inbox/20/1" bind-slide=1 class="white">Blocked/Ignored Members</a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li class="white fb1 ham_opa fontrobbold">More</li><li><a href="/help/index" bind-slide=1 class="white">Help</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="brdr9_ham pt20"><ul class="fontlig"><li><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div></div></div><div id="hamProfile" class="dn posfix ham_pos3"><a bind-slide=1 href="/profile/viewprofile.php?ownview=1" class="dispbl fontlig f12 ham_color2"><i class="icons1 posabs ham_icon3 ham_pos4"></i><div class="pt10 txtc"><img id="profileImg" src="IMG_URL/images/jsms/commonImg/3_4_NoFemalePhoto.jpg" style="height:50px; width:50px;" class="ham_imgbrdr brdr18" /></div><div class="lh25">Edit Profile</div></a></div></div></div></div>';
+                                $("#perspective").append(htmlStr);
 					//Jquery call 
+                                getHamburgerCounts();
 				var imported = document.createElement('script');
 				imported.src = 'IMG_URL/min/?f=/'+hamJs;
                                 imported.onerror = function() {
-                                 hamJsLoading = 0;
                                  ShowTopDownError(['Something went wrong']); 
                                  $("#hamburger").remove(); 
                                  setTimeout(function(){
@@ -293,8 +292,6 @@ function closeHam()
                                  }, 100);   
                                  };
 				imported.onload = function() {
-					hamJsLoading = 0;
-					hamJsLoaded=1;
 					BindNextPage();
 				    $("#hamburgerIcon").click();
 					setTimeout(function(){
@@ -328,7 +325,85 @@ function closeHam()
             showTimerForLightningMemberShipPlan("jsmsMyjs");
         }
     });
+function getHamburgerCounts(){
+    
+    
+    $.ajax({
+  		          
+		url: '/common/hamburgerCounts',
+		type: "POST",
+		//crossDomain: true,
+		success: function(result)
+                {
 
+                    if(CommonErrorHandling(result)) 
+                    {
+                        getCount(result);                    
+                    }
+                    
+                }
+});
+
+    
+    
+    
+    
+    
+    
+}
+function getCount(response){	
+	if(response.THUMBNAIL.url != null) {
+		$("#profileImg").attr("src",response.THUMBNAIL.url);	
+	}
+	if(response.MEMBERSHIPT_TOP != ""){
+		$("#memTop").html(response.MEMBERSHIPT_TOP);   
+	}
+	if(response.MEMBERSHIPT_BOTTOM != ""){
+		$("#memBottom").html(response.MEMBERSHIPT_BOTTOM);   
+	}
+	if(response.AWAITING_RESPONSE_NEW != 0){
+		$("#int_rec .newham_pos1 .vertmid").html(response.AWAITING_RESPONSE_NEW);   
+		$("#int_rec .newham_pos1").removeClass("dn");  
+	}
+	if(response.ACC_ME_NEW != 0){
+		$("#acc_mem .newham_pos1 .vertmid").html(response.ACC_ME_NEW);   
+		$("#acc_mem .newham_pos1").removeClass("dn");  
+	}
+	if(response.JUST_JOINED_NEW != 0){
+		$("#just_join .newham_pos1 .vertmid").html(response.JUST_JOINED_NEW);   
+		$("#just_join .newham_pos1").removeClass("dn");  
+	}
+	if(response.FILTERED != 0){
+		$("#FILTERED span").html(response.FILTERED).removeClass("dn");
+	}
+	if(response.ACCEPTED_MEMBERS != 0){
+		$("#ACCEPTED_MEMBERS span").html(response.ACCEPTED_MEMBERS).removeClass("dn");
+	}
+	if(response.MESSAGE_NEW != 0){
+		$("#MESSAGE_NEW span").html(response.MESSAGE_NEW).removeClass("dn");
+	}
+	if(response.AWAITING_RESPONSE != 0){
+		$("#AWAITING_RESPONSE span").html(response.AWAITING_RESPONSE).removeClass("dn");
+	}
+	if(response.BOOKMARK != 0){
+		$("#BOOKMARK span").html(response.BOOKMARK).removeClass("dn");
+	}
+	if(response.JUST_JOINED_COUNT != 0){
+		$("#JUST_JOINED_COUNT span").html(response.JUST_JOINED_COUNT).removeClass("dn");
+	}
+	if(response.BOOKMARK != 0){
+		$("#BOOKMARK span").html(response.BOOKMARK).removeClass("dn");
+	}
+	if(response.SAVE_SEARCH != 0){
+		$("#SAVE_SEARCH span").html(response.SAVE_SEARCH).removeClass("dn");
+	} 
+	if(response.MATCHALERT != 0){
+		$("#MATCHALERT span").html(response.MATCHALERT).removeClass("dn");
+	} 
+	if(response.VISITOR_ALERT != 0){
+		$("#VISITOR_ALERT span").html(response.VISITORS_ALL).removeClass("dn");
+	}
+}
 
 	function setNotificationView() {
                     $("#darkSection").toggleClass("posabs");

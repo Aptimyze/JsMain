@@ -892,14 +892,6 @@ class crmInterfaceActions extends sfActions
             }else if($diff>31 && $formArr["report_format"] == "XLS"){
                 $this->errorMsg = "Date range should be less than or equal to one month";
             }
-            if(strtotime($start_date) > strtotime("2017-03-31")){
-                $table = "PAYMENT_DETAIL_NEW";
-                $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
-            }
-            else{
-                $table = "PAYMENT_DETAIL";
-                $condition = "='DONE'";
-            }
             if (!$this->errorMsg) { //If no error message then submit the page
                 $billServObj = new billing_SERVICES('newjs_slave');
                 $purchaseObj = new BILLING_PURCHASES('newjs_slave');
@@ -999,14 +991,14 @@ class crmInterfaceActions extends sfActions
 
                 //Get total number of records
                 if(!$request->getParameter('screener')){
-                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device, $table, $condition);
+                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device);
                 }else{
                     $totalRec = $request->getParameter('screener');
                 }
                 
                 $this->totalRec=$totalRec;
                 //Get records within offset and limit as calculated above in pagination code
-                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit, $table, $condition);
+                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit);
                 $taxData = $purchaseObj->getDataFromTaxBreakUp($this->start_date, $this->end_date);
 				$rows = count($this->rawData);	
                 for($i=0;$i<$rows;$i++){

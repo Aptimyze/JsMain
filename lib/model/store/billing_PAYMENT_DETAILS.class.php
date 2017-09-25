@@ -419,20 +419,5 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
-    
-    public function getDesiredRecordsAfterDate($startDate){
-        try{
-            $sql = "SELECT * from billing.PAYMENT_DETAIL where ENTRY_DT >= :ENTRY_DT";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":ENTRY_DT",$startDate,PDO::PARAM_STR);
-            $prep->execute();
-            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                $output[] = $result;
-            }
-            return $output;
-        } catch (Exception $ex) {
-            throw new jsException($ex);
-        }
-    }
 }
 ?>

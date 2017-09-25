@@ -5,7 +5,7 @@
     <div class="bg1 txtc pad15">
       <div class="posrel">
         <div class="fontthin f20 white">Select Duration</div>
-        <a href="~$referer`"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
+        <a href="/static/settings"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
       </div>
       <!--end:top--> 
       <!--start:option-->

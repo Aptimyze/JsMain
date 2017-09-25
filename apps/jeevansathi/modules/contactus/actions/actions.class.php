@@ -55,7 +55,6 @@ class contactusActions extends sfActions
     //var_dump($this->data);
     if(MobileCommon::isNewMobileSite())
     {
-        $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
         $this->setTemplate("JSMSContactUs");
     }
     else

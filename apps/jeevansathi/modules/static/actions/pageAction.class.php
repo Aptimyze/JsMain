@@ -46,8 +46,6 @@ class pageAction extends sfAction
                     $type="disclaimer";
                 if(MobileCommon::isNewMobileSite()){
                     $type="jsms".$type;
-                    $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
-
                 }
 		else if(MobileCommon::isMobile()){
                     $type="mob".$type;

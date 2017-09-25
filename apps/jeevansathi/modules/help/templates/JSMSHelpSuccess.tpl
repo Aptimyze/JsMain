@@ -4,7 +4,9 @@
         <div class="" id="pcontainer">
         </div>
         ~if $webView neq 1`
+        <div id="hamburger" class="hamburgerCommon dn fullwid">	
             ~include_component('static', 'newMobileSiteHamburger')`	
+        </div>
         ~/if`
     </div>
         <!--heading:start-->

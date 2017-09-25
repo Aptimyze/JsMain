@@ -485,7 +485,7 @@ class SolrRequest implements RequestHandleInterface
                         }
                         if($loggedInProfileObj->getMSTATUS())
                         {
-                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),11,0),"; /*1 changed to 11 to ensure no tagging, just removal*/
+                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),1,0),";
                         }
                         if($loggedInProfileObj->getRELIGION())
                         {
