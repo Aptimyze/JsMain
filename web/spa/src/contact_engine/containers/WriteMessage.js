@@ -30,7 +30,7 @@ export default class WriteMessage extends React.Component{
     document.getElementById("ProfilePage").classList.add("scrollhid");
     let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
-    bottomBtnHeight =document.getElementById('comm_footerMsg').clientHeight;
+    bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
 
     //Note:this will take the scroll to the bottom of the msg inner view, where prvious msh are being displayes
     remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
@@ -198,7 +198,7 @@ getWriteMsg_buttonView(){
 
     WriteMsg_buttonView = [offertextHTML,buttonHTML];
   }
-  else WriteMsg_buttonView = (<div className="fullwid clearfix brdr23_contact posfix btmsend txtAr_bg1  btm0" id="comm_footerMsg">
+  else WriteMsg_buttonView = (<div className="fullwid clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
                           <div className="fl wid80p com_pad3">
                             <textarea id="writeMessageTxtId" defaultValue = {this.state.writeMessageText} className="fullwid lh15 inp_1 white"></textarea>
                           </div>
