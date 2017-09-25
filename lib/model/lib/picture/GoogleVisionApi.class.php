@@ -15,7 +15,7 @@ class GoogleVisionApi
 	 * @param $imageFormatType
 	 * @return Face co-ordinates
 	 */
-	public function getPictureCoordinates($picturePath, $imageFormatType){
+	public function getPictureCoordinates($picturePath, $imageFormatType,$pictureid,$profileid){
 		PictureFunctions::setHeaders();
 
 		//COPY into temp to avoid original image corruption
@@ -67,6 +67,7 @@ class GoogleVisionApi
 		$result = json_decode($result, true);
 		$response = $result["responses"][0];
 		$cord = null;
+		$faceDetected = false;
 		if (!empty($response["faceAnnotations"])) {
 			$otherData = $response["faceAnnotations"][0];
 			$cordinates = $otherData["boundingPoly"]["vertices"];
@@ -75,7 +76,10 @@ class GoogleVisionApi
 			$h = $cordinates[2]["y"] - $y;
 			$w = $cordinates[1]["x"] - $x;
 			$cord = $w . "x" . $h . "+" . $x . "+" . $y;
+			$faceDetected = true;
 		}
+		$photoBenchmarkObj = new test_PHOTO_BENCHMARK();
+		$photoBenchmarkObj->insert($faceDetected, $pictureid, $picturePath, $imageFormatType, $profileid);
 		return $cord;
 	}
 
