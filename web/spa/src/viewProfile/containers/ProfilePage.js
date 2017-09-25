@@ -217,7 +217,7 @@ class ProfilePage extends React.Component {
                 nextDataApi: ""
             });
         }
-        if (parseInt(this.state.actual_offset) != 0 && !isNaN(parseInt(this.state.actual_offset))) {
+        if (parseInt(this.state.actual_offset) != 0 && !isNaN(parseInt(this.state.actual_offset))   ) {
             let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&stype=" + this.state.stype;
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
             if(this.state.searchid != 1 && this.state.searchid != null){
@@ -278,7 +278,7 @@ class ProfilePage extends React.Component {
 
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
-            let actual_offset = getParameterByName(window.location.href,"actual_offset")||getParameterByName(window.location.href,"offset");
+            let actual_offset = getParameterByName(window.location.href,"offset") || getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
