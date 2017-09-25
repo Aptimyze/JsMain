@@ -265,14 +265,15 @@ class KundliInfo extends React.Component {
 
         let horoAndAstroSection = ""; 
         let horo_match = "";
-        if(this.props.about.more_astro.horo_match)
-        {
+        if(this.props.about.more_astro && this.props.about.more_astro.horo_match)
+        { 
             horo_match = <div className="clearfix pt30">
             <i className="vpro_sprite vpro_pin"></i>
             <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
             </div>
             </div>
-        }       
+        }        
+               
         if(RELIGIONARR.includes(this.props.about.religionId))
         {
             horoAndAstroSection = <div>
