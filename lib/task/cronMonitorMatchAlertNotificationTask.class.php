@@ -45,7 +45,7 @@ EOF;
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
     print_r(array("curTime"=>$curTime,"stTime"=>$stTime,"curHr"=>$hr,"count"=>$count));
-    if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08" || $hr == "09" || $hr == 10 || $hr == 11)){
+    if($count==0 && !($hr == "07" || $hr == "08" || $hr == "09" || $hr == 10 || $hr == 11)){
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
         if(!$mailerStartTime){
