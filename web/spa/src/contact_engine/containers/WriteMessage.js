@@ -25,11 +25,11 @@ export default class WriteMessage extends React.Component{
 
 
   componentDidMount(){
+    console.log("1");
     let e = document.getElementById('msgId');
 
 
-    //e.scrollTop =  e.scrollHeight;
-    document.getElementById("ProfilePage").classList.add("scrollhid");
+
     let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
     if(document.getElementById('comm_footerMsg')!=null)
@@ -65,7 +65,7 @@ export default class WriteMessage extends React.Component{
   }
 
   hideMessageLayer() {
-    document.getElementById("ProfilePage").classList.remove("scrollhid");
+    
     this.props.closeMessageLayer();
   }
 
