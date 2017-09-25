@@ -22,9 +22,7 @@ export default class MyjsOcbLayer extends React.Component {
 	//return false;
 	var ua = ua || navigator.userAgent;
 	var match= ua.match(/(iPhone);/i);
-	//console.log(match);
 	var OsVersion=ua.match(/OS\s[0-9.]*/i);
-	//console.log(OsVersion);
 	if(match==null)
 		return false;
 	else if(OsVersion==null)
@@ -53,10 +51,8 @@ export default class MyjsOcbLayer extends React.Component {
       eT = new Date(this.props.Ocb_data.expiryDate);
     }
 
-
-
-    let lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
-
+    let tDiff = this.props.timeDiff ? this.props.timeDiff : 0 ;
+    let lightningDealExpiryInSec = Math.floor((eT-cT-tDiff)/1000);
     if(!lightningDealExpiryInSec)
         return;
     let currentTime=new Date();
@@ -112,15 +108,13 @@ export default class MyjsOcbLayer extends React.Component {
       return i;
   }
 
-  
+
   getIosVersion(ua)
  {
   //return false;
   var ua = ua || navigator.userAgent;
   var match= ua.match(/(iPhone);/i);
-  //console.log(match);
   var OsVersion=ua.match(/OS\s[0-9.]*/i);
-  //console.log(OsVersion);
   if(match==null)
   return false;
   else if(OsVersion==null)
