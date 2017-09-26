@@ -964,7 +964,19 @@ class MembershipHandler
         }
         if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
-        } else if($profileCurrency){
+        } else if($profileCurrency != false){
+            if($profileCurrency != $currency){
+                if($profileID !=null)
+                    $pid = $profileID;
+                else if($profileid != null)
+                    $pid = $profileid;
+                else
+                    $pid = "";
+                $to = "manoj.rana@naukri.com,ayush.chauhan@jeevansathi.com";
+                $msg = "ProfileID = ".$pid."\nCurrency in redis =".$profileCurrency."\nNew currency = ".$currency." and ip is ".$ipAddress;
+                $subject = "Currency fluctuations";
+                SendMail::send_email($to,$msg,$subject);
+            }
             $currency = $profileCurrency;
         }
         if($_COOKIE['jeevansathi_hindi_site_new'] == 'Y'){ 

@@ -210,7 +210,6 @@ class membershipActions extends sfActions
                 $this->passedKey = $fromBackend;
                 $data            = $this->fetchApiData($apiParams, $request, 3);
                 $data            = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                print_r($data);die;
                 $profileId = $data["userDetails"]["PROFILEID"];
                 if(is_numeric($profileId))
                     JsMemcache::getInstance()->delete($profileId."_currency");
@@ -233,9 +232,6 @@ class membershipActions extends sfActions
                 $template  = 'JSMSCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
 
@@ -254,8 +250,12 @@ class membershipActions extends sfActions
                 $data                 = $this->fetchApiData($apiParams, $request, 3);
 
                 $data = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userProfile"]["PROFILEID"];
-                $currency = $data["paymentOptionsData"]["currency"];
+                $profileId = $data["userProfile"];
+                $currency = $data["currency"];
+                if($currency == "$")
+                    $currency = "DOL";
+                else
+                    $currency = "RS";
                 JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage5Url);
                 break;
