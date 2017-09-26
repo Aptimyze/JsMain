@@ -48,7 +48,7 @@ This Email contains links which let you to directly login to your account. So fo
                         <td width="20"></td>
                         <td>
 							~if $count eq 1`
-								<var>{{USERNAME:profileid=~$otherProfileId`}}</var> has liked your profile. If you like <var>{{USERNAME:profileid=~$otherProfileId`}}</var>'s profile too, then <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:none; text-align:right" target="_blank" href="(LINK)ACCEPT:profileid=~$profileid`,receiver_id=~$otherProfileId`,source=eoi(/LINK)">Accept</a> the interest to proceed further.
+								<var>{{NAME_PROFILE:profileid=~$otherProfileId`}}</var> has liked your profile. If you like <var>{{NAME_PROFILE:profileid=~$otherProfileId`}}</var>'s profile too, then <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:none; text-align:right" target="_blank" href="(LINK)ACCEPT:profileid=~$profileid`,receiver_id=~$otherProfileId`,source=eoi(/LINK)">Accept</a> the interest to proceed further.
 							~else`
 								~$count` people have liked your profile. If you like their profile too, then <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:none; text-align:right" target="_blank" href="(LINK)EOI_RECEIVIED:profileid=~$profileid`(/LINK)">Accept</a> the Interests to proceed further.
 							~/if`
