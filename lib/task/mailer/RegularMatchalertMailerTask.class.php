@@ -10,6 +10,7 @@ class RegularMatchalertMailerTask extends sfBaseTask
     private $smarty;
     private $mailerName = "MATCHALERT";
     private $limit = 1000;
+    private $showLowDppText=array();
     const NTDPP_COUNT = 16;
     const TDPP_COUNT = 10;
     const NON_TRENDS_LOGIC=3;
@@ -51,6 +52,13 @@ EOF;
         $lock = $LockingService->getFileLock($file,1);
         if(!$lock)
         	successfullDie();
+        
+        
+        $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictTrends;
+        $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictNonTrends;
+        $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedNonTrends;
+        $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedTrends;
+        
 	$mailerServiceObj = new MailerService();
 	// match alert configurations
         $fields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,USER11,USER12,USER13,USER14,USER15,USER16,LOGIC_USED,FREQUENCY";
@@ -83,11 +91,13 @@ EOF;
                                 $data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
                                 
-                                if(($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC && $data["COUNT"] < self::NTDPP_COUNT) || ($values["LOGIC_USED"] == self::TRENDS_LOGIC && $data["COUNT"] < self::TDPP_COUNT)){
+                                if(($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC && $data["COUNT"] < self::NTDPP_COUNT) || ($values["LOGIC_USED"] == self::TRENDS_LOGIC && $data["COUNT"] < self::TDPP_COUNT) || (in_array($values["LOGIC_USED"],$this->showLowDppText) && $data["COUNT"] < MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT)){
                                         if($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC)
                                             $minIdealRecords = self::NTDPP_COUNT;
                                         elseif($values["LOGIC_USED"] == self::TRENDS_LOGIC)
                                             $minIdealRecords = self::TDPP_COUNT;
+                                        elseif(in_array($values["LOGIC_USED"],$this->showLowDppText))
+                                            $minIdealRecords = MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT;
                                         $foundCount = $data["COUNT"];
                                         $data["bodyNote"]="<b>Note</b>: For your best interest, we try to recommend up to $minIdealRecords members matching your Desired Partner Profile every day, but we could find only $foundCount members matching your partner preference. Please broaden your Desired Partner Profile to get more matches on a daily basis.";
                                         $data["showDpp"]=1;
@@ -107,7 +117,7 @@ EOF;
 			}
 			else
 				$flag = "I"; // Invalid users given in database
-
+                        
 			$mailerServiceObj->updateSentForUsers($sno,$flag);
 			unset($subject);
 			unset($mailSent);
@@ -140,6 +150,18 @@ EOF;
       case 7 : 
         return SearchTypesEnums::MatchAlertMailer7;
         break;
+      case 8 : 
+        return SearchTypesEnums::MatchAlertsStrictTrends;
+        break;
+      case 9 : 
+        return SearchTypesEnums::MatchAlertsStrictNonTrends;
+        break;
+      case 10 : 
+        return SearchTypesEnums::MatchAlertsRelaxedTrends;
+        break;
+      case 11 : 
+        return SearchTypesEnums::MatchAlertsRelaxedNonTrends;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -167,9 +189,15 @@ EOF;
         $subject["showDpp"]= 0;
 	switch($logic)
 	{
+		case "8": //strict unified trends case
+		case "9": //strict unified non trends case
 		case "3": //NT-NT case
 			$subject["subject"]= $count." Desired Partner".$matchStr." for today | $today";
-                        $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
+                        
+                        if($logic == 3)
+                                $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
+                        else
+                                $subject["body"]=$this->getDppContent($count, $profileId, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,$logic);
                         
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
@@ -180,6 +208,7 @@ EOF;
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
+		case "10"://relaxed unified trends case
 		case "1":// T-T case
                         $subject["subject"]= $count.$matchStr." based on your recent activity | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your recent activity. Your recent activity includes the interests, acceptances and declines sent in the last two months.";
@@ -189,6 +218,7 @@ EOF;
                         $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
 			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. <br>If you wish to only receive matches as per your Desired Partner Profile, ";
                         break;
+                case "11"://relaxed unified non trends case
                 case "5"://relaxed dpp trends case
                         $subject["subject"]= $count.$matchStr." based on your broader Desired Partner Profile";
 			$subject["body"]="Shown below are matches based on your broader Desired Partner Profile. We have broadened some of your preferences as your Desired Partner Profile may be very strict. To get matches as per Desired Partner Profile, please ";

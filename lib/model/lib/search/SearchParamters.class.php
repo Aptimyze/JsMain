@@ -121,6 +121,7 @@ class SearchParamters
         protected $KNOWN_COLLEGE_IGNORE;
         protected $CURRENT_CLUSTER; // current selected cluster label
         protected $SEARCH_FAILED;
+        protected $HAS_TRENDS;
         
         public function __construct()
 	{
@@ -1315,4 +1316,6 @@ class SearchParamters
         public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
         public function setSEARCH_FAILED($SEARCH_FAILED="") {$this->SEARCH_FAILED = $SEARCH_FAILED;}
         public function getSEARCH_FAILED() { return $this->SEARCH_FAILED; }
+        public function setHAS_TRENDS($HAS_TRENDS="0") {$this->HAS_TRENDS = $HAS_TRENDS;}
+        public function getHAS_TRENDS() { return $this->HAS_TRENDS; }
 }
