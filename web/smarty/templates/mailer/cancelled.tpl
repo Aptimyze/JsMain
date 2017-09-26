@@ -37,7 +37,7 @@
   <tr>
     <td width="20"></td>
    <td>
-<var>{{USERNAME:profileid=~$otherProfile`}}</var> has cancelled the interest sent to you. </td>
+<var>{{NAME_PROFILE:profileid=~$otherProfile`}}</var> has cancelled the interest sent to you. </td>
     <td width="20"></td>
   </tr>
 </table>
@@ -53,14 +53,14 @@
     <td> <table style="max-width:280px; min-width:240px" border="0" cellspacing="0" cellpadding="0" align="left">
     <tr>
     <td></td>
-    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{USERNAME:profileid=~$otherProfile`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
+    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{NAME_PROFILE:profileid=~$otherProfile`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
     </tr>
   <tr>
     <td width="20"></td>
     <td width="280">
     <table width="110" border="0" cellspacing="0" cellpadding="0" align="left">
   <tr>
- <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0"  align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
+ <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0"  align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=contactMailer(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
   </tr>
   <tr><td height="15"></td></tr>
   <tr>
