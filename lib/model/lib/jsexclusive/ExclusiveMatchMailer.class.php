@@ -236,7 +236,13 @@ class ExclusiveMatchMailer {
 							if($v["STATUS"] == "Y" || $v["STATUS"] == "N" || $v["STATUS"] == "F4"){
 								$updateArr[] = $v["ID"];
 							}
-
+							$status = $newResult[$key][$k]["STATUS"];
+							if($status == 'F1')
+							    $newResult[$key][$k]["FOLLOWUP2_DT"] = null;
+							if($status == 'F2')
+							    $newResult[$key][$k]["FOLLOWUP3_DT"] = null;
+							if($status == 'F3')
+							    $newResult[$key][$k]["FOLLOWUP4_DT"] = null;
 							$newResult[$key][$k]["MEMBER_USERNAME"] = $usernames[$k];
 							$newResult[$key][$k]["NAME"] = $name[$k]["NAME"]; 
 							$newResult[$key][$k]["DISPLAY"] = $name[$k]["DISPLAY"];

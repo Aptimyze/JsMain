@@ -140,9 +140,7 @@ $("#noMsgDiv").css('height',$(window).height());
        </div>
   ~/if`
 </div>
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
-</div>
 </div>
 <script>
 function showDirectContactDetailLayer(url,profileChecksum)

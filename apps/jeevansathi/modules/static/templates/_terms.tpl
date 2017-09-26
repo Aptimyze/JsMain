@@ -49,7 +49,7 @@ The User / subscriber / visitor to Jeevansathi.com is prohibited from uploading,
 <p class="content"> 31. The usage of this website and any disputes/issues arising out of it shall be subject to the applicable laws in force for the time being in the NCT of Delhi irrespective of conflicting provisions of law and to the exclusive jurisdiction of courts located in New Delhi.</p>
 <p class="content"> 32. All members of jeevansathi.com are restricted to the following number of contacts they can make via the "Express Interest" option on the Jeevansathi.com site.</p>
 
-<p class="content"><table border="1">
+<p class="content"><table border="1" id="limitsTable">
 <tbody><tr>
 <td></td> <td>Free Member</td> <td>Paid Member</td> <td>Ever Paid</td> <td>Paid Member with Response Booster</td>
 </tr>

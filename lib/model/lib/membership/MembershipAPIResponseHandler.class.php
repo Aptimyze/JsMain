@@ -2458,7 +2458,7 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-        if($apiObj->usdTOinr && $apiObj->processPayment){
+        if($apiObj->currency == "DOL" && $apiObj->usdTOinr && $apiObj->processPayment){
             $convRate = $apiObj->userObj->memObj->get_DOL_CONV_RATE();
             $apiObj->totalCartPrice *= $convRate;
             $apiObj->discountCartPrice *= $convRate;

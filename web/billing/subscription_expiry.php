@@ -89,7 +89,9 @@ if (count($profileids_arr) > 0) {
             if (in_array("X", $expire_assist)) {
                 endAutoApply($profile);
             }
-
+            if (in_array("T", $expire_assist)) {
+                endAutoApply($profile);
+            }
             if (in_array("L", $expire_assist)) {
                 endHomeDelivery($profile);
             }

@@ -75,7 +75,7 @@ class REPORT_ABUSE_LOG extends TABLE
                                                     
 						}
                         $pdoStr = substr($pdoStr, 0, -1);                                                     
-                        $sql = "SELECT REPORTEE,count(*) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE IN ($pdoStr) GROUP BY REPORTEE"; 
+                        $sql = "SELECT REPORTEE,count(DISTINCT(REPORTER)) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE IN ($pdoStr) GROUP BY REPORTEE";
                         $prep = $this->db->prepare($sql);
                         foreach($profileArray as $k=>$v)
                             $prep->bindValue(":v".$k,$v,PDO::PARAM_INT);

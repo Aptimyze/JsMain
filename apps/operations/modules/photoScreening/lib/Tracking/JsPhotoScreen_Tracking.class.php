@@ -193,7 +193,7 @@ abstract class JsPhotoScreen_Tracking
 	public function initVariables()
 	{
 		$this->m_objProfile = Operator::getInstance('newjs_master',$this->m_iProfileId);
-		$arrDetail = $this->m_objProfile->getDetail("","","HAVEPHOTO,ACTIVATED,PHOTODATE,CASTE,MTONGUE");
+		$arrDetail = $this->m_objProfile->getDetail("","","HAVEPHOTO,ACTIVATED,PHOTODATE,CASTE,MTONGUE,SCREENING");
 		$this->m_szOld_HavePhoto_Status = $arrDetail['HAVEPHOTO'];
 		
 		$pictureServiceObj=new PictureService($this->m_objProfile);

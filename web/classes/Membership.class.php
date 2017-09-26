@@ -2719,7 +2719,7 @@ class Membership
         $id = $autoIncReceiptidObj->insertNewAutoIncrementReceiptId();
         
         $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
-        $trailingZero = 7 - strlen($id);
+        $trailingZero = 6 - strlen($id);
         if($mn == "01" || $mn == "02" || $mn == "03" )
             $receiptId = ($yr-1).$yr."-";
         else

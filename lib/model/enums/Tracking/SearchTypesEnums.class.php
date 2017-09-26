@@ -99,6 +99,7 @@ class SearchTypesEnums
         //const INTRO_CALLS_PC = "28";					
         //const INTRO_CALLS_COMPLETE_PC = "28";			
         const VIEW_SIMILAR_ECP_PC = 'CO';
+        const VIEW_SIMILAR_ACCEPTEOI_PC = 'CA';
         const VIEW_SIMILAR_ACCEPT_PC = 'V';
         const PHOTO_REQUEST_SENT_CC_PC = "21";
         const PHOTO_REQUEST_RECEIVED_CC_PC = "20";
@@ -165,5 +166,7 @@ class SearchTypesEnums
     const ADD_PHOTO_MAILER = "APM";
     const EOI_SIMILAR_PROFILES_MAIL_ACCEPTED = "SPMA";
     const EOI_SIMILAR_PROFILES_MAIL_OTHERS = "SPMO";
+    const RECENT_ACTIVITY_IOS = "RAI";
+    const RECENT_ACTIVITY_ANDROID = "RAA";
 }
 ?>
