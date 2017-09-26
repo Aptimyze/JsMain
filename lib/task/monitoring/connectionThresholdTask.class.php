@@ -32,7 +32,7 @@ class connectionThresholdTask extends sfBaseTask
   /*
    * @var array $thresholdValue having threshold value for each server   
    */
-  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300);
+  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>300,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300,"dnc"=>500);
   
   protected function configure()
   {
@@ -74,10 +74,11 @@ EOF;
      //$SERVER_ARR[]=array("shard2Slave",MysqlDbConstants::$shard2Slave["HOST"],MysqlDbConstants::$shard2Slave["USER"],MysqlDbConstants::$shard2Slave["PASS"],MysqlDbConstants::$shard2Slave["PORT"],'threshold'=>self::$thresholdValue['shard2Slave']);
      //$SERVER_ARR[]=array("shard3Slave",MysqlDbConstants::$shard3Slave["HOST"],MysqlDbConstants::$shard3Slave["USER"],MysqlDbConstants::$shard3Slave["PASS"],MysqlDbConstants::$shard3Slave["PORT"],'threshold'=>self::$thresholdValue['shard3Slave']);
      
-      $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],$user,$password,MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
+//      $SERVER_ARR[]=array("viewSimilar",MysqlDbConstants::$viewSimilar["HOST"],$user,$password,MysqlDbConstants::$viewSimilar["PORT"],'threshold'=>self::$thresholdValue['viewSimilar']);
       $SERVER_ARR[]=array("bmsSlave",MysqlDbConstants::$bmsSlave["HOST"],$user,$password,MysqlDbConstants::$bmsSlave["PORT"],'threshold'=>self::$thresholdValue['bmsSlave']);
       $SERVER_ARR[]=array("alertsSlave",MysqlDbConstants::$alertsSlave["HOST"],$user,$password,MysqlDbConstants::$alertsSlave["PORT"],'threshold'=>self::$thresholdValue['alertsSlave']);
-      
+      $SERVER_ARR[]=array("dnc",MysqlDbConstants::$dnc["HOST"],MysqlDbConstants::$dnc["USER"],MysqlDbConstants::$dnc["PASS"],MysqlDbConstants::$dnc["PORT"],'threshold'=>self::$thresholdValue['dnc']);
+
       $serverArrayCount = count($SERVER_ARR);
       for ($i = 0; $i < $serverArrayCount; $i++) {    
         $serverName = $SERVER_ARR[$i][0];
