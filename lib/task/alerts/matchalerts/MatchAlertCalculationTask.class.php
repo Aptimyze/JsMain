@@ -136,27 +136,25 @@ EOF;
 						else
 						{
                                                     
-                                                        if($this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
+                                                        if($fromReg!=1 && $this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
                                                                 $matchalerts_MATCHALERTS_TO_BE_SENT->updateCommunity($profileid,"E");
                                                                 $this->limitNtRec=self::limitNtWhenCommunity;
                                                         }else{
-                                                                $this->limitNtRec=self::limitNtNoCommunity;
-                                                        }
-                                                        
-							/**
-							* Matches : Trends are not set, Only one mailer will be sent. 
-							*/
-                                                   $includeDppCnt = 1;
-							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting,$matchLogic);
-                                                        $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
-                                                        // Set Low Dpp flag
-                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
-                                                        if($totalResults["CNT"] == 0 && $profileid%9==1 && $matchLogic!='O'){
-                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$lastSearch);
-                                                                $totalResults = $lastSearchObj->getMatches();
-                                                                if($totalResults["CNT"] == 0){
-                                                                        $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                /**
+                                                                * Matches : Trends are not set, Only one mailer will be sent. 
+                                                                */
+                                                           $includeDppCnt = 1;
+                                                                $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
+                                                                $totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting,$matchLogic);
+                                                                $this->logLowDppCount($lowMatchesCheckObj,$lowTrendsObj,$profileid,$totalResults,MailerConfigVariables::$relaxedDpp,$profilesWithLimitReached,$todayDate);
+                                                                // Set Low Dpp flag
+                                                                $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+                                                                if($totalResults["CNT"] == 0 && $profileid%9==1 && $matchLogic!='O'){
+                                                                        $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$lastSearch);
+                                                                        $totalResults = $lastSearchObj->getMatches();
+                                                                        if($totalResults["CNT"] == 0){
+                                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
+                                                                        }
                                                                 }
                                                         }
 						}
@@ -207,7 +205,7 @@ EOF;
          * This function returns whether to use community model.
          */
         private function checkForCommunityModel($profileObj,$oldNewLogic){
-                if($profileObj->getPROFILEID()%11<1 && $profileObj->getGENDER() == "F" && $profileObj->getAGE() <= 30 && self::_communityModelToggle && $oldNewLogic=='N'){
+                if($profileObj->getPROFILEID()%99<=49 && $profileObj->getGENDER() == "F" && $profileObj->getAGE() <= 30 && self::_communityModelToggle && $oldNewLogic=='N'){
                     return true;
                 }
                 else
