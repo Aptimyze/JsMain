@@ -3,7 +3,7 @@
   <div class="bg1 txtc pad15 topheadM">
     <div class="posrel">
       <div class="f20 white fontthin" id="test">Fraud Alert</div>
-      <a href="/static/settings"><i class="mainsp posabs set_arow3 set_pos3"></i></a> </div>
+      <a href="~$referer`"><i class="mainsp posabs set_arow3 set_pos3"></i></a> </div>
   </div>
   <!--end:top--> 
   <!--start:error-->

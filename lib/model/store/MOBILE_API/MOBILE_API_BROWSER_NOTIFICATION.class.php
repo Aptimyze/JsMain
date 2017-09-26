@@ -100,7 +100,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
     
     public function getNotification($regId){
         try{
-            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND SENT_TO_CHANNEL != 'Y' LIMIT 1";
+            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND SENT_TO_CHANNEL != 'Y' ORDER BY ID DESC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":REG_ID",$regId,PDO::PARAM_STR);
             $prep->execute();

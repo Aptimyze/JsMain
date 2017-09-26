@@ -16,8 +16,15 @@ if (authenticated($checksum)) {
             $st_date   = $year . "-" . $month . "-" . $day . " 00:00:00";
             $end_date  = $year2 . "-" . $month2 . "-" . $day2 . " 23:59:59";
         }
+        if(strtotime($st_date) >= strtotime("2017-04-01 00:00:00")){
+            $table = "PAYMENT_DETAIL_NEW";
+            $newTable = 1;
+        }
+        else{
+            $table = "PAYMENT_DETAIL";
+        }
         //end of - added by sriram to provied entrydate-wise or depositdate-wise search
-        $sql = "SELECT a.RECEIPTID,b.USERNAME,b.SERVICEID,b.CENTER,b.DUEAMOUNT,b.DISCOUNT,a.PROFILEID,a.BILLID,a.MODE, a.SOURCE, a.TYPE,a.AMOUNT as amt,a.CD_NUM,a.CD_DT,a.CD_CITY,a.BANK,a.OBANK,a.STATUS,a.BOUNCE_DT,a.ENTRY_DT,a.ENTRYBY,b.WALKIN,a.DEPOSIT_BRANCH,a.TRANS_NUM, a.DOL_CONV_RATE, b.ORDERID AS ORDER_ID FROM billing.PAYMENT_DETAIL a, billing.PURCHASES b WHERE a.BILLID=b.BILLID AND $date_wise BETWEEN '$st_date' AND '$end_date' ";
+        $sql = "SELECT a.RECEIPTID,b.USERNAME,b.SERVICEID,b.CENTER,b.DUEAMOUNT,b.DISCOUNT,a.PROFILEID,a.BILLID,a.MODE, a.SOURCE, a.TYPE,a.AMOUNT as amt,a.CD_NUM,a.CD_DT,a.CD_CITY,a.BANK,a.OBANK,a.STATUS,a.BOUNCE_DT,a.ENTRY_DT,a.ENTRYBY,b.WALKIN,a.DEPOSIT_BRANCH,a.TRANS_NUM, a.DOL_CONV_RATE, b.ORDERID AS ORDER_ID FROM billing.$table a, billing.PURCHASES b WHERE a.BILLID=b.BILLID AND $date_wise BETWEEN '$st_date' AND '$end_date' ";
 
         if ($mode) {
             if ($mode == "ALL_CASH") {
@@ -33,8 +40,17 @@ if (authenticated($checksum)) {
             $smarty->assign("MODE", $mode);
         }
         if ($mode2 == 'DONE' || $mode2 == 'REFUND') {
-
-            $sql .= " AND a.STATUS='$mode2' ";
+            if($newTable == 1){
+                if($mode2 == "DONE"){
+                    $sql .= " AND a.STATUS IN ('DONE','BOUNCE','CANCEL', 'CHARGE_BACK') ";
+                }
+                else{
+                    $sql .= " AND a.STATUS='$mode2' ";
+                }
+            }
+            else{
+                $sql .= " AND a.STATUS='$mode2' ";
+            }
 
         }
         if ($branch != '') {
@@ -122,12 +138,22 @@ if (authenticated($checksum)) {
                 if ($mode2 == 'DONE' || $mode2 == 'REFUND') {
                     $total_paid += $gross_amt;
                 } elseif ($mode2 == 'ACTUAL') {
-                    if ($row['STATUS'] == 'DONE') {
-                        $total_done += $gross_amt;
+                    if($newTable == 1){
+                        if ($row['STATUS'] == 'DONE' || $row['STATUS'] == 'CANCEL' || $row['STATUS'] == 'BOUNCE' || $row['STATUS'] == 'CHARGE_BACK') {
+                            $total_done += $gross_amt;
+                        }
+                        if ($row['STATUS'] == 'REFUND') {
+                            $total_refund += $gross_amt;
+                        }
                     }
+                    else{
+                        if ($row['STATUS'] == 'DONE') {
+                            $total_done += $gross_amt;
+                        }
 
-                    if ($row['STATUS'] == 'REFUND') {
-                        $total_refund += $gross_amt;
+                        if ($row['STATUS'] == 'REFUND') {
+                            $total_refund += $gross_amt;
+                        }
                     }
 
                 }
@@ -172,7 +198,12 @@ if (authenticated($checksum)) {
         if ($mode2 == 'DONE' || $mode2 == 'REFUND') {
             $smarty->assign("total_paid", round($total_paid, 2));
         } elseif ($mode2 == 'ACTUAL') {
-            $smarty->assign("total_paid", $total_done - $total_refund);
+            if($newTable == 1){
+                $smarty->assign("total_paid", $total_done + $total_refund);
+            }
+            else{
+                $smarty->assign("total_paid", $total_done - $total_refund);
+            }
         }
 
         $smarty->assign("checksum", $checksum);
