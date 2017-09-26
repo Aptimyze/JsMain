@@ -127,7 +127,7 @@ class postEOIv2Action extends sfAction
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID();
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+				$responseArray['draftmessage'] = "Interest sent. You may send a personalized message with the interest.";
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
 
 
