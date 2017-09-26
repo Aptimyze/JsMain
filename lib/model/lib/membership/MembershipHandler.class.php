@@ -924,6 +924,13 @@ class MembershipHandler
     public function getUserIPandCurrency($profileid = null)
     {
         $geoIpCountry = $_SERVER['GEOIP_COUNTRY_CODE'];
+        $loginProfile = LoggedInProfile::getInstance();
+        if($loginProfile->getPROFILEID()){
+            $profileID = $loginProfile->getPROFILEID();
+            $profileCurrency = JsMemcache::getInstance()->get($profileID."_currency");
+        } else{
+            $profileCurrency = false;
+        }
         if (!empty($geoIpCountry)) {
             if ($geoIpCountry == 'IN') {
                 $currency     = 'RS';
@@ -957,6 +964,8 @@ class MembershipHandler
         }
         if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
+        } else if($profileCurrency){
+            $currency = $profileCurrency;
         }
         if($_COOKIE['jeevansathi_hindi_site_new'] == 'Y'){ 
             $currency = 'RS';

@@ -99,7 +99,9 @@ class membershipActions extends sfActions
                 $template  = 'JSPCLandingPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
 
                 if ($data['dividerExpiry'] != null) {
                     list($this->days, $this->showCountdown, $this->countdown) = $memActFunc->setTickerData($data['dividerExpiry']);
@@ -122,7 +124,9 @@ class membershipActions extends sfActions
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userDetails"]["PROFILEID"];
+                $currency = $data["paymentOptionsData"]["currency"];
+                JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
                 break;
 
@@ -141,7 +145,9 @@ class membershipActions extends sfActions
                 $template  = 'JSPCTransactionSuccessPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage4Url);
                 break;
 
@@ -153,7 +159,6 @@ class membershipActions extends sfActions
                 $template  = 'JSPCTransactionFailurePage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage5Url);
                 break;
 
@@ -205,7 +210,10 @@ class membershipActions extends sfActions
                 $this->passedKey = $fromBackend;
                 $data            = $this->fetchApiData($apiParams, $request, 3);
                 $data            = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                print_r($data);die;
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage1Url);
                 break;
 
@@ -214,7 +222,9 @@ class membershipActions extends sfActions
                 $template  = 'JSMSVasPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage2Url);
                 break;
 
@@ -223,7 +233,9 @@ class membershipActions extends sfActions
                 $template  = 'JSMSCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
 
@@ -242,7 +254,9 @@ class membershipActions extends sfActions
                 $data                 = $this->fetchApiData($apiParams, $request, 3);
 
                 $data = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userProfile"]["PROFILEID"];
+                $currency = $data["paymentOptionsData"]["currency"];
+                JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage5Url);
                 break;
 
@@ -273,7 +287,9 @@ class membershipActions extends sfActions
                 $template  = 'JSMSSuccessPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileId = $data["userDetails"]["PROFILEID"];
+                if(is_numeric($profileId))
+                    JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage8Url);
                 break;
 
