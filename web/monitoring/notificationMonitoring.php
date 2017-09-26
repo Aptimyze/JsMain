@@ -1,6 +1,6 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104","ankita"=>"9650879575");
+$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104");
 //$mobileNumberArr = array("nitish"=>"8989931104");
 $authChecksum = sendLoginRequest();
 $urlArray = array(JsConstants::$siteUrl."/api/v1/notification/poll?".$authChecksum);

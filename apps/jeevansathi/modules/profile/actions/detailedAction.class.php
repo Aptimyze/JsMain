@@ -63,11 +63,13 @@ class detailedAction extends sfAction
      */
 	public function execute($request)
 	{		
+		$request->setParameter("currentPageName", "Profile Page");
+
+
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsProfilePageUrl);
 		$this->suggAlgoNoOfResultsToBeShownAtATime = sfConfig::get('mod_profile_detailed_suggAlgoNoOfResultsToBeShownAtATime');
 		
 		//$LibObj = new JsLib_Profile_Detailed;
-		global $smarty,$data;
 		
 		//Contains login credentials
 		$this->loginData=$data=$request->getAttribute("loginData");
@@ -76,11 +78,33 @@ class detailedAction extends sfAction
 		$this->profile=Profile::getInstance("newjs_masterRep");
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
+		
+		//PD cal redirection for lightning deal on JSMS 
+		if(MobileCommon::isNewMobileSite() && $request->getParameter('fromPdLightCal')!=1){
+			ob_start();
+			$request->setParameter('calFromPD',1);
+			$request->setParameter('layerId',19);
+			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+			$layerData = ob_get_contents();
+			ob_end_clean();
+			$layerData = json_decode($layerData, true);
+			$calData['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+			if ($calData['calObject'])
+			{  
+				$request->setAttribute('calObject',$calData['calObject']);
+				$request->setAttribute('gender',$this->loginProfile->getGENDER());
+				$request->setAttribute('fromDetailedAction',1);
+				$request->setAttribute('redirectViewProfileUrl',urlencode($_SERVER['REQUEST_URI']."&fromPdLightCal=1"));
+				sfContext::getInstance()->getController()->forward("common","CALJSMS");
+				die;
+			}
+		}
+		global $smarty,$data;
 		$this->smarty=$smarty;
-                
+
                 // VA Whitelisting
                 //whiteListing of parameters
-                DetailActionLib::whiteListParams($request);
+                //DetailActionLib::whiteListParams($request);
                 
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
@@ -1347,7 +1371,11 @@ class detailedAction extends sfAction
 			$this->arrOutDisplay["button_details"] = $buttonObj->getLogoutButtonArray($arrPass);
 		}
                 $this->searchId= $request->getParameter('searchid');
-		$this->finalResponse=json_encode($this->arrOutDisplay);
+        $finalProfileArray['about']=$this->arrOutDisplay['about'];
+        $finalProfileArray['button_details']=$this->arrOutDisplay['button_details'];
+        $finalProfileArray['page_info']=$this->arrOutDisplay['page_info'];
+        unset($finalProfileArray['about']['myinfo']);
+        $this->finalResponse=json_encode($finalProfileArray);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
         

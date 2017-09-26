@@ -17,7 +17,11 @@
 	<tr>
 	<td class="label" valign="middle" colspan="1" align="center"> <a target="_blank" href="http://gitlabweb.infoedge.com/Jeevansathi/JsMain/tags/~$valueArr.tagName`">~$valueArr.tagName`</a></td>
 	<td class="label" valign="middle" colspan="1" align="center"> ~$valueArr.dateTime`</td>
-	<td class="label" valign="middle" colspan="1" align="center"> ~$valueArr.description`</td>
+	<td class="label" valign="middle" colspan="1" align="center">
+	~foreach from=$valueArr.description key=k1 item=jiraId`
+	<a target="_blank" href="https://jsba99.atlassian.net/browse/~$jiraId`">~$jiraId`</a>, 
+	~/foreach`
+	</td>
 	</tr>
 	~/foreach`
 </table>

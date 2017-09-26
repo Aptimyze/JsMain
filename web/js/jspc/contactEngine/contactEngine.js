@@ -3,6 +3,7 @@ var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"
 var PAGETYPE='';   
 var ignoreLayerOpened=3; //for IgnoredLayer on VDP
 var currentActionLayer="";
+var WARNING= new Object();
 var buttonsCssMap={'INITIATE':{'enable':'mailicon','disable':'msgsendicon'},
               'SHORTLIST':{'enable':'staricon','disable':'staractive2'},
               'CONTACT_DETAIL':{'enable':'callicon','disable':'callicon'},
@@ -408,8 +409,17 @@ ContactEngineCard.prototype.postDisplay = function(Obj,profileChecksum,isError){
 			}
 			else if(Obj.actiondetails.writemsgbutton!=undefined)
 			{
-			  currentActionLayer="Message";
-			  return postCommonMessageLayer(Obj,profileChecksum,this.name);
+				currentActionLayer="Message";
+				if(typeof Obj.actiondetails.limitWarning != "undefined"){
+					var contactedUser = Obj.actiondetails.limitWarning.contactedUser;
+					WARNING[contactedUser]  = Obj.actiondetails.limitWarning;
+					WARNING.pageSource = this.name;
+				}
+				return postCommonMessageLayer(Obj,profileChecksum,this.name);
+			}
+			else if(typeof Obj.actiondetails.limitWarning != "undefined"){
+				currentActionLayer = "limitWarning";
+				return postCommonWarningLayer(Obj.actiondetails.limitWarning, profileChecksum, this.name, "FREE");
 			}
 			else if(Obj.actiondetails.footerbutton!=null)
 			{
@@ -433,6 +443,64 @@ function postDisplayError(pageSource)
 		return FinalHtml=$("#postCCErrorCommonLayer").html();
 	else
 		return FinalHtml=$("#postCommonErrorLayer").html();
+}
+
+function postCommonWarningLayer(Data, profilechecksum,pageSource, userType){
+	var templateID = "postCommonErrorLayer";
+	var contentDiv = "disp-cell";
+	if(pageSource == "CC"){
+		templateID = "postCCErrorCommonLayer";
+		contentDiv = "js-genericMsg";
+	}
+	var template = $("#"+templateID).clone();
+	var textToShow = "";
+	if(userType === "FREE"){
+		/* CASE FOR FREE MEMBER */
+		/* Has two cases: 1 where limit is day/month/week type 2 where overall limit is type*/
+		if(Data.type == "OVERALL"){
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed on your account.<br>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.";
+		}else{
+			textToShow = "<b>Please Note</b>: You have already sent "+
+			Data.count+
+			" out of "+
+			Data.limit+
+			" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+			We encourage you to send interests only to people where you match most\
+			 of the preferences mentioned in their partner preference.<br/><br/>"+
+			"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
+		}
+		
+
+		template.find("."+contentDiv).html(textToShow);
+
+		if(pageSource == "CC"){
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
+	}else if(userType === "PAID"){
+		/* CASE FOR PAID MEMBER */
+		var textToShow = "<b>Please Note</b>: You have already sent "+
+		Data.count+
+		" out of "+
+		Data.limit+
+		" interests allowed till the "+Data.text+" ending "+Data.expiry+".<br/>\
+		We encourage you to send interests only to people where you match most\
+		 of the preferences mentioned in their partner preference.<br/><br/>"+
+		"<a href='/static/page/disclaimer#limitsTable' class='colr5' >Click Here</a> to know more about Interest Limits";
+		template.find("."+contentDiv).html(textToShow);
+		if(pageSource == "CC"){
+			template.find("."+contentDiv).css({"font-size": "11px"});
+			template.find('span').removeClass("disp-none");
+			template.find('i').addClass("disp-none");
+		}
+	}
+	return template;
 }
 
 function postCommonMessageLayer(Obj,profileChecksum,pageSource)
@@ -829,8 +897,13 @@ $(".closeContactDetailLayer").bind('click',function() {
 				$("#jsCcVSP-"+arr[1]).css("display","");
 		}
 	}
-	
+	var layerDivParent = layerDiv.parent();
+	superdata = layerDiv.attr('superdata');
 	layerDiv.remove();
+	if(superdata){
+	layerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
+	cECloseBinding();
+	}
 	return false;
 	});
 	
@@ -1188,16 +1261,292 @@ function customOptionButton(optionBtnName) {
                        else $(this).closest('li').removeClass("selected"); 
                });
                 $(checkBox).click(function() {
-                $(".otherOptionMsgBox").each(function() {
-                $(this).addClass("disp-none");
-                })
-                       $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
-                       $(this).closest('li').addClass("selected");
-            
-                       if($(this).attr("id") == "openBox") {
-                        $(this).closest("li").find(".otherOptionMsgBox").removeClass("disp-none");
-                       } else {
-                        $(this).closest("li").find(".otherOptionMsgBox").addClass("disp-none");
-                       }
+//                $(".otherOptionMsgBox").each(function() {
+//                $(this).addClass("disp-none");
+//                })
+                    $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
+                    $(this).closest('li').addClass("selected");
+
+
+
+                    if($(this).attr("id") == "openBox") {
+                        
+                     //$(this).closest("li").find(".otherOptionMsgBox").removeClass("disp-none");
+                     $(".js-reportAttachLayer").removeClass('disp-none');
+                     $(".js-reportOptionLayer").addClass('disp-none');
+                     $('.js-selectedOption').html( $(this).closest('li').find('.reason').text() );
+                    } else {
+                     $(this).closest("li").find(".otherOptionMsgBox").addClass("disp-none");
+                    }
                });
+}
+
+
+var arrReportAbuseFiles = [];
+var bUploadAttachmentInProgress = false;
+var bUploadingDone = false;
+
+/**
+ * 
+ */
+function attachAbuseDocument(event) {
+
+    var dom = $("<input>",{id:"file", type:"file", accept : ".jpg,.bmp,.jpeg,.gif,.png", multiple:"multiple"});
+    var MAX_FILE_SIZE_IN_MB = 6;
+    
+    var ShowErrorMsg = function(msg){
+        $('.js-attachError').html(msg);  
+        $('#reportAbuseList_1').mCustomScrollbar("scrollTo","bottom",{ scrollEasing:"easeOut"});
+    }
+    
+    var HideErrorMsg = function() {
+        $('.js-attachError').html("");  
+    }
+    
+    var onCrossClick = function() {
+        HideErrorMsg();
+        var result = [];
+        var self = $(this);
+        for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+            if(arrReportAbuseFiles[itr].myId == self.attr('id')) {
+                
+                //If file is already uploaded then remove from server also
+                if( "undefined" != typeof arrReportAbuseFiles.tempAttachmentId && arrReportAbuseFiles[itr].uploaded ) {
+                    
+                    var formData = new FormData();                    
+                    var apiUrl = "/api/v1/faq/abuseDeleteAttachment"; 
+                    
+                    formData.append('feed[attachment_id]', arrReportAbuseFiles['tempAttachmentId'] );
+                    formData.append('feed[file_name]', arrReportAbuseFiles[itr].name );
+                    var ajaxConfig=new Object();
+                    showCommonLoader();
+                    ajaxConfig = {
+                        url     : apiUrl,
+                        type  : 'POST',
+                        data    : formData,
+                        async   : true,
+                        cache: false,
+                        processData: false,
+                        success : function ( response ) {
+                                        //TODO : Update Loader Layer
+                                        hideCommonLoader();
+                                        if(response.responseStatusCode == 0) {
+                                           self.parent().remove();
+                                        } else {
+                                            result.push(arrReportAbuseFiles[itr]);
+                                            
+                                            ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                        }
+                                    },
+                        error   :  function ( response ) {
+                                       
+                                       result.push(arrReportAbuseFiles[itr]);
+                                       ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                       return ;
+                                    },
+                    };
+                    jQuery.myObj.ajax(ajaxConfig);
+                }else {
+                    self.parent().remove();
+                }
+                
+                continue;
+            }
+            
+            result.push(arrReportAbuseFiles[itr]);
+        }
+        if(arrReportAbuseFiles.tempAttachmentId) {
+            result.tempAttachmentId = arrReportAbuseFiles.tempAttachmentId;
+        }
+        arrReportAbuseFiles = result;
+    }
+    
+    
+    /**
+     * 
+     */
+    var createPhotoPreview = function(fileObject) {
+        /**
+         *  
+         <li class="clearfix">
+            <div class="fl wid80p textTru">
+                Screesho1233.jpeg
+            </div>
+            <div class="fr pos-rel">
+                <div class="attc_close"></div>
+            </div>                                                
+        </li>
+         */
+        var previewDom = $("<li />", {"class" : "clearfix"});
+        var picNameDom = $("<div />", {"class" : "fl wid80p textTru"}).html(fileObject.name);
+        
+        previewDom.append(picNameDom);
+        
+        var closeOuterDivDom = $("<div />", {class:"js-closeIcon fr pos-rel cursp", id :fileObject.myId});
+        closeOuterDivDom.append( $("<div />", {class : 'attc_close'} ) );
+        closeOuterDivDom.on('click',onCrossClick);
+        
+        previewDom.append(closeOuterDivDom);
+                
+        var reader = new FileReader();
+        reader.readAsDataURL(fileObject);
+        
+        $('#previewContainer').append(previewDom);
+         
+        return previewDom;
+    }
+    
+    /**
+     * 
+     */
+    var onFileChange = function(event) {
+        
+        HideErrorMsg();
+        
+        var existingLength = arrReportAbuseFiles.length;
+   
+        var validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+        
+        //loop on files .. do basic checks like size, type
+        $.each( this.files, function( key, file ) {
+            
+            if( ( file.size / 1048576 ).toFixed(1) > MAX_FILE_SIZE_IN_MB ) {
+                ShowErrorMsg( file.name + ' You can attach a proof less than 6 MB in size' );
+                return ;
+            }
+            
+            if( validFileTypes.indexOf(file.type) == -1 ) {
+                ShowErrorMsg( file.name + ' Invalid type of attachment' );
+                return ;
+            }
+            
+            if( arrReportAbuseFiles.length >= 5 ) {
+                ShowErrorMsg( 'You can attach maximum 5 proofs' );
+                setTimeout(function(){HideErrorMsg()},3000);
+                return ;
+            }
+          
+            arrReportAbuseFiles.push(file);
+        });
+        
+        if(arrReportAbuseFiles.length == 0) {
+            ShowErrorMsg( 'No valid attachments' );
+            return ;
+        }
+        
+        var iterator = 1;
+        arrReportAbuseFiles.forEach( function (file) { 
+            if(file.hasOwnProperty('preview') === false) {
+                file.myId = iterator;
+                createPhotoPreview(file);
+            }
+            file.preview = true;
+            iterator++;
+        });
+    }
+    
+    dom.on('change',onFileChange);
+    dom.trigger("click");
+    
+}
+
+
+function uploadAttachment()
+{   
+   
+    /**
+     * 
+     */
+    var ShowErrorMsg = function(msg){
+        $('.js-attachError').html(msg);  
+        $('#reportAbuseList_1').mCustomScrollbar("scrollTo","bottom",{ scrollEasing:"easeOut"});
+    }
+    
+    var HideErrorMsg = function() {
+        $('.js-attachError').html("");  
+    }
+    var SendAjax = function(fileObject, temp_attachment_id) {
+        var apiUrl = "/api/v1/faq/abuseAttachment";
+        
+        var formData = new FormData();
+        formData.append("feed[attachment_1]", fileObject);
+        
+        if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
+              isNaN( temp_attachment_id ) == false
+                ) {
+            formData.append("feed[attachment_id]", temp_attachment_id);
+        }
+        showCommonLoader()        
+        var ajaxConfig = {
+            url     : apiUrl,
+            type  : 'POST',
+            data    : formData,
+            async   : true,
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend:function(){
+                bUploadAttachmentInProgress = true;
+            },
+              complete:function(){
+                bUploadAttachmentInProgress = false;
+            },
+            success : function ( response ) {
+                            hideCommonLoader();
+                            if(response.responseStatusCode == 0) {
+                               if(file.hasOwnProperty('error')) {
+                                   delete file.error;
+                                   delete fileObject.errorMsg;
+                               }
+                               arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
+                               fileObject.uploaded = true;
+                            } else {
+                                fileObject.error = true
+                                fileObject.errorMsg = response.message;
+                                ShowErrorMsg( response.message );                                
+                            }
+                        },
+            error   :  function ( response ) {
+                            hideCommonLoader();
+                            ShowErrorMsg("Something went wrong. Please try again");
+                        },
+        };
+        jQuery.myObj.ajax(ajaxConfig);
+        return;
+    }
+    
+    if(0 == arrReportAbuseFiles.length) {
+        return true;
+    }
+
+    if(bUploadAttachmentInProgress == true) {
+        setTimeout(function(){uploadAttachment()},20); return false;
+    }
+    var len = arrReportAbuseFiles.length ;
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if( file.hasOwnProperty("uploaded") == false || file.uploaded == false  ) {
+                if(( file.hasOwnProperty('error') && file.error == true )) {
+                    setTimeout(function(){
+                        ShowErrorMsg(file.errorMsg);
+                        hideCommonLoader();
+                    },0);
+                    return false;
+                 }
+                var tempId = (typeof arrReportAbuseFiles['tempAttachmentId'] == "undefined") ? "" : arrReportAbuseFiles['tempAttachmentId'] ;
+                SendAjax( file, tempId );
+                setTimeout(function(){uploadAttachment()},20);return false;
+            }
+    }
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if(file.hasOwnProperty("uploaded") == false || file.uploaded == false) {
+            return false;
+        }
+    }
+    if(false == bUploadingDone) {
+        bUploadingDone = true;
+        reportAbuse();
+    }
+    return true;
 }

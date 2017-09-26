@@ -524,6 +524,9 @@ input:focus {
     width: 725px
 }
 
+.wid1000 {
+    width: 1000px
+}
 
 /*--- hight and line-height classes ---*/
 
@@ -904,6 +907,9 @@ input:focus {
 
 .pt55 {
     padding-top: 55px;
+}
+.pt90 {
+    padding-top: 90px;
 }
 
 .pt100 {

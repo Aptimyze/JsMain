@@ -1,9 +1,17 @@
 var loginAttempts=0;
 var secureSite=0;
+var LoginLayerByUserActions = false;
 if (window.location.protocol == "https:")
 	secureSite=1;
 function LoginValidation()
 {
+	/* GA tracking */
+	if(LoginLayerByUserActions){
+		GAMapper("GA_LL_LOGIN");
+	}
+	else{
+		GAMapper("GA_TOPBAR_LOGIN");
+	}
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
    
@@ -32,7 +40,6 @@ function LoginValidation()
 			}
 			else
 			{   
-        
 				if(validateCaptcha()){
 					$("#emailErr").addClass("visb").html("Invalid Format");
 					$("#EmailContainer").addClass("brderred");
@@ -157,6 +164,8 @@ function validateCaptcha()
 
 function after_login(response)
 	{
+		if(response)
+				GAMapper("GA_LL_LOGIN_SUCCESS");
 		var address_url=window.location.href;
 		if(window.location.href.indexOf("redirectUri=")>0)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
@@ -171,6 +180,7 @@ function after_login(response)
 
 function onFrameLoginResponseReceived(message)
 {
+	var loginFlag = false;
 	if(message.origin === SSL_SITE_URL)
 	{		
 		var response="";
@@ -198,6 +208,7 @@ function onFrameLoginResponseReceived(message)
 				{ 
 				  createCaptcha("logoutPage");
 				}
+				GAMapper("GA_LL_LOGIN_FAILURE");
 		  }
       else{
   		/*	hideCommonLoader();
@@ -228,6 +239,7 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
       }
 		}
 		else if(response == 2)
@@ -245,11 +257,13 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
 		}
 		else
 		{
+			loginFlag = true;
 			after_login(response);
-		}		
+		}
 	}
 	
 		
@@ -297,6 +311,7 @@ function LoginBinding()
 {
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').unbind();
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').click(function() {
+		LoginLayerByUserActions = false;
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
@@ -310,13 +325,34 @@ function LoginBinding()
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
                 if($(this).hasClass("loginAlbumSearch")){
+                	/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
+                	/* GA tracking */
+                	GAMapper("GAV_LL_SHOW",{action:"by user action"});
+                	GAMapper("GA_SEARCH_LOGGEDOUT_ALBUM");
 					$("#loginRegistration").addClass("loginAlbumSearch");
 					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
 				}
 				else if($(this).hasClass("loginProfileSearch")){
+					/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
+					/* GA tracking */
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
+                	GAMapper("GA_SEARCH_LOGGEDOUT_PROFILE");
 					$("#loginRegistration").addClass("loginProfileSearch");
 					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
 				}
+
+				/* GA tracking */
+				var SplitId = this.id.split('-'); 
+				if(SplitId.length == 3){
+					LoginLayerByUserActions = true;
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
+					GAMapper("GA_SEARCH_LOGGEDOUT_EOI", {"type": SplitId[0]});
+				}
+
+				if(!LoginLayerByUserActions)
+					GAMapper("GAV_LL_SHOW");
                 $('#cls-login').click(function() {
                   //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {
@@ -386,6 +422,15 @@ function commonLoginBinding()
                     $("#remember").val("1");
                 });
                 $("#loginRegistration").click(function() {
+
+					/* GA tracking */
+					if(LoginLayerByUserActions){
+						GAMapper("GA_LL_REGISTER");
+					}
+					else{
+						GAMapper("GA_TOPBAR_REGISTER");
+					}
+
 					if($(this).hasClass("logout"))
 						location.href="/register/page1?source=login_p";
 					else if($(this).hasClass("loginAlbumSearch"))
@@ -426,8 +471,10 @@ $(document).ready(function(){
 	{ 	
 		if(LoggedoutPage){
 			customCheckboxLogin("remember",1);
-			if(fromSignout)
-				$("#LoginMessage").html("You have successfully logged out");
+			if(typeof(fromSignout)!="undefined"){
+				if(fromSignout)
+					$("#LoginMessage").html("You have successfully logged out");
+			}
 			forgotPasswordBinding(0);
 		}
 	}
@@ -455,8 +502,15 @@ $(document).ready(function(){
 
 function forgotPasswordBinding(fromLayer)
 {
-	
 	$('#forgotPasswordLoginLayer').click(function() {
+
+			/* GA tracking */
+		if(LoginLayerByUserActions){
+			GAMapper("GA_LL_FORGOT");
+		}
+		else{
+			GAMapper("GA_TOPBAR_FORGOT");
+		}
 		
 		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
@@ -533,7 +587,10 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			
+
+			/* GA tracking */
+			GAMapper("GA_FORGOTL_SENDLINK");
+
 			var email=$("#userEmail").val();
 			if(email)
 			{

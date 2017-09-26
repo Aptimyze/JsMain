@@ -81,7 +81,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore") || HandlingCommonReqDatabaseId::isMasterMasterDone())
+				if(strstr($_SERVER["REQUEST_URI"],"/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"/search/gunaScore")  || strstr($requestUri,"common/resetStaticKey") || strstr($requestUri,"/register/staticTablesData") || HandlingCommonReqDatabaseId::isMasterMasterDone() || strstr($requestUri,"/api/hamburgerDetails") || strstr($requestUri,"/common/engagementcount") || strstr($requestUri,'/api/versionupgrade'))
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -118,12 +118,17 @@ class AuthFilter extends sfFilter {
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
-		
+                                
+                                if(MobileCommon::isNewMobileSite())
+                                    $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
+                                
 				$request->setAttribute('loginData', $data);
 				if ($data[PROFILEID]) $login = true;
 				else $login = false;
 				$request->setAttribute('login', $login);
 				$request->setAttribute('profileid', $data[PROFILEID]);
+				$request->setAttribute('gender', $data[GENDER]);
+
 				$ipAddress = CommonFunction::getIP();
 
 				///////// check for currency and ip address
@@ -202,8 +207,6 @@ class AuthFilter extends sfFilter {
 								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
 							}
-
-
 
 							if($phoneVerified!="Y")
 							{
@@ -295,7 +298,6 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);
 				$request->setAttribute('activated', $data[ACTIVATED]);
-				$request->setAttribute('gender', $data[GENDER]);
 				if($data[PROFILEID])
 				$request->setAttribute('AJAX_CALL_MEMCACHE',Header::checkMemcacheUpdated($data["PROFILEID"]));
 				if ($request->getParameter("ID_CHECKED")) $request->setParameter("ID_CHECKED", urlencode($request->getParameter("ID_CHECKED")));
@@ -316,8 +318,7 @@ class AuthFilter extends sfFilter {
 					//	throw new sfStopException();
 					die;
 					}
-				}
-            
+				}            
             
 
                		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
@@ -376,9 +377,8 @@ class AuthFilter extends sfFilter {
 					$request->setParameter('showKundliList', 1);
 				}
 			}
-                        if(MobileCommon::isNewMobileSite())
-                            $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
 		}
+                
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();
 		$r_n_u_m = $revisionObj->getLatestRevision();

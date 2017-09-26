@@ -43,13 +43,22 @@ class MailerConfigVariables
         public static $logicLevelRelaxedNonTrends = 11;
         
         /* Match Alerts unified logic changes ends here */
+        public static $matchalertsLogTimeCache = 86400;
+        public static $matchalertsLogTimeFormat = "m-d-Y";
+        public static $matchalertsLogTimeFor = "+1 Day";
 	/*
 	This function returns the number of days from 01-01-2005 to today. Used in matches generation logic
 	@return - no of days
 	*/
-	public static function getNoOfDays()		
+	public static function getNoOfDays($logDate="")		
         {
-                $today=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                if($logDate != ""){
+                        $dateArr = explode("-",date(MailerConfigVariables::$matchalertsLogTimeFormat,$logDate));
+                        $m = $dateArr[0];$d = $dateArr[1];$y = $dateArr[2];
+                }else{
+                        $m = date("m");$d = date("d");$y = date("Y");
+                }
+                $today=mktime(0,0,0,$m,$d,$y);
                 $zero=mktime(0,0,0,01,01,2005);
                 $gap=($today-$zero)/(24*60*60);
                 return $gap;

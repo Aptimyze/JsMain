@@ -1,8 +1,12 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
+    currentPageName = "~$calObject.LAYERID`";
+    GAMapper("GA_CAL_PAGE", {"layerid": currentPageName});
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';
+    var fromDetailedAction='~$fromDetailedAction`';
+    var redirectViewProfileUrl='~$redirectViewProfileUrl`';
     function validateAndSend()
     {
             var altEmailUser = ($("#altEmailInpCAL").val()).trim();
@@ -31,6 +35,8 @@
                  msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
+                 /* tracking for B1 */
+                 $.get("/common/criticalActionLayerTracking?layerR=13&button=B1");
                    return; 
                     }
                 });              
@@ -151,7 +157,7 @@
       <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
          <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
-         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
   
 </div>
@@ -388,9 +394,72 @@ var altEmailUser = '~$altEmailUser`';
   
   </div>
 
-    
-    
+      ~elseif $calObject.LAYERID==26`
+<style>
+  .childDiv  {
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+</style>   
+      <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
+
+<div style="width:100%;overflow-x: hidden;">
+<div id='mainContainer' style="width:200%;transition-duration:.5s;transform: translateX(-0%);">
+     <div class="childDiv fl" style="background-color: #09090b;">
+  <div  class="posrel pad18Incomplete">
+
+  <div class="br50p txtc" style='height:80px;'>
+      
+    </div>
+     
+  </div>
+   
+  <div class="txtc">   
+  <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
+  <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
+  </div>
+  <div class="pad1 lh25 fontlig f14" style="color:#cccccc;"><b>Note: </b><span>~$calObject.NOTE_TEXT2`</span></div>
+  <!--start:div-->
+  <div style='padding: 25px 0 8% 0;'>
+  <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');">~$calObject.BUTTON1`</div>
+  </div>
+  <!--end:div-->
   
+  </div>   
+
+  <div class="childDiv bg4 " style="height:638px" resize="">
+  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div onclick="$('#mainContainer').css('transform','translateX(0%)');" class="fl wid20p white">               <i id="backBtn" class="mainsp arow2"></i></div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
+    <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="fr txtc white f14">~$calObject.BUTTON2`</div>
+
+<!-- ngIf: bShowSkip -->                <div class="clr"></div>              </div>            </div>          </div>
+  <div id="scrollContent" class="scrollContent bg4" style="height:528px">
+    <div class="pad1 brdr1 bg11">
+        <div class="pt15 pb10 fullwid">
+          <div class="fl color12 f12">Type min 100 Chars</div>
+          <div class="fr color12 f12">Count - <span id="TACount" class="color2"> ~$calObject.ABOUT_ME_TEXT|count_characters:true`</span></div>
+          <div class="clr"></div>
+        </div>
+    <div class="pt10">
+            <textarea id="textAboutMe"  style="height:300px" class="fullwid color12 f17 fontlig lh30  bg11">~$calObject.ABOUT_ME_TEXT`</textarea>
+    </div>
+    </div>
+  </div>
+  <div class="fullwid posabs btmo" onclick="criticalLayerButtonsAction('~$calObject.JSMS_ACTION1`','B1');">
+    <div class="pt20" id="doneBtn" > <div  class="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div> </div>
+  </div>
+</div>
+   </div> 
+  <script>
+  $('#textAboutMe').bind('input ', function(e) {
+    var len = $('#textAboutMe').val().trim().length;
+   // / if(len==)
+   if(len>=100) $('#TACount').css('color','green');else $('#TACount').css('color','#d9475c');
+ $("#TACount").html(len); 
+});
+
+</script>
+</div>
   ~elseif $calObject.LAYERID !=9`
       <div style="background-color: #09090b;">
   <div  class="posrel pad18Incomplete">

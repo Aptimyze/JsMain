@@ -49,7 +49,16 @@ if(authenticated($cid))
 			}
 			else 
 			{
-				list($serviceNameArr, $serviceWiseArr, $durationWiseArr) = getRevenueDetail($reportType, $type, $st_date." 00:00:00", $end_date." 23:59:59", $branch);
+				if($type == 'M' && $MYear >= '2017'){
+					$tableName = "PAYMENT_DETAIL_NEW";
+				}
+				else if($type == 'D' && $mm >= '04' && $yy >= '2017'){
+					$tableName = "PAYMENT_DETAIL_NEW";
+				}
+				else{
+					$tableName = "PAYMENT_DETAIL";
+				}
+				list($serviceNameArr, $serviceWiseArr, $durationWiseArr) = getRevenueDetail($reportType, $type, $st_date." 00:00:00", $end_date." 23:59:59", $branch,$tableName);
 			}
 
 			$smarty->assign("cid",$cid);
@@ -290,11 +299,22 @@ if(authenticated($cid))
 		return $sname;
 	}
 
-	function getRevenueDetail($reportType, $reportPeriod, $st_date, $end_date, $branch='')
+	function getRevenueDetail($reportType, $reportPeriod, $st_date, $end_date, $branch='',$tableName='')
 	{
 		// $reportType = Detailed/Summary
 		// $reportPeriod = Month-wise/Date-wise
-
+		if(empty($tableName)){
+			$tableName = "PAYMENT_DETAIL";
+		}
+		if($tableName == "PAYMENT_DETAIL_NEW"){
+			$condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+			$appleCondition="IF(pm.TYPE='DOL',(pm.APPLE_COMMISSION+pm.AMOUNT)*pm.DOL_CONV_RATE*pd.SHARE*0.01,pm.AMOUNT*pd.SHARE*0.01)";
+		}
+		else{
+			$condition = "='DONE'";
+			$appleCondition="IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)";
+		}
+		
 		// slave connection
 		$myDb=connect_misdb();
 		mysql_query('set session wait_timeout=50000',$myDb);
@@ -305,11 +325,11 @@ if(authenticated($cid))
 			$reportPeriod = "MONTH";
 
 		if($branch!='')	
-			$sql = "SELECT pd.`SERVICEID`, SUM(IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
-FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS =  'DONE' AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' AND pur.CENTER='$branch' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
+			$sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
+FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS $condition AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' AND pur.CENTER='$branch' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
 		else
-			$sql = "SELECT pd.`SERVICEID`, SUM(IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
-FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS =  'DONE' AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
+			$sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
+FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS $condition AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
                 //print_r($sql);
 		$res = mysql_query_decide($sql,$myDb) or die(mysql_error_js($myDb));
                 //print_r("Report Type:". $reportType);
@@ -344,15 +364,15 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
                         //print_r($serviceWiseArr);
                         //print_r($serviceNameArr);
                         if($branch=='')
-                            $sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
                         else
-                            $sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'ES%' AND pur.CENTER = '$branch' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur,billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' AND pur.CENTER = '$branch' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
                       
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
-			{        
-				$sid = explode(',', $row['SERVICEID']);
-				$sid = $sid[0];
+			{  
+                $sid = explode(',', $row['SERVICEID']);
+				$sid = str_replace("C","NCP",$sid[0]);//$sid[0];
                                 if($row['UPGRADE']=='MAIN'){
                                     $sid .= "-UG";
                                 } 
@@ -378,15 +398,15 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 				}
 			}
                         if($branch=='')
-                            $sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur,billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
                         else
-                            $sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'NCP%' AND pur.CENTER = '$branch' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
-                       
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' AND pur.CENTER = '$branch' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
 			{ 
 				$sid = explode(',', $row['SERVICEID']);
-				$sid = $sid[0];
+				$sid = str_replace("C","NCP",$sid[0]);
+                
                                 if($row['UPGRADE']=='MAIN'){
                                     $sid .= "-UG";
                                 }
@@ -466,7 +486,7 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 					$serviceWiseArr[5]['TOTAL'] += $amt;
 				}
 			}
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD";
+			$sql = "SELECT pur.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
 			{
@@ -485,7 +505,7 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 				}
 			}
 			
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
+			$sql = "SELECT pur.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
 			{

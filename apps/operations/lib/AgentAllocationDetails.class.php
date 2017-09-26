@@ -364,7 +364,7 @@ public function fetchProfiles($processObj)
 			}
                 }
 		else{
-			$loginDtEnd =date("Y-m-d",time()-1*24*60*60);	
+			$loginDtEnd =date("Y-m-d",time()-2*24*60*60);	
 			$profiles=$preAllocationTempPoolObj->fetchProfilesWithCities($cities,$lowerScoreLimit,$loginDtEnd);	
 		}
 			
@@ -1796,9 +1796,9 @@ public function fetchProfileDisplayDetails($profileid,$privilege)
 	$activeStatusMsg  	=$crmUtilityObj->fetchActiveStatus($jProfileDetails['ACTIVATED'],$jProfileDetails['INCOMPLETE']);
 
 	$wasPaidStatus    	=$purchaseObj->getPaidStatus($profileid);
-	$mainAdminDetails       =$mainAdminObj->get($profileid,"PROFILEID","WILL_PAY,REASON,ALLOTED_TO,PROFILEID");
+	$mainAdminDetails       =$mainAdminObj->get($profileid,"PROFILEID","WILL_PAY,REASON,ALLOTED_TO,PROFILEID,ALLOT_TIME");
 	//$jcontactDetails	=$this->fetchJprofileContact(array($profileid));
-	$history	  	=$this->fetchHistoryList($profileid,$privilege);
+	$history	  	=$this->fetchHistoryList($profileid,$privilege,$mainAdminDetails['ALLOT_TIME']);
 	$orderDetails		=$this->fetchOrderDetails($profileid);
 
 	$email                  	=$jProfileDetails['EMAIL'];
@@ -1821,7 +1821,7 @@ public function fetchProfileDisplayDetails($profileid,$privilege)
 		$details                =array_merge($jProfileDetails,$detailsArr);
 	return $details;
 }
-public function fetchHistoryList($profileid,$privilege)
+public function fetchHistoryList($profileid,$privilege,$allotTime='')
 {
 	$urlPath =sfConfig::get("sf_web_dir");
 	$symfonyVar =1;
@@ -1832,7 +1832,7 @@ public function fetchHistoryList($profileid,$privilege)
 	if(in_array("SLHD",$priv) || in_array("SLSUP",$priv) || in_array("P",$priv) || in_array("MG",$priv) || in_array("TRNG",$priv))
 		$historyLimit =0;
 	else{
-		$limitCount =getHistoryCount($profileid);
+		$limitCount =getHistoryCount($profileid,$allotTime);
 		if($limitCount>=5)
 			$historyLimit =$limitCount;
 		else

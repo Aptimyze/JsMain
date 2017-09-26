@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='')
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='',$attach='',$fileName='',$overwriteSenderEmail='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -57,10 +57,11 @@ class MailerService
 			if (!empty($alias) && is_string($alias)) {
 				$senderDetails["ALIAS"] = $alias;
 			}
-			if (!empty($alternateEmailID) && is_string($alternateEmailID)) {
-				$senderDetails["SENDER"] = $alternateEmailID;
+			if (!empty($overwriteSenderEmail) && is_string($overwriteSenderEmail)) {
+				$senderDetails["SENDER"] = $overwriteSenderEmail;
 			}
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
+            $bccList = $this->getBccMailList($mailerName);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,$bccList,$attach,'',$fileName,'','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -112,6 +113,19 @@ class MailerService
 	{
 		$visitorAlertMailerObj = new visitorAlert_MAILER();
 		$recievers = $visitorAlertMailerObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;	
+	}
+        
+        /* This function is used to get receivers to send mail 
+	* @param totalScript : total scripts executing for mailer cron
+	* @param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getMailerReceiversViewSimilarProfilesMailer($totalScript="",$script="",$limit='')
+	{
+		$vspMailerObj = new viewSimilar_MAILER();
+		$recievers = $vspMailerObj->getMailerProfiles($totalScript,$script,$limit);
 		return $recievers;	
 	}
 	 /* This function is used check whether to show Android Icon to Receiver or not
@@ -167,6 +181,19 @@ class MailerService
 			throw  new jsException("No sno/flag in updateSentForUsers() in RegularMatchAlerts.class.php");
 		$matchalertMailerObj = new visitorAlert_MAILER();
                 $matchalertMailerObj->updateSentForUsers($sno,$flag);
+
+	}
+        
+        /* This funxtion is used update the sent flag(Y for sent and F for fail) for each visitor alert mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForSimilarProfilesMailUsers($sno,$flag)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForUsers()");
+		$vspMailerObj = new viewSimilar_MAILER();
+                $vspMailerObj->updateSentForUsers($sno,$flag);
 
 	}
 
@@ -1027,5 +1054,20 @@ return $edu;
                 $addPhotoMailerObj->updateAddPhotoUsersFlag($sno,$flag,$pid);
 
 	}
+    
+    /*
+     * This function is used to get bcc mail id
+     * @param $mailerName: name of the mailer
+     */
+    public function getBccMailList($mailerName){
+        switch($mailerName){
+            case "EXCLUSIVE_MATCH_MAIL":
+                $bccList = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
+                break;
+            default:
+                $bccList = "";
+        }
+        return $bccList;
+    }
 }
 ?>

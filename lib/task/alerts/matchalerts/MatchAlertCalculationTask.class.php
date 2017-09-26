@@ -56,20 +56,20 @@ EOF;
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");
 		$flag=1;
-
 		do{
+                        $this->killInstances($totalScripts);
 			/**
 			* Fetch Ids to be send.
 			*/
-                        
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit,$fromReg);
-                        //$arr = array(9474668=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'O','PERSONAL_MATCHES'=>'A'));
-			if(is_array($arr))
+                        //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
+                       if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
 				{
+                                  $this->killInstances($totalScripts);
                                   if($v["HASTRENDS"] != 1)
                                     $v["HASTRENDS"] = 0;
 					/**
@@ -136,18 +136,12 @@ EOF;
 						else
 						{
                                                     
-                                                        if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
-                                                            $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
-                                                            $profilesArray = $communityModelNT->getMatches($matchesSetting);                                                                                                                
-                                                            if($profilesArray[0] == '')
-                                                            {
-                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
-                                                            }
-                                                            
-                                                            $this->limitNtRec=self::limitNtWhenCommunity;
+                                                        if($this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
+                                                                $matchalerts_MATCHALERTS_TO_BE_SENT->updateCommunity($profileid,"E");
+                                                                $this->limitNtRec=self::limitNtWhenCommunity;
+                                                        }else{
+                                                                $this->limitNtRec=self::limitNtNoCommunity;
                                                         }
-                                                        else
-                                                            $this->limitNtRec=self::limitNtNoCommunity;
                                                         
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
@@ -159,16 +153,17 @@ EOF;
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
                                                         if($totalResults["CNT"] == 0 && $profileid%9==1 && $matchLogic!='O'){
-                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitLastSearchRec,MailerConfigVariables::$lastSearch);
+                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$lastSearch);
                                                                 $totalResults = $lastSearchObj->getMatches();
                                                                 if($totalResults["CNT"] == 0){
                                                                         $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$lastSearch);
                                                                 }
                                                         }
 						}
-                                                $memObject->remove('SEARCH_JPARTNER_'.$profileid);
-                                                $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
                                                 }
+//                                                 cache ttl set to 1hr
+//                                                $memObject->remove('SEARCH_JPARTNER_'.$profileid);
+//                                                $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
 					}
 				}
 			
@@ -211,11 +206,20 @@ EOF;
         /**
          * This function returns whether to use community model.
          */
-        private function checkForCommunityModel($profileId,$oldNewLogic){
-                if($profileId%11<1 && self::_communityModelToggle && $oldNewLogic=='N'){
+        private function checkForCommunityModel($profileObj,$oldNewLogic){
+                if($profileObj->getPROFILEID()%11<1 && $profileObj->getGENDER() == "F" && $profileObj->getAGE() <= 30 && self::_communityModelToggle && $oldNewLogic=='N'){
                     return true;
                 }
                 else
                     return false;
+        }
+        private function killInstances($totalScripts){
+                $configObj = new MatchAlertsConfig();
+                if($configObj->isMatchAlertsForNonPeakHour() && $totalScripts == $configObj->instancePeak){
+                        successfullDie("Reached peak hour kill extra instance and start new");
+                }elseif($configObj->isMatchAlertsForNonPeakHour() == false && $totalScripts == $configObj->instanceNonPeak){
+                        successfullDie("Reached non peak hour increase cron");
+                }
+                unset($configObj);
         }
 }

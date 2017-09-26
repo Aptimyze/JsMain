@@ -249,10 +249,11 @@
         var errorLog = 0;
         var errorMessage = "";
         if(useCase == 'skipDelete') {
-            $("#formContainer").fadeOut(500);
-            $("#skipContainer").fadeIn(500);
-            $(window).scrollTop(0);
-            return errorLog;
+           // $("#formContainer").fadeOut(500);
+            //$(window).scrollTop(0);
+            window.location.href= "/static/PostWeddingServices";
+            /*$("#skipContainer").fadeIn(500);            
+            return errorLog;*/
         }
         if(useCase == 'photo'){
             $(".jfilestyle").addClass('err');
@@ -342,8 +343,9 @@
             $("ul.weddate").parent().removeClass('err');
         }
         if(useCase == 'verified'){
-            $("#formContainer").fadeOut(500);
-            $("#resultContainer").fadeIn(500);
+            //$("#formContainer").fadeOut(2000);
+            window.location.href= "/static/PostWeddingServices";
+            /*$("#resultContainer").fadeIn(500);*/
         } else {
             $('html,body').animate({scrollTop: $("#errorMessage").offset().top-20},1000);
             $("#errorMessage").html(errorMessage);

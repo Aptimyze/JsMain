@@ -1,6 +1,5 @@
 
 var calTimerTime,calTimer;
-
 $(document).ready(function() {
 var calIdTemp =$("#CriticalActionlayerId").val(); 
 if(calIdTemp=='18'){
@@ -344,10 +343,12 @@ else {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
+        
         if(CALButtonClicked===1)return;  
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
+        
         if(layerId==9 && button=='B1')
                     {   
                         var newNameOfUser='',privacyShowName='';
@@ -375,6 +376,11 @@ else {
                             dataType : 'json',
                             data: dataOcc,
                             success: function(response) {
+                                if(button == 'B2'){
+                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                                }else if(button == "B1"){
+                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                                }
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
@@ -387,6 +393,11 @@ else {
                         {
                             
                             var occupText = $("#occInputDiv input").val();
+                            if(button == 'B2'){
+                                GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                            }else if(button == "B1"){
+                                GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                            }
                             window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
                             CALButtonClicked=0;
                             return;
@@ -472,6 +483,11 @@ else {
                             data: dataStateCity,
                             success: function(response) {
                                 hideLoader();
+                                if(button == 'B2'){
+                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+                                }else if(button == "B1"){
+                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+                                }
                                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                                 CALButtonClicked=0;
 
@@ -485,12 +501,56 @@ else {
                         return;
                     }
 
+                    if(layerId==26 && button == "B1")
+                    {   
+                        var dataAboutMe = {'editFieldArr[YOURINFO]':$('#textAboutMe').val().trim() };
+                        if($('#textAboutMe').val().trim().length < 100)
+                        {
+                            showError("Please type min 100 characters.");
+                            CALButtonClicked=0;
+                            return;
+                        }
 
 
+                        showLoader();
+                        $.ajax({
+                            url: '/api/v1/profile/editsubmit',
+                            headers: { 'X-Requested-By': 'jeevansathi' },       
+                            type: 'POST',
+                            dataType : 'json',
+                            data: dataAboutMe,
+                            success: function(response) {
+                                hideLoader();
+                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                                CALButtonClicked=0;
+
+                            },
+                            error: function(response) {
+                                 hideLoader();   
+                                showError('Something went wrong');
+
+                                }
+                            });
+                        return;
+                    }
+                    if(layerId==19){
+                        if(typeof(fromDetailedAction)!='undefined' && fromDetailedAction==1)
+                        {
+                            if(button=='B2')
+                            {
+                                if(typeof(redirectViewProfileUrl)!='undefined' && redirectViewProfileUrl)
+                                   CALParams="&redirecPdUrl="+redirectViewProfileUrl;
+                            }
+
+                        }
+                    }
+        if(button == 'B2'){
+            GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
+        }else if(button == "B1"){
+            GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
+        }
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-        CALButtonClicked=0;
-        
-        
+        CALButtonClicked=0;        
     }
 
 

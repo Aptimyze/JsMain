@@ -7,7 +7,11 @@
         ~if $sf_request->getParameter('showAndBeyond')`
         <script type="text/javascript" src="//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js" async></script>
         ~/if`
+  ~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 	<script>
+  var currentPageName = "~$currentPageName`";
+  var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
+
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
@@ -39,6 +43,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
+	<link rel="manifest" href="/manifest.json">
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
@@ -90,7 +95,7 @@ var domainCode={};
 
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview']);
+                _gaq.push(['_trackPageview', currentPageName || ""]);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

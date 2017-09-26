@@ -163,6 +163,23 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
+    public function getProfilesWithinDateRangeNew($start_dt, $end_dt) {
+        try {
+            $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND STATUS='DONE' AND AMOUNT>0";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
+            $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
     public function getZeroAmountBillings($start_dt, $end_dt) {
         try {
             $sql = "SELECT BILLID FROM billing.PAYMENT_DETAIL WHERE ENTRY_DT>=:START_DT AND ENTRY_DT<=:END_DT AND AMOUNT=0";
@@ -400,6 +417,21 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
         catch(PDOException $e) {
             throw new jsException($e);
+        }
+    }
+    
+    public function getDesiredRecordsAfterDate($startDate){
+        try{
+            $sql = "SELECT * from billing.PAYMENT_DETAIL where ENTRY_DT >= :ENTRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT",$startDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                $output[] = $result;
+            }
+            return $output;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
         }
     }
 }

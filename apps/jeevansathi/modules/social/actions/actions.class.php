@@ -722,7 +722,7 @@ class socialActions extends sfActions
   * This function is used to display the album of a user.
   **/
   public function executeMobilePhotoAlbum(sfWebRequest $request)
-  {   
+  {
 	$profilechecksum = $request->getParameter('profilechecksum');
 	$linkarr = $request->getpathInfoArray();
 	
@@ -760,7 +760,13 @@ class socialActions extends sfActions
 
 
 	$loggedInProfileid = $request->getAttribute('profileid');
+	if(!$loggedInProfileid) //this was added to ensure that POG album cannot be viewed in case of Logout.
+	{
+		$request->setParameter("regMsg","Y");
+		$this->forward('static','LogoutPage');
+	}	
 	$requestedProfileid = NULL;
+
 	if($profilechecksum)
 	{
 		$authenticationJsObj = new JsAuthentication();
@@ -779,6 +785,12 @@ class socialActions extends sfActions
 	}
 	else
 	{
+
+		if(PictureFunctions::conditionalPhotoAccess()) //if conditional layer is to be shown
+		{
+			$this->showLayer = 1;
+			$this->setTemplate("mobile/mobilePhotoAlbum");
+		}
 		$Profile = Profile::getInstance('newjs_master',$requestedProfileid);
 		$Profile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
 		if($Profile->getPHOTO_DISPLAY()=='C')
@@ -791,7 +803,8 @@ class socialActions extends sfActions
                         else
                                 $contact_status = $contact_status_new["TYPE"];
 		}
-		$ProfileObj=$Profile;	
+		$ProfileObj=$Profile;		
+
 	}
 	$picServiceObj = new PictureService($ProfileObj);
 	$album = $picServiceObj->getAlbum($contact_status);

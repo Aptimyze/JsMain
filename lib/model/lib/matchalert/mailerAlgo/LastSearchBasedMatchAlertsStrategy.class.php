@@ -37,7 +37,7 @@ class LastSearchBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                         $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr, $this->logicLevel, $this->limit);
                 }
                 
-                return array("CNT"=>count($arr));
+                return array("CNT"=>count($arr),"profiles"=>$arr);
         }
         /**
          * 

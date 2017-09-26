@@ -1482,10 +1482,8 @@ class photoScreeningService
 	*/
 	public function getFinalScreenedArray($formArr)
 	{
-          
            $albumList = explode(",", $formArr['pictureIDs']);
-          
-           
+
                 if(stristr($formArr["set_profile_pic"],"screened")){
                         $profilePic = str_replace("screened", "", $formArr["set_profile_pic"]);
                         if(is_array($formArr["screenedPicDelete"]) && in_array($profilePic,$formArr["screenedPicDelete"])){
@@ -1548,7 +1546,10 @@ class photoScreeningService
 																			
                                 }
                                 elseif ($formArr["profilePic_" . $albumVal] == "EDIT" || $formArr["albumPic_" . $albumVal] == "EDIT"){
-                                        $edit++;
+
+                                	$photoBookmarkObj = new test_PHOTO_BENCHMARK();
+                                	$photoBookmarkObj->updateOpenCVEdit($albumVal);
+                                	    $edit++;
                                 }
                         }
                         if ($formArr["rotate_" . $albumVal] && $formArr["rotate_" . $albumVal]!=0){
