@@ -512,7 +512,7 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"   => "35");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                  => "108");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"        => "50");
 $js_arr[]=array("jsms/search/inview"   => "5");
-$js_arr[]=array("jsms/login/newMobLogin_js"       => "69");
+$js_arr[]=array("jsms/login/newMobLogin_js"        => "70");
 $js_arr[]=array("jsms/login/mobForgotPass_js"   => "16");
 $js_arr[]=array("jsms/login/resetPass_js"   => "5");
 $js_arr[]=array("jsms/hamburger/ham_js"     => "63");
