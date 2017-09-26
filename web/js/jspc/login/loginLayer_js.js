@@ -471,8 +471,10 @@ $(document).ready(function(){
 	{ 	
 		if(LoggedoutPage){
 			customCheckboxLogin("remember",1);
-			if(fromSignout)
-				$("#LoginMessage").html("You have successfully logged out");
+			if(typeof(fromSignout)!="undefined"){
+				if(fromSignout)
+					$("#LoginMessage").html("You have successfully logged out");
+			}
 			forgotPasswordBinding(0);
 		}
 	}

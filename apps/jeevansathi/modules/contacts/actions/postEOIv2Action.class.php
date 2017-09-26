@@ -158,7 +158,12 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
-
+			if(is_array($this->contactEngineObj->contactHandler->getContactLimitWarning()))
+			{
+				$responseArray["limitWarning"] = $this->contactEngineObj->contactHandler->getContactLimitWarning();
+				$responseArray["limitWarning"]["contactedUser"] = $request->getParameter("profilechecksum");
+			}
+			
 		}
 		else
 		{

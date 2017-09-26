@@ -1,3 +1,10 @@
+<script type="text/javascript">
+    var ssl_siteUrl = "~JsConstants::$ssl_siteUrl`";
+    var browserNotificationRegistered = "~$browserNotificationRegistered`";
+    var browserNotificationCookie = "~$browserNotificationCookie`";
+</script>
+<script src="~JsConstants::$ssl_siteUrl`/js/main_sw_register.js"></script>
+
 ~if $showLayer eq 1`
 <script type="text/javascript">
     function notificationLayerAction(buttonClick){

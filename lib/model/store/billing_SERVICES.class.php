@@ -337,16 +337,21 @@ class billing_SERVICES extends TABLE
             $search_id = "SERVICEID LIKE '{$serviceArr}%'";
         }
         if(empty($mtongue)){
-            $mtongue = "-1";
+            $mtongue[-1] = "default";
         }
         $rsKey = $device."_RS";
         $dolKey = $device."_DOL";
         try{
-            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD FROM billing.SERVICES WHERE ({$search_id}) AND SHOW_ONLINE_NEW LIKE '%,$mtongue,%' AND ACTIVE='Y' ORDER BY PRICE_INR ASC";
+            $sql = "SELECT SERVICEID,NAME,{$rsKey} AS PRICE_INR,{$dolKey} AS PRICE_USD, SHOW_ONLINE_NEW FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND (";
+            $COUNT=1;
+            foreach($mtongue as $key=>$value) {
+                $sql .= " SHOW_ONLINE_NEW LIKE '%,$key,%' OR";
+            }
+            $sql = rtrim($sql,'OR').") ORDER BY PRICE_INR ASC";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
             while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
-                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+                $output[$rowSelectDetail['SHOW_ONLINE_NEW']][$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
             }
             return $output;
         } catch(Exception $e) {
