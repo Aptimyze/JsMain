@@ -31,7 +31,6 @@ list($year1,$month1,$day1)=explode('-',$today);
 $date1=$year1."-".$month1."-".$day1." 00:00:00";
 $date2=$year1."-".$month1."-".$day1." 23:59:59";
 
-$inactivityPeriodThreshold = date("Y-m-d", mktime(0, 0, 0, date("m")-3,date("d"),date("Y"))); /* for past 3 months */
 
 if(1)
 {
@@ -137,18 +136,23 @@ if(1)
 	for($t=0;$t<1;$t++)
 	{
 		$records=0;
-		$abFactor = 5;
-		$usePercentageFlag = false;
-		for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
-		{
-		$myDbName=$slave_activeServers[$serverId];
-		$myDb=$mysqlObj->connect($myDbName);
-		$sql="(SELECT DISTINCT(SENDER) from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TIME between '$date1' and '$date2' and TYPE not in ('C','E') and PROFILEID=SENDER and SERVERID='$serverId') union (SELECT DISTINCT(RECEIVER) from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TIME between '$date1' and '$date2' AND TYPE='A' and PROFILEID=RECEIVER AND SERVERID='$serverId')";
-		$res_main=$mysqlObj->executeQuery($sql,$myDb);
-		while($row0=$mysqlObj->fetchArray($res_main))
-		{
+
+		// for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
+		// {
+		// $myDbName=$slave_activeServers[$serverId];
+		// $myDb=$mysqlObj->connect($myDbName);
+		// $sql="(SELECT DISTINCT(SENDER) from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TIME between '$date1' and '$date2' and TYPE not in ('C','E') and PROFILEID=SENDER and SERVERID='$serverId') union (SELECT DISTINCT(RECEIVER) from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TIME between '$date1' and '$date2' AND TYPE='A' and PROFILEID=RECEIVER AND SERVERID='$serverId')";
+		// $res_main=$mysqlObj->executeQuery($sql,$myDb);
+		// while($row0=$mysqlObj->fetchArray($res_main))
+		// {
+		$chunkSize = 3;
+		for ($i=0; $i < $chunkSize-1; $i++) { 
+			$sql = "SELECT PROFILEID AS SENDER FROM MIS.3DTRENDS_LOG WHERE PROFILEID % $chunkSize = $i";
+			$resFirst = mysql_query($sql, $db2);
+			while($row0 = mysql_fetch_array($resFirst))
+			{
 			$my_profileid=$row0['SENDER'];
-			
+			echo $my_profileid."  ";
 			$sql_details="SELECT PROFILEID,USERNAME,AGE,HEIGHT,MTONGUE,CASTE,MANGLIK,CITY_RES,COUNTRY_RES,EDU_LEVEL_NEW,OCCUPATION,INCOME,MSTATUS,GENDER FROM newjs.JPROFILE WHERE PROFILEID='$my_profileid'";	
 			$res_details=mysql_query($sql_details,$db);
 			$row1=mysql_fetch_array($res_details);
@@ -180,10 +184,8 @@ if(1)
 			
 			$profileid_str='';
 
-			$time_clause = "TIME>='$inactivityPeriodThreshold'"; /*time clause*/
-
 			$sendersIn=$row1["PROFILEID"];
-			$contactResult=getResultSet("RECEIVER,TYPE",$sendersIn,'','','','',"'C','E'",$time_clause,'','','','','',"Y");
+			$contactResult=getResultSet("RECEIVER,TYPE",$sendersIn,'','','','',"'C','E'",'','','','','','',"Y");
 			if(is_array($contactResult))
 			{
 				foreach($contactResult as $key=>$value)
@@ -200,7 +202,7 @@ if(1)
 			}
 			$receiversIn=$row1["PROFILEID"];
 			$typeIn="'A'";
-			$contactResult=getResultSet("SENDER",'','',$receiversIn,'',$typeIn,'',$time_clause,'','','','','',"Y");
+			$contactResult=getResultSet("SENDER",'','',$receiversIn,'',$typeIn,'','','','','','','',"Y");
 			if(is_array($contactResult))
                         {
                                 foreach($contactResult as $key=>$value)
@@ -1776,21 +1778,7 @@ if(1)
 			echo '<br> $education_total_count $education_count $education_max_deviation $weight_education is '.$education_total_count.' '.$education_count.' '.$education_max_deviation.' '.$weight_education;
 			echo '<br> $occupation_total_count $occupation_count $occupation_max_deviation $weight_occupation is '.$occupation_total_count.' '.$occupation_count.' '.$occupation_max_deviation.' '.$weight_occupation;
 			echo '<br> $city_total_count $city_count $city_max_deviation $weight_city is '.$city_total_count.' '.$city_count.' '.$city_max_deviation.' '.$weight_city;*/
-			/* NOTE: abFactor has to be an ODD NUMBER */
-			if((($my_profileid % $abFactor) == 0) && $usePercentageFlag){
-				// logging PROFILEID in table to rollback
-				$qry = "INSERT INTO MIS.3DTRENDS_LOG(PROFILEID) values('$my_profileid')";
-				mysql_query($qry, $db2);
-				// new values
-				$TAIL = "_value_percentile_string";
-				$only_percentage = array("caste", "mtongue", "occupation", "education", "income", "height", "city", "age", "mstatus", "manglik");
-				foreach ($only_percentage as $value) {
-					${$value . $TAIL} ='|';
-					foreach (${$value . "_field"} as $key => $val){
-						${$value . $TAIL} .= $val['value'].'#'.$val['percent'].'|';
-					}
-				}
-			}
+		
 
 		 
 				$insert_query="UPDATE twowaymatch.TRENDS SET USERNAME='".stripslashes($my_username)."',GENDER='$my_gender[$t]',INITIATED='$initiated',ACCEPTED='$accepted',DECLINED='$declined',W_CASTE='".$weight_caste."',CASTE_VALUE_PERCENTILE='".$caste_value_percentile_string."',W_MTONGUE='".$weight_mtongue."',MTONGUE_VALUE_PERCENTILE='".$mtongue_value_percentile_string."',W_AGE='".$weight_age."',AGE_VALUE_PERCENTILE='".$age_value_percentile_string."',W_INCOME='".$weight_income."',INCOME_VALUE_PERCENTILE='".$income_value_percentile_string."', W_HEIGHT='".$weight_height."',HEIGHT_VALUE_PERCENTILE='".$height_value_percentile_string."',W_EDUCATION='".$weight_education."',EDUCATION_VALUE_PERCENTILE='".$education_value_percentile_string."',W_OCCUPATION='".$weight_occupation."',OCCUPATION_VALUE_PERCENTILE='".$occupation_value_percentile_string."', W_CITY='".$weight_city."',CITY_VALUE_PERCENTILE='".$city_value_percentile_string."',W_MSTATUS='".$weight_mstatus."',MSTATUS_N_P='".$mstatus_adjusted_percentages_percentile['N']."',MSTATUS_M_P='".$mstatus_adjusted_percentages_percentile['M']."',W_MANGLIK='".$weight_manglik."',MANGLIK_M_P='".$manglik_adjusted_percentages_percentile['M']."',MANGLIK_N_P='".$manglik_adjusted_percentages_percentile['N']."', W_NRI='".$weight_country."',NRI_M_P='".$country_adjusted_percentages_percentile['NRI']."',NRI_N_P='".$country_adjusted_percentages_percentile['I']."',MAX_SCORE='".$max_score."',MAX_AGE_SCORE='".$max_age_score."',ENTRY_DT='".$today."',WEIGHT_ORDERING='".$weight_ordering."' WHERE PROFILEID='$my_profileid'";
@@ -2011,8 +1999,8 @@ if(1)
 			unset($city_adjusted_percentages_percentile_mean);
 				
 		}
-		unset($myDb);
-		unset($myDbName);
+		// unset($myDb);
+		// unset($myDbName);
 		}
 	}
         
