@@ -22,7 +22,7 @@ while (1) {
                 $counter = 0;
         }        
         if($counter >= $changeUnimportantFieldOn && $unImpField > $unImpFieldCheck){ // reset flag to 1 if time diff reached 1 hr
-                $redis->set("hideUnimportantFeatureAtPeakLoad",1); // Set flag to 1
+                $redis->set("hideUnimportantFeatureAtPeakLoad",0); // Set flag to 1
                 sendJJSMS("reset");
                 sendSlackmessage("FlagCount reset to 1 from $unImpField after ".($counter*5)." Seconds"); 
                 $counter = 0;
