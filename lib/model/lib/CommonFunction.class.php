@@ -1122,5 +1122,14 @@ class CommonFunction
 		$output = curl_exec($ch);
 		return $output;
 	}
+    public static function markProfileCompleteAndActivated(){
+        $toSetArr['ACTIVATED'] = 'Y';
+        $toSetArr['INCOMPLETE'] = 'N';
+        $loggedInObj = LoggedInProfile::getInstance();
+        $jProfileObj = new JPROFILE();
+        $jProfileObj->edit($toSetArr,$loggedInObj->getPROFILEID());
+        $loggedInObj->setACTIVATED('Y');
+        $loggedInObj->setINCOMPLETE('N');
+    }
 }
 ?>

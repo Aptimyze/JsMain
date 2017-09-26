@@ -193,10 +193,7 @@ class AuthFilter extends sfFilter {
                                                 }
                                                 
                                                 if($phoneVerified == 'Y' && $data[HAVEPHOTO] == 'Y' && $data[ACTIVATED] == 'N'){
-                                                    $toSetArr['ACTIVATED'] = 'Y';
-                                                    $toSetArr['INCOMPLETE'] = 'N';
-                                                    $jProfileObj = new JPROFILE();
-                                                    $jProfileObj->edit($toSetArr,  LoggedInProfile::getInstance()->getPROFILEID());
+                                                    CommonFunction::markProfileCompleteAndActivated();
                                                     $data[INCOMPLETE] = 'N';
                                                     $data[ACTIVATED] = 'Y';
                                                 }
