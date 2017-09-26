@@ -1125,6 +1125,7 @@ class CommonFunction
     public static function markProfileCompleteAndActivated(){
         $toSetArr['ACTIVATED'] = 'Y';
         $toSetArr['INCOMPLETE'] = 'N';
+        $toSetArr['SCREENING'] = 1099511627775;
         $loggedInObj = LoggedInProfile::getInstance();
         $jProfileObj = new JPROFILE();
         $jProfileObj->edit($toSetArr,$loggedInObj->getPROFILEID());
