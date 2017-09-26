@@ -97,14 +97,14 @@ class ProfilePage extends React.Component {
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
-            if(stype != undefined){
+            if(stype != undefined && stype != "undefined"){
                 urlString += "&stype=" + stype;
             }
             if(searchid != 1 && searchid != null)
             {
                 urlString += "&searchid=" + searchid;
             } 
-            if(contact_id != undefined) {
+            if(contact_id != undefined && contact_id != "undefined") {
                 urlString += "&contact_id=" + contact_id;
             }
         }
@@ -202,7 +202,7 @@ class ProfilePage extends React.Component {
                 nextUrl += "&searchid=" + this.state.searchid;
                 nextDataApi += "&searchid=" + this.state.searchid;
             } 
-            if(this.state.contact_id != undefined) {
+            if(this.state.contact_id != undefined && this.state.contact_id != "undefined" ) {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
             }
@@ -224,7 +224,7 @@ class ProfilePage extends React.Component {
                 prevUrl += "&searchid=" + this.state.searchid;
                 prevDataApi += "&searchid=" + this.state.searchid;
             } 
-            if(this.state.contact_id != undefined) {
+            if(this.state.contact_id != undefined && this.state.contact_id != "undefined") {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
             }
