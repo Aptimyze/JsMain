@@ -21,3 +21,4 @@ export const PROFILE_GUNA_LOCAL_STORAGE_SIZE = 50;
 export const PROFILE_GUNA_LOCAL_STORAGE_TIME_LIMIT = 1000; //seconds;
 export const PROFILE_LOCAL_STORAGE_KEY = "profileLocalStorage";
 export const GUNA_LOCAL_STORAGE__KEY = "gunaLocalStorage";
+export const COMM_HISTORY = "/api/v1/contacts/history"

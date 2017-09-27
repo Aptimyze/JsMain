@@ -334,7 +334,7 @@ getCancelDeclineLayer(actionDetails){
 );
 }
   setBlockButton(object){
-    this.props.replaceSingleButton(Array({label: "Unblock", params: "&ignore=0", iconid: "ignore", primary: "true", secondary: null,enable:true}));
+    this.props.replaceSingleButton(Array({action:"IGNORE",label: "Unblock", params: "&ignore=0", iconid: "ignore", primary: "true", secondary: null,enable:true}));
   }
 
 goToViewSimilar(){

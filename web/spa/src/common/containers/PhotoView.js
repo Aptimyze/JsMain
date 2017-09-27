@@ -174,7 +174,7 @@ class PhotoView extends React.Component {
                 {errorView}
                 {verifyLayer}
                 <div id="picContent">
-                    <img id="profilePic" style={{"height":window.outerWidth}} onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />
+                    <img id="profilePic" style={{"min-height":window.outerWidth}} onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />
                     <div className="posabs fullwid vpro_40PerTop fullheight txtc">
                         {loaderView}
                     </div>
