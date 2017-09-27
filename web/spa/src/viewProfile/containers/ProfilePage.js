@@ -19,6 +19,9 @@ import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import ContactEngineButton from "../../contact_engine/containers/contactEnginePD";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
+import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
+import * as CONSTANTS from '../../common/constants/apiConstants'
+
 
 class ProfilePage extends React.Component {
 
@@ -766,6 +769,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         showProfile: (containerObj,urlString) => {
+            if ( localStorage.getItem('lastProfilePageLocation') === urlString )
+            {
+              removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(urlString));
+            }
+            else
+            {
+              localStorage.setItem('lastProfilePageLocation',urlString);   
+            }
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },
