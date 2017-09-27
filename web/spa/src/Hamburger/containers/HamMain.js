@@ -118,7 +118,7 @@ class HamMain extends React.Component {
             let liElems = document.getElementById(minorElem).getElementsByTagName("li");
             let minorLiHeight = 0;
             for(let i=0;i<liElems.length;i++) {
-                minorLiHeight += liElems[i].getBoundingClientRect().height;
+                minorLiHeight += liElems[i].getBoundingClientRect().height +15;
             }
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
             document.getElementById(minorElem).style.height = minorLiHeight + "px";
@@ -421,25 +421,22 @@ class HamMain extends React.Component {
         }
         else if(this.props.page == "Login") {
             membershipRegisterView = <div className="brdrTop pad150 fontreg">
-                <div className = "dispibl wid49p pad16">
-                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink2" className="hamBtnLoggedOut bg10 lh40 br6 white">
-                        LOGIN
-                    </Link>  
-                </div>
-                <div className = "dispibl wid49p pad16">
-                    <a className="bg7 br6 lh40 white hamBtnLoggedOut" href="/register/page1?source=mobreg4">
-                        REGISTER
-                    </a>
-                </div>
-            </div>
-            editProfileView = <li>
-                <i className="hamSprite editProfileIcon"></i>
-                <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="f17 white">
-                        Browse By Community
-                </a>
-            </li>;
-        }
-
+                                                <div className="dispibl wid49p pad16">
+                                                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink2" className="hamBtnLoggedOut bg10 lh40 br6 white">
+                                                        LOGIN
+                                                    </Link>
+                                                </div>
+                                                <div className="dispibl wid49p pad16">
+                                                    <a className="bg7 br6 lh40 white hamBtnLoggedOut" href="/register/page1?source=mobreg4">REGISTER</a>
+                                                </div>
+                                     </div>;
+            editProfileView = <li className="mb12">
+                                <i className="hamSprite editProfileIcon"></i>
+                                <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="white">
+                                    Browse By Community
+                                </a>
+                               </li>;          
+        }  
         let urlString = "",appText = "";
         if(getAndroidVersion()) {
             urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
@@ -457,29 +454,32 @@ class HamMain extends React.Component {
         }
 
         let listingView = <div id="listing" className="overflowhidden">
-            <ul id="scrollElem" className="fontreg white listingHam posrel fullheight overAutoHidden">
-                <li className="brdrBtm f14 pb8 fontlig">
-                    <div className="wid49p dispibl">
-                        <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
-                    </div>
-                    <div className="wid49p dispibl">
-                        <a id="hindiLink" href={newHref}  className="white fr mar0Imp">Hindi Version</a>
+            <ul id="scrollElem" className="fontreg white listingHam listingStyle overAutoHidden">
+                <li className="appDownload f13 pb8 fontlig" style={{"padding":"10px 20px 0 20px"}}>
+                    <div className="brdrBtm pb10">
+                        <div className="wid49p dispibl">
+                            <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
+                        </div>
+                        <div className="wid49p dispibl">
+                            <div id="hindiLink" onclick="translateSite(\'http://hindi.jeevansathi.com\');" className="white fr mar0Imp">हिंदी में</div>
+                        </div>
                     </div>
                 </li>
+                
                 {startingTuple}
-                <li>
-                    <i className="hamSprite homeIcon mt10Imp"></i>
-                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink1" className="f17 white">
+                <li className="mb12">
+                    <i className="hamSprite homeIcon"></i>
+                    <Link to={"/"} onClick={(e) => this.checkHome(e)} id="homeLink1" className="white">
                         Home
                     </Link>
                 </li>
-                <li>
+                <li className="mb12">
                     <i className="hamSprite searchIcon"></i>
                     <a id="searchLink" href="/search/topSearchBand?isMobile=Y" className="white">
                         Search
                     </a>
                 </li>
-                <li>
+                <li className="mb12">
                     <i className="hamSprite searchProfileIcon"></i>
                     <a id="searchProfileIdLink" href="/search/searchByProfileId" className="white">
                         Search by Profile ID
@@ -492,45 +492,44 @@ class HamMain extends React.Component {
                 {shortlistedView}
                 {phoneBookView}
                 {profileVisitorView}
-                <li>
+                <li className="mb12">
                     <div id="settingsParent">
                         <i className="hamSprite settingsIcon"></i>
-                        <div id="settingsLink" className="ml15 dispibl white">
-                            Settings
+                        <div id="settingsLink" className="mrl10 dispibl white">
+                            Settings & Assistance
                         </div>
                         <i id="expandSettings" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                     </div>
-                    <ul id="settingsMinor" className = "minorList f15">
+                    <ul id="settingsMinor" className="minorList f15 settingStyle">
                         {recommendationView}
                         {privacySettingView}
                         {changePassView}
-                        <li>
-                            <a id="switchLink" href="/?desktop=Y" className="white">
-                                Switch to Desktop Site
-                            </a>
-                        </li>
                         {hideProfileView}
                         {deleteProfileView}
-                        {helpView}
-                        
-                        <li>
-                            <a id="contactUsLink" href="/contactus/index" className="white">
+                        {helpView} 
+                        <li className="mb12">
+                            <a id="contactUsLink" href="/contactus/index" className="newS white">
                                 Contact Us
                             </a>
                         </li>
-                        <li>
-                            <a id="privacyPolicyLink" href="/static/page/privacypolicy" className="white">
+                        <li className="mb12">
+                            <a id="privacyPolicyLink" href="/static/page/privacypolicy" className="newS white">
                                 Privacy Policy
                             </a>
                         </li>
-                        <li>
-                            <a id="termsLink" href="/static/page/disclaimer" className="white">
+                        <li className="mb12">
+                            <a id="termsLink" href="/static/page/disclaimer" className="newS white">
                                 Terms of use
                             </a>
                         </li>
-                        <li>
-                            <a id="fraudLink" href="/static/page/fraudalert" className="white">
+                        <li className="mb12">
+                            <a id="fraudLink" href="/static/page/fraudalert" className="newS white">
                                 Fraud Alert
+                            </a>
+                        </li>
+                        <li className="mb12">
+                            <a id="switchLink" href="/?desktop=Y" className="newS white">
+                                Switch to Desktop Site
                             </a>
                         </li>
                         {logoutView}
@@ -544,7 +543,7 @@ class HamMain extends React.Component {
 
         return (
             <div id="hamMain">
-                <div id="hamburger" className="white posfix z105 wid80p fullheight overflowhidden">
+                <div id="hamburger" className="white posfix z105 wid90p fullheight">
                         {listingView}
                 </div>
                 {loaderView}
