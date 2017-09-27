@@ -3025,7 +3025,7 @@ class MembershipHandler
             if(empty($city_res) || $city_res === 0){
                 $isCityEntered = false;
             } else{
-                $isCityEntered = false;
+                $isCityEntered = true;
             }
         } else{
             $isCityEntered = true;
