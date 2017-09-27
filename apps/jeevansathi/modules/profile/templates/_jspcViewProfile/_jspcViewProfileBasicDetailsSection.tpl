@@ -159,8 +159,8 @@
                   ~/if`
                     <!--start:tooltip-->
                     <div class="reportChild">
-                      <div class="boxtip5 colrw fontlig prfp8 wd74">
-                        Report Profile
+                      <div class="boxtip5 colrw fontlig prfp8 prfwid6">
+                        Report as Fake/Spam
                       </div>                                    
                     </div>
                     <!--end:tooltip--> 
