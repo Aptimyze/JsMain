@@ -666,9 +666,14 @@ class ProfileMemcacheService
             if(!array_key_exists($value['SENDER'], $arr))
             {
                $MESSAGE++;
-                if($value['SEEN']==N) 
+               $arr[$value['SENDER']]['SEEN']=$value['SEEN'];
+                if($value['SEEN']==N)
                     $MESSAGE_NEW++;
-               $arr[$value['SENDER']]=1;
+           }
+            else
+            {
+             if($arr[$value['SENDER']]['SEEN']=="Y" && $value['SEEN']=="N")
+                    $MESSAGE_NEW++;
             }
         }
     } 
