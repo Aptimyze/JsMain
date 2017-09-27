@@ -81,6 +81,7 @@ class ProfilePage extends React.Component {
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
         //console.log(this.state.gender);
+         
         window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
@@ -136,6 +137,7 @@ class ProfilePage extends React.Component {
             })
         }
         let startX, endX;
+        let stype = getParameterByName(window.location.href,"stype");
         document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
             startX = e.changedTouches[0].clientX;
             endX = 0;
@@ -148,8 +150,11 @@ class ProfilePage extends React.Component {
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
+          {    
+            return;
+          }
+          else if(stype == "KM") //swipe to be disabled for Kundli Listing
           {
-            console.log("not");
             return;
           }
           else {
@@ -765,7 +770,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        showProfile: (containerObj,urlString) => {
+        showProfile: (containerObj,urlString) => {            
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },

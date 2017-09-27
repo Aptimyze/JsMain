@@ -15,7 +15,7 @@ this.setState({...newState});
 }
 render(){
 
-return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+return (<div id="viewContactLayer"  className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
             <div className={"posabs ce_z103 ce_top1 fullwid "} style={this.state.tupleDim}>
 
@@ -41,7 +41,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
 <p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 
-  <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '11%'}}>
+  <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber">
 <p id="ViewContactPreLayerTextNoNumber" dangerouslySetInnerHTML={{__html: this.state.vCNoNumber}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 {this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
