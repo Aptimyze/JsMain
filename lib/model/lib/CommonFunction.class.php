@@ -1126,10 +1126,14 @@ class CommonFunction
         $toSetArr['ACTIVATED'] = 'Y';
         $toSetArr['INCOMPLETE'] = 'N';
         $toSetArr['SCREENING'] = 1099511627775;
+        $dateNow = date('Y-m-d H:i:s');
+        $toSetArr['VERIFY_ACTIVATED_DT'] = $dateNow;
         $loggedInObj = LoggedInProfile::getInstance();
         $jProfileObj = new JPROFILE();
         $jProfileObj->edit($toSetArr,$loggedInObj->getPROFILEID());
         $loggedInObj->setACTIVATED('Y');
+        $loggedInObj->setVERIFY_ACTIVATED_DT($dateNow);
+        $loggedInObj->setSCREENING(1099511627775);
         $loggedInObj->setINCOMPLETE('N');
     }
 }
