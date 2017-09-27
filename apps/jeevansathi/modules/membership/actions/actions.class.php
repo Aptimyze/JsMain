@@ -123,8 +123,8 @@ class membershipActions extends sfActions
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileID = $data["userDetails"]["PROFILEID"];
-                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileID);
+                $profileId = $data["userDetails"]["PROFILEID"];
+                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileId);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
                 break;
 
@@ -226,8 +226,8 @@ class membershipActions extends sfActions
                 $template  = 'JSMSCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileID = $data["userDetails"]["PROFILEID"];
-                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileID);
+                $profileId = $data["userDetails"]["PROFILEID"];
+                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileId);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
 
