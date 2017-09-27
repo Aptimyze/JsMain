@@ -51,6 +51,7 @@ class HamMain extends React.Component {
             this.checkHeight();
         } else {
             document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
+            document.getElementById("scrollElem").style.height = (window.innerHeight-document.getElementById("bottomTab").getBoundingClientRect().height)+"px";
         }
         window.addEventListener("resize", this.resizeHam);
     }
@@ -122,6 +123,7 @@ class HamMain extends React.Component {
             for(let i=0;i<liElems.length;i++) {
                 minorLiHeight += liElems[i].getBoundingClientRect().height +15;
             }
+            minorLiHeight -=20;
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
             document.getElementById(minorElem).style.height = minorLiHeight + "px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
@@ -169,27 +171,29 @@ class HamMain extends React.Component {
             if(this.state.bellResponse.VISITOR_ALERT != 0) {
                 profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>; 
             }
-            profileVisitorView = <li>
+          
+            profileVisitorView = <li className="mb12">
                 <i className="hamSprite profileVisitorIcon"></i>
-                <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="f17 white">
+                <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="white">
                     Profile Visitors
                 </a>
                 {profileVisitorCount}
             </li>;
 
-            phoneBookView = <li>
+            phoneBookView = <li className="mb12">
                 <i className="hamSprite phoneIcon"></i>
-                <a href="/inbox/16/1" id="phoneLink" className="f17 white">
+                <a href="/inbox/16/1" id="phoneLink" className="white">
                     Phonebook
                 </a>
             </li>;
+
             if(this.state.bellResponse.BOOKMARK != 0) {
                 shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;  
             }
 
-            shortlistedView = <li>
+            shortlistedView = <li className="mt12 mb12">
                 <i className="hamSprite shortlistedIcon"></i>
-                <a href="/search/shortlisted" id="shortlistedLink" className="f17 white">
+                <a href="/search/shortlisted" id="shortlistedLink" className="white">
                     Shortlisted
                     {shortlistedCount}
                 </a>
@@ -208,56 +212,56 @@ class HamMain extends React.Component {
                 intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
             }
 
-            myContactView = <li>
+            myContactView = <li className='mt12'>
                 <div id="contactsParent">
                     <i className="hamSprite myContactIcon"></i>
-                    <div id="myContactLink" className="f17 ml15 white ml15 dispibl">
+                    <div id="myContactLink" className="ml10 white ml15 dispibl">
                         My Contacts
                     </div>
                     <i id="expandContacts" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
                 <ul id="contactsMinor" className = "minorList f15">
-                    <li>
-                        <a id="intRecLink" href="/inbox/1/1" className="white">
+                    <li className="mb12">
+                        <a id="intRecLink" href="/inbox/1/1" className="newS white">
                             Interests Received
                             {intRecCount}
                         </a>
                     </li>
-                    <li>
-                        <a id="intSentLink" href="/inbox/6/1" className="white">
+                    <li className="mb12">
+                        <a id="intSentLink" href="/inbox/6/1" className="newS white">
                             Interests Sent
                         </a>
                     </li>
-                    <li>
-                        <a id="filtIntLink" href="/inbox/12/1" className="white">
+                    <li className="mb12">
+                        <a id="filtIntLink" href="/inbox/12/1" className="newS white">
                             Filtered Interest
                             {filteredCount}
                         </a>
                     </li>
-                    <li>
-                        <a id="allAccLink" href="/inbox/2/1" className="white">
+                    <li className="mb12">
+                        <a id="allAccLink" href="/inbox/2/1" className="newS white">
                             All Acceptances
                             {allAccCount}
                         </a>
                     </li>
-                    <li>
-                        <a id="declinedLink" href="/inbox/11/1" className="white">
+                    <li className="mb12">
+                        <a id="declinedLink" href="/inbox/11/1" className="newS white">
                             Declined Members
                         </a>
                     </li>
-                    <li>
-                        <a id="blockedLink" href="/inbox/20/1" className="white">
+                    <li className="mb12">
+                        <a id="blockedLink" href="/inbox/20/1" className="newS white">
                             Blocked/Ignored Members
                         </a>
                     </li>
-                    <li>
-                        <a id="messagesLink" href="/inbox/4/1" className="white">
+                    <li className="mb12">
+                        <a id="messagesLink" href="/inbox/4/1" className="newS white">
                             Messages
                             {messageCount}
                         </a>
                     </li>
                     <li>
-                        <a id="messagesLink" href="/inbox/17/1" className="white">
+                        <a id="messagesLink" href="/inbox/17/1" className="newS white">
                             Who Viewed My Contacts
                         </a>
                     </li>
@@ -268,17 +272,17 @@ class HamMain extends React.Component {
                 savedSearchCount = <span id="savedSearchCount" className="f12 album_color1 ml15">{this.state.bellResponse.SAVE_SEARCH}</span>;
             }
 
-            savedSearchView = <li>
+            savedSearchView = <li className="mb12">
                 <i className="hamSprite savedSearchIcon"></i>
-                <a href="/search/MobSaveSearch" id="savedSearchLink" className="f17 white">
+                <a href="/search/MobSaveSearch" id="savedSearchLink" className="white">
                     Saved Searches
                     {savedSearchCount}
                 </a>
             </li>;
 
-            editProfileView = <li>
+            editProfileView = <li className="mb12">
                 <i className="hamSprite editProfileIcon"></i>
-                <a href="/profile/viewprofile.php?ownview=1" id="editProfileLink" className="f17 white">
+                <a href="/profile/viewprofile.php?ownview=1" id="editProfileLink" className="white">
                     Edit Profile
                 </a>
             </li>;
@@ -294,37 +298,37 @@ class HamMain extends React.Component {
                     </div>
                     <i id="expandMyMatches" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="myMatchesMinor" className = "minorList f15">
-                    <li>
-                        <a id="dppLink" href="/search/perform?partnermatches=1" className="white">
+                <ul id="myMatchesMinor" style={{"height":"0px"}} className = "minorList f15">
+                    <li className="mb12">
+                        <a id="dppLink" href="/search/perform?partnermatches=1" className="newS white">
                             Desired Partner Matches
                         </a>
                     </li>
-                    <li>
-                        <a id="mutualMatchesLink" href="/search/perform?twowaymatch=1" className="white">
+                    <li className="mb12">
+                        <a id="mutualMatchesLink" href="/search/perform?twowaymatch=1" className="newS white">
                             Mutual Matches
                         </a>
                     </li>
-                    <li>
-                        <a id="memLookingLink" href="/search/perform?reverseDpp=1" className="white">
+                    <li className="mb12">
+                        <a id="memLookingLink" href="/search/perform?reverseDpp=1" className="newS white">
                             Members Looking For Me
                         </a>
                     </li>
-                    <li>
-                        <a id="kundliLink" href="/search/perform?kundlialerts=1" className="white">
+                    <li className="mb12">
+                        <a id="kundliLink" href="/search/perform?kundlialerts=1" className="newS white">
                             Kundli Matches
                         </a>
                     </li>
-                    <li>
-                        <a id="verifiedLink" href="/search/verifiedMatches" className="white">
+                    <li className="mb12">
+                        <a id="verifiedLink" href="/search/verifiedMatches" className="newS white">
                             Matches Verified By Visit
                         </a>
                     </li>
                     <li>
-                        <a id="dailyRec" href="/inbox/7/1" className="white">
+                        <a id="dailyRec" href="/inbox/7/1" className="newS white">
                             Daily Recommendations 
+                            {dailyRecCount}
                         </a>
-                        {dailyRecCount}
                     </li>
                 </ul>
             </li>;
@@ -464,7 +468,7 @@ class HamMain extends React.Component {
                             <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                         </div>
                         <div className="wid49p dispibl">
-                            <div id="hindiLink" onclick="translateSite(\'http://hindi.jeevansathi.com\');" className="white fr mar0Imp">हिंदी में</div>
+                            <div id="hindiLink" onclick="translateSite(\'http://hindi.jeevansathi.com\');" className="white fr mar0Imp">Hindi Version</div>
                         </div>
                     </div>
                 </li>
@@ -549,7 +553,7 @@ class HamMain extends React.Component {
                 <div id="hamburger" className="white posfix z105 wid90p fullheight">
                         <div id="outerHamDiv">
                         <div id="mainHamDiv" >
-                        <div id="newHamlist" class="hamlist hampad1" >
+                        <div id="newHamlist" className="hamlist hampad1" >
                         {listingView}
                         </div>
                         </div>
