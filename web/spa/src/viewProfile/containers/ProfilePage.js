@@ -298,8 +298,9 @@ class ProfilePage extends React.Component {
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
-
-            this.setState({
+            if(stype != "KM") //next profile hit should not go in case of Profiles from Kundli Listings
+            {
+               this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
                 actual_offset: actual_offset,
@@ -308,7 +309,9 @@ class ProfilePage extends React.Component {
                 searchid:searchid,
                 callApi: false,
                 stype: stype
-            },this.setNextPrevLink);
+                },this.setNextPrevLink);
+            }
+           
             let picData;
             if(!nextProps.pic) {
                 if(this.state.gender == "M") {
