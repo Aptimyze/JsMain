@@ -1158,12 +1158,14 @@ class crmInterfaceActions extends sfActions
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
             //insert the ID in case of exclusive
             $exclusiveId = $this->serviceid;
-            $exclusiveId = substr($exclusiveId, 0, 1);
-            if($exclusiveId == 'X'&& $serviceStatus=='Y'){
+            //$exclusiveId = substr($exclusiveId, 0, 1);
+            $findX = 'X';
+            $pos = strpos($exclusiveId, $findX);
+            if($pos !== false && $serviceStatus=='Y'){
                 $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
                 $assistedProductProfileInfo->replaceExclusiveProfile($this->profileid,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
                 unset($assistedProductProfileInfo);
-            }else if($exclusiveId == 'X'&& $serviceStatus=='N'){
+            }else if($pos !== false&& $serviceStatus=='N'){
                 $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
                 $assistedProductProfileInfo->Delete($this->profileid);
                 unset($assistedProductProfileInfo);
