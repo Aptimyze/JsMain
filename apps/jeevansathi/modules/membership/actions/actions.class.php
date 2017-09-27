@@ -92,6 +92,7 @@ class membershipActions extends sfActions
         $request->setParameter('device', 'desktop');
 
         $memActFunc = new MembershipActionFunctions();
+        $membershipHandlerObj = new MembershipHandler();
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
         switch ($displayPage) {
             case '1':
@@ -122,7 +123,8 @@ class membershipActions extends sfActions
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileID = $data["userDetails"]["PROFILEID"];
+                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileID);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
                 break;
 
@@ -188,6 +190,7 @@ class membershipActions extends sfActions
         header('Cache-Control: no-transform');
 
         $memActFunc = new MembershipActionFunctions();
+        $membershipHandlerObj = new MembershipHandler();
 
         //parse request params for module
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum,$upgradeMem) = $memActFunc->getReqParamsForRevMobMem($request);
@@ -223,7 +226,8 @@ class membershipActions extends sfActions
                 $template  = 'JSMSCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-
+                $profileID = $data["userDetails"]["PROFILEID"];
+                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileID);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
 

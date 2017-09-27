@@ -227,6 +227,7 @@
 	<!--end:continue button-->
 </div>
 <script type="text/javascript">
+    var isCityEntered = "~$isCityEntered`";
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	~if $data.backendLink`
@@ -439,16 +440,16 @@
             }else{
                 usdTOinr = 0;
             }
-
-			~if $data.backendLink`
+			if(isCityEntered){
+                ~if $data.backendLink`
 				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`&usdTOinr=" + usdTOinr;
-			~else`
+                    ~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
 				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
 			    } else {
 					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
-			    }	
+			    }
 			} else {
 				if(checkEmptyOrNull(readCookie('selectedVas'))){
 					paramStr = "displayPage=5&mainMembership=&vasImpression="+readCookie('selectedVas')+"&usdTOinr="+usdTOinr;
@@ -456,16 +457,21 @@
 					paramStr = "displayPage=5&mainMembership=&vasImpression="+"&usdTOinr="+usdTOinr;
 			    }
 			}
-			
+
 		    if(checkEmptyOrNull(readCookie('couponID'))){
 		    	paramStr += "&couponID="+readCookie('couponID');
 		    }
 		    ~/if`
-		    url = "/membership/jsms?" + paramStr;
-		    if(checkEmptyOrNull(readCookie('device'))){
-				url += '&device=' + readCookie('device');
-			}
-		    window.location.href = url;
+                url = "/membership/jsms?" + paramStr;
+                if(checkEmptyOrNull(readCookie('device'))){
+                    url += '&device=' + readCookie('device');
+                }
+                window.location.href = url;
+            } else{
+			    var errorMsg = ["Please fill 'State' in 'Edit Profile'<BR> Basic Details section to proceed."];
+			    ShowTopDownError(errorMsg,3000);
+            }
+
 		});
 		$("#enterCouponBtn").click(function(e){
 			var upgradeMem = "~$data.upgradeMem`";

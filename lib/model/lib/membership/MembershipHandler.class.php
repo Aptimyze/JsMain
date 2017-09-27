@@ -3016,4 +3016,20 @@ class MembershipHandler
         return $membership;
     }
 
+    public function isCityEntered($profileID){
+        $obj = JPROFILE::getInstance('newjs_slave');
+        $arrProfiles = $obj->getArray(array('PROFILEID'=> $profileID),"","","PROFILEID,CITY_RES,COUNTRY_RES");
+        $city_res = $arrProfiles[0]["CITY_RES"];
+        $country_res = $arrProfiles[0]["COUNTRY_RES"];
+        if($country_res == 51){
+            if(empty($city_res) || $city_res === 0){
+                $isCityEntered = false;
+            } else{
+                $isCityEntered = false;
+            }
+        } else{
+            $isCityEntered = true;
+        }
+        return $isCityEntered;
+    }
 }
