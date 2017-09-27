@@ -15,7 +15,7 @@ this.setState({...newState});
 }
 render(){
 
-return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+return (<div id="viewContactLayer"  className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
             <div className={"posabs ce_z103 ce_top1 fullwid "} style={this.state.tupleDim}>
 
