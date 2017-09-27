@@ -50,16 +50,16 @@ class HamMain extends React.Component {
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             this.checkHeight();
         } else {
-            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+            document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
         }
         window.addEventListener("resize", this.resizeHam);
     }
 
     resizeHam() {
         if(this.state.bellResponse.MEMBERSHIPT_TOP == null || !this.state.bellResponse.MEMBERSHIPT_TOP) {
-            document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+            document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
         } else {
-            document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+            document.getElementById("mainHamDiv").style.height = (window.innerHeight-100)+"px";
         } 
     }
     componentWillUnmount()
@@ -68,11 +68,13 @@ class HamMain extends React.Component {
     }
 
     checkHeight() {
+
         if(this.state.bellResponse.MEMBERSHIPT_TOP == null || !this.state.bellResponse.MEMBERSHIPT_TOP) {
-                document.getElementById("listing").style.height = (window.innerHeight-84)+"px";
+                document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
         } else {
-            document.getElementById("listing").style.height = (window.innerHeight-100)+"px";
+            document.getElementById("mainHamDiv").style.height = (window.innerHeight-100)+"px";
         }  
+        document.getElementById("scrollElem").style.height = (window.innerHeight-document.getElementById("bottomTab").getBoundingClientRect().height)+"px";
         document.getElementById("myMatchesMinor").style.height = "0px";
         document.getElementById("contactsMinor").style.height = "0px";
     }
@@ -453,7 +455,8 @@ class HamMain extends React.Component {
              newHref = CONSTANTS.HINDI_SITE;
         }
 
-        let listingView = <div id="listing" className="overflowhidden">
+        let listingView = 
+        <div>
             <ul id="scrollElem" className="fontreg white listingHam listingStyle overAutoHidden">
                 <li className="appDownload f13 pb8 fontlig" style={{"padding":"10px 20px 0 20px"}}>
                     <div className="brdrBtm pb10">
@@ -539,12 +542,18 @@ class HamMain extends React.Component {
             <div id="bottomTab" className="mar0Imp posabs btm0 fullwid">
                 {membershipRegisterView}
             </div>
-        </div>;           
+            </div>;
 
         return (
             <div id="hamMain">
                 <div id="hamburger" className="white posfix z105 wid90p fullheight">
+                        <div id="outerHamDiv">
+                        <div id="mainHamDiv" >
+                        <div id="newHamlist" class="hamlist hampad1" >
                         {listingView}
+                        </div>
+                        </div>
+                        </div>
                 </div>
                 {loaderView}
                 <div onClick={this.hideHam} id="hamView" className="fullwid darkView fullheight hamView dn"></div>
