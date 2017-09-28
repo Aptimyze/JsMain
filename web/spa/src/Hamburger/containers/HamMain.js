@@ -339,25 +339,46 @@ class HamMain extends React.Component {
             </li>;
 
             if(this.state.bellResponse.AWAITING_RESPONSE_NEW != 0) {
-                awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.AWAITING_RESPONSE_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.AWAITING_RESPONSE_NEW > 99){
+                    awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                          <div className="vertmid dispcell">99+</div>
+                      </div>;
+                }
+                else{
+                      awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                          <div className="vertmid dispcell">
+                          {this.state.bellResponse.AWAITING_RESPONSE_NEW}
+                          </div>
+                      </div>;
+                }
             }
             if(this.state.bellResponse.ACC_ME_NEW != 0) {
-                accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.ACC_ME_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.ACC_ME_NEW > 99){
+                    accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">99+</div>
+                    </div>;
+                }
+                else{
+                    accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">
+                            {this.state.bellResponse.ACC_ME_NEW}
+                        </div>
+                    </div>;
+                }
             }
             if(this.state.bellResponse.JUST_JOINED_NEW != 0) {
-                justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.JUST_JOINED_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.JUST_JOINED_NEW > 99){
+                    justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                    <div className="vertmid dispcell">99+</div>
+                    </div>;
+                }
+                else{
+                    justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">
+                            {this.state.bellResponse.JUST_JOINED_NEW}
+                        </div>
+                    </div>;
+                }
             }
 
             startingTuple = <li>
