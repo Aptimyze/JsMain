@@ -120,7 +120,7 @@ EOF;
     $xmlData1="";
     //Send Email and SMS
     SendMail::send_email(self::EMAIL_LIST, $mailBody,"Complete Registration Number Reduced by more than 30%");
-    $arrMob = array('8800470788','9711818214','8826380350','9953457479');
+    $arrMob = array('8800470788','9711818214','9953457479');
     include_once(JsConstants::$docRoot."/classes/SmsVendorFactory.class.php");
     $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
     $profileid = "144111";
