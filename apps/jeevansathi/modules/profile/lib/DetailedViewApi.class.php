@@ -1534,8 +1534,8 @@ class DetailedViewApi
       
       if(!$linkId || 0 === strlen($linkId)){
         //Send Mail to Developer 
-        $subject = "Profile Share Link: Profile Share Link not found in MailerArray";
-        SendMail::send_email("kunal.test02@gmail.com","Issue in retrieving link id of PROFILE_SHARE_LINK, check LINK_MAILER table & MailerArray Class, '".print_r(self::PROFILE_SHARE_LINK,true)."'"."\n\n'".print_r($_SERVER,true)."'",$subject);
+       // $subject = "Profile Share Link: Profile Share Link not found in MailerArray";
+       // SendMail::send_email("kunal.test02@gmail.com","Issue in retrieving link id of PROFILE_SHARE_LINK, check LINK_MAILER table & MailerArray Class, '".print_r(self::PROFILE_SHARE_LINK,true)."'"."\n\n'".print_r($_SERVER,true)."'",$subject);
         return ;
       }
       

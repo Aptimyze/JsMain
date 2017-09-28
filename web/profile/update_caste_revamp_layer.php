@@ -42,8 +42,6 @@
 		$edu = 0;
 		$edu_level = 0;
 	}
-  $http_msg=print_r($_SERVER,true);
-mail("kunal.test02@gmail.com","EDIT_LOG in Usage: update_caste_revamp_layer","$this->PROFILEID,DPP :$this->DPP:$http_msg");
 	$paramStr = implode(",",$paramArr);
 	$statement = "UPDATE newjs.JPROFILE SET ".$paramStr." WHERE PROFILEID = ".$profileid;
 	mysql_query($statement,$db) or logError("due to some temporary problem your request could not be processed. please try after some time.",$statement,"ShowErrTemplate");

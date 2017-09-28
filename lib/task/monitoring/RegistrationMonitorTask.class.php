@@ -25,7 +25,7 @@ class RegistrationMonitorTask extends sfBaseTask
    * Const variable 
    * EMAIL_LIST : List of email ids
    */
-  const EMAIL_LIST = "kunal.test02@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com";
+  const EMAIL_LIST = "ankitshukla125@gmail.com,eshajain88@gmail.com";
   
   protected function configure()
   {
