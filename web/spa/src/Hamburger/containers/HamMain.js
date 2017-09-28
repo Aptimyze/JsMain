@@ -110,14 +110,15 @@ class HamMain extends React.Component {
         }, time);
     }
 
-    expandListing(e) 
-    {console.log(e.target.id);
-        let minorElem = e.target.id.split("Parent")[0] +"Minor";
-        if(e.target.className.indexOf("plusParent") != -1) {
-            e.target.classList.remove("plusParent"); 
+    expandListing(e)
+    {
+        let element = document.getElementById(e);
+        let minorElem = element.id.split("Parent")[0] +"Minor";
+        if(element.className.indexOf("plusParent") != -1) {
+            element.classList.remove("plusParent");
             document.getElementById(minorElem).style.height = "0px";
         } else {
-            e.target.classList.add("plusParent");
+            element.classList.add("plusParent");
             let liElems = document.getElementById(minorElem).getElementsByTagName("li");
             let minorLiHeight = 0;
             for(let i=0;i<liElems.length;i++) {
@@ -213,7 +214,7 @@ class HamMain extends React.Component {
             }
 
             myContactView = <li className="mb12">
-                <div id="contactsParent" onClick={(e) => this.expandListing(e)}>
+                <div id="contactsParent" onClick={(e) => this.expandListing("contactsParent")}>
                     <i className="hamSprite myContactIcon"></i>
                     <div id="myContactLink" className="ml10 white ml15 dispibl">
                         My Contacts
@@ -291,7 +292,7 @@ class HamMain extends React.Component {
                 dailyRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MATCHALERT}</span>
             }
             myMatchesView = <li className="mb12">
-                <div id="myMatchesParent" onClick={(e) => this.expandListing(e)}>
+                <div id="myMatchesParent" onClick={(e) => this.expandListing("myMatchesParent")}>
                     <i className="hamSprite myMatchesIcon"></i>
                     <div className=" ml15 f17 white ml15 dispibl">
                         My Matches
@@ -500,7 +501,7 @@ class HamMain extends React.Component {
                 {phoneBookView}
                 {profileVisitorView}
                 <li className="mb12">
-                    <div id="settingsParent" onClick={(e) => this.expandListing(e)}>
+                    <div id="settingsParent" onClick={(e) => this.expandListing("settingsParent")}>
                         <i className="hamSprite settingsIcon"></i>
                         <div id="settingsLink" className="mrl10 dispibl white">
                             Settings & Assistance
