@@ -22,7 +22,10 @@ export default class CommHistory extends React.Component {
     componentDidMount() {
 
       document.getElementById("ProfilePage").classList.add("scrollhid");
-      document.getElementById("commHistoryScroller").style.height = window.outerHeight - document.getElementById("commHistory_header").clientHeight+"px";
+
+      document.getElementById("commHistoryScroller").style.height = window.innerHeight - document.getElementById("commHistory_header").clientHeight+"px";
+
+
       this.callapiComHist();
 
 
@@ -41,6 +44,7 @@ export default class CommHistory extends React.Component {
       }
     }
     componentWillUnmount(){
+
       document.getElementById("ProfilePage").classList.remove("scrollhid");
 
     }
@@ -181,6 +185,7 @@ export default class CommHistory extends React.Component {
               <div className="posrel">
                 <a href="#"  className="ce_overlay ce_z102" > </a>
                 <div className="posabs ce_z103 ce_top1 fullwid">
+                  
 
 
                   <div className="pad18 brdr4" id="commHistory_header">
