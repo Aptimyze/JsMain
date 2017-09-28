@@ -216,6 +216,7 @@ class LoginPage extends React.Component {
             }
 
         }
+        console.log("showHam");
         this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA);
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
