@@ -84,7 +84,7 @@ class ProfilePage extends React.Component {
         //console.log(this.props);
         //console.log(localStorage.getItem('GENDER'));
         //console.log(this.state.gender);
-         
+
         window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
@@ -107,7 +107,7 @@ class ProfilePage extends React.Component {
             if(searchid != 1 && searchid != null)
             {
                 urlString += "&searchid=" + searchid;
-            } 
+            }
             if(contact_id != undefined && contact_id != "undefined") {
                 urlString += "&contact_id=" + contact_id;
             }
@@ -153,7 +153,7 @@ class ProfilePage extends React.Component {
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
-          {    
+          {
             return;
           }
           else if(stype == "KM") //swipe to be disabled for Kundli Listing
@@ -209,7 +209,7 @@ class ProfilePage extends React.Component {
             if(this.state.searchid != 1 && this.state.searchid != null){
                 nextUrl += "&searchid=" + this.state.searchid;
                 nextDataApi += "&searchid=" + this.state.searchid;
-            } 
+            }
             if(this.state.contact_id != undefined && this.state.contact_id != "undefined" ) {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
@@ -231,7 +231,7 @@ class ProfilePage extends React.Component {
             if(this.state.searchid != 1 && this.state.searchid != null){
                 prevUrl += "&searchid=" + this.state.searchid;
                 prevDataApi += "&searchid=" + this.state.searchid;
-            } 
+            }
             if(this.state.contact_id != undefined && this.state.contact_id != "undefined") {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
@@ -314,7 +314,7 @@ class ProfilePage extends React.Component {
                 stype: stype
                 },this.setNextPrevLink);
             }
-           
+
             let picData;
             if(!nextProps.pic) {
                 if(this.state.gender == "M") {
@@ -534,12 +534,33 @@ class ProfilePage extends React.Component {
         }
 
         var historyView;
-        if(this.state.showHistory && this.state.ownView == false) {
-            historyView = <CommHistory
+        if(this.state.showHistory && this.state.ownView == false)
+        {
+          let thumbURL;
+        
+          if(this.props.AboutInfo.thumbnailPic==null)
+          {
+            console.log(this.props.AboutInfo.gender);
+            if(this.props.AboutInfo.gender=="Female")
+            {
+              thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
+            }
+            else
+            {
+              thumbURL = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+            }
+          }
+          else
+          {
+            thumbURL = this.props.AboutInfo.thumbnailPic;
+          }
+
+
+          historyView = <CommHistory
                             closeHistory={()=>this.closeHistoryTab()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
+                            profileThumbNailUrl= {thumbURL} >
                           </CommHistory>
         }
 
@@ -783,7 +804,7 @@ const mapDispatchToProps = (dispatch) => {
             }
             else
             {
-              localStorage.setItem('lastProfilePageLocation',urlString);   
+              localStorage.setItem('lastProfilePageLocation',urlString);
             }
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);

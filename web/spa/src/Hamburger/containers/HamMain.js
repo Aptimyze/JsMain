@@ -161,7 +161,7 @@ class HamMain extends React.Component {
         {
           loaderView = <Loader show="page"></Loader>;
         }
-        let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView;
+        let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView,intSentCount;
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             membershipRegisterView = <div className="brdrTop pad150">
                     <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
@@ -201,7 +201,7 @@ class HamMain extends React.Component {
             </li>;
 
             if(this.state.bellResponse.FILTERED != 0) {
-                filteredCount = <span className="f15">{this.state.bellResponse.FILTERED}</span>;
+                filteredCount = <span className="f15 album_color1 ml15">{this.state.bellResponse.FILTERED}</span>;
             }
             if(this.state.bellResponse.ACCEPTED_MEMBERS != 0) {
                 allAccCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.ACCEPTED_MEMBERS}</span>;
@@ -211,6 +211,9 @@ class HamMain extends React.Component {
             }
             if(this.state.bellResponse.AWAITING_RESPONSE !=0) {
                 intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
+            }
+            if(this.state.bellResponse.NOT_REP !=0){
+                intSentCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.NOT_REP}</span>;
             }
 
             myContactView = <li className="mb12">
@@ -231,6 +234,7 @@ class HamMain extends React.Component {
                     <li className="mb12">
                         <a id="intSentLink" href="/inbox/6/1" className="newS white">
                             Interests Sent
+                            {intSentCount}
                         </a>
                     </li>
                     <li className="mb12">
@@ -335,25 +339,46 @@ class HamMain extends React.Component {
             </li>;
 
             if(this.state.bellResponse.AWAITING_RESPONSE_NEW != 0) {
-                awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.AWAITING_RESPONSE_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.AWAITING_RESPONSE_NEW > 99){
+                    awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                          <div className="vertmid dispcell">99+</div>
+                      </div>;
+                }
+                else{
+                      awaitingResponseCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                          <div className="vertmid dispcell">
+                          {this.state.bellResponse.AWAITING_RESPONSE_NEW}
+                          </div>
+                      </div>;
+                }
             }
             if(this.state.bellResponse.ACC_ME_NEW != 0) {
-                accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.ACC_ME_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.ACC_ME_NEW > 99){
+                    accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">99+</div>
+                    </div>;
+                }
+                else{
+                    accMeCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">
+                            {this.state.bellResponse.ACC_ME_NEW}
+                        </div>
+                    </div>;
+                }
             }
             if(this.state.bellResponse.JUST_JOINED_NEW != 0) {
-                justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
-                    <div className="vertmid dispcell">
-                        {this.state.bellResponse.JUST_JOINED_NEW}
-                    </div>
-                </div>;
+                if(this.state.bellResponse.JUST_JOINED_NEW > 99){
+                    justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                    <div className="vertmid dispcell">99+</div>
+                    </div>;
+                }
+                else{
+                    justJoinedCount = <div className="bg7 disptbl white f13 newham_count txtc">
+                        <div className="vertmid dispcell">
+                            {this.state.bellResponse.JUST_JOINED_NEW}
+                        </div>
+                    </div>;
+                }
             }
 
             startingTuple = <li>
