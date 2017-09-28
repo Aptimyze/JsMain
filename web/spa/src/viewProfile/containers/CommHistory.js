@@ -21,7 +21,7 @@ export default class CommHistory extends React.Component {
     }
     componentDidMount() {
 
-
+      document.getElementById("ProfilePage").classList.add("scrollhid");
       document.getElementById("commHistoryScroller").style.height = window.outerHeight - document.getElementById("commHistory_header").clientHeight+"px";
       this.callapiComHist();
 
@@ -37,31 +37,22 @@ export default class CommHistory extends React.Component {
       }
       else
       {
-        console.log("23");
-
         e.scrollTop = e.scrollHeight-(this.scrollTop);
-
-        console.log(e.scrollTop );
       }
+    }
+    componentWillUnmount(){
+      document.getElementById("ProfilePage").classList.remove("scrollhid");
+
     }
     callapiComHist()
     {
-
-
-
       let _this = this,pchecksum = this.props.profileId,newN;
       let call_url = CONSTANTS.COMM_HISTORY+"?profilechecksum="+pchecksum+"&pageNo="+this.state.pageN+"&dataType=json";
       commonApiCall(call_url,{},'','POST').then(function(response){
-
           let recRes = response.history.reverse();
-
-
           if(_this.state.messages.length==0)
           {
-
             _this.state.messages = recRes;
-
-
           }
           else
           {
@@ -69,12 +60,7 @@ export default class CommHistory extends React.Component {
             _this.state.messages = recRes.concat(_this.state.messages);
 
           }
-
-
-
-
           newN =   _this.state.messages;
-
           let pageCount=_this.state.pageN;
           pageCount++;
             _this.setState({
@@ -82,8 +68,6 @@ export default class CommHistory extends React.Component {
               getRes: response,
               pageN : pageCount,
               messages : newN
-
-
             })
 
         });
@@ -91,15 +75,10 @@ export default class CommHistory extends React.Component {
     ComHistScrollEvent()
     {
         let e = document.getElementById("commHistoryScroller");
-
-      
-
         if(e.scrollTop==0)
-         {
-
-
+        {
          this.showMessagesOnScroll(e);
-         }
+        }
      }
      showMessagesOnScroll(e)
      {
