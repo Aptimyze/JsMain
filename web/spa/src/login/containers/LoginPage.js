@@ -152,7 +152,8 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-
+        console.log("login");
+        this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA);
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -215,6 +216,7 @@ class LoginPage extends React.Component {
             }
 
         }
+        console.log("showHam");
         this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA);
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
@@ -300,7 +302,7 @@ class LoginPage extends React.Component {
                                     </a>
                                 </div>
                                 <div id="searchLink" className="wid49p fl txtc pad12 posrel scrollhid">
-                                    <a id="calltopSearch" href="/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Search",this.refs.GAchild.getGenderForGA)} className=" f17 fontlig white">
+                                    <a id="calltopSearch" href="/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">
                                         Search
                                     </a>
                                 </div>
@@ -404,7 +406,7 @@ const mapDispatchToProps = (dispatch) => {
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-            curretObj.refs.GAchild.trackJsEventGA("Login-jsms","Login",curretObj.refs.GAchild.getGenderForGA);
+            
             commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
             {
                 
