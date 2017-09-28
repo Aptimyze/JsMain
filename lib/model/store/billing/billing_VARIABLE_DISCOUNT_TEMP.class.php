@@ -47,13 +47,20 @@ class billing_VARIABLE_DISCOUNT_TEMP extends TABLE{
                 throw new jsException($e);
         }
     }
-    public function fetchActiveRecords($entryDate)
+    public function fetchActiveRecords($entryDate,$filterVDType="")
     {
         ini_set('max_execution_time',0);
         ini_set('memory_limit',-1);
         try
         {
-            $sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt left join billing.VARIABLE_DISCOUNT vd on vdt.PROFILEID=vd.PROFILEID WHERE vdt.EDATE >=:TODAY AND vd.PROFILEID IS NULL"; 
+            $joinCondition = "";
+            if(!empty($filterVDType)){
+                $joinCondition = "vdt.PROFILEID=vd.PROFILEID AND vd.TYPE NOT IN(".$filterVDType.")";
+            }
+            else{
+                $joinCondition = "vdt.PROFILEID=vd.PROFILEID";
+            }
+            $sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt left join billing.VARIABLE_DISCOUNT vd on ".$joinCondition." WHERE vdt.EDATE >=:TODAY AND vd.PROFILEID IS NULL"; 
 	    //$sql = "SELECT vdt.* FROM billing.VARIABLE_DISCOUNT_TEMP vdt WHERE vdt.EDATE >=:TODAY";	
             $res = $this->db->prepare($sql);
             $res->bindValue(":TODAY",$entryDate, PDO::PARAM_STR);

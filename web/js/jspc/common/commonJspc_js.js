@@ -1,3 +1,73 @@
+function GAMapper(GAEvent, extraParams)
+{
+    try {
+        var PageName = currentPageName || "other page";
+        if(LoginLayerByUserActions)
+        var userStatus = "Unregistered";
+        if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
+            userStatus = loggedInJspcGender;
+        }
+        var GAMapping = {
+            // verify otp layer
+            "GA_VOL_MISS_CALL"              :["E", "Enter Code Screen", "Miss Call"],
+            "GA_VOL_SUBMIT"                 :["E", "Enter Code Screen", "Submit"],
+            "GA_VOL_RESEND"                 :["E", "Enter Code Screen", "Resend Code"],
+            "GA_VOL_SUBMIT_ERROR"           :["E", "Enter Code Screen", "Wrong OTP"],
+            "GA_VOL_SUBMIT_SUCCESS"         :["E", "Enter Code Screen", "Correct OTP"],
+            "GA_VOL_SUCCESS_OK"             :["E", "Phone verification response", "Verify Okay"],
+            
+            "GA_LL_LOGIN_SUCCESS"           :["E", "login layer", "Login Success"],
+            "GA_LL_LOGIN_FAILURE"           :["E", "login layer", "Login Failure"],
+
+            
+            "GA_CE"                         :["E", PageName || "", (extraParams['action'] || "")],
+
+            "GA_CE_MYJSJUSTJOINED"          :["E", 'myjs justjoined', 'Express Interest'],
+            "GA_CE_MYJSLASTSEARCH"          :["E", "myjs lastsearch", "Express Interest"],
+            "GA_CE_MYJSVERIFIEDMATCHES"     :["E", "myjs verifiedmatches", "Express Interest"],
+            "GA_CE_MYJSDAILYMATCHES"        :["E", "myjs dailymatches", "Express Interest"],
+
+
+            "GA_SEARCH_LOGGEDOUT_PROFILE"   :["E", "Login Layer by user action", "profile"],
+            "GA_SEARCH_LOGGEDOUT_ALBUM"     :["E", "Login Layer by user action", "album"],
+            "GA_SEARCH_LOGGEDOUT_EOI"       :["E", "Login Layer by user action", extraParams['type'] || ''],
+
+
+
+            "GA_LL_LOGIN"                   :["E", "login layer", "Login"],
+            "GA_TOPBAR_LOGIN"               :["E", "login", "login"],
+            "GA_LL_REGISTER"                :["E", "login layer", "Register"],
+            "GA_TOPBAR_REGISTER"            :["E", "login", "Register"],
+            "GA_TOPBAR_FORGOT"              :["E", "login", "Forgot Password"],
+            "GA_LL_FORGOT"                  :["E", "login layer", "Forgot Password"],
+            "GA_FORGOTL_SENDLINK"           :["E", "Forgot Password", "Send link to reset"],
+
+            
+
+            // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
+            "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
+            // 
+            "GAV_LL_SHOW"           :["V", "Login Layer"+(extraParams['action'] || "")],
+
+            "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] +" "+ extraParams['button']],
+            "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] +" "+ extraParams['button']],
+            /* click on album on profile description page when logged in */
+            "GA_PROFILE_ALBUM"      :["E", PageName || "", "album"],
+
+        }
+        if(GAMapping[GAEvent]){
+            if(GAMapping[GAEvent][0] == "E"){
+                trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
+            }else if(GAMapping[GAEvent][0] == "V"){
+                _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
+            }
+        }
+    }
+    catch(err) {
+        return;
+    }
+}
+
 var currentlyDisplayedLayer = '';
 
 //this variable has been added for idfy
@@ -58,7 +128,7 @@ var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
         '</table>'+
         
         '</div>'+
-        '<a href="http://jeevansathi.idfy.com" target="blank"><div id="trackIdfy" class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
+        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
         '</div>'+
         '</div>'+
         '<div id="closeBtn" class="disp_ib vTop cursp closeBtnNew"><i class="sprite2 closeSprite"></i></div>';
@@ -128,15 +198,7 @@ $(document).ready(function (e) {
     $(".idfyDiv, .idfyDiv2").each(function(){
         $(this).off("click").on("click",function(){
             $("#commonOverlay").removeClass("disp-none");   
-            $("#commonOverlay").html(idfyStr);
-            /*$("#trackIdfy").off("click").on("click",function () {                
-                $.myObj.ajax({
-                    type: 'POST',
-                    url: "/api/v1/common/trackIdfy",
-                    success: function (response) {                        
-                    }
-                });
-            });*/
+            $("#commonOverlay").html(idfyStr);            
             $("#closeBtn").off("click").on("click",function(){
                 $("#commonOverlay").addClass("disp-none");
             }); 

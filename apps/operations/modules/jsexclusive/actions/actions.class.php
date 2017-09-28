@@ -147,11 +147,18 @@ class jsexclusiveActions extends sfActions {
 				
 				$email = $request->getParameter("email");
 				$exclusiveObj = new ExclusiveFunctions();
-				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr));
+				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"button"=>$formArr["submit"]));
 				unset($exclusiveObj);
 			}
 			else{
-				++$this->clientIndex;
+				 if($formArr["submit"] == "SKIP"){
+					$acceptArr = $formArr["ACCEPT"];
+				 	$acceptArr = array_values($acceptArr);
+				 	$email = $request->getParameter("email");
+					$exclusiveObj = new ExclusiveFunctions();
+					$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"button"=>$formArr["submit"],"clientUsername"=>$request->getParameter("clientUsername")));
+					unset($exclusiveObj);
+				 } 
 			}
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
@@ -165,6 +172,7 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $notFound = $request['notFound'];
         $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
+        $this->activeClientsCount = $exclusiveObj->getActiveClientCount($agent);
         //Counter for welcome calls
         $this->welcomeCallsCount = $exclusiveObj->getWelcomeCallsCount($agent);
         $todaysClient = $exclusiveObj->getDayWiseAssignedCount($agent);
@@ -185,26 +193,321 @@ class jsexclusiveActions extends sfActions {
             $this->notFound=1;
         }
     }
-
+    public function executeActiveClientList(sfWebRequest $request)
+    {
+        $agent = $request['name'];
+        $exclusiveObj = new billing_EXCLUSIVE_SERVICING("crm_slave"); //connection
+        $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");//connection
+        $expiryDateObj = new billing_SERVICE_STATUS("newjs_slave");//connection
+        $clientUsername = new JPROFILE("newjs_slave");
+        $clientInfoArr = $exclusiveObj->getActiveClientInfo($agent);
+        if(is_array($clientInfoArr))
+        {
+            foreach ($clientInfoArr as $key => $value) {
+                $clientIdArr[] = $value["CLIENT_ID"];
+                $billIdArr[] = $value["BILLID"];
+            }
+            $this->columnNamesArr = array("Client ID", "Client Name", "Assign Date", "Service Day", "Expiry Date");
+            $clientIdStr = implode(",", $clientIdArr);
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $key => $val){
+                $nameTempArr[$val["PROFILEID"]] = $val;
+            }
+            $expiryDateArr = $expiryDateObj->fetchServiceDetailsByBillId($billIdArr,"PROFILEID,EXPIRY_DT");
+            $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
+            $this->count = count($clientInfoArr);
+            for ($i = 0; $i < $this->count; $i++) {
+                $dataArray[$i]['CLIENT_ID'] = $clientInfoArr[$i]['CLIENT_ID'];
+                $dataArray[$i]['USERNAME'] = $usernameArr[$clientInfoArr[$i]['CLIENT_ID']]["USERNAME"];
+                $dataArray[$i]['ASSIGNED_DT'] = $clientInfoArr[$i]['ASSIGNED_DT'];
+                $dataArray[$i]['SERVICE_DAY'] = $clientInfoArr[$i]['SERVICE_DAY'];
+                $dataArray[$i]['EXPIRY_DT'] = $expiryDateArr[$clientInfoArr[$i]['CLIENT_ID']]['EXPIRY_DT'];
+                if($nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['DISPLAY'] == 'Y')
+                     $dataArray[$i]['CLIENT_NAME'] = $nameTempArr[$clientInfoArr[$i]['CLIENT_ID']]['NAME'];
+            }
+            $this->dataArray = $dataArray;
+        }
+        unset($exclusiveObj,$nameOfUserObj,$expiryDateObj,$clientUsername);
+    }
+    public function executeClientFollowupHistory(sfWebRequest $request)
+    {
+        $agent = $request['name'];
+        $this->columnNamesArr = array("Member ID","Client ID" ,"Added On(Date)", "Followup Status 1", "Followup Status 2", "Followup Status 3", "Followup Status 4");
+        $exclusiveObj = new billing_EXCLUSIVE_FOLLOWUPS("newjs_slave");
+        $clientUsername = new JPROFILE("newjs_slave");
+        $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+        $clientfollowupArr = $exclusiveObj->clientFollowupHistory($agent);
+        if(is_array($clientfollowupArr)){
+           foreach ($clientfollowupArr as $key => $value) {
+                $clientIdArr[] = $value["MEMBER_ID"];
+                $clientId[] = $value["CLIENT_ID"];
+                $dateOld = $value["ENTRY_DT"];
+                $dateOld = explode(" ", $dateOld);
+                $newDateArr[] = date("d-m-Y", strtotime($dateOld[0]));
+                if(!($value["STATUS"]=="F0"))
+                	$date_1 = $value["FOLLOWUP1_DT"];
+                else 
+                	$date_1 = null;
+                
+                if(!($value["STATUS"]=="F1"))
+                	$date_2 = $value["FOLLOWUP2_DT"];
+                else
+                	$date_2 = null;
+                if(!($value["STATUS"]=="F2"))
+                	$date_3 = $value["FOLLOWUP3_DT"];
+                else
+                	$date_3 = null;
+                if(!($value["STATUS"]=="F3"))
+                	$date_4 = $value["FOLLOWUP4_DT"];
+                else
+                	$date_4 = null;
+                
+                if($date_1 != NULL && $date_1 != '0000-00-00'){
+               		$date_1 = explode(" ", $date_1);
+                $newFollow1Arr[] = date("d-m-Y", strtotime($date_1[0]));
+                }
+                else{
+                    $newFollow1Arr[] = "";
+                }
+                if($date_2 != NULL && $date_2 != '0000-00-00'){
+                $date_2 = explode(" ", $date_2);
+                $newFollow2Arr[] = date("d-m-Y", strtotime($date_2[0]));
+                }
+                else{
+                    $newFollow2Arr[] = "";
+                }
+                if($date_3 != NULL && $date_3 != '0000-00-00'){
+                $date_3 = explode(" ", $date_3);
+                $newFollow3Arr[] = date("d-m-Y", strtotime($date_3[0]));
+                }
+                else{
+                    $newFollow3Arr[] = "";
+                }
+                if($date_4 != NULL && $date_4 != '0000-00-00'){
+                $date_4 = explode(" ", $date_4);
+                $newFollow4Arr[] = date("d-m-Y", strtotime($date_4[0]));
+                }
+                else{
+                    $newFollow4Arr[] = "";
+                }
+            }
+            $clientIdStr = implode(",", $clientIdArr);
+            //$clientName = implode(",", $clientId);
+            $clientNameArr = $nameOfUserObj->getArray(array("PROFILEID" => $clientIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+            foreach($clientNameArr as $key => $val){
+                $nameTempArr[$val["PROFILEID"]] = $val;
+            }
+            $usernameArr = $clientUsername->getAllSubscriptionsArr($clientIdArr);
+            $clientUserName = $clientUsername->getAllSubscriptionsArr($clientId);
+            $count = count($newDateArr);
+            for($i = 0; $i<$count; $i++){
+                $statusArr1[$i] = NULL;
+                $statusArr2[$i] = NULL;
+                $statusArr3[$i] = NULL;
+                $statusArr4[$i] = NULL;
+                if(!($value["STATUS"]=="F0"))
+                	$date_1 = $value["FOLLOWUP1_DT"];
+                	else
+                		$date_1 = null;
+                
+                if(!($clientfollowupArr[$i]["STATUS"] == "F0"))		
+                	$followDate1 = $clientfollowupArr[$i]['FOLLOWUP1_DT'];
+                else 
+                	$followDate1 = null;
+                
+                if(!($clientfollowupArr[$i]["STATUS"] == "F1"))
+               		$followDate2 = $clientfollowupArr[$i]['FOLLOWUP2_DT'];
+            	else
+            		$followDate2 = null;
+                	
+                if(!($clientfollowupArr[$i]["STATUS"] == "F2"))
+                	$followDate3 = $clientfollowupArr[$i]['FOLLOWUP3_DT'];
+                else
+                	$followDate3 = null;
+                	
+                if(!($clientfollowupArr[$i]["STATUS"] == "F3"))
+                	$followDate4 = $clientfollowupArr[$i]['FOLLOWUP4_DT'];
+                else
+                	$followDate4 = null;
+                	
+                /* $followDate2 = $clientfollowupArr[$i]['FOLLOWUP2_DT'];
+                $followDate3 = $clientfollowupArr[$i]['FOLLOWUP3_DT'];
+                $followDate4 = $clientfollowupArr[$i]['FOLLOWUP4_DT']; */
+                	
+                	
+                $followupStatus = $clientfollowupArr[$i]['STATUS'];
+                
+                if($followDate1 != null && $followDate1 !='0000-00-00' && $followDate2 != null && $followDate2 !='0000-00-00'){
+                	$statusArr1[$i] = 'Follow Up';
+                }else if($followDate1 != null && $followDate1 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr1[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr1[$i] = 'DECLINE';
+                	}else{
+                		$statusArr1[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate2 != null && $followDate2 !='0000-00-00' && $followDate3 != null && $followDate3 !='0000-00-00'){
+                	$statusArr2[$i] = 'Follow Up';
+                }else if($followDate2 != null && $followDate2 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr2[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr2[$i] = 'DECLINE';
+                	}else{
+                		$statusArr2[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate3 != null && $followDate3 !='0000-00-00' && $followDate4 != null && $followDate4 !='0000-00-00'){
+                	$statusArr3[$i] = 'Follow Up';
+                }else if($followDate3 != null && $followDate3 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr3[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr3[$i] = 'DECLINE';
+                	}else{
+                		$statusArr3[$i] = 'Follow Up';
+                	}
+                }
+                
+                if($followDate4 != null && $followDate4 !='0000-00-00'){
+                	if($followupStatus == 'Y'){
+                		$statusArr4[$i] = 'CONFIRMED';
+                	}else if($followupStatus == 'N'){
+                		$statusArr4[$i] = 'DECLINE';
+                	}else{
+                		$statusArr4[$i] = 'Follow Up';
+                	}
+                }
+     
+                /* if($followDate1 !=NULL && $followDate1 !='0000-00-00')
+                {
+                    $statusArr1[$i] = 'Follow Up';
+                    if($followDate2 !=NULL && $followDate2 !='0000-00-00')
+                    {
+                        $statusArr2[$i] = 'Follow Up';
+                        if($followDate3 !=NULL && $followDate3 !='0000-00-00')
+                        {
+                            $statusArr3[$i] = 'Follow Up';
+                            if($followDate4 !=NULL && $followDate4 !='0000-00-00')
+                            {
+                                $statusArr4[$i] = 'Follow Up';
+                            }
+                            else{
+                                if($followupStatus == 'Y'){
+                                    $statusArr4[$i] = 'Confirm';
+                                }
+                                elseif ($followupStatus == 'N') {
+                                    $statusArr4[$i] = 'Decline';
+                                }
+                            }
+                        }
+                        else{
+                                if($followupStatus == 'Y'){
+                                    $statusArr3[$i] = 'Confirm';
+                                }
+                                elseif ($followupStatus == 'N') {
+                                    $statusArr3[$i] = 'Decline';
+                                }
+                        }
+                    }
+                    else{
+                        if($followupStatus == 'Y')
+                        {
+                            $statusArr2[$i] = 'Confirm';
+                        }
+                        elseif ($followupStatus == 'N') {
+                            $statusArr2[$i] = 'Decline';
+                        }
+                    }
+                }
+                else
+                {
+                    if($followupStatus == 'Y')
+                    {
+                        $statusArr1[$i] = 'CONFIRMED';
+                    }
+                    elseif ($followupStatus == 'N') {
+                        $statusArr1[$i] = 'DECLINE';
+                    }
+                } */
+            }
+            for ($i = 0; $i < $count; $i++) {
+                $clientfollowupArr[$i]['ENTRY_DT'] = $newDateArr[$i];
+                
+                $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_1']);
+             	$clientfollowupArr[$i]['FOLLOWUP_1'] = $followupArr[$i][0];
+             	if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+             		$clientfollowupArr[$i]['FOLLOWUP_1'] = $clientfollowupArr[$i]['FOLLOWUP_1'].'('.$followupArr[$i][1].')';
+             	}
+             	
+             	$followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_2']);
+                $clientfollowupArr[$i]['FOLLOWUP_2'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_2'] = $clientfollowupArr[$i]['FOLLOWUP_2'].'('.$followupArr[$i][1].')';
+                }
+                
+                $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_3']);
+                $clientfollowupArr[$i]['FOLLOWUP_3'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_3'] = $clientfollowupArr[$i]['FOLLOWUP_3'].'('.$followupArr[$i][1].')';
+                }
+                
+                $followupArr[$i] = explode("|", $clientfollowupArr[$i]['FOLLOWUP_4']);
+                $clientfollowupArr[$i]['FOLLOWUP_4'] = $followupArr[$i][0];
+                if(count($followupArr[$i])==3 && !empty($followupArr[$i][1])){
+                	$clientfollowupArr[$i]['FOLLOWUP_4'] = $clientfollowupArr[$i]['FOLLOWUP_4'].'('.$followupArr[$i][1].')';
+                }
+                $clientfollowupArr[$i]['FOLLOWUP1_DT'] = $newFollow1Arr[$i];
+                $clientfollowupArr[$i]['FOLLOWUP2_DT'] = $newFollow2Arr[$i];
+                $clientfollowupArr[$i]['FOLLOWUP3_DT'] = $newFollow3Arr[$i];
+                $clientfollowupArr[$i]['FOLLOWUP4_DT'] = $newFollow4Arr[$i];
+                $clientfollowupArr[$i]['USERNAME'] = $usernameArr[$clientfollowupArr[$i]['MEMBER_ID']]["USERNAME"];
+                
+                $clientfollowupArr[$i]['Client_User_Name'] = $clientUserName[$clientfollowupArr[$i]['CLIENT_ID']]["USERNAME"];
+                
+                $clientfollowupArr[$i]['STATUS1'] = $statusArr1[$i];
+                $clientfollowupArr[$i]['STATUS2'] = $statusArr2[$i];
+                $clientfollowupArr[$i]['STATUS3'] = $statusArr3[$i];
+                $clientfollowupArr[$i]['STATUS4'] = $statusArr4[$i];
+                if($nameTempArr[$clientfollowupArr[$i]['MEMBER_ID']]['DISPLAY'] == 'Y'){
+                    $clientfollowupArr[$i]['CLIENT_NAME'] = $nameTempArr[$clientfollowupArr[$i]['MEMBER_ID']]['NAME'];
+                }
+            }
+            $this->dataArray = $clientfollowupArr; 
+           
+        }
+        unset($exclusiveObj,$clientUsername,$nameOfUserObj);
+    }
     public function executeWelcomeCalls(sfWebRequest $request) {
         $agent = $request['name'];
         //Get all clients here
         $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
         $nameOfUserObj = new incentive_NAME_OF_USER();
-        $purchasesObj = new billing_PURCHASES();
+        $purchaseObj = new BILLING_PURCHASES();
+
 
         $combinedIdArr = $exclusiveServicingObj->getClientsForWelcomeCall('CLIENT_ID', $agent, 'ASSIGNED_DT');
-        $combinedIdArr = array_keys($combinedIdArr);
-        $combinedIdStr = implode(",",$combinedIdArr);
 
-        $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
+        if(is_array($combinedIdArr) && !empty($combinedIdArr)){
+            $combinedIdArr = array_keys($combinedIdArr);
+            $combinedIdStr = implode(",",$combinedIdArr);
 
-        $userNames = $purchasesObj->getUserName($combinedIdStr);
+            $nameOfUserArr = $nameOfUserObj->getArray(array("PROFILEID" => $combinedIdStr), "", "", "PROFILEID,NAME,DISPLAY");
 
-        foreach($nameOfUserArr as $key=>$value){
-            $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+            $userNames = $purchaseObj->getUserName($combinedIdArr);
+
+            foreach($nameOfUserArr as $key=>$value){
+                $nameOfUserArr[$key]["USERNAME"] = $userNames[$value["PROFILEID"]];
+            }
+
+            $this->welcomeCallsProfiles = $nameOfUserArr;
+        } else{
+            $this->welcomeCallsProfiles = $combinedIdArr;
         }
-        $this->welcomeCallsProfiles = $nameOfUserArr;
         $this->welcomeCallsProfilesCount = count($this->welcomeCallsProfiles);
     }
 
@@ -213,6 +516,36 @@ class jsexclusiveActions extends sfActions {
         $agent = $request['name'];
         $this->cid = $request['cid'];
         $this->client = $request['client'];
+
+        $from = $request['from'];
+
+        //check if user is eligible for new handling
+        if($from == 'search'){
+            $username = $request['username'];
+            if($username){
+                $jprofileObj = new JPROFILE("newjs_slave");
+                $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
+            } else{
+                $details=false;
+            }
+            if(!details){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
+            if(!$userDetails){
+                $module="jsexclusive";
+                $action="welcomeCallsPage2";
+                $params=array("notFound"=>true);
+                $this->notFound=true;
+                //$this->forwardTo($module,$action,$params);
+            }
+            $this->client=$details['PROFILEID'];
+        }
 
         $this->profileChecksum= JsOpsCommon::createChecksumForProfile($this->client);
         //Get all clients here
@@ -236,32 +569,6 @@ class jsexclusiveActions extends sfActions {
                     $this->message = "Invalid Username: ".$username;
                 }
             }
-        }
-
-        $from = $request['from'];
-        
-        //check if user is eligible for new handling
-        if($from == 'search'){
-            $username = $request['username'];
-            $jprofileObj = new JPROFILE("newjs_slave");
-            $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
-            if(!details){
-                $module="jsexclusive";
-                $action="welcomeCallsPage2";
-                $params=array("notFound"=>true);
-                $this->notFound=true;
-                //$this->forwardTo($module,$action,$params);
-            }
-            $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
-            $userDetails = $exclusiveServicingObj->getAllDataForClient($details['PROFILEID']);
-            if(!$userDetails){
-                $module="jsexclusive";
-                $action="welcomeCallsPage2";
-                $params=array("notFound"=>true);
-                $this->notFound=true;
-                //$this->forwardTo($module,$action,$params);
-            }
-            $this->client=$details['PROFILEID'];
         }
         
     }
@@ -300,6 +607,7 @@ class jsexclusiveActions extends sfActions {
                 $fromEmail=$agentDetails['EMAIL'];
                 $firstname=$agentDetails['FIRST_NAME'];
                 $phone = $agentDetails['PHONE'];
+                $agentEmail = $agentDetails['EMAIL'];
                 $serviceDay = $exclusiveObj->getCompleteDay($this->serviceDay); //Get the full day like Saturday from day code like SAT
                 $producerObj=new Producer();        //Push the message to delayed queue for sending email after 2 hours
                 if($producerObj->getRabbitMQServerConnected()){
@@ -310,7 +618,8 @@ class jsexclusiveActions extends sfActions {
                                                             'firstname'=>$firstname,
                                                             'phone'=>$phone,
                                                             'serviceDay'=>$serviceDay,
-                                                            'senderEmail'=>$fromEmail),
+                                                            'senderEmail'=>$fromEmail,
+                                                            'agentEmail'=>$agentEmail),
                                             'redeliveryCount'=>0 );
                     $producerObj->sendMessage($sendMailData);
                 }
@@ -587,7 +896,11 @@ class jsexclusiveActions extends sfActions {
         //columns list for interface
         $this->columnNamesArr = crmCommonConfig::$jsexlusiveFollowUpColumns;
         $currentDt = date("Y-m-d");
-
+        $fetchedList = JsMemcache::getInstance()->lrange('handledProfile','0','-1');
+        foreach($fetchedList as $key => $val){
+        	$highlighted[$val] = 1;
+        }
+        $this->highlighted = $highlighted;
         $followUpObj = new billing_EXCLUSIVE_FOLLOWUPS();
         $this->followUpsCount = $followUpObj->getPendingFollowUpEntriesCount($currentDt);
         unset($followUpObj);
@@ -599,6 +912,10 @@ class jsexclusiveActions extends sfActions {
             $this->infoMsg = $request->getParameter("infoMsg");
             $exclusiveLib = new ExclusiveFunctions();
             $this->finalFollowUpsPool = $exclusiveLib->formatFollowUpsData($this->followUpsCount);
+            $currentTime = date('Y-m-d H:i:s');
+            
+           /* $expireTime =  date('Y-m-d', strtotime('+1 day',strtotime(date('Y-m-d'))))." 00:00:00";
+            print_r(array($currentTime,$expireTime)); */
             unset($exclusiveLib);
         }
         //print_r($this->finalFollowUpsPool);die;
@@ -633,15 +950,22 @@ class jsexclusiveActions extends sfActions {
                         $this->forwardTo("jsexclusive","followupCaller",array("infoMsg"=>"Retry followUp submit !"));
                     }
                 }
+                // add followup ID to the redis object if the followID(set by agent)  date is equal to current date
+                if($formArr["date1"] == date('Y-m-d')){
+                	$exclusiveLib = new ExclusiveFunctions();
+                	$exclusiveLib->addDataToRedisObject('handledProfile',$this->ifollowUpId);
+                	$this->forwardTo("jsexclusive","followupCaller");
+                	unset($exclusiveLib);
+                }
                 $this->forwardTo("jsexclusive","followupCaller");
             }
             else{
                 $this->clientUsername = $formArr["iclient"];
                 $this->memberUsername = $formArr["imember"];
                 
-                $this->todayDay = date('d',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayMonth   = date('m',strtotime(date("Y-m-d") . "+1 day"));
-                $this->todayYear  = date('Y',strtotime(date("Y-m-d") . "+1 day"));
+                $this->todayDay = date('d',strtotime(date("Y-m-d")));
+                $this->todayMonth   = date('m',strtotime(date("Y-m-d")));
+                $this->todayYear  = date('Y',strtotime(date("Y-m-d")));
                 $this->dayArr = GetDateArrays::getDayArray();
                 $this->monthArr   = GetDateArrays::getMonthArray();
                 $this->yearArr    = array();

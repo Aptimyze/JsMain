@@ -287,6 +287,7 @@ Abstract class ApiAuthentication
             $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
             $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
             $loginData["LAST_LOGIN_DT"]=$loggedInProfileObj->getLAST_LOGIN_DT();
+            $loginData["HAVEPHOTO"] = $loggedInProfileObj->getHAVEPHOTO();
 			return $loginData;
 		}
                 
@@ -351,7 +352,7 @@ Abstract class ApiAuthentication
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
                         $queueArr['whichChannel'] = MobileCommon::getChannel();
-
+            $queueArr['latLoginDt']=$this->loginData["LAST_LOGIN_DT"];
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -381,6 +382,7 @@ Abstract class ApiAuthentication
         {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
+		//$this->updateAppRegistrationId();
         }
         $curDat = date('Y-m-d');
         if($queueArr['profileId'] && JsMemcache::getInstance()->get("DISC_HIST_".$curDat."_".$queueArr['profileId']) != "Y"){
@@ -396,6 +398,7 @@ Abstract class ApiAuthentication
                 JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
             }
             unset($prodObj,$queueData,$body);
+
         }
 	}
 	
@@ -814,6 +817,9 @@ Abstract class ApiAuthentication
 		if(!$profileId)return ;
 		$ip = $trackingData['ip'];
 		$currentTime = $trackingData['currentTime'];
+		//For trackig two months old data
+		
+      	
 		if($trackingData[misLoginTracking])
 		{
 			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
@@ -822,9 +828,19 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
-                        $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
-                        LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);  
-
+            $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
+            LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);
+            if($trackingData['latLoginDt']){
+            	$lastLoginDate=$trackingData['latLoginDt'];
+				$ContactTime=strtotime($lastLoginDate);
+	      		$time = time();
+      			$daysDiff  = floor(($time - $ContactTime)/(3600*24));
+            	if($daysDiff>=60)
+            	{
+	            	$dbOldProfileTrackingDbObj= new MIS_LOGIN_TRACKING_OLDPROFILES();
+            		$dbOldProfileTrackingDbObj->insert($profileId,$currentTime);
+            	}
+            }
                         
 		}
 		if($trackingData[logLoginHistoryTracking])
@@ -903,5 +919,26 @@ Abstract class ApiAuthentication
 			}
 		}
 	}
+
+	// App Registration-Id Login time Update Handling
+        public function updateAppRegistrationId()
+        {
+	    //if(strstr($_SERVER["REQUEST_URI"],"api/v1/")
+            $registrationid     =sfContext::getInstance()->getRequest()->getParameter('registrationid');
+            $apiappVersion      =sfContext::getInstance()->getRequest()->getParameter('CURRENT_VERSION');
+            $lastLoginDate      =$this->loginData["LAST_LOGIN_DT"];
+	    $todayDate		=date("Y-m-d");	 
+	    $checkDate 		=date("Y-m-d H:i:s",strtotime("$todayDate -2 days"));
+	    if(strtotime($lastLoginDate)<=strtotime($checkDate)){		
+            	if($registrationid && !$this->isNotApp){
+                        $producerObj = new JsNotificationProduce();
+                        if($producerObj->getRabbitMQServerConnected()){
+                                $dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion);
+                                $msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+                                $producerObj->sendMessage($msgdata);
+                        }
+            	}
+	    }	
+        }
 }
 ?>

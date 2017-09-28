@@ -1007,9 +1007,10 @@ class ContactDetails {
 		if(MembershipHandler::isEligibleForRBHandling($this->profileObj->getPROFILEID()))
 		{
 			$exclusiveFunctionsObj=new ExclusiveFunctions();
-			$rmPhone=$exclusiveFunctionsObj->getRMDetails($this->profileObj->getPROFILEID());
+			$execDetails=$exclusiveFunctionsObj->getRMDetails($this->profileObj->getPROFILEID());
+			$rmPhone = $execDetails["PHONE"];
 			if($rmPhone){
-				$this->setRM_LABEL("Relationship manager's phone no");
+				$this->setRM_LABEL("Relationship manager");
 			$this->setRM_VALUE("+91-".$rmPhone);
 			}
 		}

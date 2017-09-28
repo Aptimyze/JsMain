@@ -31,8 +31,6 @@ if($data)
       $objUpdate = JProfileUpdateLib::getInstance();
       $result = $objUpdate->editJPROFILE(array('PHONE_MOB'=>$mobile),$profileid,'PROFILEID',"activatedKey=1");
       if(false === $result) {
-        $msg = print_r($_SERVER,true);
-        mail("kunal.test02@gmail.com","Error in web/profile/sms_info.php while updating",$msg);
 
         $sql = "Update newjs.JPROFILE set PHONE_MOB = '$mobile' where profileid = '$profileid'  and  activatedKey=1 ";
         logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");

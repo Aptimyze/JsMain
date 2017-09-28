@@ -63,21 +63,31 @@ class feedbackActions extends sfActions
         $countArray= (new REPORT_ABUSE_LOG('newjs_slave'))->getReportAbuseCount($profileArray);
         foreach ($reportArray as $key => $value) 
         {
-			$tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
-			$tempArray['count']=$countArray[$value['REPORTEE']];
-     		$tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
-      		$tempArray['reason']=$value['REASON'];
-      		$tempArray['timestamp']=$value['DATE'];
-			$tempArray['comments']=$value['OTHER_REASON'];
-			$tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
-			$tempArray['reportee_email']=$profileDetails[$value['REPORTEE']]['EMAIL'];
-			$resultArr[]=$tempArray;
-			unset($tempArray);
-			# code...
+          $tempArray['reportee'] = $value['REPORTEE'];
+          $tempArray['reporter'] = $value['REPORTER'];
+
+          $tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
+          $tempArray['count']=$countArray[$value['REPORTEE']];
+          $tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
+          $tempArray['reason']=$value['REASON'];
+          $tempArray['timestamp']=$value['DATE'];
+          $tempArray['comments']=$value['OTHER_REASON'];
+          $tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
+          $tempArray['reportee_email']=$profileDetails[$value['REPORTEE']]['EMAIL'];
+          $tempArray['attachment_id'] = $value['ATTACHMENT_ID'];
+          $resultArr[]=$tempArray;
+          unset($tempArray);
 		  }
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
+
+      $indexes = array();
+      foreach ($resultArr as $key => $row)
+      {
+        $indexes[$key] = $row['count'];
+      }
+      array_multisort($indexes, SORT_DESC, $resultArr);
       echo json_encode($resultArr);
                         return sfView::NONE;
                         die;
@@ -226,6 +236,40 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
             echo json_encode($response);
             exit;
 
+  }
+  
+  /**
+   * 
+   */
+  public function executeGetAbuseAttachments($request)
+  {
+    $attachmentId = $request->getParameter('attachment_id');
+    if( $request->isMethod('POST') && false == is_null($attachmentId) && -1 != $attachmentId ) {
+      $storeObj = new FEEDBACK_ABUSE_ATTACHMENTS();
+      $result = $storeObj->getRecord($attachmentId);
+      
+      $result = $result[0];
+      if($result) {
+        $arrOut = array();
+        foreach($result as $key => $val) {
+          if(0 === strlen($val)) {
+            continue;
+          }
+          
+          $prefix = substr($val, 0, 2);
+          $imagePath = substr($val, 2);
+          if( $prefix == IMAGE_SERVER_ENUM::$appPicUrl ) {
+            $val = JsConstants::$applicationPhotoUrl.$imagePath;
+          } else if ( $prefix == IMAGE_SERVER_ENUM::$cloudUrl ){
+            $val = JsConstants::$httpsCloudUrl.$imagePath;
+          }
+          $arrOut[] = $val;
+        }
+      }
+    }
+    header("Content-type: application/json");
+    echo json_encode($arrOut);
+    die;
   }
 
 }

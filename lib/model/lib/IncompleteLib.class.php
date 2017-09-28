@@ -23,10 +23,11 @@ class IncompleteLib
 		$phone_res = $profile->getPHONE_RES();
 		$phone_mob = $profile->getPHONE_MOB();
 		$yourinfo = $profile->getYOURINFO();
+                $activated = $profile->getACTIVATED();
 		//If country_res is not india and USA, city can be blank
 	 	if($country_res!=51)
 			$city_res=true;
-		if(strlen($yourinfo)<100)
+		if(strlen($yourinfo)<100 && $activated!='Y')
 			$after_login=1;
 		else if(!$username||!$password||!$gender||!$religion||!$caste||!$mtongue||!$mstatus||$dtofbirth== '0000-00-00'||!$occupation||!$edu_level_new||!$country_res||(!$city_res && $city_res !=0)||!$height||!$email||!$relation||!$income||(!$phone_res && !$phone_mob))
 			$after_login=1;
@@ -70,7 +71,7 @@ class IncompleteLib
 			$incompleteFields[]="INCOME";
 		if( !$profile->getPHONE_RES() && !$profile->getPHONE_MOB())
 			$incompleteFields[]="PHONE";
-		if(strlen($profile->getYOURINFO())<100)
+		if(strlen($profile->getYOURINFO())<100 && $profile->getACTIVATED()!='Y')
 			$incompleteFields[]="YOURINFO";
 		return $incompleteFields;
 	}

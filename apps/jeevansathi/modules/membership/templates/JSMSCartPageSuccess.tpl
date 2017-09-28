@@ -204,6 +204,12 @@
 				</div>
 				<!--end:total pay div-->
 				<div id="cartTaxText" class="rv2_colr2 fontlig f11 pt5 padl10">~$data.cart_tax_text`</div>
+				~if $data.currency eq '$'`
+				<div class="txtc pt7 f14 fontlig clearfix">
+					<input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR">
+					<span class="pos-rel" style="display: inline-block; padding-left: 6px;">I wish to pay with Indian card</span>
+				</div>
+				~/if`
 				~if $data.apply_coupon_text`
 				<div id="enterCouponBtn" class="txtc pt22 f16 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` fontlig cursp">~$data.apply_coupon_text`</div>
 				~/if`
@@ -426,20 +432,28 @@
 		});
 		$("#continueBtn").click(function(){
 			eraseCookie('backState');
+            var usdTOinr;
+
+            if($("#USDtoINR").is(":checked")){
+                usdTOinr = 1;
+            }else{
+                usdTOinr = 0;
+            }
+
 			~if $data.backendLink`
-				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
+				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`&usdTOinr=" + usdTOinr;
 			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
 				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem;  
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
 			    } else {
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem;
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
 			    }	
 			} else {
 				if(checkEmptyOrNull(readCookie('selectedVas'))){
-					paramStr = "displayPage=5&mainMembership=&vasImpression="+readCookie('selectedVas');  
+					paramStr = "displayPage=5&mainMembership=&vasImpression="+readCookie('selectedVas')+"&usdTOinr="+usdTOinr;
 			    } else {
-					paramStr = "displayPage=5&mainMembership=&vasImpression=";
+					paramStr = "displayPage=5&mainMembership=&vasImpression="+"&usdTOinr="+usdTOinr;
 			    }
 			}
 			

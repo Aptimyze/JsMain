@@ -9,7 +9,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	
 	
 	
-	public function insertReport($reporter,$reportee,$category,$reason,$from='',$crmUser='') 
+	public function insertReport($reporter,$reportee,$category,$reason,$from='',$crmUser='', $attachment_id=-1) 
 	{  
 		
 		try
@@ -17,7 +17,7 @@ class REPORT_ABUSE_LOG extends TABLE
 			if(!$reporter || !$reportee || !$category)
 				return;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON,CATEGORY,CRM_USER) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY,:COMINGFROM,:CRM_USER)";
+			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON,CATEGORY,CRM_USER,ATTACHMENT_ID) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY,:COMINGFROM,:CRM_USER,:ATTACHMENT_ID)";
 			
 			$pdoStatement = $this->db->prepare($sql);
 			
@@ -29,6 +29,7 @@ class REPORT_ABUSE_LOG extends TABLE
 			$pdoStatement->bindValue(":DATE",$timeNow,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":COMINGFROM",$from,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":CRM_USER",$crmUser,PDO::PARAM_STR);
+            $pdoStatement->bindValue(":ATTACHMENT_ID",$attachment_id,PDO::PARAM_INT);
 			$pdoStatement->execute();
 			
 			return ;
@@ -74,7 +75,7 @@ class REPORT_ABUSE_LOG extends TABLE
                                                     
 						}
                         $pdoStr = substr($pdoStr, 0, -1);                                                     
-                        $sql = "SELECT REPORTEE,count(*) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE IN ($pdoStr) GROUP BY REPORTEE"; 
+                        $sql = "SELECT REPORTEE,count(DISTINCT(REPORTER)) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE IN ($pdoStr) GROUP BY REPORTEE";
                         $prep = $this->db->prepare($sql);
                         foreach($profileArray as $k=>$v)
                             $prep->bindValue(":v".$k,$v,PDO::PARAM_INT);
@@ -96,7 +97,7 @@ class REPORT_ABUSE_LOG extends TABLE
 	{
 		try	 	
 		{	
-			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
+			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON,ATTACHMENT_ID from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
             $prep->execute();
@@ -167,11 +168,41 @@ class REPORT_ABUSE_LOG extends TABLE
 		}
 	
 	}
-
-
-
-
-
+    
+    /**
+     * 
+     * @param type $iProfileId
+     * @param type $withInLastDays
+     * @return type
+     * @throws jsException
+     */
+    public function getListOfAllReporters($iProfileId, $withInLastDays=null) {
+      try{
+        $sql = "SELECT REPORTER, DATE FROM feedback.REPORT_ABUSE_LOG WHERE REPORTEE=:PID";
+        
+        if ( $withInLastDays ) {
+          $time = new DateTime();
+          
+          $time->sub(date_interval_create_from_date_string($withInLastDays));
+          $timeInLastDays = $time->format('Y-m-d H:i:s');
+          
+          $sql .= " AND DATE >= :WITH_IN_DAYS";
+        }
+        
+        $prep = $this->db->prepare($sql);
+        $prep->bindValue(":PID",$iProfileId,PDO::PARAM_INT);
+        
+        if ( $withInLastDays ) {
+          $prep->bindValue(":WITH_IN_DAYS",$timeInLastDays,PDO::PARAM_STR);
+        }
+        $prep->execute();
+        $arrResult = $prep->fetchAll(PDO::FETCH_ASSOC);
+                
+        return $arrResult;
+      } catch (Exception $ex) {
+        throw new jsException($ex);
+      }
+    }
 
 }
 

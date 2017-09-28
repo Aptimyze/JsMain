@@ -146,10 +146,11 @@
               <div class="clearfix">
                   <div class="prfrad prfdim8 prfbr6 fl "> <img src="" border="0" class="js-otherProfilePic prfdim5 prfrad prfm2"> </div>
                     <div class="fl ml10 prfbr7 pb10 f13 color11 wid80p pt16" style='white-space:pre;'>
-                      <span class='js-username'></span>    -    <span class="colr2"> Report Abuse</span>
+                      <span class='js-username'></span>    -    <span class="colr2">Report as Fake/Spam</span>
                     </div>
                 </div>
-                <div class="pl12 pt20">
+                <span class="pt13 colr2 f12 h20">Let Jeevansathi know what is wrong with this profile. This message will NOT be sent to the reported profile.</span>
+                <div class="pl12 pt20 js-reportOptionLayer">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
                      <ul id="reportAbuseList" class="listnone hgt200 reportlist fontlig f15 pt10 color2 mb20">
     <li class="openBox">
@@ -277,7 +278,30 @@
                 
                 
                 </div>
-            
+                  <div class="pl12 pt20 js-reportAttachLayer disp-none">
+                    	<div class="abu_bck ml10 js-abuseBack cursp"></div>
+			
+                        <ul id="reportAbuseList_1" class="listnone hgt200 reportlist fontlig f15 pt10 color2 mb20 mCustomScrollbar">                            
+                           <li class="showtextbox">
+                                    <div class="padall-15 fontlig">
+
+                                    <div class="abuse_opt-sel f14 pb10 js-selectedOption"></div>
+                                    <textarea class="wid90p outlineBorderBoxNone js-AbuseOpenTextArea" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...." style="border:1px solid #bdbdbd; height:114px;padding:5px 10px"></textarea>
+                                    <div class="f11 pb10 errcolr pb10 js-errorMsg disp-none"> *Please Enter The Comments (in atleast 25 characters) </div>
+                                    <div class="pt10 pb10 pos-rel pl30 cursp js-abuseAttachment">
+                                            <i class="attach pos-abs" style="top:13px; left:0"></i>
+                                            Attach Screenshot
+                                    </div>
+                                    <div id="previewContainer" class="docattactlist">
+                                            <div class="abuse_opt-sel f11 pb10 errcolr js-attachError"></div>
+                                            <ul class="basicList">
+                                        </ul>
+
+                                    </div>
+                                </div>                               
+                           </li>                                
+                        </ul>
+                    </div>
             </div>        
           </div>
             <div class="fullwid">

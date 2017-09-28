@@ -80,6 +80,71 @@ class ProcessHandler
       case 'CANCEL_ACCEPT_CONTACT':
           ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
           break;
+      case 'EXCLUSIVE_WELCOME_EMAIL':
+          $firstName = $body['firstname'];   //First Name of  RM
+          $senderName = $body['fromName'];     //Full name of RM
+          $profileid = $body['profileid'];
+          $phone = $body['phone'];
+          $serviceDay = $body['serviceDay'];
+          $senderEmail = $body['senderEmail'];
+          $subject = "It was nice talking to you !";
+          //print_r("1.".$serviceDay."\n2.$alias\n3.$profileid\n4.$phone\n5.$firstName\n6.$from\n7.".$body);
+          //print_r($body);die;
+          //die;
+          //Send Email here
+          $ccList = $body['agentEmail'];
+          $bccList = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
+          $top8Mailer = new EmailSender(MailerGroup::TOP8, '1857');
+          $tpl = $top8Mailer->setProfileId($profileid);
+          $tpl->getSmarty()->assign("senderName",$senderName);
+          $tpl->getSmarty()->assign("senderEmail",$senderEmail);
+          $tpl->getSmarty()->assign("firstName",$firstName);
+          $tpl->getSmarty()->assign("phone",$phone);
+          $tpl->getSmarty()->assign("serviceDay",$serviceDay);
+          $tpl->setSubject($subject);
+          $top8Mailer->send("","",$ccList,$bccList);
+          $exclusiveServicingObj = new billing_EXCLUSIVE_SERVICING();
+          $exclusiveServicingObj->updateMailerStatus($profileid,'C');//Updating email stage as completed
+          break;
+      case 'EXCLUSIVE_PROPOSAL_EMAIL':
+          $mailerServiceObj = new MailerService();
+          $exclusiveFuncObj = new ExclusiveFunctions();
+          $smarty = $mailerServiceObj->getMailerSmarty();
+          $mailerName = "EXCLUSIVE_PROPOSAL_MAIL";
+          $mailerLinks = $mailerServiceObj->getLinks();
+          $smarty->assign('mailerLinks',$mailerLinks);
+
+          $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+          $agentEmail = $body["AGENT_EMAIL"];
+          $agentName = $body["AGENT_NAME"];
+          $agentPhone = $body["AGENT_PHONE"];
+          $smarty->assign('mailerName',$agentEmail);
+          $pid = $body["RECEIVER"];
+          $bioDataArr = $exclusiveFuncObj->getClientBioData($body["USER1"]);
+          $isUploaded = $bioDataArr["isUploaded"];
+          $bioData = $bioDataArr["BIODATA"];
+          $fileName = $bioDataArr["FILENAME"];
+          $data = $mailerServiceObj->getRecieverDetails($pid,$body,$mailerName,$widgetArray);
+          if (is_array($data)) {
+              $data["AGENT_PHONE"] = $agentPhone;
+              $data["AGENT_NAME"] = $agentName;
+              $data["body"]=$body["BODY"];
+              $data["isUploaded"] = $isUploaded;
+              $subject = $body["SUBJECT"];
+              $smarty->assign('data',$data);
+              $msg = $smarty->fetch(MAILER_COMMON_ENUM::getTemplate($mailerName).".tpl");
+              //$file = fopen("/var/www/html/branch1/web/sampleMailer.html","w");
+              //fwrite($file,$msg);
+              //die;
+              //Sending mail and tracking sent status
+              $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$mailerName,$pid,$agentEmail,$agentName,$bioData,$fileName,$agentEmail);
+              if ($flag) {
+                  $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'Y');
+              } else {
+                  $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
+              }
+          }
+          break;
     }
 	}
 
@@ -120,7 +185,13 @@ class ProcessHandler
                                 $smsViewer = new InstantSMS("CRITICAL_INFORMATION",$receiverid,$varArray);
                                 $smsViewer->send();  
                                 JsMemcache::getInstance()->set($receiverid."_5MINS", 1,300);
-                                 break; 
+                                 break;
+      case 'EXCLUSIVE_PROPOSAL_SMS' :
+      						$receiver = $body['RECEIVER'];
+      						$user = $body['USERNAME'];
+      						$tokenArr = array("USERNAME_ID"=>$user,"DESCRIPTION_LINK"=>$URL);
+      						CommonUtility::sendPlusTrackInstantSMS('EXCLUSIVE_PROPOSAL_SMS',$receiver,$tokenArr);
+      						
     }
   }
 public function sendAutoReminder($receiver,$sender){

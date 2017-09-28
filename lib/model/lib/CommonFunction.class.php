@@ -518,7 +518,7 @@ class CommonFunction
 		return $years;
 	}
 
-	 public static function sendWelcomeMailer($pid)
+	 public static function sendWelcomeMailer($pid,$sendQuery=1)
 	{
 		$email_sender=new EmailSender(MailerGroup::WELCOME,1780);
 		$emailTpl=$email_sender->setProfileId($pid);
@@ -532,9 +532,12 @@ class CommonFunction
 		$top8Mailer->send();
 		
 		//logging time when user gets activated and phone verified for first time.
-		$jprofileDbObject=JPROFILE::getInstance();
+		if($sendQuery){
+			$jprofileDbObject=JPROFILE::getInstance();
 		$paramArr["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
 		$jprofileDbObject->edit($paramArr,$pid);
+		unset($jprofileDbObject);
+		}
 	}
 	public static function getChannel()
 	{
@@ -576,11 +579,11 @@ class CommonFunction
 		$source='';
 		$viewerState=$contactHandler->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
 		$viewedState=$contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
-		if($viewerState=='FREE' && $viewedState=="EVALUE")
+		if($viewerState=='FREE' && ($viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE"))
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
-		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA") && $contactHandler->getContactObj()->getTYPE()=='A')
+		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE") && $contactHandler->getContactObj()->getTYPE()=='A')
 			$source=CONTACT_ELEMENTS::ACCEPTANCE_TRACKING;
-		else if($viewerState=="EVALUE" || $viewerState=="ERISHTA" && $viewedState=="EVALUE")
+		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE" ) && ($viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE"))
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
 		else
 			$source=CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING;
@@ -1035,30 +1038,29 @@ class CommonFunction
     	return false;
     }
     
-    public static function showAndBeyondPixel($profileId)
-    {
-    	if($profileId && JsConstants::$whichMachine=="prod")
-    	{
-                $loggedInObj = LoggedInProfile::getInstance();
-                $subscription = $loggedInObj->getSUBSCRIPTION();
-                $verifyDate=$loggedInObj->getVERIFY_ACTIVATED_DT();
-                $verifyDateFlag=true;
-                if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
-				{
-					$verifyDate = $loggedInObj->getENTRY_DT();
-				}
-                	$datetime1 = new DateTime();
-					$datetime2 = new DateTime($verifyDate);
-					$interval = $datetime1->diff($datetime2);
-					if($interval->days<=7)
-						$verifyDateFlag=true;
-                if($subscription=='' && $verifyDateFlag){
-                    $analyticScore = ScoringLib::getAnalyticScore($profileId);
-                    if($analyticScore >= 0 && $analyticScore <=30)
-    			return true;
-                }   		
-    	}    	
-    	return false;
+    public static function showAndBeyondPixel($profileId="") {
+        if ($profileId && JsConstants::$whichMachine == "prod") {
+            $loggedInObj = LoggedInProfile::getInstance();
+            $subscription = $loggedInObj->getSUBSCRIPTION();
+            $verifyDate = $loggedInObj->getVERIFY_ACTIVATED_DT();
+            $verifyDateFlag = true;
+            if (!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00') {
+                $verifyDate = $loggedInObj->getENTRY_DT();
+            }
+            $datetime1 = new DateTime();
+            $datetime2 = new DateTime($verifyDate);
+            $interval = $datetime1->diff($datetime2);
+            if ($interval->days <= 7)
+                $verifyDateFlag = true;
+            if ($subscription == '' && $verifyDateFlag) {
+                $analyticScore = ScoringLib::getAnalyticScore($profileId);
+                if ($analyticScore >= 0 && $analyticScore <= 50)
+                    return true;
+            }
+        }
+        else if(JsConstants::$whichMachine == "prod")
+            return true;
+        return false;
     }
 
     //this has been added to common functions since we need a particular output for CI files
@@ -1120,5 +1122,19 @@ class CommonFunction
 		$output = curl_exec($ch);
 		return $output;
 	}
+    public static function markProfileCompleteAndActivated(){
+        $toSetArr['ACTIVATED'] = 'Y';
+        $toSetArr['INCOMPLETE'] = 'N';
+        $toSetArr['SCREENING'] = 1099511627775;
+        $dateNow = date('Y-m-d H:i:s');
+        $toSetArr['VERIFY_ACTIVATED_DT'] = $dateNow;
+        $loggedInObj = LoggedInProfile::getInstance();
+        $jProfileObj = new JPROFILE();
+        $jProfileObj->edit($toSetArr,$loggedInObj->getPROFILEID());
+        $loggedInObj->setACTIVATED('Y');
+        $loggedInObj->setVERIFY_ACTIVATED_DT($dateNow);
+        $loggedInObj->setSCREENING(1099511627775);
+        $loggedInObj->setINCOMPLETE('N');
+    }
 }
 ?>

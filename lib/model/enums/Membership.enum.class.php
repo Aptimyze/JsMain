@@ -71,6 +71,8 @@ class memDiscountTypes
         15 => 'Main Membership Upgrade Discount',
         16 => 'Lightning Deal Discount'
     );
+    
+    public static $allowVDExtension = array("WELCOME");
 }
 
 class VariableParams
@@ -628,7 +630,7 @@ class VariableParams
         "Priority Customer service",
         "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
-    public static $DOL_CONV_RATE = 60;
+    public static $DOL_CONV_RATE = 66;
     
     public static $apiPageFiveHelpText = array(
         "text1" => "Got any Questions about Paying Online?",
@@ -706,6 +708,7 @@ class discountType
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
     const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
+    const WELCOME_DISCOUNT = "WELCOME";
 }
 class mainMem
 {
@@ -728,7 +731,7 @@ class paymentOption
         "CR" => "Credit Card",
         "DR" => "Debit Card",
         "NB" => "Net Banking",
-        "CSH" => "Wallet"
+        "CSH" => "Paytm / MobiKwik"
     );
     public static $ccCardType = array(
         "card1" => array(

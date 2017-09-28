@@ -44,6 +44,10 @@ while ($row = mysql_fetch_array($res)) {
         endIntroCalls($pid);
     }
 
+    //Reactivate previous old unlimited membership after expiration of new service
+    $membershipHandler = new MembershipHandler();
+    $membershipHandler->changeUnlimitedServiceStatusForNewService($billid,false);
+
     // Deleting entry from billing.EXCLUSIVE_SERVICING as soon as subs expire
     if (strpos($row['SERVEFOR'],'X')){
         $exclusiveFunctionsObj = new ExclusiveFunctions();
@@ -85,7 +89,9 @@ if (count($profileids_arr) > 0) {
             if (in_array("X", $expire_assist)) {
                 endAutoApply($profile);
             }
-
+            if (in_array("T", $expire_assist)) {
+                endAutoApply($profile);
+            }
             if (in_array("L", $expire_assist)) {
                 endHomeDelivery($profile);
             }

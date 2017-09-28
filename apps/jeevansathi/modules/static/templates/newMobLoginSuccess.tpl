@@ -114,7 +114,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 			
 			  <!--start:forgot password-->
 				<div id="afterCaptcha" class="txtc pad12">
-					<a href="/static/forgotPassword" bind-slide="1" class="white f14 fontlig">Forgot Password</a>
+					<a href="/static/forgotPassword" bind-slide="1" class="white f14 fontlig"  onclick="GAMapper('GA_HOME_FORGOT');">Forgot Password</a>
 				</div>
 				<!--end:forgot password-->	      
 			<div class="abs_c fwid_c" style="margin-top: 20px">
@@ -130,10 +130,10 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<!--start:reg/srch-->
 				<div class="bg10 fullwid mt5">
 					<div class="wid49p fl brdr11 txtc pad12">
-						<a href="/register/page1?source=mobreg4" onclick="enableLoader()" class="f17 fontlig white">Register</a>
+						<a href="/register/page1?source=mobreg4" onclick="GAMapper('GA_HOME_REGISTER'); enableLoader();" class="f17 fontlig white">Register</a>
 					</div>
 					<div class="wid49p fl txtc pad12 posrel scrollhid">
-						<a  id="calltopSearch" href="/search/topSearchBand?isMobile=Y" class=" blueRipple f17 fontlig white">Search</a>
+						<a  id="calltopSearch" href="/search/topSearchBand?isMobile=Y" class=" blueRipple f17 fontlig white" onclick='GAMapper("GA_HOME_SEARCH");'>Search</a>
 					</div>
 					<div class="clr"></div>
 				</div>       
@@ -147,7 +147,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<a href="/static/appredirect?type=iosMobFooter" class="f15 white fontlig">Download App</a>
 			   </div>      
 
-			  <div class="txtc pad2"><a href="#" onclick=convertIntoHomePage("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
+			  <div class="txtc pad2"><a href="#" id="hindiLinkOnLoginPage" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
 	   <!--end:div-->
 			</div>
 	   </form>
@@ -170,6 +170,5 @@ You need to be a Registered Member<br />to connect with this user</div>
         {
             $('.loader').addClass('simple').addClass('dark').addClass('image');
         }
-
 
 </script> 

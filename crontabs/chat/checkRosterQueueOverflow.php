@@ -74,8 +74,8 @@
 					//restart chat consumers
 					exec("nohup sh ".$restartShellPath." > /dev/null &");
 			        //var_dump($mailMsg);die;
-			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.".........consumers restarted as well");
-			       //mail ("nsitankita@gmail.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
+			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.".........consumers restarted as well");
+			       //mail ("lavesh.rawat@gmail.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
 			}
 		}
 	function checkRabbitmqQueueMsgCount($rabbitmqConfig){

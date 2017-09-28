@@ -25,7 +25,10 @@ class SolrRequest implements RequestHandleInterface
                         //$this->logSearch();
                         JsMemcache::getInstance()->incrCount("TOTAL_SEARCH_COUNT_".date("d"));
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
-                        if($profileObj->getPROFILEID())
+                        if(JsConstants::$whichMachine=='matchAlert'){
+                                $configObj = new MatchAlertsConfig();
+                                $this->solrServerUrl = $configObj->changeSolrForNonPeak()."/select";
+                        }elseif($profileObj->getPROFILEID())
                 	{ 
                         	//if($profileObj->getPROFILEID()%7>2)
 				if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
@@ -76,7 +79,7 @@ class SolrRequest implements RequestHandleInterface
 			$pid = str_replace(' ','',$pid);
 			$pid = str_replace(',',' ',$pid);
 		}
-                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
+                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>";
                 foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
                         $index = array_search($solrUrl, JsConstants::$solrServerUrls);
                         if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
@@ -369,9 +372,13 @@ class SolrRequest implements RequestHandleInterface
                 }
                 if(!empty($setOrCond)){
                         if((isset($setOrCond["CITY_RES"]) || isset($setOrCond["STATE"])) && isset($setOrCond["COUNTRY_RES"])){ 
-                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
-                                $this->clusters[]="&facet.field={!ex=city_res}CITY_RES";
-                                $this->clusters[]="&facet.field={!ex=state}STATE";
+                                $cityCluster = 0;
+                                if(in_array("CITY_RES", $this->clustersToShow) || in_array("STATE", $this->clustersToShow) || in_array("COUNTRY_RES", $this->clustersToShow)){
+                                        $cityCluster = 1;
+                                        $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                        $this->clusters[]="&facet.field={!ex=city_res}CITY_RES";
+                                        $this->clusters[]="&facet.field={!ex=state}STATE";
+                                }
                                 $setWhereParams[]="COUNTRY_RES";
                                 $setWhereParams[]="CITY_RES";
                                 $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
@@ -406,46 +413,59 @@ class SolrRequest implements RequestHandleInterface
                                 if($solrFormatValueStateIndia){
                                         $stateCheck = "AND STATE :($solrFormatValueStateIndia)";
                                 }
+                                $tagStr= '';
+                                if($cityCluster == 1){
+                                        $tagStr = "{!tag=country_res,city_res,state}";
+                                }
                                 if($solrFormatValueCity){
                                         if($solrFormatValueCOUNTRY){
-                                                $this->filters[]="&fq={!tag=country_res,city_res,state}(CITY_RES:($solrFormatValueCity) $stateCheck) $searchOperator  COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                                $this->filters[]="&fq=$tagStr(CITY_RES:($solrFormatValueCity) $stateCheck) $searchOperator  COUNTRY_RES:($solrFormatValueCOUNTRY)";
                                         }else{
-                                                $this->filters[]="&fq={!tag=country_res,city_res,state}(CITY_RES:($solrFormatValueCity) $stateCheck)";
+                                                $this->filters[]="&fq=$tagStr(CITY_RES:($solrFormatValueCity) $stateCheck)";
                                         }
                                 }elseif(isset($setOrCond["COUNTRY_RES"])){                                      
                                         if($stateCheck){
-                                         $this->filters[]="&fq={!tag=country_res,city_res,state}STATE:($solrFormatValueStateIndia) $searchOperator COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                         $this->filters[]="&fq=".$tagStr."STATE:($solrFormatValueStateIndia) $searchOperator COUNTRY_RES:($solrFormatValueCOUNTRY)";
                                         }else{
-                                                $setWhereParams[]="COUNTRY_RES";
-                                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
-                                                $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
-                                                $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY); 
-                                                $this->filters[]="&fq={!tag=country_res,city_res,state}COUNTRY_RES:($solrFormatValueCOUNTRY_RES)";       
+                                                $setWhereParams[]="COUNTRY_RES"; 
+                                                $this->filters[]="&fq=".$tagStr."COUNTRY_RES:($solrFormatValueCOUNTRY_RES)";       
                                         }
                                 }
                         }elseif(isset($setOrCond["COUNTRY_RES"])){
                                 $setWhereParams[]="COUNTRY_RES";
-                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
                                 $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
                                 $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY);
-                                $this->filters[]="&fq={!tag=country_res,city_res,state}COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                if(in_array("COUNTRY_RES", $this->clustersToShow)){
+                                        $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                        $this->filters[]="&fq={!tag=country_res,city_res,state}COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                }else{
+                                        $this->filters[]="&fq=COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                                }
                         }elseif($setOrCond["STATE"]){
                                 $solrFormatValueStateIndia = str_replace(","," ",$setOrCond["STATE"]);
                                 $solrFormatValueStateIndia = str_replace("','"," ",$solrFormatValueStateIndia);
                                 $solrFormatValueStateIndia='"'.implode('","',explode(" ",$solrFormatValueStateIndia)).'"';
                                 $setWhereParams[]="STATE";
-                                $this->clusters[]="&facet.field={!ex=city_res,state}STATE";
-                                $this->filters[]="&fq={!tag=city_res,state}STATE:($solrFormatValueStateIndia)";
+                                if(in_array("STATE", $this->clustersToShow)){
+                                        $this->clusters[]="&facet.field={!ex=city_res,state}STATE";
+                                        $this->filters[]="&fq={!tag=city_res,state}STATE:($solrFormatValueStateIndia)";
+                                }else{
+                                        $this->filters[]="&fq=STATE:($solrFormatValueStateIndia)";
+                                }
                         }elseif($setOrCond['CITY_RES'] && is_numeric($setOrCond['CITY_RES'])){
                             //added for seo solr for countries other than india
-                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
-                                $this->clusters[]="&facet.field={!ex=city_res}CITY_RES";
-                                $this->clusters[]="&facet.field={!ex=state}STATE";
                                 $setWhereParams[]="CITY_RES";
                                 $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
                                 $solrFormatValueCity = str_replace("','"," ",$solrFormatValueCity);
                                 $solrFormatValueCity='"'.implode('","',explode(" ",$solrFormatValueCity)).'"';
-                                $this->filters[]="&fq={!tag=country_res,city_res,state}CITY_RES:($solrFormatValueCity)";
+                                if(in_array("CITY_RES", $this->clustersToShow) || in_array("STATE", $this->clustersToShow) || in_array("COUNTRY_RES", $this->clustersToShow)){
+                                        $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                        $this->clusters[]="&facet.field={!ex=city_res}CITY_RES";
+                                        $this->clusters[]="&facet.field={!ex=state}STATE";
+                                        $this->filters[]="&fq={!tag=country_res,city_res,state}CITY_RES:($solrFormatValueCity)";
+                                }else{
+                                        $this->filters[]="&fq=CITY_RES:($solrFormatValueCity)";
+                                }
                         }
                 }
                 
@@ -465,7 +485,7 @@ class SolrRequest implements RequestHandleInterface
                         }
                         if($loggedInProfileObj->getMSTATUS())
                         {
-                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),1,0),";
+                                $filterQuery = $filterQuery."if(and(tf(MSTATUS_FILTER,Y),if(tf(PARTNER_MSTATUS,".$loggedInProfileObj->getMSTATUS()."),0,1)),11,0),"; /*1 changed to 11 to ensure no tagging, just removal*/
                         }
                         if($loggedInProfileObj->getRELIGION())
                         {
@@ -607,7 +627,7 @@ class SolrRequest implements RequestHandleInterface
 		//die;
 	}
 
-					
+        
 	public function specialCases($field,$solrFormatValue,$tag,$label,$label2,$val2='')
 	{
 		
@@ -617,7 +637,7 @@ class SolrRequest implements RequestHandleInterface
 		if($val2!='')
 			$finalStr.="$label2:($val2)";
 		$this->filters[]="&fq={!tag=$tag}$finalStr";
-		if(is_array($this->clustersToShow))
+		if(is_array($this->clustersToShow) && (in_array($label2,$this->clustersToShow) || in_array($label,$this->clustersToShow)))
 		{
 			if($field==$label && in_array($label2,$this->clustersToShow))
 				$field=$label2;

@@ -2,7 +2,7 @@
 <div class="posfix z112 dispnone"  id="reportInvalidContainer">
                     <div class="fullwid fontlig" >
                         <data></data><div class="photoheader">
-                            <div class="pad16 brdr_new" style="height:85px;">
+                            <div class="pad16 brdr_new_2" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
                                     <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Invalid</div>
@@ -73,10 +73,10 @@
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
                         <div class="photoheader">
-                            <div class="pad16 brdr_new" style="height:85px;">
+                            <div class="pad16 brdr_new_2" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportAbuse" class="srp_box3 abs_c" src="">
-                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Abuse</div>
+                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report as Fake/Spam</div>
                                     <div id="savedSearchIcon" class="posabs " style="top:18px;right: 0;" onclick="hideReportAbuse()">
                                         <div class="posrel"> <i class="mainsp com_cross"></i>
                                         </div>
@@ -90,7 +90,7 @@
                         <div class="selectOptions reportAbuseScreen fl" id="js-reportAbuseMainScreen" style="height:100%;">
                             <i class="mainsp arow_new dispibl"></i>
                             <ul class="f16 fontthin white">
-                                <li class="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. </li>
+                                <li class="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. This message will NOT be sent to the reported profile.</li>
 
                                 <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt1">
                                 	<div class="fullwid posrel">
@@ -169,10 +169,22 @@
                         </div>
                         <div class="reportAbuseScreen">
                         <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
+
                         </div>
+                          <div id="attachDiv" style="overflow: auto; right:0px" class="brdr23 white posabs btmo fullwid pad3 dn">
+                            <div id="attachTitle">
+                                <i class="reportIcon atachIcon"></i>
+                                <span>Attach Screenshot</span>
+                            </div>
+                            
+                            <div id="photoDiv" >
+                            </div>
+                            
+                        </div>  
                         </div>
+                        
                         <div class="posfix fullwid scrollhid pos1_c1">
-                            <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Abuse</div>
+                            <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report as Fake/Spam</div>
                         </div>
                         </div>
                 </div>

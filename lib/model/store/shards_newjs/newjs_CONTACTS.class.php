@@ -1387,5 +1387,32 @@ public function getSendersPending($chunkStr)
                 throw new jsException($ex);
             }
         }
+        
+        public function getProfilesWhoHaveContactedInLastFewDays($date,$shard){
+            try{
+            	
+                $sql = "SELECT SENDER,GROUP_CONCAT(RECEIVER) AS RECEIVERS,GROUP_CONCAT(TYPE) AS TYPES FROM `CONTACTS` WHERE TIME > :DATE AND SENDER%3=:SHARD GROUP BY SENDER UNION SELECT RECEIVER AS SENDER,GROUP_CONCAT(SENDER) AS RECEIVERS,GROUP_CONCAT(TYPE) AS TYPES FROM `CONTACTS` WHERE TIME > :DATE AND RECEIVER%3=:SHARD AND TYPE = 'A' GROUP BY RECEIVER";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+                $prep->bindValue(":SHARD",$shard,PDO::PARAM_INT);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    if($row['RECEIVERS'] != ''){
+                        if($result[$row['SENDER']]['Receivers'] != ''){
+                            $result[$row['SENDER']]['Receivers'].= ",".$row['RECEIVERS'];
+                            $result[$row['SENDER']]['Types'] .= ",".$row['TYPES'];
+                        }
+                        else{
+                            $result[$row['SENDER']]['Receivers']= $row['RECEIVERS'];
+                            $result[$row['SENDER']]['Types'] = $row['TYPES'];
+                        }
+                    }
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
 }
 ?>
