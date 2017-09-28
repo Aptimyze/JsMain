@@ -111,13 +111,13 @@ class HamMain extends React.Component {
     }
 
     expandListing(e) 
-    {
-        let minorElem = e.target.parentElement.id.split("Parent")[0] +"Minor";
-        if(e.target.parentElement.className.indexOf("plusParent") != -1) {
-            e.target.parentElement.classList.remove("plusParent"); 
+    {console.log(e.target.id);
+        let minorElem = e.target.id.split("Parent")[0] +"Minor";
+        if(e.target.className.indexOf("plusParent") != -1) {
+            e.target.classList.remove("plusParent"); 
             document.getElementById(minorElem).style.height = "0px";
         } else {
-            e.target.parentElement.classList.add("plusParent");
+            e.target.classList.add("plusParent");
             let liElems = document.getElementById(minorElem).getElementsByTagName("li");
             let minorLiHeight = 0;
             for(let i=0;i<liElems.length;i++) {
@@ -212,13 +212,13 @@ class HamMain extends React.Component {
                 intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
             }
 
-            myContactView = <li>
-                <div id="contactsParent">
+            myContactView = <li className="mb12">
+                <div id="contactsParent" onClick={(e) => this.expandListing(e)}>
                     <i className="hamSprite myContactIcon"></i>
                     <div id="myContactLink" className="ml10 white ml15 dispibl">
                         My Contacts
                     </div>
-                    <i id="expandContacts" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandContacts" className="hamSprite plusIcon fr"></i>
                 </div>
                 <ul id="contactsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
                     <li className="mb12">
@@ -290,13 +290,13 @@ class HamMain extends React.Component {
             if(this.state.bellResponse.MATCHALERT != 0) {
                 dailyRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MATCHALERT}</span>
             }
-            myMatchesView = <li>
-                <div id="myMatchesParent">
+            myMatchesView = <li className="mb12">
+                <div id="myMatchesParent" onClick={(e) => this.expandListing(e)}>
                     <i className="hamSprite myMatchesIcon"></i>
                     <div className=" ml15 f17 white ml15 dispibl">
                         My Matches
                     </div>
-                    <i id="expandMyMatches" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandMyMatches" className="hamSprite plusIcon fr"></i>
                 </div>
                 <ul id="myMatchesMinor" style={{"height":"0px","margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
                     <li className="mb12">
@@ -500,12 +500,12 @@ class HamMain extends React.Component {
                 {phoneBookView}
                 {profileVisitorView}
                 <li className="mb12">
-                    <div id="settingsParent">
+                    <div id="settingsParent" onClick={(e) => this.expandListing(e)}>
                         <i className="hamSprite settingsIcon"></i>
                         <div id="settingsLink" className="mrl10 dispibl white">
                             Settings & Assistance
                         </div>
-                        <i id="expandSettings" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                        <i id="expandSettings" className="hamSprite plusIcon fr"></i>
                     </div>
                     <ul id="settingsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className="minorList f15 settingStyle">
                         {recommendationView}
