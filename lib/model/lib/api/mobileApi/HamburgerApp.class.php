@@ -86,6 +86,7 @@ class HamburgerApp
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
 				$hamburgerDetails['ACC_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_ME'));
 				$hamburgerDetails['ACC_BY_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_BY_ME'));
+				$hamburgerDetails['NOT_REP'] = self::convertoInt($profileMemcacheObj->get('NOT_REP'));
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");

@@ -206,7 +206,7 @@ getWriteMsg_buttonView(){
 
     WriteMsg_buttonView = [offertextHTML,buttonHTML];
   }
-  else WriteMsg_buttonView = (<div className="fullwid clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
+  else WriteMsg_buttonView = (<div className="fullwid posfix clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
                           <div className="fl wid80p com_pad3">
                             <textarea id="writeMessageTxtId" defaultValue = {this.state.writeMessageText} className="fullwid lh15 inp_1 white"></textarea>
                           </div>
