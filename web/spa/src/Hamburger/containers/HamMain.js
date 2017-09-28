@@ -111,13 +111,13 @@ class HamMain extends React.Component {
     }
 
     expandListing(e) 
-    {
-        let minorElem = e.target.parentElement.id.split("Parent")[0] +"Minor";
-        if(e.target.parentElement.className.indexOf("plusParent") != -1) {
-            e.target.parentElement.classList.remove("plusParent"); 
+    {console.log(e.target.id);
+        let minorElem = e.target.id.split("Parent")[0] +"Minor";
+        if(e.target.className.indexOf("plusParent") != -1) {
+            e.target.classList.remove("plusParent"); 
             document.getElementById(minorElem).style.height = "0px";
         } else {
-            e.target.parentElement.classList.add("plusParent");
+            e.target.classList.add("plusParent");
             let liElems = document.getElementById(minorElem).getElementsByTagName("li");
             let minorLiHeight = 0;
             for(let i=0;i<liElems.length;i++) {
@@ -191,7 +191,7 @@ class HamMain extends React.Component {
                 shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;  
             }
 
-            shortlistedView = <li className="mt12 mb12">
+            shortlistedView = <li className="mb12">
                 <i className="hamSprite shortlistedIcon"></i>
                 <a href="/search/shortlisted" id="shortlistedLink" className="white">
                     Shortlisted
@@ -212,15 +212,15 @@ class HamMain extends React.Component {
                 intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
             }
 
-            myContactView = <li className='mt12'>
-                <div id="contactsParent">
+            myContactView = <li className="mb12">
+                <div id="contactsParent" onClick={(e) => this.expandListing(e)}>
                     <i className="hamSprite myContactIcon"></i>
                     <div id="myContactLink" className="ml10 white ml15 dispibl">
                         My Contacts
                     </div>
-                    <i id="expandContacts" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandContacts" className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="contactsMinor" className = "minorList f15">
+                <ul id="contactsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
                     <li className="mb12">
                         <a id="intRecLink" href="/inbox/1/1" className="newS white">
                             Interests Received
@@ -290,15 +290,15 @@ class HamMain extends React.Component {
             if(this.state.bellResponse.MATCHALERT != 0) {
                 dailyRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MATCHALERT}</span>
             }
-            myMatchesView = <li>
-                <div id="myMatchesParent">
+            myMatchesView = <li className="mb12">
+                <div id="myMatchesParent" onClick={(e) => this.expandListing(e)}>
                     <i className="hamSprite myMatchesIcon"></i>
                     <div className=" ml15 f17 white ml15 dispibl">
                         My Matches
                     </div>
-                    <i id="expandMyMatches" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                    <i id="expandMyMatches" className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="myMatchesMinor" style={{"height":"0px"}} className = "minorList f15">
+                <ul id="myMatchesMinor" style={{"height":"0px","margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
                     <li className="mb12">
                         <a id="dppLink" href="/search/perform?partnermatches=1" className="newS white">
                             Desired Partner Matches
@@ -389,37 +389,37 @@ class HamMain extends React.Component {
                     </div>
                 </div>
             </li>;
-            recommendationView = <li>
+            recommendationView = <li className="mb12">
                 <a id="recommendationLink" href="/profile/viewprofile.php?ownview=1#Dpp" className="white">
                     Recommendation
                 </a>
             </li>;
-            privacySettingView = <li>
+            privacySettingView = <li className="mb12">
                 <a id="privacySettingLink" href="/static/privacySettings" className="white">
                     Privacy Settings
                 </a>
             </li>;
-            changePassView = <li>
+            changePassView = <li className="mb12">
                 <a id="changePassLink" href="/static/changePass" className="white">
                     Change Password
                 </a>
             </li>;
-            hideProfileView = <li>
+            hideProfileView = <li className="mb12">
                 <a id="hideProfileLink" href="/static/hideOption" className="white">
                     Hide Profile
                 </a>
             </li>;
-            deleteProfileView = <li>
+            deleteProfileView = <li className="mb12">
                 <a id="deleteProfileLink" href="/static/deleteOption" className="white">
                     Delete Profile
                 </a>
             </li>;
-            helpView = <li>
+            helpView = <li className="mb12">
                 <a id="helpLink" href="/help/index" className="white">
                     Help
                 </a>
             </li>;
-            logoutView = <li>
+            logoutView = <li className="mb12">
                 <div onClick={() => this.logoutAccount()} id="logoutLink" className="white mlLogout">
                     Logout
                 </div>
@@ -500,14 +500,14 @@ class HamMain extends React.Component {
                 {phoneBookView}
                 {profileVisitorView}
                 <li className="mb12">
-                    <div id="settingsParent">
+                    <div id="settingsParent" onClick={(e) => this.expandListing(e)}>
                         <i className="hamSprite settingsIcon"></i>
                         <div id="settingsLink" className="mrl10 dispibl white">
                             Settings & Assistance
                         </div>
-                        <i id="expandSettings" onClick={(e) => this.expandListing(e)} className="hamSprite plusIcon fr"></i>
+                        <i id="expandSettings" className="hamSprite plusIcon fr"></i>
                     </div>
-                    <ul id="settingsMinor" className="minorList f15 settingStyle">
+                    <ul id="settingsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className="minorList f15 settingStyle">
                         {recommendationView}
                         {privacySettingView}
                         {changePassView}
@@ -534,12 +534,12 @@ class HamMain extends React.Component {
                                 Fraud Alert
                             </a>
                         </li>
+                        {logoutView}
                         <li className="mb12">
                             <a id="switchLink" href="/?desktop=Y" className="newS white">
                                 Switch to Desktop Site
                             </a>
                         </li>
-                        {logoutView}
                     </ul>
                 </li>
             </ul> 
