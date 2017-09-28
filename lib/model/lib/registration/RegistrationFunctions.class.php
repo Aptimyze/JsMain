@@ -250,6 +250,10 @@ class RegistrationFunctions
                     $religionInfo = (array)$loginProfileObj->getReligionInfo(1);
                     $completeFields["jamaat"] = $religionInfo['JAMAAT'];
                 }
+		if($completeFields["countryReg"] && $completeFields["countryReg"]!="51")
+		{
+			$completeFields["residentialStatus"] = $loginProfileObj->getRES_STATUS();
+		}
                 $country_res=$loginProfileObj->getCOUNTRY_RES();
                 $completeFields["countryReg"] = $country_res;
                 if($country_res==51 || $country_res==128){

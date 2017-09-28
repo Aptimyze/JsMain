@@ -76,6 +76,8 @@ class getFieldValues {
       break;
       case "country" : $fieldArr = $this->getCountryValues();
       break;
+      case "residentialStatus" : $fieldArr = $this->getResidentialStatus();
+	break;
       case "hdegree" : $fieldArr = $this->orderEduLevelNew();
       break;
       case "ugDegree" : $fieldArr = $this->staticFields["degree_ug"];
@@ -378,6 +380,15 @@ private function orderForLabelGrid($label)
     return $arr;
   }
 
+private function getResidentialStatus(){
+    $casteArr=FieldMap::getFieldLabel("rstatus",'',1);
+    $k=0;
+    foreach($casteArr as $kk=>$v)
+            $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));
+
+    return $arr;
+
+}
   /*
    * Function to get values from FieldMap and change format for familyCity
    * @page -  this contains page id  
