@@ -13,7 +13,7 @@ import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 
 class HamMain extends React.Component {
 
-    constructor(props) 
+    constructor(props)
     {
         super();
         this.state = {
@@ -41,11 +41,11 @@ class HamMain extends React.Component {
         }
     }
 
-    componentDidMount() 
-    {   
+    componentDidMount()
+    {
         if(!this.props.bellResponse && this.props.page == "others") {
             this.props.getHamData();
-        }  
+        }
         document.getElementById("settingsMinor").style.height = "0px";
         if(this.props.page == "others" && this.state.bellResponse != "notDefined") {
             this.checkHeight();
@@ -61,7 +61,7 @@ class HamMain extends React.Component {
             document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
         } else {
             document.getElementById("mainHamDiv").style.height = (window.innerHeight-100)+"px";
-        } 
+        }
     }
     componentWillUnmount()
     {
@@ -74,7 +74,7 @@ class HamMain extends React.Component {
                 document.getElementById("mainHamDiv").style.height = (window.innerHeight-84)+"px";
         } else {
             document.getElementById("mainHamDiv").style.height = (window.innerHeight-100)+"px";
-        }  
+        }
         document.getElementById("scrollElem").style.height = (window.innerHeight-document.getElementById("bottomTab").getBoundingClientRect().height)+"px";
         document.getElementById("myMatchesMinor").style.height = "0px";
         document.getElementById("contactsMinor").style.height = "0px";
@@ -82,7 +82,7 @@ class HamMain extends React.Component {
 
     logoutAccount() {
         this.setState({showLoader:true});
-        this.hideHam(); 
+        this.hideHam();
 
         axios.get(API_SERVER_CONSTANTS.API_SERVER+"/static/logoutPage")
         .then(function(response){
@@ -92,14 +92,14 @@ class HamMain extends React.Component {
         })
     }
 
-    checkHome(e) 
+    checkHome(e)
     {
         if(window.location.pathname == "/" || window.location.pathname == "/login/") {
            e.preventDefault();
-           this.hideHam(); 
+           this.hideHam();
         }
     }
-    
+
     scrollAnimate(element, difference,time) {
         if (difference <= 0) return;
         time = difference/time;
@@ -131,11 +131,11 @@ class HamMain extends React.Component {
             let _this = this;
             setTimeout(function(){
                _this.scrollAnimate(document.getElementById('scrollElem'),differHeight,400)
-            },200); 
+            },200);
         }
     }
 
-    openHam() 
+    openHam()
     {
         document.getElementById("mainContent").classList.add("scrollhid");
         document.getElementById("hamView").classList.add("z99")
@@ -144,8 +144,8 @@ class HamMain extends React.Component {
         document.getElementById("hamburger").classList.add("hamShow")
     }
 
-    hideHam() 
-    {   
+    hideHam()
+    {
         document.getElementById("hamView").classList.remove("z99")
         document.getElementById("hamView").classList.add("dn")
         document.getElementById("hamView").classList.remove("backShow")
@@ -153,7 +153,7 @@ class HamMain extends React.Component {
         document.getElementById("mainContent").classList.remove("scrollhid");
     }
 
-    render() 
+    render()
     {
         console.log('hamMain');
         let loaderView;
@@ -170,9 +170,9 @@ class HamMain extends React.Component {
                     </a>
                 </div>;
             if(this.state.bellResponse.VISITOR_ALERT != 0) {
-                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>; 
+                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>;
             }
-          
+
             profileVisitorView = <li className="mb12">
                 <i className="hamSprite profileVisitorIcon"></i>
                 <a href="/search/visitors?matchedOrAll=A" id="profileVisitorLink" className="white">
@@ -189,7 +189,7 @@ class HamMain extends React.Component {
             </li>;
 
             if(this.state.bellResponse.BOOKMARK != 0) {
-                shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;  
+                shortlistedCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.BOOKMARK}</span>;
             }
 
             shortlistedView = <li className="mb12">
@@ -327,7 +327,7 @@ class HamMain extends React.Component {
                     </li>
                     <li>
                         <a id="dailyRec" href="/inbox/7/1" className="newS white">
-                            Daily Recommendations 
+                            Daily Recommendations
                             {dailyRecCount}
                         </a>
                     </li>
@@ -359,7 +359,7 @@ class HamMain extends React.Component {
             startingTuple = <li>
                 <div className="fullwid">
                     <div className="dispibl txtc wid32p">
-                        <a id="awaitingResponseLinkTop" href="/inbox/1/1" className="dispbl white f12"> 
+                        <a id="awaitingResponseLinkTop" href="/inbox/1/1" className="dispbl white f12">
                             <i id="int_rec" className="hamSprite irIcon posrel">
                                 <div className="posabs newham_pos1">
                                     {awaitingResponseCount}
@@ -421,7 +421,7 @@ class HamMain extends React.Component {
                 </a>
             </li>;
             logoutView = <li className="mb12">
-                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white mlLogout">
+                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white ml30">
                     Logout
                 </div>
             </li>;
@@ -442,8 +442,8 @@ class HamMain extends React.Component {
                                 <a href="/browse-matrimony-profiles-by-community-jeevansathi" id="borwseCommLink" className="white">
                                     Browse By Community
                                 </a>
-                               </li>;          
-        }  
+                               </li>;
+        }
         let urlString = "",appText = "";
         if(getAndroidVersion()) {
             urlString = "https://jeevansathi.com/static/appredirect?type=androidLayer";
@@ -451,7 +451,7 @@ class HamMain extends React.Component {
         } else if(getIosVersion()) {
             urlString = "https://jeevansathi.com/static/appredirect?type=iosLayer";
             appText = "Download iOS App ";
-        }      
+        }
 
         let newHref;
         if(getCookie("AUTHCHECKSUM")) {
@@ -460,7 +460,7 @@ class HamMain extends React.Component {
              newHref = CONSTANTS.HINDI_SITE;
         }
 
-        let listingView = 
+        let listingView =
         <div>
             <ul id="scrollElem" className="fontreg white listingHam listingStyle overAutoHidden">
                 <li className="appDownload f13 pb8 fontlig" style={{"padding":"10px 20px 0 20px"}}>
@@ -473,7 +473,7 @@ class HamMain extends React.Component {
                         </div>
                     </div>
                 </li>
-                
+
                 {startingTuple}
                 <li className="mb12">
                     <i className="hamSprite homeIcon"></i>
@@ -514,7 +514,7 @@ class HamMain extends React.Component {
                         {changePassView}
                         {hideProfileView}
                         {deleteProfileView}
-                        {helpView} 
+                        {helpView}
                         <li className="mb12">
                             <a id="contactUsLink" href="/contactus/index" className="newS white">
                                 Contact Us
@@ -543,7 +543,7 @@ class HamMain extends React.Component {
                         </li>
                     </ul>
                 </li>
-            </ul> 
+            </ul>
             <div id="bottomTab" className="mar0Imp posabs btm0 fullwid">
                 {membershipRegisterView}
             </div>
