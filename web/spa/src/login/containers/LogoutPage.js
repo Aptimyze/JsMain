@@ -9,7 +9,8 @@ export default class LogoutPage extends React.Component{
 
 	componentDidMount(){
 		removeCookie("AUTHCHECKSUM");
-    	this.props.history.push('/login');
+		localStorage.clear();
+    	window.location.href="/login";
 	}
 
 	render(){
