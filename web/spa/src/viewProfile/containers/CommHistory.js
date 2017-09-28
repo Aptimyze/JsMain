@@ -49,26 +49,37 @@ export default class CommHistory extends React.Component {
       let _this = this,pchecksum = this.props.profileId,newN;
       let call_url = CONSTANTS.COMM_HISTORY+"?profilechecksum="+pchecksum+"&pageNo="+this.state.pageN+"&dataType=json";
       commonApiCall(call_url,{},'','POST').then(function(response){
-          let recRes = response.history.reverse();
-          if(_this.state.messages.length==0)
+          if(response.history!=null)
           {
-            _this.state.messages = recRes;
+            let recRes = response.history.reverse();
+            if(_this.state.messages.length==0)
+            {
+              _this.state.messages = recRes;
+            }
+            else
+            {
+              _this.scrollTop = document.getElementById('commHistoryScroller').scrollHeight;
+              _this.state.messages = recRes.concat(_this.state.messages);
+
+            }
+            newN =   _this.state.messages;
+            let pageCount=_this.state.pageN;
+            pageCount++;
+              _this.setState({
+                showLoader: false,
+                getRes: response,
+                pageN : pageCount,
+                messages : newN
+              })
           }
           else
           {
-            _this.scrollTop = document.getElementById('commHistoryScroller').scrollHeight;
-            _this.state.messages = recRes.concat(_this.state.messages);
-
-          }
-          newN =   _this.state.messages;
-          let pageCount=_this.state.pageN;
-          pageCount++;
             _this.setState({
               showLoader: false,
-              getRes: response,
-              pageN : pageCount,
-              messages : newN
+              getRes: response
             })
+          }
+
 
         });
     }
@@ -115,31 +126,45 @@ export default class CommHistory extends React.Component {
       if(this.state.getRes!=null)
       {
 
-
-        data = this.state.messages.map((historyList,index) => {
-          let alignT;
-          if(historyList.ismine==true)
-          {
-             alignT = "txtr";
-          }
-          else
-          {
-            alignT= "txtl";
-          }
-          return <div id={"comHist"+index} className="brdr4">
-                    <div className={"pad3 "+ alignT}>
-                      <div className='fontlig f14 white'>
-                        {historyList.message}
-                      </div>
-                      <div className="dispbl color1 f12 pt5">
-                          <span className="dispibl">{historyList.header}</span>
-                          <span className="dispibl padl5">{historyList.time}</span>
-                      </div>
+        if(this.state.getRes.history==null)
+        {
+          data = <div className="disptbl hgtInherit">
+                    <div className="dispcell vertmid white txtc">
+                      Your interaction {this.state.getRes.label} will appear here.
                     </div>
-                </div>;
-        })
+                 </div>
+        }
+        else
+        {
+          data = this.state.messages.map((historyList,index) => {
+            let alignT;
+            if(historyList.ismine==true)
+            {
+               alignT = "txtr";
+            }
+            else
+            {
+              alignT= "txtl";
+            }
+            return <div id={"comHist"+index} className="brdr4">
+                      <div className={"pad3 "+ alignT}>
+                        <div className='fontlig f14 white'>
+                          {historyList.message}
+                        </div>
+                        <div className="dispbl color1 f12 pt5">
+                            <span className="dispibl">{historyList.header}</span>
+                            <span className="dispibl padl5">{historyList.time}</span>
+                        </div>
+                      </div>
+                  </div>;
+          })
+        }
+
 
       }
+
+
+
       return data;
 
   }
