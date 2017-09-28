@@ -184,7 +184,21 @@ class AuthFilter extends sfFilter {
 
 		            	
 
-						if($data[INCOMPLETE]=='Y' )
+                                                $phoneVerified = JsMemcache::getInstance()->get($data['PROFILEID']."_PHONE_VERIFIED");
+							
+                                                if(!$phoneVerified)
+                                                {
+                                                        $phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
+                                                        JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
+                                                }
+                                                
+                                                if($phoneVerified == 'Y' && $data[HAVEPHOTO] == 'Y' && $data[ACTIVATED] == 'N'){
+                                                    CommonFunction::markProfileCompleteAndActivated();
+                                                    $data[INCOMPLETE] = 'N';
+                                                    $data[ACTIVATED] = 'Y';
+                                                }
+                                                
+						if($data[INCOMPLETE]=='Y')
 						{
 							$request->setParameter("incompleteUser",1);
 							if(MobileCommon::isNewMobileSite()){
@@ -199,15 +213,7 @@ class AuthFilter extends sfFilter {
 							
 						
 						if($request->getParameter('module')!="phone" && $request->getParameter('module')!="common")
-						{							
-							$phoneVerified = JsMemcache::getInstance()->get($data['PROFILEID']."_PHONE_VERIFIED");
-							
-							if(!$phoneVerified)
-							{
-								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
-								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
-							}
-
+						{           
 							if($phoneVerified!="Y")
 							{
 								
@@ -228,7 +234,7 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 							}
-							
+                                                        
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
 								$context->getController()->forward("phone","consentMessage",0);

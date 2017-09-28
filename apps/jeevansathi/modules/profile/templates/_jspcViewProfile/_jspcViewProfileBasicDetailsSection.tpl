@@ -169,7 +169,7 @@
 
                   </div>
                   ~if $showIdfy`
-                   <div  id="idfyDiv" class="idfyDiv2 disp_ib fr wid223 mt16 fl"><span class="color5 f13 fontlig idfyText ml3">Get details of this user verified</span><i class="idfyIcon"></i></div>
+                   <div  id="idfyDiv" class="idfyDiv2 disp_ib fr wid223 mt16 fl" onclick="trackJsEventGA('idfy','click from profile','M/F','')"><span class="color5 f13 fontlig idfyText ml3">Get details of this user verified</span><i class="idfyIcon"></i></div>
                   ~/if`
               </div>
             </div>
