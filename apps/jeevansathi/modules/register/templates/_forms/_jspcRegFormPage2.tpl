@@ -307,12 +307,11 @@
       </div>
       <!--end:error div-->
       <div class="fullwid pos_rel clearfix">
-        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="residentialStatus" tabindex="0" id="residentialStatus_box">
-          <label class="lblreg pos_abs js-residentialStatus js-list pos1_lbl1 required" id="residentialStatus_label" data-attr="residentialStatus">Residential Status?</label>
-          <div class="js-tBox reg-mainlist showdd" id='residentialStatus_value' data-toSave ="res_status" data-number="3" data-type="radio"  data-validate=true data-required=true data-fieldtype="residentialStatus">
+        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="residentialStatus_box">
+          <label class="lblreg pos_abs js-residentialStatus pos1_lbl1 required" id="residentialStatus_label" data-attr="residentialStatus">Residential Status?</label>
+          <div class="js-tBox" id='residentialStatus_value' data-toSave ="res_status" data-columns="3" data-type="gridDropdown"  data-validate=true data-required=true data-fieldtype="residentialStatus">
             <div id="residentialStatus-inputBox_set"></div>
-            <ul class="rlist residentialStatusrenopt" id="residentialStatus-list_set">
-            </ul>
+            <div id="residentialStatus-gridDropdown_set"></div>
           </div>
         </div>
       </div>

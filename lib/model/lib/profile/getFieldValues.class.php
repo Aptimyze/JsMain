@@ -386,7 +386,7 @@ private function getResidentialStatus(){
     foreach($casteArr as $kk=>$v)
             $arr[$k++]=array($kk=>preg_replace('/[A-Z][a-z]{3,10}[:][ ]/',"",$casteArr[$kk]));
 
-    return $arr;
+    return array($arr);
 
 }
   /*
