@@ -345,10 +345,12 @@ export  class MyjsPage extends React.Component {
      		height: window.innerHeight + "px"
     	};
     	let ShowBrowserNotificationView = "";
-
-    	if ( this.props.myjsData.apiData.showBrowserNotification )
+ 	    if ( this.props.myjsData.apiData.showBrowserNotification )
     	{
-    		ShowBrowserNotificationView = <ShowBrowserNotification/>
+    		if (this.props.myjsData.apiData.showBrowserNotification['showLayer'] == 1)
+    		{
+    			ShowBrowserNotificationView = <ShowBrowserNotification/>
+    		}
     	}
 
   		return(

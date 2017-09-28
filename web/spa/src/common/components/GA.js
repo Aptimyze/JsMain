@@ -58,6 +58,22 @@ export default class GA extends React.Component {
   		
     }
 
+    /*this function is used to get GENDER of LoggedInProfile to be used for GA.
+      Expecting M/F in case of loggedIn and "" in case of LoggoutOut
+    */
+    getGenderForGA()
+    {
+      let gender = "M";//localStorage.getItem("Gender");
+      if(gender)
+      {
+        return gender;
+      }
+      else
+      {
+        return "Unregistered";
+      }
+    }
+
     render() {
     	return(
     		<div></div>
