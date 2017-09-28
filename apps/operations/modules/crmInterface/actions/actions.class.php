@@ -1115,6 +1115,7 @@ class crmInterfaceActions extends sfActions
 
     public function executeServiceActivationChangeInterface(sfWebRequest $request)
     {
+        
         $this->cid          = $request->getParameter('cid');
         $this->name         = $request->getParameter('name');
         $billingPurDetObj   = new billing_PURCHASE_DETAIL();
@@ -1155,7 +1156,20 @@ class crmInterfaceActions extends sfActions
             }
             $this->jprofileDet  = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
-
+            //insert the ID in case of exclusive
+            $exclusiveId = $this->serviceid;
+            //$exclusiveId = substr($exclusiveId, 0, 1);
+            $findX = 'X';
+            $pos = strpos($exclusiveId, $findX);
+            if($pos !== false && $serviceStatus=='Y'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->replaceExclusiveProfile($this->profileid,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
+                unset($assistedProductProfileInfo);
+            }else if($pos !== false&& $serviceStatus=='N'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->Delete($this->profileid);
+                unset($assistedProductProfileInfo);
+            }
             // Logging
             $serviceActivationLog = new billing_SERVICE_ACTIVATION_LOG();
 	    foreach($this->serStatDet as $key=>$dataArr){

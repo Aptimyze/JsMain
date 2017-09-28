@@ -16,7 +16,7 @@ class test_PHOTO_BENCHMARK extends TABLE {
 	public function insert($faceDetected, $pid, $origPath,$imageT,$profileid){
 		try{
 
-			$sql = "INSERT IGNORE INTO test.PHOTO_BENCHMARK (`PROFILEID`,`PICTUREID`,`OrigPic`,`TIMESTAMP`,`COORDINATE`,`FACEDETECTED`,`PICFORMAT`) 
+			$sql = "INSERT IGNORE INTO test.PHOTO_BENCHMARK (`PROFILEID`,`PICTUREID`,`OrigPic`,`TIMESTAMP`,`FACEDETECTED`,`PICFORMAT`) 
 														VALUES(:PROFILEID,:PICTIREID,:ORIGPIC,now(),:FACEDETECTED,:PICFORMAT)";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);

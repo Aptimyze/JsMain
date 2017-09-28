@@ -66,6 +66,8 @@
         }
         function trackJsEventGA(category, action, label, value){
             if (ucode){
+                if(label == "M/F")
+                       label = loggedInJspcGender;
                 if (value) {
                        _gaq.push(['_trackEvent', category, action, label, value]);
                 } else {

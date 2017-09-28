@@ -162,6 +162,12 @@ class ApiRequestHandler
 		$profileid = $request->getAttribute('profileid');
 		$loginData = $request->getAttribute('loginData');
 		if ($profileid) {
+                        $verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
+                        if(!$verifyPhoneForRequest && $loginData[ACTIVATED] == 'N' && $loginData['HAVEPHOTO'] == 'Y'){
+                            CommonFunction::markProfileCompleteAndActivated();
+                            $loginData[INCOMPLETE] = 'N';
+                            $loginData[ACTIVATED] = 'Y';
+                        }
 			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData"|| ($output["moduleName"]=='social' && $request->getParameter("fromAppRegistration")==1)) {
 			}
 			elseif (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
@@ -169,7 +175,6 @@ class ApiRequestHandler
 				$output["moduleName"] = "profile";
 				$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["editprofile"][$request->getParameter("version")];
 			} elseif ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y" && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api") && ($output["actionName"] != "AlertManagerV1")) {
-				$verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
 				if ($verifyPhoneForRequest) {
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
