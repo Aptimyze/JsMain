@@ -164,7 +164,7 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
-            this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
+            this.props.doLogin(this,emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
             this.setState ({
                 showLoader : true
             })
@@ -204,7 +204,9 @@ class LoginPage extends React.Component {
         }
     }
 
-    showHam() {
+    showHam()
+    {
+
         if(window.location.search.indexOf("ham=1") == -1) {
             if(window.location.search.indexOf("?") == -1) {
                 this.props.history.push(window.location.pathname+"?ham=1");
@@ -212,7 +214,7 @@ class LoginPage extends React.Component {
                 this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
             }
 
-        }        
+        }
         this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA);
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
@@ -396,16 +398,16 @@ LoginPage.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        doLogin: (email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
+        doLogin: (curretObj,email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
             let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password+'&rememberme=Y';
             if ( g_recaptcha_response && captcha )
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-            this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA);
+            curretObj.refs.GAchild.trackJsEventGA("Login-jsms","Login",curretObj.refs.GAchild.getGenderForGA);
             commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
             {
-                console.log("response is:",response);
+                
                 if ( response.responseStatusCode == 1)
                 {
                     addCaptchaDiv();
