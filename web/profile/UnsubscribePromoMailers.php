@@ -24,8 +24,6 @@ $db=connect_db();
         $objUpdate = JProfileUpdateLib::getInstance();
         $result = $objUpdate->editJPROFILE(array('UDATE'=>$today, 'PROMO_MAILS'=>'U'),$profileid,'PROFILEID');
         if(false === $result) {
-          $msg = print_r($_SERVER,true);
-          mail("kunal.test02@gmail.com","Error in web/profile/UnsubscribePromoMailers.php while updating",$msg);
           
           $sql="UPDATE newjs.JPROFILE SET UDATE=".$today.", PROMO_MAILS='U' WHERE PROFILEID=".$profileid;
           logError($errorMsg,"$sql","ShowErrTemplate");

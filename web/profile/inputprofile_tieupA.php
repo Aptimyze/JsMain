@@ -8,8 +8,6 @@
 * 	REASON		: 	Changes made due to three page input structure 			
 * 	Copyright  2005, InfoEdge India Pvt. Ltd.
 ************************************************************************************************************************/
-$http_msg=print_r($_SERVER,true);
-mail("kunal.test02@gmail.com","inputprofile_tieupA.php in USE",$http_msg);
 
 //to zip the file before sending it
 $zipIt = 0;
