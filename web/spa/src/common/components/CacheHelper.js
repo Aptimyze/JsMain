@@ -93,6 +93,7 @@ export function getProfileKeyLocalStorage(queryString=null)
 	let actual_offset = getParameterByName(queryString,"actual_offset");
 	let total_rec = getParameterByName(queryString,"total_rec");
 	let searchid = getParameterByName(queryString,"searchid");
+	let profilechecksum = getParameterByName(queryString,"profilechecksum");
 
 	if ( contact_id != null )
 	{
@@ -109,6 +110,10 @@ export function getProfileKeyLocalStorage(queryString=null)
 	if ( searchid != null )
 	{
 		urlString = urlString + "_"+searchid.toString();
+	}
+	if ( profilechecksum != null )
+	{
+		urlString = urlString + "_"+profilechecksum.toString();
 	}
 	return urlString;
 }	
