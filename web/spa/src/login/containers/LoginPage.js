@@ -212,7 +212,8 @@ class LoginPage extends React.Component {
                 this.props.history.push(window.location.pathname+window.location.search+"&ham=1");
             }
 
-        }
+        }        
+        this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA);
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
@@ -244,11 +245,11 @@ class LoginPage extends React.Component {
         let appDownloadView;
         if(getAndroidVersion()) {
             appDownloadView = <div id="appLinkAndroid" className="txtc pad2">
-                <a href="/static/appredirect?type=androidMobFooter" className="f15 white fontlig">Download App | 3MB only</a>
+                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP Android",this.refs.GAchild.getGenderForGA)} className="f15 white fontlig">Download App | 3MB only</a>
             </div>;
         } else if(getIosVersion()) {
             appDownloadView = <div id="appLinkIos" className="txtc pad2">
-                <a href="/static/appredirect?type=iosMobFooter" className="f15 white fontlig">Download App</a>
+                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP IOS",this.refs.GAchild.getGenderForGA)} className="f15 white fontlig">Download App</a>
             </div>;
         }
 
@@ -292,12 +293,12 @@ class LoginPage extends React.Component {
                             </div>
                             <div className="bg10 fullwid mt5">
                                 <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
-                                    <a href="/register/page1?source=mobreg4" className="f17 fontlig white">
+                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Register",this.refs.GAchild.getGenderForGA)} className="f17 fontlig white">
                                         Register
                                     </a>
                                 </div>
                                 <div id="searchLink" className="wid49p fl txtc pad12 posrel scrollhid">
-                                    <a id="calltopSearch" href="/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" className=" f17 fontlig white">
+                                    <a id="calltopSearch" href="/search/topSearchBand?isMobile=Y&amp;stime=1496377022985" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Search",this.refs.GAchild.getGenderForGA)} className=" f17 fontlig white">
                                         Search
                                     </a>
                                 </div>
@@ -356,7 +357,7 @@ class LoginPage extends React.Component {
 
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Hindi Site",this.refs.GAchild.getGenderForGA)} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
@@ -401,7 +402,7 @@ const mapDispatchToProps = (dispatch) => {
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-
+            this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA);
             commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
             {
                 console.log("response is:",response);
