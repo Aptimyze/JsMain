@@ -402,6 +402,9 @@ if($femaleProfiles && is_array($femaleProfiles))
 }
 unset($delArr);
 
+$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 2 MONTH))";
+mysql_query($sql,$db) or die("8 ".mysql_error1($db));
+
 //UPDATE POPULAR SCORE
 $sql_ntimes="UPDATE SWAP SET POPULAR=NTIMES/(POW((DATEDIFF(NOW(),ENTRY_DT)),.75))";
 mysql_query($sql_ntimes,$db) or die("error in updating newjs.SWAP.NTIMES from newjs.JP_NTIMES.NTIMES".mysql_error1($db));
