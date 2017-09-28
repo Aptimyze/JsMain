@@ -329,12 +329,6 @@ class notificationActions extends sfActions
     
     public function executeNotificationLayerSettingsV1($request){
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-        /*$notificationStop =JsConstants::$notificationStop;
-        if($notificationStop){
-                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
-                $apiResponseHandlerObj->generateResponse();
-                die;
-        }*/
         $channel = MobileCommon::isMobile()?"M":"D";
         $loginData = $request->getAttribute("loginData");
         $profileId = $loginData["PROFILEID"];
