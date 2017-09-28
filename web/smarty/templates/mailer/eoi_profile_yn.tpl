@@ -9,7 +9,7 @@
                             <table style="max-width:280px; min-width:240px" border="0" cellspacing="0" cellpadding="0" align="left">
                                 <tr>
                                     <td></td>
-                                    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=~JSTrackingPageType::YN_MAILER`(/LINK)"><var>{{NAME_PROFILE:profileid=~$eoiProfileId`}}</var></a> <var>{{PAIDSTATUS:profileid=~$eoiProfileId`}}</var> </td>
+                                    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=~JSTrackingPageType::YN_MAILER`(/LINK)"><var>{{NAME_OTHER_PROFILE:profileid=~$eoiProfileId`,receiver_id=~$profileid`}}</var></a> <var>{{PAIDSTATUS:profileid=~$eoiProfileId`}}</var> </td>
                                 </tr>
                                 <tr>
                                     <td width="20"></td>

@@ -42,7 +42,7 @@ This Email contains links which let you to directly login to your account. So fo
   <tr>
     <td width="20"></td>
    <td>
-<var>{{NAME_PROFILE:profileid=~$otherProfile`}}</var> has accepted your expression of interest. </td>
+<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has accepted your expression of interest. </td>
     <td width="20"></td>
   </tr>
 </table>
@@ -58,7 +58,7 @@ This Email contains links which let you to directly login to your account. So fo
     <td> <table style="max-width:280px; min-width:240px" border="0" cellspacing="0" cellpadding="0" align="left">
     <tr>
     <td></td>
-    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{NAME_PROFILE:profileid=~$otherProfile`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
+    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
     </tr>
   <tr>
     <td width="20"></td>
