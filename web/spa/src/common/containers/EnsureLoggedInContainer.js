@@ -5,6 +5,7 @@ import asyncComponent from '../components/asyncComponent';
 import {LOGGED_OUT_PAGE} from "../../common/constants/CommonConstants";
 import {SPA_PAGE} from "../../common/constants/CommonConstants";
 import {stripTrailingSlash} from '../../common/components/UrlDecoder';
+import { redirectToLogin } from '../../common/components/RedirectRouter';
 
 import MyjsPage from '../../myjs/containers/MyjsPage';
 
@@ -46,7 +47,7 @@ class EnsureLoggedInContainer extends React.Component
                         <Route exact path="/" component={MyjsPage}/>
                         <Route path='/myjs' component={MyjsPage} />
                         <Route path='/profile/mainmenu.php' component={MyjsPage} />
-                        <Route path='/P/logout.php' component={MyjsPage} />
+                        <Route path='/P/logout.php' component={redirectToLogin(this.props.history,9)} />
                         <Route component={PageNotFound} />
                         </Switch>
                         </div>
