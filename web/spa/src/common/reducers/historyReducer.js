@@ -1,8 +1,13 @@
 import historyObj from "../components/history_js";
-
+let oneTimeInstance = {};
+if(!window.historyObjInstantiated){
+  oneTimeInstance = new historyObj();
+  window.historyObjInstantiated = true;
+}
 const historyReducer = (state={
-  historyObject : new historyObj()
+  historyObject : oneTimeInstance
 },action) => {
+
 	switch(action.type)
 	{
   default:
