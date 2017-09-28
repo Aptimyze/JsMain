@@ -92,6 +92,22 @@ mysql_query($sql,$db) or die("03".mysql_error1($db));
 $sql="UNLOCK TABLES";
 mysql_query($sql,$db) or die("04".mysql_error1($db));
 
+
+/** Code block for swap login date only table data transfer starts here**/
+// lock table SWAP_JPROFILE_LOGIN_DT so that the JPROFILE trigger does not insert new records untill the lock is released
+$sql="lock tables SWAP_JPROFILE_LOGIN_DT WRITE, SWAP_JPROFILE_LOGIN_DT1 WRITE";
+mysql_query($sql,$db) or die("01".mysql_error1($db));
+// insert SWAP_JPROFILE_LOGIN_DT records to SWAP_JPROFILE_LOGIN_DT1
+$sql="INSERT IGNORE INTO SWAP_JPROFILE_LOGIN_DT1 SELECT * FROM SWAP_JPROFILE_LOGIN_DT";
+mysql_query($sql,$db) or die("02".mysql_error1($db));
+// empty SWAP_JPROFILE_LOGIN_DT
+$sql="DELETE FROM SWAP_JPROFILE_LOGIN_DT";
+mysql_query($sql,$db) or die("03".mysql_error1($db));
+// release lock
+$sql="UNLOCK TABLES";
+mysql_query($sql,$db) or die("04".mysql_error1($db));
+/** Code block for swap login date only table data transfer ends here**/
+
 //This section deletes common entries if exist in SEARCH_MALE and SEARCH_FEMALE
 unset($idArr);
 
@@ -149,6 +165,21 @@ $sql="truncate table SWAP";
 
 mysql_query($sql,$db) or die("1 ".mysql_error1($db));
 
+$sql="SELECT * FROM SWAP_JPROFILE_LOGIN_DT1";
+$res=mysql_query($sql,$db) or die("swap login select fail".mysql_error1($db)); 
+
+$sqlUpdateM="";
+$sqlUpdateF="";
+while($row=  mysql_fetch_assoc($res))
+{ 
+        $sqlUpdateM = "UPDATE `SEARCH_MALE` SET `LAST_LOGIN_DT` = '".$row["LAST_LOGIN_DT"]."',`SORT_DT` = '".$row["SORT_DT"]."' WHERE PROFILEID=".$row["PROFILEID"].";";
+        $sqlUpdateF = "UPDATE `SEARCH_FEMALE` SET `LAST_LOGIN_DT` = '".$row["LAST_LOGIN_DT"]."',`SORT_DT` = '".$row["SORT_DT"]."' WHERE PROFILEID=".$row["PROFILEID"].";";
+        mysql_query($sqlUpdateM,$db) or die("swap login update failed M".mysql_error1($db));
+        mysql_query($sqlUpdateF,$db) or die("swap login update failed F".mysql_error1($db));
+}
+$sql="truncate table SWAP_JPROFILE_LOGIN_DT1";
+mysql_query($sql,$db) or die("swap login truncate failed ".mysql_error1($db));
+
 // take the profiles from SWAP_JPROFILE1. This table could contain records older than the previous hour also if the script did not execute properly last time around. This ensures that all updates to JPROFILE are eventually reflected in search tables  even if the script misbehaves.
 		
 $memcacheObj = JsMemcache::getInstance();
@@ -157,16 +188,20 @@ $res=mysql_query($sql,$db) or die("3 ".mysql_error1($db));
 $popular=0;
 while($row=mysql_fetch_row($res))
 { 
+        $swapFields = array();
         $profileid=$row[0];
-        $sqlT="SELECT SCREENING,CITY_RES FROM newjs.JPROFILE WHERE PROFILEID='".$profileid."'";
+        $sqlT="SELECT SCREENING,CITY_RES,INCOME FROM newjs.JPROFILE WHERE PROFILEID='".$profileid."'";
         $resT=mysql_query($sqlT,$db) or die("3 ".mysql_error1($db));
         while($rowT=mysql_fetch_row($resT)){
                 $row[1]=$rowT[0];
 		$cityRes = $rowT[1];
+		$income = $rowT[2];
 		if(substr($cityRes,2)=="OT")
 			$cityRes = substr($cityRes,0,2)."000";
         }
-
+        $income=getSortByIncome($income);
+        $swapFields[] = "INCOME_SORTBY = '".$income."'";
+        
         //Photo first check. Verify Date to be updated accordingly in SWAP
         $sqlPhoto = "SELECT MIN(ENTRY_DT) as PHOTO_SCREENED_DT from newjs.PHOTO_FIRST where PROFILEID='".$profileid."'";        
         $resPhoto = mysql_query($sqlPhoto,$db) or die("3 ".mysql_error1($db));
@@ -178,6 +213,7 @@ while($row=mysql_fetch_row($res))
         
         $loginDateObj = new MIS_LOGIN_TRACKING_OLDPROFILES("newjs_masterRep");
         $loginDate = $loginDateObj->getData($profileid);
+        unset($loginDateObj);
         if($loginDate !="")
                 $loginDate = $loginDate["LOGIN_DATE"];
         else
@@ -185,6 +221,7 @@ while($row=mysql_fetch_row($res))
         
         $voaDateObj = new PROFILE_VOA_TRACKING("newjs_masterRep");
         $voaDate = $voaDateObj->getData($profileid);
+        unset($voaDateObj);
         if($voaDate !="")
                 $voaDate = $voaDate["CHANGE_DATE"];
         else
@@ -223,26 +260,22 @@ while($row=mysql_fetch_row($res))
                 
                 $sql_insert.="JE.SCHOOL,J.KEYWORDS,J.NAKSHATRA,'',J.MOD_DT,GREATEST(IF(J.VERIFY_ACTIVATED_DT!= '0000-00-00 00:00:00',J.VERIFY_ACTIVATED_DT,J.ENTRY_DT),'".$firstPhotoScreenedDate."','".$loginDate."','".$voaDate."') AS VERIFY_ACTIVATED_DT,IF(W.TAGS,GROUP_CONCAT(W.TAGS),'000') AS KNOWN_COLLEGE FROM (((((((JPROFILE J LEFT JOIN EDUCATION_LEVEL_NEW E ON J.EDU_LEVEL_NEW=E.VALUE) LEFT JOIN OCCUPATION O ON J.OCCUPATION = O.VALUE) LEFT JOIN JPROFILE_CONTACT JC ON JC.PROFILEID = J.PROFILEID) LEFT JOIN ASTRO_DETAILS A ON J.PROFILEID = A.PROFILEID) LEFT JOIN HOROSCOPE H ON J.PROFILEID = H.PROFILEID) LEFT JOIN FEATURED_PROFILE_LIST F ON J.PROFILEID = F.PROFILEID) LEFT JOIN JPROFILE_EDUCATION JE ON J.PROFILEID=JE.PROFILEID) LEFT JOIN WELL_KNOWN_COLLEGE W ON (W.COLLEGE_NAME = JE.COLLEGE || W.COLLEGE_NAME = JE.PG_COLLEGE) WHERE J.PROFILEID=$profileid";                                
                 mysql_query($sql_insert,$db) or die("3 1".mysql_error1($db));
+                
                 $sqlEduGrouping = "SELECT group_concat(DISTINCT(GROUPING)) AS GROUPING FROM SWAP J JOIN EDUCATION_LEVEL_NEW E WHERE J.PROFILEID =".$profileid." AND (J.EDU_LEVEL_NEW = E.VALUE OR J.PG_DEGREE = E.VALUE OR J.UG_DEGREE = E.VALUE ) ";
                 $eduGrouping = mysql_query($sqlEduGrouping, $db) or die("edu query".mysql_error1($db));
                  
                 while($roweduGroup=mysql_fetch_row($eduGrouping)){
-									 $sqlUpdate = "UPDATE `SWAP` SET `EDUCATION_GROUPING` = '".$roweduGroup[0]."' WHERE PROFILEID=".$profileid;
-                  mysql_query($sqlUpdate,$db) or die("edu query2".mysql_error1($db));
+                        $swapFields[] = "EDUCATION_GROUPING = '".$roweduGroup[0]."'";
                 }
 		/** Esha Jain**/
 		if(Flag::isFlagSet("name_of_user", $row[1]))
 		{
-			$sqlNameOfUser="SELECT * FROM incentive.NAME_OF_USER WHERE PROFILEID=".$profileid;
-			$resNameOfUser = mysql_query($sqlNameOfUser, $db) or die("name query".mysql_error1($db));
-			while($rowNameOfUser = mysql_fetch_assoc($resNameOfUser))
-			{
-				if($rowNameOfUser['DISPLAY']=="Y")
-				{
-					$sqlNameUpdate = "UPDATE `SWAP` SET NAME_OF_USER = '".mysql_real_escape_string($rowNameOfUser['NAME'])."' WHERE PROFILEID=".$profileid;
-					mysql_query($sqlNameUpdate,$db) or die("name query2".mysql_error1($db));
-				}
-			}
+                        $nameOfUserObj = new NameOfUser();
+                        $nameData = $nameOfUserObj->getNameData($profileid);
+                        unset($nameOfUserObj);
+                        if(!empty($nameData) && $nameData != "" && isset($nameData[$profileid]) && $nameData[$profileid]['DISPLAY']=="Y"){
+                                $swapFields[] = "NAME_OF_USER = '".mysql_real_escape_string($nameData[$profileid]['NAME'])."'";
+                        }
 		}
 		/** Esha Jain**/
 		
@@ -265,7 +298,8 @@ while($row=mysql_fetch_row($res))
        
         $verificationSealObj=new VerificationSealLib(array($profileid),1);
         $verificationSealObj->codeVerificationSeal();
-       
+        unset($verificationSealObj);
+        
         // END Verification Seal
         $sqlNativePlace = "SELECT NATIVE_STATE,NATIVE_CITY FROM newjs.NATIVE_PLACE WHERE PROFILEID=$profileid";
         $dataNativePlace = mysql_query($sqlNativePlace,$db) or die("error in data from NATIVE_PLACE".mysql_error1($db));
@@ -277,28 +311,22 @@ while($row=mysql_fetch_row($res))
                 }elseif($nativePlace["NATIVE_STATE"] == '' || $nativePlace["NATIVE_STATE"] == "0"){
                         $nativePlace["NATIVE_CITY"] = '';
                 }
-                
-                $sql_update="UPDATE SWAP SET NATIVE_STATE = '".$nativePlace["NATIVE_STATE"]."', NATIVE_CITY = '".$nativePlace["NATIVE_CITY"]."' WHERE PROFILEID=$profileid";
-
-                mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
+                $swapFields[] = "NATIVE_STATE = '".$nativePlace["NATIVE_STATE"]."'";
+                $swapFields[] = "NATIVE_CITY = '".$nativePlace["NATIVE_CITY"]."'";
         }
-        // Paid user check
         
-        //$sqlIsPaid = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID =$profileid ORDER BY ENTRY_DT DESC LIMIT 1";
-        //$IsPaid = mysql_query($sqlIsPaid,$db) or die("error in data from billing purchases for $profileid".mysql_error1($db));
-        //$dataIsPaid    =mysql_fetch_array($IsPaid);
+        // Paid user check
         $dataIsPaid    = $memcacheObj->get("FreeToP_$profileid");
         if($dataIsPaid !== false && $dataIsPaid != ''){
-                $sql_update="UPDATE SWAP SET PAID_ON = '".$dataIsPaid."' WHERE PROFILEID=$profileid";
-                mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
+                $swapFields[] = "PAID_ON = '".$dataIsPaid."'";
         }
         
         $memberShipObj = new MembershipHandler();
         $IsPaid    = $memberShipObj->getPurchaseDate($profileid);
+        unset($memberShipObj);
         
         if($IsPaid['PURCHASE_DATE'] !== false && $IsPaid['PURCHASE_DATE'] != '' && !empty($IsPaid['PURCHASE_DATE'])){
-                $sql_update="UPDATE SWAP SET PAID_DATE = '".$IsPaid['PURCHASE_DATE']."' WHERE PROFILEID=$profileid";
-                mysql_query($sql_update,$db) or die("3 1".mysql_error1($db));
+                $swapFields[] = "PAID_DATE = '".$IsPaid['PURCHASE_DATE']."'";
         }
         // Paid user check end
         
@@ -311,52 +339,66 @@ while($row=mysql_fetch_row($res))
 
 	if($caste || $check_phone)
 	{
-		$sql_caste = "UPDATE newjs.SWAP SET CASTE_GROUP = \"".$caste."\",CHECK_PHONE = \"".$check_phone."\" WHERE PROFILEID = ".$profileid;
-		mysql_query($sql_caste,$db) or die("3-3".mysql_error1($db));
+                $swapFields[] = "CASTE_GROUP = \"".$caste."\",CHECK_PHONE = \"".$check_phone."\" ";
 	}
-
+        
+        if(!empty($swapFields)){
+                $sql_swapUpdate = "UPDATE newjs.SWAP SET ".implode(", ",$swapFields)." WHERE PROFILEID=".$profileid;
+                mysql_query($sql_swapUpdate,$db) or die("error in updating newjs.SWAP for multiple fields".mysql_error1($db));
+        }
 	//start: added by prinka to update column newjs.SWAP.NTIMES 
 	$sql_ntimes="UPDATE SWAP S, JP_NTIMES JP SET S.NTIMES=JP.NTIMES WHERE S.PROFILEID=$profileid AND JP.PROFILEID=S.PROFILEID";
 	mysql_query($sql_ntimes,$db) or die("error in updating newjs.SWAP.NTIMES from newjs.JP_NTIMES.NTIMES".mysql_error1($db));
 	//end: added by prinka to update column newjs.SWAP.NTIMES 
+        unset($swapFields);
 }
 
-$sql_search = "SELECT S.PROFILEID AS PROFILEID FROM newjs.SWAP S INNER JOIN newjs.SEARCH_MALE J ON S.PROFILEID = J.PROFILEID WHERE S.CHECK_PHONE IN ('I','K','P','N') AND S.GENDER = 'M' AND DATE(S.ENTRY_DT)>='".DateConstants::PhoneMandatoryLive."'";
-$result = mysql_query($sql_search,$db) or die("error in join of SWAP and SEARCH_MALE".mysql_error1($db));
-while($myrow=mysql_fetch_array($result))
-{
-	$delArr[] = $myrow["PROFILEID"];
-}
-if($delArr && is_array($delArr))
-{
-	$del_search = "DELETE FROM newjs.SEARCH_MALE WHERE PROFILEID IN (".implode(",",$delArr).")";
-	mysql_query($del_search,$db) or die("error in delete of SEARCH_MALE".mysql_error1($db));
-}
-unset($delArr);
+$sql_search = "SELECT PROFILEID AS PROFILEID,GENDER FROM newjs.SWAP WHERE (CHECK_PHONE IN ('I','K','P','N') AND DATE(ENTRY_DT)>='".DateConstants::PhoneMandatoryLive."') or (ACTIVATED <>'Y' or PRIVACY='C')";
+$result = mysql_query($sql_search,$db) or die("error in select of SWAP for delete on SEARCH_MALE".mysql_error1($db));
 
-$sql_search = "SELECT S.PROFILEID AS PROFILEID FROM newjs.SWAP S INNER JOIN newjs.SEARCH_FEMALE J ON S.PROFILEID = J.PROFILEID WHERE S.CHECK_PHONE IN ('I','K','P','N') AND S.GENDER = 'F' AND DATE(S.ENTRY_DT)>='".DateConstants::PhoneMandatoryLive."'";
-$result = mysql_query($sql_search,$db) or die("error in join of SWAP and SEARCH_FEMALE".mysql_error1($db));
+$maleProfiles = array();
+$femaleProfiles = array();
 while($myrow=mysql_fetch_array($result))
 {
-        $delArr[] = $myrow["PROFILEID"];
+	if($myrow["GENDER"] == "M"){
+		$maleProfiles[] = $myrow["PROFILEID"];
+	}else{
+		$femaleProfiles[] = $myrow["PROFILEID"];
+	}
 }
-if($delArr && is_array($delArr))
+/*optimiztaion 2*/
+mysql_free_result($result);
+if($maleProfiles && is_array($maleProfiles))
 {
-        $del_search = "DELETE FROM newjs.SEARCH_FEMALE WHERE PROFILEID IN (".implode(",",$delArr).")";
-        mysql_query($del_search,$db) or die("error in delete of SEARCH_MALE".mysql_error1($db));
-}
-unset($delArr);
+	$deletePidArrStr=implode(",",$maleProfiles);
+	unset($maleProfiles);
+	$sql = "delete from SEARCH_MALE where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("5 M".mysql_error1($db));
 
-$sql_search = "SELECT PROFILEID FROM newjs.SWAP WHERE CHECK_PHONE IN ('I','K','P','N') AND DATE(ENTRY_DT)>='".DateConstants::PhoneMandatoryLive."'";
-$result = mysql_query($sql_search,$db) or die("error in select of SWAP".mysql_error1($db));
-while($myrow=mysql_fetch_array($result))
-{
-        $delArr[] = $myrow["PROFILEID"];
+	$sql = "delete from SEARCH_MALE_TEXT where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 M".mysql_error1($db));
+
+	$sql = "delete from SEARCH_MALE_REV where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 M".mysql_error1($db));
+
+	$sql = "delete from SWAP where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 M".mysql_error1($db));
 }
-if($delArr && is_array($delArr))
+if($femaleProfiles && is_array($femaleProfiles))
 {
-        $del_search = "DELETE FROM newjs.SWAP WHERE PROFILEID IN (".implode(",",$delArr).")";
-        mysql_query($del_search,$db) or die("error in delete of SWAP".mysql_error1($db));
+        $deletePidArrStr=implode(",",$femaleProfiles);
+        unset($femaleProfiles);
+	$sql = "delete from SEARCH_FEMALE where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("5 F".mysql_error1($db));
+
+	$sql = "delete from SEARCH_FEMALE_TEXT where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 F".mysql_error1($db));
+
+	$sql = "delete from SEARCH_FEMALE_REV where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 F".mysql_error1($db));
+
+	$sql = "delete from SWAP where PROFILEID IN ($deletePidArrStr)";
+	mysql_query($sql,$db) or die("22 F".mysql_error1($db));
 }
 unset($delArr);
 
@@ -365,53 +407,6 @@ $sql_ntimes="UPDATE SWAP SET POPULAR=NTIMES/(POW((DATEDIFF(NOW(),ENTRY_DT)),.75)
 mysql_query($sql_ntimes,$db) or die("error in updating newjs.SWAP.NTIMES from newjs.JP_NTIMES.NTIMES".mysql_error1($db));
 
 mysql_free_result($res);
-
-$sql="select PROFILEID from SWAP where (ACTIVATED <>'Y' or PRIVACY='C') and GENDER='M'";
-$result=mysql_query($sql,$db) or die("4 ".mysql_error1($db));
-while($myrow=mysql_fetch_array($result))
-{
-	$deletePidArr[]=$myrow["PROFILEID"];
-}
-if(is_array($deletePidArr))
-{
-	$deletePidArrStr=implode(",",$deletePidArr);
-	$sql = "delete from SEARCH_MALE where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("5 ".mysql_error1($db));
-
-	$sql = "delete from SEARCH_MALE_TEXT where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("22 ".mysql_error1($db));
-
-	$sql = "delete from SEARCH_MALE_REV where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("22 ".mysql_error1($db));
-}
-unset($deletePidArr);
-/*optimiztaion 1*/
-mysql_free_result($result);
-
-$sql="select PROFILEID from SWAP where (ACTIVATED <>'Y' or PRIVACY='C') and GENDER='F'";
-$result=mysql_query($sql,$db) or die("6 ".mysql_error1($db));
-while($myrow=mysql_fetch_array($result))
-{
-	$deletePidArr[]=$myrow["PROFILEID"];
-}
-if(is_array($deletePidArr))
-{
-	$deletePidArrStr=implode(",",$deletePidArr);
-	$sql = "delete from SEARCH_FEMALE where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("5 ".mysql_error1($db));
-
-	$sql = "delete from SEARCH_FEMALE_TEXT where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("22 ".mysql_error1($db));
-
-	$sql = "delete from SEARCH_FEMALE_REV where PROFILEID IN ($deletePidArrStr)";
-	mysql_query($sql,$db) or die("22 ".mysql_error1($db));
-}
-unset($deletePidArr);
-/*optimiztaion 2*/
-mysql_free_result($result);
-
-$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 2 MONTH))";
-mysql_query($sql,$db) or die("8 ".mysql_error1($db));
 /*
 $sql = "SELECT count(*) AS C FROM SWAP";
 $res = mysql_query($sql,$db) or die("count ".mysql_error1($db));
@@ -447,162 +442,6 @@ if($row["C"]>30000)
 {
 	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com","More than 30000 records in SWAP","More than 30000 records in SWAP -> swap_jprofile.php");	
 }
-
-$sql_points="select GENDER,HAVEPHOTO,SUBSCRIPTION,LAST_LOGIN_DT,PROFILEID,ENTRY_DT,PHOTODATE,INCOME,RELIGION,HOROSCOPE FROM SWAP";
-$result_points=mysql_query($sql_points,$db) or die("9 ".mysql_error1($db));
-$today=date("Y-m-d");
-
-while($myrow=mysql_fetch_array($result_points))
-{
-	$pid=$myrow['PROFILEID'];
-	
-	if($myrow['GENDER']=='M')
-		$tablename='SEARCH_MALE';	
-	else	
-		$tablename='SEARCH_FEMALE';	
-
-	//For religion specific fields
-	$religion= $myrow['RELIGION'];
-	if($religion=='1')
-	{
-		$str[]="SAMPRADAY='', AMRITDHARI='', CUT_HAIR='', WEAR_TURBAN=''";
-	}
-	if($religion=='2')			//MUSLIM
-	{
-		$sql_rel= "SELECT MATHTHAB,HIJAB_MARRIAGE FROM JP_MUSLIM WHERE PROFILEID='$pid'";
-		$res_rel= mysql_query($sql_rel,$db) or die("n2 ".mysql_error1($db));
-                if(mysql_num_rows($res_rel))
-		{
-			while($row_rel=mysql_fetch_array($res_rel))
-			{
-				$str[]="MATHTHAB='".$row_rel['MATHTHAB']."'";
-				if($row_rel['HIJAB_MARRIAGE'])
-					$str[]="HIJAB_MARRIAGE='".$row_rel['HIJAB_MARRIAGE']."'";
-			}
-		}
-	}
-	elseif($religion=='9')			//JAIN
-	{
-		$sql_rel= "SELECT SAMPRADAY FROM JP_JAIN WHERE PROFILEID='$pid'";
-		$res_rel= mysql_query($sql_rel,$db) or die("n3 ".mysql_error1($db));
-		if(mysql_num_rows($res_rel))
-                {
-                        $row_rel=mysql_fetch_assoc($res_rel);
-                        $str[]="SAMPRADAY='".$row_rel['SAMPRADAY']."'";
-		}
-
-	}
-	elseif($religion=='3')			//CHRISTIAN
-	{
-	}
-	elseif($religion=='5')			//PARSI
-	{
-		$sql_rel= "SELECT ZARATHUSHTRI FROM JP_PARSI WHERE PROFILEID='$pid'";
-                $res_rel= mysql_query($sql_rel,$db) or die("n3 ".mysql_error1($db));
-                if(mysql_num_rows($res_rel))
-                {
-                        $row_rel=mysql_fetch_assoc($res_rel);
-			if($row_rel['ZARATHUSHTRI']!="doesn't matter" && $row_rel['ZARATHUSHTRI']!='')
-                        $str[]="ZARATHUSHTRI='".addslashes(stripslashes($row_rel['ZARATHUSHTRI']))."'";
-                }
-
-	}
-	elseif($religion=='4')			//SIKH
-	{
-		$sql_rel= "SELECT AMRITDHARI,CUT_HAIR,WEAR_TURBAN FROM JP_SIKH WHERE PROFILEID='$pid'";
-                $res_rel= mysql_query($sql_rel,$db) or die("n3 ".mysql_error1($db));
-                if(mysql_num_rows($res_rel))
-                {
-                        $row_rel=mysql_fetch_assoc($res_rel);
-                        $str[]="AMRITDHARI='".$row_rel['AMRITDHARI']."', CUT_HAIR='".$row_rel['CUT_HAIR']."'";
-			if($myrow['GENDER']=='M')
-                        	$str[]="WEAR_TURBAN='".$row_rel['WEAR_TURBAN']."'";
-                }
-	}
-
-/*REMOVING PAID_ON as no longer required
-
-	$sql_sd="SELECT DATEDIFF( CURDATE( ) , ENTRY_DT ) AS DIFF FROM billing.PURCHASES WHERE PROFILEID = '$pid' AND STATUS = 'DONE' AND MEMBERSHIP = 'Y' ORDER BY ENTRY_DT DESC LIMIT 1"; //Using where; Using filesort
-        $res_sd=mysql_query($sql_sd,$db) or die("sd ".mysql_error1($db));
-        if(mysql_num_rows($res_sd))
-        {
-                $row_sd=mysql_fetch_assoc($res_sd);
-                if(!($row_sd['DIFF']))
-                        $diff=15;
-                elseif($row_sd['DIFF']<15)
-                        $diff=15-$row_sd['DIFF'];
-                $str[]="PAID_ON='$diff'";
-        }
-
-
-
-	if(is_array($str))
-	{
-		$rel_str=implode(",",$str);
-		$rel_str=",".$rel_str;
-		unset($str);
-	}
-*/
-	$sql_total_points="select TOTAL_POINTS FROM $tablename where PROFILEID='$pid'";
-	$result_total_points=mysql_query($sql_total_points,$db) or die("finding total_points file swap_jprofile.php ".mysql_error1($db));
-	$myrow_total_points=mysql_fetch_array($result_total_points);
-	
-	$entry_dt=$myrow["ENTRY_DT"];
-	$photo_dt=$myrow["PHOTODATE"];
-	$income=$myrow["INCOME"];
-
-	if($myrow['HAVEPHOTO']=='Y')	
-		$fresh=DayDiff(substr($photo_dt,0,10),$today);
-	else
-		$fresh=DayDiff(substr($entry_dt,1,10),$today);
-													     
-	if($fresh<16)
-		$freshness_points=300;
-	elseif($fresh>15 && $fresh<46)
-		$freshness_points=150;
-	else
-		$freshness_points=100;
-	$income=getSortByIncome($income);
-	if($myrow_total_points['TOTAL_POINTS']!='49')
-	{													     
-		$score = update_score($pid);
-
-		if($score<=150)
-			$score_points=-50;
-		elseif($score>150 && $score<326)
-			$score_points=150;
-		else
-			$score_points=300;
-
-		if(DayDiff($myrow['LAST_LOGIN_DT'],$today)>30)
-		{
-			$total_points_swap=$score_points+$freshness_points;
-			if($total_points_swap==450 || $total_points_swap==600)
-				$score_points=48-$freshness_points;
-			elseif($total_points_swap==400)
-				$score_points=47-$freshness_points;
-			elseif($total_points_swap==300)
-				$score_points=46-$freshness_points;
-			elseif($total_points_swap==250)
-				$score_points=45-$freshness_points;
-			elseif($total_points_swap==100)
-				$score_points=44-$freshness_points;
-			elseif($total_points_swap==50)
-				$score_points=43-$freshness_points;
-		}
-
-		$total_points=$score_points+$freshness_points;
-		$sql_update="UPDATE SWAP SET SCORE_POINTS='$score_points',FRESHNESS_POINTS='$freshness_points' ,TOTAL_POINTS='$total_points',PROFILE_SCORE='$score',INCOME_SORTBY='$income' $rel_str where PROFILEID=$pid";
-		$result_update=mysql_query($sql_update,$db) or die("updating total_points error ".mysql_error1($db));
-    	}
-	else
-	{	$score_points=49-$freshness_points;
-		$sql_update="UPDATE SWAP SET SCORE_POINTS='$score_points',FRESHNESS_POINTS='$freshness_points' ,TOTAL_POINTS='49',PROFILE_SCORE='$score',INCOME_SORTBY='$income' $rel_str where PROFILEID='$pid'";
-		$result_update=mysql_query($sql_update,$db) or die("updating total_points error ".mysql_error1($db));
-	}
-}
-
-mysql_free_result($result_points);
 
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
