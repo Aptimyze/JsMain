@@ -180,8 +180,8 @@ class HamMain extends React.Component {
               </a>;
               console.log(topView);
             membershipRegisterView = <div> {topView} {btnView}</div>;
-            if(this.state.bellResponse.VISITOR_ALERT != 0) {
-                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>;
+            if(this.state.bellResponse.VISITORS_ALL != 0) {
+                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITORS_ALL}</span>;
             }
 
             profileVisitorView = <li className="mb12">
