@@ -29,7 +29,7 @@ export default class ShowNotificationLayer extends React.Component {
     }
   render(){
     console.log('ShowNotificationLayer');
-  	 if(!this.props.hamFetched){
+  	 if(!this.props.fetched){
   	 	return <div></div>;
 	    }
      return(
