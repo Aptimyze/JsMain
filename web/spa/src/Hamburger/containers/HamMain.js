@@ -172,20 +172,30 @@ class HamMain extends React.Component {
         if(this.props.page == "others" && this.state.bellResponse != "notDefined")
         {
             let topView='',btnView='';
-            console.log("ham");
-            console.log(this.state.bellResponse);
-            if(this.state.bellResponse.MEMBERSHIPT_TOP!=null)
+
+            if(this.state.bellResponse.MEMBERSHIPT_TOP=="FLASH DEAL")
             {
-              console.log("ham in 1");
+
               topView = <div className="brdrTop pad150">
-                          <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
-                        </div>
+                          <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_BOTTOM}</div>
+                        </div>;
+              btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                                  {this.state.bellResponse.MEMBERSHIPT_TOP}
+                          </a>;
+
+                membershipRegisterView = <div> {topView} {btnView}</div>;
             }
-            btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
-                      {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
-              </a>;
-              console.log(topView);
-            membershipRegisterView = <div> {topView} {btnView}</div>;
+            else
+            {
+              btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                        {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
+                </a>;
+
+                membershipRegisterView = <div> {topView} {btnView}</div>;
+            }
+
+
+
             if(this.state.bellResponse.VISITORS_ALL != 0) {
                 profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITORS_ALL}</span>;
             }
