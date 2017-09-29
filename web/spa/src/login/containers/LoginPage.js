@@ -152,7 +152,7 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        console.log("login");
+        
         this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA());
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
@@ -216,7 +216,7 @@ class LoginPage extends React.Component {
             }
 
         }
-        console.log("showHam");
+        
         this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA());
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
