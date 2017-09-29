@@ -14,6 +14,9 @@ const PageNotFound = asyncComponent(() => import('./../components/PageNotFound')
   .then(module => module.default), { name: 'PageNotFound' });
 const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
   .then(module => module.default), { name: 'LoginPage' });
+const LogoutPage = asyncComponent(() => import('./../../login/containers/LogoutPage')
+  .then(module => module.default), { name: 'LogoutPage' });
+
 
 import {
   Route,Switch
@@ -46,7 +49,7 @@ class EnsureLoggedInContainer extends React.Component
                         <Route exact path="/" component={MyjsPage}/>
                         <Route path='/myjs' component={MyjsPage} />
                         <Route path='/profile/mainmenu.php' component={MyjsPage} />
-                        <Route path='/P/logout.php' component={MyjsPage} />
+                        <Route path='/P/logout.php' component={LogoutPage} />
                         <Route component={PageNotFound} />
                         </Switch>
                         </div>
