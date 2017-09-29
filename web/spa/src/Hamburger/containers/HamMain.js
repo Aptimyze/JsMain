@@ -440,12 +440,21 @@ class HamMain extends React.Component {
                 <a id="changePassLink" href="/static/changePass" className="white">
                     Change Password
                 </a>
-            </li>;
-            hideProfileView = <li className="mb12">
-                <a id="hideProfileLink" href="/static/hideOption" className="white">
-                    Hide Profile
-                </a>
-            </li>;
+            </li>;                                  
+            if(this.state.bellResponse.ACTIVATED == 'H'){
+                                hideProfileView =  <li className="mb12">
+                                    <a id="hideProfileLink" href="/static/unHideOption" className=" newS white">
+                                    Unhide Profile
+                                    </a>
+                                </li>;
+                                }
+                                else{
+                                hideProfileView = <li className="mb12">
+                                    <a id="hideProfileLink" href="/static/hideOption" className="white">
+                                    Hide Profile
+                                    </a>
+                                    </li>;
+                                }
             deleteProfileView = <li className="mb12">
                 <a id="deleteProfileLink" href="/static/deleteOption" className="white">
                     Delete Profile
