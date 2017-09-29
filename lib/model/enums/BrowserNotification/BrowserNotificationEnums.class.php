@@ -9,12 +9,18 @@ class BrowserNotificationEnums
                                         'Authorization: key=AIzaSyAEtHE2FAhvmfm--BOlXygFgI3mtvRTt-Q',
                                         'Content-Type: application/json')
 	);
+        //headers sent in curl request to FCM for browser notifications
+        public static $fcmHeaders = array("BROWSER_NOTIFICATION"=>array(
+                                        'Authorization: key=AAAAMMAH__g:APA91bHaD5OZZHCwYqOn_L-mBBidbx2moU-Q1DzUBAcPBj-rQZf9A2RSrDevZfO21cX0ZhFzt9upi5Kxi3pqOkTixn-8pKQ9DB8J1LNR183dsbpWymHcvRj2TZjaRF4TKHeTnSVpfx_A',
+                                        'Content-Type: application/json')
+        );
 
-	CONST GCM_SUCCESS = 'S';  //gcm success status
-	CONST GCM_FAILURE = 'F';  //gcm failure status
-	CONST GCM_INVALID = 'I';  //gcm invalid status
-    CONST GCM_REGID_EXPIRED = 'E';  //gcm invalid status
-	CONST GCM_REQUEST_URL = "https://android.googleapis.com/gcm/send";   //url of gcm api
+	CONST FCM_SUCCESS = 'S';  //gcm success status
+	CONST FCM_FAILURE = 'F';  //gcm failure status
+	CONST FCM_INVALID = 'I';  //gcm invalid status
+    	CONST FCM_REGID_EXPIRED = 'E';  //gcm invalid status
+	CONST FCM_REQUEST_URL = "https://fcm.googleapis.com/fcm/send";   //url of fcm api
+        CONST GCM_REQUEST_URL = "https://android.googleapis.com/gcm/send";   //url of gcm api	
     public static $messageDelimiters = array("{","}");
     public static $variablesMaxlength = array(
 			"USERNAME"  => 8,
