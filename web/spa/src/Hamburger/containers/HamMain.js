@@ -23,8 +23,7 @@ class HamMain extends React.Component {
         this.resizeHam = this.resizeHam.bind(this);
     }
 
-    translateSite(translateURL)
-    {
+    translateSite(translateURL){
         if(translateURL.indexOf('hindi')!=-1){
             setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         } else {
@@ -114,10 +113,14 @@ class HamMain extends React.Component {
     {
         let element = document.getElementById(e);
         let minorElem = element.id.split("Parent")[0] +"Minor";
-        if(element.className.indexOf("plusParent") != -1) {
+        if(element.className.indexOf("plusParent") != -1)
+        {
             element.classList.remove("plusParent");
             document.getElementById(minorElem).style.height = "0px";
-        } else {
+            document.getElementById(minorElem).style.padding = "0px";
+        }
+        else
+        {
             element.classList.add("plusParent");
             let liElems = document.getElementById(minorElem).getElementsByTagName("li");
             let minorLiHeight = 0;
@@ -126,7 +129,9 @@ class HamMain extends React.Component {
             }
             minorLiHeight -=20;
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
+            console.log(minorElem);
             document.getElementById(minorElem).style.height = minorLiHeight + "px";
+            document.getElementById(minorElem).style.padding = "12px 0px 0px 40px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
             let _this = this;
             setTimeout(function(){
@@ -163,22 +168,36 @@ class HamMain extends React.Component {
         let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView,intSentCount;
 
 
-        
+
         if(this.props.page == "others" && this.state.bellResponse != "notDefined")
         {
             let topView='',btnView='';
-            if(this.state.bellResponse.MEMBERSHIPT_TOP!=null)
+
+            if(this.state.bellResponse.MEMBERSHIPT_TOP=="FLASH DEAL")
             {
+
               topView = <div className="brdrTop pad150">
-                          <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
-                        </div>
+                          <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_BOTTOM}</div>
+                        </div>;
+              btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                                  {this.state.bellResponse.MEMBERSHIPT_TOP}
+                          </a>;
+
+                membershipRegisterView = <div> {topView} {btnView}</div>;
             }
-            btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
-                      {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
-              </a>;
-            membershipRegisterView = <div> {topView} {btnView}</div>;
-            if(this.state.bellResponse.VISITOR_ALERT != 0) {
-                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>;
+            else
+            {
+              btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
+                        {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
+                </a>;
+
+                membershipRegisterView = <div> {topView} {btnView}</div>;
+            }
+
+
+
+            if(this.state.bellResponse.VISITORS_ALL != 0) {
+                profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITORS_ALL}</span>;
             }
 
             profileVisitorView = <li className="mb12">
@@ -227,12 +246,12 @@ class HamMain extends React.Component {
             myContactView = <li className="mb12">
                 <div id="contactsParent" onClick={(e) => this.expandListing("contactsParent")}>
                     <i className="hamSprite myContactIcon"></i>
-                    <div id="myContactLink" className="ml10 white ml15 dispibl">
+                    <div id="myContactLink" className="white mrl12 dispibl">
                         My Contacts
                     </div>
                     <i id="expandContacts" className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="contactsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
+                <ul id="contactsMinor" style={{"margin":"0px","padding":"0"}} className = "minorList f15">
                     <li className="mb12">
                         <a id="intRecLink" href="/inbox/1/1" className="newS white">
                             Interests Received
@@ -306,12 +325,12 @@ class HamMain extends React.Component {
             myMatchesView = <li className="mb12">
                 <div id="myMatchesParent" onClick={(e) => this.expandListing("myMatchesParent")}>
                     <i className="hamSprite myMatchesIcon"></i>
-                    <div className=" ml15 f17 white ml15 dispibl">
+                    <div className="white mrl12 dispibl">
                         My Matches
                     </div>
                     <i id="expandMyMatches" className="hamSprite plusIcon fr"></i>
                 </div>
-                <ul id="myMatchesMinor" style={{"height":"0px","margin":"0px","padding":"12px 0px 0px 40px"}} className = "minorList f15">
+                <ul id="myMatchesMinor" style={{"height":"0px","margin":"0px","padding":"0"}} className = "minorList f15">
                     <li className="mb12">
                         <a id="dppLink" href="/search/perform?partnermatches=1" className="newS white">
                             Desired Partner Matches
@@ -437,12 +456,21 @@ class HamMain extends React.Component {
                 <a id="changePassLink" href="/static/changePass" className="white">
                     Change Password
                 </a>
-            </li>;
-            hideProfileView = <li className="mb12">
-                <a id="hideProfileLink" href="/static/hideOption" className="white">
-                    Hide Profile
-                </a>
-            </li>;
+            </li>;                                  
+            if(this.state.bellResponse.ACTIVATED == 'H'){
+                                hideProfileView =  <li className="mb12">
+                                    <a id="hideProfileLink" href="/static/unHideOption" className=" newS white">
+                                    Unhide Profile
+                                    </a>
+                                </li>;
+                                }
+                                else{
+                                hideProfileView = <li className="mb12">
+                                    <a id="hideProfileLink" href="/static/hideOption" className="white">
+                                    Hide Profile
+                                    </a>
+                                    </li>;
+                                }
             deleteProfileView = <li className="mb12">
                 <a id="deleteProfileLink" href="/static/deleteOption" className="white">
                     Delete Profile
@@ -502,7 +530,7 @@ class HamMain extends React.Component {
                             <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                         </div>
                         <div className="wid49p dispibl">
-                            <div id="hindiLink" onclick="translateSite(\'http://hindi.jeevansathi.com\');" className="white fr mar0Imp">Hindi Version</div>
+                            <a id="hindiLink" href={newHref} onclick="translateSite({CONSTANTS.HINDI_SITE});" className="white fr mar0Imp">Hindi Version</a>
                         </div>
                     </div>
                 </li>
@@ -541,7 +569,7 @@ class HamMain extends React.Component {
                         </div>
                         <i id="expandSettings" className="hamSprite plusIcon fr"></i>
                     </div>
-                    <ul id="settingsMinor" style={{"margin":"0px","padding":"12px 0px 0px 40px"}} className="minorList f15 settingStyle">
+                    <ul id="settingsMinor" style={{"margin":"0px","padding":"0"}} className="minorList f15 settingStyle">
                         {recommendationView}
                         {privacySettingView}
                         {changePassView}

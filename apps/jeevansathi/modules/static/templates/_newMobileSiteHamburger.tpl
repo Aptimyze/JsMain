@@ -136,7 +136,9 @@
                                 <li class='mb12'><a bind-slide=1  id="blockedLink" href="/inbox/20/1" class="newS white">Blocked/Ignored Members</a></li>
                                 <li class='mb12'>
                                     <a bind-slide=1  id="messagesLink" href="/inbox/4/1" class="newS white">
-                                        Messages
+                                    Messages
+                                    <span class="f12 album_color1 ml15">~if $profileMemcacheObj->get('MESSAGE_NEW')` ~if $profileMemcacheObj->get('MESSAGE_NEW')>99` 99+~else`~$profileMemcacheObj->get('MESSAGE_NEW')`~/if`~/if`
+                                    </span>
                                     </a>
                                 </li>
                                 <li><a bind-slide=1  id="messagesLink" href="/inbox/17/1" class="newS white">Who Viewed My Contacts</a></li>
