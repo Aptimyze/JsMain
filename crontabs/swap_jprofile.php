@@ -679,7 +679,7 @@ function mysql_error1($db)
         $message        = "Mysql Error Count have reached swap jpartner $date within 5 minutes";
         $from           = "JSSRVR";
         $profileid      = "144111";
-        $mobile         = "9650350387";
+        $mobile         = "9773889617";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         $mobile         = "9818424749";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
