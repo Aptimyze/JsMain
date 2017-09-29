@@ -511,6 +511,14 @@ return 0;
                               $show=1;
                       }
                   break;
+                  case '27':
+                    $loggedinUserEmail = $profileObj->getEMAIL();
+                    $bounceObj = new bounces_BOUNCED_MAILS();
+                    $Flag = $bounceObj->checkEntry($loggedinUserEmail);
+                    if(!MobileCommon::isApp() && $Flag){
+                      $show = 1;
+                    }
+                  break;
 
           default : return false;
         }
