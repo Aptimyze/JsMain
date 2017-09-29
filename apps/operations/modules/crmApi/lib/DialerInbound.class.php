@@ -217,7 +217,7 @@ class DialerInbound
 	}
 
     public function getAcceptances($profileID){
-        $dbName = JsDbSharding::getShardNo($profileID);
+        $dbName = JsDbSharding::getShardNo($profileID,1);
         $messageLogObj = new newjs_MESSAGE_LOG($dbName);
         $result = $messageLogObj->getAcceptRecieveCount($profileID) + $messageLogObj->getAcceptSentCount($profileID);
         return $result;
