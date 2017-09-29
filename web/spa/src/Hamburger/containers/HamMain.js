@@ -163,12 +163,15 @@ class HamMain extends React.Component {
         let startingTuple,editProfileView,savedSearchView,myMatchesView,myContactView,shortlistedView,phoneBookView,profileVisitorView,membershipRegisterView,awaitingResponseCount,accMeCount,justJoinedCount,filteredCount,allAccCount,messageCount,intRecCount,shortlistedCount,savedSearchCount,dailyRecCount,profileVisitorCount,recommendationView,privacySettingView,changePassView,hideProfileView,deleteProfileView,helpView,logoutView,intSentCount;
 
 
-        
+
         if(this.props.page == "others" && this.state.bellResponse != "notDefined")
         {
             let topView='',btnView='';
+            console.log("ham");
+            console.log(this.state.bellResponse);
             if(this.state.bellResponse.MEMBERSHIPT_TOP!=null)
             {
+              console.log("ham in 1");
               topView = <div className="brdrTop pad150">
                           <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
                         </div>
@@ -176,6 +179,7 @@ class HamMain extends React.Component {
             btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
                       {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
               </a>;
+              console.log(topView);
             membershipRegisterView = <div> {topView} {btnView}</div>;
             if(this.state.bellResponse.VISITOR_ALERT != 0) {
                 profileVisitorCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.VISITOR_ALERT}</span>;
