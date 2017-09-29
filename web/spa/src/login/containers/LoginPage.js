@@ -153,7 +153,7 @@ class LoginPage extends React.Component {
             captcha = 1;
         }
         console.log("login");
-        this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA);
+        this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA());
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -217,7 +217,7 @@ class LoginPage extends React.Component {
 
         }
         console.log("showHam");
-        this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA);
+        this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA());
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
@@ -249,11 +249,11 @@ class LoginPage extends React.Component {
         let appDownloadView;
         if(getAndroidVersion()) {
             appDownloadView = <div id="appLinkAndroid" className="txtc pad2">
-                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP Android",this.refs.GAchild.getGenderForGA)} className="f15 white fontlig">Download App | 3MB only</a>
+                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP Android",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App | 3MB only</a>
             </div>;
         } else if(getIosVersion()) {
             appDownloadView = <div id="appLinkIos" className="txtc pad2">
-                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP IOS",this.refs.GAchild.getGenderForGA)} className="f15 white fontlig">Download App</a>
+                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP IOS",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App</a>
             </div>;
         }
 
@@ -297,7 +297,7 @@ class LoginPage extends React.Component {
                             </div>
                             <div className="bg10 fullwid mt5">
                                 <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
-                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Register",this.refs.GAchild.getGenderForGA)} className="f17 fontlig white">
+                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Register",this.refs.GAchild.getGenderForGA())} className="f17 fontlig white">
                                         Register
                                     </a>
                                 </div>
@@ -361,7 +361,7 @@ class LoginPage extends React.Component {
 
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Hindi Site",this.refs.GAchild.getGenderForGA)} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Hindi Site",this.refs.GAchild.getGenderForGA())} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
