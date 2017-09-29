@@ -23,8 +23,7 @@ class HamMain extends React.Component {
         this.resizeHam = this.resizeHam.bind(this);
     }
 
-    translateSite(translateURL)
-    {
+    translateSite(translateURL){
         if(translateURL.indexOf('hindi')!=-1){
             setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         } else {
@@ -502,7 +501,7 @@ class HamMain extends React.Component {
                             <a id="appLink" href={urlString} target="_blank"  className="white fl mar0Imp">{appText}</a>
                         </div>
                         <div className="wid49p dispibl">
-                            <div id="hindiLink" onclick="translateSite(\'http://hindi.jeevansathi.com\');" className="white fr mar0Imp">Hindi Version</div>
+                            <a id="hindiLink" href={newHref} onclick="translateSite({CONSTANTS.HINDI_SITE});" className="white fr mar0Imp">Hindi Version</a>
                         </div>
                     </div>
                 </li>
