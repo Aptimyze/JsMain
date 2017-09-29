@@ -34,7 +34,7 @@ class HamburgerApp
                         $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
                         $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
                 }
-
+			
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
 			$memHandlerObj = new MembershipHandler();
@@ -87,6 +87,7 @@ class HamburgerApp
 				$hamburgerDetails['ACC_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_ME'));
 				$hamburgerDetails['ACC_BY_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_BY_ME'));
 				$hamburgerDetails['NOT_REP'] = self::convertoInt($profileMemcacheObj->get('NOT_REP'));
+				$hamburgerDetails['ACTIVATED'] = $profileObj->getACTIVATED();
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
