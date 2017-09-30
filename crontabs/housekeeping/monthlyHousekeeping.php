@@ -547,7 +547,7 @@ function checkForEndTime()
 	$orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
 
-	 if(in_array(date('H'),array("06","07","08","09")))
+	 if(in_array(date('H'),array("07","08","09")))
 	 {
 		date_default_timezone_set($orgTZ);
 		successfullDie();		
