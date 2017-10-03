@@ -387,6 +387,7 @@ class ProfilePage extends React.Component {
             }
             document.getElementById("tab"+elem).classList.add("vpro_selectTab");
             document.getElementById(elem+"Tab").classList.remove("dn");
+            this.GA.trackJsEventGA("Profile Description",elem+"-Tab",this.GA.getGenderForGA());
         }
     }
     resetTab()
@@ -411,6 +412,7 @@ class ProfilePage extends React.Component {
     }
     checkPhotoAlbum(e)
     {
+        this.GA.trackJsEventGA("Profile Description","Photo Album",this.GA.getGenderForGA());
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
         }
