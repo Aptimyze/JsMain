@@ -261,7 +261,7 @@
                         <div class="dispnone" id="appleAppDownloadLink1"><a href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a>
                         </div>
                         <div class="fr dispibl">
-                            <div id="hindiLink" onclick="translateSite('http://hindi.jeevansathi.com');" class="white mar0Imp">हिंदी में</div>
+                            <div id="hindiLink" onclick="translateSite('http://hindi.jeevansathi.com');" class="white mar0Imp">Hindi Version</div>
                         </div>
                     </li>
                     <div style="height: 1px;padding: 0px 20px;">
