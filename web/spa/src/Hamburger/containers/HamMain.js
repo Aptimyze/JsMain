@@ -180,7 +180,7 @@ class HamMain extends React.Component {
                           <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_BOTTOM}</div>
                         </div>;
               btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
-                                  {this.state.bellResponse.MEMBERSHIPT_TOP}
+                                  {this.state.bellResponse.MEMBERSHIPT_TOP} | UPGRADE NOW
                           </a>;
 
                 membershipRegisterView = <div> {topView} {btnView}</div>;
@@ -236,8 +236,8 @@ class HamMain extends React.Component {
             if(this.state.bellResponse.MESSAGE_NEW != 0) {
                 messageCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.MESSAGE_NEW}</span>;
             }
-            if(this.state.bellResponse.AWAITING_RESPONSE !=0) {
-                intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE}</span>;
+            if(this.state.bellResponse.AWAITING_RESPONSE_NEW !=0) {
+                intRecCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.AWAITING_RESPONSE_NEW}</span>;
             }
             if(this.state.bellResponse.NOT_REP !=0){
                 intSentCount = <span className="f12 album_color1 ml15">{this.state.bellResponse.NOT_REP}</span>;
