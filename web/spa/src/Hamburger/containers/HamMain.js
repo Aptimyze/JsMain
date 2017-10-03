@@ -444,7 +444,7 @@ class HamMain extends React.Component {
             </li>;
             recommendationView = <li className="mb12">
                 <a id="recommendationLink" href="/profile/viewprofile.php?ownview=1#Dpp" className="white">
-                    Recommendation
+                    Recommendation Settings
                 </a>
             </li>;
             privacySettingView = <li className="mb12">
