@@ -49,6 +49,8 @@ class DialerHandler
         public function getInDialerEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
+		if($campaign_name)
+			$sql .=" AND CAMPAIGN_NAME='$campaign_name'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
@@ -57,6 +59,24 @@ class DialerHandler
         public function getInDialerInEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
+                if($campaign_name)
+                        $sql .=" AND CAMPAIGN_NAME='$campaign_name'";
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $ignore_array[] = $row["PROFILEID"];
+                return $ignore_array;
+        }
+        public function getInDialerNewEligibleProfiles($x,$campaign_name)
+        {
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_NAME='$campaign_name'";
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $eligible_array[] = $row["PROFILEID"];
+                return $eligible_array;
+        }
+        public function getInDialerNewInEligibleProfiles($x,$campaign_name)
+        {
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_NAME='$campaign_name'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
@@ -176,7 +196,7 @@ class DialerHandler
 			$renewal=false;
 			$discountColumn ='VD_PERCENT';
 		}
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
