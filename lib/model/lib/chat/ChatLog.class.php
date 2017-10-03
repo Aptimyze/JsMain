@@ -21,5 +21,17 @@ public function markChatSeen($viewer,$viewed,$id)
 		
 		return $count;
 	}
+
+public function getChatLogContactCount($receiver, $skipProfile = '',$considerProfile='')
+    {
+        if (!$receiver) {
+            throw new jsException("", "No  reciever is specified in funcion getChatLogContactCount OF ChatLog.class.php");
+        }
+        $dbName        = JsDbSharding::getShardNo($receiver);
+        $chatLogObj = new newjs_CHAT_LOG($dbName);
+        $count         = $chatLogObj->getChatLogCount($receiver,  $skipProfile,$considerProfile);
+        
+        return $count;
+    }
 	
 }
