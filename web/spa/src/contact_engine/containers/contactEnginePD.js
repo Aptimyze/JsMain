@@ -10,7 +10,7 @@ import ContactDetails from '../components/ContactDetails';
 import BlockPage from './BlockPage';
 import ReportAbuse from './ReportAbuse';
 import ReportInvalid from './ReportInvalid';
-
+import GA from "../../common/components/GA";
 
 export class contactEnginePD extends React.Component{
   constructor(props){
@@ -59,6 +59,8 @@ export class contactEnginePD extends React.Component{
         let params = '';
         if(button.action == 'WRITE_MESSAGE')
            params = '&pagination=1';
+
+        this.refs.GAchild.trackJsEventGA("Profile Description-jsms",button.label,this.refs.GAchild.getGenderForGA());
         var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
         if(!temp)return;
         this.props.showLoaderDiv();
@@ -156,7 +158,7 @@ export class contactEnginePD extends React.Component{
   render(){
 
     return (
-    <div>{[this.getFrontButton(),
+    <div><GA ref="GAchild" />{[this.getFrontButton(),
         this.getOverLayDataDisplay()]
   }</div>
   );
