@@ -180,7 +180,7 @@ class HamMain extends React.Component {
                           <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_BOTTOM}</div>
                         </div>;
               btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
-                                  {this.state.bellResponse.MEMBERSHIPT_TOP}
+                                  {this.state.bellResponse.MEMBERSHIPT_TOP} | UPGRADE NOW
                           </a>;
 
                 membershipRegisterView = <div> {topView} {btnView}</div>;
