@@ -8,7 +8,7 @@
 	<div gender-btn  gender="gender" on-btn-click="genderBtn" ></div>
     <!--Fields-->
       <div  ng-repeat="field in fields.slice(1,fields.length)">  
-       <div ng-if=$index!=fields.length-2&&$index!=fields.length-1 reg-ham-field data='field' ng-show='field.show'></div>
+       <div ng-if=$index!=fields.length-3&&$index!=fields.length-2 reg-ham-field data='field' ng-show='field.show'></div>
        <div ng-if=$index==fields.length-3 reg-pin-code-field check-pin-code="checkPinCode" hover="onPinHover" data='field' ng-show='field.show' ></div>
        <div ng-if=$index==fields.length-2 reg-ham-field data='field' ng-show='field.show' on-next='myNext' ></div>
       </div>

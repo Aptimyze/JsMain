@@ -1444,7 +1444,7 @@ var padding = 31;
                 $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
 
             $("#residentialStatus_value").val("");
-            $("#residentialStatus-inputBox_set").html("");
+            $("#residentialStatus_span-text").html("");
                 $("#stateReg").val("");
                 inputData["res_status"] = "";
                 regField["residentialStatus"].selected = "";
