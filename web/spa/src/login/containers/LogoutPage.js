@@ -13,7 +13,7 @@ export default class LogoutPage extends React.Component{
         axios.get(API_SERVER_CONSTANTS.API_SERVER+"/static/logoutPage")
         .then(function(response){
             removeCookie("AUTHCHECKSUM");
-            localStorage.clear();
+            // localStorage.clear();
             window.location.href="/login";
         })
 	}

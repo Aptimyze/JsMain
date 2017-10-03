@@ -79,7 +79,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         {
           case "9":
             removeCookie("AUTHCHECKSUM");
-            localStorage.clear();
+            // localStorage.clear();
             window.location.href="/login?prevUrl="+window.location.href;
             break;
           case "7":
