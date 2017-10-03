@@ -178,7 +178,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.nextUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
+                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit",_this.refs.GAchild.getGenderForGA())
                 _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
               //console.log("s2");
@@ -192,7 +192,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.prevUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","prevProfileVisit","")
+                _this.refs.GAchild.trackJsEventGA("Profile Description-jsms","prevProfileVisit",_this.refs.GAchild.getGenderForGA())
                 _this.props.showProfile(_this, _this.state.prevDataApi);
             }
           }
@@ -387,7 +387,6 @@ class ProfilePage extends React.Component {
             }
             document.getElementById("tab"+elem).classList.add("vpro_selectTab");
             document.getElementById(elem+"Tab").classList.remove("dn");
-            this.GA.trackJsEventGA("Profile Description",elem+"-Tab",this.GA.getGenderForGA());
         }
     }
     resetTab()
@@ -412,7 +411,6 @@ class ProfilePage extends React.Component {
     }
     checkPhotoAlbum(e)
     {
-        this.GA.trackJsEventGA("Profile Description","Photo Album",this.GA.getGenderForGA());
         if(this.state.disablePhotoLink == false) {
             e.preventDefault();
         }
