@@ -536,7 +536,7 @@
             <div class="pb15 pt30 pos-rel"></div>
             ~/if`
             <div id="noOptionSelected" class="disp-none txtc color5 fontreg f12 pb15">Please select a payment option</div>
-            <div id="noCity" class="disp-none txtc color5 fontreg f12 pb15">Please fill 'State' in 'Edit Profile'<BR> Basic Details section to proceed.</div>
+            <div id="noCity" class="disp-none txtc color5 fontreg f12 pb15">Please fill 'State' in 'Edit Profile : Basic Details' section to proceed.</div>
             <div style="overflow:hidden;position: relative;">
             ~if $data.currency eq '$'`
                 <div class="pt10 f11 txtc clearfix mauto pb7 wid80p">

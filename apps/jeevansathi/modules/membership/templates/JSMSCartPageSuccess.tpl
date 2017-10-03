@@ -468,7 +468,7 @@
                 }
                 window.location.href = url;
             } else{
-			    var errorMsg = ["Please fill 'State' in 'Edit Profile'<BR> Basic Details section to proceed."];
+			    var errorMsg = ["Please fill 'State' in 'Edit Profile : Basic Details' section to proceed."];
 			    ShowTopDownError(errorMsg,3000);
             }
 
