@@ -17,7 +17,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
-$campaign_name = 'OB_NCRNEW';
+$campaign_name = 'JS_NCRNEW_Auto';
 $eligibleType ='Y';
 $limit =10;
 $todayDate =$dialerHandlerObj->getEST();
@@ -42,7 +42,7 @@ for($i=$start_from;$i<$limit;$i++)
 }
 
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
-$sub="Dialer updates of ncr-eligible done.";
+$sub="Dialer updates of ncrAuto-eligible done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,'',$from);
 ?>

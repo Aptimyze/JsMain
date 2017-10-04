@@ -67,7 +67,7 @@ $pro_str = @implode("','",$pro_array);
 $resc=mysql_query($sqlc,$db_js) or die($sqlc.mysql_error($db_js));
 while($myrowc = mysql_fetch_array($resc))
 	$camp_array[] = $myrowc["CAMPAIGN"];*/
-$camp_array = array("JS_NCRNEW","MAH_JSNEW","OB_NCRNEW");
+$camp_array = array("JS_NCRNEW","MAH_JSNEW","JS_NCRNEW_Auto");
 
 //Compute Suffix for active leadids
 $sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";
