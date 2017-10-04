@@ -16,7 +16,7 @@ class KundliInfo extends React.Component {
     }
 
     componentDidMount() {
-        if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
+        if(this.props.show_gunascore =="y" && getCookie("AUTHCHECKSUM")){
             this.props.getGuna(this.props.profilechecksum,this.props.about.sameGender);
         }
     }
