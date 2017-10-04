@@ -40,8 +40,13 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         }
 
         private function setCommunityPostParams() {
+                $this->postParams["removeProfiles"] = "";
                 $searchUtilObj = new SearchUtility();
-                $this->postParams["removeProfiles"] = implode(",", explode(" ", $searchUtilObj->getIgnoredProfiles($this->profileId, "spaceSeperator", 1, 1, 1, 1))); // profileid ,separated by , noAwaitingContacts, removeMatchAlerts, tempContacts, getFromCache
+                $remPro = $searchUtilObj->getIgnoredProfiles($this->profileId, "spaceSeperator", 1, 1, 1, 1);// profileid ,separated by , noAwaitingContacts, removeMatchAlerts, tempContacts, getFromCache
+                if($remPro != "" && $remPro !=0 && $remPro != " "){
+                        $this->postParams["removeProfiles"] = trim(implode(",", explode(" ",$remPro)),',');
+                }
+
                 $suffix = "_" . $this->loggedInProfileObj->getGENDER();
                 $this->postParams['pg_data']["edu_level" . $suffix] = (integer) $this->loggedInProfileObj->getEDU_LEVEL_NEW();
                 $this->postParams['pg_data']["havephoto" . $suffix] = $this->loggedInProfileObj->getHAVEPHOTO();
@@ -66,9 +71,8 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         }
 
         private function sendCommunityPostRequest() {
-                $urlToHit = JsConstants::$matchAlertsCommunityModelApi;
                 $postParams = json_encode($this->postParams);
-                $ch = curl_init($urlToHit);
+                $ch = curl_init(JsConstants::$matchAlertsCommunityModelApi);
                 $header[0] = "Accept: application/json";
                 curl_setopt($ch, CURLOPT_HEADER, $header);
                 curl_setopt($ch, CURLOPT_USERAGENT, "JsInternal");

@@ -375,5 +375,66 @@ SQL;
       throw new jsException($ex);
     }
   }
+
+  public function getChatLogCount($receiver,$skippedProfile='',$considerProfile='')
+		{
+			try{
+				if(!$receiver)
+					throw new jsException("","No receiver is specified in funcion getChatLogCount OF newjs_CHAT_LOG.class.php");
+				$sql = "SELECT";
+				if($select)
+					$sql = $sql." ".$select;
+				else
+					$sql = $sql." m1.SENDER ,m1.SEEN";
+				if($group)
+					$sql = $sql.",".$group;
+				$sql = $sql." FROM CHAT_LOG m1 LEFT JOIN CHAT_LOG m2 ON ( m1.RECEIVER = m2.RECEIVER AND m1.ID < m2.ID AND m1.SENDER = m2.SENDER ) WHERE m1.RECEIVER =:RECEIVER AND m2.ID IS NULL ";
+				$count = 1;
+			if($skippedProfile)
+			{
+				$sql = $sql." AND SENDER NOT IN (";
+				foreach($skippedProfile as $key1=>$value1)
+				{
+					$str = $str.":VALUE".$count.",";
+					$bindArr["VALUE".$count] = $value1;
+					$count++;
+				}
+				$str = substr($str, 0, -1);
+				$str = $str.")";
+				$sql = $sql.$str;
+			}
+			if($considerProfile)
+			{
+				$sql.=" AND m1.SENDER IN (";
+				foreach($considerProfile as $key1=>$value1)
+                                {
+                                        $str = $str.":VALUE".$count.",";
+                                        $bindArr["VALUE".$count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                $str = $str.")";
+                                $sql = $sql.$str;
+			}
+			$sql = $sql." GROUP BY m1.SENDER,m1.SEEN";
+
+			$res=$this->db->prepare($sql);
+			$res->bindValue("RECEIVER",$receiver,PDO::PARAM_INT);
+			foreach($bindArr as $k=>$v)
+				$res->bindValue($k,$v);
+			$res->execute();
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+			
+		}
+
 }
 	?>

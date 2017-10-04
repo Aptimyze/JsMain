@@ -100,7 +100,7 @@ EOF;
                 $from = "JSSRVR";
                 $profileid = "144111";
                 $smsMessage = "Mysql Error Count have reached logTempMatchalert $date within 5 minutes";
-                $mobileArr = array("9818424749", "9873639543", "9650350387", "9953457479");
+                $mobileArr = array("9818424749", "9873639543", "9773889652", "9953457479");
                 foreach ($mobileArr as $mobPhone) {
                         $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";
                         $xml_content = "%3CSMS%20UDH=%220%22%20CODING=%221%22%20TEXT=%22" . urlencode($smsMessage) . "%22%20PROPERTY=%220%22%20ID=%22" . $profileid . "%22%3E%3CADDRESS%20FROM=%22" . $from . "%22%20TO=%22" . $mobPhone . "e%22%20SEQ=%22" . $profileid . "%22%20TAG=%22%22/%3E%3C/SMS%3E";

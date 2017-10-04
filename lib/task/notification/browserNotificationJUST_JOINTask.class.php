@@ -33,6 +33,7 @@ EOF;
         ini_set('memory_limit','-1');
         ini_set('error_reporting',1);
         ini_set("mysql.connect_timeout",-1);
+	ini_set("mysql.wait_timeout",-1);
         
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
