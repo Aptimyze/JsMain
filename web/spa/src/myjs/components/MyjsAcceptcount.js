@@ -32,7 +32,7 @@ this.setState({bounceAnimation:" bounceIn animated "});
 }
 
   render(){
-    console.log('MyjsAcceptancecount');
+    
     if(!this.props.hamFetched) {
         return <div></div>;
       }

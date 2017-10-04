@@ -129,7 +129,6 @@ class HamMain extends React.Component {
             }
             minorLiHeight -=20;
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
-            console.log(minorElem);
             document.getElementById(minorElem).style.height = minorLiHeight + "px";
             document.getElementById(minorElem).style.padding = "12px 0px 0px 40px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;

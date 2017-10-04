@@ -72,8 +72,7 @@ return (<div id="viewContactLayer"  className="posabs ce-bg ce_top1 ce_z101" sty
 }
 
 componentDidMount(){
-  console.log("ComponentDidMount  viw contact");
-  console.log(this.state.cdOHeight);
+  
   //$("#contactDetailOverlay").height($("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top);
   let getOffset = (ele)=> document.getElementById(ele).clientHeight;
   let sum = getOffset('3DotProPic')+  getOffset('errorMsgOverlay') + getOffset('bottomElement');
