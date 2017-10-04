@@ -484,7 +484,6 @@ try{
          $producerObj=new Producer();
          $producerObj->sendMessage($reSendData);
      }
-
  }
 
   public function logDuplicate($phone,$profileId)

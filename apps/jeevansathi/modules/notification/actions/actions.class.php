@@ -226,7 +226,20 @@ class notificationActions extends sfActions
       
   }
   
-    public function executeInsertChromeIdV1(sfWebRequest $request)
+  /** This method will be called by the service worker to track the 
+   * whether the message has been delivered or not. 
+   * If the messageId is received, the tracking details are updated,
+   * otherwise no action is performed. 
+  */
+  
+  public function executeUpdateTrackingV1(sfWebRequest $request) {
+      $messageId = $request->getParameter("messageId");
+      $browserDBObject = new MOBILE_API_BROWSER_NOTIFICATION();
+      $browserDBObject->updateTrackingDetails($messageId);
+      die;
+  }
+  
+  public function executeInsertChromeIdV1(sfWebRequest $request)
     {
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         /*$notificationStop =JsConstants::$notificationStop;
@@ -281,7 +294,7 @@ class notificationActions extends sfActions
         $notifications = $browserNotificationObj->getNotification($regId);
 
         if($notifications){
-            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","REQUEST_DT"=>date('Y-m-d H:i:s')));
+            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","RECEIVED_DATE"=>date('Y-m-d H:i:s')));
             $response = array('title' => $notifications["TITLE"],
                           'body' => $notifications["MESSAGE"],
                           'icon' => $notifications["ICON"],

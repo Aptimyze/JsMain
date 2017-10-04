@@ -21,7 +21,8 @@ class BrowserNotificationEnums
     	CONST FCM_REGID_EXPIRED = 'E';  //gcm invalid status
 	CONST FCM_REQUEST_URL = "https://fcm.googleapis.com/fcm/send";   //url of fcm api
         CONST GCM_REQUEST_URL = "https://android.googleapis.com/gcm/send";   //url of gcm api	
-    public static $messageDelimiters = array("{","}");
+
+        public static $messageDelimiters = array("{","}");
     public static $variablesMaxlength = array(
 			"USERNAME"  => 8,
 			"USERNAME1" => 8,
@@ -74,7 +75,7 @@ class BrowserNotificationEnums
     //notifications for which channel wise login filter is not applicable
     public static $notificationWithoutLoginFilter = array("AGENT_ONLINE_PROFILE","AGENT_FP_PROFILE","EOI","MESSAGE_RECEIVED","EOI_REMINDER");
 
-    public static $minChromeVersion = 44;
+    public static $minChromeVersion = 50;
 
     //channels to be considered for daily limit of instant notifications
     public static $channelForDailyLimitNotificationFilter = array("M");

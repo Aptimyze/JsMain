@@ -31,6 +31,7 @@ EOF;
 		$sourceMasterObj = new MOBILE_API_BROWSER_NOTIFICATION();
 
 		//count of notifications picked from BROWSER_NOTIFICATION and backed up at a time
+                
 		$limit = BrowserNotificationEnums::$backupNotificationsCountLimit; 
 		$offset = 0;
 		
@@ -49,7 +50,7 @@ EOF;
 					foreach ($data as $key => $value) 
 					{
 						$backupToBeDone = false;
-						if($value['SENT_TO_CHANNEL']=='Y')
+						if($value['RECEIVED_STATUS']=='Y')
 							$backupToBeDone = true;
 						else
 						{

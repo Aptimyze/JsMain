@@ -52,6 +52,7 @@ EOF;
         if($otherUserId)
             $otherUserId = explode(",", $otherUserId);
         $processObj = new BrowserNotificationProcess();
+        // obsolete
         if($notificationType == "INSTANT")
         {
             if(in_array($notificationKey, BrowserNotificationEnums::$instantNotifications))

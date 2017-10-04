@@ -82,7 +82,7 @@ class FormatNotification
 
     public static function formaterForFcmBrowser($details)
     {
-        $dataArray = array('NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'TITLE'=>$details['TITLE'],'MESSAGE'=>$details['MESSAGE'],'ICON'=>$details['ICON'],'TAG'=>$details['TAG'],'MSG_ID'=>$details['MSG_ID'],'LANDING_ID'=>$details['LANDING_ID']);
+        $dataArray = array('NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'TITLE'=>$details['TITLE'],'BODY'=>$details['MESSAGE'],'ICON'=>$details['ICON'],'TAG'=>$details['TAG'],'MSG_ID'=>$details['MSG_ID'],'ACTION'=>$details['LANDING_ID']);
         return $dataArray;
     }
   
