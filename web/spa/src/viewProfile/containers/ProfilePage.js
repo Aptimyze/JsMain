@@ -146,7 +146,7 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || _this.state.nextProfileFetched == false) )
           {
             console.log("HITS stopped: "+_this.state.nextProfileFetched)
             
@@ -160,7 +160,7 @@ class ProfilePage extends React.Component {
                 console.log("HITS touchend: "+" :"+_this.state.nextUrl+" :"+_this.state.nextProfileFetched)
 
 
-            if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "" && _this.state.nextProfileFetched == true) {
+            if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
               //console.log("s1");
                 document.getElementById("swipePage").classList.add("animateLeft");
                 document.getElementById("validProfile").classList.remove("dn");
