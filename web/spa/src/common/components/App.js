@@ -49,7 +49,10 @@ class App extends React.Component
     this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
     this.props.MyProfile.GENDER  = localStorage.getItem('GENDER');
     this.props.MyProfile.USERNAME  = localStorage.getItem('USERNAME');
-    localStorage.removeItem('lastProfilePageLocation');
+    if ( window.location.href.indexOf("profile/viewprofile.php") == -1)
+    {
+      localStorage.removeItem('lastProfilePageLocation');
+    }
   }
 
 

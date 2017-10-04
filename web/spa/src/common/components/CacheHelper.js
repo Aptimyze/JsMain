@@ -94,6 +94,7 @@ export function getProfileKeyLocalStorage(queryString=null)
 	let total_rec = getParameterByName(queryString,"total_rec");
 	let searchid = getParameterByName(queryString,"searchid");
 	let profilechecksum = getParameterByName(queryString,"profilechecksum");
+	let username = getParameterByName(queryString,"username");
 
 	
 	if ( profilechecksum != null )
@@ -117,6 +118,10 @@ export function getProfileKeyLocalStorage(queryString=null)
 		if ( searchid != null )
 		{
 			urlString = urlString + "_"+searchid.toString();
+		}
+		if ( username != null )
+		{
+			urlString = urlString + "_"+username.toString();
 		}
 	}
 	return urlString;
