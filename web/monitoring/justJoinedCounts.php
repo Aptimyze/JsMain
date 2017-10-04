@@ -51,7 +51,7 @@ if($jj == 1 && $alertSMS == 1){
 function sendJJSMS($flag =""){
         $FROM_ID = "JSSRVR";
         $PROFILE_ID = "144111";
-        $SMS_TO = array('9650350387','9873639543');
+        $SMS_TO = array('9773889652','9873639543');
         $smsMessage = "Mysql Error Count have reached Threshold on Just joined count $flag within 5 minutes";
         foreach ($SMS_TO as $mobPhone) {
                 $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";

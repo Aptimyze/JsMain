@@ -1,7 +1,5 @@
 <?php
 include("connect.inc");
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com"," web/profile/change_horoscope_visibility.php in USE",$msg);
 $db=connect_db();
 $data=authenticated($checksum);
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");

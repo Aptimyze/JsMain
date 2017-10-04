@@ -18,8 +18,6 @@ if($data)
 	$profileid=$data['PROFILEID'];
 	if($Submit)
 	{
-		$msg = print_r($_SERVER,true);
-		mail("kunal.test02@gmail.com"," web/profile/activate_astro.php in USE",$msg);
 		$sql="SELECT VALUE from newjs.COUNTRY where LABEL = '$birth_country'";
 		$result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");;
 		$myrow=mysql_fetch_array($result);

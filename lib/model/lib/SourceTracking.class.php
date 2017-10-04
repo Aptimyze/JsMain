@@ -275,7 +275,7 @@ Class SourceTracking
        //Send Mail to Developer 
         $subject = "reg.LOG_REG_HITS Error: Some issue while inserting records";
         $body = "Reported ip : ($reportedIP) , Actual Ip: ($actualIP), Url : ($url) , and exception :";
-        SendMail::send_email("kunal.test02@gmail.com,lavesh.rawat@gmail.com",$body."'".print_r($e,true)."'",$subject);
+        SendMail::send_email("lavesh.rawat@gmail.com",$body."'".print_r($e,true)."'",$subject);
         return ;
     }
   }
