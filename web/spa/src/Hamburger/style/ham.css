@@ -52,18 +52,7 @@
     padding: 10px 10px 10px 6px;
 }
 
-@media (min-width: 280px) and (max-width: 320px) {
-    .listingHam li {
-        padding: 10px 1px !important;
-    }
-    .listingHam li a {
-        margin-left: 6px !important;
-    }
-    .firtElemSmall{
-        margin-left: 0px !important;
-    }
-    .mlLogout{margin-left: 10px !important;}
-}
+
 
 .listingHam li i {
     margin: 0px 10px;
@@ -127,7 +116,7 @@
 .shortlistedIcon {
     height: 27px;
     width: 27px;
-    background-position: -13px -15px; 
+    background-position: -13px -15px;
 }
 .phoneIcon {
     height: 27px;
@@ -179,10 +168,10 @@
     right: 2px;
 }
 .brdrTop {
-    border-top: 1px solid white;  
+    border-top: 1px solid white;
 }
 .brdrBtm {
-    border-bottom: 1px solid white;  
+    border-bottom: 1px solid white;
 }
 .ml0Imp{
     margin-left: 0px !important;
@@ -212,7 +201,7 @@
     text-align: center;
     padding-top: 5px;
 }
-.mlLogout {margin-left: 35px}
+.mlLogout {margin-left: 30px}
 
 .mb12 {
     margin-bottom: 12px;
@@ -227,4 +216,16 @@
     margin-top: 12px;
     padding-left:40px;
     height:0px;
+}
+@media (min-width: 280px) and (max-width: 320px) {
+    .listingHam li {
+        padding: 10px 1px !important;
+    }
+    .listingHam li a {
+        margin-left: 6px !important;
+    }
+    .firtElemSmall{
+        margin-left: 0px !important;
+    }
+    .mlLogout{margin-left: 6px;}
 }
