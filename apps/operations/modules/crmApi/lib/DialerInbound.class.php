@@ -198,7 +198,42 @@ class DialerInbound
                 return $setCommunity;
         }
 
+	public function excludeIncompleteInactiveDeletedProfiles($phone){
+		$profileIdArr = $this->getProfileDetails($phone);
+        if(is_array($profileIdArr)){
+            $jprofileObj = NEWJS_JPROFILE::getInstance('crm_slave');
+            foreach ($profileIdArr as $key=>$value){
+            	$profileIds[] = $value["PROFILEID"];
+			}
+            $profileIdStr = implode(",",$profileIds);
+			$profileIdArr = $jprofileObj->getArray(array("PROFILEID"=>$profileIdStr),array("INCOMPLETE"=>"'Y'","ACTIVATED"=>"'D','I'"),"","PROFILEID,ENTRY_DT","","ENTRY_DT DESC");
+			if(is_array($profileIdArr))
+				return $profileIdArr;
+			else
+				return;
+		} else{
+        	return;
+		}
+	}
 
+    public function getAcceptances($profileID){
+        $dbName = JsDbSharding::getShardNo($profileID,1);
+        $messageLogObj = new newjs_MESSAGE_LOG($dbName);
+        $result = $messageLogObj->getAcceptRecieveCount($profileID) + $messageLogObj->getAcceptSentCount($profileID);
+        return $result;
+	}
+
+	public function getDiscountPercent($profileID){
+    	$mainMemArr 	=$this->getMembershipDetails($profileID);
+        $allMainMem	=$mainMemArr['allMainMem'];
+        $discountArr	=$this->getDiscountDetails($allMainMem);
+        if(is_array($discountArr)){
+            $discount = max($discountArr);
+        } else{
+        	$discount = 0;
+		}
+		return $discount;
+	}
 }
 
 ?>

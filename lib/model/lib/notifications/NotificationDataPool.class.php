@@ -11,7 +11,8 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+	    $fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';	
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields);
         }
         if(is_array($profiledetails))
         {
@@ -80,7 +81,7 @@ class NotificationDataPool
 			if(in_array("$profileid", $logProfiles))
 				continue;
 		}
-                $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
+                $loggedInProfileObj = Profile::getInstance('newjs_masterRep',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
                 $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
                 $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
@@ -106,7 +107,8 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_local111"); 	
+           	//$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
         }
         unset($otherProfiles);
         $counter = 0;

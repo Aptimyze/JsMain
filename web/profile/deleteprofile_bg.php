@@ -579,7 +579,7 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 */
 function mysql_error_with_mail($msg)
 {
-        mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,kunal.test02@gmail.com","deleteprofile_bg_autocommit_final.php",$msg);
+        mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","deleteprofile_bg_autocommit_final.php",$msg);
 	exit;
 }
 
@@ -742,7 +742,7 @@ function deleteChatData($dbName, $iProfileId)
     }
     unset($chatLogStoreObj);
   } catch (Exception $ex) {
-    mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data  {$iProfileId} on {$dbName}", print_r($ex->getTrace(),true));
+    mail("nitesh.s@jeevansathi.com","Issue in deleteprofile cron, while removing chat data  {$iProfileId} on {$dbName}", print_r($ex->getTrace(),true));
     die("Issue while deleting data for chat tables");
   }
 }
