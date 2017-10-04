@@ -325,7 +325,7 @@ class postEOIv2Action extends sfAction
       {
         if($errorArr["UNDERSCREENING"]!=2)
           $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I");
-        $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+        $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
         $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
         $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
       }
