@@ -291,9 +291,10 @@ class BrowserNotification{
         $currentNotificationSetting = $this->allNotificationsTemplate[$notificationKey];
         $timeCriteria = $currentNotificationSetting['TIME_CRITERIA'];
         unset($notifications);
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_local111");
         $varArray['PROFILEID']=implode(",",array_filter($profiles));
         unset($profiles);
+	$fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';
         if($timeCriteria!='')
         {
             $timeCriteriaArr = explode("|",$timeCriteria);
@@ -308,7 +309,7 @@ class BrowserNotification{
                 $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
             }
         }
-        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields="*",$lessThan);
+        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields,$lessThan);
         if(is_array($profiles))
         {
             foreach($profiles as $k=>$v)
