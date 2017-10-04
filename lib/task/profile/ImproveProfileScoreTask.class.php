@@ -171,11 +171,11 @@ EOF;
         }  
       } catch (Exception $ex) {
         //Send Mail
-        $subject = "Improve Profile Score Mailer : Some issue in retrieving profiles";
-        $szMailBody = "Where Cnd Araray : ";
-        $szMailBody .= "\n\n'".print_r($whereCndArray,true)."'";
+//        $subject = "Improve Profile Score Mailer : Some issue in retrieving profiles";
+ //       $szMailBody = "Where Cnd Araray : ";
+ //       $szMailBody .= "\n\n'".print_r($whereCndArray,true)."'";
 
-        SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
+   //     SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
         
         //Log on shell
         if($this->m_bDebugInfo){

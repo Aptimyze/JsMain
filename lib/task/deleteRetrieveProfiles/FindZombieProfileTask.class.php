@@ -311,11 +311,11 @@ EOF;
           $this->logSection("Exception : ", $ex->getTrace() );
           return ;
         }
-        $subject = "Find Zombie Profile Task: Error while rerunning delete process";
-        $szMailBody = "Profileid of user is : ".$iProfileID;
-        $szMailBody .= "\n\n'".print_r($ex->getTrace(),true)."'";
+  //      $subject = "Find Zombie Profile Task: Error while rerunning delete process";
+  //      $szMailBody = "Profileid of user is : ".$iProfileID;
+  //      $szMailBody .= "\n\n'".print_r($ex->getTrace(),true)."'";
             
-        SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
+   //     SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
         return false;
       }
     }

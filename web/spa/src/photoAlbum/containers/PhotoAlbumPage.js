@@ -28,6 +28,7 @@ export default class PhotoAlbumPage extends React.Component {
       if(!getCookie("AUTHCHECKSUM")){
         window.location.href="/login?prevUrl=/myjs";        
       }
+      localStorage.removeItem('lastProfilePageLocation');
   }
 
   componentDidMount(){

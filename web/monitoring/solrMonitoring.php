@@ -64,7 +64,7 @@ if(!empty($fromServer) || !empty($downServers))
                 $mobile         = "9711304800";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
-                $mobile         = "9650350387";
+                $mobile         = "9773889652";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
                 
                 $mobile         = "9711818214";
@@ -95,7 +95,7 @@ if(!empty($fromServer) || !empty($downServers))
                         $profileid      = "144111";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
-                        $mobile         = "9650350387";
+                        $mobile         = "9773889652";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
                         
                         $mobile         = "8376883735";

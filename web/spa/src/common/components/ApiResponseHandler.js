@@ -79,7 +79,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         {
           case "9":
             removeCookie("AUTHCHECKSUM");
-            localStorage.clear();
+            // localStorage.clear();
             window.location.href="/login?prevUrl="+window.location.href;
             break;
           case "7":
@@ -89,8 +89,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             window.location.href="/phone/jsmsDisplay";
             break;
           case "0":
-          case "1":
-          case "10":
+            //successful case.
             break;
           case "5":
             window.location.href="/phone/ConsentMessage";

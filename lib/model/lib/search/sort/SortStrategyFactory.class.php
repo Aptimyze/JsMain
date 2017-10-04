@@ -49,6 +49,10 @@ class SortStrategyFactory
 			return new SortByVisitors($SearchParamtersObj,$loggedInProfileObj);
                 if($slogic == SearchSortTypesEnums::SortByBroaderDppScore) 
 			return new SortByBroaderDppScore($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByRelaxedNonTrends || $slogic == SearchSortTypesEnums::SortByRelaxedTrends) 
+			return new SortByRelaxedDpp($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByStrictNonTrends || $slogic == SearchSortTypesEnums::SortByStrictTrends) 
+			return new SortByStrictDpp($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }

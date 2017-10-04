@@ -43,6 +43,16 @@ class processCropperV1Action extends sfActions
 
                 $cropperProcessObj = new CropperProcess($profileObj);
                 $profilesUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
+
+		foreach($profilesUpdate as $k=>$v)
+		{
+			$profileInfo['PICTUREID'] = $k;
+			$profileInfo['picSizeVariants'] = $v;
+			foreach($v as $k1=>$v1)
+			{
+				$profileInfo['picSizeVariants'][$k1]= PictureFunctions::getCloudOrApplicationCompleteUrl($v1);
+			}
+		}
                 if(is_array($profilesUpdate))
                         $output = $pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
                 else
@@ -57,7 +67,7 @@ class processCropperV1Action extends sfActions
                         $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 else
                         $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-                $respObj->setResponseBody($profilesUpdate);  //response to be decided and failure case:LATER
+                $respObj->setResponseBody($profileInfo);  //response to be decided and failure case:LATER
                 $respObj->generateResponse();
                 unset($profilesUpdate);
 		die;

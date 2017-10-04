@@ -58,7 +58,8 @@ class ProfilePage extends React.Component {
             callApi: false,
             listingName: "",
             ownView:ownView,
-            ucbrowser:false
+            ucbrowser:false,
+            nextProfileFetched:false
 
         };
         if(localStorage.getItem('GENDER') == "F") {
@@ -78,13 +79,6 @@ class ProfilePage extends React.Component {
     }
     componentDidMount()
     {
-        console.log('componentDidMount');
-        //alert(navigator.userAgent);
-        //console.log('componentDidMount');
-        //console.log(this.props);
-        //console.log(localStorage.getItem('GENDER'));
-        //console.log(this.state.gender);
-
         window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
@@ -152,8 +146,10 @@ class ProfilePage extends React.Component {
           // console.log('swipe in');
           // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || _this.state.nextProfileFetched == false) )
           {
+            console.log("HITS stopped: "+_this.state.nextProfileFetched)
+            
             return;
           }
           else if(stype == "KM") //swipe to be disabled for Kundli Listing
@@ -161,9 +157,7 @@ class ProfilePage extends React.Component {
             return;
           }
           else {
-
-
-         console.log("touchned");
+                console.log("HITS touchend: "+" :"+_this.state.nextUrl+" :"+_this.state.nextProfileFetched)
 
 
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
@@ -178,7 +172,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.nextUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
+                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit",_this.refs.GAchild.getGenderForGA())
                 _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
               //console.log("s2");
@@ -192,7 +186,7 @@ class ProfilePage extends React.Component {
                 _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
                 _this.props.history.push(_this.state.prevUrl);
                 jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","prevProfileVisit","")
+                _this.refs.GAchild.trackJsEventGA("Profile Description-jsms","prevProfileVisit",_this.refs.GAchild.getGenderForGA())
                 _this.props.showProfile(_this, _this.state.prevDataApi);
             }
           }
@@ -311,7 +305,8 @@ class ProfilePage extends React.Component {
                 responseTracking:responseTracking,
                 searchid:searchid,
                 callApi: false,
-                stype: stype
+                stype: stype,
+                nextProfileFetched:false
                 },this.setNextPrevLink);
             }
 
@@ -798,6 +793,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         showProfile: (containerObj,urlString) => {
+            containerObj.state.nextProfileFetched = false;
             if ( localStorage.getItem('lastProfilePageLocation') === urlString )
             {
               removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(urlString));
@@ -810,8 +806,18 @@ const mapDispatchToProps = (dispatch) => {
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },
         fetchNextPrevData: (containerObj,urlString,saveState) => {
+            containerObj.state.nextProfileFetched = false;
             let call_url = "/api/v1/profile/detail"+urlString;
-            commonApiCall(call_url,{},'SAVE_INFO','GET',saveState,true,containerObj);
+            try
+            {
+                commonApiCall(call_url,{},'SAVE_INFO','GET',saveState,true,containerObj).then(function (response) {
+                    containerObj.state.nextProfileFetched = true;
+                });
+            }
+            catch(e)
+            {
+                containerObj.state.nextProfileFetched = true;
+            }
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)

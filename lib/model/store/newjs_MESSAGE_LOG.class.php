@@ -1815,5 +1815,41 @@ return $result;
             }
         }
 
+
+    public function getAcceptRecieveCount($profileID){
+        try {
+            $sql = "SELECT COUNT(*) AS CNT from newjs.MESSAGE_LOG where SENDER=:SENDER AND TYPE = :ACCEPTANCE";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":SENDER",$profileID,PDO::PARAM_INT);
+            $prep->bindValue(":ACCEPTANCE",'A',PDO::PARAM_STR);
+            $prep->execute();
+            if($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $result=$row['CNT'];
+            } else{
+            	$result=0;
+			}
+			return $result;
+        } catch (PDOException$e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getAcceptSentCount($profileID){
+        try {
+            $sql = "SELECT COUNT(*) AS CNT from newjs.MESSAGE_LOG where RECEIVER=:RECEIVER AND TYPE = :ACCEPTANCE ";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":RECEIVER",$profileID,PDO::PARAM_INT);
+            $prep->bindValue(":ACCEPTANCE",'A',PDO::PARAM_STR);
+            $prep->execute();
+            if($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $result=$row['CNT'];
+            } else{
+                $result=0;
+            }
+            return $result;
+        } catch (PDOException$e) {
+            throw new jsException($e);
+        }
+    }
 }
 	?>

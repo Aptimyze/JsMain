@@ -17,8 +17,8 @@ class MatchAlertsConfig
                 $nonPeak = CommonUtility::runFeatureInDaytime($this->timeRangeStart, $this->timeRangeEnd);
                 if($nonPeak == true){
                         $random = rand(1, 1000000);
-                        if($random%999999==0){
-                                $varNAme = $this->solrUrl[1];
+                        if($random%999999<=1){
+                                $varNAme = $this->solrUrl[0];
                         }else{
                                 $varNAme = $this->solrUrl[2];
                         }
