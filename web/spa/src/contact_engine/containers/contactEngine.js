@@ -13,7 +13,7 @@ export const performAction = (data) =>
     var url = `?&${params}&profilechecksum=${data.profilechecksum}`;
     if (  getCookie('AUTHCHECKSUM') !== false )
     {
-      removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage());console.log(localStorage.profileLocalStorage);
+      removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage());
     }
     return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[data.button.action]+url,{},'','POST').then((response)=>{if(typeof data.callBFun=='function') data.callBFun(response);});
 }

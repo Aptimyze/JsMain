@@ -42,7 +42,7 @@ class HamMain extends React.Component {
 
     componentDidMount()
     {
-        if(!this.props.bellResponse && this.props.page == "others") {
+        if(!this.props.bellResponse && this.props.page == "others" && !this.props.myjsData.hamFetched) {
             this.props.getHamData();
         }
         document.getElementById("settingsMinor").style.height = "0px";

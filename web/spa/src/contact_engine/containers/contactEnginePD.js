@@ -151,7 +151,8 @@ export class contactEnginePD extends React.Component{
       {
         this.goToViewSimilar();
       }
-
+      if(actionButton.action=='DECLINE' && typeof(this.props.nextPrevPostDecline)=='function')
+          this.props.nextPrevPostDecline();
 
     }
   }

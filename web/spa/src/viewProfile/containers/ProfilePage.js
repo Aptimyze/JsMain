@@ -157,43 +157,41 @@ class ProfilePage extends React.Component {
             return;
           }
           else {
-                console.log("HITS touchend: "+" :"+_this.state.nextUrl+" :"+_this.state.nextProfileFetched)
-
-
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
+              _this.swipeNextProfile('next');
               //console.log("s1");
-                document.getElementById("swipePage").classList.add("animateLeft");
-                document.getElementById("validProfile").classList.remove("dn");
-                _this.setState({
-                    dataLoaded: false
-                });
-                _this.resetTab();
-                jsb9Fun.flushJSB9Obj(_this);
-                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
-                _this.props.history.push(_this.state.nextUrl);
-                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit",_this.refs.GAchild.getGenderForGA())
-                _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
-              //console.log("s2");
-                document.getElementById("swipePage").classList.add("animateLeft");
-                document.getElementById("validProfile").classList.remove("dn");
-                jsb9Fun.flushJSB9Obj(_this);
-                _this.setState({
-                    dataLoaded: false
-                });
-                _this.resetTab();
-                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
-                _this.props.history.push(_this.state.prevUrl);
-                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("Profile Description-jsms","prevProfileVisit",_this.refs.GAchild.getGenderForGA())
-                _this.props.showProfile(_this, _this.state.prevDataApi);
+              _this.swipeNextProfile('prev');
             }
           }
 
         });
     }
+    nextPrevPostDecline(){
+      if(this.state.nextUrl != "")
+        this.swipeNextProfile('next');
+      else if(this.state.prevUrl != "")
+        this.swipeNextProfile('prev');
+    }
+swipeNextProfile(nextOrPrev){
+      let _this=this;
+      document.getElementById("swipePage").classList.add("animateLeft");
+      document.getElementById("validProfile").classList.remove("dn");
+      _this.setState({
+          dataLoaded: false
+      });
+      _this.resetTab();
+      jsb9Fun.flushJSB9Obj(_this);
+      _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
+      _this.props.history.push(nextOrPrev=='next' ? _this.state.nextUrl : _this.state.prevUrl);
+      jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+      let t1,t2;
+      t1 = nextOrPrev=='next' ? 'nextProfileVisit' : 'prevProfileVisit';
+      t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
+      _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
+      _this.props.showProfile(_this, t2);
 
+}
     setNextPrevLink() {
 
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
@@ -597,7 +595,7 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
                 if(this.state.ownView == false) {
-                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                     contactEngineView = <ContactEngineButton nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;
