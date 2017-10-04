@@ -32,7 +32,7 @@ constructor(){
 		{
       this.func=fnc;
 			this.History.push(fnc);
-			this.SetLocation(hashVal);console.log(this.History);
+			this.SetLocation(hashVal);
 		}
 		pop(fnc)
 		{

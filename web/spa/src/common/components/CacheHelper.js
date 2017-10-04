@@ -94,26 +94,35 @@ export function getProfileKeyLocalStorage(queryString=null)
 	let total_rec = getParameterByName(queryString,"total_rec");
 	let searchid = getParameterByName(queryString,"searchid");
 	let profilechecksum = getParameterByName(queryString,"profilechecksum");
+	let username = getParameterByName(queryString,"username");
 
-	if ( contact_id != null )
-	{
-		urlString = urlString + contact_id.toString();
-	}
-	if ( actual_offset != null )
-	{
-		urlString = urlString + "_"+actual_offset.toString();
-	}
-	if ( total_rec != null )
-	{
-		urlString = urlString + "_"+total_rec.toString();
-	}
-	if ( searchid != null )
-	{
-		urlString = urlString + "_"+searchid.toString();
-	}
+	
 	if ( profilechecksum != null )
 	{
 		urlString = urlString + "_"+profilechecksum.toString();
+	}
+	else
+	{
+		if ( contact_id != null )
+		{
+			urlString = urlString + contact_id.toString();
+		}
+		if ( actual_offset != null )
+		{
+			urlString = urlString + "_"+actual_offset.toString();
+		}
+		if ( total_rec != null )
+		{
+			urlString = urlString + "_"+total_rec.toString();
+		}
+		if ( searchid != null )
+		{
+			urlString = urlString + "_"+searchid.toString();
+		}
+		if ( username != null )
+		{
+			urlString = urlString + "_"+username.toString();
+		}
 	}
 	return urlString;
 }	

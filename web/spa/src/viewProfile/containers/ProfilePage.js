@@ -214,7 +214,8 @@ swipeNextProfile(nextOrPrev){
         } else {
             this.setState({
                 nextUrl: "",
-                nextDataApi: ""
+                nextDataApi: "",
+                nextProfileFetched:true
             });
         }
         if (parseInt(this.state.actual_offset) != 0 && !isNaN(parseInt(this.state.actual_offset))   ) {
@@ -236,7 +237,8 @@ swipeNextProfile(nextOrPrev){
         } else {
             this.setState({
                 prevUrl: "",
-                prevDataApi: ""
+                prevDataApi: "",
+                nextProfileFetched:true
             });
         }
 

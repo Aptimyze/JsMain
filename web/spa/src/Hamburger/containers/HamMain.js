@@ -129,7 +129,6 @@ class HamMain extends React.Component {
             }
             minorLiHeight -=20;
             let listingLen = document.getElementById(minorElem).getElementsByTagName("li").length;
-            console.log(minorElem);
             document.getElementById(minorElem).style.height = minorLiHeight + "px";
             document.getElementById(minorElem).style.padding = "12px 0px 0px 40px";
             let differHeight = document.getElementById(minorElem).getElementsByTagName("li")[listingLen-1].getBoundingClientRect().bottom - document.getElementById("bottomTab").getBoundingClientRect().top + 10;
@@ -456,7 +455,7 @@ class HamMain extends React.Component {
                 <a id="changePassLink" href="/static/changePass" className="white">
                     Change Password
                 </a>
-            </li>;                                  
+            </li>;
             if(this.state.bellResponse.ACTIVATED == 'H'){
                                 hideProfileView =  <li className="mb12">
                                     <a id="hideProfileLink" href="/static/unHideOption" className=" newS white">
@@ -482,7 +481,7 @@ class HamMain extends React.Component {
                 </a>
             </li>;
             logoutView = <li className="mb12">
-                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white ml30">
+                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white mlLogout">
                     Logout
                 </div>
             </li>;

@@ -25,7 +25,7 @@ export default class ReportInvalid extends React.Component{
     }
 
     componentDidMount(){
-      console.log("afvabdv",document.getElementById("ProfilePage").clientHeight);
+      
       //  document.getElementById("reportInvalidMidDiv").style.height = (window.innerHeight - 50)+"px";
       let topHeadHgt, bottomBtnHeight;
       topHeadHgt = document.getElementById('reportInvalidtop').clientHeight;
@@ -141,7 +141,7 @@ export default class ReportInvalid extends React.Component{
 
     let InvalidList = [{"key":6,"text":"The number does not exist "}, {"key":1,"text":"Switched off / Not reachable"}, {"key":2,"text":"Not an account holder's phone"}, {"key":4,"text":"Not picking up "}, {"key":3,"text":"Already married / engaged "}, {"key":5,"text":"Other reasons (please specify)"}];
 
-    console.log("report invalid this.props",this.props);
+    
     topviewInvalidrLayer =   <div className="pad16 ce_bdr1 hgt85" id="reportInvalidtop">
           <div className="posrel fullwid ">
               <img id="photoReportInvalid" className="srp_box3 fl dispibl" src={this.props.profileThumbNailUrl} />

@@ -85,7 +85,7 @@ class PhotoView extends React.Component {
         this.props.imageLoaded();
     }
     handleImageError() {
-      console.log()
+      
       if(this.props.genderPic=="Male")
       {
          document.getElementById("profilePic").src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto";
