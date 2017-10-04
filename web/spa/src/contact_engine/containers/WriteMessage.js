@@ -25,7 +25,7 @@ export default class WriteMessage extends React.Component{
 
 
   componentDidMount(){
-    console.log("1");
+    
     let e = document.getElementById('msgId');
 
 
