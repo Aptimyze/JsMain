@@ -247,6 +247,11 @@ class ApiResponseHandler
                                 $output["userReligion"] = $loggedIn->getRELIGION();
                                 $output["userActivation"] = $loggedIn->getACTIVATED();
                         }
+												if(MobileCommon::isNewMobileSite() && $loggedIn && $loggedIn->getPROFILEID())
+                        {
+                                $output["selfUsername"] = $loggedIn->getUSERNAME();
+                                $output["selfGender"] = $loggedIn->getGENDER();
+                        }
                 }
 
 
