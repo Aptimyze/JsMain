@@ -89,8 +89,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             window.location.href="/phone/jsmsDisplay";
             break;
           case "0":
-          case "1":
-          case "10":
+            //successful case.
             break;
           case "5":
             window.location.href="/phone/ConsentMessage";
