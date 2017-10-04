@@ -16,8 +16,8 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 $dialerDncScrubingObj =new DialerDncScrubing($db_js, $db_js_111, $db_dialer);
 
 // campaign OPT-IN Check
-$campaignArr =array('FP_JS','UPSELL_JS','JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
-$eligibleCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
+$campaignArr =array('FP_JS','UPSELL_JS','JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW','JS_NCRNEW_Auto');
+$eligibleCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW','JS_NCRNEW_Auto');
 $renewalCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH');
 
 foreach($campaignArr as $key=>$campaignName)
