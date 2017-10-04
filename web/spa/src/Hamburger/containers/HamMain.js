@@ -455,7 +455,7 @@ class HamMain extends React.Component {
                 <a id="changePassLink" href="/static/changePass" className="white">
                     Change Password
                 </a>
-            </li>;                                  
+            </li>;
             if(this.state.bellResponse.ACTIVATED == 'H'){
                                 hideProfileView =  <li className="mb12">
                                     <a id="hideProfileLink" href="/static/unHideOption" className=" newS white">
@@ -481,7 +481,7 @@ class HamMain extends React.Component {
                 </a>
             </li>;
             logoutView = <li className="mb12">
-                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white ml30">
+                <div onClick={() => this.logoutAccount()} id="logoutLink" className="white mlLogout">
                     Logout
                 </div>
             </li>;
