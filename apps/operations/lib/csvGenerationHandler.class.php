@@ -1269,6 +1269,7 @@ class csvGenerationHandler
 				$inDialerNewOutboundObj =new incentive_IN_DIALER_NEW();
 	                        $salesRegularRangeValue =crmParams::$salesRegularValueRange;
                         	$scoreRange2    	=$salesRegularRangeValue['SCORE2'];
+				$nonAutoCampaign	=crmParams::$nonAutoCampaign;	
 
 			}
 			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
@@ -1328,21 +1329,25 @@ class csvGenerationHandler
 
 				// insert in regular sales csv table
 				if($processName=="SALES_REGULAR"){
-					if($score>=$scoreRange2){
+                                        $campaignName           =$dataArr['CAMPAIGN_NAME'];
+                                        $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
+					if(in_array("$campaignName",$nonAutoCampaign)){
 						$dialerEligible ='Y';
-						$dialerEligibleNew ='N';
-						$dialerDialStatusNew =2;
-					}
-					else{
-						$dialerEligible ='N';
-						$dialerEligibleNew ='N';
-						$dialerDialStatusNew =$dialerDialStatus;
-						if($dialerDialStatusNew==1)
-							$dialerEligibleNew ='Y';
-						$dialerDialStatus =2;		
+					}else{
+						if($score>=$scoreRange2 && $dialerDialStatus==1){
+							$dialerEligible ='Y';
+							$dialerEligibleNew ='N';
+							$dialerDialStatusNew =2;
+						}
+						else{
+							$dialerEligibleNew ='N';
+							$dialerDialStatusNew =$dialerDialStatus;
+							if($dialerDialStatusNew==1)
+								$dialerEligibleNew ='Y';
+							$dialerDialStatus =2;		
+							$dialerEligible ='N';
+						}
 					}	
-					$campaignName   	=$dataArr['CAMPAIGN_NAME'];
-					$campaignNameNew   	=$dataArr['CAMPAIGN_NAME_NEW'];
 					$leadId         =$campaignName.$leadIdSuffix;	
 					$leadId 	=str_replace('pune','mumbai',$leadId);
 					$tablesName 	=$salesRegularCampaignTables[$campaignName];
