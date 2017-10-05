@@ -22,7 +22,7 @@ class GoogleVisionApi
 
 		if(!file_exists($picturePath))
 		{
-			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com",$picturePath,"Face detection error");
+			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error");
 			//die;
 		}
 		$newImgArr=explode(".",$picturePath);
@@ -34,7 +34,7 @@ class GoogleVisionApi
 			$this->rotateImageFile($picturePath,$imageFormatType);
 		}
 		else{
-			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com",$picturePath,"Face detection error2");
+			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error2");
 			//die;
 		}
 		$img = file_get_contents($picturePath);
