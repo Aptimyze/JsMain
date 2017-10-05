@@ -184,9 +184,12 @@ class BrowserNotification{
         {
             case "JUST_JOIN":
     			$applicableProfiles=array();
+		echo "DONE0: Filter Profiles done ";
     			$applicableProfiles = $this->getProfileApplicableForNotification($browserProfilesArr,$notificationKey);
+		echo "DONE1: getProfileApplicableForNotification ";
                 $poolObj = new NotificationDataPool();
                 $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+		echo "DONE2: getJustJoinData ";
                 unset($poolObj);
 			 break;
 
