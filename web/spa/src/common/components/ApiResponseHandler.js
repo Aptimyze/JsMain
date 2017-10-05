@@ -95,7 +95,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             window.location.href="/phone/ConsentMessage";
             break;
           default:
-            if ( response.data.responseMessage && RESPONSE_STATUS_MESSAGE.indexOf(response.data.responseMessage) == -1)
+            if ( response.data.responseMessage && RESPONSE_STATUS_MESSAGE_PUSH_MESSAGE.indexOf(response.data.responseMessage) != -1 )
             {
               let message = response.data.responseMessage;
               let parent = document.createElement("div");
@@ -133,12 +133,35 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
           setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
-          if ( response.data.GENDER && response.data.USERNAME )
+          if (response.data.GENDER)
           {
             localStorage.setItem('GENDER',response.data.GENDER);
+          }
+          else if (response.data.selfGender){
+            localStorage.setItem('GENDER',response.data.selfGender);
+          }
+
+          if(response.data.USERNAME)
+          {
             localStorage.setItem('USERNAME',response.data.USERNAME);
           }
+          else if (response.data.selfUsername)
+          {
+            localStorage.setItem('USERNAME',response.data.selfUsername);
+          }
         }
+        else{
+
+          if (response.data.selfGender){
+            localStorage.setItem('GENDER',response.data.selfGender);
+          }
+
+          if (response.data.selfUsername)
+          {
+            localStorage.setItem('USERNAME',response.data.selfUsername);
+          }
+        }
+
         if(typeof dispatch == 'function')
         {
           if(reducer == "SHOW_INFO") {
