@@ -30,10 +30,18 @@ if(isset($data))
 
 	if($preview_received || $preview_not_received)// show user the Preview of selected items.
 	{
+        if($newTab == "1"){
+            $table = "PAYMENT_DETAIL_NEW";
+            $amountCondition = " AND b.AMOUNT > 0";
+        }
+        else{
+            $table = "PAYMENT_DETAIL";
+            $amountCondition = "";
+        }
 		// Fetch information for each selected receipt.
 		for($i=0;$i<count($mark_coll);$i++)
 		{
-			$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID, b.INVOICE_NO,b.MODE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.TRANS_NUM from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.RECEIPTID='".$mark_coll[$i]."' AND a.BILLID=b.BILLID";
+			$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID, b.INVOICE_NO,b.MODE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.TRANS_NUM from billing.$table as b,billing.PURCHASES as a WHERE b.RECEIPTID='".$mark_coll[$i]."' AND a.BILLID=b.BILLID$amountCondition";
 			$result=mysql_query_decide($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 
 			while($row=mysql_fetch_array($result))
@@ -102,6 +110,7 @@ if(isset($data))
 
 		$smarty->assign("cid",$cid);
 		$smarty->assign("arr",$arr);
+        $smarty->assign("newTab",$newTab);
 		$smarty->display("preview_collection_status.htm");
 	}
 	else if($mark_received || $mark_not_received)// Perform the final UPDATE
@@ -121,6 +130,10 @@ if(isset($data))
 		{
 			$query="UPDATE billing.PAYMENT_DETAIL SET COLLECTED='".$VALUE."',COLLECTED_BY='".$user."',COLLECTION_DATE=now() WHERE RECEIPTID='".$mark_coll[$i]."'";
 			mysql_query_decide($query,$db2) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$query,"ShowErrTemplate");
+            if($newTab == "1"){
+                $query="UPDATE billing.PAYMENT_DETAIL_NEW SET COLLECTED='".$VALUE."',COLLECTED_BY='".$user."',COLLECTION_DATE=now() WHERE RECEIPTID='".$mark_coll[$i]."'";
+                mysql_query_decide($query,$db2) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$query,"ShowErrTemplate");
+            }
 		}
 
 		$smarty->assign("cid",$cid);
@@ -131,7 +144,16 @@ if(isset($data))
 	{
 		$start_dt=$year."-".$month."-".$day." 00:00:00";
 		$end_dt=$year2."-".$month2."-".$day2." 23:59:59";
-
+        if(strtotime($start_dt) >= strtotime("2017-04-01 00:00:00")){
+            $table = "PAYMENT_DETAIL_NEW";
+            $condition = "IN ('DONE','BOUNCE','CANCEL', 'CHARGE_BACK')";
+            $newTab = "1";
+        }
+        else{
+            $table = "PAYMENT_DETAIL";
+            $condition = "='DONE'";
+        }
+        
                 // Date range check added
                 $datetime1      =JSstrToTime($start_dt);
                 $datetime2      =JSstrToTime($end_dt);
@@ -149,7 +171,7 @@ if(isset($data))
 
 		$i=0;
 
-		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.INVOICE_NO,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM, a.DISCOUNT_TYPE from billing.PAYMENT_DETAIL as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS='DONE' AND b.AMOUNT>0 ";
+		$sql="SELECT a.USERNAME,a.BILLID,a.WALKIN,b.COLLECTED,b.RECEIPTID,b.INVOICE_NO,b.SOURCE,b.AMOUNT,b.TYPE,b.CD_DT,b.CD_NUM,b.CD_CITY,b.BANK,b.ENTRY_DT,b.DEPOSIT_DT,b.DEPOSIT_BRANCH,b.ENTRYBY, b.TRANS_NUM, a.DISCOUNT_TYPE from billing.$table as b,billing.PURCHASES as a WHERE b.ENTRY_DT BETWEEN '$start_dt' AND '$end_dt' AND a.BILLID=b.BILLID and b.STATUS $condition AND b.AMOUNT!=0 ";
 
 		if($currency=='inr')
 			$sql.=" AND b.TYPE='RS' ";
@@ -464,6 +486,7 @@ if(isset($data))
 		$smarty->assign("tot_dol",$tot_dol);
 		$smarty->assign("cid",$cid);
 		$smarty->assign("flag","1");
+        $smarty->assign("newTab",$newTab);
 		$smarty->display("collection_status.htm");
 	}
 	else// Default first search page.

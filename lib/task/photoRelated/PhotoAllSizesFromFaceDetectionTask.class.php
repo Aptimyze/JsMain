@@ -96,7 +96,7 @@ EOF;
 						copy($value["OriginalPicUrl"],$origPic);
 					}
 					$googleVisionObj = new GoogleVisionApi();
-					$outputGot = $googleVisionObj->getPictureCoordinates($origPic,$imageT);
+					$outputGot = $googleVisionObj->getPictureCoordinates($origPic,$imageT,$pid,$value["PROFILEID"]);
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{

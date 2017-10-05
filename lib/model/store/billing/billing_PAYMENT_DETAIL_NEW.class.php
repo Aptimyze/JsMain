@@ -85,5 +85,19 @@ class billing_PAYMENT_DETAIL_NEW extends TABLE{
             throw new jsException($e);
         }
     }
+    
+    public function updateCollectionRecords($params){
+        try{
+            $sql = "UPDATE billing.PAYMENT_DETAIL_NEW SET COLLECTED = :COLLECTED, COLLECTED_BY = :COLLECTED_BY, COLLECTION_DATE = :COLLECTION_DATE WHERE RECEIPTID = :RECEIPTID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":COLLECTED", $params["COLLECTED"],PDO::PARAM_STR);
+            $prep->bindValue(":COLLECTED_BY", $params["COLLECTED_BY"],PDO::PARAM_STR);
+            $prep->bindValue(":COLLECTION_DATE", $params["COLLECTION_DATE"],PDO::PARAM_STR);
+            $prep->bindValue(":RECEIPTID", $params["RECEIPTID"],PDO::PARAM_INT);
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 
 }

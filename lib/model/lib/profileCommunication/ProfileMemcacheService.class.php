@@ -637,11 +637,12 @@ class ProfileMemcacheService
             "TYPE" => 'R',
             "IS_MSG" => 'Y'
         );
+        
         $group             = "SEEN,SENDER";
         $skipContactedType = SkipArrayCondition::$MESSAGE;
-        $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+        
 	if(InboxEnums::$messageLogInQuery)
 	{
 		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
@@ -651,27 +652,31 @@ class ProfileMemcacheService
 		unset($skipProfile);
 	}
 	if(is_array($considerProfiles) && count($considerProfiles)>0)
-		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
-//        $configObj            = new ProfileInformationModuleMap();
-//        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
-//        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
-        
-        
-        
-        
-        if(is_array($msgCount))
-		{
-			foreach($msgCount as $k=>$v)
-			{
-			if($v['SEEN']!="Y")
-                    $MESSAGE_NEW  += 1;
-                $MESSAGE +=1;
-		}
-		}
-        /*$group='';
-		$where = array("SENDER"=>$this->profileid,"TYPE" => 'R',"IS_MSG"=>'Y');
-		$msgCount = $message->getMessageLogCount($where,$group,$select,$skipProfile);
-		$MESSAGE_SENT =  $msgCount[0]["COUNT"]; */
+	{
+        $message           = new MessageLog;
+        $chat          = new ChatLog;
+    	$msgCountArray = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
+        $chatCountArray=$chat->getChatLogContactCount($this->profileid,$skipProfile,$considerProfiles);
+        $finalArray=array_merge($msgCountArray,$chatCountArray);
+       /* print_r($chatCountArray);
+        print_r($msgCountArray);
+        print_r($finalArray);*/
+        $arr=array();       
+        foreach ($finalArray as $key => $value) {
+            if(!array_key_exists($value['SENDER'], $arr))
+            {
+               $MESSAGE++;
+               $arr[$value['SENDER']]['SEEN']=$value['SEEN'];
+                if($value['SEEN']==N)
+                    $MESSAGE_NEW++;
+           }
+            else
+            {
+             if($arr[$value['SENDER']]['SEEN']=="Y" && $value['SEEN']=="N")
+                    $MESSAGE_NEW++;
+            }
+        }
+    } 
 		$this->memcache->set('MESSAGE',$MESSAGE ? $MESSAGE : 0);
         $this->memcache->set('MESSAGE_NEW',$MESSAGE_NEW ? $MESSAGE_NEW : 0);
        

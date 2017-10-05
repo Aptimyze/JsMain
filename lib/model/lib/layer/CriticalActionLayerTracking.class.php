@@ -486,7 +486,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) /*&& ($profileid%19)==0*/) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];
@@ -510,6 +510,14 @@ return 0;
                           if(!$len || $len<100)
                               $show=1;
                       }
+                  break;
+                  case '27':
+                    $loggedinUserEmail = $profileObj->getEMAIL();
+                    $bounceObj = new bounces_BOUNCED_MAILS();
+                    $Flag = $bounceObj->checkEntry($loggedinUserEmail);
+                    if(!MobileCommon::isApp() && $Flag){
+                      $show = 1;
+                    }
                   break;
 
           default : return false;

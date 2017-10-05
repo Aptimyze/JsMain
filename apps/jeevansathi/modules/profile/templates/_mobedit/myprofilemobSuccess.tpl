@@ -225,9 +225,7 @@
 <div class="hamburger dn fullwid" id="ehamburger">
 ~include_partial("profile/mobedit/hamb")`
 </div>
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
-</div>
 <div class="hamoverlay ltransform fullwid" id="hamoverlay"></div>
 <div id="SAVE_DONE" class="fullwid dn" style="position:absolute;bottom:0px;">
   	<a  class="bg7 white lh30 fullwid dispbl txtc lh50">Done</a>

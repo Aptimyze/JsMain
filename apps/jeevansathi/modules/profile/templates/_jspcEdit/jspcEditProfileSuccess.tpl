@@ -316,7 +316,7 @@
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
                     <p class="fl color5 f17 pt3 pl5">Contact Details</p>
                   </li>
-                  <li class="pt4 "> <a class="color5 fontlig f15 js-editBtn cursp" data-section-id="contact" >Edit</a> </li>
+                  <li class="pt4 "> <a class="color5 fontlig f15 js-editBtn cursp editableSections" data-section-id="contact" >Edit</a> </li>
                 </ul>
               </div>
               <div class="prfp12 f14 js-contactView">

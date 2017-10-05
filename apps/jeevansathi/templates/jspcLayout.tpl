@@ -15,6 +15,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
     <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+    <link rel="manifest" href="/manifest.json">
     ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
   <!--  ~if $pageType =="privacypolicy"`
         <link rel="amphtml" href="~$ampurl`">
@@ -65,6 +66,8 @@
         }
         function trackJsEventGA(category, action, label, value){
             if (ucode){
+                if(label == "M/F")
+                       label = loggedInJspcGender;
                 if (value) {
                        _gaq.push(['_trackEvent', category, action, label, value]);
                 } else {
@@ -123,6 +126,7 @@
             var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
+    <script src="//cdn.automatad.com/axt/ad_axt_jeevansathi.min.js" async></script>
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`

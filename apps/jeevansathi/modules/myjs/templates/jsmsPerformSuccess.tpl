@@ -345,6 +345,8 @@
 </span>
 ~include_component('common', 'notificationLayerJsms')`	
 </div>
+		~include_component('static', 'newMobileSiteHamburger')`	
+
 </div>
 <script>~$pixelcode|decodevar`</script>
 

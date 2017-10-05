@@ -130,8 +130,9 @@ class JsMemcache extends sfMemcacheCache{
 					/**
 					 * default setting is lifetime.
 					 */
-					if(!$lifetime)
-						$lifetime= 3600;
+					if(!$lifetime){
+						$lifetime= 86400;
+					}
 					$key = (string)$key;
 					if($jsonEncode=='X')
 						;
@@ -142,6 +143,9 @@ class JsMemcache extends sfMemcacheCache{
 					$this->client->setEx($key,$lifetime,$value);
                                         if($lifetime == 2){
                                             $this->client->expire($key, $lifeTime);
+                                        }
+					else{
+                                            $this->client->expire($key, $lifetime);
                                         }
 					if($retryCount == 1)
 						jsException::log("S-redisClusters($key)  ->".$key." -- ".$this->get($key));
