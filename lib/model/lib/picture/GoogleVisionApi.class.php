@@ -112,7 +112,7 @@ class GoogleVisionApi
 				// Feature, Limit
 				new \Vision\Feature(\Vision\Feature::FACE_DETECTION, 100),
 				new \Vision\Feature(\Vision\Feature::SAFE_SEARCH_DETECTION,10),
-				new \Vision\Feature(\Vision\Feature::LABEL_DETECTION),100,
+				new \Vision\Feature(\Vision\Feature::LABEL_DETECTION,100),
 			]
 		);
 		$response = $vision->request(
@@ -134,13 +134,7 @@ class GoogleVisionApi
         
         $arrPicData['PICTUREID'] = $iPicId;
         $arrPicData['PROFILEID'] = $iProfileId;
-//        $arrPicData['SCREENED_ID'] = ""; //TODO
-//        $arrPicData['SCREEN_STATUS'] = ""; //TODO
-//        $arrPicData['AGE'] = ""; //TODO
-//        $arrPicData['GENDER'] = ""; //TODO
-//        $arrPicData['INAPPROPIATE'] = ""; //TODO
-//        $arrPicData['SIGNATURE'] = ""; //TODO
-        
+
         $storeObjApiResp = new PICTURE_PICTURE_API_RESPONSE();
         //TODO : $arrPicData
         $iPicId = $storeObjApiResp->insertRecord($arrPicData);
@@ -149,8 +143,7 @@ class GoogleVisionApi
 		if($iPicId && is_array($faces))
 		{
             $storeObjFaceResp = new PICTURE_FACE_RESPONSE();
-            $arrFaceIds = array();
-			foreach($faces as $face)
+            foreach($faces as $face)
 			{
 				$cordinates = null;
 				$cord = null;
@@ -173,11 +166,6 @@ class GoogleVisionApi
                 $storeObjFaceResp->insertRecord($arrData);
 			}
 		}
-		else{
-			$noFace = true;
-		}
-
-		die;
 	}
 
 }
