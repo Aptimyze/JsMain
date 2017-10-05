@@ -323,8 +323,11 @@ class postEOIv2Action extends sfAction
       }
       else
       {
+        $bookmarkObj  = new Bookmarks();
+        $count = count($bookmarkObj->getProfilesBookmarks($this->loginProfile->getPROFILEID(), array($this->Profile->getPROFILEID())));
+        $params['SHORTLIST'] = $count ? 'Y' : 'N';
         if($errorArr["UNDERSCREENING"]!=2)
-          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I");
+          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I",$params);
         $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
         $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
         $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
