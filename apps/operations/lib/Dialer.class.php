@@ -100,6 +100,7 @@ class Dialer
 			$fields		='USERNAME,SUBSCRIPTION,ENTRY_DT,ACTIVATED,INCOMPLETE,PHONE_FLAG,COUNTRY_RES,LAST_LOGIN_DT,MTONGUE';
                         $inDialerPoolObj=new incentive_IN_DIALER('crm_slave');
                         $inDialerPool   =$inDialerPoolObj->fetchDialerProfilesDetails('crm_slave');
+			$vdDiscountObj  =new billing_VARIABLE_DISCOUNT('crm_slave');
 			//$campArr	=crmParams::$salescampaignNames;
 
 			$dialerObj      =new DialerInbound();
@@ -182,7 +183,9 @@ class Dialer
 					$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
 				}
 				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2){
-					$discount =$dialerObj->getDiscountPercent($profileid);
+                                        $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
+                                        $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
+
 					if($campaignName=='noida'){
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}	
