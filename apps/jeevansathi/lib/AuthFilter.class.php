@@ -33,6 +33,7 @@ class AuthFilter extends sfFilter {
         }
 
 		/*SPA & Hindi Site*/
+		include_once("SPA.class.php");
 		$spaObj = new SPA();
 		$spaObj->spaRedirect($request);
 		/*End*/
