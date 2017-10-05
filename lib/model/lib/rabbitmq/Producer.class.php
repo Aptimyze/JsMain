@@ -77,10 +77,14 @@ class Producer
 
 			if(MQ::$logConnectionTime == 1){
 				$diff = $endLogTime-$startLogTime;
-				$logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
-				if(file_exists($errorLogPath)==false)
-	      			exec("touch"." ".$logPath,$output);
-				error_log(round($diff,4)."\n",3,$logPath);
+                if($diff > MQ::$rmqConnectionTimeout["threshold"]){
+                    $logText["time"] = time();
+                    $logText["connTime"] = round($diff,4);
+                    $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime'.date('Y-m-d').'log';
+                    if(file_exists($errorLogPath)==false)
+                        exec("touch"." ".$logPath,$output);
+                    error_log(json_encode($logText)."\n",3,$logPath);
+                }
 			}
 			$this->setRabbitMQServerConnected(1);
 			return true;

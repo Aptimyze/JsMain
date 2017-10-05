@@ -163,9 +163,9 @@ class MessageQueues
   const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
   const PRODUCT_METRICS = "PRODUCT_METRICS";
 
-  public static $logConnectionTime = 0;
+  public static $logConnectionTime = 1;
   
-  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8);
   
   //OutBound Events
   const OUTBOUND_QUEUE = 'OutBoundQueue';
