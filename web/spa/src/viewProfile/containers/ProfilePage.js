@@ -160,7 +160,6 @@ class ProfilePage extends React.Component {
         });
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
           // console.log('swipe in');
-          // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || _this.state.nextProfileFetched == false) )
           {
@@ -168,7 +167,7 @@ class ProfilePage extends React.Component {
 
             return;
           }
-          else if(stype == "KM") //swipe to be disabled for Kundli Listing
+          else if(stype == "KM" || stype =="WC") //swipe to be disabled for Kundli Listing
           {
             return;
           }
@@ -349,7 +348,7 @@ swipeNextProfile(nextOrPrev){
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
-            if(stype != "KM") //next profile hit should not go in case of Profiles from Kundli Listings
+            if(stype != "KM" && stype != "WC" ) //next profile hit should not go in case of Profiles from Kundli Listings
             {
                this.setState({
                 profilechecksum: profilechecksum || "",
@@ -455,12 +454,14 @@ swipeNextProfile(nextOrPrev){
         this.setState({
             showHistory:true
         });
+        this.props.historyObject.push(()=>this.closeHistoryTab(),"#comm");
     }
     closeHistoryTab()
     {
         this.setState({
             showHistory:false
         });
+        return true;
     }
     checkPhotoAlbum(e)
     {
@@ -610,7 +611,7 @@ swipeNextProfile(nextOrPrev){
 
 
           historyView = <CommHistory
-                            closeHistory={()=>this.closeHistoryTab()}
+                            closeHistory={()=>this.props.historyObject.pop()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl= {thumbURL} >
@@ -844,7 +845,8 @@ const mapStateToProps = (state) => {
        myjsData: state.MyjsReducer,
        Jsb9Reducer : state.Jsb9Reducer,
        buttonDetails: state.ProfileReducer.buttonDetails,
-       contactAction: state.contactEngineReducer
+       contactAction: state.contactEngineReducer,
+       historyObject : state.historyReducer.historyObject
     }
 }
 
