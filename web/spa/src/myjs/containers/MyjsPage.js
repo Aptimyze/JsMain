@@ -66,7 +66,7 @@ constructor(props){
 export  class MyjsPage extends React.Component {
 
 	constructor(props) {
-  		super();
+  		super();  		
 		jsb9Fun.recordBundleReceived(this,new Date().getTime());
 		this.state=
 		{
@@ -177,9 +177,9 @@ export  class MyjsPage extends React.Component {
    		window.addEventListener('scroll', (event) => {this.restApiHits(event)});
   	}
 
-  	firstApiHits(){
+  	firstApiHits(obj){
   		if(!this.state.myjsApi){
-		    this.props.hitApi_MYJS();
+		    this.props.hitApi_MYJS(obj);
 		    this.setState({
 		    	myjsApi: true
 		    });
@@ -395,7 +395,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         hitApi_MYJS: (containerObj) => {
-		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);
+		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj).then(()=>jsb9Fun.recordServerResponse(containerObj,new Date().getTime()));
 		},
         jsb9TrackRedirection : (time,url) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)

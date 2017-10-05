@@ -454,12 +454,14 @@ swipeNextProfile(nextOrPrev){
         this.setState({
             showHistory:true
         });
+        this.props.historyObject.push(()=>this.closeHistoryTab(),"#comm");
     }
     closeHistoryTab()
     {
         this.setState({
             showHistory:false
         });
+        return true;
     }
     checkPhotoAlbum(e)
     {
@@ -609,7 +611,7 @@ swipeNextProfile(nextOrPrev){
 
 
           historyView = <CommHistory
-                            closeHistory={()=>this.closeHistoryTab()}
+                            closeHistory={()=>this.props.historyObject.pop()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl= {thumbURL} >
@@ -843,7 +845,8 @@ const mapStateToProps = (state) => {
        myjsData: state.MyjsReducer,
        Jsb9Reducer : state.Jsb9Reducer,
        buttonDetails: state.ProfileReducer.buttonDetails,
-       contactAction: state.contactEngineReducer
+       contactAction: state.contactEngineReducer,
+       historyObject : state.historyReducer.historyObject
     }
 }
 
