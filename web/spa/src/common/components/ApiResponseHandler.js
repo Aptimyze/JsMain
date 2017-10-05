@@ -7,7 +7,7 @@ import "babel-polyfill";
 import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 import {getProfileLocalStorage,setProfileLocalStorage,isPresentInLocalStorage,removeProfileLocalStorage,getProfileKeyLocalStorage,getGunaKeyLocalStorage} from "../../common/components/CacheHelper";
-
+import {RESPONSE_STATUS_MESSAGE} from '../../common/constants/CommonConstants'
 export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
 
@@ -95,7 +95,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             window.location.href="/phone/ConsentMessage";
             break;
           default:
-            if ( response.data.responseMessage )
+            if ( response.data.responseMessage && RESPONSE_STATUS_MESSAGE.indexOf(response.data.responseMessage) == -1)
             {
               let message = response.data.responseMessage;
               let parent = document.createElement("div");
@@ -105,7 +105,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
               child.id = "TopError";
               child.innerHTML = "<div class = 'fullwid top0 posfix' style='height: 10px;top:0px;z-index:101;'><div class = 'pad12_e white f15 op1'>"+response.data.responseMessage+"</div></div>";
               parent.appendChild(child);
-
+              
               if ( document.getElementById("ApiResponseHeaderTopError") != null)
               {
                 document.getElementById("ApiResponseHeaderTopError").classList.remove("dn");
@@ -114,6 +114,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
               {
                 document.body.insertBefore(parent,document.body.childNodes[0]);
               }
+              
 
               setTimeout(function () {
                 document.getElementById("ApiResponseHeaderTopError").className += " dn";
