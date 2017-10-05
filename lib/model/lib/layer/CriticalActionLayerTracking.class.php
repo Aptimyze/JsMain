@@ -285,7 +285,7 @@ return 0;
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
                               {
-                                if(is_array($value['data']))
+                                if(is_array($value['data']) && count($value['data']) )
                                 {
                                   $show = 0;
                                   break;
