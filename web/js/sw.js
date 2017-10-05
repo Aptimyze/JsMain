@@ -1,3 +1,4 @@
+importScripts('https://www.gstatic.com/firebasejs/3.6.1/firebase.js');
 importScripts('https://www.gstatic.com/firebasejs/4.3.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.3.0/firebase-messaging.js');
 

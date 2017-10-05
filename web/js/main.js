@@ -10,8 +10,8 @@ if('serviceWorker' in navigator)
     var config = {
     messagingSenderId: "209380179960" // replace the id with the infoedge account
   };
+  
   firebase.initializeApp(config);
-
   const messaging = firebase.messaging();
   var url = ssl_siteUrl+"/js/sw.js"; 
     
@@ -39,6 +39,13 @@ if('serviceWorker' in navigator)
                           alert(err);
               })
   });
+  
+  messaging.onMessage(function(payload) {
+    console.log("on Message called");
+  console.log("Message received. ", payload);
+  // ...
+});
+  
   
 }
 

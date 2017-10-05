@@ -37,7 +37,7 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
-$notificationData =array('REG_ID'=>array('dke9tFOnX-k:APA91bFTMGlFF1dxkpfDS7UN9k-jIUiCXLhtJlcFugyi3_lNi5KerU9TTojjVpyI8HqZhsB6evpxcLir0-DMmtx_itJtC7qsbWyrkhGIsEPGyj2L3rR5xMMUUrLxqtgCuLMz27jlbDZZ'),'NOTIFICATION_KEY'=>'JUST_JOIN','TITLE'=>'Fcm Notification','MESSAGE'=>'Testing Notification','ICON'=>'','TAG'=>'','MSG_ID'=>'12345566676','LANDING_ID'=>'https://wwww.jeevansathi.com');
+$notificationData =array('REG_ID'=>array('eEODKOnyBck:APA91bH8g6-FTaq4vxIpj3HbVpsh8OIvAYfobTQ6W6yBCt2-7T599b1ppuBz6Ij5HBiKCb8M8DLrwu4lFcVh_jOYGiT8H9saF9lWi74q4jELzz82IbOdtLNp38RFpk3YCAfJ1P5KISP5'),'NOTIFICATION_KEY'=>'JUST_JOIN','TITLE'=>'Fcm Notification','MESSAGE'=>'Testing Notification','ICON'=>'','TAG'=>'','MSG_ID'=>'12345566676','LANDING_ID'=>'https://wwww.jeevansathi.com');
 FcmNotificationsSenderHandler::handleNotification('BROWSER_NOTIFICATION',$notificationData,false);
 die('test');
 
