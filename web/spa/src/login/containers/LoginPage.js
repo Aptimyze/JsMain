@@ -46,6 +46,8 @@ class LoginPage extends React.Component {
             prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.\-]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
             props.history.prevUrl = "/"+prevUrl;
             this.state.showRegisterationMessage = true;
+            localStorage.removeItem('lastProfilePageLocation');
+            
         }
     }
     componentWillMount() {
