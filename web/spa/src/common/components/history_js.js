@@ -9,22 +9,21 @@ constructor(){
 	this.History=[];
 	var _this=this;
 	window.onpopstate = function(event) {
-		if((document.location.href).indexOf("#")==-1) return;
-	    if(event.state)
-	    {
-
-	        history.replaceState(null,"",document.location.href);
+		if(_this.History.length<=0) return;
+	    // if(event.state)
+	    // {
+//					console.log("palash");return;
+	        //history.replaceState(null,"",document.location.href);
 	        if(_this.History.length>0){
 	            _this.pop();}
-	        else
-	           history.back();
-	    }
-	    else{
-			if((document.location.href).indexOf("/viewprofile.php")!=-1 && !ISBrowser("UC"))
-			{
-				history.back();
-			}
-		}
+	        else{
+	           history.back();}
+	  //   else{
+		// 	if((document.location.href).indexOf("/viewprofile.php")!=-1 && !ISBrowser("UC"))
+		// 	{
+		// 	history.back();
+		// 	}
+		// }
 	};
 }
 
@@ -70,7 +69,7 @@ constructor(){
                     var fnc=this.fnc;
 			if(history.pushState)
                         {
-                            history.replaceState({"state":document.location.href},"",document.location.href);
+                          //  history.replaceState({"state":document.location.href},"",document.location.href);
                             history.pushState(null,"",dl);
                         }
 			//document.location.href=url+"#"+hashString+",historyCall";
