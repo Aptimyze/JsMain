@@ -108,7 +108,8 @@ export default class ReportAbuse extends React.Component{
           _this.setState({
             showLoader : false
           });
-          this.props.setBlockButton();
+          if(response.blockedOnAbuse)
+            this.props.setBlockButton();
             _this.showError(response.message);
             setTimeout(function(){
             _this.closeAbuseLayer();

@@ -68,6 +68,8 @@ class ApiFeedbackV1Action extends sfActions {
       if (strtolower(FeedbackEnum::CAT_ABUSE) == trim(strtolower($feedBackObj->getCategory()))) {
         $success[message] = FeedbackEnum::SUCCESS_ABUSE_MSG;
       }
+      if($request->getParameter('blockedOnAbuse')==1)
+        $result['blockedOnAbuse'] = true;
       $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $apiResponseHandlerObj->setResponseBody($success);
     } else {
