@@ -92,6 +92,10 @@ class ProfilePage extends React.Component {
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let stype = getParameterByName(window.location.href,"stype");
+            let tupleId = getParameterByName(window.location.href,"tupleId");
+            let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
+            let toShowECP = getParameterByName(window.location.href,"toShowECP");
+            let similarOf = getParameterByName(window.location.href,"similarOf");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -104,6 +108,18 @@ class ProfilePage extends React.Component {
             }
             if(contact_id != undefined && contact_id != "undefined") {
                 urlString += "&contact_id=" + contact_id;
+            }
+            if(tupleId != undefined && tupleId != "undefined"){
+                urlString += "&tupleId=" + tupleId;
+            }
+            if(NAVIGATOR != undefined && NAVIGATOR != "undefined"){
+                urlString += "&NAVIGATOR=" + NAVIGATOR;
+            }
+            if(toShowECP != undefined && toShowECP != "undefined"){
+                urlString += "&toShowECP=" + toShowECP;
+            }
+            if(similarOf != undefined && similarOf != "undefined"){
+                urlString += "&similarOf=" + similarOf;
             }
         }
 
@@ -206,6 +222,23 @@ swipeNextProfile(nextOrPrev){
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
             }
+            if(this.state.tupleId != null){
+                nextUrl += "&tupleId=" + this.state.tupleId;
+                nextDataApi += "&tupleId=" + this.state.tupleId;
+            }
+            if(this.state.NAVIGATOR != null){
+                nextUrl += "&NAVIGATOR=" + this.state.NAVIGATOR;
+                nextDataApi += "&NAVIGATOR=" + this.state.NAVIGATOR;
+            }
+            if(this.state.toShowECP != null){
+                nextUrl += "&toShowECP=" + this.state.toShowECP;
+                nextDataApi += "&toShowECP=" + this.state.toShowECP;
+            }
+            if(this.state.similarOf != null){
+                nextUrl += "&similarOf=" + this.state.similarOf;
+                nextDataApi += "&similarOf=" + this.state.similarOf;
+            }
+
             this.props.fetchNextPrevData(this, nextDataApi, "saveLocalNext");
             this.setState({
                 nextUrl,
@@ -228,6 +261,22 @@ swipeNextProfile(nextOrPrev){
             if(this.state.contact_id != undefined && this.state.contact_id != "undefined") {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
+            }
+            if(this.state.tupleId != null){
+                prevUrl += "&tupleId=" + this.state.tupleId;
+                prevDataApi += "&tupleId=" + this.state.tupleId;
+            }
+            if(this.state.NAVIGATOR != null){
+                prevUrl += "&NAVIGATOR=" + this.state.NAVIGATOR;
+                prevDataApi += "&NAVIGATOR=" + this.state.NAVIGATOR;
+            }
+            if(this.state.toShowECP != null){
+                prevUrl += "&toShowECP=" + this.state.toShowECP;
+                prevDataApi += "&toShowECP=" + this.state.toShowECP;
+            }
+            if(this.state.similarOf != null){
+                prevUrl += "&similarOf=" + this.state.similarOf;
+                prevDataApi += "&similarOf=" + this.state.similarOf;
             }
             //this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
             this.setState({
@@ -285,6 +334,11 @@ swipeNextProfile(nextOrPrev){
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
             let stype = getParameterByName(window.location.href,"stype");
+            let tupleId = getParameterByName(window.location.href,"tupleId");
+            let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
+            let toShowECP = getParameterByName(window.location.href,"toShowECP");
+            let similarOf = getParameterByName(window.location.href,"similarOf");
+
 
             if(total_rec == "undefined") {
                 total_rec = "20";
@@ -306,6 +360,10 @@ swipeNextProfile(nextOrPrev){
                 searchid:searchid,
                 callApi: false,
                 stype: stype,
+                tupleId: tupleId,
+                NAVIGATOR: NAVIGATOR,
+                similarOf: similarOf,
+                toShowECP: toShowECP,
                 nextProfileFetched:false
                 },this.setNextPrevLink);
             }
