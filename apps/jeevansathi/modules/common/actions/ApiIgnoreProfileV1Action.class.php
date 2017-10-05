@@ -108,7 +108,16 @@ class ApiIgnoreProfileV1Action extends sfActions
                                                 $page['isBookmarked']=1;
                                             else
                                             $page['isBookmarked']=0;
-                                            $button = $buttonObj->getButtonArray($page);
+																						if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')=='1')
+                                            	$button = $buttonObj->getButtonArray($page);
+																						else {
+																							$button = $buttonObj->getNewButtonArray($page);
+																							$tempButton = $button;
+																							$button['buttons']=null;
+																							$button['buttons']['primary'][0] = $tempButton['buttons'][0];
+																							$button['buttons']['others'] = $tempButton['buttons'];
+
+																						}
                                             $tempButton = $button;
                                             $button['buttons'] = $tempButton['buttons'];
 

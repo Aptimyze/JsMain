@@ -60,7 +60,8 @@ const ProfileReducer = (state={
 		case "REPLACE_BUTTON":
 		var tmpButtonDetails = {...state.buttonDetails};
 		tmpButtonDetails['buttons'] = action.payload.newButtons;
-		tmpButtonDetails['topmsg'] = action.payload.topMsg;
+		if(action.payload.topMsg)
+			tmpButtonDetails['topmsg'] = action.payload.topMsg;
 		state = {
 			...state,
 			buttonDetails:tmpButtonDetails
