@@ -60,14 +60,14 @@ export default class WriteMessage extends React.Component{
   }
 
   hideMessageLayer() {
-    
+
     this.props.closeMessageLayer();
   }
 
 
   sendMessage() {
-    let message = document.getElementById("writeMessageTxtId").value;
-    if(message.trim()=='')return;
+    let message = document.getElementById("writeMessageTxtId").value.trim();
+    if(message=='')return;
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
