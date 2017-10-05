@@ -126,6 +126,7 @@
             var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
+    <script src="//cdn.automatad.com/axt/ad_axt_jeevansathi.min.js" async></script>
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`
