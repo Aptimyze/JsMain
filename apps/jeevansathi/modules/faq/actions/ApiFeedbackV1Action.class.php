@@ -69,7 +69,7 @@ class ApiFeedbackV1Action extends sfActions {
         $success[message] = FeedbackEnum::SUCCESS_ABUSE_MSG;
       }
       if($request->getParameter('blockedOnAbuse')==1)
-        $result['blockedOnAbuse'] = true;
+        $success['blockedOnAbuse'] = true;
       $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $apiResponseHandlerObj->setResponseBody($success);
     } else {
