@@ -7,7 +7,7 @@ import "babel-polyfill";
 import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 import {getProfileLocalStorage,setProfileLocalStorage,isPresentInLocalStorage,removeProfileLocalStorage,getProfileKeyLocalStorage,getGunaKeyLocalStorage} from "../../common/components/CacheHelper";
-import {RESPONSE_STATUS_MESSAGE} from '../../common/constants/CommonConstants'
+import {RESPONSE_STATUS_MESSAGE_PUSH_MESSAGE} from '../../common/constants/CommonConstants'
 export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
 
