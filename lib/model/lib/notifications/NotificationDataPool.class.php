@@ -156,7 +156,7 @@ class NotificationDataPool
             $condition['WHERE']['IN']["RECEIVER"] = $profileid;
             $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED; 
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
-            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
+            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = array('Y','J');
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
 	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
@@ -165,7 +165,7 @@ class NotificationDataPool
                 $cp=0;
                 foreach($cntArr as $ck=>$cv)
                 {
-                    if($cv['FILTERED']!='Y'&& $cv["TIME1"] == 0)
+                    if($cv['FILTERED']!='Y' && $cv['FILTERED']!='J' && $cv["TIME1"] == 0)
                         $cp = $cp+$cv['COUNT'];
                 }
                 $eoiCount[$profileid] = $cp;

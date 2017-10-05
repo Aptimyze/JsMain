@@ -153,6 +153,14 @@ class ContactHandler
   public  function setContactLimitWarning($warning){
     $this->contactLimitWarning = $warning;
   }
+  private $isJunk = false;
+
+  public  function getIsJunk(){
+    return $this->isJunk;
+  }
+  public  function setIsJunk($junk=false){
+    $this->isJunk = $junk;
+  }
 
 /*
 * This function update the default value while creation object
