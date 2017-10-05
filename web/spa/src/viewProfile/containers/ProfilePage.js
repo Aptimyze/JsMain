@@ -149,7 +149,7 @@ class ProfilePage extends React.Component {
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || _this.state.nextProfileFetched == false) )
           {
             console.log("HITS stopped: "+_this.state.nextProfileFetched)
-            
+
             return;
           }
           else if(stype == "KM") //swipe to be disabled for Kundli Listing
@@ -532,7 +532,7 @@ swipeNextProfile(nextOrPrev){
         if(this.state.showHistory && this.state.ownView == false)
         {
           let thumbURL;
-        
+
           if(this.props.AboutInfo.thumbnailPic==null)
           {
             console.log(this.props.AboutInfo.gender);
@@ -709,12 +709,12 @@ swipeNextProfile(nextOrPrev){
                 </div>
             </div>;
             showAlbumView = <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid"></div>;
-            setTimeout(function(){
-                var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                if(document.getElementById("animated-background")) {
-                    document.getElementById("animated-background").style.height = backHeight + "px";
-                }
-            },100);
+            // setTimeout(function(){
+            //     var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+            //     if(document.getElementById("animated-background")) {
+            //         document.getElementById("animated-background").style.height = backHeight + "px";
+            //     }
+            // },100);
         }
         return (
             <div style={this.state.profilePageStyle} id="ProfilePage">
