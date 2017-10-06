@@ -45,7 +45,8 @@ class MatchAlertsDppProfiles extends PartnerProfile {
         }
         public function getRelaxedSearchCriteria($limit,$sort) {
                 $relaxedObj = new DppRelaxation($this->loggedInProfileObj);
-                $relaxedMtongue = $relaxedObj->getRelaxedMTONGUE($this->getMTONGUE());
+                $userReligion = $this->pid = $this->loggedInProfileObj->getRELIGION();
+                $relaxedMtongue = $relaxedObj->getRelaxedMTONGUE($this->getMTONGUE(),$userReligion);
                 $this->setMTONGUE($relaxedMtongue);
                 
                 $CasteRelaxed = $relaxedObj->getRelaxedCASTE($this->getCASTE());

@@ -10,17 +10,23 @@ class DppRelaxation {
                 $this->pid = $this->loggedInProfileObj->getPROFILEID();
         }
 
-        public function getRelaxedMTONGUE($mtongue) {
+        public function getRelaxedMTONGUE($mtongue,$religion = "") {
                 $removeValuesIfNotPresent = array("7"); // Remove castes if they are not filled in but added as part of group currently bihari
+                $checkHindiMtongueValues = array("36","10","19","33","28");
                 $mtongueValues = explode(',', $mtongue);
                 $allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues", '', 1);
                 $checkHindiMtongues = array_flip($allHindiMtongues);
                 $mtongueFlag = 0;
+                $mtongueHindiUrduFlag = 0;
+                $finalMtongue = array();
                 foreach ($mtongueValues as $key => $value) {
+                        if (in_array(trim($value, ' '), $checkHindiMtongueValues) && $religion == 2){
+                                $mtongueHindiUrduFlag = 1;
+                        }
                         if (array_key_exists(trim($value, ' '), $checkHindiMtongues))
                                 $mtongueFlag = 1;
-                        else
-                                $finalMtongue.=',' . $value;
+                        elseif($value != "")
+                                $finalMtongue[] = $value;
                 }
                 foreach($removeValuesIfNotPresent as $val){
                         if(!in_array($val, $mtongueValues)){ // remove bihari mtongue if not already present
@@ -29,8 +35,13 @@ class DppRelaxation {
                         }
                 }
                 if ($mtongueFlag == 1)
-                        $finalMtongue.= ',' . implode(',', $allHindiMtongues);
-                return trim($finalMtongue, ',');
+                        $finalMtongue = array_merge ($finalMtongue,$allHindiMtongues);
+                
+                if ($mtongueHindiUrduFlag == 1)
+                        $finalMtongue = array_merge ($finalMtongue,$checkHindiMtongueValues);
+                
+                $finalMtongue = array_unique($finalMtongue);
+                return implode(",",$finalMtongue);
         }
 
         public function getRelaxedCASTE($dppcaste) {
