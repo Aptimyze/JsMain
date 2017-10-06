@@ -26,6 +26,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
     
 	public function insertNotification($paramsArr){
         try{
+	    $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));	
             if($paramsArr){
                 $sql = "INSERT INTO MOBILE_API.BROWSER_NOTIFICATION(REG_ID, NOTIFICATION_KEY, NOTIFICATION_TYPE, MESSAGE, TITLE, ICON, TAG, LANDING_ID, ENTRY_DT ,MSG_ID,SENT_TO_QUEUE,TTL) VALUES (:REG_ID, :NOTIFICATION_KEY, :NOTIFICATION_TYPE, :MESSAGE, :TITLE, :ICON, :TAG, :LANDING_ID, :ENTRY_DT, :MSG_ID, :SENT_TO_QUEUE,:TTL)";
                 $prep = $this->db->prepare($sql);
@@ -39,7 +40,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
                 $prep->bindValue(":ICON",$paramsArr["ICON"],PDO::PARAM_STR);
                 $prep->bindValue(":TAG",$paramsArr["TAG"],PDO::PARAM_STR);
                 $prep->bindValue(":LANDING_ID",$paramsArr["LANDING_ID"],PDO::PARAM_STR);
-                $prep->bindValue(":ENTRY_DT",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+                $prep->bindValue(":ENTRY_DT",$istTime,PDO::PARAM_STR);
                 $prep->bindValue(":TTL",$paramsArr["TTL"],PDO::PARAM_INT);
                 $prep->execute();
 			}
@@ -226,7 +227,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
                 $sql = $sql." LIMIT $offset,$limit";
 
             $res=$this->db->prepare($sql);
-            $res->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
+            //$res->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
             $res->execute();
             $index = 0;
             while($row = $res->fetch(PDO::FETCH_ASSOC))
