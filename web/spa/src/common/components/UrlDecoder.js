@@ -3,6 +3,7 @@ export function getRoutePath(location)
 	var hash = location.split('#')[1] || ''
 	if(hash)
 	{
+		hash = hash.replace(/^\/+/g, '');
 		hash = "/" + hash;
 	}
 	else
