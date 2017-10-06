@@ -3,8 +3,7 @@ export function getRoutePath(location) {
 	var hash = location.split('#')[1] || '';
 	if(hash) 
 	{
-		if(location.indexOf('//') == -1)
-			hash = "/" + hash;
+		hash = "/" + hash;
 	}
 	else
 	{
@@ -13,7 +12,6 @@ export function getRoutePath(location) {
 			hash = '/myjs';
 		}
 	}
-
 	return hash;
 }
 
