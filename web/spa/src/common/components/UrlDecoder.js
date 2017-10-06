@@ -1,16 +1,14 @@
 export function getRoutePath(location)
 {
-	var hash = location.split('#')[1] || '';
-  if(hash)
+	var hash = location.split('#')[1] || ''
+	if(hash)
 	{
-		hash = hash.replace(/\//g, "");
 		hash = "/" + hash;
 	}
 	else
 	{
 		if ( location.indexOf('spa/dist/index.html') !== -1 )
 		{
-			hash = hash.replace(/\//g, "");
 			hash = '/myjs';
 		}
 	}
