@@ -98,6 +98,7 @@ class ProfilePage extends React.Component {
             let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
+            let fromViewSimilar = getParameterByName(window.location.href,"fromViewSimilar");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -122,6 +123,9 @@ class ProfilePage extends React.Component {
             }
             if(similarOf != undefined && similarOf != "undefined"){
                 urlString += "&similarOf=" + similarOf;
+            }
+            if(typeof fromViewSimilar != "undefined"){
+                urlString += "&fromViewSimilar=" + fromViewSimilar;
             }
         }
 
