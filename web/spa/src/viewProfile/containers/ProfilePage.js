@@ -183,12 +183,9 @@ class ProfilePage extends React.Component {
 
         });
 
-        window.addEventListener('resize', _this.resize,false);
+
     }
-    resize()
-    {
-      document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
-    }
+  
     nextPrevPostDecline(){
       if(this.state.nextUrl != "")
         this.swipeNextProfile('next');
@@ -415,7 +412,6 @@ swipeNextProfile(nextOrPrev){
     {
         //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos);
-        window.removeEventListener('resize', resize, false);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
 
