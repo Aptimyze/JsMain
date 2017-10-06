@@ -66,8 +66,9 @@ constructor(props){
 export  class MyjsPage extends React.Component {
 
 	constructor(props) {
-  		super();  		
-		jsb9Fun.recordBundleReceived(this,new Date().getTime());
+  		super();
+			jsb9Fun.recordBundleReceived(this,new Date().getTime());
+			jsb9Fun.setJsb9Key(this,'JSNEWMOBMYJSURL');
 		this.state=
 		{
 			myjsApi: false,
