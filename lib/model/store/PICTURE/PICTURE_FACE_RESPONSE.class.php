@@ -50,7 +50,7 @@ class PICTURE_FACE_RESPONSE extends TABLE {
 
       return $this->db->lastInsertId();
     } catch (Exception $e) {
-      throw new jsException($e);
+	    jsException::nonCriticalError("PICTURE_FACE_RESPONSE (1)-->.$sql".$e);
     }
   }
 

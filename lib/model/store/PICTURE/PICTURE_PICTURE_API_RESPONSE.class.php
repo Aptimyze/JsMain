@@ -49,7 +49,7 @@ class PICTURE_PICTURE_API_RESPONSE extends TABLE {
       $pdoStatement->execute();
       return $this->db->lastInsertId();
     } catch (Exception $e) {
-      throw new jsException($e);
+	    jsException::nonCriticalError("PICTURE_PICTURE_API_RESPONSE (1)-->.$sql".$e);
     }
   }
 
