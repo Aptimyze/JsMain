@@ -343,7 +343,7 @@ getCancelDeclineLayer(actionDetails){
   }
 
 goToViewSimilar(){
-  window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1";
+  window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1&"+(this.props.NAVIGATOR ? this.props.NAVIGATOR :"") ;
 }
 
 }
