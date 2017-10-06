@@ -108,7 +108,7 @@ class postNotInterestedv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
-      if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
+      if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
       {
   			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("NOT_INTERESTED_BY_ME","M","R","D");
   			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
