@@ -163,7 +163,7 @@ class ProfilePage extends React.Component {
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
           {
-            console.log("HITS stopped: "+_this.state.nextProfileFetched)
+            //console.log("HITS stopped: "+_this.state.nextProfileFetched)
 
             return;
           }
@@ -594,7 +594,7 @@ swipeNextProfile(nextOrPrev){
 
           if(this.props.AboutInfo.thumbnailPic==null)
           {
-            console.log(this.props.AboutInfo.gender);
+            //console.log(this.props.AboutInfo.gender);
             if(this.props.AboutInfo.gender=="Female")
             {
               thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
