@@ -179,7 +179,7 @@ class postAcceptv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite())
 		{
 
-      if($this->source!='VDP')
+      if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
       {
     			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
     			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");

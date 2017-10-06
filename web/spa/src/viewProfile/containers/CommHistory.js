@@ -134,7 +134,7 @@ export default class CommHistory extends React.Component {
         {
           data = <div className="disptbl hgtInherit">
                     <div className="dispcell vertmid white txtc">
-                      Your interaction {this.state.getRes.label} will appear here.
+                      Your interaction with {this.state.getRes.label} will appear here.
                     </div>
                  </div>
         }

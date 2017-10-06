@@ -161,9 +161,9 @@ class ProfilePage extends React.Component {
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
           // console.log('swipe in');
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || _this.state.nextProfileFetched == false) )
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
           {
-            console.log("HITS stopped: "+_this.state.nextProfileFetched)
+            //console.log("HITS stopped: "+_this.state.nextProfileFetched)
 
             return;
           }
@@ -594,7 +594,7 @@ swipeNextProfile(nextOrPrev){
 
           if(this.props.AboutInfo.thumbnailPic==null)
           {
-            console.log(this.props.AboutInfo.gender);
+            //console.log(this.props.AboutInfo.gender);
             if(this.props.AboutInfo.gender=="Female")
             {
               thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
@@ -656,7 +656,7 @@ swipeNextProfile(nextOrPrev){
                     username:this.props.AboutInfo.username
                 };
                 if(this.state.ownView == false) {
-                     contactEngineView = <ContactEngineButton nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                     contactEngineView = <ContactEngineButton nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflow:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflow:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;
