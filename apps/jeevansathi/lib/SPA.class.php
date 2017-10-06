@@ -25,7 +25,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 			$spa = 0;
 		else {
 			foreach ($spaUrls as $url) {
-		    	if (strpos($specificDomain[1], $url) !== FALSE) {
+		    	if (strpos($specificSubDomain[0], $url) !== FALSE) {
 		        	$spa = 1;
 		        	break;
 		    	}

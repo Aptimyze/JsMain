@@ -274,16 +274,16 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,profileData)
 {
-		
+
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
-    
+
     if ( firstResponse.infotype == "INTEREST_ARCHIVED")
 	{
 		contactTracking += "&"+firstResponse.tracking;
 	}
-			
-    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED" || firstResponse.infotype == "SHORTLIST")
 	{
 		contactTracking += "&"+firstResponse.tracking;
 	}
