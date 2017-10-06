@@ -90,8 +90,8 @@ class SearchFormPage extends React.Component {
     }
 
     appendDefaultValues(defaultData) {
-        console.log("default",defaultData);
-        console.log("actual",this.state.primaryData)
+        //console.log("default",defaultData);
+        //console.log("actual",this.state.primaryData)
         var temp = this.state.primaryData;
         //TODO: append default values from api 
     }
@@ -103,7 +103,7 @@ class SearchFormPage extends React.Component {
                 showPromo : true
             });
         }
-        console.log("data",nextProps.searchData.services.searchForm.data)
+        //console.log("data",nextProps.searchData.services.searchForm.data)
         this.setState({
             tupleData: nextProps.searchData.services.searchForm.data
         })
