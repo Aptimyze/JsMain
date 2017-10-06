@@ -12,7 +12,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 
 	if(MobileCommon::isNewMobileSite() && JsConstants::$SPA['flag'] ){
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','/profile/viewprofile.php','mobile_view');
-		$nonSpaUrls = array('ownview=1','autologin');
+		$nonSpaUrls = array('ownview=1');
 		$spa = 0;
 		$originalArray = array('https://','http://');
 		$replaceArray = array('','');
@@ -21,7 +21,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 		$specificSubDomain = explode('?',$specificDomain[1],2);
 		if($specificDomain[1] == '' || $request->getParameter("newRedirect"))
 			$spa = 1;
-		elseif(in_array($specificSubDomain[1],$nonSpaUrls) || in_array(substr($specificSubDomain[1],0,9), $nonSpaUrls) || in_array($nonSpaUrls,$specificSubDomain[1]))
+		elseif(in_array($specificSubDomain[1],$nonSpaUrls) || in_array(substr($specificSubDomain[1],0,9), $nonSpaUrls))
 			$spa = 0;
 		else {
 			foreach ($spaUrls as $url) {
