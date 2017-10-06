@@ -29,6 +29,7 @@ class ProfilePage extends React.Component {
     {
         super();
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
+        jsb9Fun.setJsb9Key(this,'JSNEWMOBPROFILEPAGEURL');
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         let stype = getParameterByName(window.location.href,"stype");
