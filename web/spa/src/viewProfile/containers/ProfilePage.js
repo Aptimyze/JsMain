@@ -75,7 +75,8 @@ class ProfilePage extends React.Component {
 
     componentDidUpdate(prevprops) {
       //  console.log('componentDidUpdate');
-       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
+       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+
     }
     componentDidMount()
     {
@@ -163,7 +164,7 @@ class ProfilePage extends React.Component {
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
           {
-            //console.log("HITS stopped: "+_this.state.nextProfileFetched)
+            console.log("HITS stopped: "+_this.state.nextProfileFetched)
 
             return;
           }
@@ -181,6 +182,12 @@ class ProfilePage extends React.Component {
           }
 
         });
+
+        window.addEventListener('resize', _this.resize,false);
+    }
+    resize()
+    {
+      document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
     }
     nextPrevPostDecline(){
       if(this.state.nextUrl != "")
@@ -408,6 +415,7 @@ swipeNextProfile(nextOrPrev){
     {
         //this.props.fetchedProfilechecksum = "false";
         window.removeEventListener('scroll', this.setScrollPos);
+        window.removeEventListener('resize', resize, false);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
 
@@ -594,7 +602,7 @@ swipeNextProfile(nextOrPrev){
 
           if(this.props.AboutInfo.thumbnailPic==null)
           {
-            //console.log(this.props.AboutInfo.gender);
+            console.log(this.props.AboutInfo.gender);
             if(this.props.AboutInfo.gender=="Female")
             {
               thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
