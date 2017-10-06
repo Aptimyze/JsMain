@@ -46,6 +46,8 @@ class LoginPage extends React.Component {
             prevUrl = prevUrl.replace (/^[a-z]{0,5}\:*\/{0,2}[a-z0-9\.\-]{1,}\:*[0-9]{0,4}.(.*)/, '$1');
             props.history.prevUrl = "/"+prevUrl;
             this.state.showRegisterationMessage = true;
+            localStorage.removeItem('lastProfilePageLocation');
+            
         }
     }
     componentWillMount() {
@@ -152,7 +154,8 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-
+        
+        this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA());
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -164,7 +167,7 @@ class LoginPage extends React.Component {
         } else if(passVal.length == 0) {
 	       this.showError(ErrorConstantsMapping("EnterPass"));
         } else {
-            this.props.doLogin(emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
+            this.props.doLogin(this,emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
             this.setState ({
                 showLoader : true
             })
@@ -204,7 +207,9 @@ class LoginPage extends React.Component {
         }
     }
 
-    showHam() {
+    showHam()
+    {
+
         if(window.location.search.indexOf("ham=1") == -1) {
             if(window.location.search.indexOf("?") == -1) {
                 this.props.history.push(window.location.pathname+"?ham=1");
@@ -213,6 +218,8 @@ class LoginPage extends React.Component {
             }
 
         }
+        
+        this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA());
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
@@ -244,11 +251,11 @@ class LoginPage extends React.Component {
         let appDownloadView;
         if(getAndroidVersion()) {
             appDownloadView = <div id="appLinkAndroid" className="txtc pad2">
-                <a href="/static/appredirect?type=androidMobFooter" className="f15 white fontlig">Download App | 3MB only</a>
+                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP Android",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App | 3MB only</a>
             </div>;
         } else if(getIosVersion()) {
             appDownloadView = <div id="appLinkIos" className="txtc pad2">
-                <a href="/static/appredirect?type=iosMobFooter" className="f15 white fontlig">Download App</a>
+                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP IOS",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App</a>
             </div>;
         }
 
@@ -292,7 +299,7 @@ class LoginPage extends React.Component {
                             </div>
                             <div className="bg10 fullwid mt5">
                                 <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
-                                    <a href="/register/page1?source=mobreg4" className="f17 fontlig white">
+                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Register",this.refs.GAchild.getGenderForGA())} className="f17 fontlig white">
                                         Register
                                     </a>
                                 </div>
@@ -356,7 +363,7 @@ class LoginPage extends React.Component {
 
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Hindi Site",this.refs.GAchild.getGenderForGA())} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>
@@ -395,16 +402,16 @@ LoginPage.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        doLogin: (email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
+        doLogin: (curretObj,email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
             let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password+'&rememberme=Y';
             if ( g_recaptcha_response && captcha )
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-
+            
             commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
             {
-                console.log("response is:",response);
+                
                 if ( response.responseStatusCode == 1)
                 {
                     addCaptchaDiv();

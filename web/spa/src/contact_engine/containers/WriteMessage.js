@@ -18,19 +18,28 @@ export default class WriteMessage extends React.Component{
         lastMsgID : this.props.buttonData.MSGID,
         lastChatID : this.props.buttonData.CHATID
     };
-    this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
+
+        this.WrieMsgScrollEvent = this.WrieMsgScrollEvent.bind(this);
 
   }
 
 
   componentDidMount(){
+    
     let e = document.getElementById('msgId');
-    //e.scrollTop =  e.scrollHeight;
-    document.getElementById("ProfilePage").classList.add("scrollhid");
+
+
+
     let topHeadHgt, bottomBtnHeight,remHgtMSG;
     topHeadHgt = document.getElementById('comm_headerMsg').clientHeight;
-    bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
-
+    if(document.getElementById('comm_footerMsg')!=null)
+    {
+      bottomBtnHeight =document.getElementById('comm_footerMsg').clientHeight;
+    }
+    else
+    {
+      bottomBtnHeight =document.getElementById('parentFootId').clientHeight;
+    }
     //Note:this will take the scroll to the bottom of the msg inner view, where prvious msh are being displayes
     remHgtMSG = window.innerHeight - (topHeadHgt+bottomBtnHeight);
     e.style.height = remHgtMSG+"px";
@@ -51,20 +60,21 @@ export default class WriteMessage extends React.Component{
   }
 
   hideMessageLayer() {
-    document.getElementById("ProfilePage").classList.remove("scrollhid");
+
     this.props.closeMessageLayer();
   }
 
 
   sendMessage() {
-    let message = document.getElementById("writeMessageTxtId").value;
-    if(message.trim()=='')return;
+    let message = document.getElementById("writeMessageTxtId").value.trim();
+    if(message=='')return;
     this.showLoaderDiv();
     var e = document.getElementById('msgId');
     document.getElementById("writeMessageTxtId").value = "";
-    var url = '?&profilechecksum='+this.props.profilechecksum+'&draft='+message+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
-    let _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
-    commonApiCall(api+url,{},'','').then((response)=>{
+    var url = '?&profilechecksum='+this.props.profilechecksum+(this.props.fromEOI ? this.props.buttonData.actiondetails.writemsgbutton.params :"");
+    var _this=this, api = this.props.fromEOI ? '/api/v1/contacts/MessageHandle' : '/api/v2/contacts/postWriteMessage' ;
+    this.dontCall=1;
+    commonApiCall(api+url,{draft:message},'','').then((response)=>{
     let messages = _this.state.messages.concat({mymessage:'true',message:message,timeTxt:'Message Sent' }) ;
 
     _this.setState({
@@ -73,13 +83,15 @@ export default class WriteMessage extends React.Component{
       messages : messages
     });
 //    document.getElementById("writeMsgDisplayId").innerHTML += '<div class="txtr com_pad_l fontlig f16 white com_pad1"><div class="fl dispibl writeMsgDisplayTxtId fullwid">'+message+'</div><div class="dispbl f12 color1 white txtr msgStatusTxt" id="msgStatusTxt">Message Sent</div></div>';
-    e.scrollTop =  e.scrollHeight;
+      e.scrollTop =  e.scrollHeight;
 
+      setTimeout(()=>{_this.dontCall=0;},2500);
   });
 }
 
   showMessagesOnScroll(e){
     if(!this.state.nxtdata)return;
+    this.showLoaderDiv();
     var url = `?&profilechecksum=${this.props.profilechecksum}&MSGID=${this.state.lastMsgID ? this.state.lastMsgID:""}&CHATID=${this.state.lastChatID ? this.state.lastChatID:""}&pagination=1`;
     commonApiCall('/api/v2/contacts/WriteMessage'+url,{},'WRITE_MESSAGE','POST').then((response)=>{
       this.scrollHeight = document.getElementById('msgId').scrollHeight;
@@ -88,12 +100,13 @@ export default class WriteMessage extends React.Component{
         nxtdata:response.hasNext,
         messages:messages,
         lastMsgID : response.MSGID,
-        lastChatID : response.CHATID
+        lastChatID : response.CHATID,
+        showLoader:false,
  });
     });
   }
   WrieMsgScrollEvent(){
-
+    if(this.dontCall==1)return;
     let e = document.getElementById('msgId');
 
     if(e.scrollTop==0)
@@ -125,6 +138,7 @@ getWriteMsg_innerView(){
           }
           else
           {
+
             if(this.state.messages.length)
             {
               WrtieMsg_historydiv =  this.state.messages.map((msg,index)=>{
@@ -140,7 +154,7 @@ getWriteMsg_innerView(){
 
                                       return(
                                           <div className={"fontlig f16 white "+ msg_class1} id={"msg_"+index} key={index}>
-                                            <span>{msg.message.replace(/\n/g,"<br />")}</span>
+                                            <span dangerouslySetInnerHTML={{__html: msg.message.replace(/\n/g,"<br />")}}></span>
                                             <span className="dispbl f12 color1 pt5">{msg.timeTxt}</span>
                                           </div>
                                       );
@@ -192,7 +206,7 @@ getWriteMsg_buttonView(){
 
     WriteMsg_buttonView = [offertextHTML,buttonHTML];
   }
-  else WriteMsg_buttonView = (<div className="fullwid clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
+  else WriteMsg_buttonView = (<div className="fullwid posfix clearfix brdr23_contact btmsend txtAr_bg1  btm0" id="comm_footerMsg">
                           <div className="fl wid80p com_pad3">
                             <textarea id="writeMessageTxtId" defaultValue = {this.state.writeMessageText} className="fullwid lh15 inp_1 white"></textarea>
                           </div>
@@ -207,7 +221,7 @@ return WriteMsg_buttonView;
   let loaderView;
         if(this.state.showLoader)
         {
-          loaderView = <Loader show="page"></Loader>;
+          loaderView = <Loader show="writeMessageComp"  loaderStyles={{width: '100%',top: window.outerHeight/2 - 35 +'px'}}></Loader>;
         }
 
   return(
@@ -226,7 +240,7 @@ return WriteMsg_buttonView;
                 {this.getWriteMsg_innerView()}
               </div>
 
-              <div id="parentFootId">
+              <div id="parentFootId" className="clearfix">
                 {this.getWriteMsg_buttonView()}
               </div>
           </div>

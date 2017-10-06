@@ -521,6 +521,8 @@ class DetailedViewApi
             if($viewerProfile)
             {
             	$selfHavePhoto = $this->m_actionObject->loginProfile->getHAVEPHOTO();
+            	if(!$selfHavePhoto)
+            		$selfHavePhoto = "N";
             	if($selfHavePhoto != "N")
             	{
             		$pictureServiceObj=new PictureService($this->m_actionObject->loginProfile);
@@ -1647,9 +1649,9 @@ class DetailedViewApi
       $linkId = MailerArray::getLinkId(self::PROFILE_SHARE_LINK);
 
       if(!$linkId || 0 === strlen($linkId)){
-        //Send Mail to Developer
-        $subject = "Profile Share Link: Profile Share Link not found in MailerArray";
-        SendMail::send_email("kunal.test02@gmail.com","Issue in retrieving link id of PROFILE_SHARE_LINK, check LINK_MAILER table & MailerArray Class, '".print_r(self::PROFILE_SHARE_LINK,true)."'"."\n\n'".print_r($_SERVER,true)."'",$subject);
+        //Send Mail to Developer 
+       // $subject = "Profile Share Link: Profile Share Link not found in MailerArray";
+       // SendMail::send_email("kunal.test02@gmail.com","Issue in retrieving link id of PROFILE_SHARE_LINK, check LINK_MAILER table & MailerArray Class, '".print_r(self::PROFILE_SHARE_LINK,true)."'"."\n\n'".print_r($_SERVER,true)."'",$subject);
         return ;
       }
 

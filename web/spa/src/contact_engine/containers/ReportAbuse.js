@@ -5,8 +5,9 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
-import axios from "axios";
+import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import Loader from "../../common/components/Loader";
+import {getCookie} from '../../common/components/CookieHelper';
 
 
 
@@ -23,6 +24,11 @@ export default class ReportAbuse extends React.Component{
             timeToHide: 3000,
             tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
         }
+        if(!getCookie("AUTHCHECKSUM")){
+          window.location.href="/login?prevUrl=/myjs";
+          return;
+        }
+
     }
 
     componentDidMount(){
@@ -98,28 +104,17 @@ export default class ReportAbuse extends React.Component{
         _this.setState({
           showLoader : true
         });
-        axios({
-        method: 'POST',
-        url: API_SERVER_CONSTANTS.API_SERVER +  CONSTANTS.ABUSE_FEEDBACK_API + postData,
-        data: {},
-        headers: {
-          'Accept': 'application/json',
-          'withCredentials':true,
-          'X-Requested-By': 'jeevansathi',
-          'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-      }).then( (response) => {
+        commonApiCall(API_SERVER_CONSTANTS.API_SERVER +  CONSTANTS.ABUSE_FEEDBACK_API + postData,{},'','').then((response)=>{
           _this.setState({
             showLoader : false
           });
-            _this.showError(response.data.message);
+          if(response.blockedOnAbuse)
+            this.props.setBlockButton();
+            _this.showError(response.message);
             setTimeout(function(){
             _this.closeAbuseLayer();
           }, this.state.timeToHide+200);
-        })
-        .catch( (error) => {
-          console.warn('Actions - fetchJobs - recreived error: ', error)
-        })
+        });
     }
   }
 

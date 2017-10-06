@@ -172,7 +172,7 @@ class ThreeDots extends React.Component{
         loaderView = <Loader show="page"></Loader>;
       }
 
-        return (<div className="posabs ce-bg ce_top1 ce_z101 scrollhid fullwid" id="overlayove_threedot" style={this.state.tupleDim}>
+        return (<div className="posfix ce-bg ce_top1 ce_z101 scrollhid fullwid" id="overlayove_threedot" style={this.state.tupleDim}>
                   <a href="#"  className="ce_overlay ce_z102" > </a>
                     <div className="posabs ce_z103 ce_top1 fullwid" id="overlaysecond_threedot" style={this.state.tupleDim}>
 

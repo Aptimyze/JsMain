@@ -419,70 +419,16 @@ class MembershipHandler
 
     public function fetchLowestActivePrices($userObj, $allMainMem, $device = 'desktop')
     {
-        $memArray = VariableParams::$mainMembershipsArr;
-        $userType = $userObj->userType;
-
-        if(!empty($userObj) && $userObj!=""){
-            $mtongue = $userObj->mtongue;
+        $minPriceArr = $this->newLeastMembershipPrice($userObj,$device);
+        $currency = $this->getUserIPandCurrency()[1];
+        foreach ($minPriceArr as $key=>$value){
+            $minPriceArr[$key]["PRICE_RS_TAX"] = $minPriceArr[$key][$device . "_RS"];
+            if($currency == "DOL")
+                $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_USD"];
+            else
+                $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_INR"];
+            unset($minPriceArr[$key]["SERVICEID"]);
         }
-        else{
-            $mtongue = "-1";
-        }
-
-        $minPriceInfoAggregateData = $this->serviceObj->getLowestActiveMainMembership($memArray, $device,$mtongue);
-        //print_r($minPriceInfoAggregateData);die;
-        foreach ($memArray as $key => $value) {
-            foreach ($minPriceInfoAggregateData as $kk => $vv) {
-                if ($value == substr($kk, 0, strlen($value))) {
-                    $minPriceArr[$value][$kk] = $vv;
-                }
-            }
-        }
-
-        foreach ($minPriceArr as $key => $val) {
-            foreach ($val as $k => $v) {
-                if (!isset($allMainMem[$key][$k])) {
-                    unset($minPriceArr[$key][$k]);
-                }
-            }
-        }
-
-        foreach ($minPriceArr as $key => $val) {
-            $i = 0;
-            foreach ($val as $k => $v) {
-                if ($i == 1) {
-                    unset($minPriceArr[$key][$k]);
-                } else {
-                    $newMinPriceArr[$key] = array(
-                        'NAME'         => $minPriceArr[$key][$k]['NAME'],
-                        'PRICE_RS_TAX' => $minPriceArr[$key][$k][$device . "_RS"],
-                        'PRICE_INR'    => $minPriceArr[$key][$k]['PRICE_INR'],
-                        'PRICE_USD'    => $minPriceArr[$key][$k]['PRICE_USD'],
-                    );
-                }
-                $i = 1;
-            }
-        }
-
-        $minPriceArr = $newMinPriceArr;
-
-        foreach ($allMainMem as $mainMem => $subMem) {
-            $offerPrice = array();
-            $i          = 0;
-            foreach ($subMem as $key => $value) {
-                $actPrice[$key]   = $allMainMem[$mainMem][$key]['PRICE'];
-                $offerPrice[$key] = $allMainMem[$mainMem][$key]['OFFER_PRICE'];
-            }
-            foreach ($offerPrice as $key => $value) {
-                if ($value == min($offerPrice)) {
-                    $keyAct = $key;
-                }
-
-            }
-
-            $minPriceArr[$mainMem]['OFFER_PRICE'] = min($offerPrice);
-        }
-
         return $minPriceArr;
     }
 
@@ -978,6 +924,13 @@ class MembershipHandler
     public function getUserIPandCurrency($profileid = null)
     {
         $geoIpCountry = $_SERVER['GEOIP_COUNTRY_CODE'];
+        $loginProfile = LoggedInProfile::getInstance();
+        if($loginProfile->getPROFILEID()){
+            $profileID = $loginProfile->getPROFILEID();
+            $profileCurrency = false; //JsMemcache::getInstance()->get($profileID."_currency");
+        } else{
+            $profileCurrency = false;
+        }
         if (!empty($geoIpCountry)) {
             if ($geoIpCountry == 'IN') {
                 $currency     = 'RS';
@@ -1011,6 +964,8 @@ class MembershipHandler
         }
         if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
+        } else if($profileCurrency != false){
+            $currency = $profileCurrency;
         }
         if($_COOKIE['jeevansathi_hindi_site_new'] == 'Y'){ 
             $currency = 'RS';
@@ -3031,6 +2986,43 @@ class MembershipHandler
             $purchasesObj->updateUSDtoINRflag('Y',$billid);
         }
         return $newAmountArr;
+    }
+
+    public function newLeastMembershipPrice($userObj,$device){
+        if(!empty($userObj) && $userObj!="" && $userObj->profileid){
+            $mtongueArr[$userObj->mtongue]="LoggedIn";
+        } else{
+            $mtongueArr = FieldMap::getFieldLabel("community_small",null,"1");
+            $mtongueArr[-1] = "Default";
+
+        }
+        $memArray = VariableParams::$mainMembershipsArr;
+        $servObj = new Services();
+        $services = $servObj->getLowestActiveMainMembership($memArray, $device,$mtongueArr);
+        foreach ($services as $key=>$value){
+            $mtongueKeys = array_filter(explode(",",$key));
+            foreach ($mtongueKeys as $k=>$v){
+                foreach ($value as $kk=>$vv){
+                    $mainMem = rtrim(preg_replace('/[^a-zA-Z]/', '', $kk),"L");
+                    if(!empty($userObj) && $userObj!="" && $userObj->profileid && $userObj->mtongue !=$v)
+                        continue;
+                    else if(in_array($mainMem,$memArray))
+                        $minPriceArr[$v][$mainMem][$kk]=$vv;
+                }
+            }
+        }
+
+        $membership = array();
+        foreach ($minPriceArr as $key=>$value){
+            foreach ($value as $k=>$v){
+                $temp = current($v);
+                if(!array_key_exists($k,$membership) || $temp["PRICE_INR"]>$membership[$k]["PRICE_INR"]){
+                    $membership[$k] = $temp;
+                    unset($membership[$k]["SHOW_ONLINE_NEW"]);
+                }
+            }
+        }
+        return $membership;
     }
 
 }

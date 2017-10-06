@@ -115,7 +115,7 @@ export default class MyjsSliderBinding  {
                     index = (this.tupleObject.length+this.indexElevate)-1;
                     this.transitionDuration = 500;
                 }
-                if(index==(this.tupleObject.length-1))
+                if(index==(this.tupleObject.length-3))
                   if(typeof this.nextPageHit=='function')
                     this.nextPageHit();
                 var transform;

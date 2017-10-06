@@ -6,6 +6,8 @@ import {getCookie,setCookie,removeCookie} from "../../common/components/CookieHe
 import "babel-polyfill";
 import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
+import {getProfileLocalStorage,setProfileLocalStorage,isPresentInLocalStorage,removeProfileLocalStorage,getProfileKeyLocalStorage,getGunaKeyLocalStorage} from "../../common/components/CacheHelper";
+import {RESPONSE_STATUS_MESSAGE_PUSH_MESSAGE} from '../../common/constants/CommonConstants'
 export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
 {
 
@@ -32,39 +34,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           checkSumURL = data;
       }
     }
-    // console.log("shahjahan dispatch",dispatch);
-    // console.log("shahjahan prevDataUrl",localStorage.getItem("prevDataUrl"));
-    if(reducer != "SAVE_INFO" && localStorage.getItem("prevDataUrl") == callUrl && localStorage.getItem("prevData") || localStorage.getItem("nextDataUrl") == callUrl &&  localStorage.getItem("nextDataUrl") == callUrl || localStorage.getItem("currentDataUrl") == callUrl &&  localStorage.getItem("currentData")) {
+
+
+    if( isPresentInLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl)) !== false && (callUrl.indexOf("api/v1/profile/detail") !== -1 )  ) {
       let data;
-      if(localStorage.getItem("prevDataUrl") == callUrl) {
-        console.log("shahjahan Getting from prevDataUrl.");
-        data = JSON.parse(localStorage.getItem("prevData"));
+      data = getProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl));
+      
 
-        localStorage.setItem("nextData", localStorage.getItem("currentData"));
-        localStorage.setItem("nextDataUrl",localStorage.getItem("currentDataUrl"));
-
-        localStorage.setItem("currentData", localStorage.getItem("prevData"));
-        localStorage.setItem("currentDataUrl", localStorage.getItem("prevDataUrl"));
-      } else if(localStorage.getItem("nextDataUrl") == callUrl) {
-        data = JSON.parse(localStorage.getItem("nextData"));
-        // console.log("shahjahan currentData",localStorage.getItem("currentData"))
-        // console.log("shahjahan currentDataUrl",localStorage.getItem("currentDataUrl"))
-        if( dispatch != "saveLocalNext")
-        {
-          localStorage.setItem("prevData", localStorage.getItem("currentData"));
-          localStorage.setItem("prevDataUrl",localStorage.getItem("currentDataUrl"));
-
-          localStorage.setItem("currentDataUrl", localStorage.getItem("nextDataUrl"));
-          localStorage.setItem("currentData", localStorage.getItem("nextData"));
-
-          localStorage.setItem("prevDataUrlForGuna", localStorage.getItem("currentDataUrlForGuna"));
-          localStorage.setItem("prevGuna", localStorage.getItem("currentGuna"));
-
-        }
-      } else {
-        data = JSON.parse(localStorage.getItem("currentData"))
-      }
-      if(typeof dispatch == 'function')
+      if(typeof dispatch == 'function' && reducer != "SAVE_INFO")
       {
         dispatch({
           type: reducer,
@@ -72,21 +49,10 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           token: tupleID
         });
       }
-    } else if(reducer != "SAVE_INFO" && (localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna") || localStorage.getItem("prevDataUrlForGuna") == callUrl && localStorage.getItem("prevGuna"))  ) {
-      // console.log("shahjahan In guna if block.");
-      let dataGuna;
-      if ( localStorage.getItem("currentDataUrlForGuna") == callUrl && localStorage.getItem("currentGuna") )
-      {
-        dataGuna = JSON.parse(localStorage.getItem("currentGuna"));
-      }
-      else
-      {
-        dataGuna = JSON.parse(localStorage.getItem("prevGuna"));
-        localStorage.setItem("currentGuna", localStorage.getItem("prevGuna"));
-        localStorage.setItem("currentDataUrlForGuna", localStorage.getItem("prevDataUrlForGuna"));
-      }
-
-      if(typeof dispatch == 'function')
+    } else if(isPresentInLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl)) !== false && (callUrl.indexOf("api/v1/profile/gunascore") !== -1) ) {
+      let dataGuna=getProfileLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl));
+    
+      if(typeof dispatch == 'function' && reducer != "SAVE_INFO")
       {
         dispatch({
           type: reducer,
@@ -96,12 +62,12 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
 
     }
     else {
-      // console.log("shahjahan axios callUrl",callUrl);
 
+      let params2 = typeof data=='object' ? (Object.keys(data).map((i) => i+'='+encodeURIComponent(data[i])).join('&'))  : '';
       return axios({
         method: callMethod,
         url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
-        data: data!=null ? Object.keys(data).map((i) => i+'='+data[i]).join('&') : '',
+        data: params2,
         headers: {
           'Accept': 'application/json',
           'withCredentials':true,
@@ -113,7 +79,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         {
           case "9":
             removeCookie("AUTHCHECKSUM");
-            localStorage.clear();
+            // localStorage.clear();
             window.location.href="/login?prevUrl="+window.location.href;
             break;
           case "7":
@@ -123,11 +89,13 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             window.location.href="/phone/jsmsDisplay";
             break;
           case "0":
-          case "1":
-          case "10":
+            //successful case.
+            break;
+          case "5":
+            window.location.href="/phone/ConsentMessage";
             break;
           default:
-            if ( response.data.responseMessage )
+            if ( response.data.responseMessage && RESPONSE_STATUS_MESSAGE_PUSH_MESSAGE.indexOf(response.data.responseMessage) != -1 )
             {
               let message = response.data.responseMessage;
               let parent = document.createElement("div");
@@ -137,7 +105,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
               child.id = "TopError";
               child.innerHTML = "<div class = 'fullwid top0 posfix' style='height: 10px;top:0px;z-index:101;'><div class = 'pad12_e white f15 op1'>"+response.data.responseMessage+"</div></div>";
               parent.appendChild(child);
-
+              
               if ( document.getElementById("ApiResponseHeaderTopError") != null)
               {
                 document.getElementById("ApiResponseHeaderTopError").classList.remove("dn");
@@ -146,6 +114,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
               {
                 document.body.insertBefore(parent,document.body.childNodes[0]);
               }
+              
 
               setTimeout(function () {
                 document.getElementById("ApiResponseHeaderTopError").className += " dn";
@@ -164,20 +133,44 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         if ( response.data.AUTHCHECKSUM && typeof response.data.AUTHCHECKSUM !== 'undefined'){
           setCookie('AUTHCHECKSUM',response.data.AUTHCHECKSUM);
 
-          if ( response.data.GENDER && response.data.USERNAME )
+          if (response.data.GENDER)
           {
             localStorage.setItem('GENDER',response.data.GENDER);
+          }
+          else if (response.data.selfGender){
+            localStorage.setItem('GENDER',response.data.selfGender);
+          }
+
+          if(response.data.USERNAME)
+          {
             localStorage.setItem('USERNAME',response.data.USERNAME);
           }
+          else if (response.data.selfUsername)
+          {
+            localStorage.setItem('USERNAME',response.data.selfUsername);
+          }
         }
+        else{
+
+          if (response.data.selfGender){
+            localStorage.setItem('GENDER',response.data.selfGender);
+          }
+
+          if (response.data.selfUsername)
+          {
+            localStorage.setItem('USERNAME',response.data.selfUsername);
+          }
+        }
+
         if(typeof dispatch == 'function')
         {
           if(reducer == "SHOW_INFO") {
-            localStorage.setItem("currentData", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrl",callUrl)
+
+            setProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl),response.data);
+            
           } else if(reducer == "SHOW_GUNA") {
-            localStorage.setItem("currentGuna", JSON.stringify(response.data));
-            localStorage.setItem("currentDataUrlForGuna",callUrl)
+
+            setProfileLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl),response.data);          
           }
           dispatch({
             type: reducer,
@@ -185,15 +178,15 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             token: tupleID
           });
         } else if(dispatch == "saveLocalNext") {
-            localStorage.setItem("nextData", JSON.stringify(response.data));
-            localStorage.setItem("nextDataUrl",callUrl)
+            setProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl),response.data);
         } else if(dispatch == "saveLocalPrev") {
-            localStorage.setItem("prevData", JSON.stringify(response.data));
-            localStorage.setItem("prevDataUrl",callUrl)
+            setProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl),response.data);
         }
+
         return response.data;
       })
       .catch( (error) => {
+        console.warn('Actions - fetchJobs - recreived error: ', error)
         if(typeof dispatch == 'function')
         {
           dispatch({
@@ -202,7 +195,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             token: tupleID
           });
         }
-        console.warn('Actions - fetchJobs - recreived error: ', error)
       })
     }
 }

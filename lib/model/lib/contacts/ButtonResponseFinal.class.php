@@ -140,7 +140,7 @@ Class ButtonResponseFinal
 				$responseArray = $responseArray + $this->getExtraText($val);
 			}
 				else
-				$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
+				$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile,'',$this->page["COUNT"]);
 		}
 		$responseArray['buttons'] = $buttons;
 		$finalResponse = self::buttonDetailsMerge($responseArray);
@@ -528,21 +528,27 @@ Class ButtonResponseFinal
 		if(!$count)
 		$count = $params["count"];
 		$buttons["enable"] = $button->active=='true' ? true : false;
-
 		if($count){
 			if ($count < ErrorHandler::REMINDER_COUNT) {
-				if((ErrorHandler::REMINDER_COUNT - $count) == 1)
+				if($button->active!='true')
 				{
-					$buttons["label"]  = "Remind Again";
-					$buttons["enable"] = true;
+						$buttons["label"] = "Reminder ".($count-1)."/".(ErrorHandler::REMINDER_COUNT-1)." sent";
 				}
 				else
 				{
-					$buttons["label"]  = $button->label;
-					$buttons["enable"] = true;
+						if((ErrorHandler::REMINDER_COUNT - $count) == 1)
+						{
+							$buttons["label"]  = "Remind Again";
+							$buttons["enable"] = true;
+						}
+						else
+						{
+							$buttons["label"]  = $button->label;
+							$buttons["enable"] = true;
 
+						}
+						$buttons["action"] = "REMINDER";
 				}
-				$buttons["action"] = "REMINDER";
 			} else {
 
 				$buttons["label"]  = "Reminder ".(ErrorHandler::REMINDER_COUNT - 1)."/".(ErrorHandler::REMINDER_COUNT - 1);

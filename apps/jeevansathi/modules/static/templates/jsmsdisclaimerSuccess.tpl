@@ -3,7 +3,7 @@
   <div class="bg1 txtc pad15 topheadM">
     <div class="posrel">
       <div class="f20 white fontthin" id="test">Terms of Use</div>
-      <a href="/"><i class="mainsp posabs set_arow3 set_pos3"></i></a> </div>
+      <a href="~$referer`"><i class="mainsp posabs set_arow3 set_pos3"></i></a> </div>
   </div>
   <!--end:top--> 
   <!--start:error-->

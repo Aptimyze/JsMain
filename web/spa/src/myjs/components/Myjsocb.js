@@ -12,20 +12,47 @@ export default class MyjsOcbLayer extends React.Component {
 
 
   componentDidMount(){
-    
 
-    this.showTimerForLightningCal();
-
-
+    if(this.props.Ocb_data.top == "FLASH DEAL")
+    {
+      this.showTimerForLightningCal();
+    }
   }
+  getIosVersion(ua) {
+	//return false;
+	var ua = ua || navigator.userAgent;
+	var match= ua.match(/(iPhone);/i);
+	var OsVersion=ua.match(/OS\s[0-9.]*/i);
+	if(match==null)
+		return false;
+	else if(OsVersion==null)
+	{
+		return false
+	}
+	else if(OsVersion[0].substring(3,5)>=7)
+		return true;
+	else
+		return false;
+
+}
 
   showTimerForLightningCal(param) {
 
-    let cT = new Date(this.props.ocb_currentT);
-    let eT = new Date(this.props.Ocb_data.expiryDate);
+    let cT,eT;
 
-    let lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
+    if(this.getIosVersion())
+    {
+      cT = new Date(this.props.ocb_currentT.replace(/\s+/g, 'T'));
+      eT = new Date(this.props.Ocb_data.expiryDate.replace(/\s+/g, 'T'));
+    }
+    else
+    {
+      cT = new Date(this.props.ocb_currentT);
+      eT = new Date(this.props.Ocb_data.expiryDate);
+    }
 
+    let tDiff = this.props.timeDiff ? this.props.timeDiff : 0 ;
+    let lightningDealExpiryInSec = Math.floor((eT-cT-tDiff)/1000);
     if(!lightningDealExpiryInSec)
         return;
     let currentTime=new Date();
@@ -81,6 +108,32 @@ export default class MyjsOcbLayer extends React.Component {
       return i;
   }
 
+
+  getIosVersion(ua)
+ {
+  //return false;
+  var ua = ua || navigator.userAgent;
+  var match= ua.match(/(iPhone);/i);
+  var OsVersion=ua.match(/OS\s[0-9.]*/i);
+  if(match==null)
+  return false;
+  else if(OsVersion==null)
+  {
+  return false
+  }
+  else if(OsVersion[0].substring(3,5)>=7)
+  return true;
+  else
+  return false;
+
+}
+  
+  componentWillRecieveProps(nextProps){
+      if(nextProps.Ocb_data.top == "FLASH DEAL")
+      {
+        this.showTimerForLightningCal();
+      }
+  }
 
   render(){
 

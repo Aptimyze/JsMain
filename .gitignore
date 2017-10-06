@@ -1,13 +1,14 @@
 *.svn
 .phpintel/
-/cache
 /log
-cache/jeevansathi/*
-cache/operations/*
+/cache/
+cache/jeevansathi
+cache/operations
 web/smarty/templates_c/*
 web/spa/node_modules/*
 web/spa/npm-debug.log
 web/spa/src/common/constants/apiServerConstants.js
+web/spa/src/index.html
 web/uploads/SearchLogs/*
 log/*
 .idea

@@ -26,6 +26,23 @@ class MailerConfigVariables
         public static $TrendsNotLoggedinWithLoginDateSort = 5; // TRENDS not Loggedin in last 15days sort by login timestamp
         
         public static $BroaderDppSort = 6; // TRENDS Loggedin in last 15days sort by trends score
+        
+        /* Match Alerts unified logic changes start here  */
+        
+        public static $UNIFIED_LOGIC_MAILER_COUNT = 16; // matchalerts Profiles limit to be sent in mailer
+        public static $UNIFIED_LOGIC_LIST_COUNT = 20; // matchalerts Profiles limit to be added in list
+        
+        public static $sortByStrictTrends = "ST";
+        public static $sortByStrictNonTrends = "SNT";
+        public static $logicLevelStrictTrends = 8;
+        public static $logicLevelStrictNonTrends = 9;
+        
+        public static $sortByRelaxedTrends = "RT";
+        public static $sortByRelaxedNonTrends = "RNT";
+        public static $logicLevelRelaxedTrends = 10;
+        public static $logicLevelRelaxedNonTrends = 11;
+        
+        /* Match Alerts unified logic changes ends here */
         public static $matchalertsLogTimeCache = 86400;
         public static $matchalertsLogTimeFormat = "m-d-Y";
         public static $matchalertsLogTimeFor = "+1 Day";

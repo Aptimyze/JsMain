@@ -34,7 +34,7 @@ class HamburgerApp
                         $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
                         $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
                 }
-
+			
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
 			$memHandlerObj = new MembershipHandler();
@@ -86,6 +86,8 @@ class HamburgerApp
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
 				$hamburgerDetails['ACC_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_ME'));
 				$hamburgerDetails['ACC_BY_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_BY_ME'));
+				$hamburgerDetails['NOT_REP'] = self::convertoInt($profileMemcacheObj->get('NOT_REP'));
+				$hamburgerDetails['ACTIVATED'] = $profileObj->getACTIVATED();
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
@@ -122,7 +124,6 @@ class HamburgerApp
 					$hamburgerDetails['DEC_BY_ME']=JsCommon::convert99($declinedByMeCount);
 				else
 					$hamburgerDetails['DEC_BY_ME'] = 0;
-
 			$hamburgerDetails['TOTAL_NEW']=JsCommon::convert99($hamburgerDetails['AWAITING_RESPONSE_NEW'] + $hamburgerDetails['ACC_ME_NEW'] + $hamburgerDetails['MESSAGE_NEW'] + $hamburgerDetails['PHOTO_REQUEST_NEW'] + $hamburgerDetails['JUST_JOINED_NEW'] + $hamburgerDetails["FILTERED_NEW"] + $hamburgerDetails['DEC_ME_NEW']);
 		     }
 

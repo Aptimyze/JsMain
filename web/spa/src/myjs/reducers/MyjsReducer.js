@@ -16,7 +16,8 @@ const MyjsReducer = (state={
 			...state,
 			apiData:action.payload,
 			calShown : false,
-			fetched : true
+			fetched : true,
+			timeStamp : new Date().getTime()
 		}
 		break;
 		case 'SET_DR_DATA':
@@ -118,6 +119,7 @@ const MyjsReducer = (state={
 						modFetched : false,
 						vaFetched : false,
 						drFetched : false,
+						hamFetched:false,
 						timeStamp : value
 						}
 				}

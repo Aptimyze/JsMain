@@ -142,8 +142,10 @@ class viewSimilarProfileAction extends sfActions
 		//if($request->getParameter("stype")=='V' || $request->getParameter("Stype") =="V")
 		if($request->getParameter("contactedProfileDetails")=='hide')
                         $stype=SearchTypesEnums::VIEW_SIMILAR_ACCEPT_PC;
-                else
-                        $stype=SearchTypesEnums::VIEW_SIMILAR_ECP_PC;
+                elseif($request->getParameter("Stype")=="CA")
+                	$stype=SearchTypesEnums::VIEW_SIMILAR_ACCEPTEOI_PC;
+                else 
+                     $stype=SearchTypesEnums::VIEW_SIMILAR_ECP_PC;
 
 			$arrPass = array('stype'=>$stype,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP_VSP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored']);
 			$arrPass["USERNAME"] = $this->Profile->getUSERNAME();

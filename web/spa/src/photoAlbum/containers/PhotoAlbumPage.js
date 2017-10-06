@@ -25,8 +25,12 @@ export default class PhotoAlbumPage extends React.Component {
       }
       this.CssFix();
 
-
+      localStorage.removeItem('lastProfilePageLocation');
+      if(!getCookie("AUTHCHECKSUM")){
+        window.location.href="/login?prevUrl=/myjs";        
+      }
   }
+
   componentDidMount(){
 
 

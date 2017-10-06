@@ -17,7 +17,6 @@ const ProfileReducer = (state={
 	fetchedProfilechecksum: false,
 	buttonDetails: []
 },action) => {
-		// console.log("action.payload",action.payload);
 	switch(action.type)
 	{
 		case "SHOW_INFO":
@@ -53,22 +52,22 @@ const ProfileReducer = (state={
 		}
 		break;
 		case "REPLACE_BUTTONS":
-		console.log(state.buttonDetails,'ce oldstate');
 		state = {
 			...state,
 			buttonDetails:action.payload.newButtonDetails
 		}
-		console.log(state,'ce newstate');
 		break;
 		case "REPLACE_BUTTON":
 		var tmpButtonDetails = {...state.buttonDetails};
 		tmpButtonDetails['buttons'] = action.payload.newButtons;
+		if(action.payload.topMsg)
+			tmpButtonDetails['topmsg'] = action.payload.topMsg;
 		state = {
 			...state,
 			buttonDetails:tmpButtonDetails
 		}
-		console.log(state,'ce newstate');
 		break;
+
 	}
 	return state;
 }

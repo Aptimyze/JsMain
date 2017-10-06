@@ -22,8 +22,11 @@ class PhotoView extends React.Component {
         let response = nextProps.photoAction;
         let _this = this;
         response.responseMessage = nextProps.photoAction.responseMessage;
-        if(response.responseMessage == 'Successful')
+        if(response.responseMessage == 'Successful'){
             response.imageButtonDetail = {label : nextProps.photoAction.imageButtonDetail.label};
+            localStorage.removeItem('currentDataUrl');
+            localStorage.removeItem('currentData');
+        }
         this.setState({
             showLoader:false
         });
@@ -50,6 +53,7 @@ class PhotoView extends React.Component {
             }
         }
     }
+
     requestPhoto(e) {
         e.preventDefault();
         if(this.props.picData.label == document.getElementById("label1").innerHTML) {
@@ -81,7 +85,7 @@ class PhotoView extends React.Component {
         this.props.imageLoaded();
     }
     handleImageError() {
-      console.log()
+      
       if(this.props.genderPic=="Male")
       {
          document.getElementById("profilePic").src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto";
@@ -169,8 +173,8 @@ class PhotoView extends React.Component {
             <div id="PhotoView" className="posrel">
                 {errorView}
                 {verifyLayer}
-                <div id="picContent">
-                    <img id="profilePic" onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />
+                <div id="picContent" >
+                    <img id="profilePic" style={{"min-height":window.innerWidth}} onError={() => this.handleImageError()} onLoad={() => this.handleImageLoaded()} className="vpro_w100Per" src={this.props.picData.url} />
                     <div className="posabs fullwid vpro_40PerTop fullheight txtc">
                         {loaderView}
                     </div>

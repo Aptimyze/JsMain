@@ -19,6 +19,9 @@ import GA from "../../common/components/GA";
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import ContactEngineButton from "../../contact_engine/containers/contactEnginePD";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
+import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
+import * as CONSTANTS from '../../common/constants/apiConstants'
+
 
 class ProfilePage extends React.Component {
 
@@ -26,6 +29,7 @@ class ProfilePage extends React.Component {
     {
         super();
         jsb9Fun.recordBundleReceived(this,new Date().getTime());
+        jsb9Fun.setJsb9Key(this,'JSNEWMOBPROFILEPAGEURL');
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         let stype = getParameterByName(window.location.href,"stype");
@@ -55,7 +59,8 @@ class ProfilePage extends React.Component {
             callApi: false,
             listingName: "",
             ownView:ownView,
-            ucbrowser:false
+            ucbrowser:false,
+            nextProfileFetched:false
 
         };
         if(localStorage.getItem('GENDER') == "F") {
@@ -71,16 +76,11 @@ class ProfilePage extends React.Component {
 
     componentDidUpdate(prevprops) {
       //  console.log('componentDidUpdate');
-       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer)
+       jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
+
     }
     componentDidMount()
     {
-        console.log('componentDidMount');
-        //alert(navigator.userAgent);
-        //console.log('componentDidMount');
-        //console.log(this.props);
-        //console.log(localStorage.getItem('GENDER'));
-        //console.log(this.state.gender);
         window.scrollTo(0,0);
         let urlString;
         if(this.state.profilechecksum != "") {
@@ -94,17 +94,34 @@ class ProfilePage extends React.Component {
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let stype = getParameterByName(window.location.href,"stype");
+            let tupleId = getParameterByName(window.location.href,"tupleId");
+            let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
+            let toShowECP = getParameterByName(window.location.href,"toShowECP");
+            let similarOf = getParameterByName(window.location.href,"similarOf");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
+            if(stype != undefined && stype != "undefined"){
+                urlString += "&stype=" + stype;
+            }
             if(searchid != 1 && searchid != null)
             {
                 urlString += "&searchid=" + searchid;
-            } else if(contact_id != undefined) {
+            }
+            if(contact_id != undefined && contact_id != "undefined") {
                 urlString += "&contact_id=" + contact_id;
             }
-            if(stype != undefined){
-                urlString += "&stype=" + stype;
+            if(tupleId != undefined && tupleId != "undefined"){
+                urlString += "&tupleId=" + tupleId;
+            }
+            if(NAVIGATOR != undefined && NAVIGATOR != "undefined"){
+                urlString += "&NAVIGATOR=" + NAVIGATOR;
+            }
+            if(toShowECP != undefined && toShowECP != "undefined"){
+                urlString += "&toShowECP=" + toShowECP;
+            }
+            if(similarOf != undefined && similarOf != "undefined"){
+                urlString += "&similarOf=" + similarOf;
             }
         }
 
@@ -135,6 +152,7 @@ class ProfilePage extends React.Component {
             })
         }
         let startX, endX;
+        let stype = getParameterByName(window.location.href,"stype");
         document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
             startX = e.changedTouches[0].clientX;
             endX = 0;
@@ -144,53 +162,56 @@ class ProfilePage extends React.Component {
         });
         document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
           // console.log('swipe in');
-          // console.log(e)
           // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null) )
+          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
           {
-            console.log("not");
+            console.log("HITS stopped: "+_this.state.nextProfileFetched)
+
+            return;
+          }
+          else if(stype == "KM" || stype =="WC") //swipe to be disabled for Kundli Listing
+          {
             return;
           }
           else {
-
-
-         console.log("touchned");
-
-
             if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
+              _this.swipeNextProfile('next');
               //console.log("s1");
-                document.getElementById("swipePage").classList.add("animateLeft");
-                document.getElementById("validProfile").classList.remove("dn");
-                _this.setState({
-                    dataLoaded: false
-                });
-                _this.resetTab();
-                jsb9Fun.flushJSB9Obj(_this);
-                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
-                _this.props.history.push(_this.state.nextUrl);
-                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","nextProfileVisit","")
-                _this.props.showProfile(_this, _this.state.nextDataApi);
             } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
-              //console.log("s2");
-                document.getElementById("swipePage").classList.add("animateLeft");
-                document.getElementById("validProfile").classList.remove("dn");
-                jsb9Fun.flushJSB9Obj(_this);
-                _this.setState({
-                    dataLoaded: false
-                });
-                _this.resetTab();
-                _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
-                _this.props.history.push(_this.state.prevUrl);
-                jsb9Fun.recordBundleReceived(_this, new Date().getTime());
-                _this.refs.GAchild.trackJsEventGA("jsms","prevProfileVisit","")
-                _this.props.showProfile(_this, _this.state.prevDataApi);
+              _this.swipeNextProfile('prev');
             }
           }
 
         });
+
+
     }
 
+    nextPrevPostDecline(){
+      if(this.state.nextUrl != "")
+        this.swipeNextProfile('next');
+      else if(this.state.prevUrl != "")
+        this.swipeNextProfile('prev');
+    }
+swipeNextProfile(nextOrPrev){
+      let _this=this;
+      document.getElementById("swipePage").classList.add("animateLeft");
+      document.getElementById("validProfile").classList.remove("dn");
+      _this.setState({
+          dataLoaded: false
+      });
+      _this.resetTab();
+      jsb9Fun.flushJSB9Obj(_this);
+      _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
+      _this.props.history.replace(nextOrPrev=='next' ? _this.state.nextUrl : _this.state.prevUrl);
+      jsb9Fun.recordBundleReceived(_this, new Date().getTime());
+      let t1,t2;
+      t1 = nextOrPrev=='next' ? 'nextProfileVisit' : 'prevProfileVisit';
+      t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
+      _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
+      _this.props.showProfile(_this, t2);
+
+}
     setNextPrevLink() {
 
         if (parseInt(this.state.actual_offset) < parseInt(this.state.total_rec) - 1) {
@@ -200,10 +221,28 @@ class ProfilePage extends React.Component {
             if(this.state.searchid != 1 && this.state.searchid != null){
                 nextUrl += "&searchid=" + this.state.searchid;
                 nextDataApi += "&searchid=" + this.state.searchid;
-            } else if(this.state.contact_id != undefined) {
+            }
+            if(this.state.contact_id != undefined && this.state.contact_id != "undefined" ) {
                 nextUrl += "&contact_id=" + this.state.contact_id;
                 nextDataApi += "&contact_id=" + this.state.contact_id;
             }
+            if(this.state.tupleId != null){
+                nextUrl += "&tupleId=" + this.state.tupleId;
+                nextDataApi += "&tupleId=" + this.state.tupleId;
+            }
+            if(this.state.NAVIGATOR != null){
+                nextUrl += "&NAVIGATOR=" + this.state.NAVIGATOR;
+                nextDataApi += "&NAVIGATOR=" + this.state.NAVIGATOR;
+            }
+            if(this.state.toShowECP != null){
+                nextUrl += "&toShowECP=" + this.state.toShowECP;
+                nextDataApi += "&toShowECP=" + this.state.toShowECP;
+            }
+            if(this.state.similarOf != null){
+                nextUrl += "&similarOf=" + this.state.similarOf;
+                nextDataApi += "&similarOf=" + this.state.similarOf;
+            }
+
             this.props.fetchNextPrevData(this, nextDataApi, "saveLocalNext");
             this.setState({
                 nextUrl,
@@ -212,18 +251,36 @@ class ProfilePage extends React.Component {
         } else {
             this.setState({
                 nextUrl: "",
-                nextDataApi: ""
+                nextDataApi: "",
+                nextProfileFetched:true
             });
         }
-        if (parseInt(this.state.actual_offset) != 0) {
+        if (parseInt(this.state.actual_offset) != 0 && !isNaN(parseInt(this.state.actual_offset))   ) {
             let prevUrl = "/profile/viewprofile.php?responseTracking=" + this.state.responseTracking + "&total_rec=" + this.state.total_rec + "&actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&stype=" + this.state.stype;
             let prevDataApi = "?actual_offset=" + (parseInt(this.state.actual_offset) - 1) + "&total_rec=" + this.state.total_rec + "&stype=" + this.state.stype;
             if(this.state.searchid != 1 && this.state.searchid != null){
                 prevUrl += "&searchid=" + this.state.searchid;
                 prevDataApi += "&searchid=" + this.state.searchid;
-            } else if(this.state.contact_id != undefined) {
+            }
+            if(this.state.contact_id != undefined && this.state.contact_id != "undefined") {
                 prevUrl += "&contact_id=" + this.state.contact_id;
                 prevDataApi += "&contact_id=" + this.state.contact_id;
+            }
+            if(this.state.tupleId != null){
+                prevUrl += "&tupleId=" + this.state.tupleId;
+                prevDataApi += "&tupleId=" + this.state.tupleId;
+            }
+            if(this.state.NAVIGATOR != null){
+                prevUrl += "&NAVIGATOR=" + this.state.NAVIGATOR;
+                prevDataApi += "&NAVIGATOR=" + this.state.NAVIGATOR;
+            }
+            if(this.state.toShowECP != null){
+                prevUrl += "&toShowECP=" + this.state.toShowECP;
+                prevDataApi += "&toShowECP=" + this.state.toShowECP;
+            }
+            if(this.state.similarOf != null){
+                prevUrl += "&similarOf=" + this.state.similarOf;
+                prevDataApi += "&similarOf=" + this.state.similarOf;
             }
             //this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
             this.setState({
@@ -233,7 +290,8 @@ class ProfilePage extends React.Component {
         } else {
             this.setState({
                 prevUrl: "",
-                prevDataApi: ""
+                prevDataApi: "",
+                nextProfileFetched:true
             });
         }
 
@@ -252,35 +310,20 @@ class ProfilePage extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {
-       console.log('componentWillReceiveProps');
-        if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
-            this.setState({
-                showLoader:false
-            });
-        }
-        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
-            this.setState({
-                showLoader:false
-            });
-            document.getElementById("swipePage").classList.add("animateLeft");
-            this.setState ({
-                dataLoaded : false
-            });
-            jsb9Fun.flushJSB9Obj(this);
-            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
-            this.props.history.push(this.state.nextUrl);
-            jsb9Fun.recordBundleReceived(this,new Date().getTime());
-            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
-        }
-        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
 
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
-            let actual_offset = getParameterByName(window.location.href,"actual_offset")||getParameterByName(window.location.href,"offset");
+            let actual_offset = getParameterByName(window.location.href,"offset") || getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
             let searchid = getParameterByName(window.location.href,"searchid");
             let responseTracking = getParameterByName(window.location.href,"responseTracking");
             let stype = getParameterByName(window.location.href,"stype");
+            let tupleId = getParameterByName(window.location.href,"tupleId");
+            let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
+            let toShowECP = getParameterByName(window.location.href,"toShowECP");
+            let similarOf = getParameterByName(window.location.href,"similarOf");
+
 
             if(total_rec == "undefined") {
                 total_rec = "20";
@@ -291,8 +334,9 @@ class ProfilePage extends React.Component {
             if(contact_id == "nan") {
                 contact_id = undefined;
             }
-
-            this.setState({
+            if(stype != "KM" && stype != "WC" ) //next profile hit should not go in case of Profiles from Kundli Listings
+            {
+               this.setState({
                 profilechecksum: profilechecksum || "",
                 contact_id: contact_id,
                 actual_offset: actual_offset,
@@ -300,8 +344,15 @@ class ProfilePage extends React.Component {
                 responseTracking:responseTracking,
                 searchid:searchid,
                 callApi: false,
-                stype: stype
-            },this.setNextPrevLink);
+                stype: stype,
+                tupleId: tupleId,
+                NAVIGATOR: NAVIGATOR,
+                similarOf: similarOf,
+                toShowECP: toShowECP,
+                nextProfileFetched:false
+                },this.setNextPrevLink);
+            }
+
             let picData;
             if(!nextProps.pic) {
                 if(this.state.gender == "M") {
@@ -342,7 +393,6 @@ class ProfilePage extends React.Component {
     componentWillUnmount()
     {
         //this.props.fetchedProfilechecksum = "false";
-        //console.log("unmount");
         window.removeEventListener('scroll', this.setScrollPos);
         this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
     }
@@ -368,9 +418,6 @@ class ProfilePage extends React.Component {
 
     showTab(elem)
     {
-      //console.log("showtab");
-      //console.log(elem);
-      //console.log(this.state.tabArray);
         if(this.state.dataLoaded == true) {
             for(let i=0; i<this.state.tabArray.length; i++) {
                 document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
@@ -382,7 +429,6 @@ class ProfilePage extends React.Component {
     }
     resetTab()
     {
-      //console.log("reset tab");
       for(let i=0; i<this.state.tabArray.length; i++) {
           document.getElementById("tab"+this.state.tabArray[i]).classList.remove("vpro_selectTab");
 
@@ -394,12 +440,14 @@ class ProfilePage extends React.Component {
         this.setState({
             showHistory:true
         });
+        this.props.historyObject.push(()=>this.closeHistoryTab(),"#comm");
     }
     closeHistoryTab()
     {
         this.setState({
             showHistory:false
         });
+        return true;
     }
     checkPhotoAlbum(e)
     {
@@ -418,7 +466,7 @@ class ProfilePage extends React.Component {
         {
             document.getElementById("showPhoto").classList.remove("dn");
         }
-        if ( document.getElementById("tempImage") !== null) 
+        if ( document.getElementById("tempImage") !== null)
         {
             document.getElementById("tempImage").classList.add("dn");
         }
@@ -440,6 +488,7 @@ class ProfilePage extends React.Component {
 
     goBack()
     {
+
         let prevUrlListing = localStorage.getItem("prevUrlListing");
         if (  prevUrlListing && !this.props.history.prevUrl )
         {
@@ -471,30 +520,19 @@ class ProfilePage extends React.Component {
     {
         let himHer = "him",photoViewTemp,AboutViewTemp;
         let decideHimHer;
-      //  console.log("=======");
-      //  console.log(this.state);
-      //  console.log(this.state.GenderInfo.He);
-        // console.log(this.props);
-        // console.log("=======");
 
         if(this.state.gender == "M" && this.state.ownView == false)
         {
-            //console.log("p-1");
-            //himHer = "her";
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto" />;
 
         } else if(this.state.gender == "F" && this.state.ownView == false)
         {
-           //console.log("p-2");
             photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
 
         } else if(this.state.gender == "M" && this.state.ownView == true)
         {
-          //console.log("p-3");
              photoViewTemp = <img id="tempImage" src = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto" />;
         } else {
-          //console.log("p-4");
-            //himHer = "her";
             photoViewTemp = <div id="tempImage" className="fullwid bg18" style={{height: window.innerWidth}}></div>;
 
         }
@@ -536,12 +574,33 @@ class ProfilePage extends React.Component {
         }
 
         var historyView;
-        if(this.state.showHistory && this.state.ownView == false) {
-            historyView = <CommHistory
-                            closeHistory={()=>this.closeHistoryTab()}
+        if(this.state.showHistory && this.state.ownView == false)
+        {
+          let thumbURL;
+
+          if(this.props.AboutInfo.thumbnailPic==null)
+          {
+            console.log(this.props.AboutInfo.gender);
+            if(this.props.AboutInfo.gender=="Female")
+            {
+              thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
+            }
+            else
+            {
+              thumbURL = "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+            }
+          }
+          else
+          {
+            thumbURL = this.props.AboutInfo.thumbnailPic;
+          }
+
+
+          historyView = <CommHistory
+                            closeHistory={()=>this.props.historyObject.pop()}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
-                            profileThumbNailUrl={this.props.AboutInfo.thumbnailPic|| this.state.defaultPicData} >
+                            profileThumbNailUrl= {thumbURL} >
                           </CommHistory>
         }
 
@@ -549,24 +608,15 @@ class ProfilePage extends React.Component {
 
         if(this.state.dataLoaded)
         {
-            //console.log("data laoded") ;
-            // console.log(this.state.ownView);
-            // console.log(this.props.AboutInfo.gender);
-            //console.log(this.state.GenderInfo.Him);
-            //console.log(this.state.GenderInfo.Her);
             if(this.state.ownView == false)
             {
                 if(this.props.AboutInfo.gender == "Male")
                 {
-                  //console.log("a1");
                   decideHimHer= this.state.GenderInfo.Him;
-                  //console.log({decideHimHer});
                 }
                 else
                 {
-                  //console.log("a2");
                   decideHimHer = this.state.GenderInfo.Her;
-                  //console.log({decideHimHer});
                 }
             }
             else
@@ -580,9 +630,6 @@ class ProfilePage extends React.Component {
                 decideHimHer = this.state.GenderInfo.Her;
               }
             }
-            // console.log("=====");
-            // console.log({decideHimHer});
-
 
 
             document.getElementById("swipePage").classList.remove("animateLeft");
@@ -595,17 +642,22 @@ class ProfilePage extends React.Component {
                     username:this.props.AboutInfo.username
                 };
                 if(this.state.ownView == false) {
-                     contactEngineView = <ContactEngineButton pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflowY:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflowY:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                     contactEngineView = <ContactEngineButton nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflow:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflow:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;
 
-                if(this.props.AboutInfo.name_of_user)
-                {
-                    Header = this.props.AboutInfo.name_of_user;
-                } else
-                {
-                     Header = this.props.AboutInfo.username;
+                if(this.state.ownView){
+                    Header = "Preview";
+                }
+                else{
+                    if(this.props.AboutInfo.name_of_user)
+                    {
+                        Header = this.props.AboutInfo.name_of_user;
+                    }  else
+                    {
+                         Header = this.props.AboutInfo.username;
+                    }
                 }
 
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
@@ -637,25 +689,52 @@ class ProfilePage extends React.Component {
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
-                if(this.props.AboutInfo.gender == "F")
-                    stockImage = <i className="vpro_sprite female_nopro"></i>
-                else
-                    stockImage = <i className="vpro_sprite male_nopro"></i>
-
-                invalidProfileView = <div>
-                    <div className="bg4 txtc" id="errorContent">
-                        <div className="txtc setmid posfix fullwid" id="noProfileIcon">
-                           {stockImage}
-                            <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
-                        </div>
-                    </div>
-                </div>;
-                if(this.props.AboutInfo.username) {
-                    Header = this.props.AboutInfo.username;
-                } else {
-                    Header = "Profile not found";
+                if(this.state.ownView){
+                    Header = "Preview";
                 }
-                metaTagView = <MetaTagComponents page="ProfileNotFound" />
+                else{
+                    if(this.props.AboutInfo.username) {
+                        Header = this.props.AboutInfo.username;
+                    } else {
+                        Header = "Profile not found";
+                    }
+                }
+                if(this.props.AboutInfo.loginRequired)
+                {
+
+                    invalidProfileView = <div className="txtc r_vpro_pad1">
+                    <div className="f16 fontlig color13 pb20"> To view this profile </div>
+
+                    <a href="/login">
+                    <i className="vpro_sprite vpro_login"></i>
+                    <div className="f14 color2 fontlig">Login</div>
+                    </a>
+                    <div className="r_vpro_pad2"></div>
+
+                    <a href="/register/page1?source=mobreg6" >
+                    <i className="vpro_sprite vpro_regis"></i>
+                    <div className="f1  4 color2 fontlig">Register</div>
+                    </a>
+                    </div>;
+                }
+                else
+                {
+                    if(this.props.AboutInfo.gender == "F")
+                        stockImage = <i className="vpro_sprite female_nopro"></i>
+                    else
+                        stockImage = <i className="vpro_sprite male_nopro"></i>
+
+                    invalidProfileView = <div>
+                    <div className="bg4 txtc" id="errorContent">
+                    <div className="txtc setmid posfix fullwid" id="noProfileIcon">
+                    {stockImage}
+                    <div className="f14 fontreg color13 lh30">{this.props.responseMessage}</div>
+                    </div>
+                    </div>
+                    </div>;
+                    metaTagView = <MetaTagComponents page="ProfileNotFound" />
+                }
+
             }
 
         }
@@ -685,12 +764,12 @@ class ProfilePage extends React.Component {
                 </div>
             </div>;
             showAlbumView = <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid"></div>;
-            setTimeout(function(){
-                var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-                if(document.getElementById("animated-background")) {
-                    document.getElementById("animated-background").style.height = backHeight + "px";
-                }
-            },100);
+            // setTimeout(function(){
+            //     var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+            //     if(document.getElementById("animated-background")) {
+            //         document.getElementById("animated-background").style.height = backHeight + "px";
+            //     }
+            // },100);
         }
         return (
             <div style={this.state.profilePageStyle} id="ProfilePage">
@@ -721,10 +800,10 @@ class ProfilePage extends React.Component {
                                 <div id="tabAbout" onClick={() => this.showTab("About")} className="dispibl wid29p f12 vpro_selectTab">
                                   {this.state.displayTab[0]}  {decideHimHer}
                                 </div>
-                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12 opa70">
+                                <div id="tabFamily" onClick={() => this.showTab("Family")} className="dispibl wid40p txtc f12">
                                   {this.state.displayTab[1]}
                                 </div>
-                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12 opa70">
+                                <div id="tabDpp" onClick={() => this.showTab("Dpp")}  className="dispibl wid30p txtr f12">
                                   {this.state.displayTab[2]}
                                 </div>
                                 <div className="clr"></div>
@@ -762,19 +841,39 @@ const mapStateToProps = (state) => {
        myjsData: state.MyjsReducer,
        Jsb9Reducer : state.Jsb9Reducer,
        buttonDetails: state.ProfileReducer.buttonDetails,
-       contactAction: state.contactEngineReducer
+       contactAction: state.contactEngineReducer,
+       historyObject : state.historyReducer.historyObject
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
         showProfile: (containerObj,urlString) => {
+            containerObj.state.nextProfileFetched = false;
+            if ( localStorage.getItem('lastProfilePageLocation') === urlString )
+            {
+              removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(urlString));
+            }
+            else
+            {
+              localStorage.setItem('lastProfilePageLocation',urlString);
+            }
             let call_url = "/api/v1/profile/detail"+urlString;
             commonApiCall(call_url,{},'SHOW_INFO','GET',dispatch,true,containerObj);
         },
         fetchNextPrevData: (containerObj,urlString,saveState) => {
+            containerObj.state.nextProfileFetched = false;
             let call_url = "/api/v1/profile/detail"+urlString;
-            commonApiCall(call_url,{},'SAVE_INFO','GET',saveState,true,containerObj);
+            try
+            {
+                commonApiCall(call_url,{},'SAVE_INFO','GET',saveState,true,containerObj).then(function (response) {
+                    containerObj.state.nextProfileFetched = true;
+                });
+            }
+            catch(e)
+            {
+                containerObj.state.nextProfileFetched = true;
+            }
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)

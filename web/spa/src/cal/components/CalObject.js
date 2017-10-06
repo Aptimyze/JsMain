@@ -18,7 +18,7 @@ export default class calObjectClass extends React.Component
     if(this.calCompArray1.indexOf(this.calData.LAYERID) != -1) {
       return(<div><CalComp1 myjsObj={this.props.myjsObj} calData={this.props.calData}/></div>);
     } else {
-      return(<div><CalComp2 myjsObj={this.props.myjsObj} calData={this.props.calData}/></div>);
+      return(<div><CalComp2 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.props.calData}/></div>);
     }
   }
 

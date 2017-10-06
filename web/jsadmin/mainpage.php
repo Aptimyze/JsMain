@@ -584,7 +584,7 @@ if (isset($data)) //successful login
         }
 
         if (in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportAbuse\">Fetch Report Abuse Data</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportAbuse?user=$user&cid=$cid\">Fetch Report Abuse Data</a>";
         }
         if (in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/profileVerification/InappropriateUsers\">Fetch Inappropriate Users Data</a>";
@@ -628,7 +628,7 @@ if (isset($data)) //successful login
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/showLIVETags\">LIVE Tags</a>";
          }
          // link for adding / deleting buzzwords for screening
-         if (in_array('CSSUP', $priv)) {
+         if (in_array('CSSUP', $priv) || in_array('P', $priv) || in_array('MG', $priv) || in_array('ARB', $priv)) {
              $linkarr[]="<a href=\"$SITE_URL/jsadmin/addRemoveBuzzwords.php?cid=$cid\">Add / Remove Buzzwords</a>";
          }
     }

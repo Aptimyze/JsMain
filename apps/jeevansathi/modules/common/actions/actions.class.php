@@ -727,6 +727,15 @@ class commonActions extends sfActions
     {
 
         $calObject=$request->getAttribute('calObject');
+        
+        if($request->getAttribute('fromDetailedAction'))
+        {
+            $this->fromDetailedAction=1;
+            if($request->getAttribute('redirectViewProfileUrl'))
+                $this->redirectViewProfileUrl=$request->getAttribute('redirectViewProfileUrl');
+            else
+                $this->redirectViewProfileUrl='';
+        }
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
         $this->dppSuggestions = json_encode($calObject['dppSuggObject']);

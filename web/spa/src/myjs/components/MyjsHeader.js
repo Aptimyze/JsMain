@@ -73,7 +73,7 @@ export default class MyjsHeadHTML extends React.Component
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
-  render(){
+  render(){      
       return(
           <div className="posrel">
             <HamMain bellResponse={this.props.bellResponse} ref="Hamchild" page="others"></HamMain>

@@ -5,7 +5,7 @@
  */
 class SMSkibanaAlertsTask extends sfBaseTask
 {
-	private $SMS_TO = array("9818424749","9953457479","9873639543","8826380350","9999216910","9868673709","9953178503","9650350387","9755158977","8010619996");
+	private $SMS_TO = array("9818424749","9953457479","9873639543","9999216910","9868673709","9953178503","9650350387","9755158977","8010619996");
   	const FROM_ID = "JSSRVR";
   	const PROFILE_ID = "144111";
 
@@ -81,7 +81,7 @@ EOF;
 		      ],
 		      "must_not" => [
 		      	"regexp" =>[
-		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|^.{0,0}$"
+		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|.*rb_yrg95914.*|^.{0,0}$"
 		      	]
 		      ]
 		    ]

@@ -99,7 +99,7 @@ class postSendReminderv2Action extends sfAction
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID();
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&receiver=".$this->Profile->getPROFILEID().'&contactId='.$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+				$responseArray['draftmessage'] = "Reminder sent. You may send a personalized message with the reminder." ;
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
 
 
@@ -233,7 +233,7 @@ class postSendReminderv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
     if(MobileCommon::isNewMobileSite())
 		{
-        if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
+        if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
         {
           $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
     			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
@@ -243,8 +243,9 @@ class postSendReminderv2Action extends sfAction
         }
         else
           {
-            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R");
-            $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R",'',$this->contactHandlerObj->getContactObj()->getCount());
+//            $finalresponseArray['buttondetails']['buttons'][0] = $responseButtonArray["button"];
+            $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
       			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
             $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
 //            die("sssss");

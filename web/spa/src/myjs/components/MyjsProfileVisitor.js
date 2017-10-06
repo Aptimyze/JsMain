@@ -7,7 +7,7 @@ export class MyjsShowVisitors extends React.Component{
     let tupleValues = this.props.listingData;
     let count = (tupleValues.length<=3)?tupleValues.length: 3;
     let VisitorsListing;
-    if(this.props.listingData.length>4)
+    if(this.props.listingData.length>=4)
     {
       VisitorsListing = <div className="fl pl_a"><a href="/search/visitors?matchedOrAll=A">
           <div className="bg7 txtc disptbl myjsdim1">

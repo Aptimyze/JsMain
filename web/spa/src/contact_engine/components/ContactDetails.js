@@ -15,7 +15,7 @@ this.setState({...newState});
 }
 render(){
 
-return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
+return (<div id="viewContactLayer"  className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim}>
           <a href="#"  className="ce_overlay ce_z102" > </a>
             <div className={"posabs ce_z103 ce_top1 fullwid "} style={this.state.tupleDim}>
 
@@ -41,7 +41,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
 <p id="ViewContactPreLayerText" dangerouslySetInnerHTML={{__html: this.state.preLayerText}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 
-  <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber" style={{paddingTop: '11%'}}>
+  <div className={"pt15 " + this.state.vCPreLayerNoNumShow} id="ViewContactPreLayerNoNumber">
 <p id="ViewContactPreLayerTextNoNumber" dangerouslySetInnerHTML={{__html: this.state.vCNoNumber}} style={{color: '#fff',textAlign: 'center'}}></p>
   </div>
 {this.getPhoneSection({contact:this.props.actionDetails.contact2,contact_message:this.props.actionDetails.contact2_message,showReportInvalid:true,label:'Landline',style:{},id:'phone'})}
@@ -72,8 +72,7 @@ return (<div className="posabs ce-bg ce_top1 ce_z101" style={this.state.tupleDim
 }
 
 componentDidMount(){
-  console.log("ComponentDidMount  viw contact");
-  console.log(this.state.cdOHeight);
+  
   //$("#contactDetailOverlay").height($("#bottomElement").offset().top-$("#contactDetailOverlay").offset().top);
   let getOffset = (ele)=> document.getElementById(ele).clientHeight;
   let sum = getOffset('3DotProPic')+  getOffset('errorMsgOverlay') + getOffset('bottomElement');
@@ -180,8 +179,8 @@ getMembershipOvlay(){
                       <li className="tick pad21" id="subheading3">{this.state.sH3}</li>
                   </ul>
                   <div id="MembershipOfferExists" className={this.state.mOExists} >
-                      <div className="pad45_0 f16 fontlig" id="membershipOfferMsg1"></div>
-                      <div className="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
+                      <div className="pad45_0 f16 fontlig" id="membershipOfferMsg1">{this.state.mO1}</div>
+                      <div className="f16 pad20 fontmed" id="membershipOfferMsg2">{this.state.mO2}</div>
                   </div>
               {this.state.lowestOfferDiv}
               </div>
@@ -210,7 +209,7 @@ getContactDetails(actiondetails){
   bottomMsgShow='dispnone',bottomMsgText='',bottomMsgredirectFun=()=>{},bottomMsgShow2={display:'none'},
   bottomMsgText2='', nevMindStyle={display:'none'}, vCPreLayerShow='dispnone', vCPreLayerNoNumShow='dispnone',footerBShow='dispnone',
   footerBText='',preLayerText='',vCPreLayerShow='dispnone',commonOverlayShow='',newErrMsg='',
-  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone', lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
+  memHeading='',sH1,sH2,sH3,mOExists='dispnone', oPShow = 'dispnone',oPrice, lowestOfferDiv=(<div></div>) ,memOvlayShow='dispnone',closeLyrShow='dispnone',cdOvlayShow='dispnone',primaryMob=(<div></div>), landLine=(<div></div>), alternateMob=(<div></div>),emailInfo=(<div></div>),
   c1Style = {};
 
       if(actiondetails.contactdetailmsg){
@@ -307,12 +306,12 @@ else
               var mO2 = actiondetails.offer.membershipOfferMsg2;
               if(typeof(actiondetails.strikedprice) != "undefined" && actiondetails.strikedprice != null)
               {
-                var oPrice = actiondetails.strikedprice;
-                var oPShow = '';
+                oPrice = actiondetails.strikedprice;
+                oPShow = '';
               }
 
 
-              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={this.state.oPShow}>{this.state.oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
+              var lowestOfferDiv = (<div className="f16 fontlig" id="LowestOffer" >Lowest Membership starts @<del id="oldPrice" className={oPShow}>{oPrice}</del>&nbsp;<span id="currency">{actiondetails.membershipoffercurrency}</span>&nbsp;<span id="newPrice">{actiondetails.discountedprice}</span>
             </div>);
             }
             else if(typeof(actiondetails.lowestoffer) != "undefined" && actiondetails.lowestoffer != null)

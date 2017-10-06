@@ -44,6 +44,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
+	<link rel="manifest" href="/manifest.json">
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`

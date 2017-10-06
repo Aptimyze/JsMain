@@ -111,7 +111,8 @@ function IsValInteger($val)
 */
 function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 {
-	$profileid=trim($profileid,"'");
+        $myDbId=JsDbSharding::getShardNumber($profileid);
+	/*$profileid=trim($profileid,"'");
 	$profileid=trim($profileid,"\"");
 	if(!IsValInteger($profileid))
 	{
@@ -173,7 +174,7 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);
 		}        
-	}
+	}*/
 	return $myDbId;
 }
 
@@ -184,7 +185,7 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 */
 function assignServerToProfile($profileid)
 {
-	global $matchalertServer;
+	/*global $matchalertServer;
 	global $noOfShardedServers,$noOfActiveServers,$activeServers;
 	$mysqlObj=new Mysql;
 	$db_main=$mysqlObj->connect("master");
@@ -196,7 +197,7 @@ function assignServerToProfile($profileid)
 	$reshardingArray[1]=5;
 	if(in_array($serverid,$reshardingArray))
 		$serverid=$reshardingArray[$serverid];
-	*/
+	
 	//On Re-sharding
 	$shard=$serverid;
 	$assign_date=date("Y-m-d");
@@ -207,6 +208,6 @@ function assignServerToProfile($profileid)
 
 		$myDb=$mysqlObj->connect($activeServers[$shard]);
 		$mysqlObj->executeQuery($sql,$myDb);
-	}
+	}*/
 }
 ?>

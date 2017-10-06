@@ -218,6 +218,7 @@ padding: 10px 15px ;
 .VPwid30p{width:30%;}
 .VPwid25p{width:25%;}
 .VPwid28p{width:28%;}
+.VPwid35p{width:35%;}
 .VPwid46p{width:46%;}
 .VPmt5{margin-top: 5px}
 .VPpl95p{padding-left: 95px}
@@ -427,4 +428,4 @@ padding: 10px 15px ;
     right: -1px;
     top: 204px;
   }
-  
+.space30{height:30px;width:100%;background:white}  

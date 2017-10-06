@@ -40,6 +40,10 @@ class AppSearch extends SearchParamters
 			$searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::App;
 		else
 			$searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::iOS;
+                
+                if(MobileCommon::isApp()=='A' && $request->getParameter('recent_activity') && $request->getParameter('recent_activity') == 1){
+                    $searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::  RECENT_ACTIVITY_ANDROID;  
+                }
 		$searchParamsSetter['GENDER'] = $request->getParameter('Gender');
 		$searchParamsSetter['LAGE'] = $request->getParameter('lage');
 		$searchParamsSetter['HAGE'] = $request->getParameter('hage');

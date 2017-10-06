@@ -2,6 +2,8 @@ require ('../style/contact.css')
 import React from "react";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
+import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
+import {getCookie} from '../../common/components/CookieHelper';
 
 
 export const performAction = (data) =>
@@ -9,6 +11,10 @@ export const performAction = (data) =>
     if(!data.button.enable)return false;
     var params = (data.button.params ? data.button.params : "") + (data.extraParams ? data.extraParams: "");
     var url = `?&${params}&profilechecksum=${data.profilechecksum}`;
+    if (  getCookie('AUTHCHECKSUM') !== false )
+    {
+      removeProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage());
+    }
     return commonApiCall(CONSTANTS.CONTACT_ENGINE_API[data.button.action]+url,{},'','POST').then((response)=>{if(typeof data.callBFun=='function') data.callBFun(response);});
 }
 

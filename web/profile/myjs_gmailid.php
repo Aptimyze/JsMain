@@ -120,8 +120,6 @@ $activated='X';
 			//send_chat_request_email($profileid,$Email,$username);
 
 		}
-		$msg = print_r($_SERVER,true);
-		mail("kunal.test02@gmail.com","web/profile/myjs_gmailid.php in USE",$msg);
 		$sql="UPDATE JPROFILE SET EMAIL='$email',MOD_DT=NOW() WHERE PROFILEID='$data[PROFILEID]'  AND activatedKey=1";
 		mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 		JProfileUpdateLib::getInstance()->removeCache($data[PROFILEID]);

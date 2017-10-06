@@ -6,16 +6,17 @@ import * as CONSTANTS from '../../common/constants/apiConstants';
 import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import axios from "axios";
 
+const RELIGIONARR = ["1","4","7","9"];
 class KundliInfo extends React.Component {
 	constructor(props) {
-        super();
+        super();        
         this.state = {
             showAstroLayer:false
         };
     }
 
     componentDidMount() {
-        if(this.props.show_gunascore && getCookie("AUTHCHECKSUM")){
+        if(this.props.show_gunascore =="y" && getCookie("AUTHCHECKSUM")){
             this.props.getGuna(this.props.profilechecksum,this.props.about.sameGender);
         }
     }
@@ -30,7 +31,7 @@ class KundliInfo extends React.Component {
     {
         let htmlStr = "<div class='fl'><i class='vpro_sprite vpro_pin'></i></div>",colorClass,szHisHer;
         if(nextProps.gunaScore.responseMessage == "Successful" && nextProps.gunaScore.SCORE) {
-            if(nextProps.gunaScore.SCORE >18) {
+            if(nextProps.gunaScore.SCORE >=18) {
                 colorClass = "greenText";
             } else {
                 colorClass = "redText";
@@ -148,7 +149,7 @@ class KundliInfo extends React.Component {
     	var more_astro;
     	if(this.props.about.more_astro)
     	{
-            var rashi,nakshatra,horo_match;
+            var rashi,nakshatra;
             if(this.props.about.more_astro.rashi) {
                 rashi =  <div className="clearfix">
                     <div className="fontlig vpro_wordwrap" id="vpro_more_astro_rashi" >
@@ -163,22 +164,14 @@ class KundliInfo extends React.Component {
                     </div>
                 </div>;
             }
-            if(this.props.about.more_astro.horo_match)
-            {
-                horo_match = <div className="clearfix pt10">
-                    <i className="vpro_sprite vpro_pin"></i>
-                    <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
-                    </div>
-                </div>
-            }
 
-    		more_astro = <div>
-    									<div className="f12 color1">More</div>
-					            	<div className="fontlig pb15">
-					            	{rashi}
-					            	{nakshatra}
-					            	</div>
-    								</div>;
+            more_astro = <div>
+            <div className="f12 color1">More</div>
+            <div className="fontlig">
+            {rashi}
+            {nakshatra}
+            </div>
+            </div>;
     	}
 
     	var kundliSection;
@@ -220,7 +213,7 @@ class KundliInfo extends React.Component {
         var Religious;
         if(this.props.about.muslim_m || this.props.about.sikh_m || this.props.about.christian_m)
         {
-            Religious = <div className="pad5 bg4 fontlig color3 clearfix f14">
+            Religious = <div className=" bg4 fontlig color3 clearfix f14">
                 <div className="fl">
                     <i className="vpro_sprite vpro_kund"></i>
                 </div>
@@ -236,7 +229,7 @@ class KundliInfo extends React.Component {
         if(this.state.showAstroLayer == true) {
             if(this.state.astroType == "astroCompMem") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
@@ -245,7 +238,7 @@ class KundliInfo extends React.Component {
                 </div>;
             } else if(this.state.astroType == "freeAstroComp") {
                 astroButton = <div>
-                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "https://www.jeevansathi.com/profile/mem_comparison.php">
+                    <a id="astroButton" className="f18 fontlig astrob2 js-buttonAstro dispbl txtc" href = "/profile/mem_comparison.php">
                         Upgrade Membership
                     </a>
                 </div>;
@@ -270,25 +263,43 @@ class KundliInfo extends React.Component {
             </div>
         }
 
+        let horoAndAstroSection = ""; 
+        let horo_match = "";
+        if(this.props.about.more_astro && this.props.about.more_astro.horo_match)
+        { 
+            horo_match = <div className="clearfix pt30">
+            <i className="vpro_sprite vpro_pin"></i>
+            <div className="fontlig dispibl padl5 vpro_wordwrap vtop" id="vpro_more_astro_horo_match">{this.props.about.more_astro.horo_match}
+            </div>
+            </div>
+        }        
+               
+        if(RELIGIONARR.includes(this.props.about.religionId))
+        {
+            horoAndAstroSection = <div>
+            <div className="clearfix pb20 pt20">
+            {downloadHoroscope}
+            {AstroReport}
+            </div>
+            {horo_match}
+            <div className="clearfix pb15" id="gunaScore"></div></div>;
+        }
     	return(
     		<div>
           {astroLayer}
 
-					<div className="pad5 bg4 fontlig color3 clearfix f14">
-						<div className="clearfix">
-								  <i className="vpro_sprite vpro_kund fl"></i>
-									<div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
-						</div>
-						{kundliSection}
-						<div id="chk" className="clearfix pb20 pt20">
-               {downloadHoroscope}
-               {AstroReport}
-          	</div>
-						<div className="clearfix" id="gunaScore"></div>
-  					{Religious}
-    		</div>
+          <div className="pad5 bg4 fontlig color3 clearfix f14">
+          <div className="clearfix">
+          <i className="vpro_sprite vpro_kund fl"></i>
+          <div className="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
+          <div className="clr hgt10"></div>
+          </div>
+          {kundliSection}
+          {horoAndAstroSection}
+          {Religious}
+          </div>
 
-				</div>
+          </div>
     	);
     }
 }

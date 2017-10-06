@@ -72,7 +72,7 @@ class CriticalActionLayerTracking
    * @param- profile id, layer type
    * @return- boolean value to display layer or not
    */
-  public static function getCALayerToShow($profileObj,$interestsPending)
+  public static function getCALayerToShow($profileObj,$interestsPending,$checkForIndependentCal='')
   {//return 23;
     $profileId = $profileObj->getPROFILEID();
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
@@ -98,6 +98,8 @@ class CriticalActionLayerTracking
       if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
         return $value;
     }
+    if($checkForIndependentCal)
+      return 0;
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
               return 0;
 
@@ -283,7 +285,7 @@ return 0;
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
                               {
-                                if(is_array($value['data']))
+                                if(is_array($value['data']) && count($value['data']) )
                                 {
                                   $show = 0;
                                   break;
@@ -353,7 +355,7 @@ return 0;
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value)
                                 {
-                                  if(is_array($value['data']))
+                                  if(is_array($value['data']) && count($value['data']))
                                   {
                                     $show = 1;
                                     $request->setParameter('dppSugg',$dppSugg);
@@ -484,7 +486,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0)
+                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) /*&& ($profileid%19)==0*/) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];
@@ -508,6 +510,14 @@ return 0;
                           if(!$len || $len<100)
                               $show=1;
                       }
+                  break;
+                  case '27':
+                    $loggedinUserEmail = $profileObj->getEMAIL();
+                    $bounceObj = new bounces_BOUNCED_MAILS();
+                    $Flag = $bounceObj->checkEntry($loggedinUserEmail);
+                    if(!MobileCommon::isApp() && $Flag){
+                      $show = 1;
+                    }
                   break;
 
           default : return false;

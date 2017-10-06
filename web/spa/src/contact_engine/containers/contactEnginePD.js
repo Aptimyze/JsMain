@@ -10,7 +10,7 @@ import ContactDetails from '../components/ContactDetails';
 import BlockPage from './BlockPage';
 import ReportAbuse from './ReportAbuse';
 import ReportInvalid from './ReportInvalid';
-
+import GA from "../../common/components/GA";
 
 export class contactEnginePD extends React.Component{
   constructor(props){
@@ -59,6 +59,8 @@ export class contactEnginePD extends React.Component{
         let params = '';
         if(button.action == 'WRITE_MESSAGE')
            params = '&pagination=1';
+
+        this.refs.GAchild.trackJsEventGA("Profile Description-jsms",button.label,this.refs.GAchild.getGenderForGA());
         var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
         if(!temp)return;
         this.props.showLoaderDiv();
@@ -82,12 +84,11 @@ export class contactEnginePD extends React.Component{
     }
     else
     {
-
       switch(actionButton.action)
       {
         case 'SHORTLIST':
           var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-          this.props.replaceSingleButton(newButtons);
+          this.props.replaceSingleButton(newButtons,responseButtons.buttondetails.topmsg);
           break;
         case 'IGNORE':
             if(actionButton.params.indexOf("ignore=0")!=-1)
@@ -99,9 +100,6 @@ export class contactEnginePD extends React.Component{
               this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   },'showBlockLayer');
             }
             this.props.replaceOldButtons(responseButtons);
-
-            //var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-            //this.props.replaceSingleButton(newButtons);
         break;
 
         case 'CONTACT_DETAIL':
@@ -131,7 +129,7 @@ export class contactEnginePD extends React.Component{
           else if(responseButtons.buttondetails.button)
           {
             var newButtons = this.getNewButtons(responseButtons.buttondetails.button,index);
-            this.props.replaceSingleButton(newButtons);
+            this.props.replaceSingleButton(newButtons,responseButtons.buttondetails.topmsg);
           }
           }
           // for decline and cancel cases
@@ -145,21 +143,25 @@ export class contactEnginePD extends React.Component{
 
       }
       if(actionButton.action=='INITIATE' && responseButtons.buttondetails.button && responseButtons.buttondetails.button.label.indexOf('Saved')!=-1){
-        this.props.replaceSingleButton(Array(responseButtons.buttondetails.button));
+        this.underScreened = 1;
+        this.props.replaceSingleButton(Array(responseButtons.buttondetails.button),responseButtons.buttondetails.topmsg);
       }
 
-      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1)
+      if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1 && !responseButtons.actiondetails.errmsglabel)
       {
         this.goToViewSimilar();
       }
-
-
+      if(actionButton.action=='DECLINE' && typeof(this.props.nextPrevPostDecline)=='function')
+      {
+            this.props.historyObject.pop();
+          this.props.nextPrevPostDecline();
+      }
     }
   }
   render(){
 
     return (
-    <div>{[this.getFrontButton(),
+    <div><GA ref="GAchild" />{[this.getFrontButton(),
         this.getOverLayDataDisplay()]
   }</div>
   );
@@ -251,13 +253,13 @@ hideLayerCommon(data){
 getOverLayDataDisplay(){
 
     let layer = [];
-      if(this.state.showThreeDots)
+      if(this.state.showThreeDots && !this.underScreened)
         layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.props.historyObject.pop()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
-        layer= (<ReportAbuse
+        layer= (<ReportAbuse setBlockButton={this.setBlockButton.bind(this)}
                     username={this.props.profiledata.username}
                     profilechecksum={this.props.profiledata.profilechecksum}
-                    closeAbuseLayer={() => this.props.historyObject.pop()}
+                    closeAbuseLayer={() => {this.props.historyObject.pop();this.props.historyObject.pop();}}
                     profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
@@ -336,8 +338,8 @@ getCancelDeclineLayer(actionDetails){
           </div>
 );
 }
-  setFrontButtonDisplay(object){
-    this.setState({frontButton:object});
+  setBlockButton(object){
+    this.props.replaceSingleButton(Array({action:"IGNORE",label: "Unblock", params: "&ignore=0", iconid: "ignore", primary: "true", secondary: null,enable:true}));
   }
 
 goToViewSimilar(){
@@ -363,10 +365,10 @@ const mapDispatchToProps = (dispatch) => {
             payload: {newButtonDetails:newButtons.buttondetails}
           });
         },
-        replaceSingleButton: (newButtons) => {
+        replaceSingleButton: (newButtons,topMsg) => {
           dispatch({
             type: 'REPLACE_BUTTON',
-            payload: {newButtons:newButtons}
+            payload: {newButtons:newButtons,topMsg:topMsg}
           });
         }
 

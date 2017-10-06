@@ -67,7 +67,8 @@ export  class MyjsPage extends React.Component {
 
 	constructor(props) {
   		super();
-		jsb9Fun.recordBundleReceived(this,new Date().getTime());
+			jsb9Fun.recordBundleReceived(this,new Date().getTime());
+			jsb9Fun.setJsb9Key(this,'JSNEWMOBMYJSURL');
 		this.state=
 		{
 			myjsApi: false,
@@ -80,7 +81,6 @@ export  class MyjsPage extends React.Component {
   	componentDidMount()
   	{
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
-			this.props.resetTimeStamp();
 			this.firstApiHits(this);
 			this.ieApi = false;
 			this.irApi = false;
@@ -110,6 +110,11 @@ export  class MyjsPage extends React.Component {
 	{
 		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !nextProps.myjsData.ieFetched){
 			this.restApiHits(this);
+		}
+		else{
+			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
+				this.firstApiHits(this);
+			}
 		}
 
 		redirectToLogin(this.props.history,nextProps.myjsData.apiData.responseStatusCode);
@@ -170,12 +175,12 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-   		window.addEventListener('scroll', (event) => {this.restApiHits()});
+   		window.addEventListener('scroll', (event) => {this.restApiHits(event)});
   	}
 
-  	firstApiHits(){
+  	firstApiHits(obj){
   		if(!this.state.myjsApi){
-		    this.props.hitApi_MYJS();
+		    this.props.hitApi_MYJS(obj);
 		    this.setState({
 		    	myjsApi: true
 		    });
@@ -188,46 +193,68 @@ export  class MyjsPage extends React.Component {
 		}
   	}
 
-  	restApiHits(){
-  		if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched){
-  			 return;
-  		}
-   		if(!this.props.myjsData.ieFetched){
-   			if(!this.ieApi){
-   				this.ieApi = true;
-		 		this.props.hitApi_IE();
+  	restApiHits()
+		{
+			try
+			{
+				if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched)
+				{
+					 return;
+				}
+				if(!this.props.myjsData.ieFetched)
+				{
+					if(!this.ieApi)
+					{
+						this.ieApi = true;
+					this.props.hitApi_IE();
+					}
+				}
+				else if(!this.props.myjsData.irFetched)
+				{
+					if(!this.irApi)
+					{
+						this.irApi = true;
+						this.props.hitApi_IR();
+					}
+				}
+				else if(!this.props.myjsData.modFetched)
+				{
+					if(!this.modApi)
+					{
+						this.modApi = true;
+						this.props.hitApi_MOD();
+					}
+				}
+				else if(!this.props.myjsData.vaFetched)
+				{
+					if(!this.vaApi)
+					{
+						this.vaApi = true;
+							this.props.hitApi_VA();
+					}
+				}
+				else if(!this.props.myjsData.drFetched)
+				{
+					if(!this.drApi)
+					{
+						this.drApi = true;
+						this.props.hitApi_DR();
+					}
+					this.checkforgap("lastcall");
+				}
 			}
+
+
+			catch(e)
+			{
+				console.log("excpection coming from restapi"+e);
+			}
+
 		}
-  		else if(!this.props.myjsData.irFetched){
-  			if(!this.irApi){
-  				this.irApi = true;
-		    	this.props.hitApi_IR();
-		    }
-		}
-  		else if(!this.props.myjsData.modFetched){
-  			if(!this.modApi){
-  				this.modApi = true;
-		    	this.props.hitApi_MOD();
-		    }
-		}
-		else if(!this.props.myjsData.vaFetched){
-			if(!this.vaApi){
-				this.vaApi = true;
-		    	this.props.hitApi_VA();
-		    }
-		}
- 		else if(!this.props.myjsData.drFetched){
- 			if(!this.drApi){
-		    	this.drApi = true;
-		    	this.props.hitApi_DR();
-		    }
-				this.checkforgap("lastcall");
-		}
-  	}
 		checkforgap(param)
 		{
       let ele=document.getElementById("JBrowserGap");
-      if (navigator.userAgent.indexOf('SamsungBrowser/') >= 0)
+      if ( (navigator.userAgent.indexOf('SamsungBrowser/') >= 0) || (navigator.userAgent.indexOf(' UCBrowser/') >= 0) )
 			{
 
 					ele.style.height="100px";
@@ -269,33 +296,23 @@ export  class MyjsPage extends React.Component {
 	   //       return (<div><Loader show="page"></Loader></div>)
 	   //  }
 	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
-				 return (<CalObject calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
+				 return (<CalObject myjsApiHit={this.props.hitApi_MYJS.bind(this)} calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
 
 	    let MyjsHeadHTMLView, EditBarView, membershipmessageView, AcceptCountView, LoaderView;
-  		if(this.props.myjsData.fetched){
+  		if(this.props.myjsData.fetched && this.props.myjsData.hamFetched){
 
 			MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history} bellResponse={this.props.myjsData.apiDataHam.hamburgerDetails} fetched={this.props.myjsData.hamFetched}/>
 
 			EditBarView = <EditBar cssProps={this.state.cssProps}  profileInfo ={this.props.myjsData.apiData.my_profile} fetched={this.props.myjsData.fetched}/>
 
 			if(this.props.myjsData.apiData.membership_message!=null){
-			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
+			 	membershipmessageView = <MyjsOcbLayer Ocb_data={this.props.myjsData.apiData.membership_message} timeDiff={new Date().getTime() - this.props.timeStamp} ocb_currentT={this.props.myjsData.apiData.currentTime}/>
 			}
 
-  			AcceptCountView =  <AcceptCount fetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
+  			AcceptCountView =  <AcceptCount  hamFetched={this.props.myjsData.hamFetched} acceptance={this.props.myjsData.apiDataHam.hamburgerDetails} justjoined={this.props.myjsData.apiDataHam.hamburgerDetails}/>
 	    }
 	    else{
-	    	MyjsHeadHTMLView = <MyjsHeadHTML location={this.props.location} history={this.props.history}/>
-
-			EditBarView = <EditBar cssProps={this.state.cssProps}/>
-
-			if(this.props.myjsData.apiData.membership_message!=null)
-			{
-			 	membershipmessageView = <MyjsOcbLayer/>
-			}
-
-  			AcceptCountView =  <AcceptCount/>
 
   			LoaderView = <div><Loader show="page"></Loader></div>
 	    }
@@ -329,10 +346,12 @@ export  class MyjsPage extends React.Component {
      		height: window.innerHeight + "px"
     	};
     	let ShowBrowserNotificationView = "";
-
-    	if ( this.props.myjsData.apiData.showBrowserNotification )
+ 	    if ( this.props.myjsData.apiData.showBrowserNotification )
     	{
-    		ShowBrowserNotificationView = <ShowBrowserNotification/>
+    		if (this.props.myjsData.apiData.showBrowserNotification['showLayer'] == 1)
+    		{
+    			ShowBrowserNotificationView = <ShowBrowserNotification/>
+    		}
     	}
 
   		return(
@@ -369,6 +388,7 @@ const mapStateToProps = (state) => {
     return{
      myjsData: state.MyjsReducer,
 	   Jsb9Reducer : state.Jsb9Reducer,
+		 timeStamp : state.MyjsReducer.timeStamp
 
     }
 }
@@ -376,7 +396,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return{
         hitApi_MYJS: (containerObj) => {
-		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj);
+		return commonApiCall(CONSTANTS.MYJS_CALL_URL,{},'SET_MYJS_DATA','POST',dispatch,true,containerObj).then(()=>jsb9Fun.recordServerResponse(containerObj,new Date().getTime()));
 		},
         jsb9TrackRedirection : (time,url) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
@@ -400,7 +420,7 @@ const mapDispatchToProps = (dispatch) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_IE_DATA','POST',dispatch);
         },
         hitApi_Ham: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL3+'?&API_APP_VERSION=94',{},'SET_HAM_DATA','POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch);
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
 				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})

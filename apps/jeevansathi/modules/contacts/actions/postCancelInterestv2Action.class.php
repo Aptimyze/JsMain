@@ -119,7 +119,7 @@ class postCancelInterestv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
     if(MobileCommon::isNewMobileSite())
 		{
-        if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
+        if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
         {
           $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","C");
     			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
@@ -129,9 +129,9 @@ class postCancelInterestv2Action extends sfAction
         }
         else
         {
-          $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+          $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
           $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
-          $finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+          $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
 
         }
 

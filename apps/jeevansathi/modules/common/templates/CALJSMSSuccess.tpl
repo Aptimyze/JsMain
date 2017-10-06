@@ -5,6 +5,8 @@
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';
+    var fromDetailedAction='~$fromDetailedAction`';
+    var redirectViewProfileUrl='~$redirectViewProfileUrl`';
     function validateAndSend()
     {
             var altEmailUser = ($("#altEmailInpCAL").val()).trim();
@@ -33,7 +35,9 @@
                  msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
-                   return;
+                 /* tracking for B1 */
+                 $.get("/common/criticalActionLayerTracking?layerR=13&button=B1");
+                   return; 
                     }
                 });
 
@@ -152,8 +156,8 @@
   <div class="fontlig">
       <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div>
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
-         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>
-         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
 
 </div>

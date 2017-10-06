@@ -1,8 +1,9 @@
-export function getRoutePath(location) {
-
-	var hash = location.split('#')[1] || '';
-	if(hash) 
+export function getRoutePath(location)
+{
+	var hash = location.split('#')[1] || ''
+	if(hash)
 	{
+		hash = hash.replace(/^\/+/g, '');
 		hash = "/" + hash;
 	}
 	else
@@ -12,11 +13,10 @@ export function getRoutePath(location) {
 			hash = '/myjs';
 		}
 	}
-
 	return hash;
 }
 
-export function getParameterByName(url, name) 
+export function getParameterByName(url, name)
 {
 	if (!url) url = window.location.href;
 	name = name.replace(/[\[\]]/g, "\\$&");

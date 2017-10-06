@@ -127,7 +127,7 @@ class postEOIv2Action extends sfAction
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID();
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+				$responseArray['draftmessage'] = "Interest sent. You may send a personalized message with the interest.";
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
 
 
@@ -158,7 +158,12 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
-
+			if(is_array($this->contactEngineObj->contactHandler->getContactLimitWarning()))
+			{
+				$responseArray["limitWarning"] = $this->contactEngineObj->contactHandler->getContactLimitWarning();
+				$responseArray["limitWarning"]["contactedUser"] = $request->getParameter("profilechecksum");
+			}
+			
 		}
 		else
 		{
@@ -306,7 +311,7 @@ class postEOIv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite()  )
 		{
 
-      if(sfContext::getInstance()->getRequest()->getParameter('pageSource')!='VDP')
+      if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
       {
         $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
         $restResponseArray= $buttonObj->jsmsRestButtonsrray();
@@ -318,9 +323,12 @@ class postEOIv2Action extends sfAction
       }
       else
       {
+        $bookmarkObj  = new Bookmarks();
+        $count = count($bookmarkObj->getProfilesBookmarks($this->loginProfile->getPROFILEID(), array($this->Profile->getPROFILEID())));
+        $params['SHORTLIST'] = $count ? 'Y' : 'N';
         if($errorArr["UNDERSCREENING"]!=2)
-          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I");
-        $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I",$params);
+        $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
         $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
         $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
       }

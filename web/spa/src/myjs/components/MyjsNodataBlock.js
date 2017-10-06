@@ -38,7 +38,7 @@ export default class NodataBlock extends React.Component{
   }
 
 	render(){
-    console.log('palashrender');
+    
 			  let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
         let browsePrfHtml='';
 
