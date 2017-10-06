@@ -642,7 +642,7 @@ swipeNextProfile(nextOrPrev){
                     username:this.props.AboutInfo.username
                 };
                 if(this.state.ownView == false) {
-                     contactEngineView = <ContactEngineButton nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflow:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflow:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
+                     contactEngineView = <ContactEngineButton NAVIGATOR={this.props.pageInfo.NAVIGATOR} nextPrevPostDecline={this.nextPrevPostDecline.bind(this)} pageSource='VDP' showError={(inp)=>this.showError(inp)} setScroll={()=>this.setState({profilePageStyle:{overflow:'initial'}})} showLoaderDiv={()=> this.showLoaderDiv()} unsetScroll={()=>this.setState({profilePageStyle:{overflow:'hidden'}})} hideLoaderDiv={()=>this.hideLoaderDiv()} profiledata={profiledata} buttondata={this.props.buttonDetails} pagesrcbtn="pd"/>;
                 }
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;

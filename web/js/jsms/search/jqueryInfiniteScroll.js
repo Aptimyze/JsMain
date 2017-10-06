@@ -275,7 +275,7 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,profileData)
 {
 
-	if(firstResponse.infotype != 'VISITORS')
+	if(firstResponse.infotype != 'VISITORS' && tupleStype!='')
             contactTracking="&stype="+tupleStype;
 
     if ( firstResponse.infotype == "INTEREST_ARCHIVED")
@@ -548,7 +548,7 @@ function albumcheck(count,idd,profilechecksum,IsProfilefiltered,tupleStype,total
 
 	if(typeof IsProfilefiltered == 'undefined')
 		var IsProfilefiltered = 0;
-	if(typeof contactTracking == 'undefined')
+	if(typeof contactTracking == 'undefined' && tupleStype!='')
 		contactTracking="&stype="+tupleStype;
 
 	if(IsProfilefiltered==1)

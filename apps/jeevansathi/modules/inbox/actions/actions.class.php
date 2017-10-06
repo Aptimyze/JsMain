@@ -403,6 +403,10 @@ public function executePerformV2(sfWebRequest $request)
 			{
 				$module= "ContactCenterAPP";
 				$infoTypeId = $request->getParameter("infoTypeId");
+				if($request->getParameter("JSMS_MYJS"))
+					$fromMyjs=true;
+				else
+					$fromMyjs=false;
 						$pageNo = $request->getParameter("pageNo");
 				if($request->getParameter("myjs") == 1)
 					$module = "ContactCenterMYJS";
@@ -622,38 +626,44 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["url"]="/inbox/6/1";
 					//if(MobileCommon::isDesktop()==false)
 					{
-                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
-                                                {
-                                                        $producerObj=new Producer();
-                                                        if($producerObj->getRabbitMQServerConnected())
-                                                        {
-                                                                $currentTime = date('Y-m-j H:i:s');
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime),
-                                                                	"statusType" => 0,
-                                                                	"statusEoi" => 0,
-                                                                	), 'redeliveryCount'=>0 );
-                                                                $producerObj->sendMessage($updateSeenData);
-                                                        }
-                                                        else
-                                                        {
-                                                              $this->sendMail();
-                                                        }
-                                                }
-                                                else
-                                                {
-													 $contactRObj=new EoiViewLog();
-                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
-							$contactsObj = new ContactsRecords();
-							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
-                                                       
+						if($fromMyjs){
+							//Do nothing 
 						}
-						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
-						$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
-						if($currentCount)
-						{	
-							$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
-							$profileMemcacheObj->updateMemcache();
-						}
+						else{
+								if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+								{
+							        $producerObj=new Producer();
+							        if($producerObj->getRabbitMQServerConnected())
+							        {
+						                $currentTime = date('Y-m-j H:i:s');
+						                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime),
+						                	"statusType" => 0,
+						                	"statusEoi" => 0,
+						                	), 'redeliveryCount'=>0 );
+						                $producerObj->sendMessage($updateSeenData);
+							        }
+							        else
+							        {
+							            $this->sendMail();
+							        }
+								}
+								else
+								{
+									$contactRObj=new EoiViewLog();
+								    $contactRObj->setEoiViewedForAReceiver($pid,'N');
+									$contactsObj = new ContactsRecords();
+									$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+								       
+								}
+						
+								$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+								$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
+								if($currentCount)
+								{	
+									$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
+									$profileMemcacheObj->updateMemcache();
+								}
+							}
 					}
 					break;
 					
