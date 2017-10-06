@@ -1,21 +1,23 @@
-export function getRoutePath(location) {
-
+export function getRoutePath(location)
+{
 	var hash = location.split('#')[1] || '';
-	if(hash) 
+  if(hash)
 	{
+		hash = hash.replace(/\//g, "");
 		hash = "/" + hash;
 	}
 	else
 	{
 		if ( location.indexOf('spa/dist/index.html') !== -1 )
 		{
+			hash = hash.replace(/\//g, "");
 			hash = '/myjs';
 		}
 	}
 	return hash;
 }
 
-export function getParameterByName(url, name) 
+export function getParameterByName(url, name)
 {
 	if (!url) url = window.location.href;
 	name = name.replace(/[\[\]]/g, "\\$&");

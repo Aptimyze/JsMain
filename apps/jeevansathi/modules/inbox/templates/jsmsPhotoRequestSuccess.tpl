@@ -10,6 +10,17 @@
  ~else`
 $("#noMsgDiv").css('height',$(window).height());
 ~/if`
+    function setLocalStorageUrl()
+    {
+      try
+      {
+        localStorage.setItem("prevUrlListing",window.location.href);
+      }
+      catch(e)
+      {
+        console.log(e);
+      }
+    }
     });
 </script>
 
@@ -58,7 +69,7 @@ $("#noMsgDiv").css('height',$(window).height());
 ~assign var=offset value=(($firstResponse.page_index-1)*$_SEARCH_RESULTS_PER_PAGE) +$id`
 ~assign var=idd value=$offset+1`
     <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`&stype=~SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS`&total_rec=~$firstResponse.total`&tupleId='~$idd`&searchid=~$firstResponse.searchid`&offset=~$offset`&contact_id=~$firstResponse.contact_id`&actual_offset=~$idd`"> 
-<div class="~if $id is even`bg5~else`bg4~/if` pad18">
+<div class="~if $id is even`bg5~else`bg4~/if` pad18" onClick="setLocalStorageUrl()">
     <div class="fullwid">
       <img src="~$tupleInfo.photo.url`" class="brdr_radsrp wid24p tupleImage fl"/> 
       <div class="fl padlr_1" style="width:75%;">
