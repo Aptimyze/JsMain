@@ -131,6 +131,12 @@ class DetailedViewApi
 			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
 			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'MobileAppPicUrl','',$this->m_objProfile->getGender());
 			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
+			$navObj = new Navigator();
+			if(!$_GET['NAVIGATOR'])
+				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('CVS_NEW','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
+			else 
+				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('DP','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
+
 		}
 
 		$this->m_arrOut = array();
