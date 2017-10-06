@@ -811,38 +811,59 @@ class photoScreeningActions extends sfActions {
 		$this->cid = $request->getParameter("cid");
 		$this->name = $request->getAttribute('name');
 		$this->source = $request->getParameter('source');
-		$photoDataObj = new test_PHOTO_BENCHMARK();
+		$photoDataObj = new PICTURE_PICTURE_API_RESPONSE();
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$deletedReason = $request->getParameter("deleteReason");
 			$pictureid = $request->getParameter('pid');
 			$edit = $request->getParameter('edit');
-			$photoDataObj->updateBenchmark($pictureid, $edit);
+			$photoDataObj->updateBenchmark($pictureid, $edit,$deletedReason);
 		}
 		$photoDataObj->initiate($this->name);
 		$profileDetails = $photoDataObj->get($this->name);
-		$arrImgOut = array();
-		$arrImgType = array('ProfilePic450Url','MobileAppPicUrl','ProfilePic120Url', 'ProfilePic235Url', 'ProfilePicUrl' );
-
-		if (false !== $profileDetails) {
-			foreach ($arrImgType as $key) {
-				$val = $profileDetails[$key];
-				$prefix = substr($val, 0, 2);
-				$imagePath = substr($val, 2);
-				if ($prefix == IMAGE_SERVER_ENUM::$appPicUrl) {
-					$val = JsConstants::$applicationPhotoUrl . $imagePath;
-				} else if ($prefix == IMAGE_SERVER_ENUM::$cloudUrl) {
-					$val = JsConstants::$httpsCloudUrl . $imagePath;
-				}
-				$arrImgOut[$key] = $val;
-			}
+		if(!is_array($profileDetails))
+		{
+			echo "No data available at this time please try again after some time";
+			die;
 		}
-		$arrOut = array("Id" => $profileDetails['PICTUREID'], "imgs" => $arrImgOut);
+		$val = $profileDetails["MainPicUrl"];
+		$prefix = substr($val, 0, 2);
+		$imagePath = substr($val, 2);
+		if ($prefix == IMAGE_SERVER_ENUM::$appPicUrl) {
+			$val = JsConstants::$applicationPhotoUrl . $imagePath;
+		} else if ($prefix == IMAGE_SERVER_ENUM::$cloudUrl) {
+			$val = JsConstants::$httpsCloudUrl . $imagePath;
+		}
+		$imagePath = $val;
+		$id = $profileDetails["id"];
+		$faceCount = $profileDetails["FACE_COUNT"];
+		$pictureid = $profileDetails["PICTUREID"];
+		$profileid = $profileDetails["PROFILEID"];
+		$adult = $profileDetails["ADULT"];
+		$spoof = $profileDetails["SPOOF"];
+		$violence = $profileDetails["VIOLENCE"];
+		$faceDetails = null;
+		if($faceCount>0)
+		{
+			$faceDetails = $photoDataObj->getFace($id);
+		}
+
+
+
+		$arrOut = array("Id" => $id,
+						"imgs" => $imagePath,
+						"facecount"=>$faceCount,
+			"adult"=>$adult,
+			"spoof"=>$spoof,
+			"violence"=>$violence,
+			"faces"=>$faceDetails,
+			"pictureid"=>$pictureid
+	);
 		if ($request->getParameter("json_response") == 1) {
 			header("Content-type: application/json");
 			echo json_encode($arrOut);
 			die;
 		}
-		$this->picId = $profileDetails['PICTUREID'];
-		$this->arrPic = $arrImgOut;
+		$this->details = $arrOut;
 	}
 }
 ?>

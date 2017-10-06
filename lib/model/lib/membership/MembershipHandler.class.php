@@ -927,7 +927,7 @@ class MembershipHandler
         $loginProfile = LoggedInProfile::getInstance();
         if($loginProfile->getPROFILEID()){
             $profileID = $loginProfile->getPROFILEID();
-            $profileCurrency = JsMemcache::getInstance()->get($profileID."_currency");
+            $profileCurrency = false; //JsMemcache::getInstance()->get($profileID."_currency");
         } else{
             $profileCurrency = false;
         }

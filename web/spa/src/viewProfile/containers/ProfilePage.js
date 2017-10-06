@@ -186,7 +186,7 @@ class ProfilePage extends React.Component {
 
 
     }
-  
+
     nextPrevPostDecline(){
       if(this.state.nextUrl != "")
         this.swipeNextProfile('next');
@@ -203,7 +203,7 @@ swipeNextProfile(nextOrPrev){
       _this.resetTab();
       jsb9Fun.flushJSB9Obj(_this);
       _this.props.jsb9TrackRedirection(new Date().getTime(), window.location.href);
-      _this.props.history.push(nextOrPrev=='next' ? _this.state.nextUrl : _this.state.prevUrl);
+      _this.props.history.replace(nextOrPrev=='next' ? _this.state.nextUrl : _this.state.prevUrl);
       jsb9Fun.recordBundleReceived(_this, new Date().getTime());
       let t1,t2;
       t1 = nextOrPrev=='next' ? 'nextProfileVisit' : 'prevProfileVisit';
@@ -310,26 +310,7 @@ swipeNextProfile(nextOrPrev){
 
     componentWillReceiveProps(nextProps)
     {
-        if(nextProps.contactAction.acceptDone || nextProps.contactAction.reminderDone || nextProps.contactAction.contactDone){
-            this.setState({
-                showLoader:false
-            });
-        }
-        else if(nextProps.contactAction.declineDone && nextProps.fetchedProfilechecksum == this.props.fetchedProfilechecksum && this.state.dataLoaded == true){
-            this.setState({
-                showLoader:false
-            });
-            document.getElementById("swipePage").classList.add("animateLeft");
-            this.setState ({
-                dataLoaded : false
-            });
-            jsb9Fun.flushJSB9Obj(this);
-            this.props.jsb9TrackRedirection(new Date().getTime(),window.location.href);
-            this.props.history.push(this.state.nextUrl);
-            jsb9Fun.recordBundleReceived(this,new Date().getTime());
-            this.props.showProfile(this,this.state.nextprofilechecksum,this.state.responseTracking);
-        }
-        else if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
+        if(nextProps.fetchedProfilechecksum != this.props.fetchedProfilechecksum || this.state.callApi == true) {
 
             let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
             let contact_id = getParameterByName(window.location.href,"contact_id");
