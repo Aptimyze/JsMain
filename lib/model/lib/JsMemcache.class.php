@@ -131,7 +131,7 @@ class JsMemcache extends sfMemcacheCache{
 					 * default setting is lifetime.
 					 */
 					if(!$lifetime){
-						$lifetime= 86400;
+						$lifetime= 3600;
 					}
 					$key = (string)$key;
 					if($jsonEncode=='X')
