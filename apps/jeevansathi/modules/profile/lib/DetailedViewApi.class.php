@@ -131,12 +131,18 @@ class DetailedViewApi
 			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
 			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'MobileAppPicUrl','',$this->m_objProfile->getGender());
 			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
+      $fromViewSimilar = $_GET['fromViewSimilar']; //added for similar profiles section on profile page
 			$navObj = new Navigator();
+      if($fromViewSimilar == 1)
+        $arrMoreInfo['NAVIGATOR']=$navObj->navigation("DP_NEW",'profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
+      elseif($fromViewSimilar == 2)
+        $arrMoreInfo['NAVIGATOR']=navigation("CVS_NEW","",$this->profile->getUSERNAME());
+      else{
 			if(!$_GET['NAVIGATOR'])
 				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('CVS_NEW','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
-			else 
+			else
 				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('DP','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
-
+      }
 		}
 
 		$this->m_arrOut = array();
