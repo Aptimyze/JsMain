@@ -206,6 +206,9 @@ EOF;
 					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
 					//If Required, Resize Main Pic and Store into same MainPicUrl
 					$this->resizePic($iPicId,$arrData['PROFILEID'],$arrData['MainPicUrl']);
+					//detail image property
+					$googleVisionObj = new GoogleVisionApi();
+					$googleVisionObj->getPictureDetails($arrData['MainPicUrl'], $arrData['PICTUREID'], $arrData['PROFILEID']);
 					//Update Store
 					$this->updateStore($iPicId,$arrData);
 					//Track This in Master Log
