@@ -661,12 +661,17 @@ swipeNextProfile(nextOrPrev){
 
                 photoView = <div id="showPhoto" className="dn"><PhotoView defaultPhoto={this.state.defaultPicData} imageLoaded={this.imageLoaded}  verification_status={this.props.AboutInfo.complete_verification_status} profilechecksum={this.state.profilechecksum} picData={this.state.pic} genderPic= {this.props.AboutInfo.gender} /></div>;
 
-                if(this.props.AboutInfo.name_of_user)
-                {
-                    Header = this.props.AboutInfo.name_of_user;
-                } else
-                {
-                     Header = this.props.AboutInfo.username;
+                if(this.state.ownView){
+                    Header = "Preview";
+                }
+                else{
+                    if(this.props.AboutInfo.name_of_user)
+                    {
+                        Header = this.props.AboutInfo.name_of_user;
+                    }  else
+                    {
+                         Header = this.props.AboutInfo.username;
+                    }
                 }
 
                 AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
@@ -698,10 +703,15 @@ swipeNextProfile(nextOrPrev){
 
             } else if(this.props.responseStatusCode == "1") {
                 document.getElementById("validProfile").classList.add("dn");
-                if(this.props.AboutInfo.username) {
-                    Header = this.props.AboutInfo.username;
-                } else {
-                    Header = "Profile not found";
+                if(this.state.ownView){
+                    Header = "Preview";
+                }
+                else{
+                    if(this.props.AboutInfo.username) {
+                        Header = this.props.AboutInfo.username;
+                    } else {
+                        Header = "Profile not found";
+                    }
                 }
                 if(this.props.AboutInfo.loginRequired)
                 {
