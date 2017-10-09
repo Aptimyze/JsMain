@@ -33,13 +33,21 @@ EOF;
                 $instanceID = $countObj->getID('SALES_FEEDBACK_MAILER');
 		$crmMailerObj 	= new crmMailer();
 		$profilesArr 	= $crmMailerObj->getProfileForFeedbackMailer();
+                $profilesArr = array(939997687);
 		$jprofileObj = new JPROFILE('crm_slave');
-		if(is_array($profilesArr))
-			$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
-		if(count($profilesArr)>0){
+		if(is_array($profilesArr)) {
+                    print_r("Entered Here");
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                    print_r($profileDet);
+                    print_r("Exited");
+                }
+		if(count($profilesArr)>0){ 
 			foreach($profilesArr as $profileid=>$campaign){
-				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB']);
+                            print_r($profilesArr);
+                            die("Tushar");
+				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB'],$profileDet[$profileid]['USERNAME']);
 				$crmMailerObj->updateMailerSentStatus($profileid,$deliveryStatus);
+                                print_r("Mail sent");
 			}
 			/** code for daily count monitoring**/
                         passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER");

@@ -1104,13 +1104,16 @@ public function duplicateEmail($email)
     
     public function getAllSubscriptionsArr($profileArr) {
         try {
+            print_r("Profile array is ::: ".$profileArr);
         	$profileStr = implode(",", $profileArr);
             $sql = "SELECT * FROM newjs.JPROFILE WHERE PROFILEID IN ($profileStr)";
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $res[$result['PROFILEID']] = $result;
-            }
+                print_r("Profile Details\n");
+                print_r($result);
+                }
         }
         catch(Exception $e) {
             throw new jsException($e);
