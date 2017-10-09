@@ -165,7 +165,9 @@ class MessageQueues
 
   public static $logConnectionTime = 1;
   
-  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8);
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8,"redisLogging"=>0,"logPublishTime"=>0,"publishThreshold"=>0.5);
+  
+  public static $flagForDuplicateDataCheck = 1; //1: falg check is applicable, 2: flag check is not applicable
   
   //OutBound Events
   const OUTBOUND_QUEUE = 'OutBoundQueue';

@@ -148,60 +148,65 @@ class Consumer
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
-    try
-    {
-      $handlerObj=new ProcessHandler();
-      switch($process)
-      {
-        case 'MAIL':
-          $handlerObj->sendMail($type,$body);  
-          break;
-        case 'SMS':   
-          $handlerObj->sendSMS($type,$body);  
-          break;
-        case 'GCM':   
-          $handlerObj->sendGCM($type,$body);  
-          break;
-        case 'BUFFER_INSTANT_NOTIFICATIONS':
-          $handlerObj->sendInstantNotification($type,$body);
-            break;
-        case 'DUPLICATE_LOG':
-            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
-          break;
-        case MQ::DELAYED_MAIL_PROCESS:
-          $handlerObj->sendMail($type,$body,true);  
-          break;
-      }
-    }
-    catch (Exception $exception) 
-    {
-      $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
-      //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
-      /*
-       * The message due to which error is caused is reframed into a new message and the original message is dropped.
-       * This new message is pushed at the back of the queue if the number of redelivery attempts is less than a specified a limit.
-       */
-      if($redeliveryCount<MessageQueues::REDELIVERY_LIMIT)
-      {
-        //RabbitmqHelper::sendAlert("\nRedelivery Count".$redeliveryCount."\n");
-        $reSendData = array('process' =>$process,'data'=>array('type' => $type,'body'=>$body), 'redeliveryCount'=> $redeliveryCount+1 );
-        $producerObj=new Producer();
-        $producerObj->sendMessage($reSendData);
-      }
-      else
-      {
-        RabbitmqHelper::sendAlert("\nDropping message as redelivery attempts exceeded the limit"."\n");
-      }
-    }
-    try 
-    {
-      $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-    } 
-    catch(Exception $exception) 
-    {
-      $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str);
+    if(!RabbitmqHelper::isQueueDataProcessed($body,$msg)){
+        try
+        {
+          $handlerObj=new ProcessHandler();
+          switch($process)
+          {
+            case 'MAIL':
+              $handlerObj->sendMail($type,$body);  
+              break;
+            case 'SMS':   
+              $handlerObj->sendSMS($type,$body);  
+              break;
+            case 'GCM':   
+              $handlerObj->sendGCM($type,$body);  
+              break;
+            case 'BUFFER_INSTANT_NOTIFICATIONS':
+              $handlerObj->sendInstantNotification($type,$body);
+                break;
+            case 'DUPLICATE_LOG':
+                $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
+              break;
+            case MQ::DELAYED_MAIL_PROCESS:
+              $handlerObj->sendMail($type,$body,true);  
+              break;
+          }
+          $body = RabbitmqHelper::modifyDataForConsumer($body);
+          $o = new MOBILE_API_ALARM_TIME();
+          $o->insert($profileid, $alarmTime);
+        }
+        catch (Exception $exception) 
+        {
+          $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
+          RabbitmqHelper::sendAlert($str,"default");
+          //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
+          /*
+           * The message due to which error is caused is reframed into a new message and the original message is dropped.
+           * This new message is pushed at the back of the queue if the number of redelivery attempts is less than a specified a limit.
+           */
+          if($redeliveryCount<MessageQueues::REDELIVERY_LIMIT)
+          {
+            //RabbitmqHelper::sendAlert("\nRedelivery Count".$redeliveryCount."\n");
+            $reSendData = array('process' =>$process,'data'=>array('type' => $type,'body'=>$body), 'redeliveryCount'=> $redeliveryCount+1 );
+            $producerObj=new Producer();
+            $producerObj->sendMessage($reSendData);
+          }
+          else
+          {
+            RabbitmqHelper::sendAlert("\nDropping message as redelivery attempts exceeded the limit"."\n");
+          }
+        }
+        try 
+        {
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        }
+        catch(Exception $exception) 
+        {
+          $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
+          RabbitmqHelper::sendAlert($str);
+        }
     }
   }
 }
