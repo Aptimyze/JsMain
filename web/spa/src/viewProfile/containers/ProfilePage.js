@@ -493,30 +493,7 @@ swipeNextProfile(nextOrPrev){
     goBack()
     {
 
-        let prevUrlListing = localStorage.getItem("prevUrlListing");
-        if (  prevUrlListing && !this.props.history.prevUrl )
-        {
-            localStorage.removeItem("prevUrlListing");
-            window.location.href = prevUrlListing;
-        }
-        else
-        {
-            let same_url = false
-            if ( this.props.history.prevUrl )
-            {
-                same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
-            }
-            if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
-            {
-                this.props.history.push("/myjs");
-            }
-            else
-            {
-                this.props.history.push(this.props.history.prevUrl);
-            }
-
-        }
-
+            history.back();
 
     }
 
@@ -601,7 +578,7 @@ swipeNextProfile(nextOrPrev){
 
 
           historyView = <CommHistory
-                            closeHistory={()=>this.props.historyObject.pop()}
+                            closeHistory={()=>this.props.historyObject.pop(true)}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl= {thumbURL} >

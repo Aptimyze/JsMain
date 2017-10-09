@@ -3062,7 +3062,7 @@ function navigation($type,$param,$username='',$symfony='')
 	$ins_row=navigation_inserted_id($link_developed);
 	$cc_navigator="NAVIGATOR=$ins_row";
 	$smarty->assign("NAVIGATOR",$cc_navigator);
-	sfContext::getInstance()->getRequest()->setParameter('NAVIGATOR_FOR_SYMFONY',$cc_navigator); // ADDED BY PALASH FOR RETREIVING THE NAVIGATOR IN DETAILEDAPI FOR PROFILE PAGE(SPA PROJECT)
+//	sfContext::getInstance()->getRequest()->setParameter('NAVIGATOR_FOR_SYMFONY',$cc_navigator); // ADDED BY PALASH FOR RETREIVING THE NAVIGATOR IN DETAILEDAPI FOR PROFILE PAGE(SPA PROJECT)
 	$smarty->assign("NAVIGATOR_LINK","$ins_row");
 	$showNavigator=show_navigation($link_developed,$show_all,$ins_row);
 	if($symfony==2)
