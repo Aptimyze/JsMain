@@ -593,17 +593,17 @@ ACTION2=>"close",
 JSMS_ACTION1=>"/profile/viewprofile.php?ownview=1&section=contact&fieldName=EMAIL",
 JSMS_ACTION2=>"/",
 TEXT=>"Important Emails from Jeevansathi are not reaching you as we are unable to send Emails to your EmailID. Jeevansathi members will also not be able to reach out to you on your Email. Please enter a new EmailID",
-BUTTON1_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B1",
-BUTTON1_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
-BUTTON2_URL_IOS=>"common/criticalActionLayerTracking?layerR=$layerid&button=B2",
-BUTTON2_URL_ANDROID=>"/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON1_URL_IOS=>"api/v1/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON1_URL_ANDROID=>"api/v1/common/criticalActionLayerTracking?layerR=$layerid&button=B1",
+BUTTON2_URL_IOS=>"api/v1/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
+BUTTON2_URL_ANDROID=>"api/v1/common/criticalActionLayerTracking?layerR=$layerid&button=B2",
 BUTTON1_PAGEID_IOS=>"0",
 BUTTON1_PAGEID_ANDROID=>"0",
 BUTTON2_PAGEID_IOS=>"",
 BUTTON2_PAGEID_ANDROID=>"",
 UNLIMITED => "N",
-),     
-       
+),
+
 );
 if ($label) {
    if ($value) {

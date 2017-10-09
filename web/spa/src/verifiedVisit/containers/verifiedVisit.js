@@ -71,7 +71,7 @@ class VerifiedVisit extends React.Component {
                     </div>
                     {docsData}
                 </div>
-                <div onClick={(e) => this.props.historyObject.pop()} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
+                <div onClick={(e) => this.props.historyObject.pop(true)} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
                     <span className="okClick dispibl wid150">Ok</span>
                 </div>
                 </div>

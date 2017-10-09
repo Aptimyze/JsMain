@@ -93,8 +93,8 @@ export class contactEnginePD extends React.Component{
         case 'IGNORE':
             if(actionButton.params.indexOf("ignore=0")!=-1)
             {
-              this.props.historyObject.pop();
-              this.props.historyObject.pop()
+              this.props.historyObject.pop(true);
+              this.props.historyObject.pop(true)
             }
             else {
               this.showLayerCommon({blockLayerdata:responseButtons,showBlockLayer: true   },'showBlockLayer');
@@ -149,11 +149,12 @@ export class contactEnginePD extends React.Component{
 
       if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1 && !responseButtons.actiondetails.errmsglabel)
       {
+        this.props.historyObject.pop(true);
         this.goToViewSimilar();
       }
       if(actionButton.action=='DECLINE' && typeof(this.props.nextPrevPostDecline)=='function')
       {
-            this.props.historyObject.pop();
+            this.props.historyObject.pop(true);
           this.props.nextPrevPostDecline();
       }
     }
@@ -254,16 +255,16 @@ getOverLayDataDisplay(){
 
     let layer = [];
       if(this.state.showThreeDots && !this.underScreened)
-        layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.props.historyObject.pop()} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
+        layer= (<ThreeDots bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} buttondata={this.props.buttondata} closeThreeDotLayer ={()=>this.props.historyObject.pop(true)} username={this.props.profiledata.username} profilechecksum={this.props.profiledata.profilechecksum} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
       if(this.state.showReportAbuse)
         layer= (<ReportAbuse setBlockButton={this.setBlockButton.bind(this)}
                     username={this.props.profiledata.username}
                     profilechecksum={this.props.profiledata.profilechecksum}
-                    closeAbuseLayer={() => {this.props.historyObject.pop();this.props.historyObject.pop();}}
+                    closeAbuseLayer={() => {this.props.historyObject.pop(true);this.props.historyObject.pop(true);}}
                     profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} />);
 
       if(this.state.showContactDetail)
-        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop()} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} topmsg={this.props.buttondata.topmsg} />);
+        layer=  (<ContactDetails bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} actionDetails={this.state.contactDetailData} profilechecksum={this.props.profiledata.profilechecksum} closeCDLayer={() => this.props.historyObject.pop(true)} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} topmsg={this.props.buttondata.topmsg} />);
 
       if(this.state.showReportInvalid)
       {
@@ -272,7 +273,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showMsgLayer)
       {
-        layer= (<WriteMessage  bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>{this.props.historyObject.pop();if(this.state.onClose)this.state.onClose();}}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
+        layer= (<WriteMessage  bindAction={this.bindAction.bind(this)} fromEOI={this.state.fromEOI} username={this.props.profiledata.username} closeWriteMsgLayer={()=>{this.props.historyObject.pop(true);if(this.state.onClose)this.state.onClose();}}  buttonData={this.state.showWriteMsgLayerData} profilechecksum={this.props.profiledata.profilechecksum}/>);
       }
       if(this.state.commonOvlayLayer)
       {
@@ -285,7 +286,7 @@ getOverLayDataDisplay(){
 
       if(this.state.showBlockLayer)
       {
-        layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.props.historyObject.pop();this.props.historyObject.pop();}} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
+        layer= (<BlockPage blockdata={this.state.blockLayerdata} closeBlockLayer={()=>{this.props.historyObject.pop(true);this.props.historyObject.pop(true);}} profileThumbNailUrl={this.props.profiledata.profileThumbNailUrl} bindAction={(buttonObject,index) => this.bindAction(buttonObject,index)} />);
       }
       return (  <div key="2">{layer}</div>)
   }
@@ -306,7 +307,7 @@ getCommonOverLay(actionDetails){
               </div>
               <div className="posfix btmo fullwid" id="bottomElement">
                 <div className="pt15">
-                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.props.historyObject.pop()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.props.historyObject.pop(true)} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
                 </div>
               </div>
 
@@ -331,7 +332,7 @@ getCancelDeclineLayer(actionDetails){
               </div>
               <div className="posfix btmo fullwid" id="bottomElement">
                 <div className="pt15">
-                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>this.props.historyObject.pop()} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>{this.props.historyObject.pop(true);this.props.historyObject.pop(true)}} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
                 </div>
               </div>
 
@@ -343,7 +344,7 @@ getCancelDeclineLayer(actionDetails){
   }
 
 goToViewSimilar(){
-  window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1&"+(this.props.NAVIGATOR ? this.props.NAVIGATOR :"") ;
+  window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1&"+(false ? this.props.NAVIGATOR :"") ;
 }
 
 }

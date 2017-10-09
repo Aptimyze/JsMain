@@ -33,13 +33,17 @@ constructor(){
 			this.History.push(fnc);
 			this.SetLocation(hashVal);
 		}
-		pop(fnc)
+		pop(fromUser)
 		{
 			if(this.History.length>0)
 			{
 
-				if(history.replaceState)
-            history.replaceState(null,null,document.location.href);
+				if(typeof fromUser !=='undefined' && fromUser)
+					history.back();
+
+        else {
+        		history.replaceState(null,null,document.location.href);
+        }
 				var pop=this.History.pop();
 				var result=pop();
 				var e=new Error();

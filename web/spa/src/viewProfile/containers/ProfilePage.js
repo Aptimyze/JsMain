@@ -98,6 +98,7 @@ class ProfilePage extends React.Component {
             let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
+            let fromViewSimilar = getParameterByName(window.location.href,"fromViewSimilar");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -122,6 +123,9 @@ class ProfilePage extends React.Component {
             }
             if(similarOf != undefined && similarOf != "undefined"){
                 urlString += "&similarOf=" + similarOf;
+            }
+            if(typeof fromViewSimilar != "undefined"){
+                urlString += "&fromViewSimilar=" + fromViewSimilar;
             }
         }
 
@@ -489,30 +493,7 @@ swipeNextProfile(nextOrPrev){
     goBack()
     {
 
-        let prevUrlListing = localStorage.getItem("prevUrlListing");
-        if (  prevUrlListing && !this.props.history.prevUrl )
-        {
-            localStorage.removeItem("prevUrlListing");
-            window.location.href = prevUrlListing;
-        }
-        else
-        {
-            let same_url = false
-            if ( this.props.history.prevUrl )
-            {
-                same_url = this.props.history.prevUrl.indexOf(window.location.pathname) !== -1;
-            }
-            if ( typeof this.props.history.prevUrl == 'undefined' || same_url )
-            {
-                this.props.history.push("/myjs");
-            }
-            else
-            {
-                this.props.history.push(this.props.history.prevUrl);
-            }
-
-        }
-
+            history.back();
 
     }
 
@@ -597,7 +578,7 @@ swipeNextProfile(nextOrPrev){
 
 
           historyView = <CommHistory
-                            closeHistory={()=>this.props.historyObject.pop()}
+                            closeHistory={()=>this.props.historyObject.pop(true)}
                             profileId={this.props.profileId}
                             username={this.props.AboutInfo.username}
                             profileThumbNailUrl= {thumbURL} >

@@ -47,7 +47,7 @@ class LoginPage extends React.Component {
             props.history.prevUrl = "/"+prevUrl;
             this.state.showRegisterationMessage = true;
             localStorage.removeItem('lastProfilePageLocation');
-            
+
         }
     }
     componentWillMount() {
@@ -164,7 +164,7 @@ class LoginPage extends React.Component {
             g_recaptcha_response = document.getElementById("g-recaptcha-response").value;
             captcha = 1;
         }
-        
+
         this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA());
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
@@ -228,7 +228,7 @@ class LoginPage extends React.Component {
             }
 
         }
-        
+
         this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA());
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
@@ -275,7 +275,7 @@ class LoginPage extends React.Component {
                                     <div className="icons1 uicon"></div>
                                 </div>
                                 <div className="fl clasone wid80p">
-                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig" name="email" placeholder="Email" />
+                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig f15" name="email" placeholder="Email" />
                                 </div>
                                 <div id="emailErr1" className="fl wid10p txtr dn">
                                     <i className="mainsp err2_icon vertmid"></i>
@@ -287,7 +287,7 @@ class LoginPage extends React.Component {
                                     <div className="icons1 key"></div>
                                 </div>
                                 <div className="fl classNameone wid80p">
-                                    <input onChange={(e) => this.handlePasswordChange(e)} type="password" id="password" autoComplete="off" className="color9 fullwid fontlig" maxLength="40" name="password" placeholder="Password" />
+                                    <input onChange={(e) => this.handlePasswordChange(e)} type="password" id="password" autoComplete="off" className="color9 fullwid fontlig f15" maxLength="40" name="password" placeholder="Password" />
                                 </div>
                                 <div id="showHide" onClick={(e) => this.showPass(e)} className="fl f12 white fontlig wid10p txtr dn">
                                     <span id="vertmid">Show</span>
@@ -418,10 +418,10 @@ const mapDispatchToProps = (dispatch) => {
             {
                 call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
             }
-            
+
             commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
             {
-                
+
                 if ( response.responseStatusCode == 1)
                 {
                     addCaptchaDiv();

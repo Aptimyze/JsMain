@@ -1,15 +1,5 @@
-<script> 
+<script>
     var resp=~$responseJS|decodevar`;
-    $(document).ready(function () {
-        var vhgt = $(window).innerHeight();
-    $("#mainContent").css({"height":vhgt+'px', "overflow":"hidden"});
-        ~if $firstResponse.profiles neq ''` 
-        $("#tupleContainer").height($("#uploadPhotoBar").offset().top-$("#tupleContainer").offset().top) ;
-        var imageWidth=$(".tupleImage").eq(0).css('width');
-     $(".tupleImage").css('height',imageWidth).css('width',imageWidth);
- ~else`
-$("#noMsgDiv").css('height',$(window).height());
-~/if`
     function setLocalStorageUrl()
     {
       try
@@ -21,6 +11,17 @@ $("#noMsgDiv").css('height',$(window).height());
         console.log(e);
       }
     }
+
+    $(document).ready(function () {
+        var vhgt = $(window).innerHeight();
+    $("#mainContent").css({"height":vhgt+'px', "overflow":"hidden"});
+        ~if $firstResponse.profiles neq ''`
+        $("#tupleContainer").height($("#uploadPhotoBar").offset().top-$("#tupleContainer").offset().top) ;
+        var imageWidth=$(".tupleImage").eq(0).css('width');
+     $(".tupleImage").css('height',imageWidth).css('width',imageWidth);
+ ~else`
+$("#noMsgDiv").css('height',$(window).height());
+~/if`
     });
 </script>
 

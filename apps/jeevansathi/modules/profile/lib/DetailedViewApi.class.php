@@ -131,12 +131,25 @@ class DetailedViewApi
 			$arrMoreInfo['meta_tags'] = $this->m_arrOut;
 			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($this->m_actionObject->THUMB_URL,'MobileAppPicUrl','',$this->m_objProfile->getGender());
 			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
-			$navObj = new Navigator();
-			if(!$_GET['NAVIGATOR'])
-				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('CVS_NEW','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
-			else 
-				$arrMoreInfo['NAVIGATOR'] = $navObj->navigation('DP','profilechecksum__'.$this->m_actionObject->profilechecksum,'','Symfony');
-
+//       $fromViewSimilar = $_GET['fromViewSimilar']; //added for similar profiles section on profile page
+//       if($fromViewSimilar == 1)
+// 				navigation("DP_NEW","",$this->m_objProfile->getUSERNAME());
+// 			elseif($fromViewSimilar == 2)
+// 				navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
+// 			else
+// 			{
+// 				if(!$_GET['NAVIGATOR'])
+// 				{
+// 					navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
+// 				}
+// 				else
+// 				{
+// 					navigation("DP","",$this->m_objProfile->getUSERNAME());
+// 				}
+//       }
+// //      ProfileCommon::old_smarty_assign($this);
+//       $navFinal = sfContext::getInstance()->getRequest()->getParameter('NAVIGATOR_FOR_SYMFONY');
+//       $arrMoreInfo['NAVIGATOR'] = $navFinal ? $navFinal : sfContext::getInstance()->getRequest()->getParameter('NAVIGATOR');
 		}
 
 		$this->m_arrOut = array();
