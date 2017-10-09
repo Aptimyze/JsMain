@@ -165,7 +165,7 @@ class MessageQueues
 
   public static $logConnectionTime = 1;
   
-  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8);
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8,"redisLogging"=>0,"logPublishTime"=>0,"publishThreshold"=>0.5);
   
   //OutBound Events
   const OUTBOUND_QUEUE = 'OutBoundQueue';

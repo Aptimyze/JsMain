@@ -183,5 +183,56 @@ class RabbitmqHelper
     $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
    
   }
+  
+  /*
+   * Function to modify consumer data so as to add a flag on the basis of which any requeue of the message need to be checked
+   * @param: consumer data
+   * @return modified data
+   */
+  public static function modifyDataForConsumer($data){
+        if($data && is_array($data)){
+            $data["processed"] = "1";
+        }
+        return $data;
+    }
+    
+   /*
+    * Function to check whether processed flag exist in the consumer data and on the basis of this send delivery acknowledgement
+    * @param: consumer data
+    * @return modified data
+   */
+    public static function isQueueDataProcessed($data,$msg){
+        if($data && is_array($data) && $data["processed"] == "1"){
+            try{
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                return true;
+            } 
+            catch(Exception $exception){
+                $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
+                RabbitmqHelper::sendAlert($str);
+            }
+        }
+        return false;
+    }
+    
+    /*
+     * FUnction to do logging of rabbitmq timeouts
+     */
+    public static function rmqLogging($logPath="",$start,$end,$reqId,$threshold,$logText){
+        $diff = $end-$start;
+        if($logPath == ""){
+            $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime'.date('Y-m-d').'.log';
+            //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
+        }
+        if($diff > $threshold){
+            $logText["time"] = time();
+            $logText["connTime"] = round($diff,4);
+            $logText["requestId"] = $reqId;
+            if(file_exists($errorLogPath)==false)
+                exec("touch"." ".$logPath,$output);
+            error_log(json_encode($logText)."\n",3,$logPath);
+        }
+    }
+  
 }
 ?>

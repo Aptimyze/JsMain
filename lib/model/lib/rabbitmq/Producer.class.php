@@ -31,6 +31,7 @@ class Producer
 
 	public function __construct($useFallbackServer = true)
 	{
+        $this->reqId = str_replace(".","",microtime(true));
 		if (JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER") == true || $this->serverConnection('FIRST_SERVER') == false) {
 			if (MQ::FALLBACK_STATUS == true && $useFallbackServer == true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0) {
 				if (JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER") == true || $this->serverConnection('SECOND_SERVER') == false) {
@@ -74,16 +75,37 @@ class Producer
 			$startLogTime = microtime(true);
 			$this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
 			$endLogTime = microtime(true);
-
+            $connectionRedis = MQ::$rmqConnectionTimeout["redisLogging"];
+            $memcacheObj = JsMemcache::getInstance();
+            if($connectionRedis){
+                if($memcacheObj){
+                    $totalConnectionKey = "Prodconn".date('Y-m-d');
+                    $cacheValue = $memcacheObj->get($totalConnectionKey,null,0,0);
+                    if(empty($cacheValue)==false){
+                        $memcacheObj->incrCount($totalConnectionKey);
+                    }
+                    else{
+                        $memcacheObj->set($totalConnectionKey,1,86400,0,'X');
+                    }
+                }
+            }
+            if(MQ::$logConnectionTime == 1){
+                $logText["source"] = "ConnectionTime Producer";
+                RabbitmqHelper::rmqLogging("",$startLogTime,$endLogTime,$this->reqId,MQ::$rmqConnectionTimeout["threshold"],$logText);
+            }
 			if(MQ::$logConnectionTime == 1){
 				$diff = $endLogTime-$startLogTime;
                 if($diff > MQ::$rmqConnectionTimeout["threshold"]){
-                    $logText["time"] = time();
-                    $logText["connTime"] = round($diff,4);
-                    $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime'.date('Y-m-d').'.log';
-                    if(file_exists($errorLogPath)==false)
-                        exec("touch"." ".$logPath,$output);
-                    error_log(json_encode($logText)."\n",3,$logPath);
+                    if($connectionRedis && $memcacheObj){
+                        $thresholdKey = "ProdconnTimeout".date('Y-m-d');
+                        $cacheValue = $memcacheObj->get($thresholdKey,null,0,0);
+                        if(empty($cacheValue)==false){
+                            $memcacheObj->incrCount($thresholdKey);
+                        }
+                        else{
+                            $memcacheObj->set($thresholdKey,1,86400,0,'X');
+                        }
+                    }
                 }
 			}
 			$this->setRabbitMQServerConnected(1);
@@ -91,8 +113,10 @@ class Producer
 		} catch (Exception $e) {
 			//logging the counter for rabbitmq connection timeout in redis
 			if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
-				$memcacheObj = JsMemcache::getInstance();
-				if($memcacheObj){
+                $logText["source"] = "ConnectionTimeOut Producer Exception";
+                RabbitmqHelper::rmqLogging("",$startLogTime,$endLogTime,$this->reqId,MQ::$rmqConnectionTimeout["threshold"],$logText);
+                
+				if($connectionRedis && $memcacheObj){
 					$cachekey = "rmqtimeout_".date("Y-m-d");
 					$cacheValue = $memcacheObj->get($cachekey,null,0,0);
 					if(empty($cacheValue)==false){
@@ -215,6 +239,7 @@ class Producer
 		$msg = new AMQPMessage($data, array('delivery_mode' => MQ::DELIVERYMODE));
 		$process = $msgdata['process'];
 		try {
+            $startPublishTime = microtime(true);
 			switch ($process) {
 				case "MAIL":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::MAILQUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
@@ -361,6 +386,12 @@ class Producer
             $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::EXCLUSIVE_MAIL_SENDING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
             break;
 			}
+            $endPublishTime = microtime(true);
+            if(MQ::$rmqConnectionTimeout["logPublishTime"] == 1){
+                $logPath = JsConstants::$cronDocRoot.'/log/rabbitTimePublish'.date('Y-m-d').'.log';
+                $logText["source"] = "PublishTime Producer";
+                RabbitmqHelper::rmqLogging($logPath,$startPublishTime,$endPublishTime,$this->reqId,MQ::$rmqConnectionTimeout["publishThreshold"],$logText);
+            }
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
 			RabbitmqHelper::sendAlert($str, "default");

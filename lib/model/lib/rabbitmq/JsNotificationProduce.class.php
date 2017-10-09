@@ -28,6 +28,7 @@ class JsNotificationProduce
 
   public function __construct($useFallbackServer=true)
   { 
+      $this->reqId = str_replace(".","",microtime(true));
     if(JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER")==true || $this->serverConnection('FIRST_SERVER')==false)
     {
       if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
@@ -90,14 +91,11 @@ class JsNotificationProduce
       $startLogTime = microtime(true);
       $this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
       $endLogTime = microtime(true);
-
-      if(MQ::$logConnectionTime == 1){
-        $diff = $endLogTime-$startLogTime;
-        $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime.log';
-        if(file_exists($errorLogPath)==false)
-              exec("touch"." ".$logPath,$output);
-        error_log(round($diff,4)."\n",3,$logPath);
-      }
+        
+    if(MQ::$logConnectionTime == 1){
+        $logText["source"] = "ConnectionTime JsNotificationProduce";
+        RabbitmqHelper::rmqLogging("",$startLogTime,$endLogTime,$this->reqId,MQ::$rmqConnectionTimeout["threshold"],$logText);
+    }  
       $this->setRabbitMQServerConnected(1);
       return true;
     } catch (Exception $e) {
@@ -174,6 +172,7 @@ class JsNotificationProduce
     {
       if($addLog==true)
         RabbitmqHelper::addRabbitmqMsgLog(BrowserNotificationEnums::$publishedNotificationLog,$msgdata['data']['type']."-".$msgdata['data']['body']['NOTIFICATION_KEY']);
+      $startPublishTime = microtime(true);
       switch($process)
       {
         case "JS_NOTIFICATION1" :
@@ -203,6 +202,12 @@ class JsNotificationProduce
         case "MA_NOTIFICATION":
                     $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$MA_NOTIFICATION_QUEUE);
                     break;
+      }
+      $endPublishTime = microtime(true);
+      if(MQ::$rmqConnectionTimeout["logPublishTime"] == 1){
+          $logPath = JsConstants::$cronDocRoot.'/log/rabbitTimePublish'.date('Y-m-d').'.log';
+          $logText["source"] = "PublishTime JsNotificationProduce";
+          RabbitmqHelper::rmqLogging($logPath,$startPublishTime,$endPublishTime,$this->reqId,MQ::$rmqConnectionTimeout["publishThreshold"],$logText);
       }
     }
     catch (Exception $exception) 
