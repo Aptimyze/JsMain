@@ -149,7 +149,6 @@ export class contactEnginePD extends React.Component{
 
       if(actionButton.action=='INITIATE' && !responseButtons.actiondetails.writemsgbutton &&  window.location.href.search("viewprofile")!=-1 && !responseButtons.actiondetails.errmsglabel)
       {
-        this.props.historyObject.pop(true);
         this.goToViewSimilar();
       }
       if(actionButton.action=='DECLINE' && typeof(this.props.nextPrevPostDecline)=='function')
@@ -246,7 +245,10 @@ hideLayerCommon(data){
   return true;
 //  if(!this.state.showThreeDots && !this.state.showThreeDots & !this.state.showThreeDots)
 }
-
+closeAllOpenLayers(){
+  if(!this.layerCount)return;
+  while(this.layerCount)this.props.historyObject.pop(true);
+}
 
 
 
@@ -344,6 +346,7 @@ getCancelDeclineLayer(actionDetails){
   }
 
 goToViewSimilar(){
+  this.closeAllOpenLayers();
   window.location.href = "/search/MobSimilarProfiles?profilechecksum="+this.props.profiledata.profilechecksum+"&fromProfilePage=1&"+(false ? this.props.NAVIGATOR :"") ;
 }
 
