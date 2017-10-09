@@ -134,7 +134,7 @@ export default class CommHistory extends React.Component {
         {
           data = <div className="disptbl hgtInherit">
                     <div className="dispcell vertmid white txtc">
-                      Your interaction with {this.state.getRes.label} will appear here.
+                      Your interaction with {this.props.username} will appear here.
                     </div>
                  </div>
         }
@@ -185,7 +185,7 @@ export default class CommHistory extends React.Component {
               <div className="posrel">
                 <a href="#"  className="ce_overlay ce_z102" > </a>
                 <div className="posabs ce_z103 ce_top1 fullwid">
-                  
+
 
 
                   <div className="pad18 brdr4" id="commHistory_header">
