@@ -81,7 +81,7 @@ EOF;
 		      ],
 		      "must_not" => [
 		      	"regexp" =>[
-		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|^.{0,0}$"
+		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|.*rb_yrg95914.*|^.{0,0}$"
 		      	]
 		      ]
 		    ]
