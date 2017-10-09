@@ -433,7 +433,7 @@ try{
                 $deleteAstroDetailsObj->deleteEntry($profileid);
                 //DELETE TIME ,PLACE OF BIRTH
                 $deleteTimePlaceOfBirthObj = new JPROFILE();
-                $fieldsArr = array('BTIME'=>'','COUNTRY_BIRTH'=>'','CITY_BIRTH'=>'');
+                $fieldsArr = array('BTIME'=>'','COUNTRY_BIRTH'=>'','CITY_BIRTH'=>'','SHOW_HOROSCOPE'=>'');
                 $deleteTimePlaceOfBirthObj->edit($fieldsArr,$profileid);
                 
         }
