@@ -179,7 +179,7 @@ class Consumer
         }
         catch (Exception $exception) 
         {
-          $str="\nRabbitMQ Error in consumerNITISH, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
+          $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
           RabbitmqHelper::sendAlert($str,"default");
           //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
           /*
