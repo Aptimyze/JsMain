@@ -49,7 +49,7 @@ class EnsureLoggedInContainer extends React.Component
                         <Route exact path="/" component={MyjsPage}/>
                         <Route path='/myjs' component={MyjsPage} />
                         <Route path='/profile/mainmenu.php' component={MyjsPage} />
-                        <Route path='/P/logout.php' component={LogoutPage} />
+                        <Route path='/P/logout.php' component={MyjsPage} />
                         <Route component={PageNotFound} />
                         </Switch>
                         </div>
