@@ -24,7 +24,7 @@ export class MyjsShowVisitors extends React.Component{
           {tupleValues.slice(0,count).map(function(profiles, index){
             return (
                 <div className="fl pl_a" key={profiles.profilechecksum}>
-                  <Link  to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.responseMessage.tracking}&total_rec=${tupleValues.length}&actual_offset=${index}&searchid=${this.props.responseMessage.searchid}&contact_id=nan`}>
+                  <Link  to={`/profile/viewprofile.php?profilechecksum=${profiles.profilechecksum}&${this.props.responseMessage.tracking}&total_rec=${tupleValues.length}&actual_offset=${index}&searchid=${this.props.responseMessage.searchid}&contact_id=${this.props.contact_id}`}>
                     <img className="myjsdim1" src={profiles.photo.url}/>
                   </Link>
                 </div>
@@ -66,7 +66,7 @@ export default class ProfileVisitor extends React.Component{
           </div>
           <div className="myjsp1">
             <div className="fullwid">
-              <MyjsShowVisitors responseMessage={this.props.responseMessage} listingData={this.props.responseMessage.profiles} />
+              <MyjsShowVisitors responseMessage={this.props.responseMessage} contact_id={this.props.responseMessage.contact_id} listingData={this.props.responseMessage.profiles} />
             </div>
           </div>
         </div>
