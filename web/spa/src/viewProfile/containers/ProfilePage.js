@@ -78,6 +78,7 @@ class ProfilePage extends React.Component {
       //  console.log('componentDidUpdate');
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 
+
     }
     componentDidMount()
     {
@@ -88,7 +89,9 @@ class ProfilePage extends React.Component {
         } else if(getParameterByName(window.location.href,"username") != null) {
             urlString = "?username="+getParameterByName(window.location.href,"username")+"&responseTracking="+this.state.responseTracking+"&stype="+this.state.stype;
         }
-        else {
+        else
+        {
+           
             let contact_id = getParameterByName(window.location.href,"contact_id");
             let actual_offset = getParameterByName(window.location.href,"actual_offset");
             let total_rec = getParameterByName(window.location.href,"total_rec");
@@ -135,6 +138,7 @@ class ProfilePage extends React.Component {
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
         document.getElementById("photoParent").style.height = window.innerWidth +"px";
         var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+
         if(document.getElementById("animated-background")) {
             document.getElementById("animated-background").style.height = backHeight + "px";
         }
@@ -561,7 +565,7 @@ swipeNextProfile(nextOrPrev){
 
           if(this.props.AboutInfo.thumbnailPic==null)
           {
-            console.log(this.props.AboutInfo.gender);
+
             if(this.props.AboutInfo.gender=="Female")
             {
               thumbURL = "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto";
@@ -745,12 +749,18 @@ swipeNextProfile(nextOrPrev){
                 </div>
             </div>;
             showAlbumView = <div id="photoParent" style={{height:window.innerWidth +"px"}} className="fullwid scrollhid"></div>;
-            // setTimeout(function(){
-            //     var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-            //     if(document.getElementById("animated-background")) {
-            //         document.getElementById("animated-background").style.height = backHeight + "px";
-            //     }
-            // },100);
+
+
+            if( document.getElementById("photoParent"))
+            {
+              setTimeout(function(){
+                  var backHeightn = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+                  if(document.getElementById("animated-background")) {
+                      document.getElementById("animated-background").style.height = backHeightn + "px";
+                  }
+              },100);
+            }
+
         }
         return (
             <div style={this.state.profilePageStyle} id="ProfilePage">
