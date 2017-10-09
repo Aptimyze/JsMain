@@ -88,6 +88,16 @@ class LoginPage extends React.Component {
     componentWillReceiveProps(nextProps)
     {
        if ( nextProps.MyProfile.AUTHCHECKSUM ) {
+            //user is logged in, let us delete the profile local storage cache
+            try
+            {
+                localStorage.removeItem(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY);
+            }
+            catch(e)
+            {
+                console.log(e);
+            }
+                
             if ( (this.props.history.prevUrl) && ((this.props.history.prevUrl).indexOf('/login') === -1) && ((this.props.history.prevUrl).indexOf('/spa/dist/index.html') === -1)  )
             {
                 this.props.history.push(this.props.history.prevUrl);
