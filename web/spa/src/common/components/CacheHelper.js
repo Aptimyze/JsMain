@@ -72,7 +72,8 @@ export function isPresentInLocalStorage(profileLocalStorageKey,profileKey)
 export function removeProfileLocalStorage(profileLocalStorageKey,profileKey)
 {
 	let profileLocalStorageArray = JSON.parse(localStorage.getItem(profileLocalStorageKey));
-	
+	if ( profileLocalStorageArray == null )
+		return false;
 	for (var i = 0; i < profileLocalStorageArray.length; i++) 
 	{
 
