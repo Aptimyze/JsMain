@@ -174,8 +174,6 @@ class Consumer
               break;
           }
           $body = RabbitmqHelper::modifyDataForConsumer($body);
-          $o = new MOBILE_API_ALARM_TIME();
-          $o->insert($profileid, $alarmTime);
         }
         catch (Exception $exception) 
         {
