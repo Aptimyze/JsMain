@@ -39,6 +39,10 @@ EOF;
                 }
 		if(count($profilesArr)>0){ 
 			foreach($profilesArr as $profileid=>$campaign){
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                }
+		if(count($profilesArr)>0){ 
+			foreach($profilesArr as $profileid=>$campaign){
 				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB'],$profileDet[$profileid]['USERNAME']);
 				$crmMailerObj->updateMailerSentStatus($profileid,$deliveryStatus);
 			}
@@ -49,4 +53,5 @@ EOF;
 		unset($crmMailerObj);
 		unset($profilesArr);
 	}
+}
 }
