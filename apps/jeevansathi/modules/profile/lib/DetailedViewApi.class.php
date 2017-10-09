@@ -133,21 +133,23 @@ class DetailedViewApi
 			$arrMoreInfo['thumb_url'] = $thumbNailArray['url'];
       $fromViewSimilar = $_GET['fromViewSimilar']; //added for similar profiles section on profile page
       if($fromViewSimilar == 1)
-				$arrMoreInfo['NAVIGATOR']=navigation("DP_NEW","",$this->m_objProfile->getUSERNAME());
+				navigation("DP_NEW","",$this->m_objProfile->getUSERNAME());
 			elseif($fromViewSimilar == 2)
-				$arrMoreInfo['NAVIGATOR']=navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
+				navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
 			else
 			{
 				if(!$_GET['NAVIGATOR'])
 				{
-					$arrMoreInfo['NAVIGATOR']=navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
+					navigation("CVS_NEW","",$this->m_objProfile->getUSERNAME());
 				}
 				else
 				{
-					$arrMoreInfo['NAVIGATOR']=navigation("DP","",$this->m_objProfile->getUSERNAME());
+					navigation("DP","",$this->m_objProfile->getUSERNAME());
 				}
       }
-
+//      ProfileCommon::old_smarty_assign($this);
+      $navFinal = sfContext::getInstance()->getRequest()->getParameter('NAVIGATOR_FOR_SYMFONY');
+      $arrMoreInfo['NAVIGATOR'] = $navFinal ? $navFinal : sfContext::getInstance()->getRequest()->getParameter('NAVIGATOR');
 		}
 
 		$this->m_arrOut = array();
