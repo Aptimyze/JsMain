@@ -426,6 +426,16 @@ try{
                 if ($diff->y >= 2) {
                         $deleteInterest = 1;
                 }
+                
+                // delete horoscope if dob changed
+                //DELETE CREATED HOROSCOPE
+                $deleteAstroDetailsObj = ProfileAstro::getInstance();
+                $deleteAstroDetailsObj->deleteEntry($profileid);
+                //DELETE TIME ,PLACE OF BIRTH
+                $deleteTimePlaceOfBirthObj = new JPROFILE();
+                $fieldsArr = array('BTIME'=>'','COUNTRY_BIRTH'=>'','CITY_BIRTH'=>'');
+                $deleteTimePlaceOfBirthObj->edit($fieldsArr,$profileid);
+                
         }
         if($prevMstatus!= "" && $mstatus != "" &&(($prevMstatus == "N" && $mstatus != "N") || ($prevMstatus != "N" && $mstatus == "N"))){
                 $deleteInterest = 1;
