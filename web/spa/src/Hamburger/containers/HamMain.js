@@ -186,10 +186,11 @@ class HamMain extends React.Component {
             }
             else
             {
-
-              topView = <div className="brdrTop pad150">
+              if(this.state.bellResponse.MEMBERSHIPT_TOP != null){
+                topView = <div className="brdrTop pad150">
                           <div className="txtc color9 mb15">{this.state.bellResponse.MEMBERSHIPT_TOP}</div>
                         </div>;                
+              }
               btnView =   <a href="/profile/mem_comparison.php" id="membershipLink" className="hamBtn f17 white bg7 mt15 fullwid lh50">
                         {this.state.bellResponse.MEMBERSHIPT_BOTTOM}
                 </a>;
