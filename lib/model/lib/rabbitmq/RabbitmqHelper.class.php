@@ -190,7 +190,7 @@ class RabbitmqHelper
    * @return modified data
    */
   public static function modifyDataForConsumer($data){
-        if($data && is_array($data)){
+        if(MQ::$flagForDuplicateDataCheck && $data && is_array($data)){
             $data["processed"] = "1";
         }
         return $data;
@@ -202,7 +202,7 @@ class RabbitmqHelper
     * @return modified data
    */
     public static function isQueueDataProcessed($data,$msg){
-        if($data && is_array($data) && $data["processed"] == "1"){
+        if(MQ::$flagForDuplicateDataCheck && $data && is_array($data) && $data["processed"] == "1"){
             try{
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
                 return true;
@@ -216,18 +216,20 @@ class RabbitmqHelper
     }
     
     /*
-     * FUnction to do logging of rabbitmq timeouts
+     * Function to do logging of rabbitmq timeouts
+     * The "time" key should be first thing to be printed in the log file.
      */
-    public static function rmqLogging($logPath="",$start,$end,$reqId,$threshold,$logText){
+    public static function rmqLogging($logPath="",$start,$end,$reqId,$threshold,$dataArray){
         $diff = $end-$start;
         if($logPath == ""){
-            $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime'.date('Y-m-d').'.log';
+            $logPath = JsConstants::$cronDocRoot.'log/rabbitTime'.date('Y-m-d').'.log';
             //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
         }
         if($diff > $threshold){
             $logText["time"] = time();
             $logText["connTime"] = round($diff,4);
             $logText["requestId"] = $reqId;
+            $logText["source"] = $dataArray["source"];
             if(file_exists($errorLogPath)==false)
                 exec("touch"." ".$logPath,$output);
             error_log(json_encode($logText)."\n",3,$logPath);

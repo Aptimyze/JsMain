@@ -205,7 +205,7 @@ class JsNotificationProduce
       }
       $endPublishTime = microtime(true);
       if(MQ::$rmqConnectionTimeout["logPublishTime"] == 1){
-          $logPath = JsConstants::$cronDocRoot.'/log/rabbitTimePublish'.date('Y-m-d').'.log';
+          $logPath = JsConstants::$cronDocRoot.'log/rabbitTimePublish'.date('Y-m-d').'.log';
           $logText["source"] = "PublishTime JsNotificationProduce";
           RabbitmqHelper::rmqLogging($logPath,$startPublishTime,$endPublishTime,$this->reqId,MQ::$rmqConnectionTimeout["publishThreshold"],$logText);
       }
