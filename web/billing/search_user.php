@@ -25,7 +25,7 @@ if(isset($data))
 	if(trim($phrase)!="")
 	{
 		$flag=1;
-		$sql="SELECT newjs.JPROFILE.PROFILEID,newjs.JPROFILE.USERNAME,newjs.JPROFILE.SOURCE,billing.PURCHASES.BILLID";
+		$sql="SELECT newjs.JPROFILE.PROFILEID,newjs.JPROFILE.USERNAME,newjs.JPROFILE.SOURCE,newjs.JPROFILE.CITY_RES,newjs.JPROFILE.COUNTRY_RES,billing.PURCHASES.BILLID";
 		if($criteria=="uname")
 		{
 			$from=" FROM newjs.JPROFILE,billing.PURCHASES";
@@ -77,7 +77,9 @@ if(isset($data))
 			$pid=$row['PROFILEID'];
 			$username = $row['USERNAME'];
 			$source_for_offline_check = $row["SOURCE"];
-			if($source_for_offline_check == "ofl_prof" && !$offline_billing)
+			$city_res = $row["CITY_RES"];
+			$country_res = $row["COUNTRY_RES"];
+ 			if($source_for_offline_check == "ofl_prof" && !$offline_billing)
 				$smarty->assign("ONLINE_TRYING_OFFLINE",1);
 			elseif($source_for_offline_check != "ofl_prof" && $offline_billing)
 				$smarty->assign("OFFLINE_TRYING_ONLINE",1);
@@ -85,7 +87,8 @@ if(isset($data))
 
 			check_special_discount($pid);
 			$marked_for_deletion = check_marked_for_deletion($pid);
-
+            $smarty->assign("city_res",$city_res);
+            $smarty->assign("country_res",$country_res);
 			$smarty->assign("found","1"); 
 			$smarty->assign("userexists","1"); 
 			$smarty->assign("USERNAME",$phrase); 
@@ -96,10 +99,14 @@ if(isset($data))
 		{
 			if($criteria="uname")
 			{
-				$sql="SELECT PROFILEID,SOURCE from newjs.JPROFILE where USERNAME='$phrase'";
+				$sql="SELECT PROFILEID,SOURCE,CITY_RES,COUNTRY_RES from newjs.JPROFILE where USERNAME='$phrase'";
 				$result=mysql_query_decide($sql) or logError_sums($sql,0);
 				if($myrow=mysql_fetch_array($result))
 				{
+                    $city_res = $row["CITY_RES"];
+                    $country_res = $row["COUNTRY_RES"];
+                    $smarty->assign("city_res",$city_res);
+                    $smarty->assign("country_res",$country_res);
 					$smarty->assign("userexists","1"); 
 					$source_for_offline_check = $myrow["SOURCE"];
 					if($source_for_offline_check == "ofl_prof" && !$offline_billing)
