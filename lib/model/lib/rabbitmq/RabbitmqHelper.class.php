@@ -206,7 +206,7 @@ class RabbitmqHelper
         if(MQ::$flagForDuplicateDataCheck && $data && is_array($data) && $data["processed"] == "1"){
             try{
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                CommonUtility::sendAlertMail("nitishpost@gmail.com", "Queue data already processed", "Queue data already processed");
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "Queue data already processed", "Queue data already processed");
                 return true;
             } 
             catch(Exception $exception){
