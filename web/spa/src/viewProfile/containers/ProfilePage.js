@@ -173,8 +173,6 @@ class ProfilePage extends React.Component {
           // console.log(document.getElementById("comHistoryOverlay"));
           if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
           {
-            console.log("HITS stopped: "+_this.state.nextProfileFetched)
-
             return;
           }
           else if(stype == "KM" || stype =="WC") //swipe to be disabled for Kundli Listing

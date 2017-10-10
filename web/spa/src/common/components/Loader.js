@@ -1,6 +1,6 @@
 import React from "react";
 import * as CONSTANTS from '../../common/constants/apiConstants';
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 export default class Loader extends React.Component {
 	constructor(props) {
   	super();
