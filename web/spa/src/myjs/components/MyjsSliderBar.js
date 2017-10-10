@@ -89,7 +89,7 @@ alterCssStyle(duration, transform){
 }
 
 render(){
-  if(!this.props.fetched || !this.props.listing.profiles || !this.props.listing.profiles.length) {
+  if(!this.props.fetched || !this.props.listing.responseStatusCode || !this.props.listing.profiles || !this.props.listing.profiles.length ) {
     return <div></div>;
   }
 
