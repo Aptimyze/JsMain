@@ -49,6 +49,7 @@ class RabbitmqHelper
     {
   //    SendMail::send_email($emailTo,$message,$subject);
     }
+    self::killConsumerForErrorPattern($message,$consumerName);
   }
 
   public static function sendChatConsumerAlert($message)
@@ -205,6 +206,7 @@ class RabbitmqHelper
         if(MQ::$flagForDuplicateDataCheck && $data && is_array($data) && $data["processed"] == "1"){
             try{
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "Queue data already processed", "Queue data already processed");
                 return true;
             } 
             catch(Exception $exception){
@@ -225,7 +227,7 @@ class RabbitmqHelper
             $logPath = JsConstants::$cronDocRoot.'log/rabbitTime'.date('Y-m-d').'.log';
             //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
         }
-        if($diff > $threshold){
+        if($diff >= $threshold){
             $logText["time"] = time();
             $logText["connTime"] = round($diff,4);
             $logText["requestId"] = $reqId;
@@ -233,6 +235,21 @@ class RabbitmqHelper
             if(file_exists($errorLogPath)==false)
                 exec("touch"." ".$logPath,$output);
             error_log(json_encode($logText)."\n",3,$logPath);
+        }
+    }
+    
+    
+    public static function killConsumerForErrorPattern($message,$consumerName){
+        $errorPatternArray = array("MySQL server has gone away");        
+        $logPath = JsConstants::$cronDocRoot.'log/rabbitErrorToKillConsumer'.date('Y-m-d').'.log';
+        $logText["source"] = "In function killConsumerForErrorPattern";
+        $logText["message"] = $message;
+        self::rmqLogging($logPath,0,0,0,0,$logText);
+        foreach($errorPatternArray as $key => $val){
+            if(strpos($message, $val) !== false){
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "MySQL gone away $consumerName killed at ".JsConstants::$siteUrl, "MySQL gone away in consumer");
+                //die("ConsumerKilled");
+            }
         }
     }
   
