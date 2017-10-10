@@ -227,7 +227,7 @@ class RabbitmqHelper
             $logPath = JsConstants::$cronDocRoot.'log/rabbitTime'.date('Y-m-d').'.log';
             //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
         }
-        if($diff > $threshold){
+        if($diff >= $threshold){
             $logText["time"] = time();
             $logText["connTime"] = round($diff,4);
             $logText["requestId"] = $reqId;
@@ -240,11 +240,15 @@ class RabbitmqHelper
     
     
     public static function killConsumerForErrorPattern($message,$consumerName){
-        $errorPatternArray = array("MySQL server has gone away");
+        $errorPatternArray = array("MySQL server has gone away");        
+        $logPath = JsConstants::$cronDocRoot.'log/rabbitErrorToKillConsumer'.date('Y-m-d').'.log';
+        $logText["source"] = "In function killConsumerForErrorPattern";
+        $logText["message"] = $message;
+        self::rmqLogging($logPath,0,0,0,0,$logText);
         foreach($errorPatternArray as $key => $val){
             if(strpos($message, $val) !== false){
-                CommonUtility::sendAlertMail("nitishpost@gmail.com", "MySQL gone away $consumerName killed at ".JsConstants::$siteUrl, "MySQL gone away in consumer");
-                die("ConsumerKilled");
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "MySQL gone away $consumerName killed at ".JsConstants::$siteUrl, "MySQL gone away in consumer");
+                //die("ConsumerKilled");
             }
         }
     }
