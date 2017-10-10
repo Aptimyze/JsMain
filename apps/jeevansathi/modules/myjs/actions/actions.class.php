@@ -120,8 +120,7 @@ class myjsActions extends sfActions
     $moduleName = "MyJS Perform V1";
     $stFirstTime = microtime(TRUE);
     $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
-
-    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew") || MobileCommon::isNewMobileSite())
+    if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew") || (MobileCommon::isNewMobileSite() && $request->getParameter('fromSPA')==1) )
       $oldMyjsApi=false;
     else
       $oldMyjsApi=true;
