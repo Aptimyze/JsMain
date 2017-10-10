@@ -5,7 +5,6 @@ export default class PageNotFound extends React.Component {
     super();
   }
   componentDidMount(){
-    console.log(document.getElementsByClassName("sreen404"));
     document.getElementById("Pnf").style.height = window.innerHeight+"px";
     document.getElementById("Pnf").style.width = window.innerWidth+"px";
   }

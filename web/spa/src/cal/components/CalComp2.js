@@ -4,7 +4,7 @@ import CALCommonCall from './CommonCALFunctions';
 import Loader from "../../common/components/Loader";
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"

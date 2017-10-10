@@ -510,7 +510,6 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
     }
     return prevState;
   });
-//  let classnm = !this.state.classCounter[counter] ? "ppp" : ' suggestSelected'; console.log(this.state.classCounter);console.log(classnm);
 }
 
 getClassForSuggestion(counter){

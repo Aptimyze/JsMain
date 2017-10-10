@@ -5,10 +5,10 @@ import { getAndroidVersion, getIosVersion} from "../../common/components/commonF
 import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHelper';
 import axios from "axios";
 import * as CONSTANTS from '../../common/constants/apiConstants'
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import Loader from "../../common/components/Loader";
 import { connect } from "react-redux";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 
 class HamMain extends React.Component {

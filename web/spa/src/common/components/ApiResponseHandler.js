@@ -1,5 +1,5 @@
 import * as CONSTANTS from '../../common/constants/apiConstants'
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 import React from 'react';
 import {push} from 'react-router-redux';
 import {getCookie,setCookie,removeCookie} from "../../common/components/CookieHelper";
