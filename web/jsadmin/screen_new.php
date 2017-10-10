@@ -776,9 +776,22 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-                                            if(!$activatedWithoutYourInfo)
-						CommonFunction::sendWelcomeMailer($pid);
+                                            if(!$activatedWithoutYourInfo){
+                                                try
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_MAILER, 'data' => array('type' => 'WELCOME_MAILER','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+							}
+                                                        else{
+                                                            CommonFunction::sendWelcomeMailer($pid);
+                                                        }
+						}
+						catch(Exception $e) {}
                                             }
+                                        }
 						//send_email($to, $MESSAGE);
 				}
 				else

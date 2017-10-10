@@ -164,6 +164,7 @@ class Producer
 			$this->channel->queue_declare(MQ::PROFILE_CACHE_Q_DELETE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         $this->channel->queue_declare(MQ::VIEW_LOG, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        $this->channel->queue_declare(MQ::SCREENING_MAILER_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::COMMUNITY_DISCOUNT_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
@@ -323,6 +324,9 @@ class Producer
 				case MQ::WRITE_MSG_Q:
 					$this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min);
 					break;
+                case MQ::SCREENING_MAILER:
+                	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCREENING_MAILER_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                	break;
                 case 'LOGGING_TRACKING':
                 	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::LOGGING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                 	break;
