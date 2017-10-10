@@ -40,26 +40,44 @@ class GoogleVisionApi
 			//die;
 		}
 
-		$vision = new \Vision\Vision(
-			"AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg",
-			[
-				// See a list of all features in the table below
-				// Feature, Limit
-				new \Vision\Feature(\Vision\Feature::FACE_DETECTION, 100),
-			]
-		);
-		$response = $vision->request(
-			new \Vision\Image($picturePath)
-		);
-		$faces = $response->getFaceAnnotations();
-		if(is_array($faces)) {
-			$face = $faces[0];
-			$cordinates = $face->getBoundingPoly()->getVertices();
-			$x = $cordinates[0]->getX() ? $cordinates[0]->getX() : 0;
-			$y = $cordinates[0]->getY() ? $cordinates[0]->getY() : 0;
-			$h = $cordinates[2]->getY() - $y;
-			$w = $cordinates[1]->getX() - $x;
-	
+		$img = file_get_contents($picturePath);
+		$imgData = base64_encode($img);
+
+		$data = '{
+				    "requests": [
+				    {
+				      "image": {
+				        "content": "' . $imgData . '"
+				      },
+				      "features": [
+				        {
+				          "type": "FACE_DETECTION"
+				        }
+				      ]
+				    }
+				  ]
+				}';
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		$result = json_decode($result, true);
+		$response = $result["responses"][0];
+		$cord = null;
+		$faceDetected = false;
+		if (!empty($response["faceAnnotations"])) {
+			$otherData = $response["faceAnnotations"][0];
+			$cordinates = $otherData["boundingPoly"]["vertices"];
+			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
+			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
+			$h = $cordinates[2]["y"] - $y;
+			$w = $cordinates[1]["x"] - $x;
 			$cord = $w . "x" . $h . "+" . $x . "+" . $y;
 			$faceDetected = true;
 		}
@@ -108,32 +126,61 @@ class GoogleVisionApi
 			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com",$picturePath,"Face detection error");
 			//die;
 		}
+		$newImgArr=explode(".",$picturePath);
+		if(count($newImgArr)==2){
+			$newImgArr[0]=$newImgArr[0]."tempORIG";
+			$newPicturePath=$newImgArr[0].".".$newImgArr[1];
+			copy($picturePath, $newPicturePath);
+			$picturePath=$newPicturePath;
+			$this->rotateImageFile($picturePath,$imageFormatType);
+		}
+		$img = file_get_contents($picturePath);
+		$imgData = base64_encode($img);
 
-		$vision = new \Vision\Vision(
-			"AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg",
-			[
-				// See a list of all features in the table below
-				// Feature, Limit
-				new \Vision\Feature(\Vision\Feature::FACE_DETECTION, 100),
-				new \Vision\Feature(\Vision\Feature::SAFE_SEARCH_DETECTION,10),
-				new \Vision\Feature(\Vision\Feature::LABEL_DETECTION,100),
-			]
-		);
-		$response = $vision->request(
-			new \Vision\Image($picturePath)
-		);
-		$labels = $response->getLabelAnnotations();
+		$data = '{
+				    "requests": [
+				    {
+				      "image": {
+				        "content": "' . $imgData . '"
+				      },
+				      "features": [
+				        {
+				          "type": "FACE_DETECTION"
+				        },
+				        {
+				            "type": "LABEL_DETECTION"
+				        },
+				        {
+				            "type": "SAFE_SEARCH_DETECTION"
+				        }
+				      ]
+				    }
+				  ]
+				}';
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		$response = json_decode($result, true);
+		$response = $response["responses"][0];
+		$safes = $response["safeSearchAnnotation"];
+		$labels = $response["labelAnnotations"];
+
 		foreach ($labels as $label)
 		{
-			$desc[] = $label->getDescription();
+			$desc[] = $label["description"];
 		}
-        
-        $faces = $response->getFaceAnnotations();
+		$faces = $response["faceAnnotations"];
 		$arrPicData['LABEL'] = implode(",",$desc);
-		$safes = $response->getSafeSearchAnnotation();
-		$arrPicData['ADULT'] = $safes->getAdult();
-		$arrPicData['SPOOF'] = $safes->getSpoof();
-		$arrPicData['VIOLENCE'] = $safes->getViolence();
+		$arrPicData['ADULT'] = $safes["adult"];
+		$arrPicData['SPOOF'] = $safes["spoof"];
+		$arrPicData['VIOLENCE'] = $safes["violence"];
         $arrPicData['FACE_COUNT'] = is_array($faces) ? count($faces) : 0;
         
         $arrPicData['PICTUREID'] = $iPicId;
@@ -151,19 +198,19 @@ class GoogleVisionApi
 			{
 				$cordinates = null;
 				$cord = null;
-				$cordinates = $face->getBoundingPoly()->getVertices();
-				$x = $cordinates[0]->getX() ? $cordinates[0]->getX() : 0;
-				$y = $cordinates[0]->getY() ? $cordinates[0]->getY() : 0;
-				$h = $cordinates[2]->getY() - $y;
-				$w = $cordinates[1]->getX() - $x;
+				$cordinates = $face["boundingPoly"]["vertices"];
+				$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
+				$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
+				$h = $cordinates[2]["y"] - $y;
+				$w = $cordinates[1]["x"] - $x;
 				$cord = $w . "x" . $h . "+" . $x . "+" . $y;
-                                
+
                 $arrData['CORD'] = $cord; 
-                $arrData['BLUR'] = $face->getBlurredLikelihood();
-                $arrData['PAN_ANGLE'] = $face->getPanAngle();
-                $arrData['ROLL_ANGLE'] = $face->getRollAngle();
-                $arrData['TILT_ANGLE'] = $face->getTiltAngle();
-                $arrData['UNDEREXPOSED'] = $face->getUnderExposedLikelihood();
+                $arrData['BLUR'] = $face["blurredLikelihood"];
+                $arrData['PAN_ANGLE'] = $face["panAngle"];
+                $arrData['ROLL_ANGLE'] = $face["rollAngle"];
+                $arrData['TILT_ANGLE'] = $face["tiltAngle"];
+                $arrData['UNDEREXPOSED'] = $face["underExposedLikelihood"];
                 
                 $arrData['PICTUREID'] = $iPicId;
                 

@@ -5,7 +5,7 @@
     <div class="bg1 txtc pad15">
       <div class="posrel">
         <div class="fontthin f20 white">Profile Visible</div>
-        <a href="/static/settings"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
+        <a href="/"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
     </div>
     <!--end:top--> 
     <!--start:option-->
@@ -28,7 +28,7 @@
     if(webView) {
       function onUnHideResultBack() {
         if(location.href.indexOf("static/unHideResult") !== -1) {
-          location.href = "/static/settings";
+          location.href = "/";
           return true;
         }
         return false;
