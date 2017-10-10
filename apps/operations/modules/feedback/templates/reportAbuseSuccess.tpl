@@ -10,7 +10,6 @@
 		var tempHtml=$(rowHtml);
 		tempHtml.find('.RAReviewStatus').attr({
 			"id" : rowJson.id,
-			"review_status" : rowJson.review_status,
 		});
 		if(rowJson.review_status === 'Y')
 			tempHtml.find('.RAReviewStatus').attr("checked", "checked");
@@ -36,9 +35,9 @@
 			var review_status = El.prop("checked") ? 'Y':'N';
 
 			var Data = {
-				"status" : review_status,
-				"id" : 		El.attr("id"),
-				"cid": cid
+				"status"	: review_status,
+				"id"		: El.attr("id"),
+				"cid"		: cid
 			};
 
 			$.get(Url, Data, function(data){

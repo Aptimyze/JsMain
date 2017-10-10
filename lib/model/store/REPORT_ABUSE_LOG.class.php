@@ -85,14 +85,14 @@ class REPORT_ABUSE_LOG extends TABLE
 			$review_status = 'N';
 		}else return 0;
 		try{
-			// $sql = "UPDATE feedback.REPORT_ABUSE_LOG SET REVIEW_STATUS = :vREVIEW_STATUS WHERE (REPORTER, REPORTEE) = (:vREPORTER, :vREPORTEE) AND DATE = :vTIMESTAMP";
+			$sql = "UPDATE feedback.REPORT_ABUSE_LOG SET REVIEW_STATUS = :vREVIEW_STATUS WHERE (REPORTER, REPORTEE) = (:vREPORTER, :vREPORTEE) AND DATE = :vTIMESTAMP";
 			$sql = "UPDATE feedback.REPORT_ABUSE_LOG SET REVIEW_STATUS = :vREVIEW_STATUS WHERE ID = :vID";
 			
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(':vID' , $report_id, PDO::PARAM_INT);
 			$prep->bindValue(':vREVIEW_STATUS', $review_status, PDO::PARAM_STR);
-			// $prep->bindValue(':vREPORTEE', $reportee, PDO::PARAM_INT);
-			// $prep->bindValue(':vREPORTER', $reporter, PDO::PARAM_INT);
+			$prep->bindValue(':vREPORTEE', $reportee, PDO::PARAM_INT);
+			$prep->bindValue(':vREPORTER', $reporter, PDO::PARAM_INT);
 			$prep->execute();
 			$row_affected=$prep->rowCount();
 			if($row_affected>0){
