@@ -90,35 +90,42 @@ class ApiIgnoreProfileV1Action extends sfActions
                                             //changed to library call
                                             $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
                                             $ignoreCount=$ignoreArr['CNT'];
-                                        
+
                                         }
                     //changed to library call
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
 					ProfileMemcache::clearInstance($profileID);
 					ProfileMemcache::clearInstance($ignoredProfileid);
                                         $ignoreCount--;
-					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
+					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);
 					$page["source"] = $request->getParameter("pageSource");
                                         $page['IGNORED'] = 0;
-                                        
+
 					$buttonObj = new ButtonResponse($this->loginProfile,$this->ignoreProfile,$page);
                                         if(MobileCommon::isNewMobileSite())
                                         {
                                             if((new NEWJS_BOOKMARKS())->isBookmarked($profileID,$ignoredProfileid))
                                                 $page['isBookmarked']=1;
-                                            else 
+                                            else
                                             $page['isBookmarked']=0;
-                                            $button = $buttonObj->getNewButtonArray($page);
+																						if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')=='1')
+                                            	$button = $buttonObj->getButtonArray($page);
+																						else {
+																							$button = $buttonObj->getNewButtonArray($page);
+																							$tempButton = $button;
+																							$button['buttons']=null;
+																							$button['buttons']['primary'][0] = $tempButton['buttons'][0];
+																							$button['buttons']['others'] = $tempButton['buttons'];
+
+																						}
                                             $tempButton = $button;
-                                            $button['buttons']=null;
-                                            $button['buttons']['primary'][0] = $tempButton['buttons'][0];
-                                            $button['buttons']['others'] = $tempButton['buttons'];
-                                            
+                                            $button['buttons'] = $tempButton['buttons'];
+
                                         }
                                         else
                                             $button = $buttonObj->getButtonArray();
                                      //   print_r($button);print_r($button);die;
-					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;                                     
+					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					if(empty($button["buttons"]))
 					{
 						$responseArray["buttondetails"] = $button;
@@ -130,7 +137,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 					else
 						$this->m_arrOut["buttondetails"] = $button;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
-					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
+					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button,'buttonDetails'=>$button));
 					//changed to library call
 
 					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID,ignoredProfileCacheConstants::BYME);
@@ -224,6 +231,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 	                	$params["isIgnored"] = 1;
 	                	$responseArray["buttons"][0] = ButtonResponseApi::getIgnoreButton("",'','Y',true,'Undo Ignore');
 	                }
+					if(MobileCommon::isNewMobileSite())$responseArray["buttons"] = $button["buttons"]["primary"];
 					$buttonDetails = ButtonResponse::buttonDetailsMerge($responseArray);
 					$actionDetails = ButtonResponse::actionDetailsMerge(array("notused"=>1));
 					$this->m_arrOut=array('status'=>"1",'message'=>$this->getIgnoreMessage(),'button_after_action'=>$button,'buttondetails'=>$buttonDetails);

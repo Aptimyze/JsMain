@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
     <meta http-equiv="content-language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
