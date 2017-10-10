@@ -530,7 +530,12 @@ if (authenticated($cid)) {
 				foreach($log_val as $item)
 					$log_val1[]=addslashes(stripslashes($item));
 				$log_values = implode("','", $log_val1);
-				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values','$user',now(),'M','$count_screen')";
+                                if($val == "new")
+                                    $screenNewEdit = 2;
+                                
+                                else
+                                    $screenNewEdit = 3;
+				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENING,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values',$screenNewEdit,'$user',now(),'M','$count_screen')";
 				mysql_query_decide($sql_mod) or die(mysql_error_js()."at line 367");
 				//added by sriram.
 				if ($do_gender_related_changes) {
