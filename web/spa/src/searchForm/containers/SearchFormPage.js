@@ -11,7 +11,7 @@ import {getCookie} from '../../common/components/CookieHelper';
 import AppPromo from "../../common/components/AppPromo";
 import axios from "axios";;
 import * as CONSTANTS from '../../common/constants/apiConstants';
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 import DropMain from "../../DropDown/containers/DropMain";
 
 

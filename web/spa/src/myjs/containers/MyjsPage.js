@@ -44,14 +44,14 @@ constructor(props){
 
 		switch (this.props.blockname) {
 			case "int_exp":
-						if( (this.props.data===null)  || (this.props.data.profiles===null))
+						if( !this.props.data.responseStatusCode ||  (this.props.data===null)  || (this.props.data.profiles===null))
 						{
 							  return (<div className="noData Intexp"></div>);
 						}
 						return(<InterestExp int_exp_list={this.props.data}/>);
 						break;
 			case "prf_visit":
-						if(this.props.data.profiles===null)
+						if(!this.props.data.responseStatusCode ||  this.props.data.profiles===null)
 						{
 							return (<div className="noData prfvisit"></div>);
 						}

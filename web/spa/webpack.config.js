@@ -3,17 +3,17 @@ var path = require("path");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var combineLoaders = require('webpack-combine-loaders');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var SRC_DIR = path.resolve(__dirname,"src");;
+var staticServer = require("./src/common/constants/apiServerConstants");
+var SRC_DIR = path.resolve(__dirname,"src");
 var DIST_DIR = null;
 var fileNameConfig = '';
 var publicPathConfig = '';
 const NameAllModulesPlugin = require('name-all-modules-plugin');
-
 if(process.env.NODE_ENV === 'production')
  {
    DIST_DIR = path.resolve(__dirname,"dist");
    fileNameConfig = "[name].[chunkhash].bundle.js";
-   publicPathConfig = '/spa/dist/';
+   publicPathConfig = staticServer.STATIC_SERVER+'/spa/dist/';
  }
  else {
    DIST_DIR = path.resolve(__dirname,"dist");

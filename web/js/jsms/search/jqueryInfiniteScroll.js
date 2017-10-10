@@ -304,7 +304,6 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,pr
                         }
                 }
         tupleStructure += '<div class="posrel tupleOuterDiv searchNavigation" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}" style="display:none;height:{searchTupleImageHeight}px;">';
-				console.log('here1');
 	if(contactCenter==1)
 		tupleStructure+='<a tupleNo="idd'+idd+'" class="searchNavigation" href="javascript:void(0)" onclick=showProfilePage("/profile/viewprofile.php?total_rec='+totalNoOfResults+'&profilechecksum='+profilechecksum+contactTracking+'&tupleId='+idd+'&searchid='+firstResponse.searchid+'&'+NAVIGATOR+showECPPage+'&'+'offset='+(idd-1)+'&contact_id='+firstResponse.contact_id+'&actual_offset='+idd+'")>';
 	else
@@ -354,7 +353,6 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,pr
 
 	tupleStructure+='<div tupleNo="idd'+idd+'" class="searchNavigation posabs fullwid btmo">\
 			{noPhotoDiv}';
-			console.log('here2');
 
 	if(contactCenter==1)
 		tupleStructure+='<a tupleNo="idd'+idd+'" class="searchNavigation" href="javascript:void(0)" onclick=showProfilePage("/profile/viewprofile.php?total_rec='+totalNoOfResults+'&profilechecksum='+profilechecksum+contactTracking+'&tupleId='+idd+'&searchid='+firstResponse.searchid+'&'+NAVIGATOR+showECPPage+'&'+'offset='+(idd-1)+'&contact_id='+firstResponse.contact_id+'&actual_offset='+idd+'")>';

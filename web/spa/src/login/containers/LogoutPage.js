@@ -1,7 +1,7 @@
 import React from "react";
 import { removeCookie } from '../../common/components/CookieHelper';
 import axios from "axios";
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 export default class LogoutPage extends React.Component{
 

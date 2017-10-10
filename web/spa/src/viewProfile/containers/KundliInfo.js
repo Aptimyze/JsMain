@@ -3,13 +3,13 @@ import {connect} from "react-redux";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import {getCookie} from '../../common/components/CookieHelper';
 import * as CONSTANTS from '../../common/constants/apiConstants';
-import * as API_SERVER_CONSTANTS from '../../common/constants/apiServerConstants'
 import axios from "axios";
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 const RELIGIONARR = ["1","4","7","9"];
 class KundliInfo extends React.Component {
 	constructor(props) {
-        super();        
+        super();
         this.state = {
             showAstroLayer:false
         };
