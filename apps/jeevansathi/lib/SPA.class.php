@@ -11,7 +11,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 	// End hindi switch code !
 
 	if(MobileCommon::isNewMobileSite() && JsConstants::$SPA['flag'] ){
-		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view');
+		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view','login_home');
 		$nonSpaUrls = array('ownview=1');
 		$spa = 0;
 		$originalArray = array('https://','http://');
