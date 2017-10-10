@@ -4,10 +4,16 @@
 	var cid='~$cid`';
 	var fetchAbusePageUrl = "/operations.php/profileVerification/fetchAbuseInvalidData/?userName="
 	var showStatsPageUrl = "/operations.php/commoninterface/ShowProfileStats?cid="+cid+"&profileid=";
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td><a class='RAreportee' target='_blank'></a></td><td class='RAreporteeEmail'></td><td><a class='RAreporter' target='_blank'></a></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td><a class='RACount' target='_blank'></a></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled value='Download'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td><a class='RAreportee' target='_blank'></a></td><td class='RAreporteeEmail'></td><td><a class='RAreporter' target='_blank'></a></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td><a class='RACount' target='_blank'></a></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled value='Download'></td><td><input class='RAReviewStatus' type='checkbox' onclick='toggleReviewStatus.call(this)'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
+		tempHtml.find('.RAReviewStatus').attr({
+			"id" : rowJson.id,
+			"review_status" : rowJson.review_status,
+		});
+		if(rowJson.review_status === 'Y')
+			tempHtml.find('.RAReviewStatus').attr("checked", "checked");
 		tempHtml.find('.RAreportee').text(rowJson.reportee_id).attr('href', showStatsPageUrl+rowJson.reportee);
 		tempHtml.find('.RAreporteeEmail').text(rowJson.reportee_email);
 		tempHtml.find('.RAreporter').text(rowJson.reporter_id).attr('href', showStatsPageUrl+rowJson.reporter);
@@ -23,7 +29,26 @@
 		return tempHtml;
 
 	}
+		function toggleReviewStatus(){
+			var Url = "/operations.php/feedback/updateReviewStatus";
+			var El = $(this);
+			
+			var review_status = El.prop("checked") ? 'Y':'N';
 
+			var Data = {
+				"status" : review_status,
+				"id" : 		El.attr("id"),
+				"cid": cid
+			};
+
+			$.get(Url, Data, function(data){
+				if(data.status == "success"){
+					console.log("updated at backend");
+				}else{
+					console.log("some error");
+				}
+			}, 'json');
+		}
         function downloadAttachment()
         {
             var id = $(this).attr('id');

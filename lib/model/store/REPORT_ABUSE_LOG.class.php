@@ -60,7 +60,51 @@ class REPORT_ABUSE_LOG extends TABLE
 		}
 	
 	}
-
+	private function insertReviewStatusLog($review_status, $user, $report_id){
+		try{
+			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
+			$sql = "INSERT INTO feedback.REVIEW_STATUS_LOG(DATE, STATUS, USER, REPORT) VALUES(:vDATE, :vSTATUS, :vUSER, :vREPORT)";
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':vDATE', $timeNow, PDO::PARAM_STR);
+			$prep->bindValue(':vSTATUS', $review_status, PDO::PARAM_STR);
+			$prep->bindValue(':vUSER', $user, PDO::PARAM_STR);
+			$prep->bindValue(':vREPORT', $report_id, PDO::PARAM_INT);
+			$prep->execute();
+			
+			return 1;
+		}catch(Exception $e){
+			throw new jsException($e);
+		}
+		return 0;
+	}
+	public function updateReviewStatus($report_id, $status, $user){
+		$review_status = 'N';
+		if($status == 'Y'){
+			$review_status = 'Y';
+		}else if($status == 'N'){
+			$review_status = 'N';
+		}else return 0;
+		try{
+			// $sql = "UPDATE feedback.REPORT_ABUSE_LOG SET REVIEW_STATUS = :vREVIEW_STATUS WHERE (REPORTER, REPORTEE) = (:vREPORTER, :vREPORTEE) AND DATE = :vTIMESTAMP";
+			$sql = "UPDATE feedback.REPORT_ABUSE_LOG SET REVIEW_STATUS = :vREVIEW_STATUS WHERE ID = :vID";
+			
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':vID' , $report_id, PDO::PARAM_INT);
+			$prep->bindValue(':vREVIEW_STATUS', $review_status, PDO::PARAM_STR);
+			// $prep->bindValue(':vREPORTEE', $reportee, PDO::PARAM_INT);
+			// $prep->bindValue(':vREPORTER', $reporter, PDO::PARAM_INT);
+			$prep->execute();
+			$row_affected=$prep->rowCount();
+			if($row_affected>0){
+				if($this->insertReviewStatusLog($review_status, $user, $report_id))
+					return 1;
+			}
+		}catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+		return 0;
+	}
 	public function getReportAbuseCount($profileArray)
 	{
 		try	 	
