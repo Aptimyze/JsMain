@@ -284,37 +284,6 @@ d in the result
        //          		throw new jsException($e);
        //          	}
        //          }
-                 /**
-	   			* Function to fetch PROFILEID of profiles in JPROFILE whose EDU_LEVEL_NEW is a particular set of values and where PG_DEGREE or PG_COLLEGE is not NULL
-	   			* @param $educationCodes- it is the array of codes of EDU_LEVEL_NEW
-	   			* @param $codeFlag- this has value 0 or 1 and help's decide which query is to be build to be executed.
-	   			* @return $profileArr - returns the array of profileID's that match the given criteria
-	  			 */ 
-                public function getEducationData($educationCodes,$codeFlag){
-                	try{
-                		if($codeFlag=='0') {
-                			$sql="SELECT J.PROFILEID FROM newjs.JPROFILE AS J JOIN newjs.JPROFILE_EDUCATION AS E ON J.PROFILEID = E.PROFILEID WHERE EDU_LEVEL_NEW IN ($educationCodes) AND (PG_COLLEGE!= ''  OR PG_DEGREE!='' )";
-                		} else {
-                			$sql="SELECT J.PROFILEID FROM newjs.JPROFILE AS J JOIN newjs.JPROFILE_EDUCATION AS E ON J.PROFILEID = E.PROFILEID WHERE EDU_LEVEL_NEW IN ($educationCodes) AND (PG_COLLEGE!= ''  OR PG_DEGREE!='' OR COLLEGE !='' OR UG_DEGREE!='')";
-                		}
-                			
-                		$prep=$this->db->prepare($sql);	
-                		$prep->execute();
-                		$profilesArr = array();
-                		while($res=$prep->fetch(PDO::FETCH_ASSOC)){
-                			$profilesArr[$res["PROFILEID"]] =$res;
-                		}
-                    
-                    $this->logFunctionCalling(__FUNCTION__);
-                    
-                		return $profilesArr;
-                	}
-                	catch(PDOException $e)
-                	{
-                		/*** echo the sql statement and error message ***/
-                		throw new jsException($e);
-                	}
-                }
 		private function logFunctionCalling($funName)
     {return;
       /*$key = __CLASS__.'_'.date('Y-m-d');

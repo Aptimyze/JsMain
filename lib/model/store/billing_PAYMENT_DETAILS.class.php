@@ -427,7 +427,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             $prep->bindValue(":ENTRY_DT",$startDate,PDO::PARAM_STR);
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                $output[] = $result;
+                $output[] = $row;
             }
             return $output;
         } catch (Exception $ex) {

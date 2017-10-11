@@ -11,7 +11,8 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+	    $fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';	
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields);
         }
         if(is_array($profiledetails))
         {
@@ -74,6 +75,7 @@ class NotificationDataPool
     if(is_array($applicableProfiles))
     {
 	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
+	echo "START: Solar Hit ";
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
 		if(is_array($logProfiles)){
@@ -91,6 +93,7 @@ class NotificationDataPool
 		$tempObj->addProfile($profileid,$currentScript);
 
         }
+	echo "DONE: Solar Hit ";
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
@@ -106,7 +109,10 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		echo "START: newjs_SMS_TEMP_TABLE Hit ";
+		$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_local111"); 	
+           	//$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		echo "DONE: newjs_SMS_TEMP_TABLE Hit ";
         }
         unset($otherProfiles);
         $counter = 0;

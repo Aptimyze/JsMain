@@ -11,7 +11,7 @@ class fb extends BaseImportPhoto
 		$this->facebook=new Facebook\Facebook(array(
                             'app_id' => JsConstants::$fbId,
                             'app_secret' => JsConstants::$fbSecret,
-                            'default_graph_version' => 'v2.5'
+                            'default_graph_version' => 'v2.9'
                         ));
 	$this->helper = $this->facebook->getRedirectLoginHelper();
 
