@@ -416,6 +416,16 @@ try{
                 if ($diff->y >= 2) {
                         $deleteInterest = 1;
                 }
+                
+                // delete horoscope if dob changed
+                //DELETE CREATED HOROSCOPE
+                $deleteAstroDetailsObj = ProfileAstro::getInstance();
+                $deleteAstroDetailsObj->deleteEntry($profileid);
+                //DELETE TIME ,PLACE OF BIRTH
+                $deleteTimePlaceOfBirthObj = new JPROFILE();
+                $fieldsArr = array('BTIME'=>'','COUNTRY_BIRTH'=>'','CITY_BIRTH'=>'','SHOW_HOROSCOPE'=>'');
+                $deleteTimePlaceOfBirthObj->edit($fieldsArr,$profileid);
+                
         }
         if($prevMstatus!= "" && $mstatus != "" &&(($prevMstatus == "N" && $mstatus != "N") || ($prevMstatus != "N" && $mstatus == "N"))){
                 $deleteInterest = 1;
@@ -519,7 +529,8 @@ public function logDiscount($body,$type){
         $msgDate = $body["DATE"];
         $currentHour = date('H');
         $notAllowedHrs = array("00","01","02","03");
-        if(date('Y-m-d') == $msgDate && in_array($currentHour, $notAllowedHrs)){
+        //if(date('Y-m-d') == $msgDate && in_array($currentHour, $notAllowedHrs)){
+        if(false){
             $prodObj=new Producer();
             $type = "DISCOUNT_LOG";
             $queueData = array('process' =>'DISCOUNT_HISTORY',

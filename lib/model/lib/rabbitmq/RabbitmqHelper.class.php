@@ -49,6 +49,7 @@ class RabbitmqHelper
     {
   //    SendMail::send_email($emailTo,$message,$subject);
     }
+    self::killConsumerForErrorPattern($message,$consumerName);
   }
 
   public static function sendChatConsumerAlert($message)
@@ -183,5 +184,74 @@ class RabbitmqHelper
     $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
    
   }
+  
+  /*
+   * Function to modify consumer data so as to add a flag on the basis of which any requeue of the message need to be checked
+   * @param: consumer data
+   * @return modified data
+   */
+  public static function modifyDataForConsumer($data){
+        if(MQ::$flagForDuplicateDataCheck && $data && is_array($data)){
+            $data["processed"] = "1";
+        }
+        return $data;
+    }
+    
+   /*
+    * Function to check whether processed flag exist in the consumer data and on the basis of this send delivery acknowledgement
+    * @param: consumer data
+    * @return modified data
+   */
+    public static function isQueueDataProcessed($data,$msg){
+        if(MQ::$flagForDuplicateDataCheck && $data && is_array($data) && $data["processed"] == "1"){
+            try{
+                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "Queue data already processed", "Queue data already processed");
+                return true;
+            } 
+            catch(Exception $exception){
+                $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
+                RabbitmqHelper::sendAlert($str);
+            }
+        }
+        return false;
+    }
+    
+    /*
+     * Function to do logging of rabbitmq timeouts
+     * The "time" key should be first thing to be printed in the log file.
+     */
+    public static function rmqLogging($logPath="",$start,$end,$reqId,$threshold,$dataArray){
+        $diff = $end-$start;
+        if($logPath == ""){
+            $logPath = JsConstants::$cronDocRoot.'log/rabbitTime'.date('Y-m-d').'.log';
+            //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
+        }
+        if($diff >= $threshold){
+            $logText["time"] = time();
+            $logText["connTime"] = round($diff,4);
+            $logText["requestId"] = $reqId;
+            $logText["source"] = $dataArray["source"];
+            if(file_exists($errorLogPath)==false)
+                exec("touch"." ".$logPath,$output);
+            error_log(json_encode($logText)."\n",3,$logPath);
+        }
+    }
+    
+    
+    public static function killConsumerForErrorPattern($message,$consumerName){
+        $errorPatternArray = array("MySQL server has gone away");        
+        $logPath = JsConstants::$cronDocRoot.'log/rabbitErrorToKillConsumer'.date('Y-m-d').'.log';
+        $logText["source"] = "In function killConsumerForErrorPattern";
+        $logText["message"] = $message;
+        self::rmqLogging($logPath,0,0,0,0,$logText);
+        foreach($errorPatternArray as $key => $val){
+            if(strpos($message, $val) !== false){
+                //CommonUtility::sendAlertMail("nitishpost@gmail.com", "MySQL gone away $consumerName killed at ".JsConstants::$siteUrl, "MySQL gone away in consumer");
+                //die("ConsumerKilled");
+            }
+        }
+    }
+  
 }
 ?>

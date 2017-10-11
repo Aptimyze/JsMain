@@ -14,7 +14,7 @@ class ApiResponseHandler
 	private $imageCopyServer = null;
 	private $phoneDetails = null;
 	private $cache_flag=true;
-	private $cache_interval=120000; //in milisecond should be integer always 
+	private $cache_interval=120000; //in milisecond should be integer always
 	private $resetCache=false;
 	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
@@ -54,7 +54,7 @@ class ApiResponseHandler
 	public function getAndroidChatFlag($key="new"){
 		if($key == "new"){
 			$this->androidChat = JsConstants::$androidChatNew["chatOn"];
-			
+
 		}
 		else{
 			if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
@@ -64,7 +64,7 @@ class ApiResponseHandler
 				$this->androidChat = 2;
 			}
 		}
-		
+
 		return $this->androidChat;
 	}
 
@@ -85,7 +85,6 @@ class ApiResponseHandler
                         if(!empty($profileObj)){
                                 $pid=$profileObj->getPROFILEID();
                                 unset($profileObj);
-
                                 if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
 
                                         if(strpos($specificProfile, ",".$pid.",")!==false){
@@ -225,6 +224,13 @@ class ApiResponseHandler
 
 		//set flag for android xmppBackgroundConnectionTimeout
 		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
+		$appPromotion = false;
+		if(false && MobileCommon::isNewMobileSite())
+		{
+			$request = sfContext::getInstance()->getRequest();
+			$appPromotion =  JsConstants::$AndroidPromotion && !$request->getAttribute('AppLoggedInUser') && !MobileCommon::isAppWebView() && ($request->getParameter("iosWebview") != 1) ;
+		}
+		$output["appPromotion"] = $appPromotion;
 		$output["channelSource"] = MobileCommon::getFullChannelName();
 
 		if(isset($this->upgradeDetails)){
@@ -240,6 +246,11 @@ class ApiResponseHandler
                         {
                                 $output["userReligion"] = $loggedIn->getRELIGION();
                                 $output["userActivation"] = $loggedIn->getACTIVATED();
+                        }
+												if(MobileCommon::isNewMobileSite() && $loggedIn && $loggedIn->getPROFILEID())
+                        {
+                                $output["selfUsername"] = $loggedIn->getUSERNAME();
+                                $output["selfGender"] = $loggedIn->getGENDER();
                         }
                 }
 

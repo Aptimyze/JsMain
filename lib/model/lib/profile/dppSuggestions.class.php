@@ -11,6 +11,7 @@ class dppSuggestions
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
+		$this->religion = $loggedInProfileObj->getRELIGION();
 		$this->calLayer = $calLayer;
 		if($this->calLayer)
 		{
@@ -28,6 +29,7 @@ class dppSuggestions
 		if($type == "MTONGUE")
 		{
 			$valueArr["data"] = $this->getHindiAllSuggestions($valArr);
+			$valueArr["data"] = $this->getUrduHindiDelhiSuggestions($valArr,$valueArr["data"]);
 		}
 		if(is_array($trendsArr) && !empty($trendsArr))
 		{
@@ -547,7 +549,21 @@ class dppSuggestions
 		}
 		return $arr;
 	}
-
+        public function getUrduHindiDelhiSuggestions($valArr,$valueArr=array()){
+                $valArr = array_unique($valArr);
+                $checkHindiMtongueValues = array("36","10","19","33","28");
+                foreach ($valArr as $key => $value) {
+                        if (in_array(trim($value, ' '), $checkHindiMtongueValues) && $this->religion == 2){
+                                $mtongueHindiUrduFlag = 1;
+                        }
+                }
+                if($mtongueHindiUrduFlag == 1){
+                        foreach($checkHindiMtongueValues as $mtongue){
+                                $valueArr[$mtongue] = FieldMap::getFieldlabel("community_small",$mtongue);
+                        }
+                }
+                return $valueArr;
+        }
 	public function getHindiAllSuggestions($valArr)
 	{		
 		$valArr = array_unique($valArr);
