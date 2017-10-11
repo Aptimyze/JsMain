@@ -8,6 +8,9 @@ class MatchAlertsConfig
         
         public $instanceNonPeak = 19;
         public $instancePeak = 9;
+        
+        public static $dppCountCacheTime = 864000;
+        public static $DPP_HAVEPHOTO_CHECK_COUNTER = 1500;
         public function isMatchAlertsForNonPeakHour(){
                 $nonPeak = CommonUtility::runFeatureInDaytime($this->timeRangeStart, $this->timeRangeEnd);
                 return $nonPeak;

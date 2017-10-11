@@ -499,20 +499,25 @@ handleBackButton = function()
 }
 commonBackBtnBind = function()
 {
+	//console.log("abcd -1");
+	
+
     $(backBtn).bind('click',function(){
         if(typeof ShowNextPage != 'undefined')
         {
-            if(typeof historyStoreObj != "undefined" && historyStoreObj.History.length>0)
+        	
+            // if(typeof historyStoreObj != "undefined" && historyStoreObj.History.length>0)
             {
                 history.back();
             }
-            else
-            {
-                ShowNextPage('/profile/mainmenu.php',0);
-            }
+            // else
+            // {
+            //     ShowNextPage('/profile/mainmenu.php',0);
+            // }
         }
         else
         {
+        	//console.log("bc");
             window.location.href = '/profile/mainmenu.php';
         }
     });
