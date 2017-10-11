@@ -52,7 +52,9 @@ class BrowserNotification{
             {
                 $notificationDay = $this->getTopIndexElement($currentNotificationSetting, "FREQUENCY");
                 //Check if notification day is Daily('D') or ('Mon' to 'Sun')
-                $today = date('D',strtotime(date('Y-m-d')));
+	        $todayDate =date("Y-m-d");
+	        $today =date("D", strtotime("$todayDate +1 days"));
+                //$today = date('D',strtotime(date('Y-m-d')));
                 $pos = strpos($notificationDay, $today);
                 if($notificationDay == 'D' || $pos!==false )
                 {

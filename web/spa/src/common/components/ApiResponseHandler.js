@@ -31,7 +31,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     {
 
       if(Object.keys(data).length!=0){
-          checkSumURL = data;
+//          checkSumURL = data;
       }
     }
 

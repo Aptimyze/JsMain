@@ -413,13 +413,14 @@ LoginPage.propTypes = {
 const mapDispatchToProps = (dispatch) => {
     return{
         doLogin: (curretObj,email,password,g_recaptcha_response,captcha,addCaptchaDiv) => {
-            let call_url = CONSTANTS.LOGIN_CALL_URL+'?email='+email+'&password='+password+'&rememberme=Y';
+            let call_url = CONSTANTS.LOGIN_CALL_URL+'?';
+            let capchaOb = {};
             if ( g_recaptcha_response && captcha )
             {
-                call_url += '&g_recaptcha_response='+g_recaptcha_response+'&captcha='+captcha;
+                capchaOb = {g_recaptcha_response,captcha};
             }
 
-            commonApiCall(call_url,{},'SET_AUTHCHECKSUM','GET',dispatch).then((response)=>
+            commonApiCall(call_url,{email:email,password:password,'rememberme':'Y',...capchaOb},'SET_AUTHCHECKSUM','POST',dispatch).then((response)=>
             {
 
                 if ( response.responseStatusCode == 1)
