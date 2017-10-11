@@ -88,7 +88,7 @@ class MobSimilarProfilesAction extends sfActions
 	    $navObj = new Navigator();
 		$this->NAVIGATOR = $navObj->navigation('JVS','profilechecksum__'.$this->viewedProfilechecksum,'','Symfony');
 
-        $this->BREADCRUMB = '';//$navObj->BREADCRUMB;
+        $this->BREADCRUMB = $request->getParameter("fromSPA_CE")==1 ? "" : $navObj->BREADCRUMB;//; added by Palash so that it doesn't run and gets blank only for SPA site
         $this->BREADCRUMB = str_replace('"','\'',$this->BREADCRUMB);
 
 	}

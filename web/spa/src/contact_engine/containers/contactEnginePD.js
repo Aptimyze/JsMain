@@ -350,7 +350,7 @@ goToViewSimilar(){
   let _this=this;
   setTimeout(
     function(){
-      window.location.href = "/search/MobSimilarProfiles?profilechecksum="+_this.props.profiledata.profilechecksum+"&fromProfilePage=1&";
+      window.location.href = "/search/MobSimilarProfiles?profilechecksum="+_this.props.profiledata.profilechecksum+"&fromProfilePage=1&fromSPA_CE=1";
     },1000);
 }
 
