@@ -259,17 +259,17 @@ function layerClose()
       similarProfileCheckSum = "";
     if(typeof NAVIGATOR=="undefined" || !NAVIGATOR)
       var NAVIGATOR="";
-       
+
         if(typeof getNAVIGATOR == "function" && NAVIGATOR==""){
             NAVIGATOR = getNAVIGATOR();
         }
             //if(window.location.href.search('toShowECP')!=-1)
             {
-    if(canIShowNext(similarProfileCheckSum,profilechecksum))       
-                {     
+    if(canIShowNext(similarProfileCheckSum,profilechecksum))
+                {
       //if(!ISBrowser("UC"))
-       //    enableLoader();  
-                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1";
+       //    enableLoader();
+                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1"+(window.location.search.indexOf('fromSPA_CE=1')!=-1 ? "&fromSPA_CE=1" : "" );
                 }
             }
   }
@@ -651,14 +651,14 @@ function afterAction(result,action, index,isPrime){
 	}
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
-    if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");  
+    if(window.location.hash.length===0 && window.location.search.indexOf('fromSPA_CE=1')==-1 )
+        historyStoreObj.push(browserBackCommonOverlay,"#pushce");
     var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
     if(ignoreFromPrime)
     {
         result.button_after_action.buttons = result.button_after_action.buttons.others;
         result.buttondetails.button = result.buttondetails.buttons.primary[0];
-        
+
     }
     if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
