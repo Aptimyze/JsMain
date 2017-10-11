@@ -7,6 +7,7 @@ class DialerHandler
 		$this->db_js_111 	=$db_js_111;
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
+		$this->campaignArr	=array('JS_NCRNEW'=>'noida','JS_NCRNEW_Auto'=>'noidaAuto','MAH_JSNEW'=>'mumbai');
         }
         public function getEST($time='')
         {
@@ -49,8 +50,10 @@ class DialerHandler
         public function getInDialerEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		if($campaign_name)
-			$sql .=" AND CAMPAIGN_NAME='$campaign_name'";
+		if($campaign_name){
+			$campaign = $this->campaignArr[$campaign_name];
+			$sql .=" AND CAMPAIGN_NAME='$campaign'";
+		}
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
@@ -59,8 +62,10 @@ class DialerHandler
         public function getInDialerInEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-                if($campaign_name)
-                        $sql .=" AND CAMPAIGN_NAME='$campaign_name'";
+                if($campaign_name){
+			$campaign = $this->campaignArr[$campaign_name];
+                        $sql .=" AND CAMPAIGN_NAME='$campaign'";
+		}
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
@@ -68,7 +73,8 @@ class DialerHandler
         }
         public function getInDialerNewEligibleProfiles($x,$campaign_name)
         {
-                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_NAME='$campaign_name'";
+		$campaign = $this->campaignArr[$campaign_name];
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_NAME='$campaign'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
@@ -76,7 +82,8 @@ class DialerHandler
         }
         public function getInDialerNewInEligibleProfiles($x,$campaign_name)
         {
-                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_NAME='$campaign_name'";
+		$campaign = $this->campaignArr[$campaign_name];
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_NAME='$campaign'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
