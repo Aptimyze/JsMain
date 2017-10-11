@@ -287,6 +287,13 @@ export  class MyjsPage extends React.Component {
     				}
     			}
 			}
+			if(param=="lastcall")
+			{
+				if(!ele.classList.contains("dn") )
+				{
+					ele.classList.add("dn");
+				}
+			}
 
 		}
 
@@ -387,7 +394,9 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
-					<div id="JBrowserGap"></div>
+					<div id="JBrowserGap" className="fullwid txtc dn">
+						<img className="pt20" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+					</div>
 				</div>
 			</div>
 		</div>
