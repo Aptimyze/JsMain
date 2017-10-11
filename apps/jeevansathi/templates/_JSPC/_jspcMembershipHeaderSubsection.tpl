@@ -485,22 +485,27 @@ $(document).ready(function() {
         });
         $("#paidBenefits").html(insertText);
     }
-    if(lightDiscText){
-        $("#memMsgContent").hide();
-        if(lightningRenew == "1"){
+    if(typeof lightDiscText !== "undefined"){
+        if(lightDiscText){
+            $("#memMsgContent").hide();
+            if(lightningRenew == "1"){
                 $("#discBanner").addClass("disp-none");
             }
-        $("#lightDisc").html(lightDiscText);
-        $("#lightStrikePrice").html(priceStrike);
-        $("#lightDiscPrice").html(discPrice);
-        $("#memMsgParent").removeClass("mem_pad13");
-        $("#lightDiscRenew").html(lightDiscText);
-        $("#lightStrikePriceRenew").html(priceStrike);
-        $("#lightDiscPriceRenew").html(discPrice);
-        $("#memMsgParent").removeClass("mem_pad13");
-        showTimerForLightningMemberShipPlan("jspcLanding","renew");
-    }
-    else{
+            $("#lightDisc").html(lightDiscText);
+            $("#lightStrikePrice").html(priceStrike);
+            $("#lightDiscPrice").html(discPrice);
+            $("#memMsgParent").removeClass("mem_pad13");
+            $("#lightDiscRenew").html(lightDiscText);
+            $("#lightStrikePriceRenew").html(priceStrike);
+            $("#lightDiscPriceRenew").html(discPrice);
+            $("#memMsgParent").removeClass("mem_pad13");
+            showTimerForLightningMemberShipPlan("jspcLanding","renew");
+        }
+        else{
+            $("#lightningContent").hide();
+            $("#lightningContentRenew").hide();
+        }
+    } else{
         $("#lightningContent").hide();
         $("#lightningContentRenew").hide();
     }

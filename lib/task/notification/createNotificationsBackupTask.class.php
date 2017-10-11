@@ -54,7 +54,12 @@ EOF;
 							$backupToBeDone = true;
 						else
 						{
-							if(($value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime($curDate)-$value['TTL'])) || (!$value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime("- 1 day"))))
+							$ttlValue 	=strtotime($value['TTL']);
+							$ttlTimeCheck 	=strtotime(date("Y-m-d H:i:s",strtotime($curDate)-$ttlValue));
+							$dayCheck 	=strtotime(date("Y-m-d H:i:s",strtotime("- 2 day")));
+							$entryDate 	=strtotime($value['ENTRY_DT']);
+							//if(($value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime($curDate)-$value['TTL'])) || (!$value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime("- 2 day"))))
+							if(($ttlValue && $entryDate<=$ttlTimeCheck) || (!$ttlValue && $entryDate<$dayCheck))	
 							{
 								$backupToBeDone=true;
 							}

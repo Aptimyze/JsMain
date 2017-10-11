@@ -103,7 +103,8 @@ class NotificationFunctions
 			$notificationDelLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG;
 		}
 		if(!$messageId && !in_array($notificationKey, NotificationEnums::$loggedOutNotifications)){
-			$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
+			if($notificationKey)
+				$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
 		}
 		else if($messageId && $osType){
 			$notificationObj->updateSent($messageId,$status,$osType);
