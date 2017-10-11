@@ -75,13 +75,14 @@ class NotificationDataPool
     if(is_array($applicableProfiles))
     {
 	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
+	echo "START: Solar Hit ";
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
 		if(is_array($logProfiles)){
 			if(in_array("$profileid", $logProfiles))
 				continue;
 		}
-                $loggedInProfileObj = Profile::getInstance('newjs_masterRep',$profileid);
+                $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
                 $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
                 $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
@@ -92,6 +93,7 @@ class NotificationDataPool
 		$tempObj->addProfile($profileid,$currentScript);
 
         }
+	echo "DONE: Solar Hit ";
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
@@ -107,8 +109,10 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
+		echo "START: newjs_SMS_TEMP_TABLE Hit ";
 		$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_local111"); 	
            	//$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		echo "DONE: newjs_SMS_TEMP_TABLE Hit ";
         }
         unset($otherProfiles);
         $counter = 0;

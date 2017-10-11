@@ -1,0 +1,53 @@
+.savsrc-icon1 {
+    background-position: -130px -185px;
+    width: 23px;
+    height: 21px;
+}
+
+.savsrc-sp {
+    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.roundIcon {
+	position: relative;
+    margin-top: -40px;
+    margin-left: 20px;
+	width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 5px;
+    right: 8px;
+}
+.defaultTab {
+	width: 50%;
+	display: inline-block;	 
+	padding: 5px 0;
+	font-size: 13px;
+	line-height: 30px;
+	color: #d9475c;
+}
+.selectedTab {
+	color: #fff;
+	background: #d9475c;
+}
+.showMoreDiv {
+    height: 0px;
+    transition:.3s ease;
+    webkit-transition:.3s ease;
+}
+.openShowMoreDiv {
+    height: 255px;
+}
+.savsrc-icon2 {
+    background-position: -130px -206px;
+    width: 23px;
+    height: 20px;
+}
+.savsrc-sp {
+    background-image: url(http://test.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.savsrc-colr1 {
+    color: #999;
+}

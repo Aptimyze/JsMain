@@ -99,6 +99,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -166,12 +167,7 @@ class ContactDetailsV2Action extends sfAction
 								$responseArray["footerbutton"]["value"] = "";
 								$responseArray["footerbutton"]["action"] = "EDITPROFILE";
 								$responseArray["footerbutton"]["text"] = "";
-								$responseArray["contact1"]["value"]      = "blur";
-								$responseArray["contact1"]["label"]      = "Phone No.";
-								$responseArray["contact1"]["action"]     = null;
-								$responseArray["contact4"]["value"]      = "blur";
-								$responseArray["contact4"]["label"]      = "Email";
-								$responseArray["contact4"]["action"]     = null;
+								$responseArray["footerbutton"]["enable"] = true;
 							}
 							else
 								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.<a href='/profile/viewprofile.php?ownview=1' class='colr5'> Update Profile";
@@ -304,6 +300,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "Renew membership";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -320,10 +317,11 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerButton"]["label"]  = "complete your profile";
 					$responseArray["footerButton"]["value"]  = "";
 					$responseArray["footerButton"]["action"] = "COMPLETEPROFILE";
+					$responseArray["footerbutton"]["enable"] = true;
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				} elseif ($errorArr["DELETED"] == 2)
-				{	
+				{
 					$responseArray["headerLabel"] = "Deleted Profile";
 					$responseArray["errMsgLabel"] = "You can not see the contact details of this profile as this profile is Deleted.";
 					$responseArray["errMsgIconId"]           = "13";
@@ -372,6 +370,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["enable"] = true;
 					$responseArray["contact1"]["value"]      = "blur";
 					$responseArray["contact1"]["label"]      = "Phone No.";
 					$responseArray["contact1"]["action"]     = null;
@@ -430,8 +429,10 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
 					$responseArray["footerbutton"]["action"] = "CONTACT_DETAIL";
+					$responseArray["footerbutton"]["enable"] = true;
+
 				}
-			} 
+			}
 			else {
 				$memHandlerObj = new MembershipHandler();
 				$data2 = $memHandlerObj->fetchHamburgerMessage($request);
@@ -443,6 +444,7 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+				$responseArray["footerbutton"]["enable"] = true;
 				$responseArray["footerbutton"]["text"] = $MembershipMessage;
 				$responseArray["contact1"]["value"]      = "blur";
 				$responseArray["contact1"]["label"]      = "Phone No.";
