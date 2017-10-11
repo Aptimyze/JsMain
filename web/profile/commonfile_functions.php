@@ -762,7 +762,7 @@ function getCss(){
 	for($i=0;$i<count($css_arr);$i++)
 	{
 		$temp=$css_arr[$i];
-		
+
 		foreach($temp as $key=>$val)
 				if(!$CSS[$key])
 						$CSS[$key]=$key."_".$val.".css";
