@@ -2586,6 +2586,9 @@ public function fetchPincodesOfCities($cities)
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);
                 //Handle scenrio for exclusive profile
                 $exclusiveProfile       =$billingSerStatusObj->getExclusiveProfileForDates(date("Y-m-d h:i:sa"));
+                if(!is_array($exclusiveProfile)){
+                    $exclusiveProfile = array();
+                }
                 foreach($profiles as $key=>$data){
                         $profileid =$data['PROFILEID'];
                         $eDate     =$data['EDATE'];
