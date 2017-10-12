@@ -39,14 +39,15 @@
 	</div>
 	</div>
 	</div>
-		~include_component('static', 'newMobileSiteHamburger')`	
+		~include_component('static', 'newMobileSiteHamburger')`
 	</div>
 <script>
+var SPA_CE = '~$SPA_CE`';
 var InterestSentMessage = '~$InterestSentMessage`';
 if(InterestSentMessage==1)
 	ShowTopDownError(["Interest sent to ~$InterestSentToUsername`"],3000);
 /** list all global Variables here */
-var isLoading = false; // isLoading is a useful flag to make sure we don't send off more than one request at a time 
+var isLoading = false; // isLoading is a useful flag to make sure we don't send off more than one request at a time
 var _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`;
 var minPage = 0, $div = $("#searchHeader"), message, ToshowOrNotRelaxCriteria = 0, viewSimilar = 1, viewedProfilechecksum = '~$viewedProfilechecksum`';
 var firstResponse = ~$firstResponse|decodevar`;

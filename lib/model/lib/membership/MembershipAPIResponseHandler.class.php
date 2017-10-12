@@ -114,7 +114,6 @@ class MembershipAPIResponseHandler {
         else {
             $this->lowPriorityBannerDisplayCheck = false;
         }
-        
         // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
@@ -2242,7 +2241,6 @@ class MembershipAPIResponseHandler {
         include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
         
         $planCategory = $request->getParameter('planCategory');
-        
         if ($planCategory == "int") {
             $this->currency = 'RS';
         } 
@@ -2258,14 +2256,24 @@ class MembershipAPIResponseHandler {
         $service_str = "";
         $discount = $payment['discount'];
         $discount_type = $payment['discount_type'];
-        $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'APPLEPAY', $discount_type, $this->device, $this->couponCode);
-        $nameOfUserObj = new incentive_NAME_OF_USER();
-        $userName = $nameOfUserObj->getName($this->profileid);
-        
-        $output = array(
-            'inAppPurchaseId' => $ORDER["ORDERID"]
-        );
-        
+        //JSC-3335
+        $membershipHandlerObj = new MembershipHandler();
+        $isCityEntered = $membershipHandlerObj->isCityEntered($this->profileid);
+        if($this->appVersion < VariableParams::$iOSVersion || $isCityEntered){
+            $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'APPLEPAY', $discount_type, $this->device, $this->couponCode);
+            $nameOfUserObj = new incentive_NAME_OF_USER();
+            $userName = $nameOfUserObj->getName($this->profileid);
+
+            $output = array(
+                'inAppPurchaseId' => $ORDER["ORDERID"]
+            );
+        } else{
+            $output = array(
+                'cityNotFilledError' => "Please fill 'State' in 'Edit Profile'\n Basic Details section to proceed.",
+                'responseStatusCode' => 1
+            );
+        }
+
         return $output;
     }
     

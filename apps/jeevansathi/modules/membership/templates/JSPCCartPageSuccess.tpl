@@ -536,6 +536,7 @@
             <div class="pb15 pt30 pos-rel"></div>
             ~/if`
             <div id="noOptionSelected" class="disp-none txtc color5 fontreg f12 pb15">Please select a payment option</div>
+            <div id="noCity" class="disp-none txtc color5 fontreg f12 pb15">Please fill 'State' in 'Edit Profile : Basic Details' section to proceed.</div>
             <div style="overflow:hidden;position: relative;">
             ~if $data.currency eq '$'`
                 <div class="pt10 f11 txtc clearfix mauto pb7 wid80p">
@@ -559,6 +560,16 @@
 <!--end:plan-->
 ~include_partial('global/JSPC/_jspcCommonFooter')`
 <script type="text/javascript">
+    var isCityEntered = "~$isCityEntered`";
+
+    $(document).ready(function() {
+        if( isCityEntered ){
+            $('#noCity').addClass('disp-none');
+        } else{
+            $('#noCity').removeClass('disp-none');
+        }
+    });
+
     $(window).load(function() {
         ~if $data.paymentOptionsData.backendLink.fromBackend eq '1'`
             eraseCookie('mainMem');
@@ -612,7 +623,7 @@
                     var type = $("a.accordion-section-title.active").attr('id');
                     if(type != 'cashPickUp'){
                         var response = manageSelectedItem();
-                        if(response){
+                        if(isCityEntered && response){
                             enablePayNowButtonCartPage();
                         } else {
                             disablePayNowButtonCartPage();
@@ -743,7 +754,7 @@
                     });
                 }
             }
-            if (checkEmptyOrNull(readCookie('paymentMode')) && checkEmptyOrNull(readCookie('cardType'))) {
+            if (isCityEntered && checkEmptyOrNull(readCookie('paymentMode')) && checkEmptyOrNull(readCookie('cardType'))) {
                 ~if $data.paymentOptionsData.backendLink.fromBackend eq '1'`
                     if (checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))) {
                         if (checkEmptyOrNull(readCookie('selectedVas'))) {
@@ -785,7 +796,7 @@
                 ~/if`
             } else {
                 e.preventDefault();
-                if($("#cashPickUp").hasClass("active") || $("#payAtBranches").hasClass('active')){
+                if(!isCityEntered || $("#cashPickUp").hasClass("active") || $("#payAtBranches").hasClass('active')){
                     $('#noOptionSelected').addClass('disp-none');
                 } else {
                     $('#noOptionSelected').removeClass('disp-none');

@@ -1,5 +1,6 @@
 <?php
 include_once('DialerLog.class.php');
+include_once('DialerHandler.class.php');
 class DialerDncScrubing 
 {
         public function __construct($db_js, $db_js_111, $db_dialer){
@@ -45,12 +46,14 @@ class DialerDncScrubing
 		}
 		return $opt_in_profiles;
 	}
-	public function compute_eligible_in_array($dnc_array,$renewal='')
+	public function compute_eligible_in_array($dnc_array,$renewal='',$autoCampaign='')
 	{
         	$eligible_profiles = array();
         	$profileid_str = implode(",",$dnc_array);
         	if($profileid_str!=''){
-        	        if($renewal)
+			if($autoCampaign)
+				$table ='incentive.IN_DIALER_NEW';
+        	        elseif($renewal)
         	                $table ='incentive.RENEWAL_IN_DIALER';
         	        else
         	                $table ='incentive.IN_DIALER';
@@ -61,11 +64,16 @@ class DialerDncScrubing
         	}
         	return $eligible_profiles;
 	}
-	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='')
+	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='',$autoCampaign='')
 	{
-		$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
+		$dialerHandlerObj =new DialerHandler($this->db_js, $this->db_js_111, $this->db_dialer);
+		if($autoCampaign)
+			$squery1 = "SELECT SelectedOption,Call_Start_Time,easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
+		else
+			$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
                 if($dateTime)
                         $squery1 .=" and Login_Timestamp>='$dateTime'";
+
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
@@ -78,6 +86,11 @@ class DialerDncScrubing
 	                        else
 	                                $dialStatus ='1';
 
+				if($autoCampaign && $dialStatus==1){
+		                        $SelectedOption = $dialer_data["SelectedOption"];
+        		                $Call_Start_Time = $dialer_data["Call_Start_Time"];
+					$dialStatus =$dialerHandlerObj->getAutoCampaignDialStatus($SelectedOption,$Call_Start_Time);
+				}
 				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
 				mssql_query($query1,$this->db_dialer) or $this->logError($query1,$campaign_name,$this->db_dialer,1);
 
