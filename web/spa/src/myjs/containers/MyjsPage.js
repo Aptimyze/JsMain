@@ -82,6 +82,7 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
+			this.callEventListner();
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.firstApiHits(this);
 			this.ieApi = false;
@@ -251,7 +252,7 @@ export  class MyjsPage extends React.Component {
 					if(!this.drApi)
 					{
 						this.drApi = true;
-						this.props.hitApi_DR();
+						this.props.hitApi_DR(this);
 					}
 					this.checkforgap("lastcall");
 				}
