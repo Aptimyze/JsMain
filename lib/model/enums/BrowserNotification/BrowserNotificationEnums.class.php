@@ -20,6 +20,11 @@ class BrowserNotificationEnums
 	CONST FCM_INVALID = 'I';  //gcm invalid status
     	CONST FCM_REGID_EXPIRED = 'E';  //gcm invalid status
 	CONST FCM_REQUEST_URL = "https://fcm.googleapis.com/fcm/send";   //url of fcm api
+
+        CONST GCM_SUCCESS = 'S';  //gcm success status
+        CONST GCM_FAILURE = 'F';  //gcm failure status
+        CONST GCM_INVALID = 'I';  //gcm invalid status
+        CONST GCM_REGID_EXPIRED = 'E';  //gcm invalid status
         CONST GCM_REQUEST_URL = "https://android.googleapis.com/gcm/send";   //url of gcm api	
 
         public static $messageDelimiters = array("{","}");

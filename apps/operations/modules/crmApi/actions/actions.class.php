@@ -323,7 +323,7 @@ class crmApiActions extends sfActions
       $currentDate = date('Y-m-d H:i:s');
       $browserNotificationObj = new BrowserNotification();
       //update status for delivered notification
-      $updateArr = array("RECEIVED_STATUS"=>'Y',"RECEIVED_DATE"=>$currentDate); 
+      $updateArr = array("SENT_TO_CHANNEL"=>'Y',"RECEIVED_DATE"=>$currentDate); 
       $browserNotificationObj->updateSentNotificationDetails("MSG_ID",$messageId,$updateArr);
       unset($browserNotificationObj);
       $output["DeliveryStatus"] = true;

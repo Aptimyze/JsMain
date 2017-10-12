@@ -491,6 +491,10 @@
         </div>
     </div>
 </div>~include_partial("myjs/jspcMyjs/Container", ['profilePic'=>$profilePic])`~include_partial("myjs/jspcMyjs/_CardsSection", ['staticCardArr'=>$staticCardArr,'gender'=>$gender,'otherthumbnail'=>$otherthumbnail,'otherPhotoUrl'=>$otherPhotoUrl])`~include_partial("myjs/jspcMyjs/_helpScreens")`~include_partial('global/JSPC/_jspcAppPromo')` ~include_partial('global/JSPC/_jspcCommonFooter')`
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.3.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.3.1/firebase-messaging.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script src="~JsConstants::$ssl_siteUrl`/js/main_sw_register.js"></script>
 <script type="text/javascript">
     function scheduleVisit() {

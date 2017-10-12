@@ -1,6 +1,6 @@
 <html>
 <head>
-    <!--<link rel="manifest" href="/manifest.json"> -->
+    <link rel="manifest" href="/manifest.json">
   <title>Jeevansathi Notification</title>
 </head>
 <body>
@@ -13,12 +13,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script>
 	var ssl_siteUrl = "~JsConstants::$ssl_siteUrl`";
-        console.log(ssl_siteUrl);
-    $(document).ready(function(){
-       console.log("tg this side");
-       //console.log("Main:~JsConstants::$siteUrl`/js/main.js");
+    	$(document).ready(function(){
        //console.log("Manifest:https://www.jeevansathi.com/manifest.json");
-       //console.log("~JsConstants::$siteUrl`/js/sw.js")
     });
     </script>
 <script src="~JsConstants::$ssl_siteUrl`/js/main.js"></script>

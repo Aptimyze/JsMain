@@ -10,7 +10,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
 		$this->RESPONSE_BIND_TYPE = "STR";
 		$this->STATUS_BIND_TYPE = "STR";
         $this->SENT_TO_FCM_BIND_TYPE = "STR";
-        $this->RECEIVED_STATUS_BIND_TYPE = "STR";
+        $this->SENT_TO_CHANNEL_BIND_TYPE = "STR";
         $this->SENT_TO_QUEUE_BIND_TYPE = "STR";
         $this->NOTIFICATION_KEY_BIND_TYPE = "STR";
         $this->NOTIFICATION_TYPE_BIND_TYPE = "STR";
@@ -102,7 +102,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
     
     public function getNotification($regId){
         try{
-            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND RECEIVED_STATUS != 'Y' ORDER BY ID DESC LIMIT 1";
+            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND SENT_TO_CHANNEL != 'Y' ORDER BY ID DESC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":REG_ID",$regId,PDO::PARAM_STR);
             $prep->execute();
@@ -126,7 +126,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
     public function updateTrackingDetails($messageId) {
         try {
              $sql = "update MOBILE_API.BROWSER_NOTIFICATION "
-                . "set RECEIVED_STATUS=:YES, RECEIVED_DATE = now() "
+                . "set SENT_TO_CHANNEL=:YES, RECEIVED_DATE = now() "
                 . "where MSG_ID=:MSG_ID";
              $prepare = $this->db->prepare($sql);
              $prepare->bindValue(":YES", 'Y', PDO::PARAM_STR);
@@ -244,7 +244,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
         try
         {
             $entryDt = date("Y-m-d H:i:s",strtotime($entryDtOffest));
-            $sql = "SELECT ".$fields." FROM MOBILE_API.BROWSER_NOTIFICATION WHERE (RECEIVED_STATUS='Y' OR (RECEIVED_STATUS='N' AND SENT_TO_FCM='Y'))";
+            $sql = "SELECT ".$fields." FROM MOBILE_API.BROWSER_NOTIFICATION WHERE (SENT_TO_CHANNEL='Y' OR (SENT_TO_CHANNEL='N' AND SENT_TO_FCM='Y'))";
             if($limit && $offset=="")
                 $sql = $sql." LIMIT $limit";
             else if($limit && $offset!="")
@@ -332,13 +332,13 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
         public function getDataCountForRange($startDate, $endDate)
         {
                 try{
-                        $sql ="SELECT count(b.REG_ID) count, b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.RECEIVED_STATUS,b_reg.CHANNEL FROM MOBILE_API.`BROWSER_NOTIFICATION` b, MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION b_reg WHERE b.REG_ID=b_reg.REG_ID AND b.ENTRY_DT>=:START_DATE AND b.ENTRY_DT<=:END_DATE GROUP BY b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.RECEIVED_STATUS,b_reg.CHANNEL";
+                        $sql ="SELECT count(b.REG_ID) count, b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL FROM MOBILE_API.`BROWSER_NOTIFICATION` b, MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION b_reg WHERE b.REG_ID=b_reg.REG_ID AND b.ENTRY_DT>=:START_DATE AND b.ENTRY_DT<=:END_DATE GROUP BY b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
                         $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_ASSOC)){
-                                $rowArr[$row['NOTIFICATION_KEY']][$row['CHANNEL']][$row['RECEIVED_STATUS']][$row['SENT_TO_QUEUE']] =$row['count'];
+                                $rowArr[$row['NOTIFICATION_KEY']][$row['CHANNEL']][$row['SENT_TO_CHANNEL']][$row['SENT_TO_QUEUE']] =$row['count'];
                         }
                         return $rowArr;
                 }

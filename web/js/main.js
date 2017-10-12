@@ -4,26 +4,24 @@
  * and open the template in the editor.
  */
 
-
 if('serviceWorker' in navigator) 
 {
     var config = {
-    messagingSenderId: "209380179960" // replace the id with the infoedge account
+    	messagingSenderId: "209380179960" // replace the id with the infoedge account
   };
   firebase.initializeApp(config);
-
   const messaging = firebase.messaging();
-  var url = ssl_siteUrl+"/js/sw.js"; 
-    
+  var url = ssl_siteUrl+"/js/sw_fcm.js"; 
+
   navigator.serviceWorker.register(url) 
           .then((registration) => {
-              registration.update();  // update the new service worker
+              registration.update();  // update the service worker
               messaging.useServiceWorker(registration);
               messaging.requestPermission()
                       .then(function() {
                           return messaging.getToken();
               })
-                      .then(function(regId) {
+              .then(function(regId) {
                           var relativeUrl = "/api/v1/notification/insertChromeId";
                           $.ajax({
                                 type: 'POST',
@@ -35,12 +33,7 @@ if('serviceWorker' in navigator)
                                 }
                             });
               })
-                      .catch(function (err) {
-                          alert(err);
+              .catch(function (err) {
               })
   });
-  
 }
-
-
-

@@ -59,10 +59,7 @@ class BrowserFCM {
 	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 4);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 4);
         $result = curl_exec($ch);
-print_r($result);
 	$response = json_decode($result, true);
-print_r($fields);
-print_r($response);
 	curl_close($ch);
 	if($response)
 		return $response;
@@ -122,7 +119,7 @@ print_r($response);
     		foreach ($updateRegArr as $key => $value) {
                 $notificationObj->updateRegId("REG_ID",$value["old_regid"],$value["new_regid"]);  
                 $this->fields["registration_ids"] = array($value["new_regid"]);
-                $this->sendBrowserNotification(false); 
+                $this->sendNotification(false); 
             }
     		unset($notificationObj);
 
