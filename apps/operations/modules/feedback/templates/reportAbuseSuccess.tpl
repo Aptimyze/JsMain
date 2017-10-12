@@ -231,6 +231,7 @@
 <td>DATE</td>
 <td>COUNT</td>
 <td>Attachment</td>
+<td>Review</td>
 </tr>
 
 </table>
