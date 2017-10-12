@@ -2,6 +2,7 @@
 .phpintel/
 /log
 /cache/
+cache/
 cache/jeevansathi
 cache/operations
 web/smarty/templates_c/*
