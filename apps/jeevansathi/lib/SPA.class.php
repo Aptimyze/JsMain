@@ -10,7 +10,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 	}	
 	// End hindi switch code !
 
-	if(MobileCommon::isNewMobileSite() && JsConstants::$SPA['flag'] ){
+	if((MobileCommon::isNewMobileSite() || $request->getParameter("mobile_view") == 'Y') && JsConstants::$SPA['flag']  ){
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view','login_home');
 		$nonSpaUrls = array('ownview=1');
 		$spa = 0;
@@ -19,8 +19,14 @@ public function spaRedirect($request, $redirectUrl = ""){
 		$specificDomain = str_replace($originalArray, $replaceArray, $request->getUri());
 		$specificDomain = explode('/',$specificDomain,2);
 		$specificSubDomain = explode('?',$specificDomain[1],2);
-		if($specificDomain[1] == '' || $request->getParameter("newRedirect"))
+			// die("above");
+		// die(var_dump($request->getParameter("mobile_view") == 'Y'));
+		if($specificDomain[1] == '' || $request->getParameter("newRedirect") || $request->getParameter("mobile_view") == 'Y' )
+		{
+			// echo "Inside";
+			// die("Inside.");
 			$spa = 1;
+		}
 		elseif(in_array($specificSubDomain[1],$nonSpaUrls) || in_array(substr($specificSubDomain[1],0,9), $nonSpaUrls))
 			$spa = 0;
 		else {
@@ -32,7 +38,11 @@ public function spaRedirect($request, $redirectUrl = ""){
 		    }
 		}
 		}
-		if(MobileCommon::isNewMobileSite() && $spa && (strpos($request->getUri(), 'api') === false)) {
+		// die(var_dump($spa));
+		// die(var_dump(MobileCommon::isNewMobileSite()));
+		if((MobileCommon::isNewMobileSite() || $request->getParameter("mobile_view") == 'Y')  && $spa && (strpos($request->getUri(), 'api') === false)) {
+			$this->setMobileCookies();
+			// die("Inside.");
 			//bot section here.
 			$phantomExecutalbe =  JsConstants::$docRoot."/spa/phantomjs-2.1.1/bin/phantomjs";
 			$phantomCrawler =  JsConstants::$docRoot."/spa/phantomCrawler.js";
@@ -73,5 +83,13 @@ public function spaRedirect($request, $redirectUrl = ""){
 			die;
 		}
 	}
+	 private function setMobileCookies(){
+	  	@setcookie('NEWJS_DESKTOP',"",0,"/");
+	  	unset($_COOKIE['NEWJS_DESKTOP']);
+	  	@setcookie('JS_MOBILE','Y',0,"/");
+	//$this->getResponse()->setCookie('NEWJS_DESKTOP','',0,"/");
+	//$this->getResponse()->setCookie('NEWJS_DESKTOP','',-1,"/");
+	//$this->getResponse()->setCookie('JS_MOBILE','Y',0,"/");
+  }
 }
 ?>
