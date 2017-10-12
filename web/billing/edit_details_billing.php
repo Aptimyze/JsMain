@@ -39,12 +39,11 @@ if(isset($data))
 
 			$mod_str .= " to ".$deposit_dt.",\n";
 		}
-		if($chk_dep_branch)
+		if($dep_branch)
 		{
 			$mod_str .= "DEPOSIT_BRANCH changed";
 			if($row_old_details['DEPOSIT_BRANCH'])
 				$mod_str .= " from ".$row_old_details['DEPOSIT_BRANCH'];
-		
 			$mod_str .= " to ".html_entity_decode($dep_branch).",\n";
 		}
 		if($chk_mode)
@@ -113,7 +112,7 @@ if(isset($data))
 		}
 
 		//locking the edited details
-		if($mod_str)
+                if($mod_str)
 		{
 			$sql_log="INSERT into billing.EDIT_DETAILS_LOG(PROFILEID,BILLID,RECEIPTID,CHANGES,ENTRYBY,ENTRY_DT) values('$row_old_details[PROFILEID]','$row_old_details[BILLID]','$row_old_details[RECEIPTID]','$mod_str','$entryby',now())";
 			mysql_query_decide($sql_log) or logError_sums($sql_log,1); 
@@ -147,7 +146,7 @@ if(isset($data))
 				$sql_update[]= " WALKIN = '$walkinby', CENTER = '".getcenter_for_walkin($walkinby)."' ";
 			}
 		}
-		if($chk_deposit_dt || $chk_dep_branch)
+		if($chk_deposit_dt || $dep_branch)
 		{
 			if($deposit_dt)
 			{
@@ -176,7 +175,7 @@ if(isset($data))
 			$sql_pd[]=" CD_DT='$cd_dt' ";
 		if($chk_cd_city)
 			$sql_pd[]=" CD_CITY='$cd_city' ";
-		if($chk_deposit_dt || $chk_dep_branch)
+		if($chk_deposit_dt || $dep_branch)
 			$sql_pd[]=" DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='$dep_branch' ";
 		if($chk_bank)
 			$sql_pd[]=" BANK='$bank' ";
@@ -191,8 +190,12 @@ if(isset($data))
 	                $sql_update_pd_str=implode(",",$sql_pd);
         	        $sql_u=$sql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
                 	mysql_query_decide($sql_u) or logError_sums($sql_u,1);
+                        
+                        $paymentDetailNewSql="UPDATE billing.PAYMENT_DETAIL_NEW SET ";
+                        $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
+                        mysql_query_decide($finalSqlQueryForPDN) or logError_sums($finalSqlQueryForPDN,1);
 		}
-
+                
 		$smarty->assign("USER",$user);
 		$smarty->assign("CID",$cid);
 		$smarty->assign("phrase",$phrase);
@@ -220,7 +223,6 @@ if(isset($data))
 			//lock delete details
 			$sql_log = "INSERT INTO billing.EDIT_DETAILS_LOG(PROFILEID,BILLID,RECEIPTID,CHANGES,ENTRYBY,ENTRY_DT) VALUES('$row_old_details[PROFILEID]','$row_old_details[BILLID]','$row_old_details[RECEIPTID]','$change_str','$entryby',now())";
 			mysql_query_decide($sql_log) or logError_sums($sql_log,1);
-
 			change_notify_mail($receiptid, $change_str,"E");//passing receiptid, the modified string and "E" indicating that the details has been edited
 			$deldate=date("Y-m-d");
 
@@ -246,13 +248,15 @@ if(isset($data))
 					}
 				}
 
-
+                                
 				$user = getuser($cid);
 				$delreason = addslashes(stripslashes($delreason));
 				$sql="UPDATE billing.PAYMENT_DETAIL SET STATUS='DELETE', ENTRYBY = '$user', DEL_REASON = '$delreason' WHERE RECEIPTID='$receiptid'";
-				mysql_query_decide($sql) or logError_sums($sql,1);
-
-
+                                mysql_query_decide($sql) or logError_sums($sql,1);
+                                
+                                $sql="UPDATE billing.PAYMENT_DETAIL_NEW SET STATUS='DELETE', ENTRYBY = '$user', DEL_REASON = '$delreason' WHERE RECEIPTID='$receiptid'";
+                                mysql_query_decide($sql) or logError_sums($sql,1);
+                                
 				$msg=" Profileid : $profileid \n";
 				$msg.=" Username : $uname \n";
 				$msg.=" Bill id : $billid \n";
