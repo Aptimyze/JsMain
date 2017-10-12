@@ -74,7 +74,9 @@ export  class MyjsPage extends React.Component {
 			myjsApi: false,
 			hamApi: false,
 			showPromo: false,
-			deviceHeight: window.innerHeight
+			deviceHeight: window.innerHeight,
+			didUpdateCall: false,
+			is_already_scrolled: false
 		}
   	}
 
@@ -99,8 +101,11 @@ export  class MyjsPage extends React.Component {
 
 
 	componentDidUpdate(){
-		if(this.props.myjsData.modFetched){
+		if(this.props.myjsData.modFetched && !this.state.didUpdateCall){
 			this.restApiHits(this);
+			this.setState({
+				didUpdateCall: true
+			})
 		}
 		this.callEventListner();
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
@@ -108,7 +113,7 @@ export  class MyjsPage extends React.Component {
 
 	componentWillReceiveProps(nextProps)
 	{
-		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !nextProps.myjsData.ieFetched){
+		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched){
 			this.restApiHits(this);
 		}
 		else{
@@ -197,9 +202,16 @@ export  class MyjsPage extends React.Component {
 		{
 			try
 			{
-				if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched)
+				if(this.isScreenFull() && event.type != "scroll" && !this.state.is_already_scrolled)
 				{
 					 return;
+				}
+				else{
+					if(event.type == "scroll"){
+						this.setState({
+							is_already_scrolled:true
+						})
+					}
 				}
 				if(!this.props.myjsData.ieFetched)
 				{
