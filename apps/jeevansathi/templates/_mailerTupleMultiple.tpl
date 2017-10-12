@@ -13,7 +13,7 @@
        
         <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" style="text-decoration:none; color:#0f529d;" target="_blank">
        
-        <img src="~$user->getSearchPicUrl()`" align="left" width="100" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
+        <img src="~if $user->getProfilePic450Url()!=''`~$user->getProfilePic450Url()`~else`~$user->getSearchPicUrl()`~/if`" align="left" width="133" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
     </td>
     <td width="188" valign="top">
         <table border="0" cellspacing="2" align="left" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">

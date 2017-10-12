@@ -384,7 +384,8 @@ class MyJs implements Module
 					$this->completeProfilesInfo[$infoType]["VIEW_ALL_LINK"]  = $config["VIEW_ALL_LINK"];
                     $this->completeProfilesInfo[$infoType]["TRACKING"]       = (MobileCommon::isApp()=='A') ? $config["TRACKING"] : $this->getTracking($infoType);
 					$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $countObj[$infoType . "_ALL"];
-					$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType];
+          $this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType];
+          $this->completeProfilesInfo[$infoType]["INFO_TYPE"]      = $infoType;
 					$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
 					if(array_key_exists("SUBTITLE",$config))
 						$this->completeProfilesInfo[$infoType]["SUBTITLE"]          = $config["SUBTITLE"];

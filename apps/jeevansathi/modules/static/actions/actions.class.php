@@ -298,7 +298,12 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
             $pObj->getDetail($loginData['PROFILEID'], "PROFILEID","PASSWORD,EMAIL");
             $this->emailStr=$pObj->getPROFILEID();
-            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+            if(MobileCommon::isAppWebView()) {
+              $this->referer = '/static/settings';
+            }
+            else{
+              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+            }
 
             
         }
@@ -306,8 +311,12 @@ class staticActions extends sfActions
         	//print_r("expression");die;
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
-            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
-
+            if(MobileCommon::isAppWebView()) {
+              $this->referer = '/static/settings';
+            }
+            else{
+              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+            }
         }
 
         public function executeHideOption(sfWebRequest $request) 
@@ -315,16 +324,23 @@ class staticActions extends sfActions
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
-          $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
-
+          if(MobileCommon::isAppWebView()) {
+              $this->referer = '/static/settings';
+          }
+          else{
+              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+          }
         }
 
         public function executeUnHideOption(sfWebRequest $request) 
         {
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
+              $this->referer = '/static/settings';
           }
-          $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+          else{
+            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
+          }
 
         }
 

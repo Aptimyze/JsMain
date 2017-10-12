@@ -22,7 +22,7 @@ while (1) {
                 $counter = 0;
         }        
         if($counter >= $changeUnimportantFieldOn && $unImpField > $unImpFieldCheck){ // reset flag to 1 if time diff reached 1 hr
-                $redis->set("hideUnimportantFeatureAtPeakLoad",1); // Set flag to 1
+                $redis->set("hideUnimportantFeatureAtPeakLoad",0); // Set flag to 1
                 sendJJSMS("reset");
                 sendSlackmessage("FlagCount reset to 1 from $unImpField after ".($counter*5)." Seconds"); 
                 $counter = 0;
@@ -36,7 +36,7 @@ while (1) {
 function sendJJSMS($flag = "") {
         $FROM_ID = "JSSRVR";
         $PROFILE_ID = "144111";
-        $SMS_TO = array('9773889652','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707','8826380350');
+        $SMS_TO = array('9773889652','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707');
         $smsMessage = "Mysql Error Count have reached Threshold on FlagCount flag $flag within 5 minutes";
         foreach ($SMS_TO as $mobPhone) {
                 $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";

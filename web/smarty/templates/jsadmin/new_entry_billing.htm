@@ -212,6 +212,12 @@
 		}
 		function verify_page()
 		{
+		    ~if $noCityEnteredError`
+            {
+                alert("~$noCityEnteredError`");
+                return false;
+            }
+            ~/if`
 			~if !$renew`
 				if(document.pg1_frm.custname.value.length=="0")
 				{

@@ -26,7 +26,7 @@ class MessageQueues
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
-  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 6; //count of discount tracking consumer count
+  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 4; //count of discount tracking consumer count
   CONST COMMUNITY_DISCOUNT_CONSUMER_COUNT = 2; //count of community discount consumer
   CONST MATCHALERT_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST JUST_JOINED_LAST_SEEN_CONSUMER_COUNT = 1; //count of discount tracking consumer count
@@ -163,9 +163,11 @@ class MessageQueues
   const PRODUCT_METRIC_QUEUE = "PRODUCT_METRIC_QUEUE";
   const PRODUCT_METRICS = "PRODUCT_METRICS";
 
-  public static $logConnectionTime = 0;
+  public static $logConnectionTime = 1;
   
-  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>2);
+  public static $rmqConnectionTimeout = array("log"=>1,"threshold"=>0.8,"redisLogging"=>0,"logPublishTime"=>0,"publishThreshold"=>0.5);
+  
+  public static $flagForDuplicateDataCheck = 1; //1: falg check is applicable, 2: flag check is not applicable
   
   //OutBound Events
   const OUTBOUND_QUEUE = 'OutBoundQueue';

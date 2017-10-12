@@ -79,6 +79,8 @@ class VariableParams
 {
     public static $jsExclusiveReleaseDate = "2017-08-01"; //YYYY-MM-DD
 
+    public static $iOSVersion = 6.2;
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',

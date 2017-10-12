@@ -281,7 +281,8 @@ class notificationActions extends sfActions
         $notifications = $browserNotificationObj->getNotification($regId);
 
         if($notifications){
-            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","REQUEST_DT"=>date('Y-m-d H:i:s')));
+	    $requestDate =date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","REQUEST_DT"=>$requestDate));
             $response = array('title' => $notifications["TITLE"],
                           'body' => $notifications["MESSAGE"],
                           'icon' => $notifications["ICON"],
