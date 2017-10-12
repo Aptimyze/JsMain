@@ -29,16 +29,7 @@ class jsexclusiveActions extends sfActions {
 			$this->assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 			unset($exclusiveObj);
 			if(is_array($this->assignedClients) && count($this->assignedClients)>0){
-				$apObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
-				$this->assignedClients = $apObj->getSendersAfterDate($this->assignedClients);
-
-				unset($apObj);
-				if(is_array($this->assignedClients)){
-					$this->unscreenedClientsCount = count($this->assignedClients);
-				}
-				else{
-					$this->unscreenedClientsCount = 0;
-				}
+                $this->unscreenedClientsCount = count($this->assignedClients);
 			}
 			else{
 				$this->unscreenedClientsCount = 0;
@@ -88,7 +79,6 @@ class jsexclusiveActions extends sfActions {
 		if(empty($this->clientIndex) || !is_numeric($this->clientIndex)){
 			$this->clientIndex = 0;
 		}
-		
 		if(!is_array($this->assignedClients) || count($this->assignedClients)==0){
 			$this->infoMsg = "No assigned clients corresponding to logged in RM found..";
 		}
@@ -118,7 +108,7 @@ class jsexclusiveActions extends sfActions {
 					unset($exclusiveLib);
 				}
 				else{
-					$this->infoMsg = "No members for this client found..";
+					$this->infoMsg = "No RB interests were generated for the following user. Please note down this ID and revise/expand their DPP";
 					$this->showNextButton = 'Y';
 				}
 			}
@@ -150,16 +140,16 @@ class jsexclusiveActions extends sfActions {
 				$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"discardArr"=>$discardArr,"button"=>$formArr["submit"]));
 				unset($exclusiveObj);
 			}
-			else{
-				 if($formArr["submit"] == "SKIP"){
+			else if($formArr["submit"] == "SKIP"){
 					$acceptArr = $formArr["ACCEPT"];
 				 	$acceptArr = array_values($acceptArr);
 				 	$email = $request->getParameter("email");
 					$exclusiveObj = new ExclusiveFunctions();
 					$exclusiveObj->processScreenedEois(array("agentUsername"=>$this->name,"clientId"=>$request->getParameter("clientId"),"acceptArr"=>$acceptArr,"button"=>$formArr["submit"],"clientUsername"=>$request->getParameter("clientUsername")));
 					unset($exclusiveObj);
-				 } 
-			}
+			} else if($formArr["submit"] == "NEXT"){
+			    $this->clientIndex += 1;
+            }
 			$this->forwardTo("jsexclusive","screenRBInterests",array("clientIndex"=>$this->clientIndex));
 		}
 		else{

@@ -251,21 +251,22 @@ class ExclusiveMatchMailer {
 								unset($newResult[$key][$k][$v]);
 								continue;
 							}
-
 							if($v["FOLLOWUP_1"]){
 								$reason = explode("|", $v["FOLLOWUP_1"]);
-								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" || $reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
+								if($reason[0]=="Others")
+								    $reason[0]="Member already communicating with another profile";    	    
 								$newResult[$key][$k]["FOLLOWUP_1"] = $reason[0];
 							}
-
 							if($v["FOLLOWUP_2"]){
 								$reason = explode("|", $v["FOLLOWUP_2"]);
-								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" ||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
+								if($reason[0]=="Others")
+								    $reason[0]="Member already communicating with another profile";
 								$newResult[$key][$k]["FOLLOWUP_2"] = $reason[0];
 							} 
-
 							if (!$v["FOLLOWUP2_DT"]) {
 								if($v["STATUS"] == "Y"){
 									$newResult[$key][$k]["FOLLOWUP_1"] = "Confirmed";
@@ -278,8 +279,10 @@ class ExclusiveMatchMailer {
 							
 							if($v["FOLLOWUP_3"]){
 								$reason = explode("|", $v["FOLLOWUP_3"]);
-								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
+								if($reason[0]=="Others")
+								    $reason[0]="Member already communicating with another profile";
 								$newResult[$key][$k]["FOLLOWUP_3"] = $reason[0];
 							}
 
@@ -295,11 +298,13 @@ class ExclusiveMatchMailer {
 							
 							if($v["FOLLOWUP_4"]){
 								$reason = explode("|", $v["FOLLOWUP_4"]);
-								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable")
+								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
+								if($reason[0]=="Others")
+								    $reason[0]="Member already communicating with another profile";
 								$newResult[$key][$k]["FOLLOWUP_4"] = $reason[0];
 							}
-
+							
 							if (!$v["FOLLOWUP4_DT"]) {
 								if($v["STATUS"] == "Y"){
 									$newResult[$key][$k]["FOLLOWUP_3"] = "Confirmed";

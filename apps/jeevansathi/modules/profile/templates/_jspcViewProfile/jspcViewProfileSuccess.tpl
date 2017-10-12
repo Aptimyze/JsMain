@@ -146,9 +146,10 @@
               <div class="clearfix">
                   <div class="prfrad prfdim8 prfbr6 fl "> <img src="" border="0" class="js-otherProfilePic prfdim5 prfrad prfm2"> </div>
                     <div class="fl ml10 prfbr7 pb10 f13 color11 wid80p pt16" style='white-space:pre;'>
-                      <span class='js-username'></span>    -    <span class="colr2"> Report Abuse</span>
+                      <span class='js-username'></span>    -    <span class="colr2">Report as Fake/Spam</span>
                     </div>
                 </div>
+                <span class="pt13 colr2 f12 h20">Let Jeevansathi know what is wrong with this profile. This message will NOT be sent to the reported profile.</span>
                 <div class="pl12 pt20 js-reportOptionLayer">
                   <p id='RAReasonHead' class="color12 f13">Select reason</p>
                      <ul id="reportAbuseList" class="listnone hgt200 reportlist fontlig f15 pt10 color2 mb20">

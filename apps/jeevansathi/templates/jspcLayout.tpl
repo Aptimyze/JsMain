@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
     <meta http-equiv="content-language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
@@ -66,6 +67,8 @@
         }
         function trackJsEventGA(category, action, label, value){
             if (ucode){
+                if(label == "M/F")
+                       label = loggedInJspcGender;
                 if (value) {
                        _gaq.push(['_trackEvent', category, action, label, value]);
                 } else {
@@ -124,6 +127,7 @@
             var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
+    <script src="//cdn.automatad.com/axt/ad_axt_jeevansathi.min.js" async></script>
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`

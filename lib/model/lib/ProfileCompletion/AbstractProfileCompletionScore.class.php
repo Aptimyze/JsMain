@@ -125,9 +125,8 @@ abstract class AbstractProfileCompletionScore {
 			$objScoreTable->replaceRecord($this->m_objProfile->getPROFILEID(), intval($iScore));
 		}
 		catch(Exception $e)
-		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
-			$subject = "ProfileCompletionScore : Exception While updaing score";
-			SendMail::send_email("kunal.test02@gmail.com","'".print_r($e,true)."'",$subject);
+		{
+		     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
 		}
     }
     

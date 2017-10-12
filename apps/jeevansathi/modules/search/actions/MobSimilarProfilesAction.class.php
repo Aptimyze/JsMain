@@ -69,32 +69,32 @@ class MobSimilarProfilesAction extends sfActions
 
 		if($isLogout==1)
 		        $this->forward("static","logoutPage");
-                
+
                 $this->stypeName=$ResponseArr["stype"];
                 $this->heading = $ResponseArr["result_count"];
-		
+
                 //Different options to be shown
 		$this->dontShowSorting=1;
 		$this->dontShowHam=1;
 		$this->showClose=1;
-		
+
 		if(!$ResponseArr["pageTitle"])
 			$ResponseArr["pageTitle"] = "Similar profile - Jeevansathi.com";
 		$this->setTitle($ResponseArr["pageTitle"]);
-			
+
 		$this->noresultmessage = $ResponseArr["noresultmessage"];
 		$this->_SEARCH_RESULTS_PER_PAGE = viewSimilarConfig::$suggAlgoNoOfResults_Mobile;;
 		$this->setTemplate("mobile/MobSimilarProfiles");
 	    $navObj = new Navigator();
 		$this->NAVIGATOR = $navObj->navigation('JVS','profilechecksum__'.$this->viewedProfilechecksum,'','Symfony');
-        
-        $this->BREADCRUMB = $navObj->BREADCRUMB;
+
+        $this->BREADCRUMB = '';//$navObj->BREADCRUMB;
         $this->BREADCRUMB = str_replace('"','\'',$this->BREADCRUMB);
-        
+
 	}
         /**
 	  * This function is to be called to set title of page
-	  * @param - $title - title of the page to be set 
+	  * @param - $title - title of the page to be set
 	**/
         private function setTitle($title)
         {
