@@ -339,7 +339,7 @@ export  class MyjsPage extends React.Component {
 	    {
 				var dailyRecommendationsView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
-			if( this.state.allHitsDone &&  (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched) )
+			if( this.state.allHitsDone && ( (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched)) )
 			{
 				var noDatablockView=<NodataBlock restApiFun={this.restApiHits.bind(this)} data={this.props.myjsData}/>
 			}
