@@ -105,12 +105,6 @@ export  class MyjsPage extends React.Component {
 
 
 	componentDidUpdate(){
-		// if(this.props.myjsData.modFetched && !this.state.didUpdateCall){
-		// 	this.restApiHits(this);
-		// 	this.setState({
-		// 		didUpdateCall: true
-		// 	})
-		// }
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 	}
 
@@ -187,7 +181,6 @@ export  class MyjsPage extends React.Component {
 				this.restApiHits(true)
 			};
    		window.addEventListener('scroll', this.scrollFun,false );
-//   		document.getElementById('pcontainer').addEventListener('scroll', this.scrollFun,false );
   	}
 
   	firstApiHits(obj){
