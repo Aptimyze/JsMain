@@ -31,11 +31,12 @@ export default class NodataBlock extends React.Component{
     super(props);
   }
   componentDidMount(){
+    if(this.props.mountFun)this.props.mountFun();
     this.props.restApiFun();
   }
 
 	render(){
-    
+
 			  let noDataHtml = '',noDataHtml1 = '', noDataHtml2 = '',noDataHtml3='';
         let browsePrfHtml='';
 

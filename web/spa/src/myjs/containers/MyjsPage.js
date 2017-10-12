@@ -32,10 +32,8 @@ constructor(props){
 	super(props);
 }
 componentDidMount(){
-this.props.restApiFun();
-}
-componentWillReceiveProps(){
-this.props.restApiFun();
+	if(this.props.mountFun)this.props.mountFun();
+	this.props.restApiFun();
 }
 	render(){
 
@@ -218,7 +216,7 @@ export  class MyjsPage extends React.Component {
 				// 		})
 				// 	}
 				// }
-				if(!this.props.myjsData.ieFetched)
+				if(!this.ieMounted)
 				{
 					if(!this.ieApi)
 					{
@@ -226,7 +224,7 @@ export  class MyjsPage extends React.Component {
 					this.props.hitApi_IE(this);
 					}
 				}
-				else if(!this.props.myjsData.irFetched)
+				else if(!this.irMounted)
 				{
 					if(!this.irApi)
 					{
@@ -234,7 +232,7 @@ export  class MyjsPage extends React.Component {
 						this.props.hitApi_IR({containerObj:this});
 					}
 				}
-				else if(!this.props.myjsData.modFetched)
+				else if(!this.modMounted)
 				{
 					if(!this.modApi)
 					{
@@ -242,7 +240,7 @@ export  class MyjsPage extends React.Component {
 						this.props.hitApi_MOD(this);
 					}
 				}
-				else if(!this.props.myjsData.vaFetched)
+				else if(!this.vaMounted)
 				{
 					if(!this.vaApi)
 					{
@@ -251,7 +249,7 @@ export  class MyjsPage extends React.Component {
 
 					}
 				}
-				else if(!this.props.myjsData.drFetched)
+				else if(!this.drMounted)
 				{
 					if(!this.drApi)
 					{
@@ -322,22 +320,22 @@ export  class MyjsPage extends React.Component {
 
 
 			if(this.props.myjsData.ieFetched){
-	    	var interestExpView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
+	    	var interestExpView = <CheckDataPresent mountFun={()=>{this.ieMounted=1;}} restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
 	    }
 
 	    if(this.props.myjsData.irFetched ){
-	    	var interestRecView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
+	    	var interestRecView = <MyjsSlider mountFun={()=>{this.irMounted=1;}} restApiFun={this.restApiHits.bind(this)} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
 	    }
 
 	    if(this.props.myjsData.modFetched){
-	    	var matchOfTheDayView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
+	    	var matchOfTheDayView = <MyjsSlider mountFun={()=>{this.modMounted=1;}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
 	    }
 	    if(this.props.myjsData.vaFetched ){
-	    	var MyjsProfileVisitorView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
+	    	var MyjsProfileVisitorView = <CheckDataPresent mountFun={()=>{this.vaMounted=1;}} restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
+				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
 			if( this.state.allHitsDone && ( (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched)) )
 			{

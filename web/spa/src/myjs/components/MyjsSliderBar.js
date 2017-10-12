@@ -30,6 +30,7 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
+  if(this.props.mountFun)this.props.mountFun();
   this.props.restApiFun();
   this.bindSlider();
 }
