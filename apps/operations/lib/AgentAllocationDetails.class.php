@@ -2584,11 +2584,16 @@ public function fetchPincodesOfCities($cities)
                 $startDate              =date("Y-m-d", time()-9*86400);
                 $endDate                =date("Y-m-d", time()+15*86400);
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);
+                //Handle scenrio for exclusive profile
+                $exclusiveProfile       =$billingSerStatusObj->getExclusiveProfileForDates(date("Y-m-d h:i:sa"));
                 foreach($profiles as $key=>$data){
                         $profileid =$data['PROFILEID'];
                         $eDate     =$data['EDATE'];
-                        if(strtotime($eDate)>=strtotime($starDate) && strtotime($eDate)<=strtotime($endDate))
+                        if(strtotime($eDate)>=strtotime($starDate) && strtotime($eDate)<=strtotime($endDate)){
+                            if(!array_key_exists($profileid,$exclusiveProfile)){
                                 $profilesArr[] =$data;
+                            }
+                        }
                 }
         	return $profilesArr;
     	}
