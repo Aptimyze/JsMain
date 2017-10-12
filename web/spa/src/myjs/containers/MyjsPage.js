@@ -82,6 +82,7 @@ export  class MyjsPage extends React.Component {
 
   	componentDidMount()
   	{
+			this.callEventListner();
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.firstApiHits(this);
 			this.ieApi = false;
@@ -107,7 +108,6 @@ export  class MyjsPage extends React.Component {
 				didUpdateCall: true
 			})
 		}
-		this.callEventListner();
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 	}
 
@@ -157,6 +157,7 @@ export  class MyjsPage extends React.Component {
 	}
 
 	componentWillUnmount(){
+		window.removeEventListener('scroll',this.scrollFun,false);
 		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
 
@@ -180,7 +181,8 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-   		window.addEventListener('scroll', (event) => {this.restApiHits(event)});
+			this.scrollFun = (event) => {this.restApiHits(event)};
+   		window.addEventListener('scroll', this.scrollFun,false );
   	}
 
   	firstApiHits(obj){
@@ -250,7 +252,7 @@ export  class MyjsPage extends React.Component {
 					if(!this.drApi)
 					{
 						this.drApi = true;
-						this.props.hitApi_DR();
+						this.props.hitApi_DR(this);
 					}
 					this.checkforgap("lastcall");
 				}
@@ -422,8 +424,10 @@ const mapDispatchToProps = (dispatch) => {
         jsb9TrackRedirection : (time,url) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
-     	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch);
+     	hitApi_DR: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
+							window.removeEventListener('scroll',containerObj.scrollFun,false);
+						});
 		},
      	hitApi_MOD: () => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_MOD_DATA','POST',dispatch);

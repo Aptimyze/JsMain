@@ -1,5 +1,5 @@
 <?php
-class incentive_IN_DIALER extends TABLE
+class incentive_IN_DIALER_NEW extends TABLE
 {
         public function __construct($dbname="")
         {
@@ -9,13 +9,13 @@ class incentive_IN_DIALER extends TABLE
         {
                 try
                 {
-			$now=date('Y-m-d',time());
-                        $sql = "INSERT IGNORE INTO incentive.IN_DIALER (PROFILEID,PRIORITY,CAMPAIGN_NAME,ENTRY_DATE,ELIGIBLE) VALUES(:PROFILEID,:PRIORITY,:CAMPAIGN_NAME,:ENTRY_DATE,:ELIGIBLE)";
+                        $now=date('Y-m-d',time());
+                        $sql = "INSERT IGNORE INTO incentive.IN_DIALER_NEW (PROFILEID,PRIORITY,CAMPAIGN_NAME,ENTRY_DATE,ELIGIBLE) VALUES(:PROFILEID,:PRIORITY,:CAMPAIGN_NAME,:ENTRY_DATE,:ELIGIBLE)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
-			$prep->bindValue(":PRIORITY",$priority,PDO::PARAM_INT);
-			$prep->bindValue(":CAMPAIGN_NAME",$campaignName,PDO::PARAM_STR);
-			$prep->bindValue(":ENTRY_DATE",$now,PDO::PARAM_STR);
+                        $prep->bindValue(":PRIORITY",$priority,PDO::PARAM_INT);
+                        $prep->bindValue(":CAMPAIGN_NAME",$campaignName,PDO::PARAM_STR);
+                        $prep->bindValue(":ENTRY_DATE",$now,PDO::PARAM_STR);
 			$prep->bindValue(":ELIGIBLE",$eligible,PDO::PARAM_STR);
                         $prep->execute();
                 }
@@ -28,7 +28,7 @@ class incentive_IN_DIALER extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT PROFILEID,ELIGIBLE,PRIORITY FROM incentive.IN_DIALER";
+                        $sql = "SELECT PROFILEID,ELIGIBLE,PRIORITY FROM incentive.IN_DIALER_NEW";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 						while($res=$prep->fetch(PDO::FETCH_ASSOC))
@@ -48,7 +48,7 @@ class incentive_IN_DIALER extends TABLE
 	{
 		try
 		{
-			$sql = "UPDATE incentive.IN_DIALER SET ELIGIBLE=:ELIGIBLE WHERE PROFILEID=:PROFILEID";
+			$sql = "UPDATE incentive.IN_DIALER_NEW SET ELIGIBLE=:ELIGIBLE WHERE PROFILEID=:PROFILEID";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":ELIGIBLE",$eligible,PDO::PARAM_STR);
@@ -64,7 +64,7 @@ class incentive_IN_DIALER extends TABLE
 	{
 		try
 		{
-			$sql = "SELECT ".$fields." FROM incentive.IN_DIALER id JOIN ".$tableName." tb USING (PROFILEID)";
+			$sql = "SELECT ".$fields." FROM incentive.IN_DIALER_NEW id JOIN ".$tableName." tb USING (PROFILEID)";
 			$prep = $this->db->prepare($sql);
 			$prep->execute();
 			while($row=$prep->fetch(PDO::FETCH_ASSOC)){	
@@ -81,7 +81,7 @@ class incentive_IN_DIALER extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT PROFILEID FROM incentive.IN_DIALER";
+                        $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                         while($res=$prep->fetch(PDO::FETCH_ASSOC))
@@ -93,24 +93,5 @@ class incentive_IN_DIALER extends TABLE
                 }
                 return $profiles;
         }
-        public function fetchDialerProfilesDetails()
-        {
-                try
-                {
-                        $sql = "SELECT * FROM incentive.IN_DIALER";
-                        $prep = $this->db->prepare($sql);
-                        $prep->execute();
-                        while($res=$prep->fetch(PDO::FETCH_ASSOC)){
-				$pid	   		=$res["PROFILEID"];	
-                                $profileArr[$pid]	=$res;
-			}
-                }
-                catch(Exception $e)
-                {
-                        throw new jsException($e);
-                }
-                return $profileArr;
-        }
-
 }
 ?>

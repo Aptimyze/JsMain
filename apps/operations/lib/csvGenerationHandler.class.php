@@ -817,23 +817,24 @@ class csvGenerationHandler
 						$campaignCntArr    =$processObj->getCampaignCntArr();
 			$dataLimit         =$processObj->getLimit();
 			$max_dt 	   =$processObj->getEndDate();
-						foreach($profiles as $profileid=>$dataArr){
+			foreach($profiles as $profileid=>$dataArr){
  
 				$username     =$dataArr['USERNAME'];
 
 				// Data Limit exceed check
-								$campaignName =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES']);
+				$campaignName =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES']);
 				if(!$campaignName){
 					if($dataArr['ENTRY_DT']==$max_dt) $filter['campaignUndefinedCnt_L']++;
 					$filter['campaignUndefinedCnt']++;
 					continue;
-				}	
-								$campaignProfilesCnt =$campaignCntArr[$campaignName];
-								if($campaignProfilesCnt>=$dataLimit){
-										if($dataArr['ENTRY_DT']==$max_dt) $filter['dataLimitExceedCnt_L']++;
-										$filter['dataLimitExceedCnt']++;
+				}
+				$campaignNameNew =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES'],true);	
+				$campaignProfilesCnt =$campaignCntArr[$campaignName];
+				if($campaignProfilesCnt>=$dataLimit){
+					if($dataArr['ENTRY_DT']==$max_dt) $filter['dataLimitExceedCnt_L']++;
+						$filter['dataLimitExceedCnt']++;
 					$this->salesCsvProfileLog($profileid,$username,'N','DATA_LIMIT_EXCEED','Y');
-										continue;
+					continue;
 				}
 
 				// Jprofile filter 
@@ -904,14 +905,15 @@ class csvGenerationHandler
 				}
 
 								// filtered profile stored to check campaign limit
-								$campaignCntArr[$campaignName] +=1;
+				$campaignCntArr[$campaignName] +=1;
 				$dataArr['ALLOTED_TO'] 		=$allotedAgent;
 				$dataArr['ANALYTIC_SCORE'] 	=$analyticScore;
 				$dataArr['CAMPAIGN_NAME']	=$campaignName;	
-								$filteredProfiles[] 		=$dataArr;
-						}
-						$processObj->setCampaignCntArr($campaignCntArr);
-				}
+				$dataArr['CAMPAIGN_NAME_NEW']	=$campaignNameNew;
+				$filteredProfiles[] 		=$dataArr;
+			}
+			$processObj->setCampaignCntArr($campaignCntArr);
+		}
 		elseif($processName=="SALES_REGISTRATION")
 		{
 			$AgentDetailsObj =new AgentAllocationDetails();
@@ -1261,8 +1263,14 @@ class csvGenerationHandler
 			if($processName=="SALES_REGULAR"){
 				$salesRegularCampaignTables  =crmParams::$salesRegularCampaignTables;
 				$inDialerCampaign	=crmParams::$inDialerCampaign;
+				$inDialerCampaignNewArr =crmParams::$inDialerCampaignNewArr;
 				$salesCsvDataTempObj 	=new incentive_SALES_CSV_DATA_TEMP();
 				$inDialerObj            =new incentive_IN_DIALER();
+				$inDialerNewOutboundObj =new incentive_IN_DIALER_NEW();
+	                        $salesRegularRangeValue =crmParams::$salesRegularValueRange;
+                        	$scoreRange2    	=$salesRegularRangeValue['SCORE2'];
+				$nonAutoCampaign	=crmParams::$nonAutoCampaign;	
+
 			}
 			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
 				$servicesObj 		=new billing_SERVICES();
@@ -1321,12 +1329,37 @@ class csvGenerationHandler
 
 				// insert in regular sales csv table
 				if($processName=="SALES_REGULAR"){
-					$campaignName   =$dataArr['CAMPAIGN_NAME'];
+                                        $campaignName           =$dataArr['CAMPAIGN_NAME'];
+                                        $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
+					if(in_array("$campaignName",$nonAutoCampaign)){
+						$dialerEligible ='Y';
+					}else{
+						if($score>=$scoreRange2 && $dialerDialStatus==1){
+							$dialerEligible ='Y';
+							$dialerEligibleNew ='N';
+							$dialerDialStatusNew =2;
+						}
+						else{
+							$dialerEligibleNew ='N';
+							$dialerDialStatusNew =$dialerDialStatus;
+							if($dialerDialStatusNew==1)
+								$dialerEligibleNew ='Y';
+							$dialerDialStatus =2;		
+							$dialerEligible ='N';
+						}
+					}	
 					$leadId         =$campaignName.$leadIdSuffix;	
 					$leadId 	=str_replace('pune','mumbai',$leadId);
 					$tablesName 	=$salesRegularCampaignTables[$campaignName];
 	                                $salesCsvDataObj=new $tablesName;
 	                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
+					if(in_array("$campaignNameNew",$inDialerCampaignNewArr)){
+						$leadId         =$campaignNameNew.$leadIdSuffix;
+						$tablesName     =$salesRegularCampaignTables[$campaignNameNew];
+						$salesCsvDataObj=new $tablesName;	
+						$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatusNew,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
+					}
+					
 				}
 				else if($processName=="renewalProcessInDialer"){
 					$campaignType	=$this->getCampaignType($processName, $dataArr['MTONGUE']);
@@ -1395,7 +1428,10 @@ class csvGenerationHandler
 				if($processName=="SALES_REGULAR"){
 					$this->salesCsvProfileLog($profileid,$username,'Y','','',$campaignName,$dialerDialStatus);
 					if(in_array("$campaignName", $inDialerCampaign))		
-						$inDialerObj->insertProfile($profileid,$dialerPriority);
+						$inDialerObj->insertProfile($profileid,$dialerPriority,$campaignName,$dialerEligible);
+					if(in_array("$campaignNameNew",$inDialerCampaignNewArr)){
+						$inDialerNewOutboundObj->insertProfile($profileid,$dialerPriority,$campaignNameNew,$dialerEligibleNew);		
+					}
 				}
 				elseif($processName=="renewalProcessInDialer"){
 					$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER(); 	
@@ -1657,6 +1693,8 @@ class csvGenerationHandler
 			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA('newjs_masterRep');
 		elseif($processName=="salesRegularNoida")
 			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA('newjs_masterRep');
+                elseif($processName=="salesRegularNoidaNew")
+                        $csvDataObj=new incentive_SALES_CSV_DATA_NOIDA_NEW('newjs_masterRep');
 		elseif($processName=="salesRegularDelhi")
 			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI('newjs_masterRep');
 		elseif($processName=="salesRegularMumbai")
@@ -1792,7 +1830,7 @@ class csvGenerationHandler
 		}
 		return $campaignType;
 	}
-	public function getCampaignName($profileid,$username,$mtongue,$city,$isd,$country)
+	public function getCampaignName($profileid,$username,$mtongue,$city,$isd,$country,$campaignNewFlag='')
 	{
 		$considerCommunity 	=crmParams::$salesRegularConsiderCommunity;
 		$ignoreCommunity 	=crmParams::$salesRegularIgnoreCommunity;
@@ -1800,6 +1838,7 @@ class csvGenerationHandler
 		$delhiCity 		=crmParams::$salesRegularDelhiCity;
 		$nriCountry 		=crmParams::$salesRegularNriCountry;
 		$salesRegularCampaign	=crmParams::$salesRegularCampaign;
+		$salesRegularCommunityNewOutbound =crmParams::$salesRegularCommunityNewOutbound;
 
 		if($mtongue==1)
 			$filter ='MTONGUE';
@@ -1813,12 +1852,12 @@ class csvGenerationHandler
 							elseif(!in_array($mtongue,$ignoreCommunity) && in_array($city,$delhiCity))
 							$campaignId = 5;
 							elseif(!in_array($mtongue,$ignoreCommunity))
-								   $campaignId = 1;
-				else
-					$filter='MTONGUE';
-					}
-					elseif(in_array($country,$nriCountry))
-							$campaignId = 4;
+							$campaignId = 1;
+							else
+							$filter='MTONGUE';
+			}
+			elseif(in_array($country,$nriCountry))
+				$campaignId = 4;
 			else
 				$filter='COUNTRY';
 		}
@@ -1831,6 +1870,8 @@ class csvGenerationHandler
 			unset($filter);
 			return;
 		}
+		if($campaignNewFlag && in_array($mtongue,$salesRegularCommunityNewOutbound))
+			$campaignId =6;
 		$campaign =$salesRegularCampaign[$campaignId];
 		return $campaign;
 	}
@@ -1949,6 +1990,27 @@ class csvGenerationHandler
 	{
 		if($processName=='upsellProcessInDialer' || $processName=='rcbCampaignInDialer')
 			$dial_status=1;
+		elseif($processName=='SALES_REGULAR'){
+			$salesRegularRangeValue =crmParams::$salesRegularValueRange;
+			$scoreRange1 	=$salesRegularRangeValue['SCORE1'];
+			$scoreRange2 	=$salesRegularRangeValue['SCORE2'];
+			$scoreRange3 	=$salesRegularRangeValue['SCORE3'];
+			$discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
+			$discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
+
+			if($score>=$scoreRange1 and $score<$scoreRange2){
+				$discount =$vdDiscount; 
+				if($discount>=$discountRange1 && $discount<=$discountRange2){
+					$dial_status=1;
+				}
+			}
+			elseif($score>=$scoreRange2 && $score<=$scoreRange3)
+				$dial_status=1;
+			if($allotedTo=='' && $dial_status==1)
+				$dial_status=1;
+			else
+				$dial_status = '2';			
+		}	
 		else{
 			if($allotedTo=='')
 				$dial_status = '1';
