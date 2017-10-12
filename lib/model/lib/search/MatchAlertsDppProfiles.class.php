@@ -42,10 +42,27 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->setHVERIFY_ACTIVATED_DT($endDate);
                 
                 $this->setShowFilteredProfiles('N');
+                
+                $memObject=JsMemcache::getInstance();
+                $dppCnt = $memObject->get('MA_DPPCOUNT_'.$this->loggedInProfileObj->getPROFILEID());
+                if($dppCnt === false || $dppCnt=="" || $dppCnt === NULL){
+                        $dppCount = SearchCommonFunctions::getMyDppMatches("",$this->loggedInProfileObj,"","","","",1);
+                        $dppCnt = isset($dppCount["CNT"])?$dppCount["CNT"]:0;
+                        $memObject->set('MA_DPPCOUNT_'.$this->loggedInProfileObj->getPROFILEID(),$dppCnt,MatchAlertsConfig::$dppCountCacheTime);
+                }else{
+                        $dppCnt = 0;
+                }
+                unset($memObject);
+                if($dppCnt>MatchAlertsConfig::$DPP_HAVEPHOTO_CHECK_COUNTER){
+                        $this->setPHOTO_VISIBILITY_LOGGEDIN(2);
+                        $this->setHAVEPHOTO('Y');
+                        $this->setPRIVACY('"A"');
+                }
         }
         public function getRelaxedSearchCriteria($limit,$sort) {
                 $relaxedObj = new DppRelaxation($this->loggedInProfileObj);
-                $relaxedMtongue = $relaxedObj->getRelaxedMTONGUE($this->getMTONGUE());
+                $userReligion = $this->pid = $this->loggedInProfileObj->getRELIGION();
+                $relaxedMtongue = $relaxedObj->getRelaxedMTONGUE($this->getMTONGUE(),$userReligion);
                 $this->setMTONGUE($relaxedMtongue);
                 
                 $CasteRelaxed = $relaxedObj->getRelaxedCASTE($this->getCASTE());

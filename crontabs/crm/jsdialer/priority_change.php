@@ -67,7 +67,7 @@ $pro_str = @implode("','",$pro_array);
 $resc=mysql_query($sqlc,$db_js) or die($sqlc.mysql_error($db_js));
 while($myrowc = mysql_fetch_array($resc))
 	$camp_array[] = $myrowc["CAMPAIGN"];*/
-$camp_array = array("JS_NCRNEW","MAH_JSNEW");
+$camp_array = array("JS_NCRNEW","MAH_JSNEW","JS_NCRNEW_Auto");
 
 //Compute Suffix for active leadids
 $sql_lf="SELECT LEAD_ID_SUFFIX FROM incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";
@@ -86,7 +86,7 @@ if(count($camp_array)>0)
 		if($campaign_name == 'JS_RENEWAL')
 			 $squery1 = "SELECT easycode,old_priority,PROFILEID,AGENT,DISCOUNT_PERCENT,SCORE FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('renewal$suffix') AND PROFILEID IN ('$pro_str') AND Dial_Status!=0";
 		else
-			$squery1 = "SELECT easycode,old_priority,PROFILEID,AGENT,VD_PERCENT,SCORE FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix') AND PROFILEID IN ('$pro_str') AND Dial_Status!=0";
+			$squery1 = "SELECT easycode,old_priority,PROFILEID,AGENT,VD_PERCENT,SCORE FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','noidaAuto$suffix') AND PROFILEID IN ('$pro_str') AND Dial_Status!=0";
 		$sresult1 = mssql_query($squery1,$db_dialer) or logError($squery1,$campaign_name,$db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
@@ -228,7 +228,7 @@ if(count($camp_array)>0)
 		$dep_array = array();
 		//if(isset($opriority))//Previously online
 		{
-			$squery1 = "SELECT easycode,old_priority,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,SCORE,priority FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix') AND status=0 AND priority BETWEEN 6 and 9 AND Dial_Status!=0";
+			$squery1 = "SELECT easycode,old_priority,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,SCORE,priority FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix','noidaAuto$suffix') AND status=0 AND priority BETWEEN 6 and 9 AND Dial_Status!=0";
 	                $sresult1 = mssql_query($squery1,$db_dialer) or logError($squery1,$campaign_name,$db_dialer,1);
         	        while($srow1 = mssql_fetch_array($sresult1))
                 	{
@@ -272,7 +272,7 @@ if(count($camp_array)>0)
 		$cnt3=0;
 		//if(isset($opriority))//Previously visited membership page
 		{
-			$squery1 = "SELECT easycode,old_priority,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,priority,SCORE FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix') AND status=0 AND Dial_Status=2 AND priority=0 and old_priority!=0";
+			$squery1 = "SELECT easycode,old_priority,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,priority,SCORE FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix','noidaAuto$suffix') AND status=0 AND Dial_Status=2 AND priority=0 and old_priority!=0";
 	                $sresult1 = mssql_query($squery1,$db_dialer) or logError($squery1,$campaign_name,$db_dialer,1);
         	        while($srow1 = mssql_fetch_array($sresult1))
                 	{
