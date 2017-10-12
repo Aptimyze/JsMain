@@ -97,7 +97,6 @@ export  class MyjsPage extends React.Component {
 				this.firstApiHits(this);
 			}
 		}
-		this.checkforgap("mount");
 
 	}
 
@@ -266,17 +265,13 @@ export  class MyjsPage extends React.Component {
 			}
 
 		}
-		checkforgap(param)
+		hideLoader()
 		{
       let ele=document.getElementById("JBrowserGap");
-			if(param=="lastcall")
-			{
 				if(!ele.classList.contains("dn") )
 				{
 					ele.classList.add("dn");
 				}
-			}
-
 		}
 
 		hitIRforPagination(){
@@ -406,7 +401,7 @@ const mapDispatchToProps = (dispatch) => {
 		},
      	hitApi_DR: (containerObj) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
-            	containerObj.checkforgap("lastcall");
+            	containerObj.hideLoader();
 							containerObj.setState({allHitsDone:true});
 							window.removeEventListener('scroll',containerObj.scrollFun,false);
 						});
