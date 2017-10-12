@@ -651,7 +651,7 @@ function afterAction(result,action, index,isPrime){
 	}
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
-    if(window.location.hash.length===0 && window.location.search.indexOf('fromSPA_CE=1')==-1 )
+    if(window.location.hash.length===0 && (window.location.search.indexOf('fromSPA_CE=1')==-1 || result.actiondetails.writemsgbutton) )
         historyStoreObj.push(browserBackCommonOverlay,"#pushce");
     var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
     if(ignoreFromPrime)

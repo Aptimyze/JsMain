@@ -37,6 +37,8 @@ constructor(){
 		{
 			if(this.History.length>0)
 			{
+				var pop=this.History.pop();
+				var result=pop();
 
 				if(typeof fromUser !=='undefined' && fromUser)
 					history.back();
@@ -44,8 +46,6 @@ constructor(){
         else {
         		history.replaceState(null,null,document.location.href);
         }
-				var pop=this.History.pop();
-				var result=pop();
 				var e=new Error();
 				if(!result)
 				{

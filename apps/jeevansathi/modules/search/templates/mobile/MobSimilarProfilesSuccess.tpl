@@ -22,16 +22,16 @@
 	<!-- header section -->
 	<div class="fullwid bg1 posfixTop" id="searchHeader">
 		<div class="pad5">
-			
+
 			<div ~if $dontShowHam` style="visibility:hidden" ~/if` class="fl wid10p pt4"><i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i></div>
-			
+
 			<div class="fl wid80p txtc color5  fontthin f19" id="totalCountId">~$heading`</div>
 			<div class="fr wid10p">
 			~if !$dontShowSorting`
-				<a href="#" id="sortByDateRelDiv"><i class="mainsp doublearw"></i></a>
+				<a href="javascript:void(0)" id="sortByDateRelDiv"><i class="mainsp doublearw"></i></a>
 			~/if`
 			~if $showClose`
-				<a href="#" id="closeButton"><i class="mainsp comH_close posabs comH_pos1"></i></a>
+				<a href="javascript:void(0)" id="closeButton"><i class="mainsp comH_close posabs comH_pos1"></i></a>
 			~/if`
 			</div>
 			<div class="clr"></div>
