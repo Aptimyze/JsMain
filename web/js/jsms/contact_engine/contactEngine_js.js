@@ -269,7 +269,7 @@ function layerClose()
                 {
       //if(!ISBrowser("UC"))
        //    enableLoader();
-                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1"+(window.location.search.indexOf('fromSPA_CE=1')!=-1 ? "&fromSPA_CE=1" : "" );
+                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1"+(((typeof SPA_CE!='undefined') && (SPA_CE=='Y')) ? "&fromSPA_CE=1" : "" );
                 }
             }
   }
@@ -651,7 +651,7 @@ function afterAction(result,action, index,isPrime){
 	}
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
-    if(window.location.hash.length===0 && (window.location.search.indexOf('fromSPA_CE=1')==-1 || result.actiondetails.writemsgbutton) )
+    if(window.location.hash.length===0 && ((typeof SPA_CE=='undefined') || (SPA_CE!='Y') || result.actiondetails.writemsgbutton) )
         historyStoreObj.push(browserBackCommonOverlay,"#pushce");
     var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
     if(ignoreFromPrime)
