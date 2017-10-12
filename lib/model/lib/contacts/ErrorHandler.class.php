@@ -728,7 +728,7 @@ class ErrorHandler
 		static $Limits = array(
 			"M" => array(
 				"age" => array(
-					"L" => 2, "H" => 2
+					"L" => 3, "H" => 3
 					),
 				"height" => array(
 					"L" => 2, "H" => 4
@@ -739,7 +739,7 @@ class ErrorHandler
 				),
 			"F" => array(
 				"age" => array(
-					"L" => 2, "H" => 2
+					"L" => 3, "H" => 3
 					),
 				"height" => array(
 					"L" => 3, "H" => 2
