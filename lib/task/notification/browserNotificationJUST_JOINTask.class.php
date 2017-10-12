@@ -64,7 +64,7 @@ EOF;
             
             //echo "before JUST_JOIN \n";
             $processObj->setnotificationKey("JUST_JOIN");
-			$browserNotificationObj->addNotification($processObj);
+	    $browserNotificationObj->addNotification($processObj);
             echo "After JUST_JOIN \n";
         }
         else
