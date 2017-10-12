@@ -22,6 +22,9 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
+
         if (!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 		
