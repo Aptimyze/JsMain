@@ -38,7 +38,7 @@ componentWillUnmount() {
 }
 
  componentWillReceiveProps(nextProps){
-
+   if(!nextProps.listing.profiles)return;
     this.setState({
       total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
     });
