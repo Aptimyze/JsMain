@@ -267,7 +267,17 @@ class notificationActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
-    
+    /** This method will be called by the service worker to track the 
+    * whether the message has been delivered or not. 
+    * If the messageId is received, the tracking details are updated,
+    * otherwise no action is performed. 
+    */
+    public function executeUpdateTrackingV1(sfWebRequest $request){
+       $messageId = $request->getParameter("messageId");
+       $browserDBObject = new MOBILE_API_BROWSER_NOTIFICATION();
+       $browserDBObject->updateTrackingDetails($messageId);
+       die;
+    }
     public function executeGetNotificationV1($request){
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $notificationStop =JsConstants::$notificationStop;
@@ -282,7 +292,7 @@ class notificationActions extends sfActions
 
         if($notifications){
 	    $requestDate =date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
-            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","REQUEST_DT"=>$requestDate));
+            $browserNotificationObj->updateEntryDetails("ID", $notifications["ID"],array("SENT_TO_CHANNEL" =>"Y","RECEIVED_DATE"=>$requestDate));
             $response = array('title' => $notifications["TITLE"],
                           'body' => $notifications["MESSAGE"],
                           'icon' => $notifications["ICON"],
