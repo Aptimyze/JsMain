@@ -646,7 +646,7 @@ $js_arr[]=array("jspc/contactus/sw"   => "6");
 $js_arr[]=array("jsms/settings/mobDeleteProfile_js"     => "21");
 $js_arr[]=array("sw"    => "13");
 $js_arr[]=array("commonExpiration_js"   => "12");
-$js_arr[]=array("main"   => "7");
+$js_arr[]=array("main"   => "8");
 $js_arr[]=array("jsms/common/verificationIcon_js"   => "6");
 $js_arr[]=array("jsms/settings/settings_js"   => "5");
 $js_arr[]=array("rippleEffectCommon_js"   => "6");
@@ -728,7 +728,7 @@ $js_arr[]=array("jsms/settings/privacySettings_js"  => "2");
 $js_arr[]=array("jspc/static/postWeddingServices_js"    => "2");
 $js_arr[]=array("photoScreening_js"   => "2");
 $js_arr[]=array("apps/jeevansathi/templates/_jsms3DotLayer"   => "1");
-$js_arr[]=array("main_sw_register"    => "2");
+$js_arr[]=array("main_sw_register"    => "3");
 return $js_arr;
 }
 function getJavascript(){
