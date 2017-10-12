@@ -668,7 +668,7 @@ Class ButtonResponseJSMS
         	
                 
                         $button["iconid"] = IdToAppImagesMapping::REPORTABUSE;
-                        $button["label"]  = "Report Abuse";
+                        $button["label"]  = "Report as Fake/Spam";
                         $button["action"] = "REPORTABUSE";
                 
                 return (self::buttonMerge($button,$enable));
