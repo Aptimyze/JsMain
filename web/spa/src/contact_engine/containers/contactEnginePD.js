@@ -334,7 +334,7 @@ getCancelDeclineLayer(actionDetails){
               </div>
               <div className="posfix btmo fullwid" id="bottomElement">
                 <div className="pt15">
-                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>{this.props.historyObject.pop(true);this.props.historyObject.pop(true)}} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
+                    <div className="brdr22 white txtc f16 pad2 fontlig " id="closeLayer" onClick={()=>{this.props.historyObject.pop(true);this.props.historyObject.pop(true);this.props.nextPrevPostDecline();}} style={{borderTop: '1px solid rgb(255, 255, 255)',borderTop: '1px solid rgba(255, 255, 255, .2)',WebkitBackgroundClip: 'padding-box', /* for Safari */ 'backgroundClip': 'padding-box'}} >Close</div>
                 </div>
               </div>
 
