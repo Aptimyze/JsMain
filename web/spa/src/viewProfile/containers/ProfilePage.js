@@ -20,7 +20,8 @@ import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import ContactEngineButton from "../../contact_engine/containers/contactEnginePD";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
-import * as CONSTANTS from '../../common/constants/apiConstants'
+import * as CONSTANTS from '../../common/constants/apiConstants';
+import axios from "axios";
 
 
 class ProfilePage extends React.Component {
@@ -131,8 +132,8 @@ class ProfilePage extends React.Component {
                 urlString += "&fromViewSimilar=" + fromViewSimilar;
             }
         }
-
         this.props.showProfile(this, urlString);
+        axios.get("/api/v1/profile/detail"+urlString+"&ul=1");
 
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
@@ -216,6 +217,7 @@ swipeNextProfile(nextOrPrev){
       t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
       _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
       _this.props.showProfile(_this, t2);
+      axios.get("/api/v1/profile/detail"+t2+"&ul=1");
 
 }
     setNextPrevLink() {
