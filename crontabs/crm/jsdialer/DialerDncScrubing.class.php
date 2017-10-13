@@ -57,7 +57,7 @@ class DialerDncScrubing
         	                $table ='incentive.RENEWAL_IN_DIALER';
         	        else
         	                $table ='incentive.IN_DIALER';
-        	        $sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE!='N'";
+        	        $sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE='Y'";
         	        $res_vd = mysql_query($sql_vd,$this->db_js) or die($sql_vd.mysql_error($this->db_js));
         	        while($row_vd = mysql_fetch_array($res_vd))
         	                $eligible_profiles[] = $row_vd["PROFILEID"];

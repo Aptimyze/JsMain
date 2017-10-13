@@ -1855,6 +1855,10 @@ class csvGenerationHandler
 							$campaignId = 1;
 							else
 							$filter='MTONGUE';
+
+					                if($campaignNewFlag && in_array($mtongue,$salesRegularCommunityNewOutbound))
+                        					$campaignId =6;
+
 			}
 			elseif(in_array($country,$nriCountry))
 				$campaignId = 4;
@@ -1870,8 +1874,6 @@ class csvGenerationHandler
 			unset($filter);
 			return;
 		}
-		if($campaignNewFlag && in_array($mtongue,$salesRegularCommunityNewOutbound))
-			$campaignId =6;
 		$campaign =$salesRegularCampaign[$campaignId];
 		return $campaign;
 	}
