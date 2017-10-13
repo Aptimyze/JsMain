@@ -30,6 +30,7 @@ componentDidUpdate(){
 }
 
 componentDidMount(){
+  if(this.props.mountFun)this.props.mountFun();
   this.props.restApiFun();
   this.bindSlider();
 }
@@ -38,7 +39,7 @@ componentWillUnmount() {
 }
 
  componentWillReceiveProps(nextProps){
-
+   if(!nextProps.listing.profiles)return;
     this.setState({
       total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
     });
