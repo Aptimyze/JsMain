@@ -725,16 +725,45 @@ die;
 		return $lastOnlineStr;
 	}
 
-	public static function getFreshDeskDetails($profileid=''){
+	public static function getFreshChatDetails($profileid=''){
 		if(!empty($profileid) && is_numeric($profileid) && $profileid != ''){
-			$profileObj = LoggedInProfile::getInstance();
+			$profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
+			$nameOfUser = new NameOfUser();
+			$user = new memUser($profileid);
+			$user->setMemStatus();
+			$userType = $user->getUserType();
+			if($userType == 2 || $userType == 6)
+				$userData['TAG'] = "'Membership','Service'";
 			$userData['USERNAME'] = $profileObj->getUSERNAME();
 			$userData['EMAIL'] = $profileObj->getEMAIL();
-	        return json_encode(array('username' => $userData['USERNAME'], 'email' => $userData['EMAIL']));
+			$fullname = $nameOfUser->getNameFromCache(array($profileid));
+			$fullname = $fullname[$profileid]['NAME'];
+			$nameArr = explode(' ',$fullname);
+            if($nameArr[0])
+				$userData['FIRST_NAME'] = $nameArr[0];
+            else
+            	$userData['FIRST_NAME'] = $userData['USERNAME'];
+            if($nameArr[1])
+                $userData['LAST_NAME'] = $nameArr[1];
+            else
+                $userData['LAST_NAME'] = "";
+            $userData['MOB'] = $profileObj->getPHONE_MOB();
+	        return json_encode(array('username' => $userData['USERNAME'], 'email' => $userData['EMAIL'],'mob' => $userData['MOB'],'firstName' => $userData['FIRST_NAME'], 'lastName' => $userData['LAST_NAME'],'tag'=> $userData['TAG']));
 		} else {
 			return NULL;
 		}
 	}
+
+    public static function getFreshDeskDetails($profileid=''){
+        if(!empty($profileid) && is_numeric($profileid) && $profileid != ''){
+            $profileObj = LoggedInProfile::getInstance();
+            $userData['USERNAME'] = $profileObj->getUSERNAME();
+            $userData['EMAIL'] = $profileObj->getEMAIL();
+            return json_encode(array('username' => $userData['USERNAME'], 'email' => $userData['EMAIL']));
+        } else {
+            return NULL;
+        }
+    }
 
 	public static function convertDateTimeToDisplayDate($date)
 	{

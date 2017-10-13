@@ -199,12 +199,16 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+        ~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+            ~if $profileid`
+                ~assign var="userDetails" value=CommonUtility::getFreshChatDetails($profileid)`
+            ~/if`
+        ~else if $module eq 'register'  || $action eq 'phoneVerificationPcDisplay'`
             ~if $profileid`
                 var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
                 var userDetails = $.parseJSON(udObj);
                 populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
-                ~if $module eq 'membership' || $fromSideLink eq '1'`
+                ~if $fromSideLink eq '1'`
                     popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
                 ~/if`
             ~else`
@@ -220,7 +224,11 @@
     });
 </script>
 
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+    ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
+        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token])`
+    ~/if`
+~else if $module eq 'register'  || $action eq 'phoneVerificationPcDisplay'`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`
     ~/if`
