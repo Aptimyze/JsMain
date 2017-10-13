@@ -49,11 +49,11 @@ class DialerHandler
         }
         public function getInDialerEligibleProfiles($x,$campaign_name='')
         {
-                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		if($campaign_name){
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='Y'";
+		/*if($campaign_name){
 			$campaign = $this->campaignArr[$campaign_name];
 			$sql .=" AND CAMPAIGN_NAME='$campaign'";
-		}
+		}*/
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
@@ -62,10 +62,10 @@ class DialerHandler
         public function getInDialerInEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-                if($campaign_name){
+                /*if($campaign_name){
 			$campaign = $this->campaignArr[$campaign_name];
                         $sql .=" AND CAMPAIGN_NAME='$campaign'";
-		}
+		}*/
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
@@ -74,7 +74,7 @@ class DialerHandler
         public function getInDialerNewEligibleProfiles($x,$campaign_name)
         {
 		$campaign = $this->campaignArr[$campaign_name];
-                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_NAME='$campaign'";
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='Y' AND CAMPAIGN_NAME='$campaign'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
