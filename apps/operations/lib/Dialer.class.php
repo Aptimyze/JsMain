@@ -186,10 +186,10 @@ class Dialer
                                         $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
                                         $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
 
-					if($campaignName=='noida'){
+					if($campaignName=='noida' || $campaignName=='delhi'){
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}	
-					elseif($campaignName=='mumbai'){
+					elseif($campaignName=='mumbai' || $campaignName=='pune'){
 						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
 					}
 					if($discount>=$discountRange1 && $discount<=$discountRange2)
