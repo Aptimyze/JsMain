@@ -70,15 +70,16 @@ export  class MyjsPage extends React.Component {
   		super();
 			jsb9Fun.recordBundleReceived(this,new Date().getTime());
 			jsb9Fun.setJsb9Key(this,'JSNEWMOBMYJSURL');
-		this.state=
-		{
-			myjsApi: false,
-			hamApi: false,
-			showPromo: false,
-			deviceHeight: window.innerHeight,
-			didUpdateCall: false,
-			is_already_scrolled: false
-		}
+			this.state=
+			{
+				myjsApi: false,
+				hamApi: false,
+				showPromo: false,
+				deviceHeight: window.innerHeight,
+				didUpdateCall: false,
+				loaderStyle: {display:'none'}
+			}
+
   	}
 
   	componentDidMount()
@@ -96,6 +97,7 @@ export  class MyjsPage extends React.Component {
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
 				this.firstApiHits(this);
 			}
+		//	this.hideLoader('hide');
 		}
 
 	}
@@ -267,20 +269,15 @@ export  class MyjsPage extends React.Component {
 		}
 		hideLoader(param)
 		{
+
       let ele=document.getElementById("JBrowserGap");
 			if(param=='hide')
 			{
-				if(!ele.classList.contains("dn") )
-				{
-					ele.classList.add("dn");
-				}
-}
+				this.setState({loaderStyle:{display:'none'}});
+			}
 			else if(param=="show")
 			{
-				if(ele.classList.contains("dn") )
-				{
-					ele.classList.remove("dn");
-				}
+				this.setState({loaderStyle:{display:'block'}});
 			}
 
 		}
@@ -341,7 +338,7 @@ export  class MyjsPage extends React.Component {
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
+				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;this.setState({allHitsDone:true});}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
 	    }
 			if( this.state.allHitsDone && ( (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched)) )
 			{
@@ -382,7 +379,7 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
-					<div id="JBrowserGap" className="fullwid txtc dn">
+					<div id="JBrowserGap" style={this.state.loaderStyle} className={"fullwid txtc "} >
 						<img className="pt20" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
 					</div>
 				</div>
@@ -413,7 +410,6 @@ const mapDispatchToProps = (dispatch) => {
      	hitApi_DR: (containerObj) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
             	containerObj.hideLoader('hide');
-							containerObj.setState({allHitsDone:true});
 							window.removeEventListener('scroll',containerObj.scrollFun,false);
 						});
 		},
