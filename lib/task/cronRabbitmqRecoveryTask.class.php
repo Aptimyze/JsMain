@@ -102,8 +102,9 @@ foreach($resultQueues as $arr)
 }
 if($msgOverflow == 1 && $serverid == "FIRST_SERVER"){
   //echo "killAndRestartConsumer"."\n";
-
-  RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  if($queue_data->name != MessageQueues::$INSTANT_NOTIFICATION_QUEUE){
+    RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  }
   //die("123");
   //kill and start consumers again
   $this->killAndRestartConsumer();
