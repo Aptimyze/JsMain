@@ -265,13 +265,24 @@ export  class MyjsPage extends React.Component {
 			}
 
 		}
-		hideLoader()
+		hideLoader(param)
 		{
       let ele=document.getElementById("JBrowserGap");
+			if(param=='hide')
+			{
 				if(!ele.classList.contains("dn") )
 				{
 					ele.classList.add("dn");
 				}
+}
+			else if(param=="show")
+			{
+				if(ele.classList.contains("dn") )
+				{
+					ele.classList.remove("dn");
+				}
+			}
+
 		}
 
 		hitIRforPagination(){
@@ -371,7 +382,7 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
-					<div id="JBrowserGap" className="fullwid txtc">
+					<div id="JBrowserGap" className="fullwid txtc dn">
 						<img className="pt20" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
 					</div>
 				</div>
@@ -401,7 +412,7 @@ const mapDispatchToProps = (dispatch) => {
 		},
      	hitApi_DR: (containerObj) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
-            	containerObj.hideLoader();
+            	containerObj.hideLoader('hide');
 							containerObj.setState({allHitsDone:true});
 							window.removeEventListener('scroll',containerObj.scrollFun,false);
 						});
@@ -431,7 +442,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         hitApi_Ham: (containerObj) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch).then(()=>{
-            	containerObj.restApiHits();
+            	containerObj.restApiHits(); containerObj.hideLoader("show");
             });
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
