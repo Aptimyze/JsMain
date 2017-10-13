@@ -3,7 +3,7 @@ importScripts('https://www.gstatic.com/firebasejs/4.3.0/firebase-messaging.js');
 
 // initialize the service worker
 var config = {
-    messagingSenderId: "209380179960" // change the messaging Id with the InfoEdge
+    messagingSenderId: "323372390615" 
   };
   firebase.initializeApp(config);
   

@@ -7,14 +7,18 @@
 if('serviceWorker' in navigator) 
 {
     var config = {
-    	messagingSenderId: "209380179960" // replace the id with the infoedge account
+    	messagingSenderId: "323372390615" 
   };
   firebase.initializeApp(config);
   const messaging = firebase.messaging();
   var url = ssl_siteUrl+"/js/sw_fcm.js"; 
 
+
+  if(Notification.permission === 'default' || Notification.permission === 'granted')
+  {
   navigator.serviceWorker.register(url) 
           .then((registration) => {
+             setTimeout(function() {
               registration.update();  // update the service worker
               messaging.useServiceWorker(registration);
               messaging.requestPermission()
@@ -30,10 +34,19 @@ if('serviceWorker' in navigator)
                                     regId: regId,
                                 },
                                 success: function(data) {
+                                    $("#permissionResponse").html("Notifications enabled for this site");
+                                    window.close();
                                 }
                             });
               })
               .catch(function (err) {
-              })
-  });
+              });
+          }, 1000);
+        });
+ }
+ 
+else {
+    $("#permissionResponse").html("Please enable blocked notifications for this site in chrome://settings");
+        setTimeout(function(){window.close();},10000);
+    }
 }
