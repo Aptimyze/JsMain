@@ -278,6 +278,13 @@ export  class MyjsPage extends React.Component {
 					ele.classList.add("dn");
 				}
 			}
+			else if(param=="show")
+			{
+				if(ele.classList.contains("dn") )
+				{
+					ele.classList.remove("dn");
+				}
+			}
 
 		}
 
@@ -378,7 +385,7 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
-					<div id="JBrowserGap" className="fullwid txtc">
+					<div id="JBrowserGap" className="fullwid txtc dn">
 						<img className="pt20" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
 					</div>
 				</div>
@@ -438,7 +445,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         hitApi_Ham: (containerObj) => {
             return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch).then(()=>{
-            	containerObj.restApiHits();
+            	containerObj.restApiHits(); containerObj.checkforgap("show");
             });
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
