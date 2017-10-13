@@ -133,7 +133,10 @@ class ProfilePage extends React.Component {
             }
         }
         this.props.showProfile(this, urlString);
-        axios.get("/api/v1/profile/detail"+urlString+"&ul=1");
+        if ( getCookie("AUTHCHECKSUM") )
+        {
+            axios.get("/api/v1/profile/detail"+urlString+"&ul=1");
+        }
 
         let _this = this;
         document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
@@ -217,7 +220,11 @@ swipeNextProfile(nextOrPrev){
       t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
       _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
       _this.props.showProfile(_this, t2);
-      axios.get("/api/v1/profile/detail"+t2+"&ul=1");
+
+      if ( getCookie("AUTHCHECKSUM") )
+      {
+        axios.get("/api/v1/profile/detail"+t2+"&ul=1");
+      }
 
 }
     setNextPrevLink() {
