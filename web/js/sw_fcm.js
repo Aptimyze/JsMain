@@ -26,9 +26,9 @@ var config = {
           response.status);  
         return;  
       }
-      response.json().then(function(data) {  
-//        console.log(data);  
-      });  
+      //response.json().then(function(data) {  
+	// console.log(data);  
+      //});  
     }  
   )  
   .catch(function(err) {  
@@ -49,10 +49,10 @@ messaging.setBackgroundMessageHandler(function(payload) {
       
       console.log(data.MSG_ID);
       ack(data.MSG_ID);
-      
+      console.log(data.ICON);	      
   const notificationOptions = {
     body: data.BODY,
-    icon: '/firebase-logo.png',
+    icon:data.ICON ,
       };
   
   console.log(notificationOptions);

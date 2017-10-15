@@ -11,7 +11,7 @@ class BrowserNotificationEnums
 	);
         //headers sent in curl request to FCM for browser notifications
         public static $fcmHeaders = array("BROWSER_NOTIFICATION"=>array(
-                                        'Authorization: key=AAAAS0p_GNc:APA91bGLi9lzZU72gvfk2HjNjgKVV8_mh61303aY3HPJyiBwDGe0idm6kR9xsiDV-4g_EWcPbIqYxrdxdlKAGEokTDzIS1C5FT8U5ygLqVTM5PwRoTwfhLuIMezPRLR4mrQJxE6CCuKE',
+                                        'Authorization: key=AIzaSyC0YG79MeFCCQMzJG-zjrEStgKt_ZQ5yVw',
                                         'Content-Type: application/json')
         );
 

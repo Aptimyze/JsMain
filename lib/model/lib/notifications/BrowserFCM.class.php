@@ -61,6 +61,8 @@ class BrowserFCM {
         $result = curl_exec($ch);
 	$response = json_decode($result, true);
 	curl_close($ch);
+	//print_r($fields);
+	//print_r($response);
 	if($response)
 		return $response;
 	else 

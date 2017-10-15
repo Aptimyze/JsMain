@@ -23,7 +23,9 @@ if('serviceWorker' in navigator)
               messaging.useServiceWorker(registration);
               messaging.requestPermission()
                       .then(function() {
-                          return messaging.getToken();
+                        var x = messaging.getToken();
+                        console.log(x);
+                        return x;
               })
               .then(function(regId) {
                           var relativeUrl = "/api/v1/notification/insertChromeId";

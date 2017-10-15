@@ -13,7 +13,7 @@ if('serviceWorker' in navigator)
   const messaging = firebase.messaging();
   var url = ssl_siteUrl+"/js/sw_fcm.js"; 
 
-if(Notification.permission === 'default' || Notification.permission === 'granted')
+  if(Notification.permission === 'default' || Notification.permission === 'granted')
   {
   navigator.serviceWorker.register(url) 
           .then((registration) => {
@@ -22,7 +22,9 @@ if(Notification.permission === 'default' || Notification.permission === 'granted
               messaging.useServiceWorker(registration);
               messaging.requestPermission()
                       .then(function() {
-                          return messaging.getToken();
+                        var x = messaging.getToken();
+                        console.log(x);
+                        return x;
               })
               .then(function(regId) {
 			if(browserNotificationRegistered && browserNotificationCookie!='Y'){
