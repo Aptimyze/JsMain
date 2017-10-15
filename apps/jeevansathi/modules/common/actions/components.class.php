@@ -123,7 +123,7 @@ class commonComponents extends sfComponents{
                 $this->browserNotificationRegistered =1;
                 $this->browserNotificationCookie =$request->getcookie("browserNotificationCookie");
                 if($this->browserNotificationCookie!='Y'){
-                        @setcookie('browserNotificationCookie','Y',time()+(3600*1), "/","jeevansathi.com");
+                        @setcookie('browserNotificationCookie','Y',time()+(1800*1), "/","jeevansathi.com");
                 }
         }
         unset($notificationObj);
