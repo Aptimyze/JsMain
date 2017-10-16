@@ -115,11 +115,11 @@ class MessageQueues
       "SCHEDULED_NOTIFICATION_QUEUE5" => "JS_NOTIFICATION5",
       "SCHEDULED_NOTIFICATION_QUEUE6" => "JS_NOTIFICATION6"
   ); //queue name to exchange binding key mapping
-  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 3,
-      "SCHEDULED_NOTIFICATION_QUEUE2" => 3,
+  public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8,
+      "SCHEDULED_NOTIFICATION_QUEUE2" => 8,
       "SCHEDULED_NOTIFICATION_QUEUE3" => 2,
       "SCHEDULED_NOTIFICATION_QUEUE4" => 0.5,
-      "SCHEDULED_NOTIFICATION_QUEUE5" => 3,
+      "SCHEDULED_NOTIFICATION_QUEUE5" => 10,
       "SCHEDULED_NOTIFICATION_QUEUE6" => 1,
       "MatchAlertNotification"        => 1
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
