@@ -30,13 +30,13 @@ class ApiCALayerV1Action extends sfActions
 		{
 			//Set Error Message and return false
 			$this->m_iResponseStatus = ResponseHandlerConfig::$LOGOUT_PROFILE;
-			
+
 		}
-		else 
-		{	
+		else
+		{
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$totalAwaiting=(new ProfileMemcacheService($this->loginProfile))->get('AWAITING_RESPONSE');
-        
+
         $layerToShow = false;
         //As Per Peek Level Unset Some Listing Across Channels
         if(JsConstants::$hideUnimportantFeatureAtPeakLoad <=4) {
@@ -45,19 +45,22 @@ class ApiCALayerV1Action extends sfActions
         	else	
 	            $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
         }
-		
+
 		//print_r($layerToShow); die;
 		if(!$layerToShow) {
 			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$apiResponseHandlerObj->setResponseBody(array('calObject'=>null));	
+			$apiResponseHandlerObj->setResponseBody(array('calObject'=>null));
 
 			$apiResponseHandlerObj->generateResponse();
 			return sfView::NONE;
 			die;
-			
+
 		}
 		$layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+								if($layerToShow==1){
+									$layerData['genderPhoto'] = $this->loginProfile->getGENDER()=='M' ? StaticPhotoUrls::noPhotoMaleJSMS : StaticPhotoUrls::noPhotoFemaleJSMS;
+								}
                 if($layerToShow==9)
                 {
                     $profileId=$this->loginProfile->getPROFILEID();
@@ -65,26 +68,31 @@ class ApiCALayerV1Action extends sfActions
                     $nameOfUser=$nameData[$profileId]['NAME'];
                     $namePrivacy=$nameData[$profileId]['DISPLAY'];
                 }
-        if($layerToShow==16)
-        {
-        	if($suggestions = $request->getParameter('dppSugg'))
-        	{
-        		$layerData['dppSuggObject'] = $suggestions;
-        		$layerData['dppCALGeneric'] = 0;
-        	}
-	    }
+								if($layerToShow==13)
+				        {
+				        		$layerData['primaryEmail'] = $this->loginProfile->getEMAIL();
+					    }
+			        if($layerToShow==16)
+			        {
+			        	if($suggestions = $request->getParameter('dppSugg'))
+			        	{
+			        		$layerData['dppSuggObject'] = $suggestions;
+			        		$layerData['dppCALGeneric'] = 0;
+			        	}
+				    }
 
-	    if($layerToShow == 19)
-	    {
-            $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
-            $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
-            $layerData['startDate']  = $request->getParameter('START_DATE');
-            $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
-            $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
-            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
-            $layerData['symbol'] = $request->getParameter('SYMBOL');
-     		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for';
-	    }
+				    if($layerToShow == 19)
+				    {
+
+			            $layerData['discountPercentage'] = $request->getParameter('DISCOUNT_PERCENTAGE');
+			            $layerData['discountSubtitle']  = $request->getParameter('DISCOUNT_SUBTITLE');
+			            $layerData['startDate']  = $request->getParameter('START_DATE');
+			            $layerData['oldPrice'] = $request->getParameter('OLD_PRICE');
+			            $layerData['newPrice'] = $request->getParameter('NEW_PRICE');
+			            $layerData['lightningCALTime'] = $request->getParameter('LIGHTNING_CAL_TIME');
+			            $layerData['symbol'] = $request->getParameter('SYMBOL');
+			     		$layerData['lightningCALTimeText']  = 'Hurry! Offer valid for';
+				    }
 
 	     if($layerToShow==21)
         {

@@ -865,7 +865,7 @@ function updateCastOption(religionValArray,type){
   if(true === religionValArray instanceof Array && religionValArray.length === 0 ){
     //May be need to empty the option value
     if(type != "suggest") {
-       $(casteField).html(""); 
+      $(casteField).html(""); 
     }
     $(casteField).append('<option class="textTru chosenDropWid"  value="0">Others</option>');
     $(casteField).trigger(chosenUpdateEvent);
@@ -873,8 +873,8 @@ function updateCastOption(religionValArray,type){
   }
   var isCasteVisible = false;
   if(type != "suggest") {
-       $(casteField).html(""); 
-    }
+    $(casteField).html(""); 
+  }
   if(religionValArray != null){
   for(var i=0;i<religionValArray.length;i++){
     
@@ -1034,7 +1034,7 @@ return {
   onMaritalChange   : onMarital,
   updateCastOption  : updateCastOption,
   updateRangeUI     : disableFieldsOption,
-  initFields        : initFields 
+  initFields        : initFields  
 }
 }();
 
