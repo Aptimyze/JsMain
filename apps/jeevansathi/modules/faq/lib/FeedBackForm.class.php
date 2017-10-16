@@ -37,7 +37,7 @@ class FeedBackForm extends BaseForm
 								"Search for perfect match",
 								"Photo Upload",
 								"Membership/Payment Related Queries",
-								"Report Abuse",
+								"Report as Fake/Spam",
 								"Suggestions",
 								"Others",
 								"Mobile site",
