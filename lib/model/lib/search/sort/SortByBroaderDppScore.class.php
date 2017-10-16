@@ -126,12 +126,12 @@ class SortByBroaderDppScore extends SortByTrendsScore {
                 $this->SearchParamtersObj->setTRENDS_DATA("");
                 
                 //Paid members sorting
-                $dppSortString[$counter] = parent::getPaidDateSorting();
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
+//                $dppSortString[$counter] = parent::getPaidDateSorting();
+//                $sortAscOrDesc[$counter] = $this->sortByDesc;
+//                $counter++;
                 
                 // Sort by last login dt
-                $dppSortString[$counter] = "LAST_LOGIN_DT";
+                $dppSortString[$counter] = "SORT_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
                 

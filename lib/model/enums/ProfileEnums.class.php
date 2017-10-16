@@ -31,6 +31,6 @@ class ProfileEnums
 
         public static $matchAlertMailerStypeArr = array("BN1","BN2","BN3","BN4","BN5");
         public static $removeFromDppTickArr = array("dpp_state","dpp_appearance","dpp_lifestyle","dpp_have_children","dpp_nature_handi","dpp_special_case","dpp_natureHandi","about_partner");
-
+        public static $updateSortDtForFields = array("AGE"=>36,"DTOFBIRTH"=>36,"INCOME"=>36);
 }
 ?>
