@@ -37,7 +37,7 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
-$notificationData =array('REG_ID'=>array('d2OtXQ36oVQ:APA91bGVxSpjoLsE40rqevsF-x9OoBOl1-5N3qhuzvpfR6avBWS3dLd5JMCO3NY0b6CyMEInHvjofHVbhg6SREO08ZZ2sZEiDWnNON43cndeBi8wPx_B8ggpFHgrm2wonzxlavZgVX-c'),'NOTIFICATION_KEY'=>'JUST_JOIN','TITLE'=>'Just Joined Matches','MESSAGE'=>'Notification testing for male','ICON'=>'https://mediacdn.jeevansathi.com/7057/3/141143247-1507461115.jpeg','TAG'=>'JJ','MSG_ID'=>'12345566676','LANDING_ID'=>'https://www.jeevansathi.com/search/perform?justJoinedMatches=1');
+$notificationData =array('REG_ID'=>array('e5cj554X-4M:APA91bFUgunOa-MZPbCvCpECxuLz4uyTypLrFjJhCQUavGK2oIgh8_GB6Zn8ZAwo-5nUjmg9mEcx7FQLeTFoeGJ6u0Cxgwv_MG4X4DgKDdEvf4g0udlI6GNVg7IShZJPvytGwil_Sp22'),'NOTIFICATION_KEY'=>'JUST_JOIN','TITLE'=>'Just Joined Matches','MESSAGE'=>'Notification testing for male','ICON'=>'https://mediacdn.jeevansathi.com/7057/3/141143247-1507461115.jpeg','TAG'=>'JJ','MSG_ID'=>'12345566676','LANDING_ID'=>'https://www.jeevansathi.com/search/perform?justJoinedMatches=1');
 FcmNotificationsSenderHandler::handleNotification('BROWSER_NOTIFICATION',$notificationData,false);
 die('Done');
     }
