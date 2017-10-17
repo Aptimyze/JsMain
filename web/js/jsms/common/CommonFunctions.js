@@ -291,6 +291,14 @@ function BindNextPage(){
 }
 function ShowNextPage(url,nottostore,transition)
 {
+  	try
+  	{
+    	localStorage.setItem("prevUrlListing",window.location.href);
+  	}
+  	catch(e)
+  	{
+    	console.log(e);
+  	}
 	if(typeof(history.pushState)=='undefined')
 	{
 		document.location.href=url; 
@@ -339,6 +347,7 @@ var xhrReq={}
 var timer=300;
 function SingleTonNextPage(data,nottostore,url,transition)
 {
+   window.location.href = url;return;
    var random=Math.random();
    $.each(cancelUrl,function(key,value)
    {

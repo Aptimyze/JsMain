@@ -271,6 +271,7 @@ class apieditdppv1Action extends sfAction
                         // remove Low Dpp flag when user changes dpp
                         $memObject=JsMemcache::getInstance();
                         $memObject->remove('MA_LOWDPP_FLAG_'.$this->profileId);
+                        $memObject->remove('MA_DPPCOUNT_'.$this->profileId);
                         (new MIS_CA_LAYER_TRACK())->truncateForUserAndLayer($this->profileId,11,'');
 		//}
 		

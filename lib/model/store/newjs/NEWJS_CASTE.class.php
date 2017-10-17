@@ -77,8 +77,9 @@ class NEWJS_CASTE extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT SQL_CACHE VALUE,LABEL from CASTE WHERE PARENT='$religion_value' AND VALUE NOT IN (242,243,244,245,246) ORDER BY SORTBY";
+                        $sql = "SELECT SQL_CACHE VALUE,LABEL from CASTE WHERE PARENT=:relVal AND VALUE NOT IN (242,243,244,245,246) ORDER BY SORTBY";
                         $res=$this->db->prepare($sql);
+                        $res->bindValue(':relVal',$religion_value,PDO::PARAM_INT);
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_BOTH))
                         {

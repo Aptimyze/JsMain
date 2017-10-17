@@ -1,0 +1,13 @@
+{
+	"InvalidEmail": {"responseCode" : 1, "responseMessage" : "Provide a valid Email ID"},
+	"LoginDetails": "Provide your login details",
+	"EnterEmail": "Provide your email ID",
+	"EnterPass": "Provide your password",
+	"Default": "Something went wrong",
+	"ValidEmailnPass": "Provide a valid email address or phone number",
+	"EnterEmailnPass": "Provide your email address or phone number",
+	"invalidName" : {"responseCode" : 1, "responseMessage" : "Please provide a valid Full Name"},
+	"SelectReason": "Please select a reason",
+	"EnterReason": "Please enter the reason",
+	"enterComments": "Please Enter The Comments (in atleast 25 characters)"
+}

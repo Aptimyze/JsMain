@@ -649,11 +649,21 @@ class ErrorHandler
 			else{
 				// checkProfileNOTJunk returned false
 				$this->contactHandlerObj->setIsJunk(true);
+				if($this->contactHandlerObj->getAction()=='POST'){
+					$whyFilter=new MIS_WHY_FILTER();
+					$whyFilter->insertEntry(
+						$this->contactHandlerObj->getViewer()->getPROFILEID(),
+						$this->contactHandlerObj->getViewed()->getPROFILEID(),
+						$this->contactHandlerObj->getJunkType(),
+						$this->contactHandlerObj->getJunkData(),
+						'Y');
+				}
 				return true;
 			}
 		} 
 		return false;
 	}
+	
 	function getClusture($Religion){
 		$Clusture = array(
 		1 => 7 /*Hindu*/,
@@ -710,6 +720,7 @@ class ErrorHandler
 
 
         // var_dump($senderArr); var_dump($receiverArr);
+        // die();
 
 
 
@@ -764,12 +775,25 @@ class ErrorHandler
 				/* religion clusture check */
 					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
 						// $junkFlag = true;
+						// die();
 						return true;
+					}else{
+						$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
+						$this->contactHandlerObj->setJunkData($receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture']);
 					}
+				}else{
+					$this->contactHandlerObj->setJunkType("INCOME_JUNK");
+					$this->contactHandlerObj->setJunkData("s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"]);
 				}
+			}else{
+				$this->contactHandlerObj->setJunkType("HEIGHT_JUNK");
+				$this->contactHandlerObj->setJunkData("s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"]);
 			}
+		}else{
+			$this->contactHandlerObj->setJunkType("AGE_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"]);
 		}
-		
+		// die();
 		return false;
 
 		// die();

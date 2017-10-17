@@ -927,7 +927,7 @@ class MembershipHandler
         $loginProfile = LoggedInProfile::getInstance();
         if($loginProfile->getPROFILEID()){
             $profileID = $loginProfile->getPROFILEID();
-            $profileCurrency = JsMemcache::getInstance()->get($profileID."_currency");
+            $profileCurrency = false; //JsMemcache::getInstance()->get($profileID."_currency");
         } else{
             $profileCurrency = false;
         }
@@ -3025,4 +3025,19 @@ class MembershipHandler
         return $membership;
     }
 
+    public function isCityEntered($profileID){
+        $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileID);
+        $city_res = $profileObj->getCITY_RES();
+        $country_res = $profileObj->getCOUNTRY_RES();
+        if($country_res == 51){
+            if(empty($city_res) || $city_res === 0){
+                $isCityEntered = false;
+            } else{
+                $isCityEntered = true;
+            }
+        } else{
+            $isCityEntered = true;
+        }
+        return $isCityEntered;
+    }
 }

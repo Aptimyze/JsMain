@@ -9,7 +9,7 @@ Class ButtonResponseFinal
 	private $privilageObj;
 	private $channel;
 	private $source;
-	private $viewer; 
+	private $viewer;
 	private $contactType;
 	private $loginProfile;
 	private $otherProfile;
@@ -42,7 +42,7 @@ Class ButtonResponseFinal
 		}
 	}
 	public function getButtonArray()
-	{	
+	{
 		if($this->loginProfile->getPROFILEID())
 		{
 
@@ -74,19 +74,21 @@ Class ButtonResponseFinal
 					$type="R";
 			}
 			$this->page["CHAT_GROUP"] = $type;
-			//echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
+		  //echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			$buttonsResponse = self::getButtons($source,$this->channel,$viewer,$type);
-			//print_r($buttonsResponse);die;
+			$responseArray = array();
 			foreach($buttonsResponse as $key=>$val)
 			{
 				if($val->TYPE == "TEXT")
 					$responseArray["infomsglabel"] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
+				else if($val->TYPE == "EXTRA_TEXT")
+						$responseArray = $responseArray + $this->getExtraText($val);
+
 				else
 					$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
 			}
 			$responseArray['buttons'] = $buttons;
                         $responseArray['contactType'] = $type;
-			//print_r($responseArray);die;
 
 		}
 		else
@@ -95,7 +97,11 @@ Class ButtonResponseFinal
 			$params["channel"] = $this->channel;
 			$responseArray = $this->getLogoutButtonArray($params);
 		}
-		
+		$restResponseArray=self::jsmsRestButtonsrrayNew($params);
+				$responseArray["photo"]=$restResponseArray["photo"];
+				$responseArray["topmsg"]=$restResponseArray["topmsg"];
+				$responseArray["infobtnlabel"]=$restResponseArray["infobtnlabel"];
+
 		$finalResponse = self::buttonDetailsMerge($responseArray);
 		return $finalResponse;
 	}
@@ -118,8 +124,9 @@ Class ButtonResponseFinal
 		{
 			$source = "VDP";
 		}
-		//echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$type;die;
-		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);
+//		echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$type;
+		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);//die;
+		$responseArray = array();
 		foreach($buttonsResponse as $key=>$val)
 		{
 			if($val->TYPE == "REMINDER")
@@ -128,8 +135,12 @@ Class ButtonResponseFinal
 			}
 			if($val->TYPE == "TEXT")
 				$responseArray["infomsglabel"] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
-			else
-				$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
+			else if($val->TYPE == "EXTRA_TEXT")
+			{
+				$responseArray = $responseArray + $this->getExtraText($val);
+			}
+				else
+				$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile,'',$this->page["COUNT"]);
 		}
 		$responseArray['buttons'] = $buttons;
 		$finalResponse = self::buttonDetailsMerge($responseArray);
@@ -139,8 +150,6 @@ Class ButtonResponseFinal
 
 	public static function getListingButtons($source,$channel,$viewer="",$type="",$page="",$count="")
 	{
-		//print_r($count);die;
-		//print_r($page);die;
 		//var_dump($type);die;
 		/*$exclude_list = array("VDP","VDP_VSP","S","SHORTLIST","PEOPLE_WHO_VIEWED_MY_CONTACTS","ACCEPTANCES_SENT","ACCEPTANCES_RECEIVED","NOT_INTERESTED_BY_ME","NOT_INTERESTED");
 		if($channel=="M")
@@ -148,11 +157,9 @@ Class ButtonResponseFinal
 			if(!in_array($source, $exclude_list))
 			{echo "string";die;
 					$type = $this->contactObj->getTYPE();
-					//print_r($type);die;
 					if($type=="I")
 					{
 						$count = $this->contactObj->getCOUNT();
-						//print_r($count);die;
 					}
 				if ($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID()) {
 					$viewer = "S";
@@ -163,34 +170,27 @@ Class ButtonResponseFinal
 				}
 			}
 		}*/
+		//echo $source." ".$channel." ".$viewer.",".$type;die;
 		$type = $type?$type:"N";
-		//print_r("dkvkd");die;
 		$buttonsResponse = self::getButtons($source,$channel,$viewer,$type);
-		//var_dump($buttonsResponse);die;
-		//var_dump($viewer);
-		//var_dump($type);die;
 		$responseArray = array();
 
 		if(is_array($buttonsResponse))
 		{
 			foreach($buttonsResponse as $key=>$val)
-			{//print_r($page);die;
+			{
 
 				if($val->TYPE == "TEXT")
 				{
 					$buttons[] = self::getButtonsFinalResponse($val,$page,"","",$channel);
 					$responseArray["infomsglabel"] = self::getButtonsFinalResponse($val,$page);
-					//print_r($responseArray["infomsglabel"]);die;
-					//print_r($channel);die;
-					//var_dump($channel);die;
-					
+
 				}
 				else
 				$buttons[] = self::getButtonsFinalResponse($val,$page,"","","",$count);
 			}
 		}
 		$responseArray['buttons'] = $buttons;
-		//print_r($buttons);die;
 		$finalResponse = self::buttonDetailsMerge($responseArray);
 		return $finalResponse;
 
@@ -212,8 +212,7 @@ Class ButtonResponseFinal
 
 
 		public function jsmsRestButtonsrray($params,$type,$infoKey, $source, $viewer,$username,$count)
-		{//var_dump($params["PHOTO"]);die;
-			//echo "string";die;
+		{
 			if($infoKey=="ACCEPTANCES_RECEIVED" || $infoKey=="ACCEPTANCES_SENT")
 			{
 
@@ -257,9 +256,6 @@ Class ButtonResponseFinal
 	public static function getButtons($source,$channel="",$viewer="",$contactType="")
 	{
 		$arr = ContactEngineMap::getFieldLabel("BUTTON_RESPONSE","",1);
-		//echo "source=>".$source." Channel=>".$channel." Viewer=>".$viewer." type=>".$contactType;die;
-		//var_dump($arr);die;
-		//var_dump($contactType);die;
 		foreach($arr as $key=>$value)
 		{
 			if($value["SOURCE"] == $source)
@@ -273,23 +269,20 @@ Class ButtonResponseFinal
 				if($contactType && $value["CONTACT_TYPE"] && $value["CONTACT_TYPE"]!= $contactType)
 					continue;
 				$return = $value;
-				
+
 			}
 		}
-		//echo $return["BUTTONS"];die;
+
 		$buttonsDetails = json_decode($return["BUTTONS"]);
-		//print_r($buttonsDetails);die;
 		return $buttonsDetails;
 	}
 
 	public static function getButtonsFinalResponse($button,$params,$loginProfile='', $otherProfile='',$source='',$count='')
-	{//print_r($source);die;
+	{
 		if($button->TYPE=="TEXT" && $source=="M")
 		{
 			$button->TYPE="DEFAULT";
 		}
-		//print_r($button);die;
-		//var_dump($count);die;
 		switch($button->TYPE){
 			case "INITIATE":
 			$buttons = self::getSendInterestButton($button,$params);
@@ -328,6 +321,9 @@ Class ButtonResponseFinal
 			case "CHAT":
 			$buttons = self::getChatButton($button,$params);
 			break;
+			case "REPORT_ABUSE":
+			$buttons = self::getReportAbuseButton($button,$params);
+			break;
 			default:
 			$buttons = self::getdefaultButton($button,$params);
 			break;
@@ -336,7 +332,7 @@ Class ButtonResponseFinal
 	}
 
 	public static function getSendInterestButton($button,$params)
-	{//print_r("xsc");die;
+	{
 		if($params["stype"] || $params['STYPE'])
 		{
 			$stype = ($params["stype"])?$params["stype"]:$params["STYPE"];
@@ -389,7 +385,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getdefaultButton($button,$params)
@@ -409,35 +405,34 @@ Class ButtonResponseFinal
 	public static function getIgnoreButton($button,$params)
 	{
 		$ignored = $params["isIgnored"];
-		//print_r($button);die;
 		if($ignored)
 		{
 			$buttons["label"] 		= "Unblock"; ;
-			$buttons["params"] 		= "&ignore=0";	
+			$buttons["params"] 		= "&ignore=0";
 		}
 		else
 		{
 			$buttons["label"] 		= "Block";
 			$buttons["params"] 		= "&ignore=1";
 		}
-		if($button) 
-		{ 
-			$buttons["iconid"]              = $button->icon; 
-			$buttons["primary"]     		= $button->primary; 
-			$buttons["secondary"]   		= $button->secondary; 
-			$buttons['enable']              = $button->active=="true"?true:false; 
-			$buttons['id']                  = $button->TYPE; 
-			$buttons["action"]              = "IGNORE"; 
-		} 
-		else 
-		{ 
-			$buttons["action"]              = "IGNORE"; 
-			$buttons['enable']              = true; 
-			$buttons['id']                  = "IGNORE"; 
-		} 
+		if($button)
+		{
+			$buttons["iconid"]              = $button->icon;
+			$buttons["primary"]     		= $button->primary;
+			$buttons["secondary"]   		= $button->secondary;
+			$buttons['enable']              = $button->active=="true"?true:false;
+			$buttons['id']                  = $button->TYPE;
+			$buttons["action"]              = "IGNORE";
+		}
+		else
+		{
+			$buttons["action"]              = "IGNORE";
+			$buttons['enable']              = true;
+			$buttons['id']                  = "IGNORE";
+		}
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getContactDetailsButton($button,$params)
@@ -454,7 +449,7 @@ Class ButtonResponseFinal
 	}
 
 	public static function getAcceptButton($button,$params)
-	{//echo "string";die;
+	{
 		if($params["responseTracking"] )
 		{
 			$responseTracking = $params["responseTracking"];
@@ -497,7 +492,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getCancelButton($button,$params)
@@ -511,7 +506,7 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getCancelInterestButton($button,$params)
@@ -525,33 +520,39 @@ Class ButtonResponseFinal
 		$buttons['id'] 			= $button->TYPE;
 		$button = self::buttonMerge($buttons);
 		return $buttons;
-		
+
 	}
 
 	public static function getReminderButton($button,$params,$count)
-	{//print_r("ccc");die;
+	{
 		if(!$count)
 		$count = $params["count"];
-		//var_dump($count);die;
+		$buttons["enable"] = $button->active=='true' ? true : false;
 		if($count){
 			if ($count < ErrorHandler::REMINDER_COUNT) {
-				if((ErrorHandler::REMINDER_COUNT - $count) == 1)
-				{	
-					$buttons["label"]  = "Remind Again";
-					$buttons["enable"] = true;
+				if($button->active!='true')
+				{
+						$buttons["label"] = "Reminder ".($count-1)."/".(ErrorHandler::REMINDER_COUNT-1)." sent";
 				}
 				else
 				{
-					$buttons["label"]  = $button->label;
-					$buttons["enable"] = true;
+						if((ErrorHandler::REMINDER_COUNT - $count) == 1)
+						{
+							$buttons["label"]  = "Remind Again";
+							$buttons["enable"] = true;
+						}
+						else
+						{
+							$buttons["label"]  = $button->label;
+							$buttons["enable"] = true;
 
+						}
+						$buttons["action"] = "REMINDER";
 				}
-				$buttons["action"] = "REMINDER";
 			} else {
-				
+
 				$buttons["label"]  = "Reminder ".(ErrorHandler::REMINDER_COUNT - 1)."/".(ErrorHandler::REMINDER_COUNT - 1);
 				$buttons["enable"] = false;
-				$buttons["action"] = "DEFAULT";
 			}
 		}else{
 			$buttons["iconid"] = IdToAppImagesMapping::SEND_REMINDER;
@@ -560,9 +561,9 @@ Class ButtonResponseFinal
 		}
 		if($params["page_source"] == "VDP_VSP")
 		{
-			$buttons["label"] = $button->label;
 			$buttons["enable"] = false;
 		}
+
 		$buttons["iconid"] 		= $button->icon;
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
@@ -572,12 +573,12 @@ Class ButtonResponseFinal
 	}
 
 	public static function getShortlistButton($button,$params,$loginProfile='', $otherProfile='')
-	{//print_r($params);die;
+	{
 		if(isset($params['SHORTLIST']))
 		{
 			$params['isBookmarked'] = $params['SHORTLIST'] == "Y"?1:0;
 		}
-		if(!isset($params['isBookmarked'])) {		
+		if(!isset($params['isBookmarked'])) {
 			$bookmarkObj  = new Bookmarks();
 			if(is_a($loginProfile,Profile))
 				$loginProfileId = $loginProfile->getPROFILEID();
@@ -598,16 +599,15 @@ Class ButtonResponseFinal
 			$buttons["iconid"] = IdToAppImagesMapping::SHORTLISTEDBUTTON;
 			$buttons["label"]  = "Remove Shortlist";
 			$buttons["params"] = "&shortlist=true";
-		} 
+		}
 		else{
 			$buttons["iconid"] = IdToAppImagesMapping::SHORTLISTBUTTON;
 			$buttons["label"]  = "Shortlist";
 			$buttons["params"]  = "&shortlist=false";
 		}
-		//print_r($button->active);die;
 		$buttons["primary"] 	= $button->primary;
 		$buttons["secondary"] 	= $button->secondary;
-		$buttons['enable']		= $button->active;
+		$buttons['enable']		= !$button ? true : ($button->active=='true'  ? true : false);
 		$buttons['id'] 			= $buttons["action"];
 		$button = self::buttonMerge($buttons);
 		return $buttons;
@@ -705,4 +705,155 @@ Class ButtonResponseFinal
 		return $buttons;
 	}
 
+
+	public function jsmsRestButtonsrrayNew($params)
+        {
+        	//var_dump($viewer);
+        	//$loginProfile = LoggedInProfile::getInstance('newjs_master');
+        	//print_r($logInProfile);die;
+        	//$otherProfile =  new Profile("", $otherProfileID);
+        	//print_r($otherProfileObj);die;
+        	//$this->contactObj        = new Contacts($loginProfile, $otherProfile);
+        	//print_r($this->contactObj->getTYPE());die;
+			//print_r($this->contactHandlerObj);die;
+			//print_r($this->contactHandlerObj->getViewer()->getPROFILEID());die;
+			if($this->loginProfile->getPROFILEID())
+			{
+			$date           = date_create($this->contactObj->getTIME());
+			$date           = date_format($date, 'jS M Y');
+			if ($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+			{
+				//print_r($this->contactObj->getTYPE());die;
+				switch ($this->contactObj->getTYPE()) {
+					case ContactHandler::NOCONTACT:
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"){
+							$restResponseArray["topmsg"] = "";
+							$restResponseArray["topmsg2"] = "Interest will be delivered once your profile is screened";
+						}
+						//echo "NOCONTACT";
+						break;
+
+						case ContactHandler::INITIATED:
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						if($this->contactObj->getSEEN()=="Y")
+							$restResponseArray["topmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has seen your interest & is yet to reply";
+						else
+							$restResponseArray["topmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." is yet to read your interest";
+						if ($this->contactObj->getCOUNT() >= ErrorHandler::REMINDER_COUNT)
+							$restResponseArray["infobtnlabel"] = "You cannot send more than 2 reminders, you may call the user directly";
+						//echo "INITIATE";
+						break;
+						case ContactHandler::CANCEL_CONTACT:
+						//echo "string";die;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["infobtnlabel"] = "You Cancelled your interest on " . $date;
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+
+						case ContactHandler::ACCEPT:
+						$restResponseArray["topmsg"] = "Interact with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+						{
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+							$restResponseArray["canwrite"] = 1;
+						}
+						} else {
+							$restResponseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$restResponseArray["infobtnvalue"]  = "";
+							$restResponseArray["infobtnaction"] = "MEMBERSHIP";
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						}
+						break;
+
+						case ContactHandler::DECLINE:
+						$restResponseArray["infobtnlabel"] = "They declined interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$responseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+
+						case ContactHandler::CANCEL:
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						$restResponseArray["infobtnlabel"] = "You cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+					}
+
+				}
+			else
+			{//print_r(ContactHandler::INITIATED);die;
+				switch ($this->contactObj->getTYPE()) {
+				case ContactHandler::NOCONTACT:
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						//if ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y")
+						//echo "NOCONTACT";
+						break;
+				case ContactHandler::INITIATED:
+
+					$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+				case ContactHandler::CANCEL_CONTACT:
+					$restResponseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						$restResponseArray["topmsg"] = "Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						break;
+					case ContactHandler::ACCEPT:
+					$restResponseArray["topmsg"] = "Interact with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+							$restResponseArray["canwrite"] = 1;
+						} else {
+							$restResponseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$restResponseArray["infobtnvalue"]  = "";
+							$restResponseArray["infobtnaction"] = "MEMBERSHIP";
+							$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						}
+						break;
+					case ContactHandler::DECLINE:
+					$restResponseArray["infobtnlabel"] = "You declined interest on " . $date;
+						$restResponseArray["topmsg"] = "Changed your mind? Connect with ".$this->contactHandlerObj->getViewed()->getUSERNAME();
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+					case ContactHandler::CANCEL:
+					$restResponseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+						$restResponseArray["photo"] = self::getPhotoDetail($params["PHOTO"]);
+						break;
+				}
+
+
+
+			}
+			}
+			//print_r($restResponseArray);die;
+			return $restResponseArray;
+        }
+
+public function getExtraText($button){
+	$arr = array();
+	if(!$button) return $arr;
+	foreach ($button->KEYS as $key => $value) {
+		# code...
+			$arr[$value->KEYNAME] = $value->STATIC ? $value->TEXT : $this->replaceText($value->TEXT);
+	}
+	return $arr;
+}
+public static function getReportAbuseButton($button,$params)
+{
+	$buttons["action"] 		= $button->TYPE;
+	$buttons["label"] 		= $button->label;
+	$buttons["iconid"] 		= $button->icon;
+	$buttons["primary"] 	= $button->primary;
+	$buttons["secondary"] 	= $button->secondary;
+	$buttons['enable']		= $button->active=="true"?true:false;
+	$buttons['id'] 			= $button->TYPE;
+	$button = self::buttonMerge($buttons);
+	return $buttons;
+}
+
+private function replaceText($value){
+	return str_replace(array("{OTHER_USERNAME}","{USERNAME}","{DATE}"),array($this->contactHandlerObj->getViewer()->getUSERNAME(),$this->contactHandlerObj->getViewed()->getUSERNAME(),$this->contactObj->getTIME()) ,$value);
+}
 }
