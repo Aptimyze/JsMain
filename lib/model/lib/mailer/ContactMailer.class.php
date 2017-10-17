@@ -83,6 +83,7 @@ class ContactMailer
 		$smartyObj->assign("FTO",$FTO);
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
+		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
                 if(CommonConstants::contactMailersCC)
@@ -163,6 +164,7 @@ class ContactMailer
 			
 		$partialList->addPartial('jeevansathi_contact_address','jeevansathi_contact_address');
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
+		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$smartyObj->assign("acceptanceTemplate",$acceptanceTemplate);
 		$smartyObj->assign("acceptance_mailer",1);
 		$smartyObj->assign("FTO",$FTO);
@@ -231,6 +233,7 @@ class ContactMailer
 		$smartyObj->assign("FTO",$FTO);
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
+		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
                 if(CommonConstants::contactMailersCC)
@@ -265,6 +268,7 @@ class ContactMailer
 	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
 	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
+	$tpl->getSmarty()->assign("otherProfile", $sender->getPROFILEID());
 
 	if(!empty($variableDiscount))
 	{
@@ -323,6 +327,7 @@ class ContactMailer
 	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
 	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
+	$tpl->getSmarty()->assign("otherProfile", $sender->getPROFILEID());
         $tpl->setSubject($sender->getUSERNAME()." who had sent interest has uploaded a new photo");
         
 
@@ -376,10 +381,11 @@ class ContactMailer
    * @param $subscriptionStatus The subscription status of viewed.
    * @return boolean
    */
-  public static function InstantEOIMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
+  public static function InstantEOIMailer	($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
     $emailSender = new EmailSender(MailerGroup::EOI, 1754);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
+    $tpl->getSmarty()->assign("otherProfile", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
@@ -443,6 +449,7 @@ class ContactMailer
 $emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
+    $tpl->getSmarty()->assign("otherProfile", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
   	$viewerProfileIdObj = new Profile('',$viewerProfileId);
     if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')

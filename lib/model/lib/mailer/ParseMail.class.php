@@ -417,6 +417,9 @@ class ParseMail {
     
     // Get all tokens
     preg_match_all('/<var>{{\w+:\w+=\d+}}<\/var>/', $this->_buffer, $tokens);
+    if(count($tokens[0])<=0)
+      preg_match_all('/<var>{{\w+:\w+=\d+,\w+=\d+}}<\/var>/', $this->_buffer, $tokens);
+
 
     // For all the tags found.
     for ($i = 0; $i < count($tokens[0]); ++$i) {
