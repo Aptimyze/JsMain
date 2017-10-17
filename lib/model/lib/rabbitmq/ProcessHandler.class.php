@@ -540,7 +540,8 @@ public function logDiscount($body,$type){
         $msgDate = $body["DATE"];
         $currentHour = date('H');
         $notAllowedHrs = array("00","01","02","03");
-        if(date('Y-m-d') == $msgDate && in_array($currentHour, $notAllowedHrs)){
+        //if(date('Y-m-d') == $msgDate && in_array($currentHour, $notAllowedHrs)){
+        if(false){
             $prodObj=new Producer();
             $type = "DISCOUNT_LOG";
             $queueData = array('process' =>'DISCOUNT_HISTORY',

@@ -14,7 +14,7 @@ class postEOIv2Action extends sfAction
   *
   * @param sfRequest $request A request object
   */
-  
+
 	function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
@@ -33,12 +33,12 @@ class postEOIv2Action extends sfAction
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
-						
+
 						$this->Profile = new Profile();
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
 
-                                      
+
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
@@ -61,7 +61,7 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-           
+
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -80,8 +80,8 @@ class postEOIv2Action extends sfAction
 			die;
 		}
 	}
-	
-	
+
+
 	private function getContactArray($request)
 	{
 		$pictureServiceObj=new PictureService($this->Profile);
@@ -92,7 +92,7 @@ class postEOIv2Action extends sfAction
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
 			$thumbNail = null;
-		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
+		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ProfilePic120Url',1,$this->Profile->getGENDER());
 		unset($pictureServiceObj);
 		unset($profilePicObj);
 		$pictureServiceObj=new PictureService($this->loginProfile);
@@ -101,7 +101,7 @@ class postEOIv2Action extends sfAction
 			$ownthumbNail = $profilePicObj->getThumbailUrl();
 		if(!$ownthumbNail)
 			$ownthumbNail = null;
-		$ownthumbNail = PictureFunctions::mapUrlToMessageInfoArr($ownthumbNail,'ThumbailUrl',1);
+		$ownthumbNail = PictureFunctions::mapUrlToMessageInfoArr($ownthumbNail,'ProfilePic120Url',1,$this->loginProfile->getGENDER());
 		$ownthumbNail = $ownthumbNail['url'];
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
@@ -115,23 +115,23 @@ class postEOIv2Action extends sfAction
 		{
 			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		}
-		
+
 
 		if($this->contactEngineObj->messageId)
-		{ 
+		{
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$responseArray["headerthumbnailurl"] = $thumbNail;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID();
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+				$responseArray['draftmessage'] = "Interest sent. You may send a personalized message with the interest.";
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
-				
 
-			}	
+
+			}
 			else
 			{
 				if(MobileCommon::isDesktop() && sfContext::getInstance()->getRequest()->getParameter("myjs")!=1)
@@ -147,10 +147,10 @@ class postEOIv2Action extends sfAction
 						$responseArray["headerlabel_viewSimilar"]= "Interest sent to ".$this->Profile->getUSERNAME();
 					}
 					else{
-						$responseArray["errmsglabel"]= "Interest sent. Upgrade to send personalized messages or initiate chat";	
-					}		
-					
-					
+						$responseArray["errmsglabel"]= "Interest sent. Upgrade to send personalized messages or initiate chat";
+					}
+
+
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
@@ -189,7 +189,7 @@ class postEOIv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::PHONE_NOT_VERIFIED;
 				$responseArray["footerbutton"]["label"] = "Verify your number";
 				$responseArray["footerbutton"]["value"] = "";
-				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
+				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";
 			}
 			elseif($errorArr["DELETED"]==2)
 			{
@@ -249,16 +249,16 @@ class postEOIv2Action extends sfAction
 				{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top'];                     
+					$MembershipMessage = $data2['hamburger_message']['top'];
                     $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
 				}
-				
+
 			}
-			
+
 			elseif($errorArr["INCOMPLETE"] == 2)
 			{
 				$responseArray["errmsglabel"] = "Currently your profile is not complete. Your interest would be delivered only when your profile is complete.";
@@ -266,11 +266,11 @@ class postEOIv2Action extends sfAction
 				$responseArray["footerbutton"]["label"] = "complete your profile";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "COMPLETEPROFILE";
-				$responseArray["headerlabel"] = "Your Profile is Incomplete";	
-				$responseArray["redirect"] = true;				
+				$responseArray["headerlabel"] = "Your Profile is Incomplete";
+				$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
-			{  
+			{
 				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
 				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
@@ -305,19 +305,33 @@ class postEOIv2Action extends sfAction
 			else{
 				$finalresponseArray["eoi_sent"] = false;
 				$finalresponseArray["cansend"] = false;
-            	$finalresponseArray["sent"] = false;    
-        	}	
+            	$finalresponseArray["sent"] = false;
+        	}
 		}
-		if(MobileCommon::isNewMobileSite())
+		if(MobileCommon::isNewMobileSite()  )
 		{
-			
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
-			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-			//$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
-			//$finalresponseArray["button_after_action"][] = 
 
+      if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
+      {
+        $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
+        $restResponseArray= $buttonObj->jsmsRestButtonsrray();
+        $finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+        //$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
+              $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+        //$finalresponseArray["button_after_action"][] =
+
+      }
+      else
+      {
+        $bookmarkObj  = new Bookmarks();
+        $count = count($bookmarkObj->getProfilesBookmarks($this->loginProfile->getPROFILEID(), array($this->Profile->getPROFILEID())));
+        $params['SHORTLIST'] = $count ? 'Y' : 'N';
+        if($errorArr["UNDERSCREENING"]!=2)
+          $finalresponseArray["buttondetails"] = ButtonResponseFinal::getListingButtons("CE_PD","M","S","I",$params);
+        $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
+        $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
+        $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+      }
 		}
 		else
 		{
@@ -334,7 +348,6 @@ class postEOIv2Action extends sfAction
 				return $request->getParameter(strtoupper($type));
 		else
 				return $request->getParameter(strtolower($type));
-				
+
 	}
 }
-

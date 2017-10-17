@@ -36,9 +36,9 @@ class SortByStrictDpp extends SortByTrendsScore {
                 $counter++;
 
                 //Paid members sorting
-                $dppSortString[$counter] = parent::getPaidDateSorting();
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
+//                $dppSortString[$counter] = parent::getPaidDateSorting();
+//                $sortAscOrDesc[$counter] = $this->sortByDesc;
+//                $counter++;
 
                 //Trends Sorting
 
@@ -56,7 +56,7 @@ class SortByStrictDpp extends SortByTrendsScore {
                 }
 
                 // Sort by last login dt
-                $dppSortString[$counter] = "LAST_LOGIN_DT";
+                $dppSortString[$counter] = "SORT_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
 

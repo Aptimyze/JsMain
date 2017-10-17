@@ -382,7 +382,6 @@ class Initiate extends ContactEvent{
 	    } catch (Exception $e) {
 		    throw new jsException("Something went wrong while creating Roster -" . $e);
 	    }
-
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
@@ -433,7 +432,7 @@ class Initiate extends ContactEvent{
 		$receiver = $this->viewed;
 		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
                 $channel =  MobileCommon::getChannel();
-                $date = date('Y-m-d H:i:s');
+                $date = date('Y-m-d H:i:s');       
                 // the variable only logging ensures that if it is 0 then mail will be sent and logging done .. if it is 1 then no mail is sent and only logging is done
 		if(! $this->sendDataOfQueue(
             'MAIL', 'INITIATECONTACT',

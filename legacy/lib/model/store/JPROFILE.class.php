@@ -1110,7 +1110,7 @@ public function duplicateEmail($email)
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $res[$result['PROFILEID']] = $result;
-            }
+                }
         }
         catch(Exception $e) {
             throw new jsException($e);

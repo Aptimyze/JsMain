@@ -16,7 +16,7 @@ if(authenticated($cid))
 {
 	$serviceObj = new Services;
 	$membershipObj = new Membership;
-	
+
 	$user=getname($cid);
 	maStripVARS_sums('stripslashes');
 	if($offline_billing)
@@ -192,8 +192,10 @@ if(authenticated($cid))
 	$smarty->assign("dep_month",$dep_month);
 	$smarty->assign("dep_year",$dep_year);
 	$smarty->assign("dep_branch",$dep_branch);
-    
-    
+
+    if($country_res == 51 && (empty($city_res) || $city_res === 0) ){
+		$smarty->assign("noCityEnteredError","Please fill 'State' in 'Edit Profile:Basic Details' section to proceed.");
+    }
     
 	/*End of - Smarty variable assignment, to be used in various scripts based on button clicked, all smarty variables are not used for single templates*/
 
@@ -202,6 +204,7 @@ if(authenticated($cid))
 	{
 		$is_error=0;
 		/*Server side checks for User details*/
+
 		if($membership_service == 'ES' || $membership_service == 'ESP')
 		{
 			if($chk_boldlisting_service || $chk_astro_service || $chk_matriprofile_service || $chk_display_service || $chk_assistance_service || $chk_introcalls_service || $chk_featuredprofile_service || $chk_JSExclusive_service)
