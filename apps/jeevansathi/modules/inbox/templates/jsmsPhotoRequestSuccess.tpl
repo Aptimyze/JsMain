@@ -1,9 +1,21 @@
-<script> 
+<script>
     var resp=~$responseJS|decodevar`;
+    function setLocalStorageUrl()
+    {
+      try
+      {
+        localStorage.setItem("prevUrlListing",window.location.href);
+      }
+      catch(e)
+      {
+        console.log(e);
+      }
+    }
+
     $(document).ready(function () {
         var vhgt = $(window).innerHeight();
     $("#mainContent").css({"height":vhgt+'px', "overflow":"hidden"});
-        ~if $firstResponse.profiles neq ''` 
+        ~if $firstResponse.profiles neq ''`
         $("#tupleContainer").height($("#uploadPhotoBar").offset().top-$("#tupleContainer").offset().top) ;
         var imageWidth=$(".tupleImage").eq(0).css('width');
      $(".tupleImage").css('height',imageWidth).css('width',imageWidth);
@@ -58,7 +70,7 @@ $("#noMsgDiv").css('height',$(window).height());
 ~assign var=offset value=(($firstResponse.page_index-1)*$_SEARCH_RESULTS_PER_PAGE) +$id`
 ~assign var=idd value=$offset+1`
     <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`&stype=~SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS`&total_rec=~$firstResponse.total`&tupleId='~$idd`&searchid=~$firstResponse.searchid`&offset=~$offset`&contact_id=~$firstResponse.contact_id`&actual_offset=~$idd`"> 
-<div class="~if $id is even`bg5~else`bg4~/if` pad18">
+<div class="~if $id is even`bg5~else`bg4~/if` pad18" onClick="setLocalStorageUrl()">
     <div class="fullwid">
       <img src="~$tupleInfo.photo.url`" class="brdr_radsrp wid24p tupleImage fl"/> 
       <div class="fl padlr_1" style="width:75%;">

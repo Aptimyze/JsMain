@@ -121,23 +121,24 @@ class FAQFeedBack
 
 		if($this->webRequest->getParameter('fromCRM'))
 		{
-		 $reporterPFID = $this->webRequest->getParameter('reporterPFID');	
+		 $reporterPFID = $this->webRequest->getParameter('reporterPFID');
 		 $loginProfile = new Profile('',$reporterPFID);
 		 $category = 'Ops';
 		 $restInfo = $this->webRequest->getParameter('feed') ;
-		 $crmUserName = $restInfo['crmUser']; 
+		 $crmUserName = $restInfo['crmUser'];
 		}
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
-		} 		 
+		}
 		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 
 		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName,$this->m_iAbuseAttachmentID);
-			
+
 				// block for blocking the reported abuse added by Palash
-		
+
 				$ignore_Store_Obj = new IgnoredProfiles("newjs_master");
 				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
+				$this->webRequest->setParameter('blockedOnAbuse',1);
 				//Entry in Chat Roster
 				try {
 					$this->ignoreProfile = new Profile("",$otherProfileId);

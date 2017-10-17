@@ -40,7 +40,7 @@ class InboxMobileAppV2
 	const CONTACTS_VIEWED_PAID = "Contacts viewed by you would be shown here";
 	const CONTACTS_VIEWED_UNPAID_V2 = "<span style='color:#666'> Upgrade membership to view contact details and connect to your match instantly.</span>";
 	const CONTACTS_VIEWED_UNPAID_V2_IOS = "Upgrade membership to view contact details and connect to your match instantly.";
-	// todo: need to be changed 
+	// todo: need to be changed
 	const INTEREST_ARCHIVED = "Interests received more than 45 days earlier will appear here.";
 
 	static public function init()
@@ -76,7 +76,7 @@ class InboxMobileAppV2
                                 "ANCESTRAL_ORIGIN",
 				"NAME_OF_USER",
 				),
-			
+
 				"INTEREST_EXPIRING"=>Array(
 				"PROFILECHECKSUM",
                                 "USERNAME",
@@ -793,13 +793,15 @@ class InboxMobileAppV2
 			"MATCH_ALERT" => "OCCUPATION"
 		);
 	}
-	 
-        
-        
+
+
+
         public function getJsonAppV2($displayObj,$profileId,$profileObj)
 	{//print_r($profileId);die;
 		//echo "bb";die;
 //print_r($displayObj); die;
+		//added by Sanyam
+		$request = sfContext::getInstance()->getRequest();
 
 		$infoKey = key($displayObj);
 		//print_r($displayObj[$infoKey]["TUPLES"]);die;
@@ -808,9 +810,9 @@ class InboxMobileAppV2
 		self::init();
 		if (!empty($displayObj[$infoKey]["TUPLES"])) {
 			$tracking=array();
-			$finalResponse["tracking"] = $this->getTracking($infoKey);//$displayObj[$infoKey]["TRACKING"];	
+			$finalResponse["tracking"] = $this->getTracking($infoKey);//$displayObj[$infoKey]["TRACKING"];
 			$tracking=explode("&",$finalResponse["tracking"]);
-			
+
 			/**
 			 * Bookmark query commented as not specified in any listing in any channel by Reshu
 			 */
@@ -828,7 +830,7 @@ class InboxMobileAppV2
 				{
 					$displayObj[$infoKey]["TUPLES"][$value]->setIS_BOOKMARKED(1);
 				}
-				
+
 			}
 			/**
 			 * Bookmark comment end
@@ -837,16 +839,16 @@ class InboxMobileAppV2
 			foreach($displayObj[$infoKey]["TUPLES"] as $key=>$value)
 			{
 				$tupleObj = $value;
-		
+
 
                                	if($tupleObj->getUSERNAME()) {
 				foreach (self::$informationTupleFields[$infoKey] as $i => $field) {
-					
+
 					eval('$profile[$count][strtolower($field)] =$tupleObj->get' . $field . '();');
 				}
                                 $profile[$count]['last_message']= $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['last_message']);
                                 $profile[$count]['last_message'] = addslashes(htmlspecialchars_decode($profile[$count]['last_message']));
-                                
+
                                $profile[$count]["time"] = $tupleObj->getDecoratedTime();
                                $profile[$count]["size"]=$tupleObj->getMOBPHOTOSIZE();
                                $timeText = $tupleObj->getDecoratedTime();
@@ -855,11 +857,11 @@ class InboxMobileAppV2
                                  $timeTextAppend = 'on '.$timeTextAppend;
                                }
                                if($infoKey=="NOT_INTERESTED" || $infoKey=="NOT_INTERESTED_BY_ME"){
-																	$profile[$count]["timetext"] = $timeText;
+                               	$profile[$count]["timetext"] = $timeText;
 
                                }else if($infoKey=="MATCH_ALERT"){
                                   $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT())." ".$timeTextAppend;
-                                  
+
                                }else if($infoKey == "INTEREST_SENT"){
                                   $profile[$count]["timetext"] = "Sent ".$timeTextAppend;
                                   $profile[$count]["time"] = ucfirst ($timeText);
@@ -869,9 +871,23 @@ class InboxMobileAppV2
                                   $profile[$count]["timetext"] = ucfirst ($timeText);
                                   $profile[$count]["time"] = ucfirst ($timeText);
                                 }
+                                	if(MobileCommon::isNewMobileSite() && $request->getParameter("JSMS_MYJS"))
+                                	{
+                                		if($infoKey == "VISITORS")
+                                		{
+                                			$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                		}
+                                		else
+                                		{
+                                			$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getProfilePic120Url(),'ProfilePic120Url',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                		}
 
-                                  $profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
-				
+                                	}
+                                	else
+                                	{
+                                		$profile[$count]["photo"] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getMobileAppPicUrl(),'MobileAppPicUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER());
+                                	}                                 
+
                                 if(!$v[$vv]){
                                         $value = null;
                                 }
@@ -904,7 +920,7 @@ class InboxMobileAppV2
 								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
 								if(!MobileCommon::isDesktop())
 									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
-								
+
 							}
 							else
 							{
@@ -935,9 +951,9 @@ class InboxMobileAppV2
 							$profile[$count]['message'] = $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['sent_message']);
 						else
 							$profile[$count]['message'] = null;
-							
+
 				 }
-				 
+
 				foreach($tracking as $key=>$value)
 				{
 					$value = explode("=",$value);
@@ -951,7 +967,7 @@ class InboxMobileAppV2
 				// die(print_r($infoKey));
                 if($infoKey=="IGNORED_PROFILES" && !MobileCommon::isDesktop() && !MobileCommon::isMobile())
 				{
-					
+
 					$ignoreButton["buttons"]["primary"][] = $buttonObj->getIgnoreButton("","",1,1);
 					$ignoreButton["buttons"]["others"] = null;
 					$profile[$count]["buttonDetailsJSMS"] = $buttonObj::buttonDetailsMerge($ignoreButton);
@@ -961,7 +977,7 @@ class InboxMobileAppV2
                                         }else{
                                           $profile[$count]["timetext"] = "Blocked ".$profile[$count]["timetext"];
                                         }
-					
+
 
 				}
 				else{
@@ -979,13 +995,13 @@ class InboxMobileAppV2
 							if($type=="I")
 								$countInitiate=$tupleObj->CONTACTS["COUNT"];
 						}*/
-						
+
 						//print_r($count);die;
 						$page['PHOTO'] = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'];
 						$page['CC_LISTING'] = $infoKey;
 						$page['isBookmarked'] = $tupleObj->getIS_BOOKMARKED();
 						$page["tracking"] = $this->getTracking($infoKey);
-						
+
 						if($infoKey == "INTEREST_SENT")
 							$page["count"] = $tupleObj->COUNT;
 						if($infoKey == "NOT_INTERESTED_BY_ME" || $infoKey == "PEOPLE_WHO_VIEWED_MY_CONTACTS" || $infoKey=="CONTACTS_VIEWED" || $infoKey=="NOT_INTERESTED")
@@ -1031,24 +1047,24 @@ class InboxMobileAppV2
 						if(sfContext::getInstance()->getRequest()->getParameter("myjs") && ($infoKey == "MY_MESSAGE_RECEIVED"||$infoKey=="ACCEPTANCES_RECEIVED"))
 						{
 							$buttonObj = new ButtonResponseJSMS(LoggedInProfile::getInstance('newjs_master'),$profileObject,$page);
-	                		$profile[$count]["buttonDetailsJSMS"] = $buttonObj->getButtonArray(array('PHOTO'=> PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'],'CC_LISTING'=>$infoKey,'BOOKMARKED'=>$tupleObj->getIS_BOOKMARKED(),'IGNORED'=>$tupleObj->getIS_IGNORED()));	
+	                		$profile[$count]["buttonDetailsJSMS"] = $buttonObj->getButtonArray(array('PHOTO'=> PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'],'CC_LISTING'=>$infoKey,'BOOKMARKED'=>$tupleObj->getIS_BOOKMARKED(),'IGNORED'=>$tupleObj->getIS_IGNORED()));
 						}
 						else{
-							$profile[$count]["buttonDetailsJSMS"] = ButtonResponseFinal::getListingButtons($infoKey, $source, $viewer,$type, $page,$countInitiate);
+							$profile[$count]["buttonDetails"] = $profile[$count]["buttonDetailsJSMS"] = ButtonResponseFinal::getListingButtons($infoKey, $source, $viewer,$type, $page,$countInitiate);
 						}
 					}
 					else
-	                {    
+	                {
 	                	$buttonObj = new ButtonResponse(LoggedInProfile::getInstance('newjs_master'),$profileObject,$page);
 	                	$profile[$count]["buttonDetailsJSMS"] = $buttonObj->getButtonArray(array('PHOTO'=> PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'],'CC_LISTING'=>$infoKey,'BOOKMARKED'=>$tupleObj->getIS_BOOKMARKED(),'IGNORED'=>$tupleObj->getIS_IGNORED()));
 	                }
                 }
 
-                
+
 						if(MobileCommon::isNewMobileSite())
 						{
 							$restResponseArray= ButtonResponseFinal::jsmsRestButtonsrray(array('PHOTO'=> PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED(),$tupleObj->getGENDER())['url'],'CC_LISTING'=>$infoKey,'BOOKMARKED'=>$tupleObj->getIS_BOOKMARKED(),'IGNORED'=>$tupleObj->getIS_IGNORED()),$type,$infoKey, $source, $viewer,$tupleObj->USERNAME,$countInitiate);
-               
+
 			                $profile[$count]["buttonDetailsJSMS"]["photo"]=$restResponseArray["photo"];
 			                $profile[$count]["buttonDetailsJSMS"]["topmsg"]=$restResponseArray["topmsg"];
 						}                //end
@@ -1056,30 +1072,30 @@ class InboxMobileAppV2
 
                 $profile[$count]["profileObject"]=$profileObject;
                 $profile[$count]["album_count"] = $tupleObj->getPHOTO_COUNT();
-                
-                
-							
+
+
+
 
 				//print_r($profile);die;
 				unset($button);
-			
+
 				$count++;
-                	}                
-				
+                	}
+
 			}
-		
+
 			$finalResponse["profiles"] = array_change_key_case($profile,CASE_LOWER);
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 			$finalResponse["subtitle"] = $displayObj[$infoKey]["SUBTITLE"];
-            
+
 		}
 		if(in_array($infoKey,self::$noresultArray) && $displayObj[$infoKey]["VIEW_ALL_COUNT"]==0)
 		{
 			$finalResponse["noresultmessage"] = constant('self::'.$infoKey);
-			
+
 			if($infoKey=="INTEREST_RECEIVED" && MobileCommon::isApp()=="I")
 			{
-				
+
 				$finalResponse["noresultmessage"]= str_replace('<TIME>',Contacts::INTEREST_RECEIVED_UPPER_LIMIT,self::IOS_INTEREST_RECEIVED);
 			}
 			if($infoKey=="CONTACTS_VIEWED")
@@ -1090,7 +1106,7 @@ class InboxMobileAppV2
 					{
 						$finalResponse["noresultmessage"] =  self::CONTACTS_VIEWED_PAID;
 						$finalResponse["paid"] = 'Y';
-					} 
+					}
 					else
 					{
 						if(MobileCommon::isDesktop())
@@ -1125,12 +1141,12 @@ class InboxMobileAppV2
 		$finalResponse["infotype"] = $infoKey;
 		$finalResponse["heading"] = $displayObj[$infoKey]["HEADING"];
 		$finalResponse["ccmessage"] = $displayObj[$infoKey]["CCMESSAGE"];
-                
+
 			$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
 			$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"];
 			$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";
-		
-                
+
+
 		$finalResponse["contact_id"] = $displayObj[$infoKey]["contact_id"];
 		$finalResponse["self_profileid"] = $displayObj[$infoKey]["self_profileid"];
 		$inboxParams = InboxEnums::getInboxParams($displayObj[$infoKey]["ID"]);
@@ -1150,7 +1166,7 @@ class InboxMobileAppV2
 		$finalResponse["fromPage"] = InboxEnums::$fromPage;
 		$finalResponse["total"] = $displayObj[$infoKey]["VIEW_ALL_COUNT"];
 		if($infoKey == "INTEREST_RECEIVED_FILTER")
-			$finalResponse['filterCount'] = $displayObj[$infoKey]["filterCount"];	
+			$finalResponse['filterCount'] = $displayObj[$infoKey]["filterCount"];
 		$finalResponse = array_change_key_case($finalResponse,CASE_LOWER);
 		//print_r($finalResponse);die;
 
@@ -1162,7 +1178,7 @@ class InboxMobileAppV2
 		$finalResponse['listType'] = 'cc';
 		$finalResponse['showSortingOption'] = 'N';
 		//print_r($finalResponse);
-		
+
     //Request Call Back Communication
     $arrAllowedRcbCommunication = array("ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT");
     if (in_array($infoKey, $arrAllowedRcbCommunication)) {
@@ -1175,7 +1191,7 @@ class InboxMobileAppV2
       //  print_r($finalResponse["profiles"]);die;
      // die;
 		return $finalResponse;
-	}      
+	}
         private function getDisplaylayerText($gender,$infokey,$count,$contactType="")
 	{
 		$hisher = $gender=="F"?"her":"his";
@@ -1247,15 +1263,16 @@ class InboxMobileAppV2
 			}
 			return $text;
 		}
-                
-         
-           
+
+
+
 	private function getTracking($infoType){
-		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+		$request = sfContext::getInstance()->getRequest();
+		if($rtype = $request->getParameter("retainResponseType"))
 		{
 		return "responseTracking=".$rtype;
 		}
-		if(sfContext::getInstance()->getRequest()->getParameter("myjs"))
+		if($request->getParameter("myjs"))
 		{
 			$trackingMap=array(
                                 "INTEREST_RECEIVED_FILTER"=>"responseTracking=".JSTrackingPageType::MYJS_AWAITING,
@@ -1268,10 +1285,10 @@ class InboxMobileAppV2
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
-                                
+
                                );
 		}
-		else if(sfContext::getInstance()->getRequest()->getParameter("ContactCenterDesktop")==1)
+		else if($request->getParameter("ContactCenterDesktop")==1)
 		{
                         if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
                             $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSPC;
@@ -1295,7 +1312,7 @@ class InboxMobileAppV2
                  );
 		}
 		elseif(MobileCommon::isApp()=='I'){
-                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                    if($request->getParameter("matchedOrAll")=="M")
                         $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_IOS;
                     else
                         $visitorsStype = SearchTypesEnums::VISITORS_IOS;
@@ -1309,13 +1326,24 @@ class InboxMobileAppV2
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_IOS,
                                 "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS,
                                 "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_IOS,
-                                
+
                                 "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_IOS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_IOS,
                                  "INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_IOS
 					);
                 }
+								elseif($request->getParameter("JSMS_MYJS")=="1"){
+						                        $trackingMap=array(
+						                                "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
+						                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
+																						"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
+																						"MATCH_OF_THE_DAY"=>"stype=".SearchTypesEnums::JSMSMatchOfDay,
+																						"MATCH_ALERT" => "stype=".SearchTypesEnums::MATCHALERT_MYJS_JSMS
+
+
+											);
+						                }
 		else{
-                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
+                    if($request->getParameter("matchedOrAll")!="A")
                         $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSMS;
                     else
                         $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
@@ -1330,8 +1358,9 @@ class InboxMobileAppV2
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_JSMS,
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS,
                                 "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_MS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_MS,
-				
+
 				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_JSMS,
+				"ACCEPTANCES_SENT" => "responseTracking=".JSTrackingPageType::JSMS_ACC_SENT_LISTING,
 				);
                 }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;
@@ -1340,7 +1369,7 @@ class InboxMobileAppV2
 	/*get display intro call details for AP member
 	* @param : $CALL_STATUS,$CALL_COMMENTS,$LAST_CALL_DATE
 	* @return : array of display details
-	*/         
+	*/
     private function getDisplayCallDetails($CALL_STATUS,$CALL_COMMENTS,$LAST_CALL_DATE)
     {
 		if($CALL_STATUS)
@@ -1350,7 +1379,7 @@ class InboxMobileAppV2
 				case "Y":
 						$status = "Communication done";
 						if($CALL_COMMENTS)
-						{	
+						{
 							$message = "Profile called on ".CommonUtility::convertDateTimeToDisplayDate($LAST_CALL_DATE);
 						}
 						else
@@ -1361,7 +1390,7 @@ class InboxMobileAppV2
 						break;
 				case "N":
 						if($CALL_COMMENTS)
-						{	
+						{
 							$status = "Communication in progress";
 							$message = "Profile called on ".CommonUtility::convertDateTimeToDisplayDate($LAST_CALL_DATE);
 							$removeFromICLink = false;
@@ -1384,15 +1413,15 @@ class InboxMobileAppV2
 		}
 		$output = array("CC_CALL_STATUS"=>$status,"CC_CALL_COMMENTS"=>$CALL_COMMENTS,"CC_CALL_MESSAGE"=>$message,"CC_REMOVEFROMICLINK"=>$removeFromICLink);
 		return $output;
-    } 
-    
+    }
+
     /* This function is used to check if message is personalized or not*/
     private function getPersonalizedMessageOnly($profileObj,$message)
     {
-			
+
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_PAID_SELF);
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_FREE);
-			
+
 			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
 			if(!in_array($messageCmp,$presetMessage))
 			{
@@ -1401,7 +1430,7 @@ class InboxMobileAppV2
 					$messageArr=explode("||",$message);
 					$eoiMsgCount = count($messageArr);
 					$i=0;
-					
+
 					for($j=0;$j<$eoiMsgCount;$j++)
 					{
 						$splitmessage = explode("--",$messageArr[$j]);
@@ -1409,7 +1438,7 @@ class InboxMobileAppV2
 							$eoiMessages=$splitmessage[0];
 						else
 							$eoiMessages.="\n".$splitmessage[0];
-						$i++;							
+						$i++;
 					}
 					if($eoiMessages)
 						$message=$eoiMessages;
@@ -1424,7 +1453,7 @@ class InboxMobileAppV2
 			}
 			else
 				$message = null;
-		
+
 			return $message;
 		}
 }

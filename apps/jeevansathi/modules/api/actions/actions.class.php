@@ -80,7 +80,7 @@ class apiActions extends sfActions
 		$respObj = ApiResponseHandler::getInstance();
 		//$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
 		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-    if($appVersion<94){
+    if($appVersion<94 && $appVersion>0 ){
 		$hamburgerDetails = HamburgerApp::getHamburgerDetails($loginData[PROFILEID],$request->getParameter("version"),$forwardingArray);
 		$respObj->setHamburgerDetails($hamburgerDetails);
 		}
@@ -94,7 +94,7 @@ class apiActions extends sfActions
 		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
 		 $forwardingArray =ApiRequestHandler::getInstance($request)->getModuleAndActionName($request);
 		 $respObj = ApiResponseHandler::getInstance();
-		if($appVersion>=94){
+		if($appVersion>=94 || MobileCommon::isNewMobileSite()){
 			$hamburgerDetails = HamburgerApp::getHamburgerDetails($request->getAttribute('profileid'),$request->getParameter("version"),$forwardingArray);
 			$respObj->setHamburgerDetails($hamburgerDetails);
 		}

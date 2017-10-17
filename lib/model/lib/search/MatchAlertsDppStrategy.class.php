@@ -27,6 +27,21 @@ class MatchAlertsDppStrategy extends PartnerProfile {
                 $this->setLVERIFY_ACTIVATED_DT($this->LAST_LOGGEDIN_STARTFROM);
                 $this->setHVERIFY_ACTIVATED_DT($endDate);
                 $this->setShowFilteredProfiles('N');
+                $memObject=JsMemcache::getInstance();
+                $dppCnt = $memObject->get('MA_DPPCOUNT_'.$this->loggedInProfileObj->getPROFILEID());
+                if($dppCnt === false || $dppCnt=="" || $dppCnt === NULL){
+                        $dppCount = SearchCommonFunctions::getMyDppMatches("",$this->loggedInProfileObj,"","","","",1);
+                        $dppCnt = isset($dppCount["CNT"])?$dppCount["CNT"]:0;
+                        $memObject->set('MA_DPPCOUNT_'.$this->loggedInProfileObj->getPROFILEID(),$dppCnt,MatchAlertsConfig::$dppCountCacheTime);
+                }else{
+                        $dppCnt = 0;
+                }
+                unset($memObject);
+                if($dppCnt>MatchAlertsConfig::$DPP_HAVEPHOTO_CHECK_COUNTER){
+                        $this->setPHOTO_VISIBILITY_LOGGEDIN(2);
+                        $this->setHAVEPHOTO('Y');
+                        $this->setPRIVACY('"A"');
+                }
         }
         /**
          * Function to set sort order and results count

@@ -84,7 +84,12 @@ class MatchAlertsRelaxedDppProfiles extends MatchAlertsDppStrategy {
                 foreach ($this->dppRelaxationFields as $key => $value) {
                         //$getval = str_replace("'","",$this->jpartnerData[0][$value]);
                         eval('$getval = $this->get' . $key . '();');
-                        eval('$relaxVal = $relaxedObj->getRelaxed' . $value . '("' . $getval . '");');
+                        if($key == "MTONGUE"){
+                                $userReligion = $this->pid = $this->loggedInProfileObj->getRELIGION();
+                                eval('$relaxVal = $relaxedObj->getRelaxed' . $value . '("' . $getval . '","'.$userReligion.'");');
+                        }else{
+                                eval('$relaxVal = $relaxedObj->getRelaxed' . $value . '("' . $getval . '");');
+                        }
                         if ($key == "OCCUPATION") {
                                 $this->setOCCUPATION($relaxVal['occ']);
                                 if ($relaxVal['occ'] == '')
