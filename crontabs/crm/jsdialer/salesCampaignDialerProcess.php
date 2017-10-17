@@ -70,36 +70,36 @@ mail($to,$sub,$profileStr,$from);
 // Phone Number Validate
 function phoneNumberCheck($phoneNumber)
 {
-    $phoneNumber    =substr(preg_replace("/[a-zA-Z!(\' ')@#$+^&*-]/", "",$phoneNumber),-10);
-    $phoneNumber    =ltrim($phoneNumber,0);
-    if(!is_numeric($phoneNumber))
-        return false;
+	$phoneNumber    =substr(preg_replace("/[a-zA-Z!(\' ')@#$+^&*-]/", "",$phoneNumber),-10);
+        $phoneNumber    =ltrim($phoneNumber,0);
+        if(!is_numeric($phoneNumber))
+                return false;
         return $phoneNumber;
 }
 // Fetch profiles
 function getProfileDetails($phoneNo, $db_slave)
 {
-    $profileArr =array();
-    $sql= "SELECT PROFILEID,ACTIVATED FROM newjs.JPROFILE WHERE PHONE_MOB='$phoneNo' OR PHONE_WITH_STD='$phoneNo'";
-    $res=mysql_query($sql,$db_slave) or die($sql.mysql_error($db_slave));
-    while($myrow = mysql_fetch_array($res)){
-        if($myrow['ACTIVATED']!='D')
-            $profileArr[] = $myrow["PROFILEID"];
-    }
-    
-    if(count($profileArr)==0){
-        $sql1= "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE ALT_MOBILE='$phoneNo'";
-        $res1=mysql_query($sql1,$db_slave) or die($sql1.mysql_error($db_slave));
-        while($myrow1 = mysql_fetch_array($res1)){
-            
-            $pid = $myrow1["PROFILEID"];
-            $sql2= "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID='$pid' AND ACTIVATED!='D'";
-            $res2=mysql_query($sql2,$db_slave) or die($sql2.mysql_error($db_slave));
-            if($myrow2 = mysql_fetch_array($res2)){
-                $profileArr[] =$myrow2["PROFILEID"];
-            }
-        }
-    }
-    return $profileArr;
+	$profileArr =array();
+        $sql= "SELECT PROFILEID,ACTIVATED FROM newjs.JPROFILE WHERE PHONE_MOB='$phoneNo' OR PHONE_WITH_STD='$phoneNo'";
+        $res=mysql_query($sql,$db_slave) or die($sql.mysql_error($db_slave));
+        while($myrow = mysql_fetch_array($res)){
+		if($myrow['ACTIVATED']!='D')
+	                $profileArr[] = $myrow["PROFILEID"];
+	}
+
+	if(count($profileArr)==0){
+	        $sql1= "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE ALT_MOBILE='$phoneNo'";
+	        $res1=mysql_query($sql1,$db_slave) or die($sql1.mysql_error($db_slave));
+	        while($myrow1 = mysql_fetch_array($res1)){
+
+	                $pid = $myrow1["PROFILEID"];
+			$sql2= "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID='$pid' AND ACTIVATED!='D'";
+			$res2=mysql_query($sql2,$db_slave) or die($sql2.mysql_error($db_slave));
+			if($myrow2 = mysql_fetch_array($res2)){
+				$profileArr[] =$myrow2["PROFILEID"];
+			}
+		}
+	}
+        return $profileArr;
 }
 ?>
