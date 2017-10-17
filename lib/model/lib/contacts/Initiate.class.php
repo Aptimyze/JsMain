@@ -215,10 +215,6 @@ class Initiate extends ContactEvent{
       else if (is_array($this->_errorArray) && ((in_array(ErrorHandler::FILTERED, $this->_errorArray) !== false))) {
         if($this->contactHandler->getIsJunk()){
           $this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED_JUNK);
-
-          $whyFilter=new MIS_WHY_FILTER();
-          $whyFilter->insertEntry($this->viewer->getPROFILEID(), $this->viewed->getPROFILEID(), $this->contactHandler->getJunkType(), $this->contactHandler->getJunkData(), 'Y');
-          
         }else{
           $this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED);
         }

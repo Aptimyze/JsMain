@@ -649,6 +649,15 @@ class ErrorHandler
 			else{
 				// checkProfileNOTJunk returned false
 				$this->contactHandlerObj->setIsJunk(true);
+				if($this->contactHandlerObj->getAction()=='POST'){
+					$whyFilter=new MIS_WHY_FILTER();
+					$whyFilter->insertEntry(
+						$this->contactHandlerObj->getViewer()->getPROFILEID(),
+						$this->contactHandlerObj->getViewed()->getPROFILEID(),
+						$this->contactHandlerObj->getJunkType(),
+						$this->contactHandlerObj->getJunkData(),
+						'Y');
+				}
 				return true;
 			}
 		} 
