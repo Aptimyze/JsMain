@@ -38,8 +38,7 @@ class RequestHandlerConfig
                 "info"=>array("v1"=>"ApiContactUsV1","v2"=>"","v3"=>"ApiContactUsV1")),
     "membership"=>array(
                 "membershipDetails"=>array("v1"=>"ApiMembershipDetailsV1","v2"=>"ApiMembershipDetailsV2","v3"=>"ApiMembershipDetailsV3"),
-                "deactivateCurrentMembership"=>array("v1"=>"DeactivateCurrentMembershipV1")
-                ),
+                "deactivateCurrentMembership"=>array("v1"=>"DeactivateCurrentMembershipV1")),//,"updateRestoreId"=>array("v1"=>"UpdateRestoreIdV1")),
     "profile"=>array(
         "editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
        	"downloadHoroscope" => array("v1" => "downloadHoroscopeV1", "v2" => "", "v3" => "downloadHoroscopeV1"),
