@@ -731,7 +731,7 @@ $js_arr[]=array("photoScreening_js"   => "2");
 $js_arr[]=array("apps/jeevansathi/templates/_jsms3DotLayer"   => "1");
 $js_arr[]=array("main_sw_register"    => "2");
 $js_arr[]=array("lib/model/enums/MessageQueues"    => "2");
-$js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"   => "1");
+$js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"    => "2");
 return $js_arr;
 }
 function getJavascript(){
