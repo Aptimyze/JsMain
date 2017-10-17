@@ -34,11 +34,16 @@ EOF;
 		$crmMailerObj 	= new crmMailer();
 		$profilesArr 	= $crmMailerObj->getProfileForFeedbackMailer();
 		$jprofileObj = new JPROFILE('crm_slave');
-		if(is_array($profilesArr))
-			$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
-		if(count($profilesArr)>0){
+		if(is_array($profilesArr)) {
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                }
+		if(count($profilesArr)>0){ 
 			foreach($profilesArr as $profileid=>$campaign){
-				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB']);
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                }
+		if(count($profilesArr)>0){ 
+			foreach($profilesArr as $profileid=>$campaign){
+				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB'],$profileDet[$profileid]['USERNAME']);
 				$crmMailerObj->updateMailerSentStatus($profileid,$deliveryStatus);
 			}
 			/** code for daily count monitoring**/
@@ -48,4 +53,5 @@ EOF;
 		unset($crmMailerObj);
 		unset($profilesArr);
 	}
+}
 }
