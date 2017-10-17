@@ -734,6 +734,8 @@ $js_arr[]=array("lib/model/enums/MessageQueues"    => "2");
 $js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"    => "2");
 $js_arr[]=array("web/spa/dist/0.250ec2ac5c0c3a9a1d72.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/0"   => "1");
+$js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
+$js_arr[]=array("web/spa/dist/app"   => "1");
 return $js_arr;
 }
 function getJavascript(){
