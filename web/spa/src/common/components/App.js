@@ -41,11 +41,11 @@ class App extends React.Component
 
   componentWillMount() {
     
-    let AUTHCHECKSUM_FROM_GET = getParameterByName(window.location.href,"AUTHCHECKSUM");
-    if (AUTHCHECKSUM_FROM_GET != null && AUTHCHECKSUM_FROM_GET != '')
-    {
-      setCookie("AUTHCHECKSUM",AUTHCHECKSUM_FROM_GET);
-    }
+    // let AUTHCHECKSUM_FROM_GET = getParameterByName(window.location.href,"AUTHCHECKSUM");
+    // if (AUTHCHECKSUM_FROM_GET != null && AUTHCHECKSUM_FROM_GET != '')
+    // {
+    //   setCookie("AUTHCHECKSUM",AUTHCHECKSUM_FROM_GET);
+    // }
     this.props.MyProfile.AUTHCHECKSUM  = getCookie('AUTHCHECKSUM');
     this.props.MyProfile.GENDER  = localStorage.getItem('GENDER');
     this.props.MyProfile.USERNAME  = localStorage.getItem('USERNAME');
