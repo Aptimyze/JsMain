@@ -1021,9 +1021,9 @@ class crmInterfaceActions extends sfActions
                 	}else{
                 		$this->rawData[$i]["MEM_UPGRADE"] = "N";
                 	}
-                    $this->rawData[$i]["SGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["SGST"]/109,2);
+                    $this->rawData[$i]["SGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["SGST"]/118,2);
                     $this->rawData[$i]["IGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["IGST"]/118,2);
-                    $this->rawData[$i]["CGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["CGST"]/109,2);
+                    $this->rawData[$i]["CGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["CGST"]/118,2);
                 }
                 //Start:JSC-2667: Commented as change in legacy data not required 
                 //$this->rawData      = $this->filterData($this->rawData);
