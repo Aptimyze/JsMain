@@ -190,20 +190,33 @@ if(isset($data))
 	                $sql_update_pd_str=implode(",",$sql_pd);
         	        $sql_u=$sql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
                 	mysql_query_decide($sql_u) or logError_sums($sql_u,1);
-
-                        $sql_PDN = "SELECT STATUS FROM billing.PAYMENT_DETAIL_NEW WHERE RECEIPTID = '$receiptid'";
+                        $sql_PDN = "SELECT ID, STATUS, AMOUNT FROM billing.PAYMENT_DETAIL_NEW WHERE RECEIPTID = '$receiptid'";
                         $res_PDN = mysql_query_decide($sql_PDN) or logError_sums($sql_PDN,0);
-                        $row_PDN = mysql_fetch_array($res_PDN);
 
-                        if($chk_amt && $row_PDN['STATUS'] == 'REFUND') {
-                            $amt = $amt * (-1);
-                            $sql_pd[]=" AMOUNT='$amt' ";
+                        // A case may occur if multiple return has been inititated, then editing the file
+                        // will return multiple rows. Need to identify the editing will be done in the Status 
+                        // provided below for checks
+                        $statusPDN = $result['STATUS'];
+                        $countPDNSize = 0;
+                        while($result = mysql_fetch_array($res_PDN) ) {
+                            if($result['AMOUNT'] < 0 && ( $statusPDN == 'REFUND' || $statusPDN == 'BOUNCE' || $statusPDN == '')) {
+                                $id = $result['ID'];
+                                break;
+                            }
                         }
                         
                         $sql_update_pd_str_2=implode(",",$sql_pd);
                         $paymentDetailNewSql="UPDATE billing.PAYMENT_DETAIL_NEW SET ";
-                        $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str_2."WHERE RECEIPTID='$receiptid'";
+                        $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str_2."WHERE RECEIPTID='$receiptid'"; 
                         mysql_query_decide($finalSqlQueryForPDN) or logError_sums($finalSqlQueryForPDN,1);
+                        
+                        if($id) {
+                                $amt = $amt * (-1);
+                            $sql_pd[]=" AMOUNT='$amt' ";
+                            $sql_update_pd_str_3=implode(",",$sql_pd);
+                            $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str_3."WHERE ID='$id'";
+                            mysql_query_decide($finalSqlQueryForPDN) or logError_sums($finalSqlQueryForPDN,1);
+                        }
 		}
                 
 		$smarty->assign("USER",$user);
