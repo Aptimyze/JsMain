@@ -132,9 +132,7 @@ class FAQFeedBack
 		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 
 
-		//function calling 
-		//extra work \
-		
+		//extra work
 		reportAbuseLib::reportAbuseAction(
 			$loginProfile->getPROFILEID(), 
 			$loginProfile->getUSERNAME(), 

@@ -276,16 +276,16 @@ class phoneActions extends sfActions
 				$sendingObject->deleteRequestedByOther($profileid);
 				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
                 $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
-				
+
 				reportAbuseLib::reportAbuseAction(
 				LoggedInProfile::getInstance()->getPROFILEID(),
 				LoggedInProfile::getInstance()->getUSERNAME(),
-				$otherProfileId, /* viewed user's profID */
-				'',/*$categoryNew empty */
-				'',/*$otherReason empty */
-				'',/*$category empty */
-				'',/*$crmUserName empty */
-				-1/*m_iAbuseAttachmentID - 1 */
+				explode("i",$profileChecksum)[1],//$otherProfileId viewed user's profID
+				'user is already married / engaged',//$categoryNew empty
+				'report abuse due to report invalid',//$otherReason empty
+				'',//$category empty
+				'',//$crmUserName empty
+				-1//m_iAbuseAttachmentID - 1
 				);
 			}
 
