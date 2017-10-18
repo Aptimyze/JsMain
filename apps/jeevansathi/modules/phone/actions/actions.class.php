@@ -276,6 +276,17 @@ class phoneActions extends sfActions
 				$sendingObject->deleteRequestedByOther($profileid);
 				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
                 $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
+				
+				reportAbuseLib::reportAbuseAction(
+				LoggedInProfile::getInstance()->getPROFILEID(),
+				LoggedInProfile::getInstance()->getUSERNAME(),
+				$otherProfileId, /* viewed user's profID */
+				'',/*$categoryNew empty */
+				'',/*$otherReason empty */
+				'',/*$category empty */
+				'',/*$crmUserName empty */
+				-1/*m_iAbuseAttachmentID - 1 */
+				);
 			}
 
 			$ReportInvalidLibObj->sendExtraNotification($selfProfileID,$profileid,$reasonNumber);
