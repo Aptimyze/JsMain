@@ -39,12 +39,12 @@ if(isset($data))
 
 			$mod_str .= " to ".$deposit_dt.",\n";
 		}
-		if($dep_branch)
+		if($chk_dep_branch)
 		{
 			$mod_str .= "DEPOSIT_BRANCH changed";
 			if($row_old_details['DEPOSIT_BRANCH'])
 				$mod_str .= " from ".$row_old_details['DEPOSIT_BRANCH'];
-			$mod_str .= " to ".html_entity_decode($dep_branch).",\n";
+			$mod_str .= " to ".html_entity_decode($chk_dep_branch).",\n";
 		}
 		if($chk_mode)
 		{
@@ -146,11 +146,11 @@ if(isset($data))
 				$sql_update[]= " WALKIN = '$walkinby', CENTER = '".getcenter_for_walkin($walkinby)."' ";
 			}
 		}
-		if($chk_deposit_dt || $dep_branch)
+		if($chk_deposit_dt || $chk_dep_branch)
 		{
 			if($deposit_dt)
 			{
-				$sql_update[]= " DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='".html_entity_decode($dep_branch)."'" ;
+				$sql_update[]= " DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='".html_entity_decode($chk_dep_branch)."'" ;
 			}
 		}
 		if(count($sql_update)>0)
@@ -175,8 +175,8 @@ if(isset($data))
 			$sql_pd[]=" CD_DT='$cd_dt' ";
 		if($chk_cd_city)
 			$sql_pd[]=" CD_CITY='$cd_city' ";
-		if($chk_deposit_dt || $dep_branch)
-			$sql_pd[]=" DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='$dep_branch' ";
+		if($chk_deposit_dt || $chk_dep_branch)
+			$sql_pd[]=" DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='$chk_dep_branch' ";
 		if($chk_bank)
 			$sql_pd[]=" BANK='$bank' ";
 		if($chk_reason)
@@ -190,9 +190,19 @@ if(isset($data))
 	                $sql_update_pd_str=implode(",",$sql_pd);
         	        $sql_u=$sql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
                 	mysql_query_decide($sql_u) or logError_sums($sql_u,1);
+
+                        $sql_PDN = "SELECT STATUS FROM billing.PAYMENT_DETAIL_NEW WHERE RECEIPTID = '$receiptid'";
+                        $res_PDN = mysql_query_decide($sql_PDN) or logError_sums($sql_PDN,0);
+                        $row_PDN = mysql_fetch_array($res_PDN);
+
+                        if($chk_amt && $row_PDN['STATUS'] == 'REFUND') {
+                            $amt = $amt * (-1);
+                            $sql_pd[]=" AMOUNT='$amt' ";
+                        }
                         
+                        $sql_update_pd_str_2=implode(",",$sql_pd);
                         $paymentDetailNewSql="UPDATE billing.PAYMENT_DETAIL_NEW SET ";
-                        $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str."WHERE RECEIPTID='$receiptid'";
+                        $finalSqlQueryForPDN=$paymentDetailNewSql.$sql_update_pd_str_2."WHERE RECEIPTID='$receiptid'";
                         mysql_query_decide($finalSqlQueryForPDN) or logError_sums($finalSqlQueryForPDN,1);
 		}
                 
