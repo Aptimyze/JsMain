@@ -44,7 +44,7 @@
             ~include_partial('global/JSPC/_jspcMatrimonialLinks')`
             ~include_partial('global/JSPC/_jspcSeoText')`
 <footer> 
-  ~include_partial('global/JSPC/_jspcCommonFooter')`
+  ~include_partial('global/JSPC/_jspcCommonFooter',[logout=>$fromSignout])`
 </footer>
 <!--end:footer-->
 <script>
