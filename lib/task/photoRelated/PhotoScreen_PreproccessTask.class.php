@@ -109,7 +109,7 @@ EOF;
 	public function execute($arguments = array(), $options = array())
 	{
 		
-		  if(CommonUtility::hideFeaturesForUptime())
+		if(CommonUtility::hideFeaturesForUptime())
                       successfullDie();
         $LockingService = new LockingService;
 		ini_set('memory_limit','1024M');	
@@ -200,7 +200,6 @@ EOF;
 					$this->m_objProfile->getDetail("","","HAVEPHOTO");
 					$arrData['PROFILE_TYPE'] = $this->getProfileType($this->m_objProfile->getHAVEPHOTO());
 					$szType = $this->m_objPicFunction->getImageFormatType($arrData['MainPicUrl']);
-					
 					//////////////////////////////////////////////////////////////
 					//Move Main Pic To Orginial Pic Directory
 					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
@@ -208,7 +207,7 @@ EOF;
 					$this->resizePic($iPicId,$arrData['PROFILEID'],$arrData['MainPicUrl']);
 					//detail image property
 					//$googleVisionObj = new GoogleVisionApi();
-					//  $googleVisionObj->getPictureDetails($arrData['MainPicUrl'], $arrData['PICTUREID'], $arrData['PROFILEID']);
+					//  $googleVisionObj->getPictureDetails($arrData['MainPicUrl'], $arrData['PICTUREID'], $arrData['PROFILEID'],$arrData["PICFORMAT"],$arrData["ORDERING"]);
 					//Update Store
 					$this->updateStore($iPicId,$arrData);
 					//Track This in Master Log

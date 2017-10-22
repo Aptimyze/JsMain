@@ -116,7 +116,7 @@ class GoogleVisionApi
 			imagejpeg($img, $filename);
 	}
 
-	public function getPictureDetails($picturePath, $iPicId, $iProfileId){
+	public function getPictureDetails($picturePath, $iPicId, $iProfileId,$imageFormatType,$ordering){
 		PictureFunctions::setHeaders();
 
 		//COPY into temp to avoid original image corruption
@@ -185,16 +185,30 @@ class GoogleVisionApi
         
         $arrPicData['PICTUREID'] = $iPicId;
         $arrPicData['PROFILEID'] = $iProfileId;
+		$arrPicData["MAINPIC"] = $ordering == 0?1:0;
 
         $storeObjApiResp = new PICTURE_PICTURE_API_RESPONSE();
         //TODO : $arrPicData
         $iPicId = $storeObjApiResp->insertRecord($arrPicData);
         
-		
+		$postParams["api_secret"] = "IFJC5E4Da1_N-h53VW_YGGhBpi-mGRto";
+		$postParams["api_key"] = "S8ihRmykTeEf4gH8x2wysOcLYWp_D348";
+		$postParams["return_attributes"] = "gender,age,headpose,facequality,blur,ethnicity";
+		$postParams["image_base64"] = $imgData;
+		$url = "https://api-us.faceplusplus.com/facepp/v3/detect";
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		$result = json_decode($result, true);
+		$facePlusFaces = $result["faces"];
 		if($iPicId && is_array($faces))
 		{
-            $storeObjFaceResp = new PICTURE_FACE_RESPONSE();
-            foreach($faces as $face)
+		    $storeObjFaceResp = new PICTURE_FACE_RESPONSE();
+            foreach($faces as $index=>$face)
 			{
 				$cordinates = null;
 				$cord = null;
@@ -210,10 +224,17 @@ class GoogleVisionApi
                 $arrData['PAN_ANGLE'] = $face["panAngle"];
                 $arrData['ROLL_ANGLE'] = $face["rollAngle"];
                 $arrData['TILT_ANGLE'] = $face["tiltAngle"];
-                $arrData['UNDEREXPOSED'] = $face["underExposedLikelihood"];
+				$arrData['UNDEREXPOSED'] = $face["underExposedLikelihood"];
+				$arrData["facequality"] = $facePlusFaces[$index]["attributes"]["facequality"]["value"];
+				$arrData["gaussianblur"] = $facePlusFaces[$index]["attributes"]["blur"]["gaussianblur"]["value"];
+				$arrData["motionblur"] = $facePlusFaces[$index]["attributes"]["blur"]["motionblur"]["value"];
+				$arrData["blurness"] = $facePlusFaces[$index]["attributes"]["blur"]["blurness"]["value"];
+				$arrData["gender"] = $facePlusFaces[$index]["attributes"]["gender"]["value"];
+				$arrData["age"] = $facePlusFaces[$index]["attributes"]["age"]["value"];
+				$arrData["ethnicity"] = $facePlusFaces[$index]["attributes"]["ethnicity"]["value"];
                 
                 $arrData['PICTUREID'] = $iPicId;
-                
+
                 $storeObjFaceResp->insertRecord($arrData);
 			}
 		}
