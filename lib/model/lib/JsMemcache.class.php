@@ -142,7 +142,8 @@ class JsMemcache extends sfMemcacheCache{
 						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
                                         if($lifetime == 2){
-                                            $this->client->expire($key, $lifetime);
+						$ignoreExpire = '';
+                                            $this->client->expire($key, $ignoreExpire);
                                         }
 					else{
                                             $this->client->expire($key, $lifetime);
