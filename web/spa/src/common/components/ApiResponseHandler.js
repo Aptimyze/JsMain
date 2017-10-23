@@ -75,6 +75,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
         },
       }).then( (response) => {
+        
+        if(response.data.showAndBeyond){
+          var script = document.createElement("script");
+          script.src = "//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js";
+          script.async = true;
+          document.body.appendChild(script);
+        }
+
         switch(response.data.responseStatusCode)
         {
           case "9":
