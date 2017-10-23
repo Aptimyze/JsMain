@@ -17,7 +17,8 @@ class JpartnerEditLog
 			
 			foreach ($updatedArr as $k=>$v)
 			{
-				eval('$updateLog["' . $k . '"]=$jpartnerObj->get'.$k.'();');
+				if(in_array($k,DPPConstants::$editDppFields))
+					eval('$updateLog["' . $k . '"]=$jpartnerObj->get'.$k.'();');
 			}
 			$PROFILE_JPARTNER_EDIT_LOG = new PROFILE_JPARTNER_EDIT_LOG();
 			$PROFILE_JPARTNER_EDIT_LOG->addRecords($updateLog);

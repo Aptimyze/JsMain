@@ -53,6 +53,7 @@ EOF;
 				} else {
 					$currency = "DOL";
 				}
+                                $dataArr["username"] = $subsArr[$profileid]['USERNAME'];
 				$dataArr['currency'] =$currency;
 				$mmObj->sendMembershipMailer($mailId, $profileid, $dataArr);
 				unset($dataArr);

@@ -12,7 +12,7 @@
     <td><table width="100%" border="0" cellspacing="0" cellpadding="0" height="52">
         <tr>
           <td width="440" style="padding-left:10px; padding-right:10px;" height="52">
-          	<div style="width:100%"><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/mailer/revampMailer/logo.gif" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div>
+          	<div style="width:100%"><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div>
           </td>
            <td width="120" height="52" style="padding-right:10px;">
            		<table width="120" border="0" cellspacing="0" cellpadding="0" align="right">
@@ -39,7 +39,7 @@
               <tr>
                 <td valign="top">Dear User, </td>
               </tr>
-	      <br\>	
+	      <br\> 	
               <tr>
               	<td style="color:#000000;">We are contacting you to find out what you thought of your recent experience with Jeevansathi contact centre staff.<p>
 </td>
@@ -51,8 +51,8 @@
               <tr>
                 <td valign="top"><br />
 			<font color="#000000">
-				Giving this feedback should take no more than 15 seconds.<br>
-				<a href="~$SURVEY_LINK`" target="_blank" style="color:#0f529d;">~$SURVEY_LINK`</a>
+                            Giving this feedback should take no more than 15 seconds. (Yes, we have timed it!)<br><br>
+                                    <a href="~$SURVEY_LINK`" target="_blank" style="color:#0f529d;"><b>Fill Survey Now</b></a>
 			</font>
 		</td>
               </tr>
