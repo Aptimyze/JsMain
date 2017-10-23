@@ -100,6 +100,21 @@ class ProfileHandler implements VariableHandler{
 			else
 				return $this->__profile_obj->getUSERNAME();
 			break;
+    case "NAME_OTHER_PROFILE":
+        $this->__receiver_profile_obj = $this->__lru->get($this->_var_object->getParam("receiver_id"));
+        if($this->__receiver_profile_obj)
+        {
+          $nameOfUserObj= new NameOfUser();
+          $otherProfileObjArr[]=$this->__profile_obj;
+          $nameOfUser=$nameOfUserObj->showNameToProfiles($this->__receiver_profile_obj,$otherProfileObjArr);
+        }
+        if($nameOfUser && $nameOfUser[$this->__profile_obj->getPROFILEID()]["SHOW"]==true)
+        {
+          if($nameOfUser[$this->__profile_obj->getPROFILEID()]['NAME'])
+            return $nameOfUser[$this->__profile_obj->getPROFILEID()]['NAME'];
+        }
+        return $this->__profile_obj->getUSERNAME();
+    break;
 		case "RELIGION_CASTE_OR_SECT_LABEL":
 			if($this->__profile_obj->getRELIGION() == 2 || $this->__profile_obj->getRELIGION() == 3)
 				return "Religion &amp; Sect";
