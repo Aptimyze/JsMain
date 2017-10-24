@@ -11,13 +11,15 @@ class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
 		$this->STATUS_CODE_BIND_TYPE = "INT";
 		$this->STATUS_MESSAGE_BIND_TYPE = "STR";
 		$this->NOTIFICATION_KEY_BIND_TYPE = "STR";
+		$this->DATE_BIND_TYPE = "STR";
         }
 
 	public function insert($profileid, $registrationId, $messageId, $statusCode='', $statusMessage='', $notificationKey)
 	{
 		try
 		{
-			$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.IOS_RESPONSE_LOG (PROFILEID, REGISTRATION_ID,MESSAGE_ID,STATUS_CODE,STATUS_MESSAGE,NOTIFICATION_KEY,SEND_DATE) VALUES (:PROFILEID, :REGISTRATION_ID, :MESSAGE_ID, :STATUS_CODE, :STATUS_MESSAGE, :NOTIFICATION_KEY, now())";
+			$istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+			$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.IOS_RESPONSE_LOG (PROFILEID, REGISTRATION_ID,MESSAGE_ID,STATUS_CODE,STATUS_MESSAGE,NOTIFICATION_KEY,SEND_DATE) VALUES (:PROFILEID, :REGISTRATION_ID, :MESSAGE_ID, :STATUS_CODE, :STATUS_MESSAGE, :NOTIFICATION_KEY, :DATE)";
 			$resInsert = $this->db->prepare($sqlInsert);
 			$resInsert->bindValue(":PROFILEID", $profileid, constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 			$resInsert->bindValue(":REGISTRATION_ID", $registrationId, constant('PDO::PARAM_'.$this->{'REGISTRATION_ID_BIND_TYPE'}));
@@ -25,6 +27,7 @@ class MOBILE_API_IOS_RESPONSE_LOG extends TABLE{
 			$resInsert->bindValue(":STATUS_CODE", $statusCode, constant('PDO::PARAM_'.$this->{'STATUS_CODE_BIND_TYPE'}));
 			$resInsert->bindValue(":STATUS_MESSAGE", $statusMessage, constant('PDO::PARAM_'.$this->{'STATUS_MESSAGE_BIND_TYPE'}));
 			$resInsert->bindValue(":NOTIFICATION_KEY", $notificationKey,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
+			$resInsert->bindValue(":DATE",$istTime,constant('PDO::PARAM_'.$this->{'DATE_BIND_TYPE'}));
 			$resInsert->execute();
 		}
                 catch(PDOException $e)

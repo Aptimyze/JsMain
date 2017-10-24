@@ -43,11 +43,11 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
                 $counter++;
 
                 //Paid members sorting
-                $sortString[$counter] = parent::getPaidDateSorting();
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
+//                $sortString[$counter] = parent::getPaidDateSorting();
+//                $sortAscOrDesc[$counter] = $this->sortByDesc;
+//                $counter++;
                 
-                $sortString[$counter] = "LAST_LOGIN_DT";
+                $sortString[$counter] = "SORT_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
                 

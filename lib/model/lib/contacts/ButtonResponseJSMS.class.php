@@ -627,19 +627,21 @@ Class ButtonResponseJSMS
 			$button["label"]  = "Shortlisted";
 			$button["action"] = "SHORTLIST";
 			$button["params"] = "&shortlist=true";
-		} 
+			$button["enable"] = true;
+		}
 		else{
 			$button["iconid"] = IdToAppImagesMapping::SHORTLISTBUTTON;
 			$button["label"]  = "Shortlist";
 			$button["action"] = "SHORTLIST";
 			$button["params"]  = "&shortlist=false";
+			$button["enable"] = true;
 		}
 		return (self::buttonMerge($button,$enable));
 	}
 
         public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true)
         {
-        	
+
 			if ($isIgnored) {
                $button["label"]  = "Unblock";
 			if(MobileCommon::isApp()=="I")
@@ -668,7 +670,7 @@ Class ButtonResponseJSMS
         	
                 
                         $button["iconid"] = IdToAppImagesMapping::REPORTABUSE;
-                        $button["label"]  = "Report Abuse";
+                        $button["label"]  = "Report as Fake/Spam";
                         $button["action"] = "REPORTABUSE";
                 
                 return (self::buttonMerge($button,$enable));

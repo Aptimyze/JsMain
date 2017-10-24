@@ -96,6 +96,12 @@
 	<TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&profileid1=~$profileid`&actiontocall=ChatDetail&dialer_check=1">Generate PDF</a></TD>
 	<TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
 	</TR>
+    <TR>
+        <TD class="label" valign="middle" colspan="1" align="center" >View Contact Details</TD>	
+        <TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/ViewContacts?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
+        <TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&profileid1=~$profileid`&actiontocall=ViewContacts&dialer_check=1">Generate PDF</a></TD>
+        <TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
+	</TR>
 	
 </table>
   
