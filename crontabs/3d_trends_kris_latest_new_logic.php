@@ -138,7 +138,7 @@ if(1)
 	{
 		$records=0;
 		$abFactor = 5;
-		$usePercentageFlag = false;
+		$usePercentageFlag = true;
 		for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 		{
 		$myDbName=$slave_activeServers[$serverId];
