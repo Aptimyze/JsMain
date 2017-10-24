@@ -44,7 +44,7 @@ if(isset($data))
 			$mod_str .= "DEPOSIT_BRANCH changed";
 			if($row_old_details['DEPOSIT_BRANCH'])
 				$mod_str .= " from ".$row_old_details['DEPOSIT_BRANCH'];
-			$mod_str .= " to ".html_entity_decode($chk_dep_branch).",\n";
+			$mod_str .= " to ".html_entity_decode($dep_branch).",\n";
 		}
 		if($chk_mode)
 		{
@@ -176,7 +176,7 @@ if(isset($data))
 		if($chk_cd_city)
 			$sql_pd[]=" CD_CITY='$cd_city' ";
 		if($chk_deposit_dt || $chk_dep_branch)
-			$sql_pd[]=" DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='$chk_dep_branch' ";
+			$sql_pd[]=" DEPOSIT_DT='$deposit_dt', DEPOSIT_BRANCH='$dep_branch' ";
 		if($chk_bank)
 			$sql_pd[]=" BANK='$bank' ";
 		if($chk_reason)
