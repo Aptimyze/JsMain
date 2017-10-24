@@ -84,16 +84,16 @@ EOF;
             }
             else{
                 $msg = "MatchAlert started @$mailerStartTime";
-                $to = "nitish.sharma@jeevansathi.com";
+                $to = "manoj.rana@naukri.com";
                 $this->sendAlertMail($to, $msg, $msg);
-                $this->sms("8989931104",$msg);
+                $this->sms("9999216910",$msg);
             }
         }
     }
   }
   
   public function sendAlertSMS($msg=''){
-    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104");
+    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910");
     if(JsConstants::$whichMachine == "test"){
         $mobileNumberArr = array("nitish"=>"8989931104");
     }
