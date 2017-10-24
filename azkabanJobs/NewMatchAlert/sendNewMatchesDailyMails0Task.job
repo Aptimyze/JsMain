@@ -1,5 +1,5 @@
 type=command
-dependencies=newMatchAlertPopulateDaily
-command=${php5} ${docRoot}/symfony  alert:sendNewMatchesMails 2 0 1
+dependencies=newMatchAlertPopulateDailyTask
+command=${php5} ${docRoot}/symfony  alert:sendNewMatchesMails 5 0 1
 retries=3
 retry.backoff=60000
