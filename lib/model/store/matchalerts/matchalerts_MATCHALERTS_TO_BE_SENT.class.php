@@ -128,7 +128,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         public function resetTrendsIfOldLogicSet(){
                 try
 		{
-			$sql = "UPDATE matchalerts.MATCHALERTS_TO_BE_SENT m , newjs.MATCH_LOGIC t SET HASTRENDS = '0',MATCH_LOGIC='O' WHERE m.PROFILEID =t.PROFILEID AND LOGIC_STATUS = 'O' AND HASTRENDS='1'";
+			$sql = "UPDATE matchalerts.MATCHALERTS_TO_BE_SENT m , newjs.MATCH_LOGIC t SET HASTRENDS = '0',MATCH_LOGIC='O' WHERE m.PROFILEID =t.PROFILEID AND LOGIC_STATUS = 'O'";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 		}

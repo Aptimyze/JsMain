@@ -28,6 +28,7 @@ EOF;
     $this->addArguments(array(
 		new sfCommandArgument('totalScript', sfCommandArgument::REQUIRED, 'My argument'),
                 new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
+                new sfCommandArgument('dailyCron', sfCommandArgument::OPTIONAL, 'My argument',0),
                 ));
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -38,6 +39,7 @@ EOF;
   {
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
+        $dailyCron = $arguments["dailyCron"]; // daily cron
 	$mailerServiceObj = new MailerService();
 
 	if(!sfContext::hasInstance())
@@ -47,7 +49,7 @@ EOF;
         $lock = $LockingService->getFileLock($file,1);
         if(!$lock)
                 successfullDie();
-	$receivers = $mailerServiceObj->getNewMatchesMailerReceivers($totalScript,$currentScript,$this->limit);
+	$receivers = $mailerServiceObj->getNewMatchesMailerReceivers($totalScript,$currentScript,$this->limit,$dailyCron);
 	$stypeMatch = SearchTypesEnums::NewMatchesEmail;
 	$this->smarty = $mailerServiceObj->getMailerSmarty();
         $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
@@ -78,7 +80,7 @@ EOF;
 			}
 			else
 				$flag = "I"; // Invalid users given in database
-			$mailerServiceObj->updateSentForNewMatchesUsers($sno,$flag);
+			$mailerServiceObj->updateSentForNewMatchesUsers($sno,$flag,$dailyCron);
 			unset($subject);
                         unset($mailSent);
                         unset($data);

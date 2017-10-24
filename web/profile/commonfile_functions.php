@@ -257,6 +257,7 @@ $css_arr[]=array("apps/jeevansathi/modules/common/templates/CALJSMSSuccess"   =>
 $css_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $css_arr[]=array("jspc/static/postWeddingServices_css"    => "2");
 $css_arr[]=array(""   => "1");
+$css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
 return $css_arr;
 }
 /* JavaScript File */
@@ -510,8 +511,8 @@ $js_arr[]=array("jsms/angular/registration/scripts/services" => "6");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"  => "28");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"        => "59");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"   => "35");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                  => "108");
-$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "51");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                     => "112");
+$js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"           => "53");
 $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"         => "71");
 $js_arr[]=array("jsms/login/mobForgotPass_js"   => "16");
@@ -729,6 +730,12 @@ $js_arr[]=array("jspc/static/postWeddingServices_js"    => "2");
 $js_arr[]=array("photoScreening_js"   => "2");
 $js_arr[]=array("apps/jeevansathi/templates/_jsms3DotLayer"   => "1");
 $js_arr[]=array("main_sw_register"    => "4");
+$js_arr[]=array("lib/model/enums/MessageQueues"    => "2");
+$js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"    => "2");
+$js_arr[]=array("web/spa/dist/0.250ec2ac5c0c3a9a1d72.bundle"   => "1");
+$js_arr[]=array("web/spa/dist/0"   => "1");
+$js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
+$js_arr[]=array("web/spa/dist/app"   => "1");
 return $js_arr;
 }
 function getJavascript(){
@@ -762,7 +769,7 @@ function getCss(){
 	for($i=0;$i<count($css_arr);$i++)
 	{
 		$temp=$css_arr[$i];
-		
+
 		foreach($temp as $key=>$val)
 				if(!$CSS[$key])
 						$CSS[$key]=$key."_".$val.".css";

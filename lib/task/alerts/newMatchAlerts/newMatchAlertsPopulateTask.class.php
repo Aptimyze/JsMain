@@ -9,6 +9,9 @@ class newMatchAlertsPopulateTask extends sfBaseTask
 {
     protected function configure()
     {
+        $this->addArguments(array(
+                	new sfCommandArgument('dailyCron', sfCommandArgument::OPTIONAL, 'My argument'),
+		));
         $this->addOptions(array(
           new sfCommandOption('application',null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
         ));
@@ -40,30 +43,33 @@ EOF;
 /** code for inserting daily count**/
 		 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring NMA_MAILER#INSERT");
 	 
-/**code ends*/                 
-        
+/**code ends*/           
+        $temp = 0;
+        if($arguments["dailyCron"] == 1){
+           $temp = 1;
+        }
         $newMatchAlertReceiver = new new_matches_emails_RECEIVER();
-        $newMatchAlertReceiver->truncateTable();
+        $newMatchAlertReceiver->truncateTable($temp);
         
         $sortDate = date('Y-m-d H:i:s', strtotime('-6 months'));
         $entryDate = date('Y-m-d H:i:s', strtotime('-15 days'));
         $loginDate = date('Y-m-d H:i:s', strtotime('-3 months'));
-        $affectedCount = $newMatchAlertReceiver->insertValuesFromJprofileAndJprofileAlerts($sortDate,$entryDate,$loginDate);
+        $affectedCount = $newMatchAlertReceiver->insertValuesFromJprofileAndJprofileAlerts($sortDate,$entryDate,$loginDate,$temp);
         //$newMatchAlertReceiver->updateTrends();
         //$newMatchAlertReceiver->resetTrendsIfOldLogicSet();
         
         $newMatchAlertLog = new new_matches_emails_LOG();
-        $newMatchAlertLog->insertFromLog_Temp();
+        $newMatchAlertLog->insertFromLog_Temp($temp);
         
         $newMatchAlertLog_Temp = new new_matches_emails_LOG_TEMP();
-        $newMatchAlertLog_Temp->truncateTable();
+        $newMatchAlertLog_Temp->truncateTable($temp);
         
         $deleteDate = MailerConfigVariables::getNoOfDays();
         $deleteDate = $deleteDate-31;
         $newMatchAlertLog->deleteEntriesBeforeDate($deleteDate);
         
         $newMatchAlertMAILER = new new_matches_emails_MAILER();
-        $newMatchAlertMAILER->truncateTable();
+        $newMatchAlertMAILER->truncateTable($temp);
         
         $trackObj = new TrackingFunctions();
         $output = $trackObj->trackingMis(array("PROFILES_CONSIDERED"=>$affectedCount));

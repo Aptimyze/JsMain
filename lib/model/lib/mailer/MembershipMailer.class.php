@@ -84,6 +84,12 @@ class MembershipMailer {
 			break;
 		case 'JS_EXCLUSIVE_FEEDBACK':
 			$currency =$dataArr['currency'];
+                        $username = $dataArr['username'];
+                        
+                        if(!empty($username)) {
+                            $smartyObj->assign('username', $username);
+                        }
+                        
 		        if(!empty($currency)){
         			$smartyObj->assign('currency',$currency);
         		}

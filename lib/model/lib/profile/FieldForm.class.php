@@ -65,11 +65,19 @@ class FieldForm extends sfForm
           $prevMstatus = $this->loggedInObj->getMSTATUS();
           $prevDob = $this->loggedInObj->getDTOFBIRTH();
           $fieldsEdited = array();
-          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;          
+          $sendSMS = ProfileEnums::$sendInstantMessagesForFields;
+          $updateDateFields = ProfileEnums::$updateSortDtForFields; 
+          $updateDate = 0;
 	  foreach($this->formValues as $field_name=>$value){
 		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
 		{
 			$value = "";
+		}
+		if(array_key_exists($field_name,$updateDateFields))
+		{
+                        if($updateDateFields[$field_name]>$updateDate){
+                                $updateDate = $updateDateFields[$field_name];
+                        }
 		}
 		if(array_key_exists($field_name,$sendSMS))
 		{
@@ -195,6 +203,13 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
+        if($updateDate != 0){
+                $searchObj = new NEWJS_SEARCH_SORT_DT();
+                $finalTime = strtotime("now")+($updateDate*60*60);
+                $sortDate = date("Y-m-d H:i:s",$finalTime);
+                $searchObj->updateSortDate($this->loggedInObj->getPROFILEID(),$sortDate);
+                unset($searchObj);
+        }
         if(count($criticalInfoFieldArr)){
                 $request=sfContext::getInstance()->getRequest();
                 $insert = 1;

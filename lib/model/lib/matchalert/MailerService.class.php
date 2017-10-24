@@ -96,10 +96,10 @@ class MailerService
 	* @param limit : limit of receivers to send mail at a cron execution
 	* @return recievers : array of receivers
 	*/
-	public function getNewMatchesMailerReceivers($totalScript="",$script="",$limit='')
+	public function getNewMatchesMailerReceivers($totalScript="",$script="",$limit='',$dailyCron=0)
 	{
         	$newMatchesObj = new new_matches_emails_MAILER();
-		$recievers = $newMatchesObj->getMailerProfiles("",$totalScript,$script,$limit);
+		$recievers = $newMatchesObj->getMailerProfiles("",$totalScript,$script,$limit,"",$dailyCron);
 		return $recievers;
 	}
 
@@ -163,12 +163,12 @@ class MailerService
         *@param sno : serial number of mail
         *@param flag : sent status of the mail
         */
-        public function updateSentForNewMatchesUsers($sno,$flag)
+        public function updateSentForNewMatchesUsers($sno,$flag,$dailyCron=0)
         {
                 if(!$sno || !$flag)
                         throw  new jsException("No sno/flag in updateSentForNewMatchesUsers() in RegularMatchAlerts.class.php");
                 $matchalertMailerObj = new new_matches_emails_MAILER();
-                $matchalertMailerObj->updateSentForUsers($sno,$flag);
+                $matchalertMailerObj->updateSentForUsers($sno,$flag,$dailyCron);
 
         }
         /* This funxtion is used update the sent flag(Y for sent and F for fail) for each visitor alert mail receiver
