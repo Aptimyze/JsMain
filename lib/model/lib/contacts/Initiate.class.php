@@ -231,9 +231,11 @@ class Initiate extends ContactEvent{
         $this->viewerMemcacheObject->update("WEEK_INI_BY_ME",1,$this->optionalFlag);
         $this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP",1,$this->optionalFlag);
         $this->viewerMemcacheObject->updateMemcache();
-        if ($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED) {
+        if (in_array($this->contactHandler->getContactObj()->getFILTERED(), array(Contacts::FILTERED_JUNK, Contacts::FILTERED))) {
           $this->viewedMemcacheObject->update("FILTERED",1,$this->optionalFlag);
-          $this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+          if($this->contactHandler->getContactObj()->getFILTERED() == Contacts::FILTERED){
+            $this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+          }
         }
         else {
           $this->viewedMemcacheObject->update("AWAITING_RESPONSE",1,$this->optionalFlag);

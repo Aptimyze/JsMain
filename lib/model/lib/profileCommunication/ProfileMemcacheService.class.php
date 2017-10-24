@@ -435,7 +435,7 @@ class ProfileMemcacheService
                         
                         if ($value["FILTERED"] == 'Y' || $value["FILTERED"] == 'J'){
                                     if ($value['TIME1']=='0'){
-                                    if ($value["SEEN"] != 'Y' && ($value["FILTERED"] == 'Y' || $value["FILTERED"] == 'J'))
+                                    if ($value["SEEN"] != 'Y' && $value["FILTERED"] == 'Y')
                                         $FILTERED_NEW = $FILTERED_NEW + $value["COUNT"];
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
