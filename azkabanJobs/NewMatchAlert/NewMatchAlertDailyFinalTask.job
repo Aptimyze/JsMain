@@ -1,0 +1,3 @@
+type=command
+dependencies=sendNewMatchesMails0Task,sendNewMatchesMails1Task,sendNewMatchesMails2Task
+command=echo newMatchAlerts successfully sent
