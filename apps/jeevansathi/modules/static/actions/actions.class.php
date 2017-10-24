@@ -504,6 +504,14 @@ class staticActions extends sfActions
             $this->time = floor($request->getParameter('time')/60);
             $this->symbol = $request->getParameter('symbol');
      }
+   if($this->layerId==24)
+    {
+          $this->loginProfile=LoggedInProfile::getInstance();
+          $profileId=$this->loginProfile->getPROFILEID();
+          $nameData=(new NameOfUser())->getNameData($profileId);
+          $this->NAME = $nameData[$profileId]["NAME"];
+    }
+
     $this->setTemplate("criticalActionLayer");
   }
 

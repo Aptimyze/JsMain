@@ -757,6 +757,394 @@ var altEmail = '~$altEmail`';</script>
  document.head.appendChild(setscript);
  
    </script>
+~elseif $layerId == '24'`
+<!--================================================================================================================================-->
+<style>
+input::-ms-clear {
+    display: none;
+}
+#readmoreConsent{
+  position: absolute;
+  left: 47%;
+  margin-top: -3%;
+  cursor: pointer;
+}
+#aadharField{
+      color: #34495e;
+      height: 30px;
+      width: 426px;
+      font-size: 20px;
+      font-weight: 500;
+      padding-left: 6px;
+      letter-spacing: 1.2167em;
+
+      margin: auto;
+      background: transparent;
+      display: block;
+      text-align: left;
+          
+      background: linear-gradient(to right, currentColor 0%,
+                                            currentColor calc(100%/2), 
+                                            transparent 50%, 
+                                            transparent 100%
+
+                                            ) repeat-x left bottom;    
+
+      background-size: 36px 1px;
+      border: none;
+      /*border-bottom: 1px solid;*/
+      /*font-family: monospace;*/
+    }
+.scrollableCAL{
+  max-height: 420px; overflow-y: auto; overflow-x: hidden;
+  height: 380px;
+}
+.scrollbar-thin::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+
+.scrollbar-thin::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb
+{
+  background-color: #999;
+}
+
+
+.bottom_fade{
+  position: relative;
+  height: 3em;
+  overflow: hidden;
+  text-align: center;
+}
+
+.bottom_fade:after {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background: linear-gradient(to top,
+     rgba(230,230,230, 1) 20%, 
+     rgba(230,230,230, 0) 80%
+  );
+  pointer-events: none; /* so the text is still selectable */
+} 
+
+
+.disp-hidden{
+  visibility : hidden !important;
+}
+#aadhar_input{
+  padding-top: 4%;
+}
+#nameInputCAL{
+      border:  0;
+      border-bottom: 1px solid rgba(63, 72, 79, 0.5);     
+      padding: 6px;     
+      background: transparent;
+}
+#nameInputCAL:focus{
+  color: #34495e;
+}
+#TRYAGAINBTN {
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    bottom: 11px;
+    left: 43%;
+}
+.collapse-text{
+  overflow: hidden;
+  height: 2em;
+}
+#criticalAction-layer-content{
+  padding-bottom: 0;
+}
+</style>
+<script>
+String.prototype.aadhaarVerificationCheck = (function()
+    {
+        var d = [[0,1,2,3,4,5,6,7,8,9],
+                [1,2,3,4,0,6,7,8,9,5],
+                [2,3,4,0,1,7,8,9,5,6],
+                [3,4,0,1,2,8,9,5,6,7],
+                [4,0,1,2,3,9,5,6,7,8],
+                [5,9,8,7,6,0,4,3,2,1],
+                [6,5,9,8,7,1,0,4,3,2],
+                [7,6,5,9,8,2,1,0,4,3],
+                [8,7,6,5,9,3,2,1,0,4],
+                [9,8,7,6,5,4,3,2,1,0]];
+        var p = [[0,1,2,3,4,5,6,7,8,9],
+                [1,5,7,6,2,8,3,0,9,4],
+                [5,8,0,3,7,9,6,1,4,2],
+                [8,9,1,6,0,4,3,5,2,7],
+                [9,4,5,3,1,2,6,8,7,0],
+                [4,2,8,6,5,7,3,9,0,1],
+                [2,7,9,3,8,0,6,4,1,5],
+                [7,0,4,6,9,1,3,2,5,8]];
+        var j = [0,4,3,2,1,5,6,7,8,9];
+
+        return function()
+        {
+            var c = 0;
+            this.replace(/\D+/g,"").split("").reverse().join("").replace(/[\d]/g, function(u, i, o){
+                c = d[c][p[i&7][parseInt(u,10)]];
+            });
+            return (c === 0);
+        };
+    })();
+function validateUserName(name){
+  var name_of_user=name;
+  name_of_user = name_of_user.replace(/\./gi, " ");
+  name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+  name_of_user = name_of_user.replace(/\,|\'/gi, "");
+  name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+  var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+  if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+    return "Please provide a valid Full Name";
+  }else{
+    var nameArr = name_of_user.split(" ");
+    if(nameArr.length<2){
+      return "Please provide your first name along with surname, not just the first name";
+    }else{
+    return true;
+    }
+  }
+  return true;
+}
+function getpos(El){
+    return El.selectionStart;
+  }
+function setpos(El, pos){
+  El.selectionStart = pos;
+  El.selectionEnd = pos;
+}
+function is_numeric(n){
+  var patt = new RegExp("^[0-9]");
+  return patt.test(n);
+}
+
+  
+var aadhar = "";
+
+var COUNT = 10;
+var COUNTER;
+var CALInnerHtml;
+var TRYAGAINTXT = "Try Again";
+var TryAgainClick = false;
+var AadharResponseShown = false;
+function restoreContent(){
+  TryAgainClick = true;
+  $("#aadharField").val("");
+
+  $("#cal_content_2").hide();
+  $("#cal_content_1").show();
+ 
+  $("#closeButtonCALayer").hide();
+  $("#CALButtonB2").show();
+  $("#CALButtonB1").show();
+  nameErrorObj = null;
+  aadharErrorObj = null;
+  consentErrorObj = null;
+
+  $("#cal_content_2").html('<div class="extraNumber"><img src="~sfConfig::get("app_img_url")`/images/colorbox/loader_big.gif"></div>');
+}
+
+$("#aadharField").keydown(function(e){
+  if(![37,38,39,40,8,46, 48,49,50,51,52,53,54,55,56,57].includes(e.which)){
+    e.preventDefault();return;
+  }
+  });
+
+function aadharVerificationApi(aadhar, UserName){
+  var CardHtml = "";
+  $("#cal_content_1").hide();
+  // $("#cal_content_2").html(CardHtml);
+  $("#cal_content_2").show();
+  $("#CALButtonB2").hide();
+  $("#CALButtonB1").hide();
+
+  var Url = "/api/v1/profile/aadharVerification?name="+UserName+"&aid="+aadhar;
+  $.get(Url, function(data){
+    if(data.responseStatusCode == 1){
+      $("#cal_content_2").hide();
+      $("#cal_content_1").show();
+      $("#CALButtonB2").show();
+      $("#CALButtonB1").show();
+
+      $("#aadharError").text(data.ERROR).removeClass("disp-hidden");
+      return false;
+    }else if(data.responseStatusCode == 0){
+      COUNT = 10;
+       // updateCount(COUNT,COUNTER, UserName);
+       COUNTER = setInterval(function(){
+        updateCount( UserName);
+        --COUNT;
+      }, 1000);
+    }
+  }, "json");
+}
+
+function updateCount( UserName){
+  if(COUNT <= 0){
+    clearInterval(COUNTER);
+    if(!TryAgainClick)$("#closeButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Request Timeout"+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
+    $("#cal_content_2").html(CardHtml);
+    return;
+  }
+  var Url  = "/api/v1/profile/aadharVerificationStatus?name="+UserName;
+  if(COUNT%2 ==0)
+  $.get(Url, function(data){
+    // clearInterval(COUNTER);
+    switch(data.VERIFIED){
+      case "Y":
+        clearInterval(COUNTER);
+        $("#okayButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'</div>';
+        $("#cal_content_2").html(CardHtml);
+        AadharResponseShown = true;
+        return;
+      break;
+      case "N":
+        clearInterval(COUNTER);
+        if(!TryAgainClick)$("#closeButtonCALayer").show();
+        CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+data.MESSAGE+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
+        $("#cal_content_2").html(CardHtml);
+        AadharResponseShown = true;
+        return;
+      break;
+      case "P" :
+        CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
+        $("#cal_content_2").html(CardHtml);
+        return;
+      break;
+      // default:
+      //   clearInterval(COUNTER);
+      //   if(!TryAgainClick)$("#closeButtonCALayer").show();
+      //   CardHtml = '<div class="mauto wid470" style="margin-top: 20%;">'+"Something went wrong."+'<br><br><span class="f18 fontlig errCL1" onclick="restoreContent();" style="cursor:pointer;">'+TRYAGAINTXT+'</span></div>';
+      //   $("#cal_content_2").html(CardHtml);
+      //   return;
+      // break;
+    }
+    
+  }, 'json');
+  if(AadharResponseShown == false){
+    var CardHtml = '<div class="mauto vertM"><br><div class="f80">'+COUNT+'</div><br><br><br>please wait..</div>';
+    $("#cal_content_2").html(CardHtml);
+  }
+  
+}
+function get_aadharinput(){
+  $("#closeButtonCALayer").hide();
+  return $("#aadharField").val().split(' ').join('');
+  
+}
+var isCalTrack = false;
+var nameErrorObj, aadharErrorObj, consentErrorObj;
+function manageClicks(clickType){
+  TryAgainClick = false;
+  AadharResponseShown = false;
+  $("#cal_content_2").html('<div class="extraNumber"><img src="~sfConfig::get("app_img_url")`/images/colorbox/loader_big.gif"></div>');
+  if(!nameErrorObj)
+    nameErrorObj = $("#nameError");
+  if(!aadharErrorObj)
+    aadharErrorObj = $("#aadharError");
+  if(!consentErrorObj)
+    consentErrorObj = $("#consentError");
+
+  nameErrorObj.addClass("disp-hidden");
+  aadharErrorObj.addClass("disp-hidden");
+  consentErrorObj.addClass("disp-hidden");
+  switch(clickType){
+    case "CALBUTTON1":
+      var aadhar = get_aadharinput();
+      if(aadhar.length == 12 && aadhar.aadhaarVerificationCheck()){
+        var UserName = $("#nameInputCAL").val();
+        var nameError = validateUserName(UserName);
+        if(!nameError.length){
+          if($('#' + "consentCheckbox").is(":checked")){
+            // $(".scrollableCAL").css({"height": "300px"});
+            /* if cal is not tracked then tracking */
+            if(isCalTrack == false){
+              trackingCAL("B1", 24);
+              isCalTrack = true;
+            }
+            aadharVerificationApi(aadhar, UserName);
+          }else{
+            consentErrorObj.removeClass("disp-hidden");
+          }
+        }else{
+          nameErrorObj.text(nameError).removeClass("disp-hidden");
+        }
+      }else{
+        // aadharErrorObj.removeClass("disp-hidden");
+        $("#aadharError").text("Provide a valid Aadhaar number").removeClass("disp-hidden");
+      }
+    break;
+    case "CALBUTTON2":
+      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/);
+    break;
+    case "SKIP":
+      criticalLayerButtonsAction("close"/*clickAction*/,"B2"/*button*/);
+    break;
+    case "OKAY":
+      criticalLayerButtonsAction("close"/*clickAction*/,""/*button*/);
+
+    break;
+  }
+}
+
+</script>
+<div id="criticalAction-layer" class="layerMidset setshare layersZ pos_fix calwid1 disp-none" style="display: block;">
+<div class=" calbg1 fullwid txtc pos-rel scrollbar-thin scrollableCAL">
+<div class=" vmid fontlig color11 padalln" id="criticalAction-layer-content">
+<div id="cal_content_1">
+<div class="wid470 mauto">
+<div class="f22">~$titleText`</div>
+<div class="f14 lh22">We are moving to a secure platform by verifying Aadhaar of our users. Verify your Aadhaar to appear as 'Aadhaar Verified'.<br>Your Aadhaar Number will not be shared with anyone.</div>
+<div class="clearfix" id="aadhar_input">
+<input type="text" name="" id="aadharField" size="12" maxlength="12" />
+
+</div>
+<div id="aadharError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Provide a valid Aadhaar number</div>
+<div class="f13  mt5 txtc pb30">Aadhaar details will be verified by government data</div>
+<div  class="f12  mt5 txtc">Your Name (As per Aadhaar Card)</div>
+<div class="pos-rel wid300 divcenter">
+  <input type="text" id="nameInputCAL" class="f15 wid90p pa2 color11 txtc" value="~$NAME`" placeholder="Your name here">
+  <img onclick="$('#nameInputCAL').focus();" src='~sfConfig::get("app_img_url")`/images/jspc/myjsImg/pencil.png' class="pos-abs" style="cursor: pointer;right:9px;top:5px">
+</div>
+<div id="nameError" class="bold f11 colrGrey mt5 txtc errCL1 disp-hidden">Mention a valid name</div>
+  <div id="consentError" class="bold f11 colrGrey mt5 txtc errCL1 fl disp-hidden">Consent is needed to verify</div>
+
+</div>
+<div class="clearfix">
+  <div style="display: inline-flex;">
+  <div class="fl" style="width:5%"><input type="checkbox" id="consentCheckbox" checked="checked"></div>
+  <div id="consentText" class="wid94p bottom_fade f13" style="line-height: 1.5; padding-bottom: 15px;text-align: center;cursor: pointer;" onclick="$(this).toggleClass('bottom_fade');$('#readmoreConsent').toggleClass('disp-hidden');">~$calObject.LEGAL_TEXT`
+  </div>
+  </div>
+  <div id="readmoreConsent" onclick="$(this).toggleClass('disp-hidden');$('#consentText').toggleClass('bottom_fade');" class="bold  f11 colrGrey mt5 txtc errCL1" >read more</div>
+</div>
+</div>
+<div id="cal_content_2" class="disp-none"><div class="extraNumber"><img src="~sfConfig::get('app_img_url')`/images/colorbox/loader_big.gif"></div></div>
+</div>
+</div>
+<div class="clearfix">
+<button id="CALButtonB1" onclick="manageClicks('CALBUTTON1');" class="cursp bg_pink f18 colrw txtc fontreg lh61 brdr-0 calwid2 fl">Verify</button><button id="CALButtonB2" onclick="manageClicks('CALBUTTON2');" class="cursp  bg6 calwid2  f18 colrw txtc fontreg lh61 brdr-0 fl">Not Now</button>
+</div>
+<button  id='closeButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('SKIP');">Close</button>
+<button  id='okayButtonCALayer'  class="disp-none cursp bg_pink calwid1  f18 colrw txtc fontreg lh61 brdr-0 fl" onclick="manageClicks('OKAY');">Okay</button>
+</div>
+<!--================================================================================================================================-->
 
 ~elseif $layerId == '25'`
  
