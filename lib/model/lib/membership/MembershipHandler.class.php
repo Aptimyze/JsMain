@@ -419,14 +419,16 @@ class MembershipHandler
 
     public function fetchLowestActivePrices($userObj, $allMainMem, $device = 'desktop')
     {
-        $minPriceArr = $this->newLeastMembershipPrice($userObj,$device);
+        $minPriceArr = $this->newLeastMembershipPrice($userObj,$allMainMem,$device);
         $currency = $this->getUserIPandCurrency()[1];
         foreach ($minPriceArr as $key=>$value){
             $minPriceArr[$key]["PRICE_RS_TAX"] = $minPriceArr[$key][$device . "_RS"];
-            if($currency == "DOL")
-                $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_USD"];
-            else
-                $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_INR"];
+            if(!$minPriceArr[$key]["OFFER_PRICE"]){
+                if($currency == "DOL")
+                    $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_USD"];
+                else
+                    $minPriceArr[$key]["OFFER_PRICE"] = $value["PRICE_INR"];
+            }
             unset($minPriceArr[$key]["SERVICEID"]);
         }
         return $minPriceArr;
@@ -2988,7 +2990,7 @@ class MembershipHandler
         return $newAmountArr;
     }
 
-    public function newLeastMembershipPrice($userObj,$device){
+    public function newLeastMembershipPrice($userObj,$allMainMem,$device){
         if(!empty($userObj) && $userObj!="" && $userObj->profileid){
             $mtongueArr[$userObj->mtongue]="LoggedIn";
         } else{
@@ -3006,12 +3008,14 @@ class MembershipHandler
                     $mainMem = rtrim(preg_replace('/[^a-zA-Z]/', '', $kk),"L");
                     if(!empty($userObj) && $userObj!="" && $userObj->profileid && $userObj->mtongue !=$v)
                         continue;
-                    else if(in_array($mainMem,$memArray))
-                        $minPriceArr[$v][$mainMem][$kk]=$vv;
+                    else if(in_array($mainMem,$memArray)) {
+                        $minPriceArr[$v][$mainMem][$kk] = $vv;
+                        if($allMainMem[$mainMem][$kk])
+                            $minPriceArr[$v][$mainMem][$kk]["OFFER_PRICE"] = $allMainMem[$mainMem][$kk]["OFFER_PRICE"];
+                    }
                 }
             }
         }
-
         $membership = array();
         foreach ($minPriceArr as $key=>$value){
             foreach ($value as $k=>$v){

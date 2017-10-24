@@ -79,7 +79,7 @@ class CommunicationHistory
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
 				if($value['MESSAGE']){
-					if(strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false)
+					if((strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false ) && $value['TYPE']=="I")
 					{
 						$messageArr=explode("||",$value['MESSAGE']);
 						$eoiMsgCount = count($messageArr);
