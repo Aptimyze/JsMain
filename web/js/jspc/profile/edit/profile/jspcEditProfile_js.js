@@ -9,6 +9,7 @@
 var retryAttempt = 0;
 var EditApp = {};
 var callBlur = 0;
+var DataUpdated = 0;
 EditApp = function(){
 
   try{
@@ -246,6 +247,7 @@ EditApp = function(){
      * Store Data in editAppObject
      */
     storeData = function(data,textStatus,jqXHR){
+       DataUpdated = 1;
       var userReligion;
       bErrorInEditAjax = false;
       retryStoreData = 0;
@@ -750,7 +752,7 @@ EditApp = function(){
       	var inputAttr     = {class:"f15 color11 fontlig wid70p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
       if(fieldObject.key=="AADHAAR"){
         var fieldDivAttr  = {class:"fl edpbrd3 wid351 edpbrad1 pos-rel fl edpp5 edpbrad1 edpbg1"}
-      	var inputAttr     = {class:"f15 color11 fontlig wid70p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
+      	var inputAttr     = {class:"f15 color11 fontlig wid70p cursp",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
         } else
       	var inputAttr     = {class:"f15 color11 fontlig wid94p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
       var errorLabelAttr = {class:"pos-abs js-errorLabel errorChosenTop f13 colr5 disp-none"};
@@ -7478,21 +7480,25 @@ if(button == "B2"){
         $('#criticalAction-layer').attr("style", "display:none;");
 }else{
         if(button == ""){
+                DataUpdated = 0;
                 EditApp.updateNeedToUpdate();
                 EditApp.init();
-                setTimeout(function(){
-                        var aadhar = EditApp.getEditAppFields("basic","AADHAAR");
-                        var name = EditApp.getEditAppFields("basic","NAME");
-                        $("#nameView").html(name.decValue);
-                        if(aadhar.decValue != ""){
-                                $("#aadhaarView").text(aadhar.decValue).addClass("color11").removeClass("color5");
-                                $("#aadhaarLabelParent").find(".js-undSecMsg").removeClass("disp-none");
-                        }else{
-                                $("#aadhaarView").text("Not filled in").removeClass("edpcolr2").removeClass("color11").addClass("color5");
-                                $("#aadhaarLabelParent").find(".js-undSecMsg").addClass("disp-none");
+                var handle = setInterval(function(){
+                        if(DataUpdated == 1){
+                             var aadhar = EditApp.getEditAppFields("basic","AADHAAR");
+                                var name = EditApp.getEditAppFields("basic","NAME");
+                                $("#nameView").html(name.decValue);
+                                if(aadhar.decValue != ""){
+                                        $("#aadhaarView").text(aadhar.decValue).addClass("color11").removeClass("color5");
+                                        $("#aadhaarLabelParent").find(".js-undSecMsg").removeClass("disp-none");
+                                }else{
+                                        $("#aadhaarView").text("Not filled in").removeClass("edpcolr2").removeClass("color11").addClass("color5");
+                                        $("#aadhaarLabelParent").find(".js-undSecMsg").addClass("disp-none");
+                                }
+                                showHideEditSection("basic","hide");
+                                clearInterval(handle);
                         }
-                        showHideEditSection("basic","hide");
-                },1000);
+                },500);
         }
 }
 $('body').css("overflow", "initial");
