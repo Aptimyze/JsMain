@@ -76,12 +76,27 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         },
       }).then( (response) => {
         
-        if(response.data.showAndBeyond){
-          var script = document.createElement("script");
-          script.src = "//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js";
-          script.async = true;
-          document.body.appendChild(script);
+        try{
+          if(response.data.showAndBeyond){
+            var url = "//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js";
+            function isJsLoaded(){
+              var scripts = document.getElementsByTagName('script');
+              for (var i = scripts.length; i--;) {
+                if (scripts[i].src.indexOf(url) != -1){
+                  return true;
+                }
+              }
+              return false;
+            }
+            if(!isJsLoaded()){
+                var andbeyond = document.createElement("script");
+                andbeyond.src = url;
+                andbeyond.async = true;
+                document.head.appendChild(andbeyond);
+              }
+          }
         }
+        catch(e){}
 
         switch(response.data.responseStatusCode)
         {
