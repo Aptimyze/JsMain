@@ -61,6 +61,9 @@ class desktopRegister1 extends registrationBaseClass {
     parent::preDisplay();
     $authenticationObj = new WebAuthentication;
     $authenticationObj->removeLoginCookies();
+    $campaignData = RegistrationFunctions::getCampaignVars($this->request);
+    if($campaignData)
+        $this->campaignData = $campaignData;
   }
   /**
    * function called to update jprofile and insert name
@@ -106,6 +109,8 @@ class desktopRegister1 extends registrationBaseClass {
     parent::postSubmit();
 
     $this->sourceVar['source'] = RegistrationFunctions::setSourceHomeCookie($this->id);
+    
+    RegistrationFunctions::putCampaignVars($this->id,$this->request->getParameter("campaignData"));
 
     RegistrationMisc::contactArchiveUpdate($this->loginProfile, $this->pageVar['ip']);
 
