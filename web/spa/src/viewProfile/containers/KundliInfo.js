@@ -36,7 +36,7 @@ class KundliInfo extends React.Component {
             } else {
                 colorClass = "redText";
             }
-            if(this.props.about.gender = "Female") {
+            if(this.props.about.gender == "Female") {
                 szHisHer = "her";
             } else {
                 szHisHer = "his";

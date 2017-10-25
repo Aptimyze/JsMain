@@ -154,12 +154,26 @@ class ContactHandler
     $this->contactLimitWarning = $warning;
   }
   private $isJunk = false;
+  private $junkType = 'default';
+  private $junkData = 'default'; 
 
   public  function getIsJunk(){
     return $this->isJunk;
   }
   public  function setIsJunk($junk=false){
     $this->isJunk = $junk;
+  }
+  public function getJunkType(){
+    return $this->junkType;
+  }
+  public function getJunkData(){
+    return $this->junkData;
+  }
+  public function setJunkType($junkType=''){
+    $this->junkType = $junkType;
+  }
+  public function setJunkData($junkData=''){
+    $this->junkData = $junkData;
   }
 
 /*

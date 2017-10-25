@@ -506,14 +506,14 @@ commonBackBtnBind = function()
         if(typeof ShowNextPage != 'undefined')
         {
         	
-            // if(typeof historyStoreObj != "undefined" && historyStoreObj.History.length>0)
+            if(typeof historyStoreObj != "undefined" && historyStoreObj.History.length>0)
             {
                 history.back();
             }
-            // else
-            // {
-            //     ShowNextPage('/profile/mainmenu.php',0);
-            // }
+            else
+            {
+                ShowNextPage('/profile/mainmenu.php',0);
+            }
         }
         else
         {

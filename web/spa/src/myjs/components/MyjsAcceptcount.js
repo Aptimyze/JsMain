@@ -27,12 +27,25 @@ export default class AcceptCount extends React.Component {
   }
 componentDidMount(){
 this.setState({bounceAnimation:" bounceIn animated "});
+try
+{
+  let ele=document.getElementById("JBrowserGap");
+  console.log(ele.classList.contains("dn"));
+  if(ele.classList.contains("dn") )
+  {
+    ele.classList.remove("dn");
+  }
+}
+catch(e)
+{
+  console.log("second loader MYJS "+e);
+}
 
 
 }
 
   render(){
-    
+
     if(!this.props.hamFetched) {
         return <div></div>;
       }

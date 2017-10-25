@@ -287,7 +287,7 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite())
+        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite() || MobileCommon::isIOSApp())
         {
         	$tickArr = array();
 

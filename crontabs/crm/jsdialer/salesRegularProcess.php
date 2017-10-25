@@ -26,8 +26,8 @@ $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);
 $csvEntryDate =date("Y-m-d",time()-10.5*60*60);
 
 /* Config array Start */
-$campaignArr 		=array('JS_NCRNEW','MAH_JSNEW','JS_RENEWAL','OB_JS_PAID','OB_RENEWAL_MAH');
-$campaignTableArr       =array('JS_NCRNEW'=>array('SALES_CSV_DATA_NOIDA','SALES_CSV_DATA_DELHI'),'MAH_JSNEW'=>array('SALES_CSV_DATA_MUMBAI','SALES_CSV_DATA_PUNE'),'JS_RENEWAL'=>array('SALES_CSV_DATA_RENEWAL'),'OB_JS_PAID'=>array('SALES_CSV_DATA_PAID_CAMPAIGN'),'OB_RENEWAL_MAH'=>array('SALES_CSV_DATA_RENEWAL'));
+$campaignArr 		=array('JS_NCRNEW','MAH_JSNEW','JS_NCRNEW_Auto','JS_RENEWAL','OB_JS_PAID','OB_RENEWAL_MAH');
+$campaignTableArr       =array('JS_NCRNEW'=>array('SALES_CSV_DATA_NOIDA','SALES_CSV_DATA_DELHI'),'JS_NCRNEW_Auto'=>array('SALES_CSV_DATA_NOIDA_NEW'),'MAH_JSNEW'=>array('SALES_CSV_DATA_MUMBAI','SALES_CSV_DATA_PUNE'),'JS_RENEWAL'=>array('SALES_CSV_DATA_RENEWAL'),'OB_JS_PAID'=>array('SALES_CSV_DATA_PAID_CAMPAIGN'),'OB_RENEWAL_MAH'=>array('SALES_CSV_DATA_RENEWAL'));
 
 /* Config array End */
 

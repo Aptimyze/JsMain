@@ -5,16 +5,18 @@ class incentive_IN_DIALER extends TABLE
         {
                 parent::__construct($dbname);
         }
-	public function insertProfile($profileid,$priority)
+	public function insertProfile($profileid,$priority,$campaignName,$eligible)
         {
                 try
                 {
 			$now=date('Y-m-d',time());
-                        $sql = "INSERT IGNORE INTO incentive.IN_DIALER (PROFILEID,PRIORITY,ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ENTRY_DATE)";
+                        $sql = "INSERT IGNORE INTO incentive.IN_DIALER (PROFILEID,PRIORITY,CAMPAIGN_NAME,ENTRY_DATE,ELIGIBLE) VALUES(:PROFILEID,:PRIORITY,:CAMPAIGN_NAME,:ENTRY_DATE,:ELIGIBLE)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
 			$prep->bindValue(":PRIORITY",$priority,PDO::PARAM_INT);
+			$prep->bindValue(":CAMPAIGN_NAME",$campaignName,PDO::PARAM_STR);
 			$prep->bindValue(":ENTRY_DATE",$now,PDO::PARAM_STR);
+			$prep->bindValue(":ELIGIBLE",$eligible,PDO::PARAM_STR);
                         $prep->execute();
                 }
                 catch(Exception $e)
@@ -91,5 +93,24 @@ class incentive_IN_DIALER extends TABLE
                 }
                 return $profiles;
         }
+        public function fetchDialerProfilesDetails()
+        {
+                try
+                {
+                        $sql = "SELECT * FROM incentive.IN_DIALER";
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+                        while($res=$prep->fetch(PDO::FETCH_ASSOC)){
+				$pid	   		=$res["PROFILEID"];	
+                                $profileArr[$pid]	=$res;
+			}
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+                return $profileArr;
+        }
+
 }
 ?>

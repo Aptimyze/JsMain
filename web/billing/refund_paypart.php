@@ -245,8 +245,9 @@ if(authenticated($cid))
 				        mysql_query_decide($sql) or logError_sums($sql,1);
 
 				}
-				$sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
+                                $sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
+                                
 				$sql_ss = "UPDATE billing.SERVICE_STATUS SET ACTIVE = 'Y' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
 

@@ -1364,4 +1364,14 @@ class membershipActions extends sfActions
         $respObj->generateResponse();
         die();
     }
+
+    public function executeUpdateRestoreIdV1(sfWebRequest $request){
+        $profileid = $request->getParameter('profileid');
+        $restoreid = $request->getParameter('restoreid');
+        if($profileid && $restoreid){
+            $freshchat = new NEWJS_FRESHCHAT();
+            $freshchat->insertRestoreID($profileid,$restoreid);
+        }
+        die();
+    }
 }

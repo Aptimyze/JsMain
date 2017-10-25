@@ -1,2 +1,4 @@
 type=command
 command=${php5} ${docRoot}/crontabs/housekeeping/monthlyHousekeeping.php
+retries=5
+retry.backoff=600000

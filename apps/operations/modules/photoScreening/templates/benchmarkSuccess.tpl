@@ -47,8 +47,8 @@
                     </a>
                     <!-- Pic Description -->
                     <div class="desc">
-                        <div style="float: left"> Details
-                            <table border="1">
+                        <div style="float: left"> ~$details.mainpic`
+                            <table border="2">
                                 <tr><td>Face Count</td><td>~$details.facecount`</td></tr>
                                 <tr><td>Adult</td><td>~$details.adult`</td></tr>
                                 <tr><td>Spoof</td><td>~$details.spoof`</td></tr>
@@ -57,14 +57,17 @@
                             ~if $details.facecount gt 0`
                             ~foreach from=$details.faces item=photo key=k`
                             Face ~$k+1`
-                            <table border="1">
-                                <tr><td>Blur</td><td>~$photo.BLUR`</td></tr>
+                            <table border="2">
+                                <tr><td>Blur</td><td>~$photo.BLURNESS`</td></tr>
                                 <tr><td>Pan Angle</td><td>~$photo.PAN_ANGLE`</td></tr>
                                 <tr><td>Roll Angle</td><td>~$photo.ROLL_ANGLE`</td></tr>
                                 <tr><td>Tilt Angle</td><td>~$photo.TILT_ANGLE`</td></tr>
                                 <tr><td>Under Exposed</td><td>~$photo.UNDEREXPOSED`</td></tr>
-
-                            </table>
+                                <tr><td>Ethnicity</td><td>~$photo.ETHNICITY`</td></tr>
+                                <tr><td>Gender</td><td>~$photo.GENDER`</td></tr>
+                                <tr><td>Age</td><td>~$photo.AGE`</td></tr>
+                                <tr><td>Face Quality</td><td>~$photo.FACEQUALITY`</td></tr>
+                               </table>
                             ~/foreach`
                             ~/if`
                         </div>
