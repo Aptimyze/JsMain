@@ -752,7 +752,7 @@ EditApp = function(){
       	var inputAttr     = {class:"f15 color11 fontlig wid70p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
       if(fieldObject.key=="AADHAAR"){
         var fieldDivAttr  = {class:"fl edpbrd3 wid351 edpbrad1 pos-rel fl edpp5 edpbrad1 edpbg1"}
-      	var inputAttr     = {class:"f15 color11 fontlig wid70p cursp",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
+      	var inputAttr     = {class:"f15 color11 fontlig wid70p cursp",disabled:"disabled",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
         } else
       	var inputAttr     = {class:"f15 color11 fontlig wid94p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
       var errorLabelAttr = {class:"pos-abs js-errorLabel errorChosenTop f13 colr5 disp-none"};
