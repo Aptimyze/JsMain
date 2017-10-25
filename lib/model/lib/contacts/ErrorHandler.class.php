@@ -801,7 +801,7 @@ class ErrorHandler
 					"type" => "WEEKLY",
 					"text" => "week",
 					"value" => (100*($monthly_initiated + 1)) / $limitArr["WEEKLY_LIMIT"],
-					"count" => $monthly_initiated+1,
+					"count" => $weekly_initiated+1,
 					"limit" => $limitArr["WEEKLY_LIMIT"],
 					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("WEEK")))
 					),
@@ -809,7 +809,7 @@ class ErrorHandler
 					"type" => "MONTHLY",
 					"text" => "month",
 					"value" => (100*($weekly_initiated + 1)) / $limitArr["MONTH_LIMIT"],
-					"count" => $weekly_initiated+1,
+					"count" => $monthly_initiated+1,
 					"limit" => $limitArr["MONTH_LIMIT"],
 					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("MONTH")))
 					),
