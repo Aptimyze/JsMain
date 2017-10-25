@@ -355,8 +355,8 @@ class SearchUtility
 					$searchParamsSetter["L".$cluster]=$temp[0];
 					$searchParamsSetter["H".$cluster]=$temp[1];
 				}
-                                if(($cluster == "INCOME" || $cluster = "INCOME_DOL") && strpos($clusterVal,"#") !== false){
-                                        $temp = explode("#",$clusterVal);
+                                if(($cluster == "INCOME" || $cluster = "INCOME_DOL") && strpos($clusterVal,"$$") !== false){
+                                        $temp = explode("$$",$clusterVal);
                                         $rupeesValues = explode("$",$temp[0]);
                                         $dollerValues = explode("$",$temp[1]);
                                         $searchParamsSetter["LINCOME"] = $rArr["minIR"] = $rupeesValues[0];
