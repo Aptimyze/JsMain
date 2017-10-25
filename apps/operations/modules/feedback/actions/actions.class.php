@@ -40,8 +40,25 @@ class feedbackActions extends sfActions
 
 }
 
-	
 
+  public function executeUpdateReviewStatus(sfWebRequest $request){
+    $status = $request->getParameter("status");
+    $id = $request->getParameter("id");
+    $agentDetailObj=new AgentAllocationDetails();
+    $cid = $agentDetailObj->fetchAgentName($request->getParameter("cid"));
+
+    if($cid && $id && $status && is_string($status)){
+
+      $reportAbuseOb = new REPORT_ABUSE_LOG('newjs_slave');
+      // die(json_encode(array("status" => "success00")));
+
+      $updateFlag = $reportAbuseOb->updateReviewStatus($id, $status, $cid);
+      if($updateFlag){
+        die(json_encode(array("status" => "success")));
+      }
+    }
+    die(json_encode(array("status" => "failure")));
+  }
 
 	public function executeReportAbuseLog(sfWebRequest $request)
 	{
@@ -65,6 +82,8 @@ class feedbackActions extends sfActions
         {
           $tempArray['reportee'] = $value['REPORTEE'];
           $tempArray['reporter'] = $value['REPORTER'];
+          $tempArray['review_status'] = $value['REVIEW_STATUS'];
+          $tempArray['id'] = $value['ID'];
 
           $tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
           $tempArray['count']=$countArray[$value['REPORTEE']];

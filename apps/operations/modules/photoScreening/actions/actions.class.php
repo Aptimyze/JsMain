@@ -841,14 +841,12 @@ class photoScreeningActions extends sfActions {
 		$adult = $profileDetails["ADULT"];
 		$spoof = $profileDetails["SPOOF"];
 		$violence = $profileDetails["VIOLENCE"];
+		$mainpic = $profileDetails["MAINPIC"];
 		$faceDetails = null;
 		if($faceCount>0)
 		{
 			$faceDetails = $photoDataObj->getFace($id);
 		}
-
-
-
 		$arrOut = array("Id" => $id,
 						"imgs" => $imagePath,
 						"facecount"=>$faceCount,
@@ -856,7 +854,8 @@ class photoScreeningActions extends sfActions {
 			"spoof"=>$spoof,
 			"violence"=>$violence,
 			"faces"=>$faceDetails,
-			"pictureid"=>$pictureid
+			"pictureid"=>$pictureid,
+			"mainpic"=>$mainpic==1?"Main pic":"Album Pic"
 	);
 		if ($request->getParameter("json_response") == 1) {
 			header("Content-type: application/json");

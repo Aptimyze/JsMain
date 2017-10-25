@@ -21,7 +21,7 @@ class crmMailer {
         $smartyObj = $emailTpl->getSmarty();
 		$smartyObj->assign("instanceID",$instanceID);
 		if(isset($campaign)){
-			if($campaign == "IB_Sales"){
+		    if($campaign == "IB_Sales"||$campaign =="IB_PaidService"){
 				$surveyLink = "https://www.surveymonkey.com/r/B6NGKY8";
                         }
 			if($campaign == "IB_Service"){

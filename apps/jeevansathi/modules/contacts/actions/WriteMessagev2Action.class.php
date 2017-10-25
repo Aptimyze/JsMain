@@ -151,7 +151,7 @@ class WriteMessagev2Action extends sfAction
 				$timeValue			  = JsCommon::ESItoIST($value["DATE"]);
 				$arr["messages"][$key]["time"] 	  = $timeValue ;
 				$dateValueArr 			  = @explode(" ",$timeValue);
-				$timeTxtVal 			  = CommonUtility::convertDateToDayDiff($value["DATE"]);
+				$timeTxtVal 			  = CommonUtility::convertDateToDay($value["DATE"]);
 				if($this->loginProfile->getPROFILEID() == $value["SENDER"]){
 					$arr["messages"][$key]["mymessage"] = "true";
 					$arr["messages"][$key]["timeTxt"] =$timeTxtVal;

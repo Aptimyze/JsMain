@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-09-08
+	Created on 2017-10-10
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -427,7 +427,7 @@ private static $subjectArray=array(
 '1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'A','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Please make your photo visible'),
 '1844'=>array('MAIL_ID'=>'1844','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Because, We decide as a family !'),
 '1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
-'1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'"Feedback request from Jeevansathi.com"'),
+'1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Feedback request from Jeevansathi.com'),
 '1850'=>array('MAIL_ID'=>'1850','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> could not be generated'),
 '1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed his ~$fieldList`'),
 '1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
