@@ -293,7 +293,7 @@ class RegistrationFunctions
         /*
         * fetching Campaign related parmeters
         */
-       public static function getCampaignVars($request)
+       public static function getCampaignVars($request,$jsonFormat=0)
        {     
              foreach(RegistrationEnums::$campaignParamList as $key=>$val){
                  $value = $request->getParameter($key);
@@ -302,7 +302,9 @@ class RegistrationFunctions
                      $checkArr[] = $val;
                  }
              }
-             return json_encode($campArr,JSON_FORCE_OBJECT);
+             if($jsonFormat)
+                return json_encode($campArr,JSON_FORCE_OBJECT);
+             return $campArr;
        }
        
        /*
@@ -310,7 +312,11 @@ class RegistrationFunctions
         */
        
        public static function putCampaignVars($profileId,$campaignVars){
+            foreach(RegistrationEnums::$campaignParamList as $key=>$val){
+                 if($campaignVars[$key])
+                     $campArr[$key]= $campaignVars[$key];
+            }
             $campVarObj = new MIS_CAMPAIGN_KEYWORD_TRACKING();
-            $campVarObj->insertEntry($profileId, $campaignVars);
+            $campVarObj->insertEntry($profileId, $campArr);
        }
 }

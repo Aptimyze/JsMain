@@ -61,7 +61,7 @@ class desktopRegister1 extends registrationBaseClass {
     parent::preDisplay();
     $authenticationObj = new WebAuthentication;
     $authenticationObj->removeLoginCookies();
-    $campaignData = RegistrationFunctions::getCampaignVars($this->request);
+    $campaignData = RegistrationFunctions::getCampaignVars($this->request,$jsonFormat=1);
     if($campaignData)
         $this->campaignData = $campaignData;
   }
