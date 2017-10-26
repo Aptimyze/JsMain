@@ -224,15 +224,16 @@ class RabbitmqHelper
     public static function rmqLogging($logPath="",$start,$end,$reqId,$threshold,$dataArray){
         $diff = $end-$start;
         if($logPath == ""){
-            $logPath = JsConstants::$cronDocRoot.'log/rabbitTime'.date('Y-m-d').'.log';
+            $logPath = JsConstants::$cronDocRoot.'/log/rabbitTime'.date('Y-m-d').'.log';
             //$logPath = "/data/applogs/Logger/".date('Y-m-d').'rabbitTimePublish.log';
+            //$logPath = JsConstants::$docRoot."/uploads/SearchLogs/xerrorRabbit.log";
         }
         if($diff >= $threshold){
             $logText["time"] = time();
             $logText["connTime"] = round($diff,4);
             $logText["requestId"] = $reqId;
             $logText["source"] = $dataArray["source"];
-            if(file_exists($errorLogPath)==false)
+            if(file_exists($logPath)==false)
                 exec("touch"." ".$logPath,$output);
             error_log(json_encode($logText)."\n",3,$logPath);
         }
