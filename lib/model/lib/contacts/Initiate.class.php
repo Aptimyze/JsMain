@@ -213,7 +213,11 @@ class Initiate extends ContactEvent{
         return true;
       }
       else if (is_array($this->_errorArray) && ((in_array(ErrorHandler::FILTERED, $this->_errorArray) !== false))) {
-        $this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED);
+        if($this->contactHandler->getIsJunk()){
+          $this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED_JUNK);
+        }else{
+          $this->contactHandler->getContactObj()->setFILTERED(Contacts::FILTERED);
+        }
       }
 
       if ($this->contactHandler->getContactObj()->getTYPE() === "E" && $this->contactHandler->getToBeType() === "I") {
@@ -227,9 +231,11 @@ class Initiate extends ContactEvent{
         $this->viewerMemcacheObject->update("WEEK_INI_BY_ME",1,$this->optionalFlag);
         $this->viewerMemcacheObject->update("CONTACTS_MADE_AFTER_DUP",1,$this->optionalFlag);
         $this->viewerMemcacheObject->updateMemcache();
-        if ($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED) {
+        if (in_array($this->contactHandler->getContactObj()->getFILTERED(), array(Contacts::FILTERED_JUNK, Contacts::FILTERED))) {
           $this->viewedMemcacheObject->update("FILTERED",1,$this->optionalFlag);
-          $this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+          if($this->contactHandler->getContactObj()->getFILTERED() == Contacts::FILTERED){
+            $this->viewedMemcacheObject->update("FILTERED_NEW",1,$this->optionalFlag);
+          }
         }
         else {
           $this->viewedMemcacheObject->update("AWAITING_RESPONSE",1,$this->optionalFlag);
@@ -242,7 +248,7 @@ class Initiate extends ContactEvent{
 
       $this->contactHandler->getContactObj()->setType("I");
       
-    if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource()!="AP") {
+    if (($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED_JUNK)  && $this->contactHandler->getPageSource()!="AP") {
   
         try
         {
@@ -364,7 +370,7 @@ class Initiate extends ContactEvent{
 			    {
 				    $this->updateRoster($this->viewer, $this->viewed, "intsent");
 			    }
-			    if ($this->contactHandler->getContactObj()->getFILTERED() == "Y")
+			    if ($this->contactHandler->getContactObj()->getFILTERED() == "Y" || $this->contactHandler->getContactObj()->getFILTERED() == "J")
 				    $roster = "NOTINUSE";
 			    else
 				    $roster = "intrec";
@@ -375,9 +381,18 @@ class Initiate extends ContactEvent{
 		    }
 		    else
 		    {
+          $filteredFlag = 'N';
+          switch ($this->contactHandler->getContactObj()->getFILTERED()) {
+            case 'Y':
+              $filteredFlag = 'Y';
+              break;
+            case 'J':
+              $filteredFlag = 'Y';
+              break;
+          }
 			    $this->sendDataOfQueue(
 				    'CHATROSTERS', 'INITIATE',
-				    array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N"));
+				    array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter" => $filteredFlag));
 		    }
 	    } catch (Exception $e) {
 		    throw new jsException("Something went wrong while creating Roster -" . $e);

@@ -154,10 +154,14 @@ function getResultSet($parameters="",$sendersIn="",$sendersNotIn="",$receiversIn
 			$sql_where[]="SEEN IN($seenIn)";
 		if($seenNotIn)
 			$sql_where[]="SEEN NOT IN($seenNotIn)";
-		if($filteredIn)
+		if($filteredIn){
+			SendMail::send_email('onemail.himanshu@gmail.com',__FUNCTION__.' called from web/P/contacts_functions.php : 158','getResultSet [$filteredIn used]');
 			$sql_where[]="FILTERED IN($filteredIn)";
-		if($filteredNotIn)
+		}
+		if($filteredNotIn){
+			SendMail::send_email('onemail.himanshu@gmail.com',__FUNCTION__.' called from web/P/contacts_functions.php : 158','getResultSet [$filteredNotIn used]');
 			$sql_where[]="FILTERED NOT IN($filteredNotIn)";
+		}
 		if($timeClause)
 			$sql_where[]=$timeClause;	
 		if($sql_where)

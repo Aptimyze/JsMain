@@ -775,7 +775,7 @@ class contactsActions extends sfActions
 				{
 						foreach ($respondArr as $key=>$val)
 						{
-							if($val['TYPE']=='I' && $val['FILTERED']!='Y')
+							if($val['TYPE']=='I' && $val['FILTERED']!='Y' && $val['FILTERED']!='J')
 							{
 								$countAwaiting += $val['COUNT'];
 							}

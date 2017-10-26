@@ -59,7 +59,7 @@ class InformationTypeAdapter
             case "FILTERED_INTEREST":
                 $contactsObj                          = new ContactsRecords();
                 $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
-                $condition["WHERE"]["IN"]["FILTERED"]     = "Y";
+                $condition["WHERE"]["IN"]["FILTERED"]     = array("Y", "J");
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
                 $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
                 break;

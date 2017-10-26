@@ -634,17 +634,169 @@ class ErrorHandler
 	{
 		if($this->errorTypeArr[ErrorHandler::FILTERED])
 		{
-			$whyFlag = 0;
-			if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
-				$whyFlag = 1;
-			
-			$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
-			if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
-			{ 
+			// die(var_dump($this->checkProfileNOTJunk()));
+			if($this->checkProfileNOTJunk()){
+				$whyFlag = 0;
+				if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
+					$whyFlag = 1;
+				
+				$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
+				if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
+				{ 
+					return true;
+				}
+			}
+			else{
+				// checkProfileNOTJunk returned false
+				$this->contactHandlerObj->setIsJunk(true);
+				if($this->contactHandlerObj->getAction()=='POST'){
+					$whyFilter=new MIS_WHY_FILTER();
+					$whyFilter->insertEntry(
+						$this->contactHandlerObj->getViewer()->getPROFILEID(),
+						$this->contactHandlerObj->getViewed()->getPROFILEID(),
+						$this->contactHandlerObj->getJunkType(),
+						$this->contactHandlerObj->getJunkData(),
+						'Y');
+				}
 				return true;
 			}
 		} 
 		return false;
+	}
+	
+	function getClusture($Religion){
+		$Clusture = array(
+		1 => 7 /*Hindu*/,
+		4 => 7 /*Sikh*/,
+		7 => 7 /*Buddhist*/,
+		9 => 7 /*Jain*/,
+
+		2 => 4 /*Muslim*/,
+		3 => 3 /*Christian*/,
+		5 => 5 /*Parsi*/,
+		6 => 6 /*Jewish*/,
+		10 => 2 /*Bahai*/,
+		8 => 1 /*Other*/);
+		return $Clusture[$Religion];
+	}
+	/**
+	 * Check if the profile is Junk.
+	 * Returns `true` when contact is `NOT Junk` else false
+	 * @return bool
+	 * @uses $contactHandlerObj
+	 */
+	function checkProfileNOTJunk(){
+		// units year inches rupees
+		// $Gender = $Sender->getGENDER();
+		$sender = $this->contactHandlerObj->getContactObj()->getSenderObj();
+		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
+
+		$senderArr = array(
+			"age" => $sender->getAGE(),
+			"height" => $sender->getHEIGHT(),
+			"income" => $sender->getINCOME(),
+			"gender" => $sender->getGENDER(),
+			// "religion" => $Sender->getDecoratedReligion(),
+			"religion" => $sender->getRELIGION(),
+			"clusture" => $this->getClusture($sender->getRELIGION())
+			);
+
+		
+		$dbName = JsDbSharding::getShardNo($receiver->getPROFILEID());
+		$jpartnerObj = new newjs_JPARTNER($dbName);
+		$fields = "LAGE,HAGE,LHEIGHT,HHEIGHT,PARTNER_RELIGION,LINCOME";
+		$paramArr['PROFILEID']=$receiver->getPROFILEID();
+		$receiverArr = $jpartnerObj->get($paramArr,$fields)[0];
+
+
+
+		$dppReligionsRaw = explode(',', $receiverArr["PARTNER_RELIGION"]);
+		$dppReligions = array();
+		if($dppReligionsRaw)
+		foreach ($dppReligionsRaw as $religion) {
+			$dppReligions[] = $this->getClusture(substr($religion, 1, -1));
+		}
+		$receiverArr["clusture"] = $dppReligions;
+
+
+        // var_dump($senderArr); var_dump($receiverArr);
+        // die();
+
+
+
+        // var_dump(in_array($senderArr["clusture"], $receiverArr["clusture"]));
+		
+		// $Height = $Sender->getHEIGHT();
+		// $Age = $Sender->getAGE();
+		// echo $Sender->getDecoratedIncomeLevel();
+		/*
+		 * getGENDER
+		 * getHEIGHT getDecoratedHeight
+		 * getINCOME getDecoratedIncomeLevel
+		 * getAGE	
+		 * getDecoratedReligion
+		 */
+		static $Limits = array(
+			"M" => array(
+				"age" => array(
+					"L" => 3, "H" => 3
+					),
+				"height" => array(
+					"L" => 2, "H" => 4
+					),
+				"income" => array(
+					"L" => 2
+					)
+				),
+			"F" => array(
+				"age" => array(
+					"L" => 3, "H" => 3
+					),
+				"height" => array(
+					"L" => 3, "H" => 2
+					),
+				"income" => array(
+					"L" => 2
+					)
+				)
+			);
+		$junkFlag = false;
+		/* age check */
+		if(strlen($senderArr["age"]) == 0 || 
+			($senderArr["age"] >= ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) && 
+			$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"]))){
+			/* height check */
+			if(strlen($senderArr["height"]) == 0 || 
+				($senderArr["height"] >= ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) && 
+				$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"]))){
+				/* income check  */
+				if(strlen($senderArr["income"]) == 0 || 
+					($senderArr["income"] >= ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"]))){
+				/* religion clusture check */
+					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
+						// $junkFlag = true;
+						// die();
+						return true;
+					}else{
+						$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
+						$this->contactHandlerObj->setJunkData($receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture']);
+					}
+				}else{
+					$this->contactHandlerObj->setJunkType("INCOME_JUNK");
+					$this->contactHandlerObj->setJunkData("s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"]);
+				}
+			}else{
+				$this->contactHandlerObj->setJunkType("HEIGHT_JUNK");
+				$this->contactHandlerObj->setJunkData("s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"]);
+			}
+		}else{
+			$this->contactHandlerObj->setJunkType("AGE_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"]);
+		}
+		// die();
+		return false;
+
+		// die();
 	}
 	
 	/**
