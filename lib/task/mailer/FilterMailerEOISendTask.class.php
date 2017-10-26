@@ -122,8 +122,10 @@ EOF;
 		}
 				
        
-        if ($count == 1)
+        if ($count == 1){
             $tpl->getSmarty()->assign("otherProfileId", $viewerProfileArray[0]);
+            $tpl->getSmarty()->assign("otherProfile", $viewerProfileArray[0]);
+        }
         
         $partialObj = new PartialList();
         $partialObj->addPartial("eoi_profile", "eoi_profile_filter", $viewerProfileArray);

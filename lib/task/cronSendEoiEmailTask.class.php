@@ -197,8 +197,10 @@ $memcacheObj->set("cronSendEoi",$i);
         } else
             $emailSender = new EmailSender(MailerGroup::EOI, 1767);
         $tpl = $emailSender->setProfileId($viewedProfileId);
-        if ($count == 1)
+        if ($count == 1){
             $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId[0]);
+            $tpl->getSmarty()->assign("otherProfile", $viewerProfileId[0]);
+        }
         $tpl->getSmarty()->assign("eoi_draft", $draft);
         $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
         $tpl->getSmarty()->assign("count", $count);

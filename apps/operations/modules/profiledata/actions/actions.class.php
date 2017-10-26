@@ -351,4 +351,14 @@ class ProfileDataActions extends sfActions
       die;
     }
   }
+  
+  /**
+   * @param sfWebRequest $request
+   * @return type
+   */   
+  public function executeViewContacts(sfWebRequest $request)
+  {
+      $objViewContactsData = new ViewContactsData();
+      $this->arrDetails = $objViewContactsData->getViewContactsData($this->profileid);
+  }
 }

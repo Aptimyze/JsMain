@@ -199,19 +199,19 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+        ~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index') || $module eq 'register'  || $action eq 'phoneVerificationPcDisplay' || $module eq 'static' && $action eq 'logoutPage'`
             ~if $profileid`
-                var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
-                var userDetails = $.parseJSON(udObj);
-                populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
-                ~if $module eq 'membership' || $fromSideLink eq '1'`
-                    popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
-                ~/if`
-            ~else`
-                ~if $fromSideLink eq '1'`
-                    popupFreshDeskGlobal("", "");
-                ~/if`
+                ~assign var="userDetails" value=CommonUtility::getFreshChatDetails($profileid)`
+                ~assign var="tag" value=CommonUtility::getUserType($profileid)`
             ~/if`
+        ~/if`
+
+        ~if $module eq 'static' && $action eq 'logoutPage'`
+            localStorage.removeItem("login");
+            localStorage.setItem("logout",1);
+        ~elseif $profileid`
+            localStorage.removeItem("logout");
+            localStorage.setItem("login",1);
         ~/if`
         slider();
         ~if $module neq 'register'`
@@ -220,8 +220,8 @@
     });
 </script>
 
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index') || $module eq 'register'  || $action eq 'phoneVerificationPcDisplay' || $module eq 'static' && $action eq 'logoutPage'`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
-        ~include_partial('global/freshDesk')`
+        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
     ~/if`
 ~/if`
