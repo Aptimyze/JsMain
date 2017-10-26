@@ -3,7 +3,7 @@ include_once('DialerLog.class.php');
 class DialerHandler
 {
         public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
-		$this->db_js 		=$db_js;
+		$this->db_js 		=$db_js_111;
 		$this->db_js_111 	=$db_js_111;
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
@@ -598,14 +598,26 @@ class DialerHandler
                 $sql = "REPLACE INTO incentive.CAMPAIGN_STATUS_LOG(`CAMPAIGN_NAME`,`ENTRY_DATE`,`STATUS`) VALUES('$campaignName','$csvEntryDate','$status')";
                 mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
         }
-        public function getDialerCampaignRecords($campaignName,$csvEntryDate)
+        public function getDialerCampaignRecords($campaignName,$csvEntryDate,$statusCheck='')
         {
                 $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_JS WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE='$csvEntryDate'";
+		if($statusCheck)
+			$squery .=" AND StatusCode='$statusCheck'";
 		$sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
                 if($srow = mssql_fetch_array($sresult)){
 			$cnt =$srow['cnt'];
 		}
 		return $cnt;
+        }
+        public function getUploadedDialerCampaignRecords($campaignName,$csvEntryDate)
+        {
+		$dataID =$campaignName."-".$csvEntryDate;	
+                $squery = "select count(1) cnt from easy.dbo.ct_$campaignName WHERE EOI='$dataID'";
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
+                if($srow = mssql_fetch_array($sresult)){
+                        $cnt =$srow['cnt'];
+                }
+                return $cnt;
         }
         public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
         {
