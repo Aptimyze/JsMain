@@ -15,4 +15,4 @@ export default function CALCommonCall(url, clickAction,myjsObj,params) {
        //history,push('/myjs');
   });
 };
-export const skippableCALS = Array('1','2','3','4','5','6','7','9','10','11','12','13','14','15','16','17','19','21','22','27');
+export const skippableCALS = Array('1','2','3','4','5','6','7','9','10','11','12','13','14','15','16','17','19','21','22','26','27');

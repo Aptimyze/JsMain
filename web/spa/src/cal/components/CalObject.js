@@ -12,7 +12,7 @@ export default class calObjectClass extends React.Component
     super(props);
     this.calData = this.props.calData;
     this.calCompArray1  = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','22','27'];
-    this.calCompArray2  = ['18','19','20','23'];
+    this.calCompArray2  = ['18','19','20','23','26'];
   }
   render() {
     if(this.calCompArray1.indexOf(this.calData.LAYERID) != -1) {
