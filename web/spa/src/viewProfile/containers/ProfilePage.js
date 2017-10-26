@@ -34,6 +34,8 @@ class ProfilePage extends React.Component {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         let stype = getParameterByName(window.location.href,"stype");
+        let listingName = getParameterByName(window.location.href,"listingName");
+        let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
         let ownView = false;
         if(getParameterByName(window.location.href,"preview") == 1) {
             ownView = true;
