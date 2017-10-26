@@ -280,7 +280,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
         break;
       }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-    return;
+    return true;
 
 }
 
