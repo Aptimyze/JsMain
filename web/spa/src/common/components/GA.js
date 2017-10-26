@@ -23,8 +23,7 @@ export default class GA extends React.Component {
         scriptLoaded: false
       }
       if(ucode)
-      {
-        console.log(ucode);
+      {       
         let _gaq = _gaq || [];
 
         _gaq.push(['_setAccount', ucode]);
