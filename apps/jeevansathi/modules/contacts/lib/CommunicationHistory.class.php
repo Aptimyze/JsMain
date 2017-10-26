@@ -34,6 +34,11 @@ class CommunicationHistory
 		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($messagelog))
 			foreach ($messagelog as $key => $value) {
+				if($value[OBSCENE] == 'Y' && !$value['MESSAGE'] && $value['TYPE'] == 'R')
+                {
+                    unset($messagelog[$key]);
+                    continue;
+                }
 				$ids = $value["ID"];
 				if ($value[OBSCENE] == 'N')
 					$id_array[] = $ids;

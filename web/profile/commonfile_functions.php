@@ -511,7 +511,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/services" => "6");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"  => "28");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"        => "59");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"   => "35");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                      => "113");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                       => "115");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"            => "54");
 $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"          => "72");
@@ -558,7 +558,7 @@ $js_arr[]=array("jsms/contactus/contactus_js" => "2");
 $js_arr[]=array("jsms/common/sly"   => "6");
 $js_arr[]=array("jspc/myjs/myjs_js"      => "97");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"        => "121");
-$js_arr[]=array("jspc/myjs/engBarJs_js"     => "45");
+$js_arr[]=array("jspc/myjs/engBarJs_js"      => "46");
 $js_arr[]=array("jspc/common/nano"   => "8");
 $js_arr[]=array("jspc/registration/registrationJspc_js"    => "46");
 $js_arr[]=array("jspc/registration/validation_js"   => "37");
@@ -737,6 +737,7 @@ $js_arr[]=array("web/spa/dist/0"   => "1");
 $js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
+$js_arr[]=array("sw_fcm"   => "1");
 return $js_arr;
 }
 function getJavascript(){
