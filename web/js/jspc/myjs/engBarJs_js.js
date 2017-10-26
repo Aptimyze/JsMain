@@ -744,7 +744,7 @@ try{
         }
 		else {
 			for (i = 0; i < noOfRes && interestsCount<20; i++) {
-				if (profiles[i]['filtered']=='Y'){ filteredArray[filteredCount++]=profiles[i]; continue;} 
+				if (profiles[i]['filtered']=='Y' || profiles[i]['filtered']=='J'){ filteredArray[filteredCount++]=profiles[i]; continue;} 
         else {
           if(++interestsCount==20 && showViewAll==1)
             break;
