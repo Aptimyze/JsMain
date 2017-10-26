@@ -162,6 +162,18 @@ class AgentBucketHandler
 				$profilesArr[$profileid] =$profiles_arr[$profileid];
 			}
 		}
+		if(is_array($profilesArr)){
+			$chatLibrary = new ChatLibrary();
+			$profileIdArr = array_keys($profilesArr);
+			$profilesIdStr = implode(",",$profileIdArr);
+			$onlineProfiles = $chatLibrary->getIfUserIsOnlineInJSChat($profilesIdStr,1);
+			foreach ($profilesArr as $key=>$value){
+				if ($onlineProfiles[$key])
+					$profilesArr[$key]["STATUS"] = "ONLINE";
+				else
+					$profilesArr[$key]["STATUS"] = "OFFLINE";
+			}
+		}
 		return $profilesArr;
 	}
 	public function allocate($processObj,$paramsArr=array())

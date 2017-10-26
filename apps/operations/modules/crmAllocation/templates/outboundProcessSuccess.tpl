@@ -16,6 +16,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>JeevanSathi</title>
 		</meta>
+		<meta http-equiv="refresh" content="15" >
 		<script src="~sfConfig::get('app_img_url')`/min/?f=/js/tracking_js.js"></script>
 	</head>
 	~if get_slot('optionaljsb9Key')|count_characters neq 0`
@@ -100,6 +101,7 @@
 			</tr>
 			<tr align="CENTER">
 				<td class="label" width=5% height="20"><b>Serial Number</b></td>
+				<td class="label" width=5% height="20"><b>Status</b></td>
 				<td class="label" width=9% height="20"><b>Name</b></td>
 				<td class="label" width=9% height="20"><b>User Name</b></td>
 				~if $subMethod eq 'RENEWAL_NOT_DUE'`
@@ -171,6 +173,7 @@
 			<tr ~if stristr($profiles.SUBSCRIPTION,'F') || stristr($profiles.SUBSCRIPTION,'D')` class=label ~else` class=fieldsnew ~/if` align="CENTER">
 				~/if`
 				<td height="21" width="5%" align=center> ~$num++` </td>
+				<td height="21" width="5%" align=center> ~$profiles.STATUS` </td>
 				<td height="21" width="5%" align=left>~if $profiles.NAME eq ''` --NA-- ~else` ~$profiles.NAME` ~/if` </td>
 				<td height="21" width="10%" align="left">
 					<a href="#" onclick="MM_openBrWindow('~sfConfig::get('app_site_url')`/operations.php/crmAllocation/agentAllocation?name=~$agentName`&username=~$profiles.USERNAME`&profileid=~$profiles.PROFILEID`&cid=~$cid`&subMethod=~$subMethod`&orders=~$orders`&pchecksum=~$profiles.CHECKSUM`','','width=800,height=600,scrollbars=yes'); return false;">~$profiles.USERNAME`<br>~$profiles.EMAIL`</a>
