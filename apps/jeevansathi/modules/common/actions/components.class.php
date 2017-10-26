@@ -121,9 +121,9 @@ class commonComponents extends sfComponents{
 	$this->notifEnabled = $notifArr['enabled'];
         if($this->notifEnabled){
                 $this->browserNotificationRegistered =1;
-                $this->browserNotificationCookie =$request->getcookie("browserNotificationCookie");
+                $this->browserNotificationCookie =$request->getcookie("browserNotificationCookie1");
                 if($this->browserNotificationCookie!='Y'){
-                        @setcookie('browserNotificationCookie','Y',time()+(86400*2), "/","jeevansathi.com");
+                        @setcookie('browserNotificationCookie1','Y',time()+(1800*1), "/","jeevansathi.com");
                 }
         }
         unset($notificationObj);

@@ -848,12 +848,22 @@ class CommonFunction
     	return $decoratedOccGroups;
     }
 
-    public static function getContactLimitDates($profileObj = '')
+    public static function getContactLimitDates($profileObj = '',$profileid='')
 	{
-		$loginProfile = $profileObj;
-
+		
 		if($profileObj == '')
 			$loginProfile = LoggedInProfile::getInstance();
+		else
+			$loginProfile = $profileObj;
+		if(!$loginProfile->getPROFILEID())
+		{
+
+			if($profileid)
+			{
+				$loginProfile=new Profile();
+				$loginProfile->getDetail($profileid, "PROFILEID","*");
+			}
+		}
 
 		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
 		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')

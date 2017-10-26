@@ -156,6 +156,7 @@ class MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION extends TABLE{
         return NULL;
     }
 
+    
     public function insertRegistrationDetails($paramsArr){
         try{
             if($paramsArr){

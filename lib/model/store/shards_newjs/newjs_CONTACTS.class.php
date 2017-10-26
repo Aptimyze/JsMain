@@ -27,8 +27,10 @@ class newjs_CONTACTS extends TABLE
                 return false;
         }
 
+
 	public function setFILTERED($sender,$receiver)
 	{
+		SendMail::send_email('onemail.himanshu@gmail.com',__FUNCTION__.' called from lib/model/store/shards_newjs/newjs_CONTACTS.class.php : 33','setFILTERED($sender,$receiver)[HARDCODED Y]');
                 if(!$sender || !$receiver)
                         throw new jsException("","PROFILEID IS BLANK IN newjs_CONTACTS.class.php");
 		try
@@ -76,7 +78,7 @@ public function getContactsPending($serverId)
 	{
 		try
 		{
-			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
+			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and FILTERED<>'J' and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 			$res->execute();
@@ -100,7 +102,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) $chunkStr ORDER BY TIME DESC";
+        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y', 'J') and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) $chunkStr ORDER BY TIME DESC";
 			$res = $this->db->prepare($sql);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
@@ -481,7 +483,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-			$sql = "SELECT RECEIVER FROM newjs.CONTACTS where SENDER=:SENDER AND TYPE='I' AND FILTERED!='Y'";
+			$sql = "SELECT RECEIVER FROM newjs.CONTACTS where SENDER=:SENDER AND TYPE='I' AND FILTERED!='Y' AND FILTERED!='J'";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":SENDER",$senderProfileid,PDO::PARAM_INT);
 			$res->execute();
@@ -1113,7 +1115,7 @@ public function getSendersPending($chunkStr)
         	try{
         		if($type == ContactHandler::INITIATED){
         			$SENDER_RECEIVER = "RECEIVER";
-        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y' and (`SEEN` != 'Y')" ;
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y' and FILTERED != 'J' and (`SEEN` != 'Y')" ;
 				}
         		elseif($type == ContactHandler::ACCEPT){
         			$SENDER_RECEIVER = "SENDER";
@@ -1121,7 +1123,7 @@ public function getSendersPending($chunkStr)
 				}
         		elseif($type == ContactHandler::FILTERED){
 					$SENDER_RECEIVER = "RECEIVER";
-					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y' and (`SEEN` != 'Y')";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED IN('Y', 'J') and (`SEEN` != 'Y')";
 				}					
         		elseif($type == ContactHandler::DECLINE){
 					$SENDER_RECEIVER = "SENDER";
@@ -1209,7 +1211,7 @@ public function getSendersPending($chunkStr)
 		{
 			try
 			{
-				$sql = "SELECT RECEIVER,count(*) as count, GROUP_CONCAT( SENDER ORDER BY TIME  SEPARATOR ',' ) AS SENDER from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and DATEDIFF(NOW( ) , `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
+				$sql = "SELECT RECEIVER,count(*) as count, GROUP_CONCAT( SENDER ORDER BY TIME  SEPARATOR ',' ) AS SENDER from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and FILTERED<>'J' and DATEDIFF(NOW( ) , `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
 				$res = $this->db->prepare($sql);
 				$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 				$res->execute();
