@@ -44,11 +44,20 @@
                                                 ~if $data.showDpp eq 1`
                                                         <a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;" title="Edit Desired Partner Profile">Edit Desired Partner Profile</a>.
                                                 ~/if`
-                                                ~if $data.COUNT gt 1`
-                                                	<a href="~$mailerLinks['MATCH_ALERT']`~$data.commonParamaters`?From_Mail=Y&stype=~$data.stypeMatch`" target="_blank" style="color:#14428e; text-decoration:none;">View All</a>
-												~/if`
+                                                
                                                 </td>
                                             </tr>
+                                            ~if $data.COUNT gt 1`
+                                            <tr>
+						                        <td colspan="3" height="10"></td>
+						                    </tr>
+						                    <tr>
+						                        <td width="580">
+                                                	<a href="~$mailerLinks['MATCH_ALERT']`~$data.commonParamaters`?From_Mail=Y&stype=~$data.stypeMatch`" target="_blank" style="color:#14428e; text-decoration:none;">View All</a>
+                                                </td>
+												
+											</tr>
+											~/if`
                                         </table>
                                        
                                     </td>
