@@ -1862,6 +1862,44 @@ SQL;
             throw new jsException($e);
         }        
     }
+    //This function gets data for campaigns data
+        public function getRegistrationMisCampaignsData($fromDate, $toDate, $source) {
+                try {
+                        if ($source != "" && $source != NULL) {
+                                $source_names = '"'.implode('","', array_map('addSlashes',$source)).'"';
+                                $sql = "SELECT jp.PROFILEID,jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND s.GROUPNAME IN $source_names";
+                        } else {
+                                $sql = "SELECT jp.PROFILEID,jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE";
+                        }
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":FROMDATE", $fromDate, PDO::PARAM_STR);
+                        $prep->bindValue(":TODATE", $toDate, PDO::PARAM_STR);
+                        $prep->execute();
+                        while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                                $detailArr[] = $result;
+                        }
+                        return $detailArr;
+                } catch (Exception $e) {
+                        throw new jsException($e);
+                }
+        }
+        public function getProfileCampaingnRegistationData($registerDate)
+        {
+            try {
+                $sql = "SELECT jp.`PROFILEID` , jp.`ACTIVATED`,jp.`HAVEPHOTO` FROM `JPROFILE` as jp WHERE (jp.`ENTRY_DT` >= :REG_DATE AND jp.`ENTRY_DT` < CURDATE())";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":REG_DATE", $registerDate, PDO::PARAM_STR);
+                $prep->execute();
+                $profilesArr = array();
+                while ($res = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $profilesArr[$res["PROFILEID"]] = $res;
+                }
+                return $profilesArr;
+            } catch (PDOException $e) {
+                /*** echo the sql statement and error message ***/
+                throw new jsException($e);
+            }
+        }
 
 }
 

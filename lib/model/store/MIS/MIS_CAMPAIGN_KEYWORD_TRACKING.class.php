@@ -32,4 +32,37 @@ class MIS_CAMPAIGN_KEYWORD_TRACKING extends TABLE{
             }
             
         }
+        public function updateIsQualityProfile($qualityProfiles){
+                try
+		{
+                    if(!empty($qualityProfiles) && is_array($qualityProfiles)){
+                        $profileIds = implode(",",$qualityProfiles);
+                        $sqlInsert = "UPDATE MIS.CAMPAIGN_KEYWORD_TRACKING SET IS_QUALITY = 'Y' WHERE PROFILEID IN ($profileIds)";
+                        $resInsert = $this->db->prepare($sqlInsert);
+                        $resInsert->execute();
+                    }
+		}
+                catch(PDOException $e)
+                {
+                        jsException::nonCriticalError("Error in campaign Mis error");
+                }
+        }
+        
+        public function updateActivatedNPhoto($profileId,$value="Y",$photoUploaded="N"){
+                try
+		{
+                    if($profileId != ""){
+                        $sqlInsert = "UPDATE MIS.CAMPAIGN_KEYWORD_TRACKING SET ACTIVATED_STATUS = :ACTIVATED_STATUS, PHOTO_UPLOADED = :PHOTO_UPLOADED WHERE PROFILEID = :PROFILEID";
+                        $resInsert = $this->db->prepare($sqlInsert);
+                        $resInsert->bindValue(":ACTIVATED_STATUS",$value,PDO::PARAM_STR);
+                        $resInsert->bindValue(":PHOTO_UPLOADED",$photoUploaded,PDO::PARAM_STR);
+                        $resInsert->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+                        $resInsert->execute();
+                    }
+		}
+                catch(PDOException $e)
+                {
+                        jsException::nonCriticalError("Error in campaign Mis error");
+                }
+        }
 }

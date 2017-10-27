@@ -38,7 +38,7 @@ EOF;
     $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate," 00:00:00");
    
     $profile_ids = array();
-
+    $qualityProfiles = array();
     foreach ($profiles as $profile) {
       $profiles_entry_date = date("Y-m-d",strtotime($profile["ENTRY_DT"]));
       if ( $registerDate == $profiles_entry_date) 
@@ -80,6 +80,7 @@ EOF;
         $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER']] ++;
         $mobVerified = $this->verifyMobile($profile['MV']);
         if($mobVerified == 1){
+          $qualityProfiles[] = $profile["PROFILEID"];
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MV'] ++;
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MVCC'] += $ccStatus;
         }
@@ -101,6 +102,9 @@ EOF;
    
     $regQualityActivated->insert($profile_ids,$registerDate); 
 
+    $qualityUpdate = new MIS_CAMPAIGN_KEYWORD_TRACKING(); // update quality column in CAMPAIGN keyword tracking MIS
+    $qualityUpdate->updateIsQualityProfile($qualityProfiles);
+    
     $this->logSection('data inserted');
   }
   function verifyMobile($MV) {
