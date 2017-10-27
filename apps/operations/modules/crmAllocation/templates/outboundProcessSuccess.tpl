@@ -16,7 +16,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>JeevanSathi</title>
 		</meta>
-		<meta http-equiv="refresh" content="15" >
 		<script src="~sfConfig::get('app_img_url')`/min/?f=/js/tracking_js.js"></script>
 	</head>
 	~if get_slot('optionaljsb9Key')|count_characters neq 0`
@@ -173,7 +172,7 @@
 			<tr ~if stristr($profiles.SUBSCRIPTION,'F') || stristr($profiles.SUBSCRIPTION,'D')` class=label ~else` class=fieldsnew ~/if` align="CENTER">
 				~/if`
 				<td height="21" width="5%" align=center> ~$num++` </td>
-				<td height="21" width="5%" align=center> ~$profiles.STATUS` </td>
+				<td class="status" height="21" width="5%" align=center id="~$k`"> ~$profiles.STATUS` </td>
 				<td height="21" width="5%" align=left>~if $profiles.NAME eq ''` --NA-- ~else` ~$profiles.NAME` ~/if` </td>
 				<td height="21" width="10%" align="left">
 					<a href="#" onclick="MM_openBrWindow('~sfConfig::get('app_site_url')`/operations.php/crmAllocation/agentAllocation?name=~$agentName`&username=~$profiles.USERNAME`&profileid=~$profiles.PROFILEID`&cid=~$cid`&subMethod=~$subMethod`&orders=~$orders`&pchecksum=~$profiles.CHECKSUM`','','width=800,height=600,scrollbars=yes'); return false;">~$profiles.USERNAME`<br>~$profiles.EMAIL`</a>
@@ -318,5 +317,37 @@
 	window.onload = function () {objtnm.init();}
 	window.onunload = function() { objtnm.LogCatch.call(objtnm);}
 	});
+	</script>
+
+	<script>
+		var update_online_status = function (onlineProfiles) {
+            $(".status").each(function(){
+                var value = $.trim($(this).text());
+		        if(value == "ONLINE"){
+                    $(this).text("OFFLINE");
+				}
+            });
+            var profilesArr = $.parseJSON(onlineProfiles);
+			$.each(profilesArr,function (profile) {
+                $("#" + profile).text("ONLINE");
+            });
+        };
+
+        var get_online_profiles = function() {
+            var profilesArr = "~$profilesArr|json_encode`";
+            var url = "/operations.php/crmApi/ApiGetOnlineProfilesV1/";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data:{
+                    profilesid: profilesArr
+                },
+                success: function(data) {
+                    update_online_status(data);
+                }
+            });
+        };
+
+        setInterval(get_online_profiles,1000 * 15);
 	</script>
 </html>
