@@ -107,7 +107,14 @@ if (authenticated($cid)) {
 		$service_mes = $myrow['SERVICE_MESSAGES'];
 		$source = $myrow['SOURCE'];
 		$std = $myrow['STD'];
-                $activatedWithoutYourInfo = $_POST["activatedWithoutYourInfo"];
+                $sqlAct = "SELECT PROFILEID FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO WHERE PROFILEID='$pid'";
+		$resAct = mysql_query_decide($sqlAct) or die("$sqlAct" . mysql_error_js());
+		$rowAct = mysql_fetch_assoc($resAct);
+                if($rowAct['PROFILEID'])
+                    $activatedWithoutYourInfo = 1;
+                else
+                    $activatedWithoutYourInfo = 0;
+                
 		if ($activated == 'U' || ($activated == 'Y' && (!areAllBitsSet($screening_val) || $activatedWithoutYourInfo)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
 			if ($name != "" || $name_hob != "" || $name_contact != "" || $name_edu != "") {
 				if ($name != "") {
