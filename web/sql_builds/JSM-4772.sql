@@ -13,3 +13,7 @@ CREATE TABLE `CAMPAIGN_KEYWORD_TRACKING` (
   `IS_QUALITY` enum('Y','N') NOT NULL DEFAULT 'N',
   PRIMARY KEY (`PROFILEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ INSERT INTO `MIS_MAINPAGE` ( `NAME` , `MAIN_URL` , `JUMP_URL` , `PRIVILEGE` , `ACTIVE` , `PUBLIC` )
+VALUES ('Fetch Keyword, Adgroup, Campaign information', '/operations.php/registerMis/CampaignsRegistration?cid=$cid', NULL , 'P+MG', 'Y', ''
+)
