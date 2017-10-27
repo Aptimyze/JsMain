@@ -37,23 +37,20 @@
                                     <td valign="top" width="606">
                                         <table border="0" cellspacing="0" cellpadding="0" style="max-width:540px;font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;" align="left">
                                             <tr>
-                                                <td width="540">~$data.body`
+                                                <td width="580">~$data.body`
                                                 ~if $data.bodyNote neq null`
                                                    <div style="padding-top: 5px;"> ~$data.bodyNote`</div>    
                                                 ~/if`
                                                 ~if $data.showDpp eq 1`
-                                                        <div><div style="padding-top: 5px;"><a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;" title="Edit Desired Partner Profile">Edit Desired Partner Profile</a></div></div>
+                                                        <a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;" title="Edit Desired Partner Profile">Edit Desired Partner Profile</a>.
                                                 ~/if`
+                                                ~if $data.COUNT gt 1`
+                                                	<a href="~$mailerLinks['MATCH_ALERT']`~$data.commonParamaters`?From_Mail=Y&stype=~$data.stypeMatch`" target="_blank" style="color:#14428e; text-decoration:none;">View All</a>
+												~/if`
                                                 </td>
                                             </tr>
                                         </table>
-                                        <table width="60" align="left" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
-                                            <tr>
-						~if $data.COUNT gt 1`
-                                                	<td><a href="~$mailerLinks['MATCH_ALERT']`~$data.commonParamaters`?From_Mail=Y&stype=~$data.stypeMatch`" target="_blank" style="color:#14428e; text-decoration:none;">View All</a></td>
-						~/if`
-                                            </tr>
-                                        </table>
+                                       
                                     </td>
                                 </tr>
                             </table>
