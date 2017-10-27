@@ -36,9 +36,16 @@ class MIS_CAMPAIGN_KEYWORD_TRACKING extends TABLE{
                 try
 		{
                     if(!empty($qualityProfiles) && is_array($qualityProfiles)){
-                        $profileIds = implode(",",$qualityProfiles);
-                        $sqlInsert = "UPDATE MIS.CAMPAIGN_KEYWORD_TRACKING SET IS_QUALITY = 'Y' WHERE PROFILEID IN ($profileIds)";
+                        $sqlInsertW = array();
+                        foreach($qualityProfiles as $k=>$profileId){
+                                $sqlInsertW[] = ":PROFILEID".$k;
+                        }
+                        $sqlInsertW = implode(",",$sqlInsertW);
+                        $sqlInsert = "UPDATE MIS.CAMPAIGN_KEYWORD_TRACKING SET IS_QUALITY = 'Y' WHERE PROFILEID IN ($sqlInsertW)";
                         $resInsert = $this->db->prepare($sqlInsert);
+                        foreach($qualityProfiles as  $k=>$profileId){
+                                $resInsert->bindValue(":PROFILEID".$k,$profileId,PDO::PARAM_STR);
+                        }
                         $resInsert->execute();
                     }
 		}
