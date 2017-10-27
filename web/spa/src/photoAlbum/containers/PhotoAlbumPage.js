@@ -186,10 +186,10 @@ if(!this.state.recAlbumlink || this.sliderBound) return;
               <i className="up_sprite puback posabs z1 bckpos" onClick={() => this.goBack()}></i>
               <div className="dispcell vertmid pad3 txtc white">
                 <p class="txtc">
-                  It has been while since you registered on Jeevansathi, hence we rquired you to add a photo to able to see other members album.
+                  It has been a while since you registered on Jeevansathi, hence we require you to add a photo to be able to see other members album.
                 </p>
                 <p className="pt20 txtc">
-                  If you have privacy concerns,you can make your photo visible on only on acceptance thorugh privacy settings.
+                  If you have privacy concerns, you can make your photo visible on only on acceptance through privacy settings.
                 </p>
               </div>
               <div className="posabs bckpos2 fullwid">
