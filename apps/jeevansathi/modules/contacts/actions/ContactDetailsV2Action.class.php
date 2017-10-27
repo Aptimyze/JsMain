@@ -95,7 +95,7 @@ class ContactDetailsV2Action extends sfAction
 					unset($responseArray);
 					$responseArray["errmsglabel"] 			= "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 					$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Explore Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -109,9 +109,9 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
 					$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
 					$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
-					$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
-					$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages to members you like";
-					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
+					$responseArray["membershipmsg"]["subheading1"] = "View Contact details";
+					$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
+					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
 
 					$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
 					if($dataPlan)
@@ -182,7 +182,7 @@ class ContactDetailsV2Action extends sfAction
                         $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				
 						$responseArray["bottommsg2"]       = "Upgrade to ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." to make your phone/email visible to all matching profiles";
-						$responseArray["bottommsg"]       = "View Membership Plans";
+						$responseArray["bottommsg"]       = "Explore Plans";
 						$responseArray["membershipOfferMsg"] = $MembershipMessage;
 						$responseArray["bottomMsgUrl"]       = "/profile/mem_comparison.php";
 						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made contact details visible";
@@ -331,13 +331,13 @@ class ContactDetailsV2Action extends sfAction
 				elseif ($errorArr["PROFILE_HIDDEN"] == 2)
 				{	
 					$responseArray["headerLabel"] = "Profile is Hidden";
-					$responseArray["errMsgLabel"] = "You can not see the contact details as your profile is hidden. To see contact details unhide your profile.";
+					$responseArray["errMsgLabel"] = "You can not see contact details as your profile is hidden. Unhide your profile to proceed.";
 					$responseArray["errMsgIconId"]           = "13";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				}
 				 elseif ($errorArr["UNDERSCREENING"] == 2) {
-					$responseArray["errMsgLabel"]  = "Your profile is being screened by our screening team. You can see contact details only after your profile is screened.";
+					$responseArray["errMsgLabel"]  = "Your profile is under screening. You can view contact details after it is screened.";
 					$responseArray["errMsgIconId"] = "16";
 					$responseArray["headerLabel"]  = "Profile is Underscreening";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -367,7 +367,7 @@ class ContactDetailsV2Action extends sfAction
 				 else {
 
 					$responseArray["contactdetailmsg"]       = "Become a paid member to view <br> contact details";
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Explore Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["enable"] = true;
@@ -441,7 +441,7 @@ class ContactDetailsV2Action extends sfAction
                 $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				$responseArray["errmsglabel"]     = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
-				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+				$responseArray["footerbutton"]["label"]  = "Explore Plans";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 				$responseArray["footerbutton"]["enable"] = true;
@@ -458,9 +458,9 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
 				$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
 				$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
-				$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
-				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages to members you like";
-				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
+				$responseArray["membershipmsg"]["subheading1"] = "View Contact details";
+				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
+				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
 
 				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
 				if($dataPlan)

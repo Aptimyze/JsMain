@@ -151,7 +151,7 @@ class postEOIv2Action extends sfAction
 					}
 
 
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Explore Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -251,7 +251,7 @@ class postEOIv2Action extends sfAction
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top'];
                     $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Explore Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -272,7 +272,7 @@ class postEOIv2Action extends sfAction
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
 				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
-				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
+				$responseArray["errmsglabel"] = "Your interest is saved & will be sent after screening (may take upto 24 hours)";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["remove3Dots_UnderScreen"] = true;
 				$responseArray["headerlabel"] = "Profile Under Screening";
