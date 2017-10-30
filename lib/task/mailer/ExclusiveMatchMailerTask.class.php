@@ -29,7 +29,6 @@ EOF;
             sfContext::createInstance($this->configuration);
      	
      	$exclusiveMailer = new ExclusiveMatchMailer();
-     	
      	//Populating ExclusiveMatchMailer
      	$result = $exclusiveMailer->getClientAndAgentDetails();
      	if(is_array($result))
@@ -40,6 +39,7 @@ EOF;
 	    $calculatetable = new incentive_ExclusiveMatchMailer();
 	    $receivers = $calculatetable->getReceivers();
 	    $result = $exclusiveMailer->getAcceptances($receivers);
+            
 	    foreach ($result as $key => $value) {
 	    	if(!empty($value)){
 	    		$str_value = "";
@@ -53,6 +53,7 @@ EOF;
 	    $exclusiveMailer->logMails();
 	    //Sending Mail
 	    $receivers = $exclusiveMailer->getMailerProfiles();
+            
 	    $mailerServiceObj = new MailerService();
 	    $this->smarty = $mailerServiceObj->getMailerSmarty();
 	    if (is_array($receivers)) {
