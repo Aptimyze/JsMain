@@ -189,7 +189,7 @@ class Accept extends ContactEvent
         $profileMemcacheServiceViewedObj->update("ACC_ME",1);
         $profileMemcacheServiceViewedObj->update("ACC_ME_NEW",1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
-        if ($filtered!='Y'){
+        if ($filtered != 'Y' || $filtered != 'J'){
           if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
           {
             $profileMemcacheServiceViewerObj->update("INTEREST_ARCHIVED",-1);

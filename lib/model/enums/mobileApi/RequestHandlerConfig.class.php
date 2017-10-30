@@ -15,7 +15,8 @@ class RequestHandlerConfig
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
         "notificationOpenedTracking"=>array("v1"=>"notificationOpenedTrackingV1"),
-        "notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1")),
+        "notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1"),
+        "updateTracking"=>array("v1"=>"updateTrackingV1")),
     "search"=>array(
         "partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
         "perform"=>array("v1"=>"performV1","v2"=>"","v3"=>"performV1"),
