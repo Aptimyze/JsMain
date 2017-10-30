@@ -194,8 +194,8 @@ getFrontButton(){
 }
   if(this.props.buttondata.buttons && this.props.buttondata.buttons.length>1)
   {
-  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true},'showThreeDots')} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(!
-    otherButtons[0].enable ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true},'showThreeDots')} className="posabs srp_pos2 threeWid"><i className={"mainsp "+(!
+    otherButtons[0].enable ? "srp_pinkdots" : "threedot1")}></i></div>);
 }
 if(primaryButton.enable==true)
 {
