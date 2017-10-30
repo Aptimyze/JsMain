@@ -651,8 +651,8 @@ function afterAction(result,action, index,isPrime){
 	}
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
-    if(window.location.hash.length===0 && ((typeof SPA_CE=='undefined') || (SPA_CE!='Y') || result.actiondetails.writemsgbutton || result.actiondetails.errmsglabel) )
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");
+     if(window.location.hash.length===0 && ((typeof SPA_CE=='undefined') || (SPA_CE!='Y') || (result.actiondetails && result.actiondetails.writemsgbutton) || (result.actiondetails && result.actiondetails.errmsglabel) ) )      
+       historyStoreObj.push(browserBackCommonOverlay,"#pushce");
     var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
     if(ignoreFromPrime)
     {
