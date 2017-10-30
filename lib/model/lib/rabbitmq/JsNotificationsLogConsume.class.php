@@ -125,6 +125,8 @@ class JsNotificationsLogConsume
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
+    $codeException = 0;
+    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
@@ -175,6 +177,7 @@ class JsNotificationsLogConsume
     }
     catch (Exception $exception) 
     {
+      $codeException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
     }
     try 
@@ -183,8 +186,12 @@ class JsNotificationsLogConsume
     } 
     catch(Exception $exception) 
     {
+      $deliveryException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
+    }
+    if($codeException || $deliveryException){
+        die("Killed due to code exception or delivery exception");
     }
   }
 }
