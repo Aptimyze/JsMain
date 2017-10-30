@@ -9,14 +9,14 @@ class ApiGetOnlineProfilesV1Action extends sfActions {
      **/
     function execute($request){
         $profilesIdArr = $request->getParameter('profilesid');
+        $profilesIdArr = json_decode($profilesIdArr);
         if(is_array($profilesIdArr)){
-            $chatLibrary = new ChatLibrary();
-            $profileIdArr = array_keys($profilesIdArr);
-            $profilesIdStr = implode(",",$profileIdArr);
-            $onlineProfiles = $chatLibrary->getIfUserIsOnlineInJSChat($profilesIdStr,1);
-        } else{
-            $onlineProfiles = array();
+            $JsMemcacheObj  =JsMemcache::getInstance();
+            $listName       =CommonConstants::ONLINE_USER_LIST;
+            $onlineProfiles = $JsMemcacheObj->zScorePipelining($listName,$profilesIdArr);
         }
+        if(!is_array($onlineProfiles))
+            $onlineProfiles = array();
         $json_profiles = json_encode($onlineProfiles);
         echo $json_profiles;
         die;

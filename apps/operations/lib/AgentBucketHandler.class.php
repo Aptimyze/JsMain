@@ -163,12 +163,10 @@ class AgentBucketHandler
 			}
 		}
 		if(is_array($profilesArr)){
-			$chatLibrary = new ChatLibrary();
-			$profileIdArr = array_keys($profilesArr);
-			$profilesIdStr = implode(",",$profileIdArr);
-			$onlineProfiles = $chatLibrary->getIfUserIsOnlineInJSChat($profilesIdStr,1);
+            $jsCommonObj =new JsCommon();
+            $onlineProfiles =$jsCommonObj->getOnlineUsetList();
 			foreach ($profilesArr as $key=>$value){
-				if ($onlineProfiles[$key])
+				if (in_array($key,$onlineProfiles))
 					$profilesArr[$key]["STATUS"] = "ONLINE";
 				else
 					$profilesArr[$key]["STATUS"] = "OFFLINE";

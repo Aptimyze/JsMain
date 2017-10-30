@@ -318,7 +318,6 @@
 	window.onunload = function() { objtnm.LogCatch.call(objtnm);}
 	});
 	</script>
-
 	<script>
 		var update_online_status = function (onlineProfiles) {
             $(".status").each(function(){
@@ -328,13 +327,13 @@
 				}
             });
             var profilesArr = $.parseJSON(onlineProfiles);
-			$.each(profilesArr,function (profile) {
+            profilesArr.forEach(function (profile,index) {
                 $("#" + profile).text("ONLINE");
             });
         };
 
         var get_online_profiles = function() {
-            var profilesArr = "~$profilesArr|json_encode`";
+            var profilesArr = "~$jsonProfilesArr`";
             var url = "/operations.php/crmApi/ApiGetOnlineProfilesV1/";
             $.ajax({
                 type: 'POST',
@@ -348,6 +347,6 @@
             });
         };
 
-        setInterval(get_online_profiles,1000 * 15);
+        setInterval(get_online_profiles,~CommonConstants::$REFRESH_INTERVAL_RATE`);
 	</script>
 </html>
