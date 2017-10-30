@@ -43,16 +43,19 @@
 			/*
 				This function is written for dynamic resizing of textareas.
 			 */
-			
+			var maxHeight = 80;
 			$('textarea').each(function () {
-			 // this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;');
+			  this.style.width = '380 px';
+			  height = (this.scrollHeight>maxHeight)?maxHeight:this.scrollHeight;
+			  this.setAttribute('style', 'height:' + (height) + 'px;');
+			  handleCorrection(this);
 			  if($(this).attr("data")){
 				  
 				handleInput(this);
 				}
 			}).on('input', function () {
-			  //this.style.height = 'auto';
-			  //this.style.height = (this.scrollHeight) + 'px';
+			  this.style.height = 'auto';
+			  this.style.height = (this.scrollHeight) + 'px';
 			  
 			}).on('scroll',function(){
 				if($(this).attr("data")){
@@ -70,6 +73,23 @@
 			    $(this).attr('size',size);
 			 });
 		});
+		
+		
+			function handleCorrection(e) {
+			  id= $(e).attr("name");
+			  height = document.getElementsByName(id)[0].style.height;
+			  id="obscene_"+id;
+			  if(document.getElementById(id)!=null){
+				  document.getElementById(id).style.height= height;
+				  document.getElementsByName(id)[0].style.height= height;
+				  id="Backdrop_"+id;
+				  document.getElementById(id).style.height= height;
+				  
+				}
+			  
+			}
+			
+		
 
 		 	/**
 		 	 * This function is used to count the number of characters in the your info field.
@@ -666,11 +686,11 @@
 						~$OBSCENE_MESSAGE_EDUCATION`
 						<td>&nbsp;</td>
 						<td><div class="container" >
-							<div class="backdrop" id="Backdrop_obscene_EDUCATION">
-							<div class="textboxes1 highlights" id="obscene_EDUCATION"></div>
+							<div class="textboxes1 backdrop" id="Backdrop_obscene_EDUCATION">
+							<div class="highlights" id="obscene_EDUCATION"></div>
 							</div>
 
-								<textarea name="obscene_EDUCATION" class="textarea" data=~$OBSCENE_WORDS_EDUCATION`>~$EDUCATIONvalue`</textarea>
+								<textarea name="obscene_EDUCATION" class="textboxes1 textarea" data=~$OBSCENE_WORDS_EDUCATION`>~$EDUCATIONvalue`</textarea>
 							</div>
 					~/if`
 					~if $EXCEED_NUMERIC_EDUCATION`
@@ -756,8 +776,8 @@
 						~$OBSCENE_MESSAGE_INFO`
 						<td>&nbsp;</td>
 						<td><div class="container" >
-							<div class="backdrop" id="Backdrop_obscene_YOURINFO">
-							<div class="textboxes1 highlights" id="obscene_YOURINFO"></div>
+							<div class="textboxes1 backdrop" id="Backdrop_obscene_YOURINFO">
+							<div class="highlights" id="obscene_YOURINFO"></div>
 							</div>
 
 								<textarea name="obscene_YOURINFO" cols="60" rows="8" class="textboxes1 textarea" data=~$OBSCENE_WORDS_YOURINFO`>~$YOURINFOvalue`</textarea>
@@ -810,13 +830,13 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="FAMILYINFO" cols="40" rows="8" class="textboxes1">~$FAMILYINFOvalue`</textarea></td>
+						<td><textarea name="FAMILYINFO" cols="60" rows="8" class="textboxes1">~$FAMILYINFOvalue`</textarea></td>
 					</tr>
 					~if $OBSCENE_FAMILYINFO`
 						~$OBSCENE_MESSAGE_FAMILY`
 						<td>&nbsp;</td>
 						<td><div class="container" >
-							<div class="backdrop" id="Backdrop_obscene_FAMILYINFO">
+							<div class="textboxes1 backdrop" id="Backdrop_obscene_FAMILYINFO">
 							<div class="highlights" id="obscene_FAMILYINFO"></div>
 							</div>
 
@@ -841,7 +861,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="SPOUSE" cols="40" rows="8" class="textboxes1">~$SPOUSEvalue`</textarea></td>
+						<td><textarea name="SPOUSE" cols="60" rows="8" class="textboxes1">~$SPOUSEvalue`</textarea></td>
 					</tr>
 					~if $OBSCENE_SPOUSE`
 					<tr class="fieldsnew">
@@ -850,7 +870,7 @@
 						<tr class="fieldsnew">
 						<td>&nbsp;</td>
 						<td><div class="container" >
-							<div class="backdrop" id="Backdrop_obscene_SPOUSE">
+							<div class="textboxes1 backdrop" id="Backdrop_obscene_SPOUSE">
 							<div class="highlights" id="obscene_SPOUSE"></div>
 							</div>
 
@@ -877,13 +897,13 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="JOB_INFO" cols="40" rows="8" class="textboxes1">~$JOB_INFOvalue`</textarea></td>
+						<td><textarea name="JOB_INFO" cols="60" rows="8" class="textboxes1">~$JOB_INFOvalue`</textarea></td>
 					</tr>
 					~if $OBSCENE_JOB_INFO`
 						~$OBSCENE_MESSAGE_JOBINFO`
 						<td>&nbsp;</td>
 						<td><div class="container" >
-							<div class="backdrop" id="Backdrop_obscene_JOB_INFO">
+							<div class="textboxes1 backdrop" id="Backdrop_obscene_JOB_INFO">
 							<div class="highlights" id="obscene_JOB_INFO"></div>
 							</div>
 
