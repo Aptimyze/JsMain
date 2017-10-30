@@ -9,9 +9,11 @@ let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants')
 import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
+import { connect } from "react-redux";
+
 require ('../style/CALJSMS_css.css');
 
-export default class calComp2 extends React.Component{
+export  class calComp2 extends React.Component{
 constructor(props){
   super(props);
   this.calData = this.props.calData;
@@ -60,13 +62,10 @@ componentWillMount(){
   let index = skippableCALS.indexOf(this.props.calData.LAYERID);
   if(index!=-1)
   {
-    let dl=document.location.origin+document.location.pathname+document.location.search+"#cal";
-    history.pushState(null,"",dl);
-    var _this = this;
-    window.onpopstate= function(){
-      _this.criticalLayerButtonsAction(_this.props.calData.BUTTON2_URL_ANDROID,_this.props.calData.JSMS_ACTION2,'B2');
-      window.onpopstate= null;
-    }
+
+    this.props.historyObject.push(()    =>
+          this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B2')
+      ,'#cal');
   }
 
 
@@ -79,6 +78,11 @@ componentDidMount(){
       case '19':
         this.showTimerForLightningCal();
       break;
+      case '26':
+      let aboutMeStyle = {'width':'200%','transitionDuration':'.5s','transform': 'translateX(-0%)'};
+        this.setState({aboutMeStyle,aboutMeLength : this.calData.ABOUT_ME_TEXT.length});
+      break;
+
   }
 }
 
@@ -124,6 +128,9 @@ switch(this.calData.LAYERID)
     case '20':
     case '23':
       toReturn =  this.setOccupCityCalData();
+    break;
+    case '26':
+      toReturn =  this.getAboutInfoCal();
     break;
 
 
@@ -238,9 +245,42 @@ criticalLayerButtonsAction(url,clickAction,button) {
         case '19':
           if(typeof this.props.myjsApiHit=='function')this.props.myjsApiHit();
         break;
+
+        case '26':
+           if(button=='B1')
+           {
+             let textAboutMe = $i('textAboutMe').value.trim();
+             var dataAboutMe = {'editFieldArr[YOURINFO]': textAboutMe};
+             if(textAboutMe.length < 100)
+             {
+                 this.showError("Please type min 100 characters.");
+                 this.CALButtonClicked=0;
+                 return;
+             }
+
+             this.setState({showLoader:true});
+             commonApiCall(CONSTANTS.EDIT_SUBMIT,dataAboutMe,'','','POST').then((response)=>{
+                  this.CALButtonClicked=0;
+                  if(response.responseStatusCode=="0"){
+                    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{
+                      this.CALButtonClicked=0;
+                      this.setState({showLoader:false});
+                      });
+                  }
+                  else{
+                    this.setState({showLoader:false});
+                    this.showError(response.responseMessage);
+                    this.CALButtonClicked=0;
+
+                  }
+                });
+             return;
+
+           }
+        break;
       }
     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-    return;
+    return true;
 
 }
 
@@ -522,5 +562,100 @@ this.calTimer=setInterval(this.updateCalTimer.bind(thisObject),1000);
 
 ////////////LIGHTNING CAL ENDS///////////////
 
+getAboutInfoCal(){
+let childDivStyle = {display: 'inline-block',width: '50%',position: 'relative',backgroundColor: '#09090b','height':window.innerHeight+'px'};
+let errorView, LoaderView = this.state.showLoader ? (<div><Loader show="page"></Loader></div>) : (<div></div>);
+if(this.state.insertError)
+{
+  errorView = (<TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError>);
+}
+
+return(
+<div style={{width:'100%','overflow': 'hidden',height:window.innerHeight+'px'}}>
+  {errorView}
+  {LoaderView}
+<div id='mainContainer' style={this.state.aboutMeStyle}>
+     <div className="childDiv fl" style={childDivStyle}>
+  <div  className="posrel pad18Incomplete">
+
+  <div className="br50p txtc" style={{height:'80px'}}>
+
+  </div> </div> <div className = "txtc" > <div className="fontlig white f18 pb10 color16">{this.calData.TITLE}</div> <div className = "pad1 lh25 fontlig f14" style = {{color:'#cccccc'}} > {
+  this.calData.TEXT
+} </div>
+  </div> <div className="txtc pad1 lh25 fontlig f14" style={{color:'#cccccc'}}>
+    <b>{"Note: "}</b>
+    <span>{this.calData.NOTE_TEXT2}</span>
+  </div>
+ <div style = {{padding: '25px 0 8% 0'}} > <div id='CALButtonB1' className="bg7 f18 white lh30 fullwid dispbl txtc lh50" onClick={()=>{
+  this.setState({
+    aboutMeStyle:
+    {...this.state.aboutMeStyle,transform:'translateX(-50%)' }
+   });
+  }
+}>{this.calData.BUTTON1}</div> </div>
+
+  </div> <div className="childDiv bg4 " style={childDivStyle}>
+  <div className="bg1">
+    <div className="pad1">
+      <div className="rem_pad1">
+        <div onClick={()=>{this.setState({aboutMeStyle:{...this.state.aboutMeStyle,transform:'translateX(0%)' } }); }} className="fl wid20p white">
+          <i id="backBtn" className="mainsp arow2"></i>
+        </div>
+        <div className="fl wid60p txtc white fontthin f16 ">About me</div>
+        <div id='CALButtonB2' onClick={() => this.props.historyObject.pop(true)}  style={{'color':'#cccccc'}} className="fr txtc white f14">{this.calData.BUTTON2}</div>
+
+        <div className="clr"></div>
+      </div>
+    </div>
+  </div>
+  <div id="scrollContent" className="scrollContent bg4" style={{height:window.innerHeight+'px'}}>
+    <div className="pad1 brdr1 bg11">
+      <div className="pt15 pb10 fullwid">
+        <div className="fl color12 f12">Type min 100 Chars</div>
+        <div className="fr color12 f12">Count -
+          <span id="TACount" className="color2">{this.state.aboutMeLength}</span>
+        </div>
+        <div className="clr"></div>
+      </div>
+      <div className="pt10">
+        <textarea id="textAboutMe" defaultValue={this.calData.ABOUT_ME_TEXT} onInput={this.onchangeAboutMe.bind(this)} style={{
+          'height': '300px'
+        }} className="fullwid color12 f17 fontlig lh30  bg11"></textarea>
+      </div>
+    </div>
+  </div>
+  <div className="fullwid posabs btmo" onClick={() => this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1')}>
+    <div className="pt20" id="doneBtn">
+      <div className="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div>
+    </div>
+  </div>
+</div> </div>
+</div>);
+}
+
+
+onchangeAboutMe(){
+  var len = $i('textAboutMe').value.trim().length;
+   // /if (len ==)
+  this.setState({aboutMeLength : len});
+  if (len >= 100)
+    $i('TACount').style.color = 'green';
+  else
+    $i('TACount').style.color= '#d9475c';
+}
+
 
 }
+const mapStateToProps = (state) => {
+    return{
+      historyObject : state.historyReducer.historyObject
+
+    }
+}
+const mapDispatchToProps = (state) => {
+    return{
+
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(calComp2)

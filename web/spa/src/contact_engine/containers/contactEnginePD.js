@@ -194,8 +194,8 @@ getFrontButton(){
 }
   if(this.props.buttondata.buttons && this.props.buttondata.buttons.length>1)
   {
-  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true},'showThreeDots')} className="posabs srp_pos2"><a href="javascript:void(0)"><i className={"mainsp "+(!
-    otherButtons[0].enable ? "srp_pinkdots" : "threedot1")}></i></a></div>);
+  threeDots =(<div onClick={()=>this.showLayerCommon({showThreeDots: true},'showThreeDots')} className="posabs srp_pos2 threeWid"><i className={"mainsp "+(!
+    otherButtons[0].enable ? "srp_pinkdots" : "threedot1")}></i></div>);
 }
 if(primaryButton.enable==true)
 {
@@ -345,12 +345,51 @@ getCancelDeclineLayer(actionDetails){
   }
 
 goToViewSimilar(){
+  let similarProfileCheckSumTemp = window.location.search.split('similarOf='), similarProfileCheckSum;
+  if(typeof similarProfileCheckSumTemp[1]!="undefined" && similarProfileCheckSumTemp[1])
+    similarProfileCheckSum = similarProfileCheckSumTemp[1].split("&")[0];
+  else
+    similarProfileCheckSum = "";
+
+  if(!this.canIShowNext(similarProfileCheckSum,this.props.profiledata.profilechecksum)) return;
   this.closeAllOpenLayers();
   let _this=this;
   setTimeout(
     function(){
       window.location.href = "/search/MobSimilarProfiles?profilechecksum="+_this.props.profiledata.profilechecksum+"&fromProfilePage=1&fromSPA_CE=1";
     },1000);
+}
+
+
+canIShowNext(parentUsername,username)
+{
+  var str = localStorage.getItem("viewSim4");
+  var newString='';
+        if(str && parentUsername)
+        {
+                if(str.indexOf(',')!='-1')
+                {
+                        var res = str.split(",");
+                        if(res[0]== parentUsername)
+                        {
+                                newString = res[0]+","+username;
+                        }
+      else
+      {
+        return false;
+      }
+                }
+    else if(str!=username)
+    {
+                  newString = parentUsername+","+username;
+    }
+        }
+        else{
+    newString = username;
+}
+  if(newString)
+    localStorage.setItem("viewSim4",newString);
+  return true;
 }
 
 }

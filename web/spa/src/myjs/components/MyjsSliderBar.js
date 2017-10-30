@@ -41,7 +41,7 @@ componentWillUnmount() {
  componentWillReceiveProps(nextProps){
    if(!nextProps.listing.profiles)return;
     this.setState({
-      total : nextProps.listingName == 'match_alert'?nextProps.listing.profiles.length:nextProps.listing.total
+      total : nextProps.listingName == 'match_alert'?nextProps.listing.no_of_results:nextProps.listing.total
     });
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
    {

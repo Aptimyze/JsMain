@@ -435,7 +435,7 @@ class ProfileMemcacheService
                         
                         if ($value["FILTERED"] == 'Y' || $value["FILTERED"] == 'J'){
                                     if ($value['TIME1']=='0'){
-                                    if ($value["SEEN"] != 'Y' && ($value["FILTERED"] == 'Y' || $value["FILTERED"] == 'J'))
+                                    if ($value["SEEN"] != 'Y' && $value["FILTERED"] == 'Y')
                                         $FILTERED_NEW = $FILTERED_NEW + $value["COUNT"];
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
@@ -546,7 +546,7 @@ class ProfileMemcacheService
         }
         if (is_array($contactArr)) {
             $datediff = floor(abs(JSstrToTime(date("Y-m-d")) - JSstrToTime(ErrorHandler::DUP_LIVE_DATE)) / (60 * 60 * 24));
-            $contactLimitDates = CommonFunction::getContactLimitDates();
+            $contactLimitDates = CommonFunction::getContactLimitDates('',$this->profileid);
             foreach ($contactArr as $key => $val) {
                 $contactDate = $contactDates[$key];
                 if ($val == 0)
@@ -557,6 +557,7 @@ class ProfileMemcacheService
                 // insert logic for month's count
                 if (strtotime($contactLimitDates['monthStartDate'])  <= strtotime($contactDate))
                     $MONTH_INI_BY_ME++;
+                // insert duplicate logic 
                 if ($datediff >= $val)
                 {
 					$CONTACTS_MADE_AFTER_DUP++;

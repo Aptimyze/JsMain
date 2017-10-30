@@ -80,6 +80,12 @@ class FormatNotification
         return $dataArray;
     }
 
+    public static function formaterForFcmBrowser($details)
+    {
+        $dataArray = array('NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'TITLE'=>$details['TITLE'],'BODY'=>$details['MESSAGE'],'ICON'=>$details['ICON'],'TAG'=>$details['TAG'],'MSG_ID'=>$details['MSG_ID'],'ACTION'=>$details['LANDING_ID']);
+        return $dataArray;
+    }
+  
     /*notification formater for push notifications for new architecture */
     public static function formatPushNotification($details,$channel)
     {
@@ -90,7 +96,9 @@ class FormatNotification
 	}
     	elseif(in_array("CRM_AND", $channel)==false)
     	{
-            $dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],"MSG_ID"=>$details["MSG_ID"]);
+	    $dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],'TITLE'=>$details['TITLE'],'MESSAGE'=>$details['MESSAGE'],'ICON'=>$details['ICON'],'TAG'=>$details['TAG'],'MSG_ID'=>$details['MSG_ID'],'LANDING_ID'=>$details['LANDING_ID']);
+        return $dataArray;
+            //$dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],"MSG_ID"=>$details["MSG_ID"]);
             $type = "BROWSER_NOTIFICATION";
         }
     	else

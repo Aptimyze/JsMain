@@ -13,3 +13,6 @@ all:
 
   deliveryTrackingV1:
     enable_login: off
+    
+  updateTrackingV1:
+      enable_login: off

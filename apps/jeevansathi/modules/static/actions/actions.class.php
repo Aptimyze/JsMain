@@ -316,6 +316,10 @@ class staticActions extends sfActions
             }
             else{
               $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+              if ( strpos($this->referer,'static/deleteReason') !== false || strpos($this->referer,'static/passCheck') !== false )
+              {
+                $this->referer = '/';
+              }
             }
         }
 
