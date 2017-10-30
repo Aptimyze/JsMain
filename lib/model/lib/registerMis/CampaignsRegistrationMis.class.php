@@ -26,6 +26,9 @@ class CampaignsRegistrationMis
                                 $stateCode = substr($value["CITY_RES"], 0,2);
                                 $dataArr[$key]["STATE"] = FieldMap::getFieldLabel('state_india',$stateCode);
                                 $dataArr[$key]["CITY_RES"] = FieldMap::getFieldLabel('city_india',$value["CITY_RES"]);
+                        }elseif($value["COUNTRY_RES"] == 128){
+                                $dataArr[$key]["STATE"] = "";
+                                $dataArr[$key]["CITY_RES"] = FieldMap::getFieldLabel('city_usa',$value["CITY_RES"]);
                         }else{
                                 $dataArr[$key]["STATE"] = "";
                                 $dataArr[$key]["CITY_RES"] = "";
