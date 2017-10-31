@@ -128,6 +128,8 @@ class WriteMessageConsumer
 	$redeliveryCount=$msgdata['redeliveryCount'];
 	$type=$msgdata['data']['type'];
 	$body=$msgdata['data']['body'];
+    $codeException = 0;
+    $deliveryException = 0;
 	try
 	{
 
@@ -189,6 +191,7 @@ class WriteMessageConsumer
 	}
 	catch (Exception $exception) 
 	{
+      $codeException = 1;
 	  $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
 	  RabbitmqHelper::sendAlert($str,"writeMsg");
 	  //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
@@ -214,9 +217,13 @@ class WriteMessageConsumer
 	} 
 	catch(Exception $exception) 
 	{
+      $deliveryException = 1;
 	  $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
 	  RabbitmqHelper::sendAlert($str);
 	}
+    if($codeException || $deliveryException){
+        die("Killed due to code exception or delivery exception");
+    }
   }
 
   /**
