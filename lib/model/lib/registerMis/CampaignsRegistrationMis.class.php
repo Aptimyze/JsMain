@@ -59,8 +59,8 @@ class CampaignsRegistrationMis
 	public function createCSVFromatData($params,$groupedData,$displayDate)
 	{
 		$csvData = '';
-                $iterate = "PROFILEID,ENTRY_DT,MTONGUE,RELIGION,CASTE,OCCUPATION,EDU_LEVEL_NEW,INCOME,RELATION,GENDER,AGE,COUNTRY_RES,STATE,CITY_RES,CASTE,CLICK_URL,CAMPAIGN,ADGROUP,SOURCE,MEDIUM,CAMPAIGN,ADNAME,KEYWORD,GROUPNAME,INCOMPLETE,ACTIVATED_STATUS,IS_QUALITY,CHANNEL,PHOTO_UPLOADED,PCS,IS_PAID";
-                $csvData .= "Profile ID,Registration Date,Mother Tongue,Religion,Caste,Occupation,Highest Degree,Income,Posted by,Gender,Age,Country,State,City,Caste,Click URL,Campaign ID,Adgroup ID,source ID,utm_medium,utm_campaign,utm_term,Keyword,Source Group Name,Incomplete (Y/N),Activated within 3 days (Y/H/N/D),Quality (Y/N),Device (Mobile/Desktop),Photo uploaded (Y- (0-20)/N),Profile Completion Score,Conversion (30 day)"."\n";
+                $iterate = "PROFILEID,ENTRY_DT,MTONGUE,RELIGION,CASTE,OCCUPATION,EDU_LEVEL_NEW,INCOME,RELATION,GENDER,AGE,COUNTRY_RES,STATE,CITY_RES,CLICK_URL,CAMPAIGN,ADGROUP,SOURCE,MEDIUM,CAMPAIGN,ADNAME,KEYWORD,GROUPNAME,INCOMPLETE,ACTIVATED_STATUS,IS_QUALITY,CHANNEL,PHOTO_UPLOADED,PCS,IS_PAID";
+                $csvData .= "Profile ID,Registration Date,Mother Tongue,Religion,Caste,Occupation,Highest Degree,Income,Posted by,Gender,Age,Country,State,City,Click URL,Campaign ID,Adgroup ID,source ID,utm_medium,utm_campaign,utm_term,Keyword,Source Group Name,Incomplete (Y/N),Activated within 3 days (Y/H/N/D),Quality (Y/N),Device (Mobile/Desktop),Photo uploaded (Y- (0-20)/N),Profile Completion Score,Conversion (30 day)"."\n";
                 $iterate = explode(",",$iterate);
 		foreach($groupedData as $key=>$value)
 		{
