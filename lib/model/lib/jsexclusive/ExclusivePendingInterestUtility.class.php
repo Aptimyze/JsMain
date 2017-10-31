@@ -157,6 +157,8 @@ class ExclusivePendingInterestUtility {
                 foreach ($sender as $senderID => $time) {
                     $temp[$count] = $senderID;
                     $count++;
+                    if($count == 5)
+                        break;
                 }
                 $data[$receiver] = $temp;
         }

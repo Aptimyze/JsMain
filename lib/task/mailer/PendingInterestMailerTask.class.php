@@ -44,14 +44,10 @@ EOF;
 
         // get details of each profile
         $utility = new ExclusivePendingInterestUtility();
-        $interestDetails = $utility->getProfileInterestDetails($pendingInterestList);
-
-        // sort the interests on the basis of time
-        $interestDetailSorted = $utility->sortOnTime($interestDetails);
-
+        $interestDetails2 = $utility->getProfileInterestDetails($pendingInterestList);
+        
         // preparing the input format for receiving the Receiver Details
-        $interestDetails = $utility->castToInputObject($interestDetailSorted);
-
+        $interestDetails = $utility->castToInputObject($interestDetails2);
         $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
         
         $mailerServiceObj = new MailerService();
@@ -63,7 +59,6 @@ EOF;
             $usersList = $receiverDetails["USERS"];
 
             $receiverDetails["USERS"] = $utility->bumpUpPhotoListing($usersList);
-            
             if (is_array($receiverDetails)) {
                 
                 $mailerServiceObj = new MailerService();

@@ -1372,7 +1372,7 @@ public function getSendersPending($chunkStr)
             $result = array();
     		$sql = "SELECT SENDER, RECEIVER, TIME
 					FROM newjs.CONTACTS
-					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
+					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ORDER BY TIME DESC;" ;
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
 			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
