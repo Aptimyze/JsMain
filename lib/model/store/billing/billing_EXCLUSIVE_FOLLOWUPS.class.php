@@ -305,7 +305,6 @@ class billing_EXCLUSIVE_FOLLOWUPS extends TABLE {
   		$sql = "SELECT ID,CLIENT_ID,MEMBER_ID,FOLLOWUP_1,FOLLOWUP_2,FOLLOWUP_3,FOLLOWUP_4,FOLLOWUP1_DT,FOLLOWUP2_DT,FOLLOWUP3_DT,FOLLOWUP4_DT,CONCALL_ACTUAL_DT,STATUS FROM billing.EXCLUSIVE_FOLLOWUPS"
                             . " WHERE AGENT_USERNAME=:AGENT"
                             . " AND CLIENT_ID=:CLIENTID AND MAILER=:MAILER AND (FOLLOWUP1_DT >= :DATE OR FOLLOWUP2_DT >= :DATE OR FOLLOWUP3_DT >= :DATE OR FOLLOWUP4_DT >= :DATE OR CONCALL_ACTUAL_DT >= :DATE)";
-  			print_r($sql);
 		    $res = $this->db->prepare($sql);
             $res->bindValue(":AGENT", $agent, PDO::PARAM_STR);
         	$res->bindValue(":DATE", $date, PDO::PARAM_STR);
