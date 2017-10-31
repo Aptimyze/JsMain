@@ -608,5 +608,15 @@ class ProfileCacheConstants
                                         'REQUEST_ID',
                                         'VERIFY_STATUS',
                                     );
+    public static $prefixMapping = array(
+					"JPROFILE"=>"bi",
+					"ProfileEducation"=>"ei",
+					"ProfileAstro"=>"ai",
+					"ProfileNativePlace"=>"ni",
+					"JHOBBYCacheLib"=>"hi",
+					"ProfileAUTO_EXPIRY"=>"xi"
+					/*""=>"",
+					""=>"",*/
+				);
 }
 ?>

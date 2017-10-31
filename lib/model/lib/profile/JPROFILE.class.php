@@ -125,7 +125,6 @@ class JPROFILE
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
         }
-
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
             //$this->logCacheConsumption();
@@ -141,9 +140,9 @@ class JPROFILE
         }
         if ( is_array($result) && 
 	     isset($result['PROFILEID']) &&
-	     false === ProfileCacheLib::getInstance()->isCommandLineScript()
+	     false === ProfileCacheFunctions::isCommandLineScript()
 	) {
-            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
         }
 
         return $result;
@@ -223,7 +222,7 @@ class JPROFILE
     {
         if(
             JPROFILE::ENABLE_GETFORPARTIALKEYS &&
-            !ProfileCacheLib::getInstance()->isCommandLineScript() &&
+            !ProfileCacheFunctions::isCommandLineScript() &&
             is_array($valueArray) &&
             count($valueArray) == 1 &&
             $valueArray['PROFILEID'] &&
