@@ -58,7 +58,7 @@ class NotificationConfigurationFunc
             $currentDate = strtotime(date('Y-m-d'));
             $dateDiff = ($currentDate - strtotime($layerData[0][$lastLoginChannel]))/(60*60*24);
             //if($layerData[0][$countChannel] >=5 || ($dateDiff < 7) || ($layerData[0][$channelShowLayer] == 'Y') ){
-	    if(($dateDiff < 3) || ($layerData[0][$channelShowLayer] == 'Y')){	
+	    if(($dateDiff < 2) || ($layerData[0][$channelShowLayer] == 'Y')){	
                 $registeredUser = 1;
             }
 	    if($layerData[0][$channelShowLayer] == 'Y')

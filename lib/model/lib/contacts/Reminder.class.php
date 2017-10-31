@@ -93,7 +93,7 @@ class Reminder extends ContactEvent {
     $sendMailNot = $this->contactHandler->getElements('MAIL_AND_NOT') == 'N' ? false : true;
     //send eoi reminder notification with default reminder message
     $filteredState =$this->contactHandler->getContactObj()->getFILTERED();	
-    if($filteredState!='Y' && $sendMailNot)
+    if($filteredState!='Y' && $filteredState!='J' && $sendMailNot)
     {	
       $receiverId = $this->contactHandler->getViewed()->getPROFILEID();
       $senderId = $this->contactHandler->getViewer()->getPROFILEID();
