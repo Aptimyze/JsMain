@@ -8,7 +8,7 @@
 
 class ExclusivePendingInterestUtility {
     
-    public $numberOfShards = 3;
+    private $numberOfShards=3;
     
     public function profileIdShardSeperation($profileIdArray) {
         
@@ -17,19 +17,21 @@ class ExclusivePendingInterestUtility {
 		}
                 
                 foreach ($profileIdArray as $profileId) {
-                    if($profileId %3 == 0) {
+                    $dbName=JsDbSharding::getShardNo($profileId);
+                        
+                    if($dbName[5] == '1') {
                         $result["SHARD1"][] = $profileId;
                     }
-                    else if($profileId%3 == 1) {
+                    else if($dbName[5] == '2') {
                         $result["SHARD2"][] = $profileId;
                     }
                     else {
                         $result["SHARD3"][] = $profileId;
                     }
                 }
-               
         return $result;
     }
+    
     
     /**
      * This is a common method that calls the respective shard to fetch the 
@@ -38,9 +40,7 @@ class ExclusivePendingInterestUtility {
      * @param Array $profileIdArray 
      */
     public function getProfileInterestDetails($profileIdArray) {
-        
         $shardBasedProfileIds = $this->profileIdShardSeperation($profileIdArray);
-        
         $result = array();
         for($i = 1; $i <= $this->numberOfShards; $i++ ) {
             if(!empty($shardBasedProfileIds["SHARD".$i])) {
@@ -186,8 +186,16 @@ class ExclusivePendingInterestUtility {
             }
         }
         
+        if(is_array($result1) && is_array($result2)) {
+            return array_merge($result1, $result2);
+        }
+        else if(is_array($result1) && !is_array($result2)) {
+            return $result1;
+        } 
+        else {
+            return $result2;
+        }
         
-        return array_merge($result1, $result2);
     }
         
     

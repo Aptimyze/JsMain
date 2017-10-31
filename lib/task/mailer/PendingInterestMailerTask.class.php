@@ -41,11 +41,11 @@ EOF;
         // Get the low acceptances profile
         $pendingInterest = new billing_EXCLUSIVE_MAIL_LOG();
         $pendingInterestList = $pendingInterest->getLowAcceptanceProfiles($this->acceptanceCount);
-        
+
         // get details of each profile
         $utility = new ExclusivePendingInterestUtility();
         $interestDetails = $utility->getProfileInterestDetails($pendingInterestList);
-        
+
         // sort the interests on the basis of time
         $interestDetailSorted = $utility->sortOnTime($interestDetails);
 
@@ -57,17 +57,18 @@ EOF;
         $mailerServiceObj = new MailerService();
         
         foreach($interestDetails as $key => $value) {
+            
             $values = $utility->populateValueParameter($key, $value);
             $receiverDetails = $mailerServiceObj->getRecieverDetails($key, $values, $this->mailerName, $widgetArray);
             $usersList = $receiverDetails["USERS"];
-            
+
             $receiverDetails["USERS"] = $utility->bumpUpPhotoListing($usersList);
+            
             if (is_array($receiverDetails)) {
                 
                 $mailerServiceObj = new MailerService();
                 $this->smarty = $mailerServiceObj->getMailerSmarty();
             
-                
                 $mailerLinks = $mailerServiceObj->getLinks();
                 $this->smarty->assign('mailerLinks',$mailerLinks);
                 // change to $key
@@ -86,7 +87,6 @@ EOF;
 
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($receiverDetails["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$key,$agentDetails["EMAIL"],$agentDetails["AGENT_NAME"],'','',$agentDetails["EMAIL"]);
-
                     if ($flag) {
                         // if mail is sent successfully, update the exclusive mail log table with the status
                         // of mail sent to pending interest column. Refer table
