@@ -299,7 +299,7 @@ class RegistrationFunctions
                  $value = $request->getParameter($key);
                  if($value && !in_array($val,$checkArr)){
                      $campArr[$key]= $value;
-                     $checkArr[] = $val;
+                     $checkArr[] = trim($val,'{}');
                  }
              }
              if($jsonFormat)
@@ -314,7 +314,7 @@ class RegistrationFunctions
        public static function putCampaignVars($profileId,$campaignVars){
             foreach(RegistrationEnums::$campaignParamList as $key=>$val){
                  if($campaignVars[$key])
-                     $campArr[$key]= $campaignVars[$key];
+                     $campArr[$key]= trim($campaignVars[$key],'{}');
             }
             $campVarObj = new MIS_CAMPAIGN_KEYWORD_TRACKING();
             $campVarObj->insertEntry($profileId, $campArr);
