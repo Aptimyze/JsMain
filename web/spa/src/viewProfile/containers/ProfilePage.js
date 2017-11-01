@@ -34,6 +34,8 @@ class ProfilePage extends React.Component {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         let stype = getParameterByName(window.location.href,"stype");
+        let listingName = getParameterByName(window.location.href,"listingName");
+        let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
         let ownView = false;
         if(getParameterByName(window.location.href,"preview") == 1) {
             ownView = true;
@@ -58,7 +60,8 @@ class ProfilePage extends React.Component {
             stype:stype,
             disablePhotoLink: false,
             callApi: false,
-            listingName: "",
+            listingName: listingName,
+            hitFromMyjs:hitFromMyjs,
             ownView:ownView,
             ucbrowser:false,
             nextProfileFetched:false
@@ -103,6 +106,8 @@ class ProfilePage extends React.Component {
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
             let fromViewSimilar = getParameterByName(window.location.href,"fromViewSimilar");
+            let listingName = getParameterByName(window.location.href,"listingName");
+            let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -130,6 +135,12 @@ class ProfilePage extends React.Component {
             }
             if(typeof fromViewSimilar != "undefined"){
                 urlString += "&fromViewSimilar=" + fromViewSimilar;
+            }
+            if(listingName != undefined && listingName != "undefined" && listingName != null){
+                urlString += "&listingName=" + listingName;
+            }
+            if(hitFromMyjs != undefined && hitFromMyjs != "undefined" && hitFromMyjs != null){
+                urlString += "&hitFromMyjs=" + hitFromMyjs;
             }
         }
         this.props.showProfile(this, urlString);
@@ -257,6 +268,14 @@ swipeNextProfile(nextOrPrev){
                 nextUrl += "&similarOf=" + this.state.similarOf;
                 nextDataApi += "&similarOf=" + this.state.similarOf;
             }
+            if(this.state.listingName != null){
+                nextUrl += "&listingName=" + this.state.listingName;
+                nextDataApi += "&listingName=" + this.state.listingName;
+            }
+            if(this.state.hitFromMyjs != null){
+                nextUrl += "&hitFromMyjs=" + this.state.hitFromMyjs;
+                nextDataApi += "&hitFromMyjs=" + this.state.hitFromMyjs;
+            }
 
             this.props.fetchNextPrevData(this, nextDataApi, "saveLocalNext");
             this.setState({
@@ -296,6 +315,14 @@ swipeNextProfile(nextOrPrev){
             if(this.state.similarOf != null){
                 prevUrl += "&similarOf=" + this.state.similarOf;
                 prevDataApi += "&similarOf=" + this.state.similarOf;
+            }
+            if(this.state.listingName != null){
+                prevUrl += "&listingName=" + this.state.listingName;
+                prevDataApi += "&listingName=" + this.state.listingName;
+            }
+            if(this.state.hitFromMyjs != null){
+                prevUrl += "&hitFromMyjs=" + this.state.hitFromMyjs;
+                prevDataApi += "&hitFromMyjs=" + this.state.hitFromMyjs;
             }
             //this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
             this.setState({
@@ -338,6 +365,8 @@ swipeNextProfile(nextOrPrev){
             let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
+            let listingName = getParameterByName(window.location.href,"listingName");
+            let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
 
 
             if(total_rec == "undefined") {
@@ -364,7 +393,9 @@ swipeNextProfile(nextOrPrev){
                 NAVIGATOR: NAVIGATOR,
                 similarOf: similarOf,
                 toShowECP: toShowECP,
-                nextProfileFetched:false
+                listingName:listingName,
+                hitFromMyjs:hitFromMyjs,
+                nextProfileFetched:false,
                 },this.setNextPrevLink);
             }
 

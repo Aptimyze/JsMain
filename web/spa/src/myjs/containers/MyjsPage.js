@@ -338,7 +338,7 @@ export  class MyjsPage extends React.Component {
 	    }
 	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;this.setState({allHitsDone:true});}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
+				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;this.setState({allHitsDone:true});}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'dailymatches' hitFromMyjs='1' url='/inbox/7/1'/>
 	    }
 			if( this.state.allHitsDone && ( (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched)) )
 			{
@@ -408,7 +408,7 @@ const mapDispatchToProps = (dispatch) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
      	hitApi_DR: (containerObj) => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1&myjs=1&listingName=dailymatches&hitFromMyjs=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
             	containerObj.hideLoader('hide');
 							window.removeEventListener('scroll',containerObj.scrollFun,false);
 						});

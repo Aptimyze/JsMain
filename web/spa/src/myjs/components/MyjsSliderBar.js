@@ -17,7 +17,7 @@ export class MyjsSlider extends React.Component {
       tupleWidth : {'width' : window.innerWidth},
       loaderStyles:[],
       divStyles:[],
-      total : props.listingName == 'match_alert'?props.listing.no_of_results:props.listing.total,
+      total : props.listingName == 'dailymatches'?props.listing.no_of_results:props.listing.total,
       MyjsThumb:''
     }
   }
@@ -41,7 +41,7 @@ componentWillUnmount() {
  componentWillReceiveProps(nextProps){
    if(!nextProps.listing.profiles)return;
     this.setState({
-      total : nextProps.listingName == 'match_alert'?nextProps.listing.no_of_results:nextProps.listing.total
+      total : nextProps.listingName == 'dailymatches'?nextProps.listing.profiles.length:nextProps.listing.total
     });
    if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
    {
@@ -154,14 +154,22 @@ render(){
                       }
 
                     }
+                    let profileUrl = '';
+                    if ( this.props.listingName != 'dailymatches')
+                    {
+                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`;
+                    }
+                    else
+                    {
+                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}&listingName=${this.props.listingName}&hitFromMyjs=${this.props.hitFromMyjs}`;
 
-
+                    }
 
 
                   return (
                 <div key={index} className={"mr10 dispibl ml0 posrel rmtuple " + (this.state.divStyles[index] ? this.state.divStyles[index] : '')} style={this.state.tupleWidth} id={this.props.listing.infotype+"_"+index} >
                   <div className="bg4 overXHidden" id="hideOnAction">
-                    <Link  to={`/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`}>
+                    <Link  to={profileUrl}>
                       <div className="pad16 scrollhid hgt140">
                         <div className="overXHidden fullheight">
                           <div className="whitewid200p overflowWrap">
