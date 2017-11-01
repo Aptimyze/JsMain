@@ -43,17 +43,12 @@ componentWillUnmount() {
     this.setState({
       total : nextProps.listingName == 'dailymatches'?nextProps.listing.profiles.length:nextProps.listing.total
     });
-   if(nextProps.listing.profiles.length != this.props.listing.profiles.length)
-   {
      this.setState({
        loaderStyles:[],
        divStyles:[]
 
      });
      this.obj.resetSlider(nextProps.listing.profiles);
-
-   }
-
 }
 removeMyjsTuple(index){
 
