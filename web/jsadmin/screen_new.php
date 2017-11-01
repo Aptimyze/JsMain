@@ -13,7 +13,7 @@ header('Pragma: no-cache');
 include ("time1.php");
 
 global $screeningRep;
-$screeningRep = false;
+$screeningRep = true;
 
 include ("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");

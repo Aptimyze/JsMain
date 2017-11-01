@@ -1,10 +1,10 @@
 <?php
 /**
- * This is the cron to schedule Broswer notification. This cron is used to add both instant and schedule notifications.
+ * This is the cron to schedule PENDING_EOI. This cron is used to add both instant and schedule notifications.
  * Parameters Description:
  *  type: 'instant' or 'scheduled'
  */
-class browserNotificationTask extends sfBaseTask{
+class browserNotificationPENDING_EOITask extends sfBaseTask{
     
     protected function configure() {
         
@@ -15,11 +15,11 @@ class browserNotificationTask extends sfBaseTask{
         $this->addArguments(array(new sfCommandArgument('message', sfCommandArgument::OPTIONAL, 'My argument')));
         
         $this->namespace = "browserNotification";
-        $this->name = "browserNotificationTask";
+        $this->name = "browserNotificationPENDING_EOITask";
         $this->briefDescription = "";
         $this->detailedDescription = <<<EOF
             The [browserNotificationTask|INFO] task does things.
-            Call it with:[php symfony browserNotification:browserNotificationTask|INFO]
+            Call it with:[php symfony browserNotification:browserNotificationPENDING_EOITask|INFO]
 EOF;
         $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -74,38 +74,10 @@ EOF;
             //Block for scheduled notification
             $processObj->setmethod("SCHEDULED");
             
-            echo "before MEM_EXPIRE \n";
-            $processObj->setnotificationKey("MEM_EXPIRE");
+            echo "before PENDING_EOI \n";
+            $processObj->setnotificationKey("PENDING_EOI");
             $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE \n";
-            
-            /*echo "before MEM_EXPIRE_A10 \n";
-            $processObj->setnotificationKey("MEM_EXPIRE_A10");
-            $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_A10 \n";
-            
-            echo "before MEM_EXPIRE_A15 \n";
-            $processObj->setnotificationKey("MEM_EXPIRE_A15");
-            $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_A15 \n";
-            
-            echo "before MEM_EXPIRE_B1 \n";
-            $processObj->setnotificationKey("MEM_EXPIRE_B1");
-            $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_B1 \n";
-            
-            echo "before MEM_EXPIRE_B5 \n";
-            $processObj->setnotificationKey("MEM_EXPIRE_B5");
-            $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_B5 \n";*/
-            /*
-            //Notification for Renewal Reminder
-            foreach (BrowserNotificationEnums::$renewalReminderNotification as $key => $val)
-            {
-                $processObj->setnotificationKey($val);
-                $browserNotificationObj->addNotification($processObj);
-            }
-            */
+            echo "After PENDING_EOI \n";
         }
         else
         {

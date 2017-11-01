@@ -8,7 +8,7 @@ class incentive_SALES_CAMPAIGN_PROFILE_DETAILS extends TABLE {
 	public function getProfiles()
         {
                 try{
-                        $sql ="select PROFILEID, CAMPAIGN from incentive.SALES_CAMPAIGN_PROFILE_DETAILS WHERE MAIL_SENT!='Y'";
+                        $sql ="select PROFILEID, CAMPAIGN from incentive.SALES_CAMPAIGN_PROFILE_DETAILS WHERE MAIL_SENT='N'";
                         $row = $this->db->prepare($sql);
                         $row->execute();
                         while($result=$row->fetch(PDO::FETCH_ASSOC)){
