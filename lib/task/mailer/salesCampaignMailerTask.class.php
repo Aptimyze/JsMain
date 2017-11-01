@@ -27,7 +27,7 @@ EOF;
 		/** code for daily count monitoring**/
 	        $cronDocRoot = JsConstants::$cronDocRoot;
                 $php5 = JsConstants::$php5path;
-                passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER#INSERT");
+                //passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER#INSERT");
                 /**code ends*/
 		$countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
                 $instanceID = $countObj->getID('SALES_FEEDBACK_MAILER');
@@ -47,7 +47,7 @@ EOF;
 				$crmMailerObj->updateMailerSentStatus($profileid,$deliveryStatus);
 			}
 			/** code for daily count monitoring**/
-                        passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER");
+                        //passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER");
                         /**code ends*/
 		}
 		unset($crmMailerObj);
