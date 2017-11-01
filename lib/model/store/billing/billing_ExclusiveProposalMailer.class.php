@@ -66,12 +66,11 @@ class billing_ExclusiveProposalMailer extends TABLE{
     public function getProfilesToSendProposalMail(){
         try{
             $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
-            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS IN (:STATUS1,:STATUS2)";
+            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":DATE",$tomorrowDT,PDO::PARAM_STR);
-            $prep->bindValue(":STATUS1",'N',PDO::PARAM_STR);
-            $prep->bindValue(":STATUS2",'U',PDO::PARAM_STR);
+            $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             $COUNT=0;
