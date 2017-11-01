@@ -1370,9 +1370,12 @@ public function getSendersPending($chunkStr)
     public function getReceivedDetailsForMatchMailer($profilesId,$time, $type) {
     	try {
             $result = array();
-    		$sql = "SELECT SENDER, RECEIVER, TIME
-					FROM newjs.CONTACTS
-					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ORDER BY TIME DESC;" ;
+            
+            $sql = "SELECT * FROM "
+                    . "(SELECT SENDER, RECEIVER, TIME FROM CONTACTS WHERE "
+                        . "RECEIVER IN ($profilesId) AND TYPE = :TYPE "
+                        . "AND TIME >= :TIME ORDER BY TIME DESC LIMIT 5) "
+                    . "con ORDER BY con.TIME";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
 			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
