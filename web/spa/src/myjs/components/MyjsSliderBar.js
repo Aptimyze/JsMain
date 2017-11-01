@@ -157,11 +157,11 @@ render(){
                     let profileUrl = '';
                     if ( this.props.listingName != 'dailymatches')
                     {
-                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`;
+                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}`;
                     }
                     else
                     {
-                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.state.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}&listingName=${this.props.listingName}&hitFromMyjs=${this.props.hitFromMyjs}`;
+                      profileUrl = `/profile/viewprofile.php?profilechecksum=${tuple.profilechecksum}&${this.props.listing.tracking}&total_rec=${this.props.listing.totalOffset}&actual_offset=${index}&searchid=${this.props.listing.searchid}&contact_id=${this.props.listing.contact_id}&${tuple.buttonDetails.buttons[0].params}&listingName=${this.props.listingName}&hitFromMyjs=${this.props.hitFromMyjs}`;
 
                     }
 
