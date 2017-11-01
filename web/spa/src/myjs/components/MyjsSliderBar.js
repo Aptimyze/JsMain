@@ -114,7 +114,7 @@ render(){
               {
                 [this.props.listing.profiles.map((tuple,index) => {
 
-                  if(tuple.dontShow)return(<div></div>);
+                  if(tuple.dontShow)return '';
                     if(tuple.profilepic120url==undefined)
                     {
 
