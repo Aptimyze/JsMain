@@ -1274,10 +1274,12 @@ $oldUrl.="&lavesh=$lavesh";
 			/********End of - Code Added by sriram on May 22 2007********/
 			
 			$nameOfUserForObscene = $nameOfUserObj->getNameData($profileid);
+			$nameOfUserForObsceneArray = $nameOfUserObj->getValidNames();
 			
 			if(is_array($nameOfUserForObscene)){
-				$nameOfUserForObsceneArray= explode(" ",$nameOfUserForObscene[$profileid]["NAME"]);
+				$nameOfUserForObsceneArray= array_merge($nameOfUserForObsceneArray,explode(" ",$nameOfUserForObscene[$profileid]["NAME"]));
 			}
+			
 			
 			if (!$uname_set) {
 				$item[] = "USERNAME";
@@ -1366,7 +1368,9 @@ $oldUrl.="&lavesh=$lavesh";
 				if(is_array($nameOfUserForObsceneArray)){
 					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
 				}
+				
 				$obsceneWord=getObsceneWords($myrow['SPOUSE'],$obscene);
+				
 				$smarty->assign("OBSCENE_WORDS_SPOUSE",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_SPOUSE", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
@@ -1625,14 +1629,14 @@ function getAge($newDob) {
 		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
 		$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $message);
 		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
-
+		$string_replaced_special_characters = trim(preg_replace('/\s+/', ' ', $string_replaced_special_characters));
 		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
 		$messageFinal= implode(",",$messageArr);
 		$messageFinal= strtolower($messageFinal);
 		$messageArr= explode(",",$messageFinal);
 		$obscene=explode(",",strtolower(implode(",",$obscene)));
 		$result = array_intersect($messageArr, $obscene);
-   		$resultstr=implode(',',array_values($result));
+		$resultstr=implode(',',array_values($result));
    		return $resultstr;
 	}
   
