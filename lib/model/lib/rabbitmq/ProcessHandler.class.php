@@ -146,6 +146,8 @@ class ProcessHandler
               } else {
                   $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
               }
+          } else {
+              $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
           }
           break;
     }

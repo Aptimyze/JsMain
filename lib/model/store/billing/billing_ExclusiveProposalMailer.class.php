@@ -66,11 +66,12 @@ class billing_ExclusiveProposalMailer extends TABLE{
     public function getProfilesToSendProposalMail(){
         try{
             $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
-            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
+            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE <= :DATE AND STATUS IN (:STATUS1,:STATUS2)";
 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":DATE",$tomorrowDT,PDO::PARAM_STR);
-            $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
+            $prep->bindValue(":STATUS1",'N',PDO::PARAM_STR);
+            $prep->bindValue(":STATUS2",'U',PDO::PARAM_STR);
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             $COUNT=0;
@@ -101,6 +102,26 @@ class billing_ExclusiveProposalMailer extends TABLE{
             $prep->bindValue(":TUPLEID",$tupleID,PDO::PARAM_INT);
             $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
             $prep->execute();
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getUnderprocessIDsCount($date){
+        try{
+            $sql = "SELECT count(*) AS COUNT FROM  billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+            $prep->bindValue(":STATUS","U",PDO::PARAM_INT);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($row = $prep->fetch()){
+                $count = $row["COUNT"];
+            }
+            if(!isset($count))
+                $count = 0;
+            return $count;
         }catch(Exception $e){
             throw new jsException($e);
         }
