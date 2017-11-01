@@ -16,7 +16,7 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 mysql_query("set session wait_timeout=600",$db_master);
 
 $campaignArr	=array('IB_Sales','IB_Service','IB_PaidService');
-$startDt      	=date("Y-m-d",time()- 0*24*60*60)." 00:00:00";
+$startDt      	=date("Y-m-d");
 $checkTime      ='Jan  1 1753 00:00:00:000AM';	
 $mailStatus	='N';
 
@@ -29,7 +29,9 @@ while($srow = mysql_fetch_array($result)){
 }*/
 
 foreach($campaignArr as $key=>$campaignName){
-    $time =getMaxDialTime($db_master,$campaignName);
+    $timeArr =getMaxDialTime($db_master,$campaignName);
+    $time =$timeArr['time'];	
+     	
     if(!$time)	
 	$time =$checkTime;	
     echo "\n".$squery1 = "select distinct(PHONE_NO1) as PHONE_NO,Last_call_time from easy.dbo.ct_$campaignName where Last_call_date >='$startDt' and Last_call_time >'$time' order by Last_call_time asc";
@@ -70,15 +72,16 @@ if(time() > strtotime($Starttime) && time() < strtotime($endTime)){
 $to="manoj.rana@naukri.com";
 $sub="Sales Campaign Details Update";
 $from="From:vibhor.garg@jeevansathi.com";
-mail($to,$sub,$profileStr,$from);
+//mail($to,$sub,$profileStr,$from);
 
 function getMaxDialTime($db_master,$campaignName){
-	$query = "SELECT DIALER_TIME as time FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS WHERE CAMPAIGN='$campaignName' ORDER BY ID DESC LIMIT 1";
+	$query = "SELECT DIALER_TIME as time,DATE FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS WHERE CAMPAIGN='$campaignName' ORDER BY ID DESC LIMIT 1";
 	$result = mysql_query($query,$db_master) or die($query.mysql_error($db_master));;
 	if($srow = mysql_fetch_array($result)){
 	    $dialTime =$srow['time'];
+	    $date =$srow['DATE'];	
 	}
-	return $dialTime;
+	return array("time"=>"$dialTime","date"=>"$date");
 }
 
 // Phone Number Validate
