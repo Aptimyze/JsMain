@@ -437,5 +437,11 @@ class SearchCommonFunctions
                 $mappingCasteData = array_unique($mappingCasteData);
                 return $mappingCasteData;
         }
+        public static function setCityForOtherCondition($cityChk){
+                if(stristr($cityChk, "OT")){
+                        $cityChk = substr($cityChk, 0,2)."000";
+                }
+                return $cityChk;
+        }
 }
 ?>

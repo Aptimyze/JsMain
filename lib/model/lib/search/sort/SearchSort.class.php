@@ -122,7 +122,7 @@ class SearchSort
 			}
 			if($loggedInProfileObj->getCITY_RES())
 			{
-				$this->filterSort = $this->filterSort."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".$loggedInProfileObj->getCITY_RES()."),0,1)),1,0),";
+				$this->filterSort = $this->filterSort."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".SearchCommonFunctions::setCityForOtherCondition($loggedInProfileObj->getCITY_RES())."),0,1)),1,0),";
 			}
 			if($loggedInProfileObj->getMTONGUE())
 			{
@@ -160,7 +160,7 @@ class SearchSort
 			}
 			if($loggedInProfileObj->getCITY_RES())
 			{
-				$this->filterSortScore = $this->filterSortScore."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".$loggedInProfileObj->getCITY_RES()."),0,1)),32,0),";
+				$this->filterSortScore = $this->filterSortScore."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".SearchCommonFunctions::setCityForOtherCondition($loggedInProfileObj->getCITY_RES())."),0,1)),32,0),";
 			}
 			if($loggedInProfileObj->getMTONGUE())
 			{
@@ -317,8 +317,9 @@ class SearchSort
             if(strlen($loggedInObj->getCITY_RES())==2){
                 $response['state'] = $loggedInObj->getCITY_RES();
             }
-            else
-                $response['city'] = $loggedInObj->getCITY_RES();
+            else{
+                $response['city'] = SearchCommonFunctions::setCityForOtherCondition($loggedInObj->getCITY_RES());
+            }
             
             if($nativeState && $nativeCity)
                 $response['nativeCity'] = $nativeCity;

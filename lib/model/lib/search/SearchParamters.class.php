@@ -366,6 +366,7 @@ class SearchParamters
 	public function getCOUNTRY_RES() { return $this->COUNTRY_RES; }
 	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
+                $CITY_RES = $this->replaceCityResOTvalues($CITY_RES);
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
@@ -1318,4 +1319,11 @@ class SearchParamters
         public function getSEARCH_FAILED() { return $this->SEARCH_FAILED; }
         public function setHAS_TRENDS($HAS_TRENDS="0") {$this->HAS_TRENDS = $HAS_TRENDS;}
         public function getHAS_TRENDS() { return $this->HAS_TRENDS; }
+        public function replaceCityResOTvalues($CITY_RES){
+                $ncr = FieldMap::getFieldLabel("delhiNcrCities",1,1);
+                if(count(array_intersect($ncr,explode(",",$CITY_RES))) == sizeOf($ncr)){
+                     $CITY_RES .= ",DE000";
+                }
+                return $CITY_RES;
+        }
 }
