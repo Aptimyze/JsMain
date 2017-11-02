@@ -97,7 +97,6 @@ class FormatNotification
     	elseif(in_array("CRM_AND", $channel)==false)
     	{
 	    $dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],'TITLE'=>$details['TITLE'],'MESSAGE'=>$details['MESSAGE'],'ICON'=>$details['ICON'],'TAG'=>$details['TAG'],'MSG_ID'=>$details['MSG_ID'],'LANDING_ID'=>$details['LANDING_ID']);
-        return $dataArray;
             //$dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],"MSG_ID"=>$details["MSG_ID"]);
             $type = "BROWSER_NOTIFICATION";
         }
