@@ -1544,14 +1544,7 @@
 						if($scope.success==1)
 						{
 							if($scope.isPhoneMob){
-								var source='', groupName='';
-								try{
-										var jsonTemp = JSON.parse(localStorage.getItem('trackServerParams'));
-										source = jsonTemp.source;
-										groupName = jsonTemp.groupname;
-								}
-								catch(e){console.log('pixel error'+e);}
-								setTimeout(function(){window.location="/phone/jsmsDisplay?fromReg=1&source="+source+"&groupname="+groupName;},1000);
+								setTimeout(function(){window.location="/phone/jsmsDisplay?fromReg=1";},1000);
 							}
 							else
 								setTimeout(function(){window.location="/profile/mainmenu.php";},1000);
