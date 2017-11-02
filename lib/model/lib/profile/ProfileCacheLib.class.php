@@ -84,10 +84,6 @@ class ProfileCacheLib
 	{
 		return true;
         }
-//	$allStoreFields = ProfileCacheFunctions::getColumnArr($storeName);
-//        $prefix = ProfileCacheFunctions::getStorePrefix($storeName);
-//        $demandedFields = $this->getRelevantFields($fields, $storeName,$allStoreFields);
-//	$demandedFields = ProfileCacheFunctions::getRelevantKeysName($demandedFields,$prefix,'',self::KEY_PREFIX_DELIMITER);
         $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
         if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $demandedFields)) 
 	{
@@ -95,7 +91,7 @@ class ProfileCacheLib
         }
         $this->storeInLocalCache($key);
 
-        if (false === $this->checkFieldsAvailability($key, $fields, $storeName)) 
+        if (false === $this->checkFieldsAvailability($key, $demandedFields, $storeName)) 
 	{
 		ProfileCacheFunctions::logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
 		return false;
@@ -195,13 +191,13 @@ class ProfileCacheLib
      */
     public function get($szCriteria, $key, $fields, $storeName="", $arrExtraWhereClause = null)
     {
-        //$storeName = "*";
+        $storeName = "";
         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "get :: ".$storeName."\n", FILE_APPEND);
 //IN USE
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript()||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName))) 
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript()||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName)))  // CHECK THIS
 	{
-		return false;
+		//return false;
         }
 
         $arrData = $this->getFromLocalCache($key);
@@ -219,24 +215,28 @@ class ProfileCacheLib
 
         $arrOut = array();
         //Check for Not-Filled Case
-        if(strlen($storeName)) 
-	{
-                $allStoreFields = ProfileCacheFunctions::getColumnArr($storeName);
-                $arrFields = $this->getRelevantFields($fields, $storeName,$allStoreFields);
-		$allStoreFields = ProfileCacheFunctions::getRelevantKeysName($allStoreFields,$prefix,'',self::KEY_PREFIX_DELIMITER);
+        //if(strlen($storeName)) 
+	//{
+        //print_r($arrData);die;
+//                $allStoreFields = ProfileCacheFunctions::getColumnArr($storeName);
+//                $arrFields = $this->getRelevantFields($fields, $storeName,$allStoreFields);
+//		$allStoreFields = ProfileCacheFunctions::getRelevantKeysName($allStoreFields,$prefix,'',self::KEY_PREFIX_DELIMITER);
+		$allStoreFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
                 //print_r($allStoreFields);die;
-		foreach ($allStoreFields as $col) 
-		{
-                
-			if(isset($this->arrRecords[intval($key)][$col]) && $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) 
-			{
-				$iProfileID = $arrData['PROFILEID'];
-				$arrData = array_fill_keys($allStoreFields, ProfileCacheConstants::NOT_FILLED);
-				$arrData['PROFILEID'] = $iProfileID;
-				break;
-			}
-		}
-        }
+                if(strlen($storeName)) {
+                        foreach ($allStoreFields as $col) 
+                        {
+                                        if(isset($this->arrRecords[intval($key)][$col]) && $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) 
+                                        {
+                                                $iProfileID = $arrData['PROFILEID'];
+                                                $arrData = array_fill_keys($allStoreFields[$col1], ProfileCacheConstants::NOT_FILLED);
+                                                $arrData['PROFILEID'] = $iProfileID;
+                                                break;
+                                        }
+                        }
+                }
+        //}
+                print_r($arrData);die;
 	$arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrData,$prefix,'',self::KEY_PREFIX_DELIMITER);
         return $arrOut;
     }

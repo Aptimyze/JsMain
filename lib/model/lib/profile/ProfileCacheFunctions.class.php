@@ -30,7 +30,7 @@ class ProfileCacheFunctions
 		if($storeName && array_key_exists($storeName,ProfileCacheConstants::$prefixMapping))
 		{
 			return ProfileCacheConstants::$prefixMapping[$storeName];
-		}else if($storeName == ProfileCacheConstants::ALL_FIELDS_SYM){
+		}else if($storeName == ""){
                         return ProfileCacheConstants::$prefixMapping;
                 }
 		return false;
@@ -62,11 +62,16 @@ class ProfileCacheFunctions
 
 	public static function getOriginalKeysNameWithValues($array,$prefix='',$suffix='',$prefixDelimiter='',$suffixDelimiter='')
         {
-                $pre = $prefix.$prefixDelimiter;
+                if(!is_array($prefix)){
+                        $pre = $prefix.$prefixDelimiter;
+                }
                 if(is_array($array)&&($prefix))
                 {
                         foreach($array as $k=>$v)
                         {
+                                if(is_array($prefix)){
+                                        $pre = $prefix[$k].$prefixDelimiter;
+                                }
                                 if(substr($k,0,strlen($pre))==$pre)
                                 {
                                         $array[substr($k,strlen($pre))] = $v;
