@@ -281,6 +281,7 @@ return 0;
                             $layerData = ob_get_contents();
                             ob_end_clean();
                             $dppSugg=json_decode($layerData,true);
+                            if(is_array($dppSugg['dppSuggObject']))   $dppSugg = $dppSugg['dppSuggObject'];
                             if(is_array($dppSugg) && is_array($dppSugg['dppData']))
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
@@ -351,6 +352,7 @@ return 0;
                               $layerData = ob_get_contents();
                               ob_end_clean();
                               $dppSugg=json_decode($layerData,true);
+                              if(is_array($dppSugg['dppSuggObject']))   $dppSugg = $dppSugg['dppSuggObject'];
                               if(is_array($dppSugg) && is_array($dppSugg['dppData']))
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value)
