@@ -193,7 +193,7 @@ class Dialer
 						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
 					}
 					if($discount>=$discountRange1 && $discount<=$discountRange2){
-						if($profileid%2==1)
+						if($profileid%4==2 || $profileid%4==3)
 							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
 						else
 							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
