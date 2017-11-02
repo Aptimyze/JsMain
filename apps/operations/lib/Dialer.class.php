@@ -192,8 +192,12 @@ class Dialer
 					elseif($campaignName=='mumbai' || $campaignName=='pune'){
 						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
 					}
-					if($discount>=$discountRange1 && $discount<=$discountRange2)
-						$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+					if($discount>=$discountRange1 && $discount<=$discountRange2){
+						if($profileid%2==1)
+							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+						else
+							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+					}
 					else
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
 				}	
