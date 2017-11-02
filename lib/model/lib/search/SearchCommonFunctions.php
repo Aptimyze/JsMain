@@ -219,6 +219,8 @@ class SearchCommonFunctions
                     $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
                     $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
                 }
+                if($source == "AP")
+                    $SearchParamtersObj->setIS_APCron(1);
 		if($paramArr && is_array($paramArr))
 		{
 			foreach($paramArr as $k=>$v)
