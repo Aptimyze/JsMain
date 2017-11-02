@@ -31,6 +31,11 @@ while($srow = mysql_fetch_array($result)){
 foreach($campaignArr as $key=>$campaignName){
     $timeArr =getMaxDialTime($db_master,$campaignName);
     $time =$timeArr['time'];	
+    $date1 =$timeArr['date'];
+    $date2 =explode(" ",$date1);		
+    $date3 =$date2[0];
+    if($date3!=$startDt)
+	$time='';
      	
     if(!$time)	
 	$time =$checkTime;	
