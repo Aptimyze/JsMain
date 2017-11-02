@@ -2823,7 +2823,7 @@ class Profile{
 Description: returns already set profileState object if exists other wise create the object and returns it on demand
 Added by Esha
 ****************************************/
-	public function getPROFILE_STATE($compute='true') 
+	public function getPROFILE_STATE($compute=false) 
 	{
 		if(!($this->PROFILE_STATE instanceof ProfileState))
 			$this->PROFILE_STATE = new ProfileState($this);

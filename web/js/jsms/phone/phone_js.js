@@ -404,7 +404,7 @@ function verifiedOk()
 	setHash("verifiedOk");
 	$('#mydiv').show();
 	if(fromReg==1)
-		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname+"&sourcename="+sourcename+"&fromPhone=1";
+		window.location.href="/profile/viewprofile.php?ownview=1&groupname="+groupname+"&sourcename="+sourcename+"&fromPhone=1&fromReg=1";
 	else
 		window.location.href="/profile/mainmenu.php";
 }
