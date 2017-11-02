@@ -30,7 +30,9 @@ class ProfileCacheFunctions
 		if($storeName && array_key_exists($storeName,ProfileCacheConstants::$prefixMapping))
 		{
 			return ProfileCacheConstants::$prefixMapping[$storeName];
-		}
+		}else if($storeName == ProfileCacheConstants::ALL_FIELDS_SYM){
+                        return ProfileCacheConstants::$prefixMapping;
+                }
 		return false;
 	}
 
@@ -130,7 +132,7 @@ class ProfileCacheFunctions
 		return true;
 	}
 
-	public function calculateResourceUsages($st_Time='', $preMsg="",$postMessage="")
+	public static function calculateResourceUsages($st_Time='', $preMsg="",$postMessage="")
 	{
 		$end_time = microtime(TRUE);
 		$var = memory_get_usage(true);
@@ -151,8 +153,13 @@ class ProfileCacheFunctions
 
 	public static function getColumnArr($storeName)
 	{
-		if(!$storeName)
-			return false;
+		if(!$storeName){
+			foreach(ProfileCacheConstants::$storeKeys as $k=>$val){
+                                $arrFields[$k] = array_merge(ProfileCacheConstants::$$val);
+                        }
+                        return $arrFields;
+                }
+                
 		if($storeName == "JPROFILE") 
 		{
 			$arrFields = ProfileCacheConstants::$arrJProfileColumns;
@@ -195,5 +202,53 @@ class ProfileCacheFunctions
 		}
 		return $arrFields;
 	}
+        public static function getFinalFieldsArrayWithPrefix($storeName,$fields){
+//                print_r($fields);die;
+//                echo $storeName;die;
+                $allStoreFields =self::getColumnArr($storeName) ;
+                $prefix = self::getStorePrefix($storeName);
+                if($storeName == ""){
+                        $demandedFields = array();
+                        foreach($allStoreFields as $k=>$fieldArray){
+                                $Fld = self::getRelevantFields($fields, $k, $fieldArray);
+                                $demandedFields1 = self::getRelevantKeysName($Fld,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
+                                $demandedFields = array_merge($demandedFields,$demandedFields1);
+                        }
+                }else{
+                        $fields = self::getRelevantFields($fields, $storeName, $allStoreFields);
+                        $demandedFields = self::getRelevantKeysName($fields,$prefix,'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
+                }
+                return $demandedFields;
+        }
+        /**
+     * @param $arrFields
+     * @return array
+     */
+	public static function getRelevantFields($arrFields, $storeName="",$allStoreFields='')
+	{
+//IN USE
+		if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) 
+		{
+			$array = $allStoreFields;
+		} 
+		else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) 
+		{
+			$array = ProfileCacheConstants::$arrHashSubKeys;
+		} 
+		else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) 
+		{
+			$array = explode(',',$arrFields);
+			foreach($array as $k=>$v)
+			{
+				$array[$k] = trim($v);
+			}
+			$array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $array);
+		}
+		if(count(array_diff(array_unique($arrFields),$array)))
+		{
+			self::logThis(LoggingEnums::LOG_INFO, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+		}
+        return $array;
+    }
 
 }

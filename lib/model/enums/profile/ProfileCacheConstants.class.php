@@ -26,6 +26,7 @@ class ProfileCacheConstants
     const NOT_FILLED = "-NF-";
     const DUPLICATE_FIELD_DELIMITER = "-d-";
     const GETARRAY_PROFILEID_LIMIT = 50;
+    const KEY_PREFIX_DELIMITER = ".";
     
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
@@ -615,8 +616,27 @@ class ProfileCacheConstants
 					"ProfileNativePlace"=>"ni",
 					"JHOBBYCacheLib"=>"hi",
 					"ProfileAUTO_EXPIRY"=>"xi"
-					/*""=>"",
+					/*"FILTER"=>"fl",
+					"YOUR_INFO_OLD"=>"yo",
+					"Alerts"=>"al",
+					"Contact"=>"cn",
+					""=>"",
 					""=>"",*/
 				);
+    public static $storeKeys = array(
+                                        "JPROFILE"=>"arrJProfileColumns",
+                                        "ProfileEducation"=>"arrJProfile_EducationColumns",
+                                        "ProfileNativePlace"=>"arrNativePlaceColumns",
+                                        "ProfileAstro"=>"arrAstroDetailsColumns",
+                                        "Contact"=>"arrJProfileContact",
+                                        "JHOBBYCacheLib"=>"arrJHobbyColumns",
+                                        "Alerts"=>"arrJProfileAlertsColumn",
+                                        "YOUR_INFO_OLD"=>"arrOldYourInfo",
+                                        "ProfileAUTO_EXPIRY"=>"arrAutoExpiry",
+                                        "FILTER"=>"arrProfileFilter"
+                                );
+    public static function getKeyData($storeName){
+            
+    }
 }
 ?>
