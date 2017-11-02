@@ -360,8 +360,11 @@ if (authenticated($cid)) {
             $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
             $activated_without_yourInfoObj->delete($pid);
         //}
-            
-        $objUpdate = JProfileUpdateLib::getInstance();
+        global $screeningRep;
+        if($screeningRep)
+            $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+        else
+            $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
 				if ($str_edu) {         
@@ -1607,7 +1610,11 @@ function getAge($newDob) {
    */
   function markProfileUnderScreening($iProfileID)
 	  {
-    $objUpdate = JProfileUpdateLib::getInstance();
+    global $screeningRep;
+    if($screeningRep)
+        $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+    else
+        $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
     $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");
     if(false === $result) {
