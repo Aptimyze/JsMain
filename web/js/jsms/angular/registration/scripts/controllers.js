@@ -1543,8 +1543,9 @@
 					).then(function() {
 						if($scope.success==1)
 						{
-							if($scope.isPhoneMob)
-								setTimeout(function(){window.location="/phone/jsmsDisplay";},1000);
+							if($scope.isPhoneMob){
+								setTimeout(function(){window.location="/phone/jsmsDisplay?fromReg=1";},1000);
+							}
 							else
 								setTimeout(function(){window.location="/profile/mainmenu.php";},1000);
 						}

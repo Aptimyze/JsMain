@@ -3,7 +3,7 @@ export default class MyjsSliderBinding  {
   constructor(parent,tupleObject,funObj,notMyjs,indexElevate,nextPageHit,pagesrc)
   {
     this.parent = parent;
-    this.tupleObject = tupleObject;
+    this.tupleObject = tupleObject.filter((tuple)=>{return (tuple.dontShow ? false : true)});
     this.styleFunction = funObj.styleFunction;
     this.el = parent;
     this.parent = this.el.parentNode;
@@ -50,7 +50,7 @@ export default class MyjsSliderBinding  {
             }
 
             resetSlider(newListing){
-              this.tupleObject = newListing;
+              this.tupleObject = newListing.filter((tuple)=>{return (tuple.dontShow ? false : true)});
               if(this._index==this.tupleObject.length)
                 this.PrevSlide();
               return this;
