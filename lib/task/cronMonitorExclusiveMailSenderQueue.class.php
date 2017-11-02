@@ -39,7 +39,7 @@ EOF;
         $proposalObj = new billing_ExclusiveProposalMailer();
         $count = $proposalObj->getUnderprocessIDsCount(date("Y-m-d"));
         $hour = date("H");
-        if($count>4 && $hour > 1 && $hour < 11){
+        if($count>10 && $hour > 1 && $hour < 11){
             $rmqObj = new RabbitmqHelper();
             $rmqObj->killConsumerForCommand(MessageQueues::EXCLUSIVE_MAIL_SENDING_QUEUE);
             $to = "ayush.chauhan@jeevansathi.com,manoj.rana@naukri.com";

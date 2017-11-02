@@ -63,14 +63,34 @@ class billing_ExclusiveProposalMailer extends TABLE{
         }
     }
 
-    public function getProfilesToSendProposalMail(){
+    public function getProfilesToSendProposalMail($agentMail='',$isInstant=true){
         try{
+            if(!$isInstant){
+                $moreThanDate = date("Y-m-d");
+            }
             $tomorrowDT = date("Y-m-d",strtotime(' +1 day'));
-            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
+            $sql = "SELECT RECEIVER,AGENT_NAME,AGENT_EMAIL,TUPLE_ID,AGENT_PHONE,USERNAME FROM billing.ExclusiveProposalMailer WHERE ";
 
+            if(!$isInstant){
+                $sql .= " DATE >= :MORETHANDATE AND DATE <= :LESSTHANDATE AND STATUS IN (:STATUS1,:STATUS2) AND FOLLOWUP_STATUS != :FSTATUS ";
+            } else{
+                $sql .= " DATE = :LESSTHANDATE AND STATUS = :STATUS1 AND FOLLOWUP_STATUS = :FSTATUS ";
+            }
+
+            if(!empty($agentMail)){
+                $sql .= " AND AGENT_EMAIL = :AGENTEMAIL";
+            }
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":DATE",$tomorrowDT,PDO::PARAM_STR);
-            $prep->bindValue(":STATUS",'N',PDO::PARAM_STR);
+            $prep->bindValue(":STATUS1",'N',PDO::PARAM_STR);
+            $prep->bindValue(":LESSTHANDATE",$tomorrowDT,PDO::PARAM_STR);
+            $prep->bindValue(":FSTATUS",'F0',PDO::PARAM_STR);
+            if(!empty($agentMail)){
+                $prep->bindValue(":AGENTEMAIL",$agentMail,PDO::PARAM_STR);
+            }
+            if(!$isInstant){
+                $prep->bindValue(":STATUS2",'U',PDO::PARAM_STR);
+                $prep->bindValue(":MORETHANDATE",$moreThanDate,PDO::PARAM_STR);
+            }
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             $COUNT=0;
