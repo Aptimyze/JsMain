@@ -9,7 +9,8 @@ class VIEW_LOG extends TABLE
 							$dbname=$dbname?$dbname:"shard2_master";
 						parent::__construct($dbname);
         }
-
+        
+        
 	/**
 	  * This function gets a list of profiles that have been viewed by a user.
 	  * Pass $keyVal as 1 if the profileids are to sent in the key of the returned array.
@@ -19,7 +20,7 @@ class VIEW_LOG extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT VIEWED FROM VIEW_LOG WHERE VIEWER=$viewer";
+                        $sql = "SELECT VIEWED,DATE FROM VIEW_LOG WHERE VIEWER=$viewer";
 			if($viewedStr)
 			{
 				$str = str_replace("\'","",$viewedStr);
@@ -33,7 +34,7 @@ class VIEW_LOG extends TABLE
 			}
 			if($limit)
 			{
-				$sql .= " ORDER BY DATE DESC LIMIT :limit ";
+				$sql .= " LIMIT :limit ";
 			}
                         $res=$this->db->prepare($sql);
 			if($viewedStr)
@@ -45,18 +46,39 @@ class VIEW_LOG extends TABLE
                         }
                         if($limit)
                         {
-                        	$res->bindValue(":limit", $limit, PDO::PARAM_INT);
+                        	$res->bindValue(":limit", $limit+1000, PDO::PARAM_INT);// for recent 5000 if exceeds before housekeeping cron
                         }
                         $res->execute();
                         while($result = $res->fetch(PDO::FETCH_ASSOC))
-			{
-				if($key=='spaceSeperator')
-                                	$resultArr.= $result['VIEWED']." ";
-				else if($key == 1)
-					$resultArr[$result['VIEWED']] = 1;
-				else
-	                                $resultArr[] = $result['VIEWED'];
-			}			
+						{
+							$unsortedResult[]=$result;
+						}	
+						usort($unsortedResult, function ($a, $b) {
+							$a = strtotime($a['DATE']);
+							$b = strtotime($b['DATE'])	;
+							
+							if ($a == $b) return 0;
+							return ($a > $b) ? -1 : 1;
+							
+						});
+						$i=0;
+						foreach($unsortedResult as $k=>$v)
+						{
+							if($limit && $i>=$limit){
+								
+									$memObject=JsMemcache::getInstance();
+									$memObject->storeDataInCacheByPipeline("ViewLogGT5k",$viewer);
+								
+								break;
+							}
+							if($key=='spaceSeperator')
+			                                	$resultArr.= $v['VIEWED']." ";
+							else if($key == 1)
+								$resultArr[$v['VIEWED']] = 1;
+							else
+				                                $resultArr[] = $v['VIEWED'];
+				            $i++;
+						}
                         return $resultArr;
                 }
                 catch(PDOException $e)
@@ -64,5 +86,7 @@ class VIEW_LOG extends TABLE
                         throw new jsException($e);
                 }
         }
+        
+        
 }
 ?>
