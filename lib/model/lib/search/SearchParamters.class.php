@@ -1312,6 +1312,8 @@ class SearchParamters
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
         public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
         public function getIS_VSP() { return $this->IS_VSP; }
+        public function setIS_APCron($IS_APCron=0) {$this->IS_APCron = $IS_APCron;}
+        public function getIS_APCron() { return $this->IS_APCron; }
         public function setCURRENT_CLUSTER($CURRENT_CLUSTER="") {$this->CURRENT_CLUSTER = $CURRENT_CLUSTER;}
         public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
         public function setSEARCH_FAILED($SEARCH_FAILED="") {$this->SEARCH_FAILED = $SEARCH_FAILED;}

@@ -123,6 +123,8 @@ class DiscountTrackingConsumer
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
+    $codeException = 0;
+    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
@@ -136,6 +138,7 @@ class DiscountTrackingConsumer
     }
     catch (Exception $exception) 
     {
+      $codeException = 1;
       $str="\nRabbitMQ Error in DiscountTrackingConsumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str,"default");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
@@ -161,8 +164,12 @@ class DiscountTrackingConsumer
     } 
     catch(Exception $exception) 
     {
+      $deliveryException = 1;
       $str="\nRabbitMQ Error in DiscountTrackingConsumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
+    }
+    if($codeException || $deliveryException){
+        die("Killed due to code exception or delivery exception");
     }
   }
 }
