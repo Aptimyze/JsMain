@@ -1343,7 +1343,7 @@ class csvGenerationHandler
 							$dialerEligibleNew ='N';
 							$dialerDialStatusNew =$dialerDialStatus;
 							if($dialerDialStatusNew==1){
-								if($profileid%2==1){
+								if($profileid%4==2 || $profileid%4==3){
 									$dialerEligibleNew ='Y';
 								}
 								else{
