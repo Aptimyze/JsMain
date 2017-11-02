@@ -534,7 +534,7 @@ class Inbox implements Module
 		if ($infoType != "MATCH_ALERT" && $infoType != "VISITORS") {
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {
-				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = array('Y','J');
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";

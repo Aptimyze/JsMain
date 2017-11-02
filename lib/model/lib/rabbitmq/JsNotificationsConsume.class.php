@@ -130,6 +130,7 @@ class JsNotificationsConsume
       $handlerObj=new ProcessHandler();
       if(BrowserNotificationEnums::$addNotificationLog==true)
         RabbitmqHelper::addRabbitmqMsgLog(BrowserNotificationEnums::$transferredNotificationlog,$type."-".$body["NOTIFICATION_KEY"]);
+
       if(in_array($type, BrowserNotificationEnums::$notificationChannelType))
       { 
         $handlerObj->sendGcmNotification($type,$body);  

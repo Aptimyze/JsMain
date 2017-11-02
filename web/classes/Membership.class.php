@@ -1455,6 +1455,7 @@ class Membership
         		if($actDiscPerc>=$siteDiscPerc)
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
+        		    $total = $total + $siteDisc;
                     $msg  = "'{$this->username}' has been given a discount greater than visible on site, <br>";
                     $msg .= "Total Gross Value of Products Sold: $this->curtype $total /- <br>";
                     $msg .= "Products billed: $this->serviceName <br>";

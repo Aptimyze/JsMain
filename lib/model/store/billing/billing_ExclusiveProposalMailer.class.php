@@ -105,5 +105,25 @@ class billing_ExclusiveProposalMailer extends TABLE{
             throw new jsException($e);
         }
     }
+
+    public function getUnderprocessIDsCount($date){
+        try{
+            $sql = "SELECT count(*) AS COUNT FROM  billing.ExclusiveProposalMailer WHERE DATE = :DATE AND STATUS = :STATUS";
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+            $prep->bindValue(":STATUS","U",PDO::PARAM_INT);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
+            while ($row = $prep->fetch()){
+                $count = $row["COUNT"];
+            }
+            if(!isset($count))
+                $count = 0;
+            return $count;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 ?>
