@@ -1342,8 +1342,15 @@ class csvGenerationHandler
 						else{
 							$dialerEligibleNew ='N';
 							$dialerDialStatusNew =$dialerDialStatus;
-							if($dialerDialStatusNew==1)
-								$dialerEligibleNew ='Y';
+							if($dialerDialStatusNew==1){
+								if($profileid%2==1){
+									$dialerEligibleNew ='Y';
+								}
+								else{
+									$dialerDialStatusNew=2;
+									$dialerEligibleNew ='N';
+								}
+							}
 							$dialerDialStatus =2;		
 							$dialerEligible ='N';
 						}
