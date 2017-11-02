@@ -738,6 +738,7 @@ $js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
 $js_arr[]=array("sw_fcm"    => "2");
+$js_arr[]=array("apps/operations/lib/Dialer"   => "1");
 return $js_arr;
 }
 function getJavascript(){
