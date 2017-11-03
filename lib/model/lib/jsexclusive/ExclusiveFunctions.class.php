@@ -249,7 +249,7 @@ class ExclusiveFunctions{
                     $mailerInfo[0]["STATUS"] = "F0";
                     if ($lastName = $agentDetail[$agent]["LAST_NAME"])
                         $mailerInfo[0]["NAME"] .= " ".$lastName;
-                    $result = $this->getProfilesToSendProposalMail($mailerInfo);
+                    $result = $this->getProfilesToSendProposalMail($mailerInfo,true);
                     $this->sendProposalMail($result);
                 }
             }
@@ -507,7 +507,7 @@ class ExclusiveFunctions{
                 $result[$key]["NAME"] .= " ".$lastName;
         }
 
-        $result = $this->getProfilesToSendProposalMail($result);
+        $result = $this->getProfilesToSendProposalMail($result,false);
 
         return $result;
     }
@@ -604,7 +604,7 @@ class ExclusiveFunctions{
         return $clientBioData;
     }
 
-    public function getProfilesToSendProposalMail($mailerArr){
+    public function getProfilesToSendProposalMail($mailerArr,$isInstant){
         foreach($mailerArr as $key=>$value){
             $clientID = $value["CLIENT_ID"];
             $clientProfileObj = new Operator;
@@ -613,7 +613,12 @@ class ExclusiveFunctions{
         }
         $proposalObj = new billing_ExclusiveProposalMailer();
         $proposalObj->insertMailLog($mailerArr);
-        $result = $proposalObj->getProfilesToSendProposalMail();
+        if($isInstant){
+            $result = $proposalObj->getProfilesToSendProposalMail($mailerArr[0]["EMAIL"],$isInstant);
+        } else{
+            $result = $proposalObj->getProfilesToSendProposalMail('',$isInstant);
+        }
+
         if(!is_array($result))
             $result = array();
         return $result;
