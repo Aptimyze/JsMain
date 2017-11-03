@@ -82,7 +82,7 @@ EOF;
 
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($receiverDetails["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$key,$agentDetails["EMAIL"],$agentDetails["AGENT_NAME"],'','',$agentDetails["EMAIL"]);
-                    if ($flag) {
+                    if ($flag == 'Y') {
                         // if mail is sent successfully, update the exclusive mail log table with the status
                         // of mail sent to pending interest column. Refer table
                         $billingExclusiveMailLog = new billing_EXCLUSIVE_MAIL_LOG();
