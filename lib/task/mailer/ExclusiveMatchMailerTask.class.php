@@ -86,7 +86,7 @@ EOF;
 //                     fwrite($file,$msg);
                     //Sending mail and tracking sent status
                     $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName,'','',$agentEmail);
-                    if ($flag) {
+                    if ($flag == "Y") {
                     	$this->updateStatus($pid,'Y');
                         $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);
                     } else {
