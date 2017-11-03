@@ -218,7 +218,7 @@ class ExclusiveFunctions{
             }
         }
         
-        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$skipUpdate=false){
+        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$mailType,$skipUpdate=false){
             if(is_array($arr)){
                 if($skipUpdate == false){
                     $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
@@ -229,6 +229,7 @@ class ExclusiveFunctions{
                 $params["ENTRY_DT"] = $todaysDate;
                 $params["CLIENT_ID"] = $client;
                 $params["AGENT_USERNAME"] = $agent;
+                $params["MAIL_TYPE"] = $mailType;
                 //$params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
                 $params["FOLLOWUP1_DT"] = date('Y-m-d');
                 $params["STATUS"] = "F0";
