@@ -508,7 +508,8 @@ class jsexclusiveActions extends sfActions {
         $this->client = $request['client'];
 
         $from = $request['from'];
-
+        
+        $mailType = $request->getParameter('mailType');
         //check if user is eligible for new handling
         if($from == 'search'){
             $username = $request['username'];
@@ -552,7 +553,7 @@ class jsexclusiveActions extends sfActions {
                 $details = $jprofileObj->get($username,"USERNAME","USERNAME,PROFILEID");
                 if(is_array($details)){
                     $exclusiveLib = new ExclusiveFunctions();
-                    $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,true);
+                    $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup(array($details["PROFILEID"]),$this->client,$agent,$mailType, true);
                     $this->message = "Follow up added successfully. Proposal mail sent to $username. Please DO NOT add the same ID again.";
                 }
                 else{
@@ -711,6 +712,7 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $this->client = $request->getParameter('client');
         $this->agent = $request->getParameter('name');
+        $mailType = $request->getParameter('mailType');
         $formArr = $request->getParameter('followupForm');
         $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
         $exclusiveLib = new ExclusiveFunctions();
@@ -724,7 +726,7 @@ class jsexclusiveActions extends sfActions {
                 }
             }
             if(is_array($yesArr)){
-                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent);
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent, $mailType);
             }
             if(is_array($noArr)){
                 $followupObj->updateStatusForClientId(implode(",", $noArr),'N');
