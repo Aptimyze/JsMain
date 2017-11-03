@@ -5,7 +5,7 @@
 * Helper class for MatchMailer
 */
 class ExclusiveMatchMailer {
-	
+    
 	public function getAcceptances($receivers) {
 		$result = array();
 
@@ -84,7 +84,7 @@ class ExclusiveMatchMailer {
 
 	public function getAcceptancesForMatchMailer($dbName,$profilesId){
 		$contactsObj = new newjs_CONTACTS($dbName);
-        $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
+                $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
 		$res1 = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$flag=1;
 		$result = array();
@@ -98,9 +98,10 @@ class ExclusiveMatchMailer {
 				}
 			}
 		}	
-		if($flag == 0)
-			$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
-
+		if($flag == 0) {
+                    // This method will return the list of Acceptance list
+                    $res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
+                }
 		if (is_array($res2) && !empty($res2)) {
 			foreach ($res2 as $key => $value) {
 				foreach ($value as $k => $v) {
