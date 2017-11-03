@@ -537,7 +537,12 @@ if (authenticated($cid)) {
 				foreach($log_val as $item)
 					$log_val1[]=addslashes(stripslashes($item));
 				$log_values = implode("','", $log_val1);
-				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values','$user',now(),'M','$count_screen')";
+                                if($val == "new")
+                                    $screenNewEdit = 2;
+                                
+                                else
+                                    $screenNewEdit = 3;
+				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENING,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values',$screenNewEdit,'$user',now(),'M','$count_screen')";
 				mysql_query_decide($sql_mod) or die(mysql_error_js()."at line 367");
 				//added by sriram.
 				if ($do_gender_related_changes) {
@@ -778,9 +783,22 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-                                            if(!$activatedWithoutYourInfo)
-						CommonFunction::sendWelcomeMailer($pid);
+                                            if(!$activatedWithoutYourInfo){
+                                                try
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_MAILER, 'data' => array('type' => 'WELCOME_MAILER','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+							}
+                                                        else{
+                                                            CommonFunction::sendWelcomeMailer($pid);
+                                                        }
+						}
+						catch(Exception $e) {}
                                             }
+                                        }
 						//send_email($to, $MESSAGE);
 				}
 				else
