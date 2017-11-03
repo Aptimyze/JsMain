@@ -47,7 +47,7 @@ foreach($campaignArr as $key=>$campaignName)
         unset($profilesArr);
 }
 
-$to     ="manoj.rana@naukri.com,dheeraj.negi@naukri.com";
+$to     ="manoj.rana@naukri.com,dheeraj.negi@naukri.com,anamika.singh@jeevansathi.com,princy.gulati@jeevansathi.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 $sub    ="Dialer Status Report for Uploaded Reecords";
 mail($to,$sub,$msg,$from);
