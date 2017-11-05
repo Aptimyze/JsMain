@@ -48,8 +48,7 @@ EOF;
         $billServObj = new billing_SERVICES('newjs_slave');
         $purchaseObj = new BILLING_PURCHASES('newjs_slave');
         $this->serviceData = $billServObj->getFinanceDataServiceNames();
-        
-        $this->rawData = $purchaseObj->fetchFinanceData($start_date, $end_date, $device);
+        $this->rawData = $purchaseObj->fetchFinanceData($start_date, $end_date, $device,0,'',$table,$condition);
         $taxData = $purchaseObj->getDataFromTaxBreakUp($start_date, $end_date);
         $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\tCountry\tCity\tState\tUpgrade\tSGST\tIGST\tCGST\r\n";
         

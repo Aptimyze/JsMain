@@ -97,6 +97,7 @@ export function getProfileKeyLocalStorage(queryString=null)
 	let profilechecksum = getParameterByName(queryString,"profilechecksum");
 	let username = getParameterByName(queryString,"username");
     let similarOf = getParameterByName(window.location.href,"similarOf");
+    let listingName = getParameterByName(window.location.href,"listingName");
 
 
 	
@@ -130,6 +131,10 @@ export function getProfileKeyLocalStorage(queryString=null)
 		if ( similarOf != null )
 		{
 			urlString = urlString + "_"+similarOf.toString();
+		}
+		if ( listingName != null )
+		{
+			urlString = urlString + "_"+listingName.toString();
 		}
 	}
 	return urlString;

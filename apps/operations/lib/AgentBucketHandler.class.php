@@ -162,6 +162,16 @@ class AgentBucketHandler
 				$profilesArr[$profileid] =$profiles_arr[$profileid];
 			}
 		}
+		if(is_array($profilesArr)){
+            $jsCommonObj =new JsCommon();
+            $onlineProfiles =$jsCommonObj->getOnlineUsetList();
+			foreach ($profilesArr as $key=>$value){
+				if (in_array($key,$onlineProfiles))
+					$profilesArr[$key]["STATUS"] = "ONLINE";
+				else
+					$profilesArr[$key]["STATUS"] = "OFFLINE";
+			}
+		}
 		return $profilesArr;
 	}
 	public function allocate($processObj,$paramsArr=array())

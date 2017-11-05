@@ -136,7 +136,7 @@ class JsNotificationsLogConsume
       if($type == 'REGISTRATION_ID')
       {
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
-	$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
+	//$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
       }     
       elseif($type == 'LOCAL_NOTIFICATION_LOG')
       {
