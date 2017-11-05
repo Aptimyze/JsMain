@@ -8,6 +8,7 @@ import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapp
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import Loader from "../../common/components/Loader";
 import {getCookie} from '../../common/components/CookieHelper';
+import {$i} from '../../common/components/commonFunctions';
 
 
 
@@ -22,30 +23,46 @@ export default class ReportAbuse extends React.Component{
             errorMessage: "",
             showLoader : false,
             timeToHide: 3000,
-            tupleDim : {'width' : window.innerWidth,'height': window.innerHeight}
+            tupleDim : {'width' : window.innerWidth,'height': window.innerHeight},
+            fileArray :[],
+            srcImage:{}
         }
         if(!getCookie("AUTHCHECKSUM")){
           window.location.href="/login?prevUrl=/myjs";
           return;
         }
+        this.arrReportAbuseFiles = [];
+        this.bUploadAttachmentInProgress = false;
+        this.bUploadingDone = false;
+        this.MAX_FILE_SIZE_IN_MB = 6;
 
     }
 
     componentDidMount(){
-      //  document.getElementById("reportAbuseMidDiv").style.height = (window.innerHeight - 50)+"px";
+      //  $i("reportAbuseMidDiv").style.height = (window.innerHeight - 50)+"px";
       let topHeadHgt, bottomBtnHeight;
-      topHeadHgt = document.getElementById('reportAbustop').clientHeight;
-      bottomBtnHeight =document.getElementById('reportAbusbtm').clientHeight;
-      document.getElementById('js-reportAbuseMainScreen').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
-    //  document.getElementById('reportAbuseScreen2').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+      topHeadHgt = $i('reportAbustop').clientHeight;
+      bottomBtnHeight =$i('reportAbusbtm').clientHeight;
+      $i('js-reportAbuseMainScreen').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
+    //  $i('reportAbuseScreen2').style.height= window.innerHeight - (topHeadHgt+bottomBtnHeight)+"px";
     }
 
     closeAbuseLayer() {
         this.props.closeAbuseLayer();
     }
+    componentDidUpdate(){
+      let _this=this;
+      this.state.fileArray.map((fileObject,index)=>{
 
+              var reader = new FileReader();
+              reader.onload = (e)=> { $i("RA_fileImage_"+index).src=e.target.result;};
+              reader.readAsDataURL(fileObject);
+
+      });
+
+    }
     listSelected(e) {
-        let ul = document.getElementById("abuseList");
+        let ul = $i("abuseList");
 
         let items = ul.getElementsByTagName("li");
 
@@ -61,9 +78,9 @@ export default class ReportAbuse extends React.Component{
           if (e.target.id != "opt9" && e.target.id != "opt7")
           {
             setTimeout(function(){
-              document.getElementById("reportAbuseMidDiv").classList.add("ce_rptabu_d");
-              //  document.getElementById("reportAbuseScreen2").classList.add("animateLeftSlow");
-              //  document.getElementById("reportAbuseMidDiv").classList.add("dn");
+              $i("reportAbuseMidDiv").classList.add("ce_rptabu_d");
+              //  $i("reportAbuseScreen2").classList.add("animateLeftSlow");
+              //  $i("reportAbuseMidDiv").classList.add("dn");
             },300);
           }
 
@@ -85,11 +102,24 @@ export default class ReportAbuse extends React.Component{
   submitAbuse() {
     if(this.state.selectOption == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
-    } else if(document.getElementById("detailReasonsLayer").value.trim().length < 25 && this.state.selectOption != "opt7" && this.state.selectOption != "opt9") {
+    } else if($i("detailReasonsLayer").value.trim().length < 25 && this.state.selectOption != "opt7" && this.state.selectOption != "opt9") {
         this.showError(ErrorConstantsMapping("enterComments"));
     } else {
 
-        let reason = document.getElementById("detailReasonsLayer").value.trim();
+      var bUploadSuccessFul = false;
+      if(this.arrReportAbuseFiles.length) {
+        this.setState({
+          showLoader : true
+        });
+          if(!this.uploadingDone)
+          {
+            this.uploadAttachment();
+            return;
+          }
+
+      }
+
+        let reason = $i("detailReasonsLayer").value.trim();
         let mainReason = this.state.selectText;
 
         // let feed = {};
@@ -152,6 +182,21 @@ export default class ReportAbuse extends React.Component{
                             <div id="reportAbuseScreen2" className="reportAbuseScreen">
                                 <textarea className="pad18 fullheight bgTrans fullwid f18 fontthin" id="detailReasonsLayer" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
                             </div>
+                            <div id="attachDiv" style={{overflow: 'auto',right:'0px',width: (window.innerWidth)+'px','borderTop':'1px solid #cbc9c9',maxHeight:Math.round(window.innerHeight/2.5) + 'px'}} className="brdr23 white posabs btmo fullwid pad3">
+
+                            <div id="attachTitle" onClick={this.attachAbuseDocument.bind(this)}>
+                                <i className="reportIcon atachIcon"></i>
+                                <span>Attach Screenshot</span>
+                            </div>
+
+                            <div id="photoDiv">
+                              {this.getPhotoPreview()}
+                            </div>
+
+                        </div>
+                      <div style={{display:'none'}}>
+                          {this.state.fileInput}
+                      </div>
                          </div>;
 
     AbusiveButtonLayer = <div className="fullwid posfix btm0" id="reportAbusbtm">
@@ -188,4 +233,201 @@ export default class ReportAbuse extends React.Component{
     );
   }
 
+  /**
+   *
+   */
+  attachAbuseDocument(event) {
+      let newInput = (<input onChange={this.onFileChange.bind(this)} id="file" type="file" accept=".jpg,.bmp,.jpeg,.gif,.png" multiple="multiple"/>);
+      this.setState({fileInput : newInput},()=>{      $i("file").click();});
+}
+
+onCrossClick(event)  {
+    var result = [];
+    var self = event.target.parentNode.parentNode;
+    let _this=this;
+    for(var itr = 0; itr < this.arrReportAbuseFiles.length; itr++) {
+
+        if(this.arrReportAbuseFiles[itr].myId == event.target.id) {
+
+            //If file is already uploaded then remove from server also
+            if( "undefined" != typeof this.tempAttachmentId && this.arrReportAbuseFiles[itr].uploaded ) {
+              _this.setState({
+                showLoader : true
+              });
+
+                var formData = {};//new FormData();
+                var apiUrl = "/api/v1/faq/abuseDeleteAttachment";
+
+                formData['feed[attachment_id]'] = this.arrReportAbuseFiles['tempAttachmentId'] ;
+                formData['feed[file_name]'] = this.arrReportAbuseFiles[itr].name ;
+                commonApiCall(API_SERVER_CONSTANTS.API_SERVER +  apiUrl   ,formData,'','').then((response)=>{
+                  _this.setState({
+                    showLoader : false
+                  });
+                if(response.responseStatusCode == 0) {
+                } else {
+                    result.push(this.arrReportAbuseFiles[itr]);
+                    this.showError('Something went wrong. Please try again.');
+                }
+              });
+                    // error   :  function ( response ) {
+                    //                $("#contactLoader,#loaderOverlay").hide();
+                    //                result.push(this.arrReportAbuseFiles[itr]);
+                    //                ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                    //                return ;
+                    //             },
+            }
+            continue;
+        }
+
+        result.push(this.arrReportAbuseFiles[itr]);
+    }
+    console.log(result);
+    this.arrReportAbuseFiles = result;
+    this.setState({fileArray:result});
+}
+
+
+      /**
+       *
+       */
+      getPhotoPreview () {
+          /**
+           *  <div class="photoEach txtc pad3">
+                  <i class="reportIcon closeIcon crossPosition"></i>
+                  <img width="80%" height="100px" src="<IMG PATH>" />
+                  <div class="f12 white mt5">
+                  image_name.jpg
+                  </div>
+              </div>
+           */
+           return this.state.fileArray.map((fileObject, index)=>
+           {
+          fileObject.myId = "RAAttach_"+index;
+          var previewDom = (<div key={index} className="photoEach txtc pad3">
+            <i id={fileObject.myId} className = "reportIcon closeIcon crossPosition" onClick = {this.onCrossClick.bind(this)} />
+            <img id={"RA_fileImage_"+index}  width = "80%" height = "100px"/>;
+            <div className = "f12 white mt5">{fileObject.name}</div>
+          </div>);
+          return previewDom;
+        });
+      }
+
+      /**
+       *
+       */
+      onFileChange(event){
+          let files = event.target.files;
+          var existingLength = this.arrReportAbuseFiles.length;
+          var validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+          let oldFiles = this.arrReportAbuseFiles.slice();
+          //loop on files .. do basic checks like size, type
+
+            for (var key in files) {
+              let file = files[key];
+                if (files.hasOwnProperty(key)) {
+
+                  if( ( file.size / 1048576 ).toFixed(1) > this.MAX_FILE_SIZE_IN_MB ) {
+                      this.showError(file.name + ' You can attach a proof less than 6 MB in size');
+                      return ;
+                  }
+
+                  if( validFileTypes.indexOf(file.type) == -1 ) {
+                      this.showError(file.name + ' Invalid type of attachment');
+                      return;
+                  }
+
+                  oldFiles.push(file);
+                  if( oldFiles.length > 5 ) {
+                      this.showError('You can attach maximum 5 proofs');
+                      return;
+                  }
+
+                }
+            }
+
+          this.arrReportAbuseFiles = oldFiles;
+
+          if(this.arrReportAbuseFiles.length == 0) {
+              this.showError('No valid attachments');
+              return ;
+          }
+          let fileArray = [];
+
+          this.arrReportAbuseFiles.map( (file,index)=> {
+              if(file.hasOwnProperty('preview') === false) {
+              }
+              file.preview = true;
+              fileArray.push(file);
+          });
+          this.setState({fileArray: fileArray});
+      }
+
+
+  /**
+   *
+   */
+   SendAjax (fileObject, temp_attachment_id) {
+       var apiUrl = "/api/v1/faq/abuseAttachment";
+       var formData = new FormData();
+       formData.append("feed[attachment_1]", fileObject);
+       let _this = this;
+       if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
+             isNaN( temp_attachment_id ) == false
+               ) {
+           formData.append("feed[attachment_id]", temp_attachment_id);
+       }
+       commonApiCall(API_SERVER_CONSTANTS.API_SERVER +  apiUrl   ,formData,'','','','','',{'Content-Type': 'multipart/form-data'}).then((response)=>{
+                           if(response.responseStatusCode == 0) {
+                              if(file.hasOwnProperty('error')) {
+                                  delete file.error;
+                              }
+                              _this.tempAttachmentId = response.attachment_id;
+                              fileObject.uploaded = true;
+                              _this.checkForAttachments();
+                           } else {
+                               fileObject.error = true
+                               _this.showError(  response.message );
+                           }
+                       });
+           // error   :  function ( response ) {
+           //                 $("#contactLoader,#loaderOverlay").hide();
+           //                 fileObject.error = true;
+           //                 ShowTopDownError( [ "Something went wrong. Please try again" ], 2000 );
+           //             },
+
+}
+
+checkForAttachments(){
+    let done = true;
+    this.arrReportAbuseFiles.map((file)=>{
+        if(!file.uploaded) done=false;
+    });
+    if(done)
+    {
+      this.uploadingDone = true;
+      $i("reportAbuseSubmit").click();
+    }
+}
+  uploadAttachment()
+  {
+    let _this=this;
+    if(0 == this.arrReportAbuseFiles.length) {
+        return true;
+    }
+    var len = this.arrReportAbuseFiles.length ;
+    for(var itr =0 ; itr < len; itr++) {
+        let file = this.arrReportAbuseFiles[itr];
+              if(( file.hasOwnProperty('error') && file.error == true )) {
+                    this.setState({'showError':false});
+                    return false;
+                 }
+                var tempId = (typeof this.tempAttachmentId == "undefined") ? "" : this.tempAttachmentId ;
+                this.SendAjax( file, tempId );
+
+    }
+    return true;
+
+
+}
 }
