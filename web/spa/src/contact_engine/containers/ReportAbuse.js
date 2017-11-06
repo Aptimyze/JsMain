@@ -248,41 +248,11 @@ onCrossClick(event)  {
     for(var itr = 0; itr < this.arrReportAbuseFiles.length; itr++) {
 
         if(this.arrReportAbuseFiles[itr].myId == event.target.id) {
-
-            //If file is already uploaded then remove from server also
-            if( "undefined" != typeof this.tempAttachmentId && this.arrReportAbuseFiles[itr].uploaded ) {
-              _this.setState({
-                showLoader : true
-              });
-
-                var formData = {};//new FormData();
-                var apiUrl = "/api/v1/faq/abuseDeleteAttachment";
-
-                formData['feed[attachment_id]'] = this.arrReportAbuseFiles['tempAttachmentId'] ;
-                formData['feed[file_name]'] = this.arrReportAbuseFiles[itr].name ;
-                commonApiCall(API_SERVER_CONSTANTS.API_SERVER +  apiUrl   ,formData,'','').then((response)=>{
-                  _this.setState({
-                    showLoader : false
-                  });
-                if(response.responseStatusCode == 0) {
-                } else {
-                    result.push(this.arrReportAbuseFiles[itr]);
-                    this.showError('Something went wrong. Please try again.');
-                }
-              });
-                    // error   :  function ( response ) {
-                    //                $("#contactLoader,#loaderOverlay").hide();
-                    //                result.push(this.arrReportAbuseFiles[itr]);
-                    //                ShowTopDownError(['Something went wrong. Please try again.'], 2000);
-                    //                return ;
-                    //             },
-            }
             continue;
         }
 
         result.push(this.arrReportAbuseFiles[itr]);
     }
-    console.log(result);
     this.arrReportAbuseFiles = result;
     this.setState({fileArray:result});
 }
@@ -387,8 +357,8 @@ onCrossClick(event)  {
                               fileObject.uploaded = true;
                               if(!_this.checkForAttachments()) _this.SendAjax(fileIndex+1,_this.tempAttachmentId) ;
                            } else {
-                               fileObject.error = true
                                _this.showError(  response.message );
+                               _this.tempAttachmentId =null;
                            }
                        });
            // error   :  function ( response ) {
@@ -418,7 +388,7 @@ checkForAttachments(){
     if(0 == this.arrReportAbuseFiles.length) {
         return true;
     }
-    var tempId = (typeof this.tempAttachmentId == "undefined") ? "" : this.tempAttachmentId ;
+    var tempId = ((typeof this.tempAttachmentId == "undefined") || !this.tempAttachmentId) ? "" : this.tempAttachmentId ;
     this.SendAjax( 0, tempId );
     return true;
 
