@@ -25,7 +25,7 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
     public function updateStatus($pid,$status,$date) {
         try {
             $sql = "UPDATE  billing.EXCLUSIVE_MAIL_LOG 
-                    SET STATUS = :STATUS  
+                    SET STATUS = :STATUS
                     WHERE PROFILE = :PROFILE AND DATE = :DATE ;";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(':STATUS',$status,PDO::PARAM_STR);
@@ -53,6 +53,39 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
                 $result[] = $row["PROFILE"];
             }
             return $result;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    
+    public function getLowAcceptanceProfiles($acceptanceCount) {
+        $sql = "SELECT DISTINCT PROFILE FROM billing.EXCLUSIVE_MAIL_LOG "
+                . "WHERE ACPT_COUNT <= :ACCEPTANCE_COUNT AND DATE(date)=CURDATE() AND PENDING_INTEREST_MAIL_STATUS = 'N'";
+        
+        $res = $this->db->prepare($sql);
+            $res->bindValue(":ACCEPTANCE_COUNT", $acceptanceCount, PDO::PARAM_INT);
+            $res->execute();
+            
+            while($row = $res->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = $row["PROFILE"];
+            }
+            return $result;
+        
+    }
+    
+    public function updatePendingInterestMailStatus($profileID, $status) {
+        
+        try {
+            
+        $sql = "UPDATE  billing.EXCLUSIVE_MAIL_LOG "
+                . "SET PENDING_INTEREST_MAIL_STATUS = :STATUS "
+                . "WHERE PROFILE = :PROFILE AND DATE(date)=CURDATE();";
+        
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(':STATUS',$status,PDO::PARAM_STR);
+                $prep->bindValue(':PROFILE',$profileID,PDO::PARAM_INT);
+                $prep->execute();
+                
         } catch (Exception $e) {
             throw new jsException($e);
         }
