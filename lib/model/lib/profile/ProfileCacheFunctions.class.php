@@ -219,16 +219,23 @@ class ProfileCacheFunctions
 		return $arrFields;
 	}
         public static function getFinalFieldsArrayWithPrefix($storeName,$fields){
-//                print_r($fields);die;
-//                echo $storeName;die;
                 $allStoreFields =self::getColumnArr($storeName) ;
                 $prefix = self::getStorePrefix($storeName);
+                $demanField = explode(",",$fields);
                 if($storeName == ""){
                         $demandedFields = array();
                         foreach($allStoreFields as $k=>$fieldArray){
-                                $Fld = self::getRelevantFields($fields, $k, $fieldArray);
-                                $demandedFields1 = self::getRelevantKeysName($Fld,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
-                                $demandedFields = array_merge($demandedFields,$demandedFields1);
+                                $Flds = self::getColumnArr($k);
+                                $intersect = array_intersect($demanField, $Flds);
+                                if(count($intersect)>0){
+                                        $demandedFields1 = self::getRelevantKeysName($intersect,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
+                                        $demandedFields = array_merge($demandedFields,$demandedFields1);
+                                        $demanField = array_diff($demanField, $intersect);
+                                        $fields = implode(",",$demanField);
+                                        if(trim($fields) == ""){
+                                                break;
+                                        }
+                                }
                         }
                 }else{
                         $fields = self::getRelevantFields($fields, $storeName, $allStoreFields);

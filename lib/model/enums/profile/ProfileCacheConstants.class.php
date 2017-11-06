@@ -259,13 +259,14 @@ class ProfileCacheConstants
                                         "ALT_EMAIL_STATUS",
                                          // other frequent fields
                                          "AUTO_EXPIRY_DATE",
+        
                                          // Jhobby
                                         "HOBBY",
-                                        "ALLMUSIC",
-                                        "ALLBOOK",
-                                        "ALLMOVIE",
-                                        "ALLSPORTS",
-                                        "ALLCUISINE",
+                                        //"ALLMUSIC",
+                                        //"ALLBOOK",
+                                        //"ALLMOVIE",
+                                        //"ALLSPORTS",
+                                        //"ALLCUISINE",
                                         "FAV_MOVIE",
                                         "FAV_TVSHOW",
                                         "FAV_FOOD",
@@ -567,11 +568,11 @@ class ProfileCacheConstants
     public static $arrJHobbyColumns = array(
                                         'PROFILEID',
                                         "HOBBY",
-                                        "ALLMUSIC",
+                                        /*"ALLMUSIC",
                                         "ALLBOOK",
                                         "ALLMOVIE",
                                         "ALLSPORTS",
-                                        "ALLCUISINE",
+                                        "ALLCUISINE",*/
                                         "FAV_MOVIE",
                                         "FAV_TVSHOW",
                                         "FAV_FOOD",
@@ -615,12 +616,14 @@ class ProfileCacheConstants
 					"ProfileAstro"=>"ai",
 					"ProfileNativePlace"=>"ni",
 					"JHOBBYCacheLib"=>"hi",
-					"ProfileAUTO_EXPIRY"=>"xi"
-					/*"FILTER"=>"fl",
+					"ProfileAUTO_EXPIRY"=>"xi",
+					"FILTER"=>"fl",
 					"YOUR_INFO_OLD"=>"yo",
 					"Alerts"=>"al",
-					"Contact"=>"cn",
-					""=>"",
+					"ProfileContact"=>"cn",
+					"ProfileFSO"=>"fs",
+					"aadharVerification"=>"av",
+					/*""=>"",
 					""=>"",*/
 				);
     public static $storeKeys = array(
@@ -628,7 +631,7 @@ class ProfileCacheConstants
                                         "ProfileEducation"=>"arrJProfile_EducationColumns",
                                         "ProfileNativePlace"=>"arrNativePlaceColumns",
                                         "ProfileAstro"=>"arrAstroDetailsColumns",
-                                        "Contact"=>"arrJProfileContact",
+                                        "ProfileContact"=>"arrJProfileContact",
                                         "JHOBBYCacheLib"=>"arrJHobbyColumns",
                                         "Alerts"=>"arrJProfileAlertsColumn",
                                         "YOUR_INFO_OLD"=>"arrOldYourInfo",

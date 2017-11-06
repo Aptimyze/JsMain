@@ -85,6 +85,7 @@ class ProfileCacheLib
 		return true;
         }
         $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
+        //print_r($demandedFields);die;
         if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $demandedFields)) 
 	{
 		return true;
@@ -192,11 +193,13 @@ class ProfileCacheLib
     public function get($szCriteria, $key, $fields, $storeName="", $arrExtraWhereClause = null)
     {
         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "get :: ".$storeName."\n", FILE_APPEND);
+        $a = print_r($fields,true);
+        file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
 //IN USE
+        //var_dump($this->isCached($szCriteria, $key, $fields, $storeName));die;
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript()||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName)))  // CHECK THIS
 	{
-		//return false;
+		return false;
         }
 
         $arrData = $this->getFromLocalCache($key);
@@ -215,7 +218,6 @@ class ProfileCacheLib
         $arrOut = array();
         //Check for Not-Filled Case
 		$allStoreFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
-                //print_r($allStoreFields);die;
                 if(strlen($storeName)) {
                         foreach ($allStoreFields as $col) 
                         {
@@ -321,6 +323,7 @@ class ProfileCacheLib
 		return false;
 	}
 	$localCacheFields = array_keys($localCacheData);
+        //print_r($localCacheData);die;
 	$isSubset = (count(array_diff($demandedFields,$localCacheFields))==0);
         if (!$isSubset) 
 	{
