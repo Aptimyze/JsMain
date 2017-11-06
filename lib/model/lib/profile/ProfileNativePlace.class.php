@@ -119,6 +119,7 @@ class ProfileNativePlace
         $objProCacheLib =ProfileCacheLib::getInstance();
         if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, 'NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY', __CLASS__)) {
             //Get From Cache
+                
             $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, 'NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY', __CLASS__);
 
             if (false !== $result) {
@@ -128,9 +129,9 @@ class ProfileNativePlace
             
             if($result && $result["NATIVE_COUNTRY"] === ProfileCacheConstants::NOT_FILLED){
                 $result = null;
-            }
+            }   
         }
-        
+        //die("123414");
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;
@@ -144,13 +145,13 @@ class ProfileNativePlace
             $dummyResult = array('PROFILEID'=>$iProfileID, "NATIVE_COUNTRY"=>ProfileCacheConstants::NOT_FILLED, "NATIVE_STATE"=>"", "NATIVE_CITY" => "");
         }
         
-        if (is_array($result) && false === $objProCacheLib->isCommandLineScript()) {
+        if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
             $result['PROFILEID'] = $iProfileID;
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
         }
         
-        if (is_array($dummyResult) && false === $objProCacheLib->isCommandLineScript()) {
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult);
+        if (is_array($dummyResult) && false === ProfileCacheFunctions::isCommandLineScript()) {
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
         }
         return $result;
     }

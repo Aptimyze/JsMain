@@ -69,16 +69,27 @@ class ProfileCacheFunctions
                 {
                         foreach($array as $k=>$v)
                         {
-                                if(is_array($prefix)){
+                                if(strpos($k, $prefixDelimiter) !== false){
+                                        $ky = explode($prefixDelimiter,$k);
+                                        $ky = $ky[1];
+                                        $array[$ky] = $v;
+                                        unset($array[$k]);
+                                }else{
+                                        $ky = $k;
+                                }
+                                //print_r($ky);die;
+                                /*if(is_array($prefix)){
                                         $pre = $prefix[$k].$prefixDelimiter;
                                 }
+                                
                                 if(substr($k,0,strlen($pre))==$pre)
                                 {
                                         $array[substr($k,strlen($pre))] = $v;
                                         unset($array[$k]);
-                                }
+                                }*/
                         }
                 }
+                //echo "dsfsfsd";print_r($array);die;
                 $suf = $suffixDelimiter.$suffix;
                 if(is_array($array)&&($suffix))
                 {
@@ -249,7 +260,7 @@ class ProfileCacheFunctions
 			}
 			$array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $array);
 		}
-		if(count(array_diff(array_unique($arrFields),$array)))
+		if(is_array($arrFields) && count(array_diff(array_unique($arrFields),$array)))
 		{
 			self::logThis(LoggingEnums::LOG_INFO, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
 		}

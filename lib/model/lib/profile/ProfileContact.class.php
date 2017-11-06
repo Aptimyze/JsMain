@@ -116,7 +116,7 @@ class ProfileContact
 			$result['PROFILEID'] = $pid;
 		}
 
-		if(is_array($result) && isset($result['PROFILEID']) && false === ProfileCacheLib::getInstance()->isCommandLineScript())
+		if(is_array($result) && isset($result['PROFILEID']) && false === ProfileCacheFunctions::isCommandLineScript())
 		{
 			$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
 		}

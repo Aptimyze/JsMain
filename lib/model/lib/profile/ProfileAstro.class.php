@@ -92,6 +92,7 @@ class ProfileAstro
         if ($objProCacheLib->isCached('PROFILEID', $pid,$fields , __CLASS__)) {
             $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);                       
             //so for that case also we are going to query mysql
+            //die("ASDADADAS");
             if (false !== $result) {
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
@@ -118,7 +119,7 @@ class ProfileAstro
           $result['PROFILEID'] = $pid;
         }
         
-        if ( is_array($result) && count($result) && false === $objProCacheLib->isCommandLineScript()) {
+        if ( is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
         }
         

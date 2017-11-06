@@ -191,7 +191,6 @@ class ProfileCacheLib
      */
     public function get($szCriteria, $key, $fields, $storeName="", $arrExtraWhereClause = null)
     {
-        $storeName = "";
         $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "get :: ".$storeName."\n", FILE_APPEND);
 //IN USE
@@ -215,12 +214,6 @@ class ProfileCacheLib
 
         $arrOut = array();
         //Check for Not-Filled Case
-        //if(strlen($storeName)) 
-	//{
-        //print_r($arrData);die;
-//                $allStoreFields = ProfileCacheFunctions::getColumnArr($storeName);
-//                $arrFields = $this->getRelevantFields($fields, $storeName,$allStoreFields);
-//		$allStoreFields = ProfileCacheFunctions::getRelevantKeysName($allStoreFields,$prefix,'',self::KEY_PREFIX_DELIMITER);
 		$allStoreFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
                 //print_r($allStoreFields);die;
                 if(strlen($storeName)) {
@@ -235,9 +228,16 @@ class ProfileCacheLib
                                         }
                         }
                 }
-        //}
-                print_r($arrData);die;
-	$arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrData,$prefix,'',self::KEY_PREFIX_DELIMITER);
+        foreach ($allStoreFields as $k) {
+            $indexKey = $k;
+            
+            //$isDuplicateField = stripos($k, ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER);
+            if(false !== $isDuplicateField) {
+                //$indexKey = substr($k, 0, $isDuplicateField);
+            }
+            $arrOut[$indexKey] = $arrData[$k];
+        }
+	$arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER);       
         return $arrOut;
     }
 
@@ -256,6 +256,7 @@ class ProfileCacheLib
     private function storeInLocalCache($key)
     {
             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
+            
         file_put_contents($fileName, "storeInLocalCache"."\n", FILE_APPEND);
 //IN USE
         $stTime = ProfileCacheFunctions::createNewTime();

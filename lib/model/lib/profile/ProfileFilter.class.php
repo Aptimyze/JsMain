@@ -128,12 +128,12 @@ class ProfileFilter
             $dummyResult = array('PROFILEID'=>$iProfileId, "AGE"=>ProfileCacheConstants::NOT_FILLED);
         }
         
-        if (is_array($result) && false === $objProCacheLib->isCommandLineScript()) {
+        if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
             $result['PROFILEID'] = $iProfileId;
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
         }
         
-        if (is_array($dummyResult) && false === $objProCacheLib->isCommandLineScript()) {
+        if (is_array($dummyResult) && false === ProfileCacheFunctions::isCommandLineScript()) {
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
         return $result;
