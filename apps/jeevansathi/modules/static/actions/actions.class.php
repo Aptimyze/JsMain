@@ -354,8 +354,10 @@ class staticActions extends sfActions
 
         public function executeUnHideResult(sfWebRequest $request) 
         {
+
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
+              $this->referer = '/static/settings';
           }
         }
 
