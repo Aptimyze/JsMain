@@ -2101,7 +2101,7 @@ $(document).ready(function () {
         datatype: 'json',
         cache: true,
         async: true,
-        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid},
+        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid, campaignData: campaignData},
         beforeSend: function (xhr) {
            showCommonLoader(); 
         },
