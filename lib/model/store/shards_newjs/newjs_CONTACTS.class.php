@@ -1326,7 +1326,7 @@ public function getSendersPending($chunkStr)
       }
     }
 
-    public function getSentAcceptancesForMatchMailer($profilesId,$time) {
+    public function getSentAcceptancesForMatchMailer($profilesId,$time, $type="A") {
     	try {
     		$result = array();
     		$sql = "SELECT SENDER, RECEIVER
@@ -1334,7 +1334,7 @@ public function getSendersPending($chunkStr)
     				WHERE SENDER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
 
     		$prep = $this->db->prepare($sql);
-    		$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
+    		$prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
     		$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
     		$prep->execute();
     		$prep->setFetchMode(PDO::FETCH_ASSOC);
@@ -1354,7 +1354,6 @@ public function getSendersPending($chunkStr)
     		$sql = "SELECT SENDER, RECEIVER
 					FROM newjs.CONTACTS
 					WHERE RECEIVER IN ($profilesId) AND TYPE = :TYPE AND TIME >= :TIME ;" ;
-
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(':TYPE','A',PDO::PARAM_STR);
 			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
@@ -1369,6 +1368,31 @@ public function getSendersPending($chunkStr)
     		throw new jsException($e);
     	}
     }
+    
+    public function getReceivedDetailsForMatchMailer($profilesId,$time, $type) {
+    	try {
+            $result = array();
+            
+            $sql = "SELECT * FROM "
+                    . "(SELECT SENDER, RECEIVER, TIME FROM CONTACTS WHERE "
+                        . "RECEIVER IN ($profilesId) AND TYPE = :TYPE "
+                        . "AND TIME >= :TIME ORDER BY TIME DESC LIMIT 5) "
+                    . "con ORDER BY con.TIME";
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
+			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
+			$prep->execute();
+			$prep->setFetchMode(PDO::FETCH_ASSOC);
+
+			while ($row = $prep->fetch()) {
+                            $result[$row["RECEIVER"]][$row["SENDER"]] = $row["TIME"];
+			}
+			return $result;
+    	} catch (Exception $e) {
+    		throw new jsException($e);
+    	}
+    }
+    
     
 	public function getRbInterestSentForDuration($interestTime,$remainderArray){
             try{
