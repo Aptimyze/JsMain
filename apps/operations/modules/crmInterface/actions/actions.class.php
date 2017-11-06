@@ -1419,7 +1419,7 @@ class crmInterfaceActions extends sfActions
             $activeCat = $communityWelcomeDiscountObj->getActiveGroupByCategories();
             $communityWelcomeDiscountObj->startTransaction();
             $communityWelcomeDiscountObj->markAllInactive();
-            $this->$error = 0;
+            $this->error = 0;
             foreach($activeCat as $cat => $communityArr){
                 foreach($communityArr as $key=>$communityId){
                     unset($params);
@@ -1446,14 +1446,19 @@ class crmInterfaceActions extends sfActions
                 $this->message = "Discount updated successfully";
             }
         }       
-        
+        $otherCommunityIndex = 0;
         $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
         foreach($activeCommunityWiseDiscount as $catId=>$comArr){
             foreach($comArr as $key=>$val){
+                if($val["COMMUNITY"]=="0")
+                    $otherCommunityIndex = $catId;
                 $data[$catId]["NAME"][]= $val["COMMUNITY"]=="0"?"Others":FieldMap::getFieldLabel("community", $val["COMMUNITY"]);
                 $data[$catId]["DISCOUNT"] = $val["DISCOUNT"];
             }
         }
+        $lastIndex = count($data);
+        if($otherCommunityIndex != $lastIndex)
+            list($data[$otherCommunityIndex],$data[$lastIndex]) = array($data[$lastIndex],$data[$otherCommunityIndex]);
         $this->data = $data;
         
         $membershipHandlerObj = new MembershipHandler();
