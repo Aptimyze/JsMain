@@ -36,6 +36,7 @@ echo "Start\n\n";
 $inactiveRecordTable="INACTIVE_RECORDS_6_MONTHS_FOR_CRON";
 $mysqlObj=new Mysql;
 
+
 //$inactivityDate='2011-10-02';
 //Store list of profile which are not logged in b/w 6-7 months
 $sql="TRUNCATE TABLE test.$inactiveRecordTable";
@@ -416,12 +417,43 @@ $inactivityDateViewLog=date("Y-m-d",$timestamp);
 
 
 //VIEW LOG
+
 $db_211=$mysqlObj->connect("viewLogRep");
+
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_211);
 
 //$db_211_slave=connect_211_slave();
 $db_211_slave = $mysqlObj->connect("211Slave");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_211_slave);
+
+
+echo "\n\n";
+$memObject=JsMemcache::getInstance();
+$viewersGT5k=$memObject->getSetsAllValue("ViewLogGT5k");
+
+if(is_array($viewersGT5k)){
+	foreach($viewersGT5k as $k=>$v){
+		if($v!=''){
+			$sql="SELECT VIEWER,VIEWED FROM newjs.VIEW_LOG  WHERE VIEWER=$v ORDER BY DATE DESC LIMIT 5000,100000";
+			$res=mysql_query($sql,$db_211_slave) or die(mysql_error($db_211_slave).$sql);
+			while($row=mysql_fetch_assoc($res))
+			{
+				    $viewer=$row["VIEWER"];
+			        $viewed=$row["VIEWED"];
+			//TODO
+			        $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
+				//echo $sqlI,"\n\n";
+			        mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
+			
+			
+			        $sqlD="DELETE FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
+			        mysql_query($sqlD,$db_211) or die(mysql_error($db_211).$sqlD);
+			      			
+			}
+			$memObject->deleteSpecificDataFromCache("ViewLogGT5k",$v);
+		}
+	}
+}
 
 echo "\n\n";
 echo $sql="SELECT VIEWER,VIEWED FROM newjs.VIEW_LOG  WHERE DATE<'$inactivityDateViewLog'";
@@ -450,32 +482,7 @@ if($laveshrawat++%10000==0)
 
 }
 
-$memObject=JsMemcache::getInstance();
-$viewersGT5k=$memObject->getSetsAllValue("ViewLogGT5k");
 
-if(is_array($viewersGT5k)){
-	foreach($viewersGT5k as $k=>$v){
-		if($v!=''){
-			$sql="SELECT VIEWER,VIEWED FROM newjs.VIEW_LOG  WHERE VIEWER=$v ORDER BY DATE DESC LIMIT 5000,100000";
-			$res=mysql_query($sql,$db_211_slave) or die(mysql_error($db_211_slave).$sql);
-			while($row=mysql_fetch_assoc($res))
-			{
-				    $viewer=$row["VIEWER"];
-			        $viewed=$row["VIEWED"];
-			//TODO
-			        $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
-				//echo $sqlI,"\n\n";
-			        mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
-			
-			
-			        $sqlD="DELETE FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
-			        mysql_query($sqlD,$db_211) or die(mysql_error($db_211).$sqlD);
-			        $memObject->deleteSpecificDataFromCache("ViewLogGT5k",$v);
-			
-			}
-		}
-	}
-}
 
 echo "\n\n";
 echo "done";

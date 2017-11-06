@@ -18,6 +18,7 @@ class VIEW_LOG extends TABLE
 
         public function get($viewer,$viewedStr='',$key='',$limit="")
         {
+			
                 try
                 {
                         $sql = "SELECT VIEWED,DATE FROM VIEW_LOG WHERE VIEWER=$viewer";
@@ -49,36 +50,24 @@ class VIEW_LOG extends TABLE
                         	$res->bindValue(":limit", $limit+1000, PDO::PARAM_INT);// for recent 5000 if exceeds before housekeeping cron
                         }
                         $res->execute();
+                        $count=0;
                         while($result = $res->fetch(PDO::FETCH_ASSOC))
 						{
-							$unsortedResult[]=$result;
-						}	
-						usort($unsortedResult, function ($a, $b) {
-							$a = strtotime($a['DATE']);
-							$b = strtotime($b['DATE'])	;
-							
-							if ($a == $b) return 0;
-							return ($a > $b) ? -1 : 1;
-							
-						});
-						$i=0;
-						foreach($unsortedResult as $k=>$v)
-						{
-							if($limit && $i>=$limit){
-								
-									$memObject=JsMemcache::getInstance();
-									$memObject->storeDataInCacheByPipeline("ViewLogGT5k",$viewer);
-								
-								break;
-							}
 							if($key=='spaceSeperator')
-			                                	$resultArr.= $v['VIEWED']." ";
+			                    	$resultArr.= $result['VIEWED']." ";
 							else if($key == 1)
-								$resultArr[$v['VIEWED']] = 1;
+								$resultArr[$result['VIEWED']] = 1;
 							else
-				                                $resultArr[] = $v['VIEWED'];
-				            $i++;
+				                $resultArr[] = $result['VIEWED'];
+				            $count++;
+				            
 						}
+						if($limit && $count>=$limit){
+							$memObject=JsMemcache::getInstance();
+							$memObject->storeDataInCacheByPipeline("ViewLogGT5k",$viewer,86400);
+										
+						}
+						
                         return $resultArr;
                 }
                 catch(PDOException $e)
