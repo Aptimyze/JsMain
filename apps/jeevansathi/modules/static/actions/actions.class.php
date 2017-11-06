@@ -333,6 +333,10 @@ class staticActions extends sfActions
           }
           else{
               $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+              if ( strpos($this->referer,'static/hideCheckPassword') !== false )
+              {
+                $this->referer = '/';
+              }
           }
         }
 
