@@ -130,7 +130,7 @@ export default class ReportAbuse extends React.Component{
 
         let _this = this;
 
-        let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason;
+        let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason+'&feed[attachment]=1&feed[temp_attachment_id]='+ this.tempAttachmentId;
         _this.setState({
           showLoader : true
         });
@@ -367,9 +367,10 @@ onCrossClick(event)  {
   /**
    *
    */
-   SendAjax (fileObject, temp_attachment_id) {
+   SendAjax (fileIndex, temp_attachment_id) {
        var apiUrl = "/api/v1/faq/abuseAttachment";
        var formData = new FormData();
+       let fileObject = this.state.fileArray[fileIndex];
        formData.append("feed[attachment_1]", fileObject);
        let _this = this;
        if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
@@ -384,7 +385,7 @@ onCrossClick(event)  {
                               }
                               _this.tempAttachmentId = response.attachment_id;
                               fileObject.uploaded = true;
-                              _this.checkForAttachments();
+                              if(!_this.checkForAttachments()) _this.SendAjax(fileIndex+1,_this.tempAttachmentId) ;
                            } else {
                                fileObject.error = true
                                _this.showError(  response.message );
@@ -402,12 +403,14 @@ checkForAttachments(){
     let done = true;
     this.arrReportAbuseFiles.map((file)=>{
         if(!file.uploaded) done=false;
+
     });
     if(done)
     {
       this.uploadingDone = true;
       $i("reportAbuseSubmit").click();
     }
+    return done;
 }
   uploadAttachment()
   {
@@ -415,17 +418,8 @@ checkForAttachments(){
     if(0 == this.arrReportAbuseFiles.length) {
         return true;
     }
-    var len = this.arrReportAbuseFiles.length ;
-    for(var itr =0 ; itr < len; itr++) {
-        let file = this.arrReportAbuseFiles[itr];
-              if(( file.hasOwnProperty('error') && file.error == true )) {
-                    this.setState({'showError':false});
-                    return false;
-                 }
-                var tempId = (typeof this.tempAttachmentId == "undefined") ? "" : this.tempAttachmentId ;
-                this.SendAjax( file, tempId );
-
-    }
+    var tempId = (typeof this.tempAttachmentId == "undefined") ? "" : this.tempAttachmentId ;
+    this.SendAjax( 0, tempId );
     return true;
 
 
