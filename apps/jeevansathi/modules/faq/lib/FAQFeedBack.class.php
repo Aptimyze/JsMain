@@ -40,7 +40,6 @@ class FAQFeedBack
 
 
 	private function insertReportAbuseLog(){
-        
 		$newReasonsAndroid = array(7,8,9,10,11,12,13,14,16,18);
 		$askOtherReasonAndroid = 0;
 		$reasonNew=$this->webRequest->getParameter('reason');
@@ -121,48 +120,37 @@ class FAQFeedBack
 
 		if($this->webRequest->getParameter('fromCRM'))
 		{
-		 $reporterPFID = $this->webRequest->getParameter('reporterPFID');	
+		 $reporterPFID = $this->webRequest->getParameter('reporterPFID');
 		 $loginProfile = new Profile('',$reporterPFID);
 		 $category = 'Ops';
 		 $restInfo = $this->webRequest->getParameter('feed') ;
-		 $crmUserName = $restInfo['crmUser']; 
+		 $crmUserName = $restInfo['crmUser'];
 		}
 		else{
 		$loginProfile=LoggedInProfile::getInstance();
-		} 		 
+		}
 		if(!$categoryNew || !$loginProfile->getPROFILEID() || !$otherProfileId) return;
 
-		(new REPORT_ABUSE_LOG())->insertReport($loginProfile->getPROFILEID(),$otherProfileId,$categoryNew,$otherReason,$category,$crmUserName,$this->m_iAbuseAttachmentID);
-			
-				// block for blocking the reported abuse added by Palash
+
+		//extra work
+		reportAbuseLib::reportAbuseAction(
+			$loginProfile->getPROFILEID(), 
+			$loginProfile->getUSERNAME(), 
+			$otherProfileId, 
+			$categoryNew, 
+			$otherReason, 
+			$category, 
+			$crmUserName, 
+			$this->m_iAbuseAttachmentID);
 		
-				$ignore_Store_Obj = new IgnoredProfiles("newjs_master");
-				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
-				//Entry in Chat Roster
-				try {
-					$this->ignoreProfile = new Profile("",$otherProfileId);
-					$this->ignoreProfile->getDetail("","","*");
-					$producerObj = new Producer();
-					if ($producerObj->getRabbitMQServerConnected()) {
-						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($loginProfile->getPROFILEID()),'username'=>$loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID()),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
-						$producerObj->sendMessage($chatData);
-					}
-					unset($producerObj);
-				} catch (Exception $e) {
-					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-				}
-			
-				//End
-				ProfileMemcache::clearInstance($loginProfile->getPROFILEID());
-				ProfileMemcache::clearInstance($otherProfileId);
+		$this->webRequest->setParameter('blockedOnAbuse',1);
+		if(stristr($categoryNew, 'Already married/engaged') || stristr($categoryNew,'User is already married / engaged')){
+			$ReportAbuseMailObj = new requestUserToDelete();
+			$ReportAbuseMailObj->sendMailForDeletion($otherProfileId,'0');
+		}
 
-				if(stristr($categoryNew, 'Already married/engaged') || stristr($categoryNew,'User is already married / engaged'))
-				{	
-				$ReportAbuseMailObj = new requestUserToDelete();
-				$ReportAbuseMailObj->sendMailForDeletion($otherProfileId,'0');
-				}
 
-				//////////////////////////////////////////////////
+		
 
 	}
     
@@ -233,6 +221,7 @@ class FAQFeedBack
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
 		$dataArray = $this->webRequest->getParameter('feed');
+
         $apiResponseHandlerObj=ApiResponseHandler::getInstance();
         
         //If Attachement Exist and Error in attachement

@@ -10,6 +10,10 @@
 
 class getGunaScoreV1Action extends sfActions
 {
+        const MAILBODY = "CASTE BLANK IN GUNA SCORE : ";
+	const RECEIVER = "sanyam1204@gmail.com,eshajain88@gmail.com,bhavana.kadwal@jeevansathi.com";    
+        const SENDER = "info@jeevansathi.com";
+        const SUBJECT = "caste blank in gunaScore";
 	/**
 	* Executes index action
 	*
@@ -29,6 +33,14 @@ class getGunaScoreV1Action extends sfActions
 		}
 		$gender = $loggedInDetails["GENDER"];
 		$caste = $loggedInDetails["CASTE"];
+                if(!$caste)
+		{
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->generateResponse();
+                        $mailBody = self::MAILBODY."loggedInDetails: \n\n".print_r($loggedInDetails)."\n\n".print_r($_SERVER,true);
+			SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);
+			die;
+		}
 		$profilechecksumArr = $request->getParameter('profilechecksumArr');
 		
 		//$diffGender is the variable which tells if the search was made of the opposite gender

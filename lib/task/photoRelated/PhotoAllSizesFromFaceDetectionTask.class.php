@@ -52,7 +52,7 @@ EOF;
 		$totalScripts = $arguments["totalScripts"]; // total no of scripts
 	        $currentScript = $arguments["currentScript"]; // current script number
 	        
-	    if(CommonUtility::hideFeaturesForUptime())
+	   if(CommonUtility::hideFeaturesForUptime())
 			successfullDie();
 
 
@@ -94,8 +94,12 @@ EOF;
 						
 						$origPic =$pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["OriginalPicUrl"],$pid,$value["PROFILEID"],$imageT,'nonScreened');
 						copy($value["OriginalPicUrl"],$origPic);
+						if(!file_exists($origPic))
+							SendMail::send_email("reshu.rajput@jeevansathi.com",$origPic." real value ".$value["OriginalPicUrl"],"Face detection error in copy ");
+			
 					}
-					$outputGot = $faceDetectionObj->getPictureCoordinates($origPic);
+					$googleVisionObj = new GoogleVisionApi();
+					$outputGot = $googleVisionObj->getPictureCoordinates($origPic,$imageT,$pid,$value["PROFILEID"]);
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{

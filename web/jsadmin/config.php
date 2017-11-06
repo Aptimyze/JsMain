@@ -14,8 +14,12 @@ $domain=".jeevansathi.com";
 include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php");
 
 include (JsConstants::$smartyDir);
+global $screeningRep;
 
-$db = connect_db();
+if(!$screeningRep)
+    $db = connect_db();
+else
+    $db = connect_rep();
 
 function connect_db()
 {

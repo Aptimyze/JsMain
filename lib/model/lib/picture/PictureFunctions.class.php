@@ -730,9 +730,10 @@ class PictureFunctions
         	$time = time();
         	if($verifyActivatedDate == PictureStaticVariablesEnum::VERIFY_ACT_DATE_BLANK)
         	{
-        		$verifyActivatedDate = 0;
-        	}        	
-       		$dateDiff = $time - strtotime($verifyActivatedDate);       		       		
+        		$verifyActivatedDate = $loginProfile->getENTRY_DT();
+        	}
+
+       		$dateDiff = $time - strtotime($verifyActivatedDate);  		       		
         	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
         	{
         		return 0;

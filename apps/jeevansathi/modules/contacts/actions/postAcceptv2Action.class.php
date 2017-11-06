@@ -14,7 +14,7 @@ class postAcceptv2Action extends sfAction
   *
   * @param sfRequest $request A request object
   */
-  
+
 	function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
@@ -33,7 +33,7 @@ class postAcceptv2Action extends sfAction
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
-						
+
 						$this->Profile = new Profile();
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
@@ -66,8 +66,8 @@ class postAcceptv2Action extends sfAction
                 return sfView::NONE;
 		die;
 	}
-	
-	
+
+
 	private function getContactArray()
 	{
 		$request=sfContext::getInstance()->getRequest();
@@ -101,12 +101,14 @@ class postAcceptv2Action extends sfAction
 			}
 			else
 			{
-				$responseArray["notused"]= "true";
+					$responseArray["notused"]= "true";
 			}
+			$responseArray["redirect"]= true;
 		}
 		else
 		{
 			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			$responseArray["redirect"]= false;
 			if($errorArr["PROFILE_IGNORE"] == 2)
 			{
 				$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
@@ -146,7 +148,7 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::PHONE_NOT_VERIFIED;
 				$responseArray["footerbutton"]["label"] = "Verify your number";
 				$responseArray["footerbutton"]["value"] = "";
-				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
+				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";
 			}
 			elseif($errorArr["INCOMPLETE"] == 2)
 			{
@@ -155,13 +157,15 @@ class postAcceptv2Action extends sfAction
 				$responseArray["footerbutton"]["label"] = "complete your profile";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "COMPLETEPROFILE";
-				$responseArray["headerlabel"] = "Your Profile is Incomplete";					
+				$responseArray["headerlabel"] = "Your Profile is Incomplete";
+				$responseArray["redirect"]= true;				
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
 				$responseArray["errmsglabel"] = "Expession of interest will be delivered only when Profile is live";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["redirect"]= true;
 			}
 			else
 			{
@@ -175,16 +179,24 @@ class postAcceptv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite())
 		{
 
-			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
-			else
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
+      if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
+      {
+    			if($this->contactObj->getsenderObj()->getPROFILEID() == $this->contactHandlerObj->getViewer()->getPROFILEID())
+    			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","A");
+    			else
+    			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","R","A");
 
-			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
-			//$finalresponseArray["button_after_action"][] = 
-
+    			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
+    			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+                $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+			//$finalresponseArray["button_after_action"][] =
+    }
+    else
+    {
+      $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
+      $finalresponseArray["buttondetails"]["photo"]=$thumbNail;
+      $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
+    }
 		}
 		else
 		{
@@ -194,4 +206,3 @@ class postAcceptv2Action extends sfAction
 		return $finalresponseArray;
 	}
 }
-

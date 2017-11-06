@@ -623,7 +623,7 @@ function retreiveOnlyActiveProfiles($table,$whereStrLabel1,$whereStrLabel2,$myDb
 function mysql_error_with_mail($msg)
 {
 	//echo "-------->>".$msg;die;
-        mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,kunal.test02@gmail.com","deleteprofile_bg_autocommit_final.php",$msg);
+        mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","deleteprofile_bg_autocommit_final.php",$msg);
 	exit;
 }
 
@@ -660,7 +660,7 @@ function retreiveChatData($dbName, $iProfileID, $listOfActiveProfileIds)
     }
     unset($deletedChatLogStoreObj);
   } catch (Exception $ex) {
-    mail("kunal.test02@gmail.com","Issue in deleteprofile cron, while removing chat data {$iProfileID} on {$dbName}", print_r($ex->getTrace(),true));
+    mail("nitesh.s@jeevansathi.com","Issue in deleteprofile cron, while removing chat data {$iProfileID} on {$dbName}", print_r($ex->getTrace(),true));
     die("Issue while retreiving data for chat tables");
   }
 }

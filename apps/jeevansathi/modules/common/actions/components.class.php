@@ -116,7 +116,16 @@ class commonComponents extends sfComponents{
         $loginData = $request->getAttribute('loginData');
         $this->profileid = $loginData['PROFILEID'];
        	$notificationObj = new NotificationConfigurationFunc();
-        $this->showLayer = $notificationObj->showEnableNotificationLayer($this->profileid);
+	$notifArr	 = $notificationObj->showEnableNotificationLayer($this->profileid);
+        $this->showLayer = $notifArr['showLayer'];
+	$this->notifEnabled = $notifArr['enabled'];
+        if($this->notifEnabled){
+                $this->browserNotificationRegistered =1;
+                $this->browserNotificationCookie =$request->getcookie("browserNotificationCookie1");
+                if($this->browserNotificationCookie!='Y'){
+                        @setcookie('browserNotificationCookie1','Y',time()+(1800*1), "/","jeevansathi.com");
+                }
+        }
         unset($notificationObj);
 	}
 }

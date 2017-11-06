@@ -24,6 +24,9 @@ EOF;
         if (!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
+        $rmqObj = new RabbitmqHelper();
+        $rmqObj->killConsumerForCommand(MessageQueues::EXCLUSIVE_MAIL_SENDING_QUEUE);
+
         $exclusiveObj = new ExclusiveFunctions();
         $result = $exclusiveObj->getReceiverAndAgentDetailsforProposalMail();
         if(is_array($result) && !empty($result))

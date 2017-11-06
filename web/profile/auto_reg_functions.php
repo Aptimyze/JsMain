@@ -370,7 +370,6 @@ function if_blank($values){
 }
 function register_user($post_values)	{
 //function not in use
-        mail("kunal.test02@gmail.com","auto_reg_functions.php :: register_user() in USE",print_r($_SERVER,true));
 	global $smarty;
 	global $protect_obj;
 	$cookie=array();

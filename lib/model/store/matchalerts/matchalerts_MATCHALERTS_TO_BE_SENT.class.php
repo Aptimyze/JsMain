@@ -128,7 +128,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         public function resetTrendsIfOldLogicSet(){
                 try
 		{
-			$sql = "UPDATE matchalerts.MATCHALERTS_TO_BE_SENT m , newjs.MATCH_LOGIC t SET HASTRENDS = '0',MATCH_LOGIC='O' WHERE m.PROFILEID =t.PROFILEID AND LOGIC_STATUS = 'O' AND HASTRENDS='1'";
+			$sql = "UPDATE matchalerts.MATCHALERTS_TO_BE_SENT m , newjs.MATCH_LOGIC t SET HASTRENDS = '0',MATCH_LOGIC='O' WHERE m.PROFILEID =t.PROFILEID AND LOGIC_STATUS = 'O'";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 		}
@@ -252,6 +252,64 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 			{
 				$result["LAST_LOGIN_DT"] = $row["LAST_LOGIN_DT"];
 				$result["PROFILEID"] = $row["PROFILEID"];
+			}
+			return $result;
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+	}
+        /**
+	* update
+	* @param pid
+	*/
+	public function updateCommunity($pid,$STATUS)
+	{
+		try
+		{
+			$sql = "UPDATE matchalerts.MATCHALERTS_TO_BE_SENT SET COMMUNITY_ELIGIBLE=:COMMUNITY_ELIGIBLE WHERE PROFILEID=:PID";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PID",$pid,PDO::PARAM_INT);
+                        $prep->bindValue(":COMMUNITY_ELIGIBLE",$STATUS,PDO::PARAM_STR);
+                        $prep->execute();
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+	}
+        
+        /**
+	* Fetch 
+	* @param 
+	*/
+	public function fetchCommunityProfiles($totalScript="1",$currentScript="0",$limit="")
+	{
+		try
+		{
+			$result = NULL;
+			$sql = "SELECT PROFILEID , PERSONAL_MATCHES,MATCH_LOGIC FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE PROFILEID%:TOTAL_SCRIPT=:SCRIPT AND IS_CALCULATED=:STATUS";
+                        
+                        $sql .=    " AND COMMUNITY_ELIGIBLE=:COMMUNITY_ELIGIBLE";
+                        
+                        $sql .=    " ORDER BY LAST_LOGIN_DT DESC";
+                        
+			if($limit)
+                                $sql.= " limit 0,:LIMIT";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+                        $prep->bindValue(":SCRIPT",$currentScript,PDO::PARAM_INT);
+                        $prep->bindValue(":STATUS",'Y',PDO::PARAM_STR);
+                        $prep->bindValue(":COMMUNITY_ELIGIBLE",'E',PDO::PARAM_STR);
+                        if($limit)
+                                  $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
+                        $prep->execute();
+			while($row = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$result[$row["PROFILEID"]]["HASTRENDS"] = $row["HASTRENDS"];
+                                $result[$row["PROFILEID"]]["PERSONAL_MATCHES"] = $row["PERSONAL_MATCHES"];
+                                $result[$row["PROFILEID"]]["MATCH_LOGIC"] = $row["MATCH_LOGIC"];
 			}
 			return $result;
 		}

@@ -5,7 +5,12 @@
     <div class="bg1 txtc pad15">
       <div class="posrel">
         <div class="fontthin f20 white">Profile Hidden</div>
-        <a href="/static/settings"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
+        ~if $webView eq 1`  
+            <a href="/myhome"><i class="mainsp posabs set_arow1 set_pos1"></i></a> 
+        ~else`
+            <a href="/"><i class="mainsp posabs set_arow1 set_pos1"></i></a> 
+        ~/if`
+        </div>
     </div>
     <!--end:top--> 
     <!--start:option-->
@@ -26,7 +31,7 @@
     if(webView) {
       function onHideDurationBack() {
         if(location.href.indexOf("/static/hideDuration?") !== -1) {
-          location.href = "/static/settings";
+          location.href = "/";
           return true;
         }
         return false;

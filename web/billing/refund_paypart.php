@@ -5,8 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com"," web/billing/refund_paypart.php in USE",$msg);
 
 $ip=FetchClientIP();
 if(strstr($ip, ","))
@@ -247,8 +245,9 @@ if(authenticated($cid))
 				        mysql_query_decide($sql) or logError_sums($sql,1);
 
 				}
-				$sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
+                                $sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
+                                
 				$sql_ss = "UPDATE billing.SERVICE_STATUS SET ACTIVE = 'Y' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
 

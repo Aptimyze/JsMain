@@ -802,5 +802,67 @@ class photoScreeningActions extends sfActions {
         
         $this->setTemplate('showDeletedPlusOriginalPhotos');                 
     }
+
+	/**
+	 * This function is used to display the profile to be screened by the screening user
+	 * */
+	public function executeBenchmark(sfWebRequest $request) {
+
+		$this->cid = $request->getParameter("cid");
+		$this->name = $request->getAttribute('name');
+		$this->source = $request->getParameter('source');
+		$photoDataObj = new PICTURE_PICTURE_API_RESPONSE();
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$deletedReason = $request->getParameter("deleteReason");
+			$pictureid = $request->getParameter('pid');
+			$edit = $request->getParameter('edit');
+			$photoDataObj->updateBenchmark($pictureid, $edit,$deletedReason);
+		}
+		$photoDataObj->initiate($this->name);
+		$profileDetails = $photoDataObj->get($this->name);
+		if(!is_array($profileDetails))
+		{
+			echo "No data available at this time please try again after some time";
+			die;
+		}
+		$val = $profileDetails["MainPicUrl"];
+		$prefix = substr($val, 0, 2);
+		$imagePath = substr($val, 2);
+		if ($prefix == IMAGE_SERVER_ENUM::$appPicUrl) {
+			$val = JsConstants::$applicationPhotoUrl . $imagePath;
+		} else if ($prefix == IMAGE_SERVER_ENUM::$cloudUrl) {
+			$val = JsConstants::$httpsCloudUrl . $imagePath;
+		}
+		$imagePath = $val;
+		$id = $profileDetails["id"];
+		$faceCount = $profileDetails["FACE_COUNT"];
+		$pictureid = $profileDetails["PICTUREID"];
+		$profileid = $profileDetails["PROFILEID"];
+		$adult = $profileDetails["ADULT"];
+		$spoof = $profileDetails["SPOOF"];
+		$violence = $profileDetails["VIOLENCE"];
+		$mainpic = $profileDetails["MAINPIC"];
+		$faceDetails = null;
+		if($faceCount>0)
+		{
+			$faceDetails = $photoDataObj->getFace($id);
+		}
+		$arrOut = array("Id" => $id,
+						"imgs" => $imagePath,
+						"facecount"=>$faceCount,
+			"adult"=>$adult,
+			"spoof"=>$spoof,
+			"violence"=>$violence,
+			"faces"=>$faceDetails,
+			"pictureid"=>$pictureid,
+			"mainpic"=>$mainpic==1?"Main pic":"Album Pic"
+	);
+		if ($request->getParameter("json_response") == 1) {
+			header("Content-type: application/json");
+			echo json_encode($arrOut);
+			die;
+		}
+		$this->details = $arrOut;
+	}
 }
 ?>

@@ -1,4 +1,6 @@
-function GAMapper(GAEvent, extraParams={}){
+function GAMapper(GAEvent, extraParams)
+{
+    return;
     try {
         var PageName = currentPageName || "other page";
         if(LoginLayerByUserActions)

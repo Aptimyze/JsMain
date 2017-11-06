@@ -1,4 +1,6 @@
-function GAMapper(GAEvent, extraParams={}){
+function GAMapper(GAEvent, extraParams)
+{
+	return;
     try {
     	var PageName = "";
     	if(typeof(currentPageName) != "undefined"){
@@ -51,11 +53,11 @@ function GAMapper(GAEvent, extraParams={}){
             "GA_PHONEVERIFICATION_PAGE"		:["V", "Phone Verification Screen"],
             "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']],
 
-  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || ""]
+  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || "default"]
 
         }
         if(GAMapping[GAEvent]){
-        	console.log(GAMapping[GAEvent]);
+        	// console.log(GAMapping[GAEvent]);
             if(GAMapping[GAEvent][0] == "E"){
                 trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
             }else if(GAMapping[GAEvent][0] == "V"){
@@ -290,6 +292,14 @@ function BindNextPage(){
 }
 function ShowNextPage(url,nottostore,transition)
 {
+  	try
+  	{
+    	localStorage.setItem("prevUrlListing",window.location.href);
+  	}
+  	catch(e)
+  	{
+    	console.log(e);
+  	}
 	if(typeof(history.pushState)=='undefined')
 	{
 		document.location.href=url; 
@@ -338,6 +348,7 @@ var xhrReq={}
 var timer=300;
 function SingleTonNextPage(data,nottostore,url,transition)
 {
+   window.location.href = url;return;
    var random=Math.random();
    $.each(cancelUrl,function(key,value)
    {

@@ -86,8 +86,7 @@ class SearchApiStrategyV1
 	* @return array search respone in format for api
 	*/
 	public function convertResponseToApiFormat($loggedInProfileObj,$searchClustersArray,$searchId,$SearchParamtersObj,$relaxedResults="",$casteMappingCnt="",$casteMappingCastes="",$currentPage,$noOfPages,$request,$relaxCriteria)
-	{
-            
+	{            
 		if($request->getParameter("myJs")==1)
 			$this->photoType= 'ProfilePic120Url';
 		if($request->getParameter("searchBasedParam"))
@@ -190,7 +189,7 @@ class SearchApiStrategyV1
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		if($request->getParameter("androidMyjsNew")==1){
+		if($request->getParameter("androidMyjsNew")==1 || $request->getParameter("fromSPA")==1){
 			$this->photoType= 'ProfilePic120Url';
 		}
 		else
@@ -343,7 +342,7 @@ class SearchApiStrategyV1
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
                         
-                        if(MobileCommon::isAndroidApp()){
+                        if(MobileCommon::isAndroidApp()  || MobileCommon::isIOSApp()){
                                 $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
                                 if($clusterIndex != ""){
                                         if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
@@ -768,13 +767,14 @@ class SearchApiStrategyV1
 		}
 		if($key=='eoi_label')
 		{
-			if($value==self::contactNoLabel)		
-			{  
+			if($value==self::contactNoLabel)
+			{
 				$request = sfContext::getInstance()->getRequest();
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
 				$page = '';
 				if(MobileCommon::isApp() =="A" && $request->getParameter('API_APP_VERSION') >= 96)
 				$page['comingFromPage'] = 'search';
+				if($request->getParameter('JSMS_MYJS') == '1') $page['stype'] = SearchTypesEnums::MATCHALERT_MYJS_JSMS;
 				$value = ButtonResponseApi::getInitiateButton($page);
 			}
 			else

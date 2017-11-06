@@ -29,7 +29,6 @@ EOF;
             sfContext::createInstance($this->configuration);
      	
      	$exclusiveMailer = new ExclusiveMatchMailer();
-     	
      	//Populating ExclusiveMatchMailer
      	$result = $exclusiveMailer->getClientAndAgentDetails();
      	if(is_array($result))
@@ -40,6 +39,7 @@ EOF;
 	    $calculatetable = new incentive_ExclusiveMatchMailer();
 	    $receivers = $calculatetable->getReceivers();
 	    $result = $exclusiveMailer->getAcceptances($receivers);
+            
 	    foreach ($result as $key => $value) {
 	    	if(!empty($value)){
 	    		$str_value = "";
@@ -53,6 +53,7 @@ EOF;
 	    $exclusiveMailer->logMails();
 	    //Sending Mail
 	    $receivers = $exclusiveMailer->getMailerProfiles();
+            
 	    $mailerServiceObj = new MailerService();
 	    $this->smarty = $mailerServiceObj->getMailerSmarty();
 	    if (is_array($receivers)) {
@@ -85,8 +86,8 @@ EOF;
 //                     $file = fopen("/var/www/html/trunk/web/sampleMailer.html","w");
 //                     fwrite($file,$msg);
                     //Sending mail and tracking sent status
-                    $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName);
-                    if ($flag) {
+                    $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$agentEmail,$agentName,'','',$agentEmail);
+                    if ($flag == "Y") {
                     	$this->updateStatus($pid,'Y');
                         $exclusiveMailer->logMatchMailProfiles($result[$pid],$pid);
                     } else {

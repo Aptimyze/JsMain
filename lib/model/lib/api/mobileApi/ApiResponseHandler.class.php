@@ -14,7 +14,7 @@ class ApiResponseHandler
 	private $imageCopyServer = null;
 	private $phoneDetails = null;
 	private $cache_flag=true;
-	private $cache_interval=120000; //in milisecond should be integer always 
+	private $cache_interval=120000; //in milisecond should be integer always
 	private $resetCache=false;
 	private $userActionState=0;
 	private $androidFlagForRatingLogic=true;
@@ -54,7 +54,7 @@ class ApiResponseHandler
 	public function getAndroidChatFlag($key="new"){
 		if($key == "new"){
 			$this->androidChat = JsConstants::$androidChatNew["chatOn"];
-			
+
 		}
 		else{
 			if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
@@ -64,7 +64,7 @@ class ApiResponseHandler
 				$this->androidChat = 2;
 			}
 		}
-		
+
 		return $this->androidChat;
 	}
 
@@ -75,30 +75,31 @@ class ApiResponseHandler
 	}
 
 	//getter for androidChatLocalStorage flag
-	public function getAndroidChatLocalStorageFlag(){
+	public function getAndroidChatLocalStorageFlag($loggedIn = false){
 		$this->androidChatLocalStorage = JsConstants::$androidChatNew["flushLocalStorage"];
 		/**/
 		$memcacheInstance = JsMemcache::getInstance();
 		$specificProfile = $memcacheInstance->get("flushAndChatProfiles",null,0,0);
-		$profileObj=LoggedInProfile::getInstance('newjs_master');
-		if(!empty($profileObj)){
-			$pid=$profileObj->getPROFILEID();
-			unset($profileObj);
-			
-			if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
+                if($loggedIn){
+                        $profileObj=LoggedInProfile::getInstance('newjs_master');
+                        if(!empty($profileObj)){
+                                $pid=$profileObj->getPROFILEID();
+                                unset($profileObj);
+                                if($pid && !empty($pid) && !empty($specificProfile) && $this->androidChatLocalStorage==false){
 
-				if(strpos($specificProfile, ",".$pid.",")!==false){
-					$this->androidChatLocalStorage = true;
-					$specificProfile = str_replace( ",".$pid.",",",", $specificProfile);
-					if($specificProfile==","){
-						$memcacheInstance->remove("flushAndChatProfiles");
-					}
-					else{
-						$memcacheInstance->set("flushAndChatProfiles",$specificProfile,86400,0,'X');
-					}
-				}
-			}
-		}
+                                        if(strpos($specificProfile, ",".$pid.",")!==false){
+                                                $this->androidChatLocalStorage = true;
+                                                $specificProfile = str_replace( ",".$pid.",",",", $specificProfile);
+                                                if($specificProfile==","){
+                                                        $memcacheInstance->remove("flushAndChatProfiles");
+                                                }
+                                                else{
+                                                        $memcacheInstance->set("flushAndChatProfiles",$specificProfile,86400,0,'X');
+                                                }
+                                        }
+                                }
+                        }
+                }
 		/**/
 		return $this->androidChatLocalStorage;
 	}
@@ -113,20 +114,22 @@ class ApiResponseHandler
 	}
 
 	//setter for membershipSubscription of logged in user for android app
-	public function setSelfSubscription(){
+	public function setSelfSubscription($loggedIn=false){
 		$this->membershipSubscription = "Free";
-		$profileObj=LoggedInProfile::getInstance('newjs_master');
-		$pid=$profileObj->getPROFILEID();
-		unset($profileObj);
-		if($pid && !empty($pid)){
-			$this->membershipSubscription = CommonFunction::getMembershipName($pid);
-			if($this->membershipSubscription && $this->membershipSubscription!= "Free"){
-		        $this->membershipSubscription = "Paid";
-		    }
-		    else{
-		        $this->membershipSubscription = "Free";
-		    }
-		}
+                if($loggedIn){
+                        $profileObj=LoggedInProfile::getInstance('newjs_master');
+                        $pid=$profileObj->getPROFILEID();
+                        unset($profileObj);
+                        if($pid && !empty($pid)){
+                                $this->membershipSubscription = CommonFunction::getMembershipName($pid);
+                                if($this->membershipSubscription && $this->membershipSubscription!= "Free"){
+                                $this->membershipSubscription = "Paid";
+                            }
+                            else{
+                                $this->membershipSubscription = "Free";
+                            }
+                        }
+                }
 	}
 
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
@@ -171,6 +174,8 @@ class ApiResponseHandler
 	*/
 	public function generateResponse()
 	{
+                $request=sfContext::getInstance()->getRequest();
+                $loggedIn = $request->getAttribute('login');
 		if(isset($this->responseStatusCode) && isset($this->responseMessage))
 		{
 			if($this->responseBody)
@@ -209,16 +214,24 @@ class ApiResponseHandler
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
 		//flag for android chat localstorage flushing
-		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag();
+		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag($loggedIn);
 
 		//set membershipSubscription
-		$this->setSelfSubscription();
+		$this->setSelfSubscription($loggedIn);
                 $output["isPaid"] = $this->membershipSubscription ==  "Free" ? 'N' : 'Y';
 		//set webservice caching flag for android
 		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
 
 		//set flag for android xmppBackgroundConnectionTimeout
 		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
+		$appPromotion = false;
+		if(false && MobileCommon::isNewMobileSite())
+		{
+			$request = sfContext::getInstance()->getRequest();
+			$appPromotion =  JsConstants::$AndroidPromotion && !$request->getAttribute('AppLoggedInUser') && !MobileCommon::isAppWebView() && ($request->getParameter("iosWebview") != 1) ;
+		}
+		$output["appPromotion"] = $appPromotion;
+		$output["channelSource"] = MobileCommon::getFullChannelName();
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
@@ -227,12 +240,20 @@ class ApiResponseHandler
 		}
 
 		$output["phoneDetails"]=$this->phoneDetails;
-		$loggedIn=LoggedInProfile::getInstance();
-		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
-		{
-			$output["userReligion"] = $loggedIn->getRELIGION();
-			$output["userActivation"] = $loggedIn->getACTIVATED();
-		}
+                if($loggedIn){
+                        $loggedIn=LoggedInProfile::getInstance();
+                        if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+                        {
+                                $output["userReligion"] = $loggedIn->getRELIGION();
+                                $output["userActivation"] = $loggedIn->getACTIVATED();
+                        }
+												if(MobileCommon::isNewMobileSite() && $loggedIn && $loggedIn->getPROFILEID())
+                        {
+                                $output["selfUsername"] = $loggedIn->getUSERNAME();
+                                $output["selfGender"] = $loggedIn->getGENDER();
+                                $output["showAndBeyond"] = CommonFunction::showAndBeyondPixel($loggedIn->getPROFILEID());
+                        }
+                }
 
 
 		// set the content type

@@ -14,6 +14,7 @@ class QuickSearchBand extends SearchParamters
         const manglik_blank = '';
         const occupation_blank = '';
         const education_blank = '';
+        private $skipFields = array("GENDER","AGE","INCOME","HEIGHT","RELIGION","CASTE","CASTE_GROUP","MATCHALERTS_DATE_CLUSTER","HAVEPHOTO","MTONGUE","CITY_RES","COUNTRY_RES","STATE","MSTATUS");
 
 	public function __construct($loggedInProfileObj="")
         {
@@ -31,7 +32,10 @@ class QuickSearchBand extends SearchParamters
 		$json = $request->getParameter('json');
 		$jsonArr = json_decode($json,true);
 		$searchParamsSetter['SEARCH_TYPE'] = self::getSearchType($request->getParameter('MOBILE_SEARCH'));
-
+                
+                if(MobileCommon::isApp()=='I' && $request->getParameter('recent_activity') && $request->getParameter('recent_activity') == 1){
+                    $searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::RECENT_ACTIVITY_IOS;  
+                }
 
                 /** 
                 * If profile is logged in , then gender is of opposite gender
@@ -52,6 +56,24 @@ class QuickSearchBand extends SearchParamters
 		$searchParamsSetter['LHEIGHT'] = $jsonArr["LHEIGHT"];
 		$searchParamsSetter['HHEIGHT'] = $jsonArr["HHEIGHT"];
 
+                $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
+                $applyClusters = array_diff($solr_clusters,$this->skipFields);
+                
+                foreach($applyClusters as $clusterFields){
+                        if($jsonArr[$clusterFields] != ""){
+                                if($clusterFields == "KNOWN_COLLEGE"){
+                                        if($cluster == "Any")
+                                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
+                                        else
+                                                $searchParamsSetter['KNOWN_COLLEGE'] = $jsonArr[$clusterFields];
+                                }else{
+                                        $searchParamsSetter[$clusterFields] = $jsonArr[$clusterFields];
+                                }
+                        }
+                }
+                
+                 if(isset($jsonArr['EDU_LEVEL_NEW']) && $jsonArr['EDU_LEVEL_NEW'] != "")
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $jsonArr['EDU_LEVEL_NEW'];
 
 		if(isset($jsonArr["LINCOME"]) && isset($jsonArr["HINCOME"]))
                 {

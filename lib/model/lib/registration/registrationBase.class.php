@@ -242,7 +242,7 @@ abstract class registrationBaseClass {
     if(!$this->fieldsArray){
       $msgReqForDebug[]=$_SERVER;
       $subject="static data not fetched in registration";
-      SendMail::send_email("kunal.test02@gmail.com,ankitshukla125@gmail.com",print_r($msgReqForDebug,true),$subject);  
+      SendMail::send_email("ankitshukla125@gmail.com",print_r($msgReqForDebug,true),$subject);  
     }
       
   }

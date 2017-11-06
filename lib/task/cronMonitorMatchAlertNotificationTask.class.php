@@ -45,7 +45,7 @@ EOF;
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
     print_r(array("curTime"=>$curTime,"stTime"=>$stTime,"curHr"=>$hr,"count"=>$count));
-    if($count==0 && !($hr == "09" || $hr == 10 || $hr == 11)){
+    if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08")){
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
         if(!$mailerStartTime){
@@ -84,16 +84,16 @@ EOF;
             }
             else{
                 $msg = "MatchAlert started @$mailerStartTime";
-                $to = "nitish.sharma@jeevansathi.com";
+                $to = "manoj.rana@naukri.com";
                 $this->sendAlertMail($to, $msg, $msg);
-                $this->sms("8989931104",$msg);
+                $this->sms("9999216910",$msg);
             }
         }
     }
   }
   
   public function sendAlertSMS($msg=''){
-    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104");
+    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910");
     if(JsConstants::$whichMachine == "test"){
         $mobileNumberArr = array("nitish"=>"8989931104");
     }

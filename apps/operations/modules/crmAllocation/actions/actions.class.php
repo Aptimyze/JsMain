@@ -142,6 +142,7 @@ class crmAllocationActions extends sfActions
 	$this->subMethod	=$processObj->getSubMethod();
 	$profileCountArr	=$agentBucketHandlerObj->fetchOutboundProfilesCount($processObj);	
 	$this->profilesArr	=$agentBucketHandlerObj->fetchOutboundProfilesDisplayList($processObj,$pageLimit,$pageIndex);
+	$this->jsonProfilesArr = json_encode(array_keys($this->profilesArr));
 	$totalRec               =$profileCountArr[$this->subMethod];
 
 	$linkUrl		=sfConfig::get("app_site_url")."/operations.php/crmAllocation/outboundProcess";
@@ -859,7 +860,6 @@ class crmAllocationActions extends sfActions
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
-
   	//active tab
   	$this->tabChosenDetails = exclusiveMemberList::$TYPE_TABID_MAPPING[$type];
   	//horizontal tab details

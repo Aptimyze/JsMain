@@ -40,8 +40,25 @@ class feedbackActions extends sfActions
 
 }
 
-	
 
+  public function executeUpdateReviewStatus(sfWebRequest $request){
+    $status = $request->getParameter("status");
+    $id = $request->getParameter("id");
+    $agentDetailObj=new AgentAllocationDetails();
+    $cid = $agentDetailObj->fetchAgentName($request->getParameter("cid"));
+
+    if($cid && $id && $status && is_string($status)){
+
+      $reportAbuseOb = new REPORT_ABUSE_LOG('newjs_slave');
+      // die(json_encode(array("status" => "success00")));
+
+      $updateFlag = $reportAbuseOb->updateReviewStatus($id, $status, $cid);
+      if($updateFlag){
+        die(json_encode(array("status" => "success")));
+      }
+    }
+    die(json_encode(array("status" => "failure")));
+  }
 
 	public function executeReportAbuseLog(sfWebRequest $request)
 	{
@@ -63,22 +80,33 @@ class feedbackActions extends sfActions
         $countArray= (new REPORT_ABUSE_LOG('newjs_slave'))->getReportAbuseCount($profileArray);
         foreach ($reportArray as $key => $value) 
         {
-			$tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
-			$tempArray['count']=$countArray[$value['REPORTEE']];
-     		$tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
-      		$tempArray['reason']=$value['REASON'];
-      		$tempArray['timestamp']=$value['DATE'];
-			$tempArray['comments']=$value['OTHER_REASON'];
-			$tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
-			$tempArray['reportee_email']=$profileDetails[$value['REPORTEE']]['EMAIL'];
-            $tempArray['attachment_id'] = $value['ATTACHMENT_ID'];
-			$resultArr[]=$tempArray;
-			unset($tempArray);
-			# code...
+          $tempArray['reportee'] = $value['REPORTEE'];
+          $tempArray['reporter'] = $value['REPORTER'];
+          $tempArray['review_status'] = $value['REVIEW_STATUS'];
+          $tempArray['id'] = $value['ID'];
+
+          $tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
+          $tempArray['count']=$countArray[$value['REPORTEE']];
+          $tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
+          $tempArray['reason']=$value['REASON'];
+          $tempArray['timestamp']=$value['DATE'];
+          $tempArray['comments']=$value['OTHER_REASON'];
+          $tempArray['reporter_email']=$profileDetails[$value['REPORTER']]['EMAIL'];
+          $tempArray['reportee_email']=$profileDetails[$value['REPORTEE']]['EMAIL'];
+          $tempArray['attachment_id'] = $value['ATTACHMENT_ID'];
+          $resultArr[]=$tempArray;
+          unset($tempArray);
 		  }
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
+
+      $indexes = array();
+      foreach ($resultArr as $key => $row)
+      {
+        $indexes[$key] = $row['count'];
+      }
+      array_multisort($indexes, SORT_DESC, $resultArr);
       echo json_encode($resultArr);
                         return sfView::NONE;
                         die;

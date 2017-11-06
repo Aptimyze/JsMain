@@ -720,9 +720,7 @@ class Membership
         } else {
             $this->generateBill($memUpgrade);
         }
-        //Start:JSC-2925:Changes for GST
-        $this->logTaxBreakup();
-        //End:JSC-2925:Changes for GST
+
         if(in_array($doneUpto, array("PAYMENT_DETAILS","MEM_DEACTIVATION"))){
             $this->setGenerateReceiptParams();
         }
@@ -741,7 +739,9 @@ class Membership
         $this->setServiceActivation();
         $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
-        
+        //Start:JSC-2925:Changes for GST
+        $this->logTaxBreakup();
+        //End:JSC-2925:Changes for GST
         $this->checkIfDiscountExceeds($userObjTemp,$memUpgrade,$apiTempObj);
         if($memUpgrade != "NA"){
             $memHandlerObj = new MembershipHandler(false);
@@ -1161,6 +1161,7 @@ class Membership
     
     function populatePurchaseDetail($upgradeMem="NA") {
         $serviceObj = new Services;
+        $membershipHandlerObj = new MembershipHandler();
         if (strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'NCP')) {
             $serarr = explode(",", $this->serviceid);
             for ($s = 0; $s < count($serarr); $s++) {
@@ -1251,11 +1252,23 @@ class Membership
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
 
             //handling for main membership upgrade
+            $newAmountArr = $membershipHandlerObj->getAmountForUSDtoINRpayment($this->billid,$this->orderid);
             if($price != 0 && $upgradeMem == 'MAIN'){
+                if(is_array($newAmountArr)){
+                    $this->amount = round($newAmountArr["AMOUNT"]*$share/100,2);
+                    $this->discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
+                    $this->setCity_res("UP25");
+                }
                 $actualAmount = $this->amount + $this->discount;
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$actualAmount','$this->discount','$this->amount','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             }
             else{
+                if(is_array($newAmountArr)){
+                    $net_price = round($newAmountArr["AMOUNT"]*$share/100,2);
+                    $discount = round($newAmountArr["DISCOUNT"]*$share/100,2);
+                    $price = $net_price + $discount;
+                    $this->setCity_res("UP25");
+                }
                 $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             }
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
@@ -1375,7 +1388,11 @@ class Membership
                 $newjsConnObj->updateSubscriptionForId($this->subscription, $id);
             }
         }
-        
+        if(strpos($this->serviceid, 'X')!==false)
+        {
+            //add entry in EXCLUSIVE_MEMBERS TABLE
+            $this->addExclusiveMemberEntry();
+        }
         foreach ($this->assisted_arr as $k => $v) {
             if ($v == 'X') {
                 startAutoApply($this->profileid, $this->walkin);
@@ -1389,10 +1406,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
-
-            //add entry in EXCLUSIVE_MEMBERS TABLE
-            $this->addExclusiveMemberEntry();
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com');
         }
         
         $this->sendInstantSms();
@@ -1441,6 +1455,7 @@ class Membership
         		if($actDiscPerc>=$siteDiscPerc)
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
+        		    $total = $total + $siteDisc;
                     $msg  = "'{$this->username}' has been given a discount greater than visible on site, <br>";
                     $msg .= "Total Gross Value of Products Sold: $this->curtype $total /- <br>";
                     $msg .= "Products billed: $this->serviceName <br>";
@@ -2566,6 +2581,11 @@ class Membership
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem,$apiResHandlerObj);
         }
 
+        if($apiResHandlerObj->usdTOinr && $apiResHandlerObj->processPayment){
+            $discount = $apiResHandlerObj->track_discount;
+            $total = $apiResHandlerObj->track_total;
+        }
+
         if ($couponCodeVal && $mainServiceId) {
             $discountVal = $memHandlerObj->validateCouponCode($mainServiceId, $couponCodeVal);
             if (is_numeric($discountVal) && $discountVal > 0) {
@@ -2700,7 +2720,7 @@ class Membership
         $id = $autoIncReceiptidObj->insertNewAutoIncrementReceiptId();
         
         $id = ($id+1)/2; //To get continuation series. On live auto increment stores only odd number series
-        $trailingZero = 7 - strlen($id);
+        $trailingZero = 6 - strlen($id);
         if($mn == "01" || $mn == "02" || $mn == "03" )
             $receiptId = ($yr-1).$yr."-";
         else

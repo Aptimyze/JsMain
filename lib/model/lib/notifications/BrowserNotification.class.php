@@ -52,7 +52,9 @@ class BrowserNotification{
             {
                 $notificationDay = $this->getTopIndexElement($currentNotificationSetting, "FREQUENCY");
                 //Check if notification day is Daily('D') or ('Mon' to 'Sun')
-                $today = date('D',strtotime(date('Y-m-d')));
+	        $todayDate =date("Y-m-d");
+	        $today =date("D", strtotime("$todayDate +1 days"));
+                //$today = date('D',strtotime(date('Y-m-d')));
                 $pos = strpos($notificationDay, $today);
                 if($notificationDay == 'D' || $pos!==false )
                 {
@@ -74,10 +76,12 @@ class BrowserNotification{
      * @return : registration id array
      */
     public function getChannelWiseRegId($processObj){
+	$todayDate =date("Y-m-d");
+	$entryDate =date("Y-m-d", strtotime("$todayDate -30 days"))." 00:00:00";
         $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_masterRep");
         $channel = $processObj->getchannel();
         if($channel){
-            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel);
+            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel, $entryDate);
         }
         return $regIdArr;
     }
@@ -182,9 +186,12 @@ class BrowserNotification{
         {
             case "JUST_JOIN":
     			$applicableProfiles=array();
+		echo "DONE0: Filter Profiles done ";
     			$applicableProfiles = $this->getProfileApplicableForNotification($browserProfilesArr,$notificationKey);
+		echo "DONE1: getProfileApplicableForNotification ";
                 $poolObj = new NotificationDataPool();
                 $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+		echo "DONE2: getJustJoinData ";
                 unset($poolObj);
 			 break;
 
@@ -289,9 +296,10 @@ class BrowserNotification{
         $currentNotificationSetting = $this->allNotificationsTemplate[$notificationKey];
         $timeCriteria = $currentNotificationSetting['TIME_CRITERIA'];
         unset($notifications);
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_local111");
         $varArray['PROFILEID']=implode(",",array_filter($profiles));
         unset($profiles);
+	$fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';
         if($timeCriteria!='')
         {
             $timeCriteriaArr = explode("|",$timeCriteria);
@@ -306,7 +314,7 @@ class BrowserNotification{
                 $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
             }
         }
-        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields="*",$lessThan);
+        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields,$lessThan);
         if(is_array($profiles))
         {
             foreach($profiles as $k=>$v)
@@ -330,7 +338,7 @@ class BrowserNotification{
     }
     
     public function getAllNotificationsTemplate(){
-        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_masterRep");
+        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_slave");
         $notificationArr = $notificationsTempObj->getAll();
         foreach($notificationArr as $notificationName => $value){
             foreach($value as $key => $val){

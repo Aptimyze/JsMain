@@ -11,7 +11,8 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
+	    $fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';	
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields);
         }
         if(is_array($profiledetails))
         {
@@ -74,6 +75,7 @@ class NotificationDataPool
     if(is_array($applicableProfiles))
     {
 	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
+	echo "START: Solar Hit ";
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
 		if(is_array($logProfiles)){
@@ -91,6 +93,7 @@ class NotificationDataPool
 		$tempObj->addProfile($profileid,$currentScript);
 
         }
+	echo "DONE: Solar Hit ";
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
@@ -106,7 +109,10 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		echo "START: newjs_SMS_TEMP_TABLE Hit ";
+		$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_local111"); 	
+           	//$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
+		echo "DONE: newjs_SMS_TEMP_TABLE Hit ";
         }
         unset($otherProfiles);
         $counter = 0;
@@ -156,7 +162,7 @@ class NotificationDataPool
             $condition['WHERE']['IN']["RECEIVER"] = $profileid;
             $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED; 
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
-            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
+            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = array('Y','J');
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
 	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
@@ -165,7 +171,7 @@ class NotificationDataPool
                 $cp=0;
                 foreach($cntArr as $ck=>$cv)
                 {
-                    if($cv['FILTERED']!='Y'&& $cv["TIME1"] == 0)
+                    if($cv['FILTERED']!='Y' && $cv['FILTERED']!='J' && $cv["TIME1"] == 0)
                         $cp = $cp+$cv['COUNT'];
                 }
                 $eoiCount[$profileid] = $cp;

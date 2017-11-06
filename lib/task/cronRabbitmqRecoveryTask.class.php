@@ -102,8 +102,9 @@ foreach($resultQueues as $arr)
 }
 if($msgOverflow == 1 && $serverid == "FIRST_SERVER"){
   //echo "killAndRestartConsumer"."\n";
-
-  RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  if($queue_data->name != MessageQueues::$INSTANT_NOTIFICATION_QUEUE){
+    RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  }
   //die("123");
   //kill and start consumers again
   $this->killAndRestartConsumer();
@@ -126,7 +127,7 @@ foreach($resultAlarm as $row)
     $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
     RabbitmqHelper::sendAlert($str,"default");
     
-    CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->cluster_links[0]->name,"rabbitmq");
+    CommonUtility::sendSlackmessage("Rabbitmq Error Alert: Memory alarm to be raised soon,memory used- ".round($row->mem_used/(1024*1024*1024),2). " GB at ".$row->name,"rabbitmq");
   }
   else
   {
@@ -292,6 +293,7 @@ return true;
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
+                                  MessageQueues::CRONSCREENINGMAILERQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGMAILERCONSUMERCOUNT,
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,

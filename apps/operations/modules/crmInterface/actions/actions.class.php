@@ -892,6 +892,14 @@ class crmInterfaceActions extends sfActions
             }else if($diff>31 && $formArr["report_format"] == "XLS"){
                 $this->errorMsg = "Date range should be less than or equal to one month";
             }
+            if(strtotime($start_date) > strtotime("2017-03-31")){
+                $table = "PAYMENT_DETAIL_NEW";
+                $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+            }
+            else{
+                $table = "PAYMENT_DETAIL";
+                $condition = "='DONE'";
+            }
             if (!$this->errorMsg) { //If no error message then submit the page
                 $billServObj = new billing_SERVICES('newjs_slave');
                 $purchaseObj = new BILLING_PURCHASES('newjs_slave');
@@ -991,15 +999,32 @@ class crmInterfaceActions extends sfActions
 
                 //Get total number of records
                 if(!$request->getParameter('screener')){
-                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device);
+                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device, $table, $condition);
                 }else{
                     $totalRec = $request->getParameter('screener');
                 }
                 
                 $this->totalRec=$totalRec;
                 //Get records within offset and limit as calculated above in pagination code
-                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit);
-
+                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit, $table, $condition);
+                $taxData = $purchaseObj->getDataFromTaxBreakUp($this->start_date, $this->end_date);
+				$rows = count($this->rawData);	
+                for($i=0;$i<$rows;$i++){
+                	$billid = $this->rawData[$i]["BILLID"];
+                	$this->rawData[$i]["COUNTRY_RES"] = FieldMap::getFieldLabel("country",$taxData[$billid]["COUNTRY_RES"]);
+                	$StateCity = $taxData[$billid]["CITY_RES"];
+                	$this->rawData[$i]["CITY_RES"] = FieldMap::getFieldLabel("city",$StateCity);
+                	$StateCity = substr($StateCity, 0, 2);
+                	$this->rawData[$i]["STATE_RES"] = FieldMap::getFieldLabel("state_india",$StateCity);
+                	if(!empty($this->rawData[$i]["MEM_UPGRADE"])){
+                		$this->rawData[$i]["MEM_UPGRADE"] = "Y";
+                	}else{
+                		$this->rawData[$i]["MEM_UPGRADE"] = "N";
+                	}
+                    $this->rawData[$i]["SGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["SGST"]/118,2);
+                    $this->rawData[$i]["IGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["IGST"]/118,2);
+                    $this->rawData[$i]["CGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["CGST"]/118,2);
+                }
                 //Start:JSC-2667: Commented as change in legacy data not required 
                 //$this->rawData      = $this->filterData($this->rawData);
                 //End:JSC-2667: Commented as change in legacy data not required 
@@ -1022,7 +1047,7 @@ class crmInterfaceActions extends sfActions
         $agentAllocationDetailsObj = new AgentAllocationDetails();
         $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
         $priv                      = explode('+', $priv);
-        if (in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv) || in_array('BMI', $priv)) {
             $this->showOptions = 1;
         }
     }
@@ -1090,6 +1115,7 @@ class crmInterfaceActions extends sfActions
 
     public function executeServiceActivationChangeInterface(sfWebRequest $request)
     {
+        
         $this->cid          = $request->getParameter('cid');
         $this->name         = $request->getParameter('name');
         $billingPurDetObj   = new billing_PURCHASE_DETAIL();
@@ -1130,7 +1156,20 @@ class crmInterfaceActions extends sfActions
             }
             $this->jprofileDet  = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
-
+            //insert the ID in case of exclusive
+            $exclusiveId = $this->serviceid;
+            //$exclusiveId = substr($exclusiveId, 0, 1);
+            $findX = 'X';
+            $pos = strpos($exclusiveId, $findX);
+            if($pos !== false && $serviceStatus=='Y'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->replaceExclusiveProfile($this->profileid,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
+                unset($assistedProductProfileInfo);
+            }else if($pos !== false&& $serviceStatus=='N'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->Delete($this->profileid);
+                unset($assistedProductProfileInfo);
+            }
             // Logging
             $serviceActivationLog = new billing_SERVICE_ACTIVATION_LOG();
 	    foreach($this->serStatDet as $key=>$dataArr){

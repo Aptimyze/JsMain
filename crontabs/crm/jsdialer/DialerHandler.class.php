@@ -3,10 +3,11 @@ include_once('DialerLog.class.php');
 class DialerHandler
 {
         public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
-		$this->db_js 		=$db_js;
+		$this->db_js 		=$db_js_111;
 		$this->db_js_111 	=$db_js_111;
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
+		$this->campaignArr	=array('JS_NCRNEW'=>'noida','JS_NCRNEW_Auto'=>'noidaAuto','MAH_JSNEW'=>'mumbai');
         }
         public function getEST($time='')
         {
@@ -48,7 +49,11 @@ class DialerHandler
         }
         public function getInDialerEligibleProfiles($x,$campaign_name='')
         {
-                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='Y'";
+		/*if($campaign_name){
+			$campaign = $this->campaignArr[$campaign_name];
+			$sql .=" AND CAMPAIGN_NAME='$campaign'";
+		}*/
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $eligible_array[] = $row["PROFILEID"];
@@ -57,6 +62,28 @@ class DialerHandler
         public function getInDialerInEligibleProfiles($x,$campaign_name='')
         {
                 $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
+                /*if($campaign_name){
+			$campaign = $this->campaignArr[$campaign_name];
+                        $sql .=" AND CAMPAIGN_NAME='$campaign'";
+		}*/
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $ignore_array[] = $row["PROFILEID"];
+                return $ignore_array;
+        }
+        public function getInDialerNewEligibleProfiles($x,$campaign_name)
+        {
+		$campaign = $this->campaignArr[$campaign_name];
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='Y' AND CAMPAIGN_NAME='$campaign'";
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $eligible_array[] = $row["PROFILEID"];
+                return $eligible_array;
+        }
+        public function getInDialerNewInEligibleProfiles($x,$campaign_name)
+        {
+		$campaign = $this->campaignArr[$campaign_name];
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER_NEW WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_NAME='$campaign'";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
                 while($row = mysql_fetch_array($res))
                         $ignore_array[] = $row["PROFILEID"];
@@ -176,7 +203,7 @@ class DialerHandler
 			$renewal=false;
 			$discountColumn ='VD_PERCENT';
 		}
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
@@ -216,9 +243,15 @@ class DialerHandler
 
 	public function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles='',$login15DaysArr='')
 	{
+		$autoCampaign =false;
                 if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_RENEWAL_MAH'){
 			$renewal=true;
                         $discountColumn ='DISCOUNT_PERCENT,EXPIRY_DT';
+		}
+		elseif($campaign_name=='JS_NCRNEW_Auto'){
+			$renewal=false;
+			$autoCampaign =true;
+			$discountColumn ='VD_PERCENT,SelectedOption,Call_Start_Time';	
 		}
                 else{
 			$renewal=false;
@@ -238,6 +271,10 @@ class DialerHandler
 			$dialer_data["dial_status"] 	= $srow1["Dial_Status"];
 			if($renewal)
 				$dialer_data['expiryDt']= $srow1["EXPIRY_DT"];	
+			if($autoCampaign){
+				$dialer_data["SelectedOption"]    = $srow1["SelectedOption"];	
+				$dialer_data["Call_Start_Time"]   = $srow1["Call_Start_Time"];
+			}				
 
 			if(in_array($proid,$eligible_array)){
 				if($renewal==1)
@@ -368,6 +405,10 @@ class DialerHandler
 	}
         public function data_comparision_others($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$login15DaysArr)
         {
+		$autoCampaign =false;
+		if($campaign_name=='JS_NCRNEW_Auto')
+			$autoCampaign =true;
+
                 $profileid 	= $dialer_data["profileid"];
 		$dialStatus 	= $dialer_data["dial_status"];
 		$login15Days 	= $login15DaysArr[$profileid];
@@ -392,7 +433,15 @@ class DialerHandler
                 if(array_key_exists($profileid,$allotedArray))
                         $alloted_to = $allotedArray[$profileid];
 
-                if($alloted_to!=$dialer_data['allocated'])
+		if($autoCampaign){
+	                $SelectedOption = $dialer_data["SelectedOption"];
+	                $Call_Start_Time = $dialer_data["Call_Start_Time"];
+			$autoDialStatus =$this->getAutoCampaignDialStatus($SelectedOption,$Call_Start_Time);
+		}
+		if($autoCampaign && $autoDialStatus!=1){
+			$update_str[]="Dial_Status='0'";
+		}	
+                elseif($alloted_to!=$dialer_data['allocated'])
                 {
                         if($alloted_to){
                                 $update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
@@ -549,14 +598,26 @@ class DialerHandler
                 $sql = "REPLACE INTO incentive.CAMPAIGN_STATUS_LOG(`CAMPAIGN_NAME`,`ENTRY_DATE`,`STATUS`) VALUES('$campaignName','$csvEntryDate','$status')";
                 mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
         }
-        public function getDialerCampaignRecords($campaignName,$csvEntryDate)
+        public function getDialerCampaignRecords($campaignName,$csvEntryDate,$statusCheck='')
         {
                 $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_JS WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE='$csvEntryDate'";
+		if($statusCheck)
+			$squery .=" AND StatusCode='$statusCheck'";
 		$sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
                 if($srow = mssql_fetch_array($sresult)){
 			$cnt =$srow['cnt'];
 		}
 		return $cnt;
+        }
+        public function getUploadedDialerCampaignRecords($campaignName,$csvEntryDate)
+        {
+		$dataID =$campaignName."-".$csvEntryDate;	
+                $squery = "select count(1) cnt from easy.dbo.ct_$campaignName WHERE EOI='$dataID'";
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
+                if($srow = mssql_fetch_array($sresult)){
+                        $cnt =$srow['cnt'];
+                }
+                return $cnt;
         }
         public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
         {
@@ -598,6 +659,8 @@ class DialerHandler
         }
         public function fetchIST($time)
         {
+		if(!$time)
+			$time =time();
                 $ISTtime=strftime("%Y-%m-%d %H:%M",strtotime("$time + 10 hours 30 minutes"));
                 return $ISTtime;
         }
@@ -614,5 +677,29 @@ class DialerHandler
 		$dialerLogObj =new DialerLog();
 		$dialerLogObj->logError($sql,$campaignName,$dbConnect,$ms);	
 	}
+	public function getAutoCampaignDialStatus($SelectedOption,$Call_Start_Time)
+	{
+		$today 		=strtotime(date("Y-m-d"));
+		$date15DayBack 	=date('Y-m-d',time()-15*86400); 
+		$date5DayBack 	=date('Y-m-d',time()-5*86400);
+		$date15DayBack 	=strtotime($date15DayBack);
+		$date5DayBack 	=strtotime($date5DayBack);
+		$callTime 	=strtotime($Call_Start_Time);
+
+		if($SelectedOption){
+			if($today>=$callTime && $today<=$date15DayBack)
+				$dialStatus =0;
+			else
+				$dialStatus =1;	
+		}
+		elseif(!$SelectedOption){
+			if($today>=$callTime && $today<=$date5DayBack)
+				$dialStatus =0;
+			else
+				$dialStatus =1;
+		}
+		return $dialStatus;
+	}
+
 }
 ?>

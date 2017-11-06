@@ -123,6 +123,7 @@ class Contacts {
 	const NOTSEEN = 'N';
 	const NOTSEEN_BLANK = '';
 	const FILTERED = 'Y';
+	const FILTERED_JUNK = "J";
 	const NOTFILTERED = 'N';
 	const NOTFILTERED_BLANK = '';
 	const TYPEDEFAULT="N";
@@ -306,7 +307,7 @@ class Contacts {
 	 */
 	public function setFILTERED($FILTERED)
 	{
-		if(in_array($FILTERED,array(Contacts::FILTERED,Contacts::NOTFILTERED,Contacts::NOTFILTERED_BLANK)))
+		if(in_array($FILTERED,array(Contacts::FILTERED,Contacts::NOTFILTERED,Contacts::NOTFILTERED_BLANK, Contacts::FILTERED_JUNK)))
 			$this->FILTERED = $FILTERED;
 		else
 			throw new jsException("",Contacts::FILTER_ERROR);

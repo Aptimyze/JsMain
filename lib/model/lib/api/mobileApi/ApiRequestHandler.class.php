@@ -4,8 +4,8 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 104;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 101;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 111;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 111;
 	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
@@ -162,14 +162,19 @@ class ApiRequestHandler
 		$profileid = $request->getAttribute('profileid');
 		$loginData = $request->getAttribute('loginData');
 		if ($profileid) {
-			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData") {
+                        $verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
+                        if(!$verifyPhoneForRequest && $loginData[ACTIVATED] == 'N' && $loginData['HAVEPHOTO'] == 'Y'){
+                            CommonFunction::markProfileCompleteAndActivated();
+                            $loginData[INCOMPLETE] = 'N';
+                            $loginData[ACTIVATED] = 'Y';
+                        }
+			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData"|| ($output["moduleName"]=='social' && $request->getParameter("fromAppRegistration")==1)) {
 			}
-			if (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
+			elseif (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
 				$request->setParameter('sectionFlag', "incomplete");
 				$output["moduleName"] = "profile";
 				$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["editprofile"][$request->getParameter("version")];
 			} elseif ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y" && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api") && ($output["actionName"] != "AlertManagerV1")) {
-				$verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
 				if ($verifyPhoneForRequest) {
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
@@ -177,12 +182,12 @@ class ApiRequestHandler
 				else if($output['moduleName']!="register" && $output['moduleName']!="static" && $output["moduleName"] != "phone" )
 				{
 					$isApp = MobileCommon::isApp();
-					if($isApp)
+					if($isApp || $request->getParameter("fromSPA"))
 					{
 						$versionArr = array('A'=>107,'I'=>5.9);
 						$showConsentMsg = '';
 						$appVersion = $request->getParameter("API_APP_VERSION"); 
-						if ( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid)
+						if (( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid) || $request->getParameter("fromSPA"))
 						{
 							$memObject=JsMemcache::getInstance();
 							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
@@ -206,7 +211,6 @@ class ApiRequestHandler
 			}
 
 		}
-
 
 		return $output;
 	}

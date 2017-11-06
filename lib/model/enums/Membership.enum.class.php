@@ -79,6 +79,8 @@ class VariableParams
 {
     public static $jsExclusiveReleaseDate = "2017-08-01"; //YYYY-MM-DD
 
+    public static $iOSVersion = 6.2;
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',
@@ -630,7 +632,7 @@ class VariableParams
         "Priority Customer service",
         "Also get the benefits of JS Boost on your profile and make your number visible to free members"
     );
-    public static $DOL_CONV_RATE = 60;
+    public static $DOL_CONV_RATE = 66;
     
     public static $apiPageFiveHelpText = array(
         "text1" => "Got any Questions about Paying Online?",
@@ -952,6 +954,10 @@ class franchiseeCommission
 
 class SelectGatewayRedirect{
     public static $gatewayOptions = array('default','payu','ccavenue');
+}
+
+class FreshChat{
+    public static $token = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
 }
 
 ?>

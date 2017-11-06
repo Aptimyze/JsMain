@@ -26,7 +26,7 @@ class ProfileInformationModuleMap
 		}
 		else
 			$arrayName = self::$defaultArray[$module];
-		       
+
 		if(isset(self::${$arrayName}))
                 {
                         if($infoType=='')
@@ -49,7 +49,7 @@ class ProfileInformationModuleMap
                 }
                 else
                         $arrayName = self::$defaultArray[$module];
-                
+
                 if(isset(self::${$arrayName}))
                 {
                         foreach(self::${$arrayName} as $k=>$v)
@@ -61,7 +61,7 @@ class ProfileInformationModuleMap
 		jsException::nonCriticalError("Wrong module or infoType is given in profileInformationModuleMap.class.php");
 		return self::_defaultList;
         }
-        
+
 	static public function init()
         {
 		self::$defaultArray = Array(
@@ -71,7 +71,7 @@ class ProfileInformationModuleMap
 			"ContactCenterDesktop" => "ContactCenterDesktop"
 		);
 		self::$MYJSAPP_ANDROID_1=Array(
-		"INTEREST_RECEIVED"=>Array( 
+		"INTEREST_RECEIVED"=>Array(
 			"ID"=> "1",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -91,7 +91,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=19",
       "CONTACT_ID"=>"",
 		),
-		"NOT_INTERESTED"=>Array( 
+		"NOT_INTERESTED"=>Array(
 			"ID"=> "10",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -111,7 +111,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-	"NOT_INTERESTED_BY_ME"=>Array( 
+	"NOT_INTERESTED_BY_ME"=>Array(
 			"ID"=> "11",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -131,7 +131,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-	"VISITORS"=>Array( 
+	"VISITORS"=>Array(
 			"ID"=> "2",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -151,7 +151,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "stype=A11",
       "CONTACT_ID"=>"",
 		),
-		"MATCH_ALERT"=>Array( 
+		"MATCH_ALERT"=>Array(
 			"ID"=> "3",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -171,7 +171,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "stype=A15",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_SENT"=>Array( 
+		"ACCEPTANCES_SENT"=>Array(
 			"ID"=> "4",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -191,7 +191,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"MESSAGE_RECEIVED"=>Array( 
+		"MESSAGE_RECEIVED"=>Array(
 			"ID"=> "5",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -211,7 +211,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_RECEIVED"=>Array( 
+		"ACCEPTANCES_RECEIVED"=>Array(
 			"ID"=> "6",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -231,7 +231,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"JUST_JOINED_MATCHES"=>Array( 
+		"JUST_JOINED_MATCHES"=>Array(
 			"ID"=> "13",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -251,7 +251,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ALL_ACCEPTANCE"=>Array( 
+		"ALL_ACCEPTANCE"=>Array(
 			"ID"=> "16",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -271,7 +271,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"INTEREST_EXPIRING"=>Array( 
+		"INTEREST_EXPIRING"=>Array(
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -288,7 +288,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		),
-		"MATCH_OF_THE_DAY"=>Array( 
+		"MATCH_OF_THE_DAY"=>Array(
 			"ID"=> "24",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "7",
@@ -307,7 +307,7 @@ class ProfileInformationModuleMap
                 ),
 		);
 		self::$MYJSAPP_IOS_1=Array(
-		"INTEREST_RECEIVED"=>Array( 
+		"INTEREST_RECEIVED"=>Array(
 			"ID"=> "7",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -327,7 +327,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=15",
       "CONTACT_ID"=>"",
 		),
-		"VISITORS"=>Array( 
+		"VISITORS"=>Array(
 			"ID"=> "8",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -347,7 +347,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "stype=A11",
       "CONTACT_ID"=>"",
 		),
-		"MATCH_ALERT"=>Array( 
+		"MATCH_ALERT"=>Array(
 			"ID"=> "9",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -367,7 +367,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "stype=WMM",
       "CONTACT_ID"=>"",
 		),
-		"MESSAGE_RECEIVED"=>Array( 
+		"MESSAGE_RECEIVED"=>Array(
 			"ID"=> "11",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -387,7 +387,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_RECEIVED"=>Array( 
+		"ACCEPTANCES_RECEIVED"=>Array(
 			"ID"=> "12",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -407,7 +407,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_SENT"=>Array( 
+		"ACCEPTANCES_SENT"=>Array(
 			"ID"=> "10",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -427,7 +427,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"JUST_JOINED_MATCHES"=>Array( 
+		"JUST_JOINED_MATCHES"=>Array(
 			"ID"=> "13",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -447,7 +447,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ALL_ACCEPTANCE"=>Array( 
+		"ALL_ACCEPTANCE"=>Array(
 			"ID"=> "16",
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
@@ -467,7 +467,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"INTEREST_EXPIRING"=>Array( 
+		"INTEREST_EXPIRING"=>Array(
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -485,7 +485,7 @@ class ProfileInformationModuleMap
       "KUNAL"=>"1",
 		),
 
-		"MATCH_OF_THE_DAY"=>Array( 
+		"MATCH_OF_THE_DAY"=>Array(
 			"ID"=> "24",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "7",
@@ -498,13 +498,13 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Match of the day",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "",
+			"BUTTONS"=> "INITIATE",
 			"TRACKING"=> "IMD",
             "CONTACT_ID"=>""
                 ),
 		);
 		self::$ContactCenterAPP=Array(
-		"INTEREST_RECEIVED"=>Array( 
+		"INTEREST_RECEIVED"=>Array(
 			"ID"=> "1",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -521,7 +521,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=11",
       "KUNAL"=>"1",
 		),
-		"INTEREST_EXPIRING"=>Array( 
+		"INTEREST_EXPIRING"=>Array(
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -538,7 +538,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
       "KUNAL"=>"1",
 		),
-		"ACCEPTANCES_RECEIVED"=>Array( 
+		"ACCEPTANCES_RECEIVED"=>Array(
 			"ID"=> "2",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -554,7 +554,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "MESSAGE|CONTACT|CANCEL",
 			"TRACKING"=> "",
 		),
-		"ACCEPTANCES_SENT"=>Array( 
+		"ACCEPTANCES_SENT"=>Array(
 			"ID"=> "3",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -570,7 +570,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "MESSAGE|CONTACT|DECLINE",
 			"TRACKING"=> "",
 		),
-		"MY_MESSAGE"=>Array( 
+		"MY_MESSAGE"=>Array(
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -586,7 +586,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
 		),
-		"VISITORS"=>Array( 
+		"VISITORS"=>Array(
 			"ID"=> "5",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -602,7 +602,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
 			"TRACKING"=> "stype=AV",
 		),
-		"INTEREST_SENT"=>Array( 
+		"INTEREST_SENT"=>Array(
 			"ID"=> "6",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -618,7 +618,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "REMINDER|CANCEL|CONTACT",
 			"TRACKING"=> "",
 		),
-				"MATCH_ALERT"=>Array( 
+				"MATCH_ALERT"=>Array(
 			"ID"=> "7",
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
@@ -638,7 +638,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "stype=A15",
       			"CONTACT_ID"=>"",
 		),
-		"SHORTLIST"=>Array( 
+		"SHORTLIST"=>Array(
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -654,7 +654,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "",
 			"TRACKING"=> "stype=AS&responseTracking=12",
 		),
-		"PHOTO_REQUEST_RECEIVED"=>Array( 
+		"PHOTO_REQUEST_RECEIVED"=>Array(
 			"ID"=> "9",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "100",
@@ -670,7 +670,7 @@ class ProfileInformationModuleMap
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
 		),
-		"ACCEPTANCES_ALL"=>Array( 
+		"ACCEPTANCES_ALL"=>Array(
 			"ID"=> "13",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
@@ -718,12 +718,12 @@ class ProfileInformationModuleMap
                         "BUTTONS"=> "",
                         "TRACKING"=> "stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC
                 ),
-                "FILTERED_INTEREST"=>Array( 
+                "FILTERED_INTEREST"=>Array(
 			"ID"=> "12",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "10",
 			"TUPLE"=> "INBOX_EOI_APP",
-			"TUPLE_ORDER"=> "",
+			"TUPLE_ORDER"=> "FILTERED DESC,TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
@@ -735,7 +735,7 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::FILTERED_INTEREST_ANDROID,
 		),
 
-                "CONTACTS_VIEWED"=>Array( 
+                "CONTACTS_VIEWED"=>Array(
                        "ID"=> "16",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "10",
@@ -752,7 +752,7 @@ class ProfileInformationModuleMap
                        "TRACKING"=> "stype=".SearchTypesEnums::CONTACTS_VIEWED_ANDROID."&responseTracking=".JSTrackingPageType::CONTACTS_VIEWED_ANDROID
                ),
 
-                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array( 
+                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
                        "ID"=> "17",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "5",
@@ -769,7 +769,7 @@ class ProfileInformationModuleMap
                        "TRACKING"=> "stype=".SearchTypesEnums::CONTACT_VIEWERS_ANDROID."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_ANDROID// contact viewers
                ),
 
-            "IGNORED_PROFILES"=>Array( 
+            "IGNORED_PROFILES"=>Array(
                        "ID"=> "20",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "10",
@@ -785,7 +785,7 @@ class ProfileInformationModuleMap
                        "BUTTONS"=> "UNBLOCK",
                        "TRACKING"=> "",
                ),
-             "INTEREST_ARCHIVED"=>Array( 
+             "INTEREST_ARCHIVED"=>Array(
 				"ID"=> "22",
 				"SORT_ORDER"=> "",
 				"COUNT"=> "10",
@@ -802,7 +802,7 @@ class ProfileInformationModuleMap
 				"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_ANDROID,
 		  		"CONTACT_ID"=>"",
 		),
-                "MATCH_OF_THE_DAY"=>Array( 
+                "MATCH_OF_THE_DAY"=>Array(
 			"ID"=> "24",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "7",
@@ -820,9 +820,9 @@ class ProfileInformationModuleMap
                         "CONTACT_ID"=>""
                 )
 
-		); 
+		);
 self::$ContactCenterMYJS=Array(
-		"INTEREST_RECEIVED_FILTER"=>Array( 
+		"INTEREST_RECEIVED_FILTER"=>Array(
 			"ID"=> "1",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "24",
@@ -839,7 +839,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "responseTracking=11",
 			"SOURCE"=>"ER",
 		),
-		"ACCEPTANCES_RECEIVED"=>Array( 
+		"ACCEPTANCES_RECEIVED"=>Array(
 			"ID"=> "2",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "20",
@@ -856,7 +856,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
 			"SOURCE"=>"AR"
 		),
-		"MY_MESSAGE_RECEIVED"=>Array( 
+		"MY_MESSAGE_RECEIVED"=>Array(
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "20",
@@ -873,7 +873,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
 			"SOURCE"=>"MR"
 		),
-		"VISITORS"=>Array( 
+		"VISITORS"=>Array(
 			"ID"=> "5",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "5",
@@ -889,7 +889,7 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
 			"TRACKING"=> "stype=AV",
 		),
-		"MATCH_ALERT"=>Array( 
+		"MATCH_ALERT"=>Array(
 			"ID"=> "7",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "20",
@@ -906,7 +906,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "stype=AM",
 			"SOURCE"=>"MR"
 		),
-		"SHORTLIST"=>Array( 
+		"SHORTLIST"=>Array(
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "5",
@@ -922,7 +922,7 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "",
 			"TRACKING"=> "stype=AS&responseTracking=12",
 		),
-		"PHOTO_REQUEST_RECEIVED"=>Array( 
+		"PHOTO_REQUEST_RECEIVED"=>Array(
 			"ID"=> "9",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "5",
@@ -938,12 +938,12 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
 		),
-            "FILTERED_INTEREST"=>Array( 
+            "FILTERED_INTEREST"=>Array(
 			"ID"=> "12",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
-			"TUPLE_ORDER"=> "",
+			"TUPLE_ORDER"=> "FILTERED DESC,TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
@@ -954,7 +954,7 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "",
 			"TRACKING"=> "responseTracking=52",
 		),
-        "INTEREST_EXPIRING"=>Array( 
+        "INTEREST_EXPIRING"=>Array(
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -971,7 +971,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		),
-                "MATCH_OF_THE_DAY"=>Array( 
+                "MATCH_OF_THE_DAY"=>Array(
 			"ID"=> "24",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "7",
@@ -988,9 +988,9 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
                         "CONTACT_ID"=>""
                 )
-		); 
+		);
     self::$ContactCenterDesktop=Array(
-		"INTEREST_RECEIVED"=>Array( 
+		"INTEREST_RECEIVED"=>Array(
 			"ID"=> "1",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1007,7 +1007,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"INTEREST_EXPIRING"=>Array( 
+		"INTEREST_EXPIRING"=>Array(
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1024,7 +1024,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
       		"CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_RECEIVED"=>Array( 
+		"ACCEPTANCES_RECEIVED"=>Array(
 			"ID"=> "2",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1041,7 +1041,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_SENT"=>Array( 
+		"ACCEPTANCES_SENT"=>Array(
 			"ID"=> "3",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1058,7 +1058,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"MY_MESSAGE"=>Array( 
+		"MY_MESSAGE"=>Array(
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1075,7 +1075,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"VISITORS"=>Array( 
+		"VISITORS"=>Array(
 			"ID"=> "5",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1094,7 +1094,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"INTEREST_SENT"=>Array( 
+		"INTEREST_SENT"=>Array(
 			"ID"=> "6",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1111,7 +1111,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"MATCH_ALERT"=>Array( 
+		"MATCH_ALERT"=>Array(
 			"ID"=> "7",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1128,7 +1128,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"SHORTLIST"=>Array( 
+		"SHORTLIST"=>Array(
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1147,7 +1147,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"PHOTO_REQUEST_RECEIVED"=>Array( 
+		"PHOTO_REQUEST_RECEIVED"=>Array(
 			"ID"=> "9",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1164,7 +1164,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"PHOTO_REQUEST_SENT"=>Array( 
+		"PHOTO_REQUEST_SENT"=>Array(
 			"ID"=> "14",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1181,7 +1181,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"HOROSCOPE_REQUEST_SENT"=>Array( 
+		"HOROSCOPE_REQUEST_SENT"=>Array(
 			"ID"=> "15",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1198,7 +1198,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"HOROSCOPE_REQUEST_RECEIVED"=>Array( 
+		"HOROSCOPE_REQUEST_RECEIVED"=>Array(
 			"ID"=> "18",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1215,7 +1215,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
-		"ACCEPTANCES_ALL"=>Array( 
+		"ACCEPTANCES_ALL"=>Array(
 			"ID"=> "13",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1266,12 +1266,12 @@ self::$ContactCenterMYJS=Array(
                         "TRACKING"=> "",
                         "CONTACT_ID"=>"",
                 ),
-                "FILTERED_INTEREST"=>Array( 
+                "FILTERED_INTEREST"=>Array(
 			"ID"=> "12",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
 			"TUPLE"=> "INBOX_EOI_APP",
-			"TUPLE_ORDER"=> "",
+			"TUPLE_ORDER"=> "FILTERED DESC,TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
@@ -1284,7 +1284,7 @@ self::$ContactCenterMYJS=Array(
       "CONTACT_ID"=>"",
 		),
 
-                "CONTACTS_VIEWED"=>Array( 
+                "CONTACTS_VIEWED"=>Array(
                        "ID"=> "16",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "25",
@@ -1302,7 +1302,7 @@ self::$ContactCenterMYJS=Array(
                        "CONTACT_ID"=>"",
                ),
 
-                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array( 
+                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
                        "ID"=> "17",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "25",
@@ -1320,7 +1320,7 @@ self::$ContactCenterMYJS=Array(
                        "CONTACT_ID"=>"",
                ),
 
-            "IGNORED_PROFILES"=>Array( 
+            "IGNORED_PROFILES"=>Array(
                        "ID"=> "20",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "25",
@@ -1337,7 +1337,7 @@ self::$ContactCenterMYJS=Array(
                        "TRACKING"=> "",
                        "CONTACT_ID"=>"",
                ),
-            "INTRO_CALLS"=>Array( 
+            "INTRO_CALLS"=>Array(
                        "ID"=> "19",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "25",
@@ -1354,7 +1354,7 @@ self::$ContactCenterMYJS=Array(
                        "TRACKING"=> "",
                        "CONTACT_ID"=>"",
                ),
-            "INTRO_CALLS_COMPLETE"=>Array( 
+            "INTRO_CALLS_COMPLETE"=>Array(
                        "ID"=> "21",
                        "SORT_ORDER"=> "",
                        "COUNT"=> "25",
@@ -1374,7 +1374,7 @@ self::$ContactCenterMYJS=Array(
             /*
             	Added for making archive in case of Interest archived.
              */
-            "INTEREST_ARCHIVED"=>Array( 
+            "INTEREST_ARCHIVED"=>Array(
 			"ID"=> "22",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
@@ -1391,7 +1391,7 @@ self::$ContactCenterMYJS=Array(
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
       		"CONTACT_ID"=>"",
 		),
-                "MATCH_OF_THE_DAY"=>Array( 
+                "MATCH_OF_THE_DAY"=>Array(
 			"ID"=> "24",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "7",

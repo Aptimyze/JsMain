@@ -32,6 +32,7 @@
                         var webView= "~$webView`";
                         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
 	</script>
+	<meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
 	<meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
 	<meta http-equiv="content-language" content="en" />
 	<meta name="theme-color" content="#415765">
@@ -43,6 +44,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
+	<link rel="manifest" href="/manifest.json">
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
@@ -94,7 +96,7 @@ var domainCode={};
 
                 _gaq.push(['_setAccount', ucode]);
                 _gaq.push(['_setDomainName', j_domain]);
-                _gaq.push(['_trackPageview', currentPageName || ""]);
+                _gaq.push(['_trackPageview']);
                 _gaq.push(['_trackPageLoadTime']);
                 (function() {
                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

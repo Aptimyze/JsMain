@@ -75,7 +75,8 @@ class MembershipAPIResponseHandler {
         $this->totalCartPrice = $request->getParameter('totalCartPrice');
         $this->paymentMode = $request->getParameter('paymentMode');
         $this->cardType = $request->getParameter('cardType');
-        
+        $this->usdTOinr = $request->getParameter('usdTOinr');
+
         $this->callType = $request->getParameter('execCallbackType');
         $this->callTab = $request->getParameter('tabVal');
         $this->callProfile = $request->getParameter('profileid');
@@ -113,7 +114,6 @@ class MembershipAPIResponseHandler {
         else {
             $this->lowPriorityBannerDisplayCheck = false;
         }
-        
         // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
@@ -271,10 +271,10 @@ class MembershipAPIResponseHandler {
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$this->acceptanceCount = $profileMemcacheObj->get('ACC_ME');
 			$shardDb = JsDbSharding::getShardNo($this->profileid,'slave');
-			$newjsMessageLogObj = new NEWJS_MESSAGE_LOG($shardDb);
-			$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
+			//$newjsMessageLogObj = new NEWJS_MESSAGE_LOG($shardDb);
+			//$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
 		}
-    
+
         return $this;
     }
     
@@ -2241,7 +2241,6 @@ class MembershipAPIResponseHandler {
         include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
         
         $planCategory = $request->getParameter('planCategory');
-        
         if ($planCategory == "int") {
             $this->currency = 'RS';
         } 
@@ -2257,14 +2256,24 @@ class MembershipAPIResponseHandler {
         $service_str = "";
         $discount = $payment['discount'];
         $discount_type = $payment['discount_type'];
-        $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'APPLEPAY', $discount_type, $this->device, $this->couponCode);
-        $nameOfUserObj = new incentive_NAME_OF_USER();
-        $userName = $nameOfUserObj->getName($this->profileid);
-        
-        $output = array(
-            'inAppPurchaseId' => $ORDER["ORDERID"]
-        );
-        
+        //JSC-3335
+        $membershipHandlerObj = new MembershipHandler();
+        $isCityEntered = $membershipHandlerObj->isCityEntered($this->profileid);
+        if($this->appVersion < VariableParams::$iOSVersion || $isCityEntered){
+            $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'APPLEPAY', $discount_type, $this->device, $this->couponCode);
+            $nameOfUserObj = new incentive_NAME_OF_USER();
+            $userName = $nameOfUserObj->getName($this->profileid);
+
+            $output = array(
+                'inAppPurchaseId' => $ORDER["ORDERID"]
+            );
+        } else{
+            $output = array(
+                'cityNotFilledError' => "Please fill 'State' in 'Edit Profile'\n Basic Details section to proceed.",
+                'responseStatusCode' => 1
+            );
+        }
+
         return $output;
     }
     
@@ -2457,7 +2466,13 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-       
+        if($apiObj->currency == "DOL" && $apiObj->usdTOinr && $apiObj->processPayment){
+            $convRate = $apiObj->userObj->memObj->get_DOL_CONV_RATE();
+            $apiObj->totalCartPrice *= $convRate;
+            $apiObj->discountCartPrice *= $convRate;
+            $apiObj->userObj->currency = "RS";
+            $apiObj->currency= "RS";
+        }
         $userData = $apiObj->memHandlerObj->getUserData($apiObj->profileid);
         $USERNAME = $userData['USERNAME'];
         $EMAIL = $userData['EMAIL'];

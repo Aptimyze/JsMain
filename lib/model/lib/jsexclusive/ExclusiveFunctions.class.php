@@ -218,7 +218,7 @@ class ExclusiveFunctions{
             }
         }
         
-        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$skipUpdate=false){
+        public function actionsToBeTakenForProfilesToBeFollowedup($arr,$client,$agent,$mailType,$skipUpdate=false){
             if(is_array($arr)){
                 if($skipUpdate == false){
                     $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
@@ -229,7 +229,9 @@ class ExclusiveFunctions{
                 $params["ENTRY_DT"] = $todaysDate;
                 $params["CLIENT_ID"] = $client;
                 $params["AGENT_USERNAME"] = $agent;
-                $params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                $params["MAIL_TYPE"] = $mailType;
+                //$params["FOLLOWUP1_DT"] = date('Y-m-d', strtotime('+1 day',  strtotime($todaysDate)));
+                $params["FOLLOWUP1_DT"] = date('Y-m-d');
                 $params["STATUS"] = "F0";
                 foreach($arr as $key => $val){
                     $params["MEMBER_ID"] = $val;
@@ -247,7 +249,7 @@ class ExclusiveFunctions{
                     $mailerInfo[0]["STATUS"] = "F0";
                     if ($lastName = $agentDetail[$agent]["LAST_NAME"])
                         $mailerInfo[0]["NAME"] .= " ".$lastName;
-                    $result = $this->getProfilesToSendProposalMail($mailerInfo);
+                    $result = $this->getProfilesToSendProposalMail($mailerInfo,true);
                     $this->sendProposalMail($result);
                 }
             }
@@ -505,7 +507,7 @@ class ExclusiveFunctions{
                 $result[$key]["NAME"] .= " ".$lastName;
         }
 
-        $result = $this->getProfilesToSendProposalMail($result);
+        $result = $this->getProfilesToSendProposalMail($result,false);
 
         return $result;
     }
@@ -538,6 +540,7 @@ class ExclusiveFunctions{
                 $sendMailData = array('process' =>'EXCLUSIVE_MAIL',
                     'data'=>array('type' => 'EXCLUSIVE_PROPOSAL_EMAIL',
                         'RECEIVER'=>$value["RECEIVER"],
+                    	'USERNAME'=>$userName,
                         'AGENT_NAME'=>$value["AGENT_NAME"],
                         'AGENT_EMAIL'=>$value["AGENT_EMAIL"],
                         'USER1'=>$value["USER1"],
@@ -601,7 +604,7 @@ class ExclusiveFunctions{
         return $clientBioData;
     }
 
-    public function getProfilesToSendProposalMail($mailerArr){
+    public function getProfilesToSendProposalMail($mailerArr,$isInstant){
         foreach($mailerArr as $key=>$value){
             $clientID = $value["CLIENT_ID"];
             $clientProfileObj = new Operator;
@@ -610,7 +613,12 @@ class ExclusiveFunctions{
         }
         $proposalObj = new billing_ExclusiveProposalMailer();
         $proposalObj->insertMailLog($mailerArr);
-        $result = $proposalObj->getProfilesToSendProposalMail();
+        if($isInstant){
+            $result = $proposalObj->getProfilesToSendProposalMail($mailerArr[0]["EMAIL"],$isInstant);
+        } else{
+            $result = $proposalObj->getProfilesToSendProposalMail('',$isInstant);
+        }
+
         if(!is_array($result))
             $result = array();
         return $result;

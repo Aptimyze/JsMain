@@ -9,6 +9,7 @@ class Dialer
         public function __construct(){
 		$this->indialerLogObj = new incentive_IN_DIALER_PROFILE_LOG();
 		$this->indialerInsObj = new incentive_IN_DIALER();
+		$this->indialerInsNewObj = new incentive_IN_DIALER_NEW();
 	}
 	// Create Temp Pool
         public function createTempPoolForDialer()
@@ -58,13 +59,20 @@ class Dialer
         }
 
 	// logging of Dialer eligible/in-eligible profiles
-	public function updateIndialerProfileLog($profileid,$username,$eligible,$filterName='',$filterValue='')
+	public function updateIndialerProfileLog($profileid,$username,$eligible,$filterName='',$filterValue='',$updateType='')
 	{
 		// data logging 
 		$this->indialerLogObj->insertProfile($profileid, $username, $eligible, $filterName, $filterValue);
 
-		// IN_DIALER eligible/in-eligible updates	
-		$this->indialerInsObj->updateDialerEligibility($profileid, $eligible);
+		// IN_DIALER eligible/in-eligible updates
+		if($updateType=='O')	
+			$this->indialerInsObj->updateDialerEligibility($profileid, $eligible);
+		elseif($updateType=='N')
+			$this->indialerInsNewObj->updateDialerEligibility($profileid, $eligible);
+		elseif(!$updateType){
+			$this->indialerInsObj->updateDialerEligibility($profileid, $eligible);
+			$this->indialerInsNewObj->updateDialerEligibility($profileid, $eligible);
+		}
 	}
 	// fetch profiles from Dialer Pool
 	public function fetchProfiles($processObj){
@@ -85,23 +93,33 @@ class Dialer
 			$jprofileObj    =new JPROFILE('newjs_slave');
 	                $purchaseObj 	=new BILLING_PURCHASES('newjs_slave');
         	        $everPaidPool  	=$purchaseObj->fetchEverPaidPool();
-
 			$excl_dnc_dt    =@date('Y-m-d',time()-(30-1)*86400);
 			$excl_ni_dt     =@date('Y-m-d',time()-(7-1)*86400);
 			$excl_cf_dt     =@date('Y-m-d',time()-(7-1)*86400);
 			$excl_d_dt      =@date('Y-m-d',time()-(30-1)*86400);
 			$fields		='USERNAME,SUBSCRIPTION,ENTRY_DT,ACTIVATED,INCOMPLETE,PHONE_FLAG,COUNTRY_RES,LAST_LOGIN_DT,MTONGUE';
+                        $inDialerPoolObj=new incentive_IN_DIALER('crm_slave');
+                        $inDialerPool   =$inDialerPoolObj->fetchDialerProfilesDetails('crm_slave');
+			$vdDiscountObj  =new billing_VARIABLE_DISCOUNT('crm_slave');
+			//$campArr	=crmParams::$salescampaignNames;
+
+			$dialerObj      =new DialerInbound();
+                        $salesRegularRangeValue =crmParams::$salesRegularValueRange;
+                        $scoreRange1    =$salesRegularRangeValue['SCORE1'];
+                        $scoreRange2    =$salesRegularRangeValue['SCORE2'];
+                        $scoreRange3    =$salesRegularRangeValue['SCORE3'];
+                        $discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
+                        $discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
 			
 			foreach($profileArr as $k => $dataFieldArr){
 
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
 	
-                        	if($analyticScore<70 || $analyticScore>100){
-                        	        $this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
-					continue;	
-				}
-	
+                                if($analyticScore<70){
+                                	$this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
+                                        continue;  
+				}     
 				$memStatus 	=$alertsObj->fetchMembershipStatus($profileid);
 				$memCall   	=$memStatus["MEMB_CALLS"];
 				$offerCall	=$memStatus["OFFER_CALLS"];
@@ -157,7 +175,33 @@ class Dialer
 				$logincFreqCheck =$this->loginFrequencyFilter($profileid,$username,$dispEntryDt,$jProfileArr['ENTRY_DT']);
 				if(!$logincFreqCheck)
 					continue;
-				$this->updateIndialerProfileLog($profileid,$username,'Y');
+
+				// New code
+                                $campaignName   =$inDialerPool[$profileid]['CAMPAIGN_NAME'];
+				if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3){
+					$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+					$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+				}
+				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2){
+                                        $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
+                                        $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
+
+					if($campaignName=='noida' || $campaignName=='delhi'){
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+					}	
+					elseif($campaignName=='mumbai' || $campaignName=='pune'){
+						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+					}
+					if($discount>=$discountRange1 && $discount<=$discountRange2){
+						if($profileid%4==2 || $profileid%4==3)
+							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+						else
+							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+					}
+					else
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
+				}	
+				//$this->updateIndialerProfileLog($profileid,$username,'Y');
 				unset($jProfileArr);
 				unset($dispositionDetArr);
 				unset($dispEntryDtArr);

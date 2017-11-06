@@ -1323,8 +1323,8 @@ class ContactsMemcache {
     $responsedArr = $dbObj->getRespondedCount($this->_getProfileId(), "TIME > '$back_90_days 00:00:00'");
     if (is_array($responsedArr)) {
       foreach ($responsedArr as $key => $val) {
+          if ($val[ContactsMemcache::FILTERED] !== "Y" && $val[ContactsMemcache::FILTERED] !== "J") {
         if ($val[ContactsMemcache::TYPE] === ContactsMemcache::INITIATED) {
-          if ($val[ContactsMemcache::FILTERED] !== "Y") {
             $awaiting_response += $val[ContactsMemcache::COUNT];
           }
           else {

@@ -5,12 +5,14 @@
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
     var primaryEmail = '~$primaryEmail`';
     var isIphone = '~$isIphone`';
+    var fromDetailedAction='~$fromDetailedAction`';
+    var redirectViewProfileUrl='~$redirectViewProfileUrl`';
     function validateAndSend()
     {
             var altEmailUser = ($("#altEmailInpCAL").val()).trim();
             var validation=validateAlternateEmail(altEmailUser,primaryEmail);
             if(validation.valid!==true)
-            {  
+            {
                 showError(validation.errorMessage);
                 CALButtonClicked=0;
                 return;
@@ -20,22 +22,24 @@
                  {
                  $.ajax({
                     url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
-                    headers: { 'X-Requested-By': 'jeevansathi' },       
+                    headers: { 'X-Requested-By': 'jeevansathi' },
                     type: 'POST',
                     success: function(response) {
                       if(response.responseStatusCode == 1)
                       {
                       showError("Something went wrong");
                       CALButtonClicked=0;
-                      return;   
+                      return;
                       }
                  $("#altEmailCAL").hide();
                  msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
+                 /* tracking for B1 */
+                 $.get("/common/criticalActionLayerTracking?layerR=13&button=B1");
                    return; 
                     }
-                });              
+                });
 
                 }
 
@@ -44,9 +48,9 @@
 
 ~if $calObject.LAYERID eq '13'`
 <script>
-  
 
-  function validateAlternateEmail(altEmail,primaryMail){        
+
+  function validateAlternateEmail(altEmail,primaryMail){
     var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
     var email = altEmail.trim();
     var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
@@ -71,7 +75,7 @@
     else if(domain == 'yahoo' || domain == 'ymail' || domain == 'rocketmail' )
     {
         if(!(len >= 4 && len <=32))
-        {   
+        {
 
             emailVerified.valid = false;
             emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
@@ -120,7 +124,7 @@
             emailVerified.valid = true;
             emailVerified.errorMessage = "A link has been sent to your email id "+altEmail+" click on the link to verify your email.";
             return emailVerified;
-     
+
     }
 </script>
 
@@ -129,33 +133,33 @@
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
 ~if $calObject.LAYERID eq '13'`
-  
+
         <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
 
       <div class="darkBackgrnd" id="altEmailCAL">
   <div class="fontlig">
-      <div style="padding: 60px 20px 0px 20px;" class="app_clrw f18 txtc">~$calObject.TEXTNEW`</div> 
+      <div style="padding: 60px 20px 0px 20px;" class="app_clrw f18 txtc">~$calObject.TEXTNEW`</div>
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
     <input id='altEmailInpCAL' type="text" class="bg4 lh60 fontthin mt30 f20 fullwid txtc" placeholder="Your alternate email">
         <div class="pt10 f15 fontlig fullwid txtc colr8A">~$calObject.TEXTUNDERINPUT`</div>
          <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
 
         <div id="CALButton" class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 115px"><span id ="CALButtonB2" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');">~$calObject.BUTTON2NEW`</span></div>
-        
+
         <div onclick="validateAndSend();" type="submit" id="submitAltEmail" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1NEW`</div>
     </div>
-  
+
 </div>
 
 
       <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
   <div class="fontlig">
-      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
+      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div>
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
          <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
-         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
-  
+
 </div>
 
   ~elseif $calObject.LAYERID ==19`
@@ -164,16 +168,16 @@
 
   <div class="br50p txtc" style='height:80px;'>
       ~if $showPhoto eq '1'`
-      ~if $gender eq 'M'`   
-        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
-        ~else`<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+      ~if $gender eq 'M'`
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`">
+        ~else`<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`">
         ~/if`
       ~/if`
     </div>
-     
+
   </div>
-   
-  <div class="txtc">   
+
+  <div class="txtc">
   <div class="fontlig white f20 pb20 color16 ">~$calObject.TITLE`</div>
   <div class="pad1 lh25 fontlig calf27 calcol1">~$discountPercentage`</div>
   <div class="pad1 lh25 fontlig f20 calcol1 pb20">~$discountSubtitle`</div>
@@ -201,9 +205,9 @@
   <div style='padding: 25px 0 8% 0;'>
   <div id='CALButtonB2' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');">~$calObject.BUTTON2`</div>
   </div>
-  
+
   ~/if`
-  
+
   </div>
 
 ~elseif $calObject.LAYERID eq '18'`
@@ -242,7 +246,7 @@
 ~elseif $calObject.LAYERID eq '25'`
 
         <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please select a Manglik Status.</div>
-        
+
         <div style="background-color: rgb(9, 9, 11);top: 0;right: 0;bottom: 0;left: 0;" class="fullheight fullwid posfix">
         <div id="occMidDiv" style='padding-top:20%;' class="posrel midDiv white">
             <div class="pb10 fontlig f19 txtc">~$calObject.TITLE`</div>
@@ -252,7 +256,7 @@
                 <div id="occSelect" class="dispibl wid90p color11 fontlig f18 vtop textTru">Select Manglik Status</div>
                 <div class="wid8p dispibl"><img class="fr" src="~$IMG_URL`/images/jsms/commonImg/arrow.png" /></div>
             </div>
-          
+
           <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
 
         </div>
@@ -329,7 +333,7 @@
             </div>
 
         </div>
- 
+
         <div id="overlayMid" class="bg4 pad3 ">
             <div id="mainHeading" class="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
             <div id="dppDescription" class="txtc color8 fontlig f17"></div>
@@ -342,7 +346,7 @@
                 <input type="submit" id="upgradeSuggestion" class="fullwid dispbl lh50 txtc f16 pinkRipple white" value="Upgrade Desired Partner Profile">
             </div>
         </div>
-    
+
   ~elseif $calObject.LAYERID ==14`
   <script>
 var altEmailUser = '~$altEmailUser`';
@@ -353,18 +357,18 @@ var altEmailUser = '~$altEmailUser`';
   <div class="br50p txtc" style='height:80px;'>
   <!-- This is the check for Photo -->
       ~if $showPhoto eq '1'`
-  <!-- This is the check for Gender -->    
+  <!-- This is the check for Gender -->
       ~if $gender eq 'M'`   <!-- Gender equal M -->
-        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`">
         ~else`      <!-- Gender otherwise -->
-        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+        <img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`">
         ~/if`
       ~/if`
     </div>
-     
+
   </div>
-   
-  <div class="txtc">   
+
+  <div class="txtc">
   <div class="fontlig white f18 pb10 color16">~$calObject.TITLE` </div>
   <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
   </div>
@@ -378,16 +382,16 @@ var altEmailUser = '~$altEmailUser`';
   </div>
   <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
   <div class="fontlig">
-      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
+      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div>
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
-         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
-         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1')"  class="pad_new app_clrw f16 txtc">OK</div>    
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1')"  class="pad_new app_clrw f16 txtc">OK</div>
     </div>
-  
+
 </div>
-  
-  
-  
+
+
+
   </div>
 
       ~elseif $calObject.LAYERID==26`
@@ -397,7 +401,7 @@ var altEmailUser = '~$altEmailUser`';
     width: 50%;
     position: relative;
 }
-</style>   
+</style>
       <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
 
 <div style="width:100%;overflow-x: hidden;">
@@ -406,12 +410,12 @@ var altEmailUser = '~$altEmailUser`';
   <div  class="posrel pad18Incomplete">
 
   <div class="br50p txtc" style='height:80px;'>
-      
+
     </div>
-     
+
   </div>
-   
-  <div class="txtc">   
+
+  <div class="txtc">
   <div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
   <div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
   </div>
@@ -421,11 +425,11 @@ var altEmailUser = '~$altEmailUser`';
   <div id='CALButtonB1' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="$('#mainContainer').css('transform','translateX(-50%)');">~$calObject.BUTTON1`</div>
   </div>
   <!--end:div-->
-  
-  </div>   
+
+  </div>
 
   <div class="childDiv bg4 " style="height:638px" resize="">
-  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div onclick="$('#mainContainer').css('transform','translateX(0%)');" class="fl wid20p white">               <i id="backBtn" class="mainsp arow2"></i></div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div> 
+  <div class="bg1">            <div class="pad1">              <div class="rem_pad1">                <div onclick="$('#mainContainer').css('transform','translateX(0%)');" class="fl wid20p white">               <i id="backBtn" class="mainsp arow2"></i></div>                <div class="fl wid60p txtc white fontthin f16 ">About me</div>
     <div id='CALButtonB2' onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" style='color:#cccccc;' class="fr txtc white f14">~$calObject.BUTTON2`</div>
 
 <!-- ngIf: bShowSkip -->                <div class="clr"></div>              </div>            </div>          </div>
@@ -445,13 +449,13 @@ var altEmailUser = '~$altEmailUser`';
     <div class="pt20" id="doneBtn" > <div  class="bg7 white lh30 dispbl txtc lh50 bggrey">Submit</div> </div>
   </div>
 </div>
-   </div> 
+   </div>
   <script>
   $('#textAboutMe').bind('input ', function(e) {
     var len = $('#textAboutMe').val().trim().length;
    // / if(len==)
    if(len>=100) $('#TACount').css('color','green');else $('#TACount').css('color','#d9475c');
- $("#TACount").html(len); 
+ $("#TACount").html(len);
 });
 
 </script>
@@ -462,16 +466,16 @@ var altEmailUser = '~$altEmailUser`';
 
 	<div class="br50p txtc" style='height:80px;'>
 			~if $showPhoto eq '1'`
-			~if $gender eq 'M'` 	
-				<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`"> 
-				~else`<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`"> 
+			~if $gender eq 'M'`
+				<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoMaleJSMS`">
+				~else`<img id="profilepic" class="image_incomplete" src="~StaticPhotoUrls::noPhotoFemaleJSMS`">
 				~/if`
 			~/if`
 		</div>
-		 
+
 	</div>
-	 
-	<div class="txtc">	 
+
+	<div class="txtc">
 	<div class="fontlig white f18 pb10 color16">~$calObject.TITLE`</div>
 	<div class="pad1 lh25 fontlig f14" style='color:#cccccc;'>~$calObject.TEXT`</div>
   </div>
@@ -486,11 +490,11 @@ var altEmailUser = '~$altEmailUser`';
   <div style='padding: 25px 0 8% 0;'>
 	<div id='CALButtonB2' class="bg7 f18 white lh30 fullwid dispbl txtc lh50" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');">~$calObject.BUTTON2`</div>
   </div>
-  
+
   ~/if`
-  
+
   </div>
-  
+
   ~else`
       <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
 
@@ -505,14 +509,12 @@ var altEmailUser = '~$altEmailUser`';
             <div id='CALPrivacy2' onclick="switchColors('#CALPrivacy2','#CALPrivacy1');$('#hideShowText').show();namePrivacy='N';" type="submit" class="dispibl f14 txtc fontlig wid49p brdrRad2 ~if $namePrivacy neq 'N'`bgBtnGrey~else`bg7~/if` lh40 app_clrw mlNeg2">Don't show my name</div>
             <div id="hideShowText" ~if $namePrivacy neq 'N'`style="display:none"~/if` class="pt10 f15 fontlig fullwid txtc colr8A">You will not be able to see names of other members.</div>
         </div>
-        
+
         <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
-        
+
         <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitName" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1`</div>
     </div>
-	
-</div>
-      
-      ~/if`
 
-    
+</div>
+
+      ~/if`
