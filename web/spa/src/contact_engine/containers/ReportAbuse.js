@@ -100,6 +100,7 @@ export default class ReportAbuse extends React.Component{
     }
 
   submitAbuse() {
+    let attParams='';
     if(this.state.selectOption == "") {
         this.showError(ErrorConstantsMapping("SelectReason"));
     } else if($i("detailReasonsLayer").value.trim().length < 25 && this.state.selectOption != "opt7" && this.state.selectOption != "opt9") {
@@ -116,7 +117,7 @@ export default class ReportAbuse extends React.Component{
             this.uploadAttachment();
             return;
           }
-
+          attParams = '&feed[attachment]=1&feed[temp_attachment_id]='+ this.tempAttachmentId;
       }
 
         let reason = $i("detailReasonsLayer").value.trim();
@@ -130,7 +131,7 @@ export default class ReportAbuse extends React.Component{
 
         let _this = this;
 
-        let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason+'&feed[attachment]=1&feed[temp_attachment_id]='+ this.tempAttachmentId;
+        let postData = '?feed[category]=Abuse&feed[mainReason]='+mainReason+'&feed[message]='+message+'&CMDSubmit=1&profilechecksum='+profilechecksum+'&reason='+reason+attParams;
         _this.setState({
           showLoader : true
         });
