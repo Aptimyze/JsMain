@@ -95,7 +95,7 @@ class ContactDetailsV2Action extends sfAction
 					unset($responseArray);
 					$responseArray["errmsglabel"] 			= "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 					$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
-					$responseArray["footerbutton"]["label"]  = "Explore Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -113,7 +113,7 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
 					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
 
-					$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+					$responseArray["footerbutton"]["newlabel"]  = "Upgrade";
 					if($dataPlan)
 					{
 						$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
@@ -182,7 +182,7 @@ class ContactDetailsV2Action extends sfAction
                         $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				
 						$responseArray["bottommsg2"]       = "Upgrade to ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." to make your phone/email visible to all matching profiles";
-						$responseArray["bottommsg"]       = "Explore Plans";
+						$responseArray["bottommsg"]       = "Upgrade";
 						$responseArray["membershipOfferMsg"] = $MembershipMessage;
 						$responseArray["bottomMsgUrl"]       = "/profile/mem_comparison.php";
 						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made contact details visible";
@@ -367,7 +367,7 @@ class ContactDetailsV2Action extends sfAction
 				 else {
 
 					$responseArray["contactdetailmsg"]       = "Become a paid member to view <br> contact details";
-					$responseArray["footerbutton"]["label"]  = "Explore Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["enable"] = true;
@@ -425,7 +425,7 @@ class ContactDetailsV2Action extends sfAction
                     {
                     	$responseArray['errMsgLabel'] = null;
                     }
-                    $responseArray["footerbutton"]["label"]  = "View Contact Details";
+                    $responseArray["footerbutton"]["label"]  = "View Contact";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
 					$responseArray["footerbutton"]["action"] = "CONTACT_DETAIL";
@@ -441,7 +441,7 @@ class ContactDetailsV2Action extends sfAction
                 $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
 				$responseArray["errmsglabel"]     = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
-				$responseArray["footerbutton"]["label"]  = "Explore Plans";
+				$responseArray["footerbutton"]["label"]  = "Upgrade";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 				$responseArray["footerbutton"]["enable"] = true;
@@ -462,7 +462,7 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
 				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
 
-				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+				$responseArray["footerbutton"]["newlabel"]  = "Upgrade";
 				if($dataPlan)
 				{
 					$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];

@@ -156,7 +156,7 @@ class postSendReminderv1Action extends sfAction
 						$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
 						if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 						{
-							$responseArray["footerbutton"]["label"]  = "Explore Plans";
+							$responseArray["footerbutton"]["label"]  = "Upgrade";
 							$responseArray["footerbutton"]["value"] = "";
 							$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						}

@@ -151,7 +151,7 @@ class postEOIv2Action extends sfAction
 					}
 
 
-					$responseArray["footerbutton"]["label"]  = "Explore Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -251,7 +251,7 @@ class postEOIv2Action extends sfAction
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 					$MembershipMessage = $data2['hamburger_message']['top'];
                     $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
-					$responseArray["footerbutton"]["label"]  = "Explore Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
