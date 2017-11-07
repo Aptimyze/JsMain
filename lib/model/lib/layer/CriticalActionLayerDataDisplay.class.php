@@ -515,7 +515,7 @@ UNLIMITED => "N",
 
 ),
 24=>array(LAYERID=>"24",
-TIMES=>"1",
+TIMES=>"255",
 MINIMUM_INTERVAL=>"72",
 TITLE=>"Get your profile Aadhaar verified",
 BUTTON1=>"Verify",
