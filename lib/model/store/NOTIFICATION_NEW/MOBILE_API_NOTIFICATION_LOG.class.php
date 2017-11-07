@@ -14,7 +14,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
         }
 	public function insert($profileid,$key,$messageId,$sent,$osType)
 	{
-        $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+        $istTime = date("Y-m-d H:i:s", strtotime('+10 hour 30 minutes'));
 		$sqlInsert = "INSERT IGNORE INTO  $this->databaseName.NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`SEND_DATE`,`SENT`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,:IST_TIME,:SENT,:OS_TYPE)";
 		$resInsert = $this->db->prepare($sqlInsert);
 		$resInsert->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
