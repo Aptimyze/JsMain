@@ -30,10 +30,12 @@ export class CheckDataPresent extends React.Component{
 
 constructor(props){
 	super(props);
+	this.GAObject = new GA();
 }
 componentDidMount(){
 	if(this.props.mountFun)this.props.mountFun();
 	this.props.restApiFun();
+	//this.GAObject.trackJsEventGA("jsms","new","1");
 }
 	render(){
 
@@ -362,8 +364,7 @@ export  class MyjsPage extends React.Component {
   		<div id="MyjsPage" style={{}}>
   			{promoView}
 	  		<div className="fullheight" id="mainContent">
-			  	<MetaTagComponents page="MyjsPage"/>
-			  	<GA ref="GAchild" />
+			  	<MetaTagComponents page="MyjsPage"/>			  	
 				<div className="perspective" id="perspective">
 					<div className="" id="pcontainer">
 									{MyjsHeadHTMLView}
