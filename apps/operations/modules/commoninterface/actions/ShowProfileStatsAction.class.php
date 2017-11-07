@@ -40,23 +40,23 @@ class ShowProfileStatsAction extends sfActions
         $this->loginProfile = OPERATOR::getInstance();
         $this->loginProfile->getDetail($this->profileid, "", "*");
 
-        $this->photoDisplay   = $this->loginProfile->getPHOTO_DISPLAY();
-        $apiProfileSectionObj = ApiProfileSections::getApiProfileSectionObj($this->loginProfile, '', '1');
-        $editDetailsObj       = new EditDetails();
-
-        $jpartnerObj = $editDetailsObj->getJpartnerObj($this);
-        $this->loginProfile->setJpartner($jpartnerObj);
-
-        $this->profilePicUrl = $editDetailsObj->getProfilePicUrl($this);
-
-        $this->otherDetailsArr = $editDetailsObj->getOtherDetails($this, $this->cid);
-
-        $this->profCompScoreArr = $editDetailsObj->getProfCompScoreDetails($this);
-
-        $myProfileArr = array();
-        $ResponseOut  = $editDetailsObj->getEditDetailsValues($this, $apiProfileSectionObj, $sectionFlag, $myProfileArr, "1");
-        unset($editDetailsObj);
-        $this->profileDetailArr = $this->getAlteredArrData($myProfileArr);
+//        $this->photoDisplay   = $this->loginProfile->getPHOTO_DISPLAY();
+//        $apiProfileSectionObj = ApiProfileSections::getApiProfileSectionObj($this->loginProfile, '', '1');
+//        $editDetailsObj       = new EditDetails();
+//
+//        $jpartnerObj = $editDetailsObj->getJpartnerObj($this);
+//        $this->loginProfile->setJpartner($jpartnerObj);
+//
+//        $this->profilePicUrl = $editDetailsObj->getProfilePicUrl($this);
+//
+//        $this->otherDetailsArr = $editDetailsObj->getOtherDetails($this, $this->cid);
+//
+//        $this->profCompScoreArr = $editDetailsObj->getProfCompScoreDetails($this);
+//
+//        $myProfileArr = array();
+//        $ResponseOut  = $editDetailsObj->getEditDetailsValues($this, $apiProfileSectionObj, $sectionFlag, $myProfileArr, "1");
+//        unset($editDetailsObj);
+//        $this->profileDetailArr = $this->getAlteredArrData($myProfileArr);
 
         $agentAllocDetailsObj = new AgentAllocationDetails();
         $crmUtilityObj        = new crmUtility();
@@ -80,7 +80,7 @@ class ShowProfileStatsAction extends sfActions
         $this->detailedProfileStatsData['show_score']    = $show_score;
         $this->detailedProfileStatsData['an_show_score'] = $an_show_score;
 
-        $this->mainProfileStatsData = $showCrmStatsObj->geMainProfileStats($this->profileDetailArr);
+        $this->mainProfileStatsData = $showCrmStatsObj->geMainProfileStats($this->loginProfile);
 	$this->mainProfileStatsData['actualUrl'] =$this->actualUrl;
 
         $this->detailedProfileStatsData["ALBUM_COUNT"] = $this->profilePicUrl["album_count"];
