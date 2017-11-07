@@ -712,7 +712,7 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $this->client = $request->getParameter('client');
         $this->agent = $request->getParameter('name');
-        $mailType = $request->getParameter('mailType');
+        $this->mailType = $request->getParameter('mailType');
         $formArr = $request->getParameter('followupForm');
         $followupObj = new billing_EXCLUSIVE_MAIL_LOG_FOR_FOLLOWUPS("newjs_masterRep");
         $exclusiveLib = new ExclusiveFunctions();
@@ -726,7 +726,7 @@ class jsexclusiveActions extends sfActions {
                 }
             }
             if(is_array($yesArr)){
-                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent, $mailType);
+                $exclusiveLib->actionsToBeTakenForProfilesToBeFollowedup($yesArr,$this->client,$this->agent, $this->mailType);
             }
             if(is_array($noArr)){
                 $followupObj->updateStatusForClientId(implode(",", $noArr),'N');
