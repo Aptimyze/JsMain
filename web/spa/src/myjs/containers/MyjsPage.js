@@ -30,12 +30,10 @@ export class CheckDataPresent extends React.Component{
 
 constructor(props){
 	super(props);
-	this.GAObject = new GA();
 }
 componentDidMount(){
 	if(this.props.mountFun)this.props.mountFun();
 	this.props.restApiFun();
-	//this.GAObject.trackJsEventGA("jsms","new","1");
 }
 	render(){
 
@@ -81,7 +79,7 @@ export  class MyjsPage extends React.Component {
 				didUpdateCall: false,
 				loaderStyle: {display:'none'}
 			}
-
+		this.GAObject = new GA();
   	}
 
   	componentDidMount()
@@ -101,7 +99,8 @@ export  class MyjsPage extends React.Component {
 			}
 		//	this.hideLoader('hide');
 		}
-
+		console.log("did mount");
+		this.GAObject.trackJsEventGA("jsms","new","1");
 	}
 
 
