@@ -8,7 +8,7 @@ import Loader from "../../common/components/Loader";
 import {commonApiCall} from '../../common/components/ApiResponseHandler.js';
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import MetaTagComponents from '../../common/components/MetaTagComponents';
-import GA from "../../common/components/GA";
+//import GA from "../../common/components/GA";
 import {Link} from "react-router-dom";
 
 class ForgotPassword extends React.Component {
