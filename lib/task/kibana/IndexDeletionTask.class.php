@@ -16,11 +16,9 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-    $currdate = date('Y.m.d', strtotime( '-8 days' ));
     // Server at which ElasticSearch and kibana is running
     $elkServer = JsConstants::$kibana['ELK_SERVER'];
     $elkPort = JsConstants::$kibana['ELASTIC_PORT'];
-    $indexName = KibanaEnums::$COOLMETRIC_INDEX.$currdate;
     // print_r(KibanaEnums::$COOLMETRIC_INDEX_DELETION_LIMIT );
     $indicesToDelete = array(
                         KibanaEnums::$COOLMETRIC_INDEX.date('Y.m.d', strtotime( KibanaEnums::$COOLMETRIC_INDEX_DELETION_LIMIT )),
