@@ -43,10 +43,17 @@ export default class GA{
         _gaq.push(['_setDomainName', this.state.j_domain]);
         _gaq.push(['_trackPageview']);
         _gaq.push(['_trackPageLoadTime']);
-        if(value){
-          _gaq.push(['_trackEvent', category, action, label, value]);
-        } else {
-          _gaq.push(['_trackEvent', category, action, label]);
+        try
+        {
+          if(value){
+            _gaq.push(['_trackEvent', category, action, label, value]);
+          } else {
+            _gaq.push(['_trackEvent', category, action, label]);
+          }
+        }
+        catch(e)
+        {
+          console.log("GA Tracking "+e+" action:"+action);
         }            
       }
     }
