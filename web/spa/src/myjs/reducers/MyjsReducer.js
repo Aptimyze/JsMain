@@ -101,7 +101,8 @@ const MyjsReducer = (state={
 					break;
 				}
 //				let newArray = arr['profiles'].slice(),
-					let oldCount = arr.total;
+					let countKey = key=='apiDataDR' ? 'no_of_results' : 'total';
+					let oldCount = parseInt(arr[countKey]);
 				//newArray.splice(action.payload.index,1);
 				arr['profiles'][action.payload.index]['dontShow'] = true;
 				state = {
@@ -109,7 +110,7 @@ const MyjsReducer = (state={
 					[key] : {
 						...arr,
 						profiles : arr['profiles'],
-						total : --oldCount
+						[countKey] : --oldCount
 					}
 				}
 				break;

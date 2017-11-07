@@ -93,6 +93,9 @@ label {
 		<input type="hidden" name="id" value="~$ID_AFF`" >
 		<input type="hidden" name="leadid" id ="leadid" value="~$leadid`"  >
 		<input type="hidden" name="secondary_source" value="~$sf_request->getParameter('secondary_source')`" >
+                ~foreach from = $campaignData key = nm item=field`
+                    <input type="hidden" name="campaignData[~$nm`]" value="~$field`" >
+                ~/foreach`
 		~if $TIEUP_SOURCE eq 'ofl_prof'`
 			<input type="hidden" name="email_is_ok" id="email_is_ok" value="1" >
 		~else`
