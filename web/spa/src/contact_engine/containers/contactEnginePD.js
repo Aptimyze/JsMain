@@ -20,9 +20,10 @@ export class contactEnginePD extends React.Component{
       showMessageOverlay:false,
       pageSource : this.props.pageSource
         };
+    this.GAObject = new GA();
   }
 
-  componentDidMount(){
+  componentDidMount(){    
   }
 
   componentWillReceiveProps(nextProps){
@@ -60,7 +61,7 @@ export class contactEnginePD extends React.Component{
         if(button.action == 'WRITE_MESSAGE')
            params = '&pagination=1';
 
-        this.refs.GAchild.trackJsEventGA("Profile Description-jsms",button.label,this.refs.GAchild.getGenderForGA());
+        this.GAObject.trackJsEventGA("Profile Description-jsms",button.label,this.GAObject.getGenderForGA());
         var temp = performAction({profilechecksum:this.props.profiledata.profilechecksum,callBFun:callBack.bind(this),button:button,extraParams:"&pageSource="+this.state.pageSource+params});
         if(!temp)return;
         this.props.showLoaderDiv();
@@ -160,7 +161,7 @@ export class contactEnginePD extends React.Component{
   render(){
 
     return (
-    <div><GA ref="GAchild" />{[this.getFrontButton(),
+    <div>{[this.getFrontButton(),
         this.getOverLayDataDisplay()]
   }</div>
   );

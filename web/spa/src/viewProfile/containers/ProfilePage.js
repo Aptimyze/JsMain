@@ -76,6 +76,7 @@ class ProfilePage extends React.Component {
         if (navigator.userAgent.indexOf(' UCBrowser/') >= 0) {
           this.state.ucbrowser = true;
         }
+        this.GAObject = new GA();
     }
 
     componentDidUpdate(prevprops) {
@@ -205,7 +206,7 @@ class ProfilePage extends React.Component {
 
         });
 
-
+        this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
     nextPrevPostDecline(){
@@ -229,7 +230,7 @@ swipeNextProfile(nextOrPrev){
       let t1,t2;
       t1 = nextOrPrev=='next' ? 'nextProfileVisit' : 'prevProfileVisit';
       t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
-      _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
+      _this.GAObject.trackJsEventGA("Profile Description-jsms",t1,"");
       _this.props.showProfile(_this, t2);
 
       if ( getCookie("AUTHCHECKSUM") )
@@ -802,7 +803,6 @@ swipeNextProfile(nextOrPrev){
         }
         return (
             <div style={this.state.profilePageStyle} id="ProfilePage">
-                <GA ref="GAchild" />
                 {metaTagView}
                 {promoView}
                 {errorView}
