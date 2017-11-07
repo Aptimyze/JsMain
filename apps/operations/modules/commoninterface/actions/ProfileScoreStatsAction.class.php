@@ -24,7 +24,7 @@ class ProfileScoreStatsAction extends sfActions
         $this->curlReq   = $request->getParameter('curlReq');
 	$this->actualUrl = $request->getParameter('actualUrl');
 
-        if (!$this->curlReq) {
+       /*  if (!$this->curlReq) {
             $key  = 'SHOW_STAT_PAGE_' . $name;
             $name = 'jstech';
             $time = 5;
@@ -35,7 +35,7 @@ class ProfileScoreStatsAction extends sfActions
                 JsMemcache::getInstance()->set($key, $name, $time);
             }
 
-        }
+        } */
 
         $this->loginProfile = OPERATOR::getInstance();
         $this->loginProfile->getDetail($this->profileid, "", "*");
