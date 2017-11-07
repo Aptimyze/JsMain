@@ -98,8 +98,7 @@ export  class MyjsPage extends React.Component {
 				this.firstApiHits(this);
 			}
 		//	this.hideLoader('hide');
-		}
-		console.log("did mount");
+		}		
 		this.GAObject.trackJsEventGA("jsms","new","1");
 	}
 
