@@ -58,8 +58,8 @@ EOF;
         $lock = $LockingService->getFileLock($file,1);
         if(!$lock)
         	successfullDie();
-        
-        
+        	
+       
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictTrends;
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictNonTrends;
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedNonTrends;
@@ -114,10 +114,12 @@ EOF;
                                 }
                                 
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
-        $data["mailSentDate"] = date("Y-m-d H:i:s");
+				
+				$data["mailSentDate"] = date("Y-m-d H:i:s");   
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
+				
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
                 $this->setMatchAlertNotificationCache($data);
 			}
@@ -184,7 +186,11 @@ EOF;
   protected function getSubjectAndBody($firstUser,$count,$logic,$profileId,$dppLink="")
   {
 	$subject = array();
+	$defaultTimezone=date_default_timezone_get();
+    date_default_timezone_set('Asia/Kolkata');// changing into IST
 	$today = date("d M");
+	date_default_timezone_set($defaultTimezone); // Changing back to default
+
         $matchStr = " Matches";
         $these = ' these';
         if($count==1){
