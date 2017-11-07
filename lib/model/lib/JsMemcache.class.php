@@ -1065,6 +1065,30 @@ class JsMemcache extends sfMemcacheCache{
  		}
 
 	}
-  
+
+    public function zScorePipelining($key,$profileIdArr){
+        if(self::isRedis()) {
+            if($this->client) {
+                try {
+                    $pipe = $this->client->pipeline();
+
+                    foreach($profileIdArr as $k=>$value) {
+                        $pipe->zScore($key,$value);
+                    }
+                    $resultArr = $pipe->execute();
+                    foreach($resultArr as $key=>$val) {
+                        if($val) {
+                            $finalArr[] = $profileIdArr[$key];
+                        }
+                    }
+                    return $finalArr;
+                }
+                catch (Exception $e) {
+                    jsException::log("D-redisClusters($key)".$e->getMessage());
+                    return false;
+                }
+            }
+        }
+    }
 }
 ?>

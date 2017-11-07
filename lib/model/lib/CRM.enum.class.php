@@ -44,6 +44,9 @@ class crmParams
 	public static $crmCsvTables                     =array("DAILY_GHARPAY"=>"incentive_GHARPAY_CSV_DATA","QA_ONLINE"=>"incentive_QA_ONLINE_CSV_DATA");
 	public static $campaignNames			=array('renewal'=>'JS_RENEWAL','renewalMah'=>'OB_RENEWAL_MAH');
 
+        // CRM Mailer Process
+        public static $maxProfileIdRetrievalLimit       = 5;
+        
 	// Field Sales Process	
 	public static $fieldSalesIgnoreCommunity	=array(1,3,16,17,31);
 	public static $fieldSalesPincodeMappedCity      =array("DE00","MH04","MH08");

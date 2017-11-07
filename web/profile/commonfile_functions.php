@@ -205,7 +205,7 @@ $css_arr[]=array("jsms/common/verificationIcon_css"   => "5");
 $css_arr[]=array("rippleEffectCommon_css"   => "5");
 $css_arr[]=array("jsms/common/disableRightClick_css"   => "5");
 $css_arr[]=array("jsms/profile/horoscope/horoscope_css"   => "4");
-$css_arr[]=array("operations/showStatViewProfile_css"   => "4");
+$css_arr[]=array("operations/showStatViewProfile_css"    => "5");
 $css_arr[]=array("operations/help_module"   => "4");
 $css_arr[]=array("jspc/chat/chat_css"   => "18");
 $css_arr[]=array("jspc/help/JSPCHelp_css"   => "11");
@@ -258,6 +258,7 @@ $css_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $css_arr[]=array("jspc/static/postWeddingServices_css"    => "2");
 $css_arr[]=array(""    => "2");
 $css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
+$css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
