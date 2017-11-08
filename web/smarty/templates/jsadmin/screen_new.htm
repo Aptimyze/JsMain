@@ -43,12 +43,14 @@
 			/*
 				This function is written for dynamic resizing of textareas.
 			 */
-			var maxHeight = 100;
+			var maxHeight = 150;
 			$('textarea').each(function () {
 			  this.style.width = '480 px';
-			  height = (this.scrollHeight>maxHeight)?maxHeight:this.scrollHeight;
+			  if($(this).hasClass()!="backdrop"){
+			  height = ((this.scrollHeight>maxHeight)?maxHeight:this.scrollHeight) + 2;
 			  this.setAttribute('style', 'height:' + (height) + 'px;');
 			  handleCorrection(this);
+			  }
 			  if($(this).attr("data")){
 				  
 				handleInput(this);
@@ -685,7 +687,7 @@
 						<td >&nbsp;</td>
 						<td><textarea name="EDUCATION" rows="3" cols="76" class="textboxes1 textarea">~$EDUCATIONvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_EDUCATION`
+					~if $OBSCENE_EDUCATION || $OBSCENE_WORDS_EDUCATION`
 						~$OBSCENE_MESSAGE_EDUCATION`
 						<tr id="td_obscene_EDUCATION">
 						<td>&nbsp;</td>
@@ -777,7 +779,7 @@
 							<p> Total Characters: <span id="count_character_about"></span></p>
 						</td>
 					</tr>
-					~if $OBSCENE_YOURINFO`
+					~if $OBSCENE_YOURINFO || $OBSCENE_WORDS_YOURINFO`
 						~$OBSCENE_MESSAGE_INFO`
 						<tr id="td_obscene_YOURINFO">
 						<td>&nbsp;</td>
@@ -839,7 +841,7 @@
 						<td>&nbsp;</td>
 						<td><textarea name="FAMILYINFO" cols="60" rows="8" class="textboxes1 textarea">~$FAMILYINFOvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_FAMILYINFO`
+					~if $OBSCENE_FAMILYINFO || $OBSCENE_WORDS_FAMILYINFO`
 						~$OBSCENE_MESSAGE_FAMILY`
 						<tr id="td_obscene_FAMILYINFO">
 						<td>&nbsp;</td>
@@ -872,7 +874,7 @@
 						<td>&nbsp;</td>
 						<td><textarea name="SPOUSE" cols="60" rows="8" class="textboxes1 textarea">~$SPOUSEvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_SPOUSE`
+					~if $OBSCENE_SPOUSE || $OBSCENE_WORDS_SPOUSE`
 					<tr class="fieldsnew">
 						~$OBSCENE_MESSAGE_SPOUSE`
 					</tr>
@@ -908,7 +910,7 @@
 						<td>&nbsp;</td>
 						<td><textarea name="JOB_INFO" cols="60" rows="8" class="textboxes1 textarea">~$JOB_INFOvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_JOB_INFO`
+					~if $OBSCENE_JOB_INFO || $OBSCENE_WORDS_JOB_INFO`
 						~$OBSCENE_MESSAGE_JOBINFO`
 						<tr id="td_obscene_JOB_INFO">
 						<td>&nbsp;</td>
