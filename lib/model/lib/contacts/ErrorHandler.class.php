@@ -688,9 +688,11 @@ class ErrorHandler
 	function checkProfileNOTJunk(){
 		// units year inches rupees
 		// $Gender = $Sender->getGENDER();
+		
 		$sender = $this->contactHandlerObj->getContactObj()->getSenderObj();
 		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
-
+		if($receiver->getPROFILEID()%103>20)
+			return true;
 		$senderArr = array(
 			"age" => $sender->getAGE(),
 			"height" => $sender->getHEIGHT(),

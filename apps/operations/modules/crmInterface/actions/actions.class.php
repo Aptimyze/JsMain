@@ -1047,7 +1047,7 @@ class crmInterfaceActions extends sfActions
         $agentAllocationDetailsObj = new AgentAllocationDetails();
         $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
         $priv                      = explode('+', $priv);
-        if (in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv) || in_array('BMI', $priv)) {
             $this->showOptions = 1;
         }
     }

@@ -480,5 +480,17 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             throw new jsException($e);
         }
     }
+    
+     public function getAgentUserName($profileId) {
+        $sql = "SELECT AGENT_USERNAME FROM billing.EXCLUSIVE_SERVICING "
+                . "WHERE CLIENT_ID = :PROFILE_ID LIMIT 1";
+        
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":PROFILE_ID", $profileId, PDO::PARAM_INT);
+        $res->execute();
+        return $res->fetch(PDO::FETCH_ASSOC)["AGENT_USERNAME"];
+    }
+    
+    
 }
 ?>

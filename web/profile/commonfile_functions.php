@@ -205,7 +205,7 @@ $css_arr[]=array("jsms/common/verificationIcon_css"   => "5");
 $css_arr[]=array("rippleEffectCommon_css"   => "5");
 $css_arr[]=array("jsms/common/disableRightClick_css"   => "5");
 $css_arr[]=array("jsms/profile/horoscope/horoscope_css"   => "4");
-$css_arr[]=array("operations/showStatViewProfile_css"   => "4");
+$css_arr[]=array("operations/showStatViewProfile_css"    => "5");
 $css_arr[]=array("operations/help_module"   => "4");
 $css_arr[]=array("jspc/chat/chat_css"   => "18");
 $css_arr[]=array("jspc/help/JSPCHelp_css"   => "11");
@@ -258,6 +258,9 @@ $css_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $css_arr[]=array("jspc/static/postWeddingServices_css"    => "2");
 $css_arr[]=array(""    => "2");
 $css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
+$css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
+$css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSAGE_LOG"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -483,7 +486,7 @@ $js_arr[]=array("jsms/membership/shimmer_js" => "2");
 $js_arr[]=array("jsms/utility/vSlider_js"   => "19");
 $js_arr[]=array("jsms/utility/hamSearch_js"   => "15");
 $js_arr[]=array("jsms/membership/revamp_mobile_membership" => "6");
-$js_arr[]=array("jsms/phone/phone_js"    => "29");
+$js_arr[]=array("jsms/phone/phone_js"     => "31");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_membership"   => "24");
 $js_arr[]=array("jsms/membership/new_revamp_mobile_payment"   => "15");
 $js_arr[]=array("jsms/membership/jsms_upgrade_js"   => "11");
@@ -506,7 +509,7 @@ $js_arr[]=array("jsms/angular/registration/lib/angular-resource_min" => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular-route_min" => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular-touch_min" => "2");
 $js_arr[]=array("jsms/angular/registration/scripts/app" => "5");
-$js_arr[]=array("jsms/angular/registration/scripts/controllers"        => "50");
+$js_arr[]=array("jsms/angular/registration/scripts/controllers"         => "52");
 $js_arr[]=array("jsms/angular/registration/scripts/services" => "6");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"  => "28");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"        => "59");
@@ -738,6 +741,8 @@ $js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
 $js_arr[]=array("sw_fcm"    => "2");
+$js_arr[]=array("apps/operations/lib/Dialer"   => "1");
+$js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"     => "3");
 return $js_arr;
 }
 function getJavascript(){

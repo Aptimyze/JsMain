@@ -216,4 +216,22 @@ print_r($returnArr);die;
         }
         return $profileCache;
     }
+    
+    public function getValidNames(){
+		 $memObject=JsMemcache::getInstance();
+		 $validNameData=$memObject->getSetsAllValue('ValidNames');
+		 if(empty($validNameData)){
+           
+			  $validNameListObj = new newjs_ValidNameList($dbName="","M");
+			   $dataArrMale= $validNameListObj->getValidNames();
+			   $validNameListObj = new newjs_ValidNameList($dbName="","F");
+			   $dataArrFemale= $validNameListObj->getValidNames();
+			   $validNameData= array_unique(array_merge($dataArrMale,$dataArrFemale));
+			   
+			   $memObject->storeDataInCacheByPipeline("ValidNames",$validNameData);
+			  
+		}
+		return $validNameData;
+	}
 }
+
