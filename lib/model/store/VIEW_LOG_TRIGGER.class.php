@@ -8,10 +8,7 @@ class VIEW_LOG_TRIGGER extends TABLE{
 
     public function __construct($dbname="")
         {
-			if(!JsConstants::$communicationRep)
-				$dbname=$dbname?$dbname:"viewLogRep";
-			else
-				$dbname=$dbname?$dbname:"shard2_master";
+			$dbname=$dbname?$dbname:"viewLogRep";
 			parent::__construct($dbname);
         }
         public function updateViewTrigger($viewer,$viewed)
