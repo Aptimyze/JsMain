@@ -16,14 +16,13 @@ export default class GA{
       j_domain=j_domain.toLowerCase();
       let ucode=domainCode[j_domain];      
       
-      if(ucode)
-      {
-        this.state = {
+      this.state = {
           j_domain:j_domain,
           ucode:ucode,
           scriptLoaded: false,          
-        };
-        
+      };
+      if(ucode)
+      {      
         (function() {
           let ga = document.createElement('script'); 
           ga.type = 'text/javascript'; 
