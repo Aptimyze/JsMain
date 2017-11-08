@@ -260,6 +260,7 @@ $css_arr[]=array(""    => "2");
 $css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
 $css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
+$css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSAGE_LOG"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
