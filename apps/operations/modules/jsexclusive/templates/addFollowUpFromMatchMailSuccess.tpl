@@ -6,7 +6,7 @@
 		
 	</div>
 	<br>
-	<form name="matchmailFollowup" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/addFollowUpFromMatchMail?client=~$client`" method="post">
+	<form name="matchmailFollowup" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/addFollowUpFromMatchMail?client=~$client`&mailType=~$mailType`" method="post">
 
  		<table border="0" align="center" width="80%" table-layout="auto" style="
     border-spacing: 10px;">

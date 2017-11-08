@@ -30,7 +30,7 @@ class LoginPage extends React.Component {
         jsb9Fun.recordDataReceived(this,new Date().getTime());
         jsb9Fun.setJsb9Key(this,'JSNEWMOBLOGINURL');
         jsb9Fun.recordServerResponse(this,'-1');
-
+        this.GAObject = new GA();
         this.state = {
             insertError: false,
             errorMessage: "",
@@ -48,7 +48,7 @@ class LoginPage extends React.Component {
             this.state.showRegisterationMessage = true;
             localStorage.removeItem('lastProfilePageLocation');
 
-        }
+        }    
     }
     componentWillMount() {
         if ( document.cookie.indexOf(LOGIN_ATTEMPT_COOKIE) !== -1 )
@@ -83,6 +83,7 @@ class LoginPage extends React.Component {
        {
            this.addCaptchaDiv();
        }
+       _this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
     componentWillReceiveProps(nextProps)
@@ -165,7 +166,7 @@ class LoginPage extends React.Component {
             captcha = 1;
         }
 
-        this.refs.GAchild.trackJsEventGA("Login-jsms","Login",this.refs.GAchild.getGenderForGA());
+        this.GAObject.trackJsEventGA("Login-jsms","Login",this.GAObject.getGenderForGA());
         var validate = validateInput('email',emailVal);
         if(emailVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
@@ -229,7 +230,7 @@ class LoginPage extends React.Component {
 
         }
 
-        this.refs.GAchild.trackJsEventGA("Login-jsms","showHamburger",this.refs.GAchild.getGenderForGA());
+        this.GAObject.trackJsEventGA("Login-jsms","showHamburger",this.GAObject.getGenderForGA());
         this.refs.Hamchild.getWrappedInstance().openHam();
     }
 
@@ -261,11 +262,11 @@ class LoginPage extends React.Component {
         let appDownloadView;
         if(getAndroidVersion()) {
             appDownloadView = <div id="appLinkAndroid" className="txtc pad2">
-                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP Android",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App | 3MB only</a>
+                <a href="/static/appredirect?type=androidMobFooter" onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Download APP Android",this.GAObject.getGenderForGA())} className="f15 white fontlig">Download App | 3MB only</a>
             </div>;
         } else if(getIosVersion()) {
             appDownloadView = <div id="appLinkIos" className="txtc pad2">
-                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Download APP IOS",this.refs.GAchild.getGenderForGA())} className="f15 white fontlig">Download App</a>
+                <a href="/static/appredirect?type=iosMobFooter" onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Download APP IOS",this.GAObject.getGenderForGA())} className="f15 white fontlig">Download App</a>
             </div>;
         }
 
@@ -309,7 +310,7 @@ class LoginPage extends React.Component {
                             </div>
                             <div className="bg10 fullwid mt5">
                                 <div id="registerLink" className="wid49p fl brdr11 txtc pad12">
-                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Register",this.refs.GAchild.getGenderForGA())} className="f17 fontlig white">
+                                    <a href="/register/page1?source=mobreg4" onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Register",this.GAObject.getGenderForGA())} className="f17 fontlig white">
                                         Register
                                     </a>
                                 </div>
@@ -344,8 +345,7 @@ class LoginPage extends React.Component {
 
         return (
             <div className="scrollhid" id="LoginPage">
-                <MetaTagComponents page="LoginPage"/>
-                <GA ref="GAchild" />
+                <MetaTagComponents page="LoginPage"/>                
                 <HamMain ref="Hamchild" page="Login"></HamMain>
                 {promoView}
                 {errorView}
@@ -372,7 +372,7 @@ class LoginPage extends React.Component {
                                             {appDownloadView}
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.refs.GAchild.trackJsEventGA("Login-jsms","Hindi Site",this.refs.GAchild.getGenderForGA())} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">हिंदी में</a>
                                             </div>
                                         </div>
                                     </div>

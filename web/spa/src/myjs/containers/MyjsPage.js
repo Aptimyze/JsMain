@@ -79,7 +79,7 @@ export  class MyjsPage extends React.Component {
 				didUpdateCall: false,
 				loaderStyle: {display:'none'}
 			}
-
+		this.GAObject = new GA();
   	}
 
   	componentDidMount()
@@ -98,8 +98,8 @@ export  class MyjsPage extends React.Component {
 				this.firstApiHits(this);
 			}
 		//	this.hideLoader('hide');
-		}
-
+		}		
+		this.GAObject.trackJsEventGA("jsms","new","1");
 	}
 
 
@@ -362,8 +362,7 @@ export  class MyjsPage extends React.Component {
   		<div id="MyjsPage" style={{}}>
   			{promoView}
 	  		<div className="fullheight" id="mainContent">
-			  	<MetaTagComponents page="MyjsPage"/>
-			  	<GA ref="GAchild" />
+			  	<MetaTagComponents page="MyjsPage"/>			  	
 				<div className="perspective" id="perspective">
 					<div className="" id="pcontainer">
 									{MyjsHeadHTMLView}
