@@ -467,7 +467,13 @@ class ScreenedPicture extends Picture
 							if (false !== $result)
 							{
 								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-							}							
+							}		
+							/**
+							* Maintain ordering
+							*/					
+							if(is_array($result)){
+								usort($result, function ($a, $b) { return $a['ORDERING'] - $b['ORDERING']; });
+							}
 							$this->logCacheConsumed();
 						}
 						else
