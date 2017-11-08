@@ -44,7 +44,7 @@ class newjs_ValidNameList extends TABLE{
 		
 		public function getValidNames()
 		{
-			$sql="SELECT NAME from ".$this->tableName;
+			$sql="SELECT NAME from ".$this->tableName. " where length(NAME) > 2";
 			$resSelectDetail = $this->db->prepare($sql);
 			$resSelectDetail->execute();
 			while($rowSelectDetail=$resSelectDetail->fetch(PDO::FETCH_ASSOC)){
