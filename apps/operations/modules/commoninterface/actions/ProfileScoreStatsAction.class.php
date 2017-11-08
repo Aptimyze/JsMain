@@ -36,7 +36,7 @@ class ProfileScoreStatsAction extends sfActions
             }
 
         } */
-
+	    $this->detailedProfileStats = JsMemcache::getInstance()->get("detailedProfileStatsData");
         $this->loginProfile = OPERATOR::getInstance();
         $this->loginProfile->getDetail($this->profileid, "", "*");
 
