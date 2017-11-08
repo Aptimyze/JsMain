@@ -906,7 +906,7 @@ class NEWJS_JPROFILE extends TABLE
             $this->setConnection("newjs_master");
         try {
 
-            $sql = "update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:PROFILEID";
+            $sql = "update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             //$prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
