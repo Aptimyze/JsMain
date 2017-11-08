@@ -1,10 +1,8 @@
-import React from 'react'
-import ReactGA from 'react-ga'
+//import React from "react";
 
-export default class GA extends React.Component {
+export default class GA{
 	constructor(props) {
-  		super();
-  		this.trackJsEventGA = this.trackJsEventGA.bind(this);  		
+  		//this.trackJsEventGA = this.trackJsEventGA.bind(this);
       let domainCode = [];
       domainCode[".hindijeevansathi.in"]="UA-20942264-1";
       domainCode[".jeevansathi.co.in"]="UA-20941176-1";
@@ -17,19 +15,15 @@ export default class GA extends React.Component {
       let j_domain=host_url.match(/:\/\/[\w]{0,10}(.[^/]+)/)[1];      
       j_domain=j_domain.toLowerCase();
       let ucode=domainCode[j_domain];      
-      this.state = {
-        j_domain,
-        ucode,
-        scriptLoaded: false
-      }
+      
       if(ucode)
-      {       
-        let _gaq = _gaq || [];
-
-        _gaq.push(['_setAccount', ucode]);
-        _gaq.push(['_setDomainName', j_domain]);
-        _gaq.push(['_trackPageview']);
-        _gaq.push(['_trackPageLoadTime']);
+      {
+        this.state = {
+          j_domain:j_domain,
+          ucode:ucode,
+          scriptLoaded: false,          
+        };
+        
         (function() {
           let ga = document.createElement('script'); 
           ga.type = 'text/javascript'; 
@@ -37,55 +31,44 @@ export default class GA extends React.Component {
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           let s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-
-      //     var scriptElems = document.getElementsByTagName("script");
-      //     console.log(scriptElems);
-      //     var scriptAdded = false;
-      //     var _this = this;
-      //     for (var i = 0; i < scriptElems.length; i++) {
-      //      if(scriptElems[i].src == "http://www.google-analytics.com/ga.js") {
-      //       scriptAdded = true;
-      //     }
-      //   }
-      //   if(scriptAdded == false) 
-      //   {
-      //    let ga = document.createElement('script'); 
-      //    ga.type = 'text/javascript'; 
-      //    ga.async = true;
-      //    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      //    ga.onload = function() {
-      //     _this.state.scriptLoaded = true;
-      //   }
-      //   let s = document.getElementsByTagName('head')[0]; 
-      //   s.appendChild(ga);	
-      // }
-    }
+      }
   	}
 
-  	trackJsEventGA(category, action, label, value){ 
-		if(this.state.ucode){
-			var _gaq = window._gaq || _gaq;
-			_gaq.push(['_setAccount', 'UA-179986-1']);
-			_gaq.push(['_setDomainName', '.jeevansathi.com']);
-			if(value){
-				_gaq.push(['_trackEvent', category, action, label, value]);
-			} else {
-				_gaq.push(['_trackEvent', category, action, label]);
-			}
-		}
-	}
+  	trackJsEventGA(category, action, label, value)
+    {
+      if(this.state.ucode){
+        var _gaq = window._gaq || _gaq;
 
-  	componentDidMount() {
-  		var _this = this;
+        _gaq.push(['_setAccount', this.state.ucode]);
+        _gaq.push(['_setDomainName', this.state.j_domain]);
+        _gaq.push(['_trackPageview']);
+        _gaq.push(['_trackPageLoadTime']);
+        try
+        {
+          if(value){
+            _gaq.push(['_trackEvent', category, action, label, value]);
+          } else {
+            _gaq.push(['_trackEvent', category, action, label]);
+          }
+        }
+        catch(e)
+        {
+          console.log("GA Tracking "+e+" action:"+action);
+        }            
+      }
+    }
+
+  	/*componentDidMount() {console.log("did mount")
+  		var _this = this;      
   		if(this.state.scriptLoaded == true) {
   			this.trackJsEventGA("jsms","new","1");		
   		} else {
   			setTimeout(function(){
   				_this.trackJsEventGA("jsms","new","1");
-			},3000); 		
+			},1000); 		
   		}	
   		
-    }
+    }*/
 
     /*this function is used to get GENDER of LoggedInProfile to be used for GA.
       Expecting M/F in case of loggedIn and "" in case of LoggoutOut
@@ -103,10 +86,10 @@ export default class GA extends React.Component {
       }
     }
 
-    render() {
+    /*render() {
     	return(
     		<div></div>
     	);
 	    
-    }
+    }*/
 }

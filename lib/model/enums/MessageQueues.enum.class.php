@@ -7,6 +7,7 @@ class MessageQueues
   CONST BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT = 3; //Number of instances of BufferInstantNotificationConsumer class run at a time.  
   CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
+  CONST SCREENINGMAILERCONSUMERCOUNT = 1;  //Number of instances of ScreeningMailerConsumer class run at a time.
   CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
@@ -36,7 +37,7 @@ class MessageQueues
   CONST VIEW_LOG = "ViewLogQueue";
   CONST FALLBACK_SERVER_MSGPICK_COUNT = 10; 
   //per queue msg limit mapping
-  public static $upperMessageLimitPerQueue = array("default"=>50000,"INSTANT_NOTIFICATION_QUEUE"=>90000);
+  public static $upperMessageLimitPerQueue = array("default"=>50000,"INSTANT_NOTIFICATION_QUEUE"=>400000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE","DelayedMailQueue","MatchAlertNotification","WriteMsgDelayedQueue"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 700000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
@@ -61,6 +62,7 @@ class MessageQueues
   CONST CRONNOTIFICATION_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsQueueMessage"; //Command to start cron:cronConsumeNotificationsQueueMessageTask
   CONST CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeDiscountTrackingQueueMessage"; //Command to start cron:cronConsumeDiscountTrackingQueueMessage
   CONST CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
+  CONST CRONSCREENINGMAILERQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningMailerQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
   CONST CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeWriteMessageQUEUE"; //Command to start cron:cronConsumeWriteMessageQUEUE write message queue
   CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
   CONST CRON_BUFFER_INSTANT_NOTIFICATION_START_COMMAND = "symfony cron:cronConsumeBufferInstantNotifications";
@@ -81,6 +83,7 @@ class MessageQueues
   CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST COMMUNITY_DISCOUNT_QUEUE = "CommunityDiscountQueue";
+  CONST SCREENING_MAILER_QUEUE = "screeningMailerQueue";
   CONST CRON_CONSUME_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronConsumeCommunityDiscountQueueMessageTask";
   CONST CRON_EXECUTE_COMMUNITY_DISCOUNT_STARTCOMMAND = "symfony cron:cronExecuteCommunityDiscountConsumerTask";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -135,6 +138,7 @@ class MessageQueues
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
   const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
+  const SCREENING_MAILER = "SCREENING_MAILER";
   const DELAY_MINUTE = 15;
   const DELAY_WRITEMSG = 900 ;//60;
 

@@ -55,7 +55,7 @@
     </tr>
     <tr>
         <td>
-            ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/addFollowUpFromMatchMail?client=~$client`">Add followups from matchmail</a>
+            ~$num++`.&nbsp;&nbsp;&nbsp;&nbsp;<a href="/operations.php/jsexclusive/addFollowUpFromMatchMail?client=~$client`&mailType=MATCH_MAIL">Add followups from matchmail</a>
         </td>
     </tr>
     <tr>
@@ -66,6 +66,7 @@
             <td>
                 <input type="text" id="clientUserid" name="clientUserid" value="">
                 <input type="hidden" id="client" name ="client" value="~$client`">
+                <input type="hidden" id="mailType" name ="mailType" value="MANUAL">
             </td>
             <td>     
                 <input type="submit" name="submit" value="Submit" >
