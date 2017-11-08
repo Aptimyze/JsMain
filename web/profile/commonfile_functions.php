@@ -259,6 +259,7 @@ $css_arr[]=array("jspc/static/postWeddingServices_css"    => "2");
 $css_arr[]=array(""    => "2");
 $css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
 $css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -740,6 +741,7 @@ $js_arr[]=array("web/spa/dist/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
 $js_arr[]=array("sw_fcm"    => "2");
 $js_arr[]=array("apps/operations/lib/Dialer"   => "1");
+$js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
 return $js_arr;
 }
 function getJavascript(){
