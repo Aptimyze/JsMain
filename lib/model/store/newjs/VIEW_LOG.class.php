@@ -3,11 +3,9 @@ class VIEW_LOG extends TABLE
 {
         public function __construct($dbname="")
         {
-					if(!JsConstants::$communicationRep)
-							$dbname=$dbname?$dbname:"viewLogRep";
-					else
-							$dbname=$dbname?$dbname:"shard2_master";
-						parent::__construct($dbname);
+						
+			$dbname=$dbname?$dbname:"viewLogRep";
+			parent::__construct($dbname);
         }
         
         

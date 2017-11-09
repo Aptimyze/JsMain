@@ -261,6 +261,7 @@ $css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
 $css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
 $css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSAGE_LOG"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/register/actions/newJsmsPage1Action"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -563,9 +564,9 @@ $js_arr[]=array("jspc/myjs/myjs_js"      => "97");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"        => "121");
 $js_arr[]=array("jspc/myjs/engBarJs_js"       => "47");
 $js_arr[]=array("jspc/common/nano"   => "8");
-$js_arr[]=array("jspc/registration/registrationJspc_js"    => "46");
+$js_arr[]=array("jspc/registration/registrationJspc_js"     => "47");
 $js_arr[]=array("jspc/registration/validation_js"   => "37");
-$js_arr[]=array("jspc/common/commonJspc_js"                       => "70");
+$js_arr[]=array("jspc/common/commonJspc_js"                        => "71");
 $js_arr[]=array("jspc/search/hslider" => "3");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min" => "3");
 $js_arr[]=array("jspc/search/test1" => "3");
