@@ -288,4 +288,35 @@ class RegistrationFunctions
             $affectedRows = $jprofileObj->updateEmail($email,$email.RegistrationEnums::$emailModification.($max+1));
             return $affectedRows;
         }
+        
+        
+        /*
+        * fetching Campaign related parmeters
+        */
+       public static function getCampaignVars($request,$jsonFormat=0)
+       {     
+             foreach(RegistrationEnums::$campaignParamList as $key=>$val){
+                 $value = $request->getParameter($key);
+                 if($value && !in_array($val,$checkArr)){
+                     $campArr[$key]= $value;
+                     $checkArr[] = trim($val,'{}');
+                 }
+             }
+             if($jsonFormat)
+                return json_encode($campArr,JSON_FORCE_OBJECT);
+             return $campArr;
+       }
+       
+       /*
+        * store campaign variables
+        */
+       
+       public static function putCampaignVars($profileId,$campaignVars){
+            foreach(RegistrationEnums::$campaignParamList as $key=>$val){
+                 if($campaignVars[$key])
+                     $campArr[$key]= trim($campaignVars[$key],'{}');
+            }
+            $campVarObj = new MIS_CAMPAIGN_KEYWORD_TRACKING();
+            $campVarObj->insertEntry($profileId, $campArr);
+       }
 }

@@ -8,7 +8,7 @@ import axios from "axios";
 import {recordServerResponse, recordDataReceived,setJsb9Key} from "../../common/components/Jsb9CommonTracking";
 import {getProfileLocalStorage,setProfileLocalStorage,isPresentInLocalStorage,removeProfileLocalStorage,getProfileKeyLocalStorage,getGunaKeyLocalStorage} from "../../common/components/CacheHelper";
 import {RESPONSE_STATUS_MESSAGE_PUSH_MESSAGE} from '../../common/constants/CommonConstants'
-export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,tupleID)
+export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,containerObj,headers)
 {
 
 
@@ -39,19 +39,18 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     if( isPresentInLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl)) !== false && (callUrl.indexOf("api/v1/profile/detail") !== -1 )  ) {
       let data;
       data = getProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl));
-      
+
 
       if(typeof dispatch == 'function' && reducer != "SAVE_INFO")
       {
         dispatch({
           type: reducer,
           payload: data,
-          token: tupleID
         });
       }
     } else if(isPresentInLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl)) !== false && (callUrl.indexOf("api/v1/profile/gunascore") !== -1) ) {
       let dataGuna=getProfileLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl));
-    
+
       if(typeof dispatch == 'function' && reducer != "SAVE_INFO")
       {
         dispatch({
@@ -64,6 +63,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
     else {
 
       let params2 = typeof data=='object' ? (Object.keys(data).map((i) => i+'='+encodeURIComponent(data[i])).join('&'))  : '';
+      if(data instanceof FormData) params2 = data;
       return axios({
         method: callMethod,
         url: API_SERVER_CONSTANTS.API_SERVER +callUrl + checkSumURL + '&fromSPA=1',
@@ -73,9 +73,10 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           'withCredentials':true,
           'X-Requested-By': 'jeevansathi',
           'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+          ...headers
         },
       }).then( (response) => {
-        
+
         try{
           if(response.data.showAndBeyond){
             var url = "//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js";
@@ -128,7 +129,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
               child.id = "TopError";
               child.innerHTML = "<div class = 'fullwid top0 posfix' style='height: 10px;top:0px;z-index:101;'><div class = 'pad12_e white f15 op1'>"+response.data.responseMessage+"</div></div>";
               parent.appendChild(child);
-              
+
               if ( document.getElementById("ApiResponseHeaderTopError") != null)
               {
                 document.getElementById("ApiResponseHeaderTopError").classList.remove("dn");
@@ -190,15 +191,14 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           if(reducer == "SHOW_INFO") {
 
             setProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl),response.data);
-            
+
           } else if(reducer == "SHOW_GUNA") {
 
-            setProfileLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl),response.data);          
+            setProfileLocalStorage(CONSTANTS.GUNA_LOCAL_STORAGE__KEY,getGunaKeyLocalStorage(callUrl),response.data);
           }
           dispatch({
             type: reducer,
             payload: response.data,
-            token: tupleID
           });
         } else if(dispatch == "saveLocalNext") {
             setProfileLocalStorage(CONSTANTS.PROFILE_LOCAL_STORAGE_KEY,getProfileKeyLocalStorage(callUrl),response.data);
@@ -215,7 +215,6 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           dispatch({
             type: reducer,
             payload: {},
-            token: tupleID
           });
         }
       })
