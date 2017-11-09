@@ -53,6 +53,10 @@ class JsForm extends sfForm
                         $removeJamaat = 1;
                         
                   }
+		  if(($field_name =="country_res" && $value=="51") || ($field_name=="res_status" && $this->formValues['country_res']=="51"))
+		  {
+			$this->formValues['res_status']='';
+		  }			
 		  if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->page_obj->getFieldByName($field_name);

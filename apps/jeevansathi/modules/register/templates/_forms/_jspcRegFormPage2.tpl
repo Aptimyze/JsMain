@@ -298,7 +298,26 @@
         </div>
       </div>
     </div>
-    <!--end:Pincode--> 
+    <!--end:Pincode-->
+    <!--start:Residential status?-->
+    <div id="residentialStatus_selector" class="mt7 disp-none">
+      <!--start:error div-->
+      <div class="clearfix f14 fontlig">
+        <div class="reg-wid3 fr colr5  visHid" id="residentialStatus_error"></div>
+      </div>
+      <!--end:error div-->
+      <div class="fullwid pos_rel clearfix">
+        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="residentialStatus_box">
+          <label class="lblreg pos_abs js-residentialStatus pos1_lbl1 required" id="residentialStatus_label" data-attr="residentialStatus">Residential Status?</label>
+          <div class="js-tBox" id='residentialStatus_value' data-toSave ="res_status" data-columns="3" data-type="gridDropdown"  data-validate=true data-required=true data-fieldtype="residentialStatus">
+            <div id="residentialStatus-inputBox_set"></div>
+            <div id="residentialStatus-gridDropdown_set"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end:Residential status?-->
+ 
     <!--start:registration button-->
     <div class="fullwid mt30">
       <div class="reg-marl1"> 
