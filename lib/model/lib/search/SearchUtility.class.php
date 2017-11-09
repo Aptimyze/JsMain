@@ -355,8 +355,19 @@ class SearchUtility
 					$searchParamsSetter["L".$cluster]=$temp[0];
 					$searchParamsSetter["H".$cluster]=$temp[1];
 				}
-                                
-				if($cluster == "INCOME")
+                                if(($cluster == "INCOME" || $cluster = "INCOME_DOL") && strpos($clusterVal,"$$") !== false){
+                                        $temp = explode("$$",$clusterVal);
+                                        $rupeesValues = explode("$",$temp[0]);
+                                        $dollerValues = explode("$",$temp[1]);
+                                        $searchParamsSetter["LINCOME"] = $rArr["minIR"] = $rupeesValues[0];
+                                        $searchParamsSetter["HINCOME"] = $rArr["maxIR"] = $rupeesValues[1];
+                                        $searchParamsSetter["LINCOME_DOL"] = $dArr["minID"] = $dollerValues[0];
+                                        $searchParamsSetter["HINCOME_DOL"] = $dArr["maxID"] = $dollerValues[1];
+                                        $incomeMappingObj = new IncomeMapping($rArr,$dArr);
+                                        $incomeValues = $incomeMappingObj->getAllIncomes(1);
+                                        unset($incomeMappingObj);
+                                        $searchParamsSetter[$cluster]=implode(",",$incomeValues);
+                                }elseif($cluster == "INCOME")
 				{
 					if($temp[0]=="-" && $temp[1]=="-")	//If Rupee checkbox is unclicked i.e. dont use Rupee parameter
 					{
