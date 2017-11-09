@@ -373,7 +373,7 @@ setAadhaarCalData(){
               <div  className="posrel pt20">
               </div>
 
-              <input type="tel" id={this.calIds['aadhaarNumber']} style={{width: "80%", fontSize: "1.7em", color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}} type="text" placeholder="Aadhaar No." defaultValue={this.savedAadhaarNumber}/>
+              <input type="tel" id={this.calIds['aadhaarNumber']} style={{width: "80%", fontSize: "1.7em", color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}}  placeholder="Aadhaar No." defaultValue={this.savedAadhaarNumber}/>
               <div className="errorMessage f13 color2" style={{...this.state.errorAadhaarNumberStyle}} id={this.calIds['errorAadhaarNumber']}>
                   {this.errorAadhaarNumberText}
               </div>
