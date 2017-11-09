@@ -52,7 +52,7 @@ constructor(props){
 
 
 
-  this.errorAadhaarNumberText = "Please provide a valid aadhaar number";
+  this.errorAadhaarNumberText = "Please provide a valid Aadhaar number";
   this.errorUserNameText = "Please provide a valid name";
   this.errorConsentCheckboxText = "Consent is necessary to proceed";
 
