@@ -755,22 +755,56 @@ class ErrorHandler
 					"L" => 3, "H" => 3
 					),
 				"height" => array(
-					"L" => 3, "H" => 2
+					"L" => 3, "H" => 3
 					),
 				"income" => array(
 					"L" => 2
 					)
 				)
 			);
+
+		// $ageExtraCheck
+		$ageExtraCheck = false;
+		switch ($senderArr['gender']) {
+			case 'M':
+				if(in_array(($senderArr["age"] - $receiverArr["age"]), array(-1,0,1,2,3,4,5))){
+					$ageExtraCheck = true;
+				}
+				break;
+			case 'F':
+				if(in_array(($receiverArr['age'] - $senderArr['age']), array(-1,0,1,2,3,4,5))){
+					$ageExtraCheck = true;
+				}
+				break;
+		}
+		// $heightExtraCheck
+		$heightExtraCheck = false;
+		switch ($senderArr['gender']) {
+			case 'M':
+				if(in_array(($senderArr["height"] - $receiverArr["height"]), array(2,3,4,5,6,7))){
+					$heightExtraCheck = true;
+				}
+				break;
+			case 'F':
+				if(in_array(($receiverArr['height'] - $senderArr['height']), array(2,3,4,5,6,7))){
+					$ageExtraCheck = true;
+				}
+				break;
+		}
+
 		$junkFlag = false;
 		/* age check */
 		if(strlen($senderArr["age"]) == 0 || 
-			($senderArr["age"] >= ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) && 
-			$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"]))){
+			(($senderArr["age"] >= ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) && 
+				$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])) &&
+				$ageExtraCheck
+			)){
 			/* height check */
 			if(strlen($senderArr["height"]) == 0 || 
-				($senderArr["height"] >= ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) && 
-				$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"]))){
+				(($senderArr["height"] >= ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) && 
+								$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])) &&
+					$heightExtraCheck
+				)){
 				/* income check  */
 				if(strlen($senderArr["income"]) == 0 || 
 					($senderArr["income"] >= ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"]))){
@@ -778,6 +812,7 @@ class ErrorHandler
 					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
 						// $junkFlag = true;
 						// die();
+						// NOT JUNK IF REACHED HERE
 						return true;
 					}else{
 						$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
