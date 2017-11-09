@@ -81,7 +81,6 @@ class ShowProfileStatsAction extends sfActions
         $this->detailedProfileStatsData['an_show_score'] = $an_show_score;
         
         //storing the value in redis need to be use in another TPL
-        $this->detailedProfileStatsData['CONTACTS']['AWAITING_RESPONSE']='89';
         if(is_array($this->detailedProfileStatsData))
             JsMemcache::getInstance()->set("detailedProfileStatsData",$this->detailedProfileStatsData);
         
