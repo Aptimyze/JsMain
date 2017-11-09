@@ -81,13 +81,14 @@ class ShowProfileStatsAction extends sfActions
         $this->detailedProfileStatsData['an_show_score'] = $an_show_score;
         
         //storing the value in redis need to be use in another TPL
+        $dataKey  = 'detailedData'.$this->profileid;
         if(is_array($this->detailedProfileStatsData))
-            JsMemcache::getInstance()->set("detailedProfileStatsData",$this->detailedProfileStatsData);
+            JsMemcache::getInstance()->set($dataKey,$this->detailedProfileStatsData,300);
         
         $this->mainProfileStatsData = $showCrmStatsObj->geMainProfileStats($this->loginProfile);
-	$this->mainProfileStatsData['actualUrl'] =$this->actualUrl;
-
-        $this->detailedProfileStatsData["ALBUM_COUNT"] = $this->profilePicUrl["album_count"];
+        $this->mainProfileStatsData['actualUrl'] =$this->actualUrl;
+        $pictureServiceObj = new PictureService($this->loginProfile);
+    	$this->detailedProfileStatsData["ALBUM_COUNT"] = $pictureServiceObj->getUserUploadedPictureCount();
 
         // Bottom Link
         $this->checksum = md5($this->profileid) . "i" . $this->profileid;
