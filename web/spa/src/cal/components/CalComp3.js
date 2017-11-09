@@ -381,7 +381,7 @@ setAadhaarCalData(){
               <div  className="posrel pt20"></div>
               <div className="pad1 lh25 fontlig f14" style={{color:'#cccccc'}}>{this.calText[1]}</div>
               <input id={this.calIds['userName']} style={{color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}} type="text" defaultValue={this.calData.NAME_OF_USER}/>
-              <img src={API_SERVER_CONSTANTS.STATIC_SERVER+"/images/jspc/myjsImg/pencil.png"} className="pos-abs" style={{cursor: "pointer",right:"9px",top:"5px"}} />
+              <img src="/images/jspc/myjsImg/pencil.png" className="pos-abs" style={{cursor: "pointer",right:"9px",top:"5px"}} />
               <div className="errorMessage f13 color2" style={{...this.state.errorUserNameStyle}} id={this.calIds['errorUserName']}>
                   {this.errorUserNameText}
               </div>
