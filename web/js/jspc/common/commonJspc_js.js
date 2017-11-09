@@ -154,7 +154,7 @@ $(document).keydown(function (e) {
 $(document).ready(function (e) {
     top.document.title = document.title;
     $("#liveChatLinkFooter,#liveChatLinkHeader").click(function () {
-        $("#lc_chat_header").click();
+        window.fcWidget.open();
     });
     $(".contentHeader").each(function () {
         $(this).mCustomScrollbar();
