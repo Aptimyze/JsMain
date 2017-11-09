@@ -40,7 +40,7 @@ EOF;
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
         $dailyCron = $arguments["dailyCron"]; // daily cron
-        if($dailyCron == 1 && CommonUtility::runFeatureInDaytime(1,14)){
+        if($dailyCron == 1 && CommonUtility::runFeatureInDaytime(1,17)){
                 successfullDie();
         }
 	$mailerServiceObj = new MailerService();
