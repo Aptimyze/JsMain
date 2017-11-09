@@ -226,11 +226,14 @@ class ExclusiveMatchMailer {
 					unset($agentDetail[$key]["FIRST_NAME"]);
 					unset($agentDetail[$key]["LAST_NAME"]);
 				}
-				foreach ($newResult as $key => $value) {
+				foreach ($newResult as $key => $value) {    
 					$newResult[$key]["AGENT_DETAIL"] = $agentDetail[$result[$key]["AGENT_USERNAME"]];
 					$flag=0;
-					// print_r($value);die;
 					foreach ($value as $k => $v) {
+					    if($newResult[$key][$k]["STATUS"]=="F0"){
+					        unset($newResult[$key][$k]);
+					        continue;
+					    }
 						if(is_numeric($k))
 							$flag=1;
 						if(is_array($v)){
@@ -256,16 +259,16 @@ class ExclusiveMatchMailer {
 								$reason = explode("|", $v["FOLLOWUP_1"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" || $reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";    	    
+									if($reason[0]=="Others")
+	   							    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_1"] = $reason[0];
 							}
 							if($v["FOLLOWUP_2"]){
 								$reason = explode("|", $v["FOLLOWUP_2"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" ||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_2"] = $reason[0];
 							} 
 							if (!$v["FOLLOWUP2_DT"]) {
@@ -282,8 +285,8 @@ class ExclusiveMatchMailer {
 								$reason = explode("|", $v["FOLLOWUP_3"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_3"] = $reason[0];
 							}
 
@@ -296,13 +299,12 @@ class ExclusiveMatchMailer {
 									continue;
 								}
 							}
-							
 							if($v["FOLLOWUP_4"]){
 								$reason = explode("|", $v["FOLLOWUP_4"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								        $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_4"] = $reason[0];
 							}
 							
@@ -330,6 +332,7 @@ class ExclusiveMatchMailer {
 				}
 			}
 		}
+		
 		if(is_array($updateArr)){
 			$updateStr = implode(",", $updateArr);
 			$followupObj->updateMailerFlag($updateStr);
