@@ -107,10 +107,10 @@ more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ff
       <tr>
         <td></td>
         ~if $currency eq 'RS'`
-        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">+91 8800909042.</span></td>
-        <!-- <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1800-3010-6299.</span></td> -->
+        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td>
+        <!-- <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td> -->
         ~else`
-        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">+91 8800909042.</span></td>
+        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td>
         ~/if`
         <td></td>
       </tr>
