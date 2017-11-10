@@ -2248,6 +2248,14 @@ break;
                                         $field->setTableName("JP_MUSLIM:JAMAAT");
                                         $page_obj->setField(134,"c","",$field);
 
+
+                                        $field=new Field(37);
+                                        $field->setName("RES_STATUS");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("string");
+                                        $field->setTableName("JPROFILE:RES_STATUS");
+                                        $page_obj->setField(37,"a","",$field);
+
                                         break;
 
 
@@ -2520,7 +2528,7 @@ case 'MP4':
 						$field_array=array('YOURINFO');
 					break;
 case 'APP1':
-						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK","JAMAAT");
+						$field_array=array('RELATIONSHIP','GENDER','DTOFBIRTH','HEIGHT','COUNTRY_RES','CITY_RES','PINCODE','MSTATUS','HAVECHILD','MTONGUE','RELIGION','CASTE','EDU_LEVEL_NEW','OCCUPATION','INCOME','EMAIL','PASSWORD','PHONE_MOB','SOURCE','OTHER_UG_DEGREE','OTHER_PG_DEGREE','PG_COLLEGE','EDUCATION','DEGREE_UG','DEGREE_PG','COLLEGE','NAME_OF_USER','HOROSCOPE_MATCH',"MANGLIK","JAMAAT","RES_STATUS");
 					break;
 case 'APP2':
 						$field_array=array('YOURINFO');

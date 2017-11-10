@@ -51,7 +51,7 @@ EOF;
                 
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
-                $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
+                $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . LowDppMatchesCheck::$mailerFreq ) );
                 $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");

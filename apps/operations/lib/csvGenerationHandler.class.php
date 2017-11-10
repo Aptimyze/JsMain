@@ -1337,13 +1337,22 @@ class csvGenerationHandler
 						if($score>=$scoreRange2 && $dialerDialStatus==1){
 							$dialerEligible ='Y';
 							$dialerEligibleNew ='N';
-							$dialerDialStatusNew =2;
+							$dialerDialStatusNew =0;
 						}
 						else{
 							$dialerEligibleNew ='N';
 							$dialerDialStatusNew =$dialerDialStatus;
-							if($dialerDialStatusNew==1)
-								$dialerEligibleNew ='Y';
+							if($dialerDialStatusNew==1){
+								if($profileid%4==2 || $profileid%4==3){
+									$dialerEligibleNew ='Y';
+								}
+								else{
+									$dialerDialStatusNew=2;
+									$dialerEligibleNew ='N';
+								}
+							}
+							else
+								$dialerDialStatusNew=0;
 							$dialerDialStatus =2;		
 							$dialerEligible ='N';
 						}

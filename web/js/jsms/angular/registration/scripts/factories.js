@@ -185,7 +185,9 @@
 			{"label":"Country living in","value":notFilled,"show":"true","storeKey":"country_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":""},
 			{"label":"State living in","value":notFilled,"show":"false","storeKey":"state_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"state_res","userDecision":"","dindex":"4","tapName":'State',"dependant_tapName":""},
 			{"label":"City living in","value":notFilled,"show":"false","storeKey":"city_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_city_jspc","userDecision":"","dindex":"5","tapName":'City',"dependant_tapName":""},
-			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""}
+			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""},
+			{"label":"Residential Status","value":notFilled,"show":"false","screenName":"s2","userDecision":"","dindex":"7","dshow":"res_status","storeKey":"res_status","errorLabel":"","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","tapName":"Residential Status"},
+
 				],
 		"s3" : [
 			{"label":"Highest Education","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"edu_level_new","userDecision":"","dindex":"0","storeKey":"edu_level_new","tapName":"Highest Education"},
@@ -857,7 +859,7 @@
 
 		var fieldsStoreKey={
 			"s1":["relationship"],
-			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode"],
+			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode","res_status"],
 			"s3":["edu_level_new","pg_college","degree_pg","other_pg_degree","college","degree_ug","other_ug_degree","occupation","income"],
 			"s4":["mstatus","mtongue","religion","caste","sect","jamaat","havechild","casteNoBar","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
@@ -898,6 +900,7 @@
 				delete data["city_res"];
 				delete data["state_res"];
 				delete data["pincode"];
+				delete data["res_status"];
 			}
 			if(key=="state_res")
 			{
@@ -998,6 +1001,7 @@
 			'reg[_csrf_token]':'a4ec6e42ea632a304661bc3b8a6180cd',
 			'reg[relationship]':'',
 			'reg[gender]':'',
+			'reg[res_status]':'',
 			'reg[dtofbirth][day]':'',
 			'reg[dtofbirth][month]':'',
 			'reg[dtofbirth][year]':'',

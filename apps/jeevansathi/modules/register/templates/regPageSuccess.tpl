@@ -107,8 +107,12 @@ var prefilledData = null;
 ~if isset($pageObj->incompletePrefilledData)`
   prefilledData = ~$pageObj->incompletePrefilledData|decodevar`;
 ~/if`
+var campaignData = null;
+~if isset($pageObj->campaignData)`
+  var campaignData = ~$pageObj->campaignData|decodevar`;
+~/if`
 $(document).ready(function() {
-
+    
 	slider();
 });
 

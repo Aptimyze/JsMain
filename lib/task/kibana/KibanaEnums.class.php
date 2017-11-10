@@ -5,9 +5,30 @@
 	class KibanaEnums
 	{
 		public static $FILEBEAT_INDEX = 'filebeat-';
+		public static $FILEBEAT_INDEX_DELETION_LIMIT = '-32 days';
+
 		public static $CONSUMER_INDEX = 'consumer-';
+		public static $CONSUMER_INDEX_DELETION_LIMIT = '-3 days';
+
 		public static $OPENFIRE_INDEX = 'openfire-';
+		public static $OPENFIRE_INDEX_DELETION_LIMIT = '-7 days';
+
 		public static $COOLMETRIC_INDEX = 'coolmatric-';
+		public static $COOLMETRIC_INDEX_DELETION_LIMIT = '-8 days';
+
+		public static $ANDROIDCHAT_INDEX = 'androidchat-';
+		public static $ANDROIDCHAT_INDEX_DELETION_LIMIT = '-8 days';
+
+		public static $APACHE_INDEX = 'apache-';
+		public static $APACHE_INDEX_DELETION_LIMIT = '-8 days';
+
+		public static $RABBITTIME_INDEX = 'rabbittime-';
+		public static $RABBITTIME_INDEX_DELETION_LIMIT = '-3 days';
+		
+		public static $SERVER_INDEX = 'server-';
+		public static $SERVER_INDEX_DELETION_LIMIT = '-3 days';
+
+
 
 
 		public static $COOLMETRIC_TREND_INDEX = 'coolmetrictrends';

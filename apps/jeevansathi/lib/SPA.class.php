@@ -10,7 +10,7 @@ public function spaRedirect($request, $redirectUrl = ""){
 	}	
 	// End hindi switch code !
 
-	if((MobileCommon::isNewMobileSite() || $request->getParameter("mobile_view") == 'Y') && JsConstants::$SPA['flag']  ){
+	if((MobileCommon::isNewMobileSite() || $request->getParameter("mobile_view") == 'Y') && JsConstants::$SPA['flag'] && !strpos($_SERVER['HTTP_USER_AGENT'],"Googlebot")){
 		$spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view','login_home');
 		$nonSpaUrls = array('ownview=1');
 		$spa = 0;

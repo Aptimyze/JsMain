@@ -356,19 +356,22 @@ class phoneActions extends sfActions
   public function executeJsmsDisplay(sfWebRequest $request)
   {
   	$request->setParameter('currentPageName',"Phone Verification");
-	if($request->getParameter('fromReg'))
-		$this->fromReg = 1;
+//////////////////////////// check whether from reg or not
+
+
 	$this->groupname = $request->getParameter('groupname');
 	$this->loginData=$request->getAttribute("loginData");
 	$this->loginProfile=LoggedInProfile::getInstance();
 	$loginProfileid = $this->loginData[PROFILEID];
 	$this->loginProfile->getDetail($loginProfileid,"PROFILEID","*");
+  if($this->loginProfile->getACTIVATED()=='N')
+		$this->fromReg = 1;
 
 
 	// to check if the current profile's primary number is duplicate or not
 	if (JsCommon::showDuplicateNumberConsent($loginProfileid))
 		$this->showDuplicateConsentMsg = 'Y' ;
-	else 
+	else
 		$this->showDuplicateConsentMsg = 'N' ;
 
 	//Pixel code to run only when coming from mobile registration page 4

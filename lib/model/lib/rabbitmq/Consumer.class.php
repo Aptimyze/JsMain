@@ -210,7 +210,7 @@ class Consumer
       RabbitmqHelper::sendAlert($str);
     }
     if($codeException || $deliveryException){
-        die();
+        die("Killed due to code exception or delivery exception");
     }
   }
 }

@@ -50,7 +50,7 @@ if(authenticated($cid) || $JSIndicator==1)
 			//finding count of those profiles which are yet to be screened.
 			//$sql_new_unscreened = "SELECT COUNT(*) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) GROUP BY DAY";
       $sql_new_unscreened = <<<SQL
-        SELECT COUNT(*),DAY FROM (
+        SELECT COUNT(*) AS COUNT,DAY FROM (
         SELECT J.PROFILEID,DAYOFMONTH(MOD_DT) AS DAY 
         FROM newjs.JPROFILE J
         LEFT JOIN newjs.JPROFILE_CONTACT C
