@@ -22,8 +22,7 @@ class negativeTreatment
 
         $this->phoneLogObj      = new PHONE_VERIFIED_LOG('newjs_local111');
         $this->oldEmailObj      = new newjs_OLDEMAIL('newjs_local111');
-        $this->jprofileEmailObj = new JPROFILE('newjs_local111');
-	$this->jprofileMasterObj= new JPROFILE('newjs_master');
+        $this->jprofileEmailObj = new JPROFILE('newjs_master');
         $this->prmObj           = new jsadmin_PremiumUsers('newjs_slave');
         $this->cnt              = 1;
     }
@@ -379,7 +378,7 @@ class negativeTreatment
         );
         $profileDeleteObj->insertRecord($arrDeleteLogs);
         //End:JSC-2551:Log before pushing to RabbitMQ for deletion 
-        $jprofileObj         = $this->jprofileMasterObj;
+        $jprofileObj         = $this->jprofileEmailObj;
         $markDelObj          = new JSADMIN_MARK_DELETE;
         $ProfileDelReasonObj = new NEWJS_PROFILE_DEL_REASON;
         $AP_ProfileInfo      = new ASSISTED_PRODUCT_AP_PROFILE_INFO;

@@ -1663,8 +1663,9 @@ function getAge($newDob) {
 		$messageFinal= strtolower($messageFinal);
 		$messageArr= explode(",",$messageFinal);
 		$obscene=explode(",",strtolower(implode(",",$obscene)));
-		$result = array_intersect($messageArr, $obscene);
-		$resultstr=implode(',',array_values($result));
+		$result = array_map('trim',array_filter(array_intersect($messageArr, $obscene)));
+        $resultstr=implode(',',array_values($result));
+        $resultstr= trim($resultstr,",");
    		return $resultstr;
 	}
   
