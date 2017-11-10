@@ -207,7 +207,7 @@ hitAadhaarStatusApi(v, UserName){
         if(v.statusResponseApiFlag != 1)
         {
           this.setState({layerToShow : "successScreen"});
-          this.criticalLayerButtonsAction(this.props.calData.BUTTON2_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B1');
+          this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION2,'B1');
           v.statusResponseApiFlag = 1;
         }
       break;
