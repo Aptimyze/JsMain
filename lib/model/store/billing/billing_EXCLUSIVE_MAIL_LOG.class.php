@@ -59,8 +59,9 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
     }
     
     public function getLowAcceptanceProfiles($acceptanceCount) {
+        try {
         $sql = "SELECT DISTINCT PROFILE FROM billing.EXCLUSIVE_MAIL_LOG "
-                . "WHERE ACPT_COUNT <= :ACCEPTANCE_COUNT AND DATE(date)=CURDATE() AND PENDING_INTEREST_MAIL_STATUS = 'N'";
+                . "WHERE ACPT_COUNT <= :ACCEPTANCE_COUNT AND DATE=CURDATE() AND PENDING_INTEREST_MAIL_STATUS = 'N'";
         
         $res = $this->db->prepare($sql);
             $res->bindValue(":ACCEPTANCE_COUNT", $acceptanceCount, PDO::PARAM_INT);
@@ -70,7 +71,9 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
                 $result[] = $row["PROFILE"];
             }
             return $result;
-        
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
     }
     
     public function updatePendingInterestMailStatus($profileID, $status) {
