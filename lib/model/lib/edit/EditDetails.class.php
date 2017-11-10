@@ -64,7 +64,7 @@ class EditDetails{
 						$albumArr[$k]["pictureid"] = $v->getPICTUREID();
 						$albumArr[$k]["url"] = $v->getMainPicUrl();
 						
-						if(MobileCommon::isApp()=="I" && $v->getOrdering()=="0" && $k==0){
+						if(MobileCommon::isApp() && $v->getOrdering()=="0" && $k==0){
 							if($v->getProfilePic235Url())
 								$myProfileArr["album"]["profilePicUrl"]=$v->getProfilePic235Url();
 							else if($v->getProfilePic120Url())
