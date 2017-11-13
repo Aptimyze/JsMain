@@ -203,8 +203,12 @@ if(count($camp_array)>0)
 				}
 				if($query1!="")
 				{
+					$executeQuery = 1;
+					if($analytic_score>41 && $analytic_score<=90 && $campaign_name == 'JS_NCRNEW')
+						$executeQuery = 0;
 					//echo $query1;echo "#";
-					mssql_query($query1,$db_dialer) or logError($query1,$campaign_name,$db_dialer,1);
+					if($executeQuery)
+						mssql_query($query1,$db_dialer) or logError($query1,$campaign_name,$db_dialer,1);
 				}
 				if($query!="")
 				{

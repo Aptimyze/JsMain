@@ -124,6 +124,7 @@ foreach($resultAlarm as $row)
   if($row->mem_used >= MessageQueues::SAFE_LIMIT)
   {
     JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
+    JsMemcache::getInstance()->set("mqMemoryAlarmValue".$serverid,$row->mem_used);
     $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
     RabbitmqHelper::sendAlert($str,"default");
     
@@ -134,9 +135,10 @@ foreach($resultAlarm as $row)
     JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,false);
     
   }
-  if(($row->disk_free - $row->disk_free_limit) < MessageQueues::SAFE_LIMIT)
+  if(($row->disk_free - $row->disk_free_limit) < MessageQueues::DISK_SAFE_LIMIT)
   {
     JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
+    JsMemcache::getInstance()->set("mqDiskAlarmValue".$serverid,$row->disk_free - $row->disk_free_limit);
     $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
     
     RabbitmqHelper::sendAlert($str,"default");

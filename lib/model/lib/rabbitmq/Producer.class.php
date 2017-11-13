@@ -32,12 +32,40 @@ class Producer
 	public function __construct($useFallbackServer = true)
 	{
         $this->reqId = str_replace(".","",microtime(true));
-		if (JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER") == true || $this->serverConnection('FIRST_SERVER') == false) {
+        $memAlarmFirstServer =  JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER");
+        $diskAlarmFirstServer = JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER");
+		if ($memAlarmFirstServer == true || $diskAlarmFirstServer == true || $this->serverConnection('FIRST_SERVER') == false) {
+            if($memAlarmFirstServer == true){
+                $errorReason1 = "Error due to memordyAlarm";
+            }
+            else if($diskAlarmFirstServer == true ){
+                $errorReason1 = "Error due to diskAlarm";
+            }
+            else{
+                $errorReason1 = "Error due to no connection";
+            }
 			if (MQ::FALLBACK_STATUS == true && $useFallbackServer == true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0) {
-				if (JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER") == true || $this->serverConnection('SECOND_SERVER') == false) {
-					$str = "\nRabbitMQ Error in producer, Connection to both rabbitmq brokers failed with host-> " . JsConstants::$rabbitmqConfig['FIRST_SERVER']['HOST'] . " and " . JsConstants::$rabbitmqConfig['SECOND_SERVER']['HOST'] . "\tLine:" . __LINE__;
+                $memAlarmSecondServer =  JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER");
+                $diskAlarmSecondServer = JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER");
+				if ($memAlarmSecondServer == true || $diskAlarmSecondServer == true || $this->serverConnection('SECOND_SERVER') == false) {
+                    $firstServerDiskAlarmValue = JsMemcache::getInstance()->get("mqDiskAlarmValueFIRST_SERVER");
+                    $secondServerDiskAlarmValue = JsMemcache::getInstance()->get("mqDiskAlarmValueSECOND_SERVER");
+                    $firstServerMemoryAlarmValue = JsMemcache::getInstance()->get("mqMemoryAlarmValueFIRST_SERVER");
+                    $secondServerMemoryAlarmValue = JsMemcache::getInstance()->get("mqMemoryAlarmValueSECOND_SERVER");
+                    if($memAlarmSecondServer == true){
+                        $errorReason2 = "Error due to memordyAlarm";
+                    }
+                    else if($diskAlarmSecondServer == true ){
+                        $errorReason2 = "Error due to diskAlarm";
+                    }
+                    else{
+                        $errorReason2 = "Error due to no connection";
+                    }
+                    $alarmStr = "1stDiskAlarm:".$firstServerDiskAlarmValue."\t 2ndDiskAlarm:".$secondServerDiskAlarmValue."\t 1stMemoryAlarm:".$firstServerMemoryAlarmValue."\t 2ndMemoryAlarm:".$secondServerMemoryAlarmValue."\t ErrorReasonServer1:".$errorReason1." \t ErrorReason Server2:".$errorReason2;
+					$str = "\nRabbitMQ Error in producer, Connection to both rabbitmq brokers failed with host-> " . JsConstants::$rabbitmqConfig['FIRST_SERVER']['HOST'] . " and " . JsConstants::$rabbitmqConfig['SECOND_SERVER']['HOST'] . "\t 1sDiskAlarm: ".$alarmStr."Line:" . __LINE__;
 					RabbitmqHelper::sendAlert($str, "default");
 					$this->setRabbitMQServerConnected(0);
+                    JsMemcache::getInstance()->incrCount("Connectionlost");
 					return;
 				}
 			} else {
