@@ -71,7 +71,7 @@ class MembersLookingForMe extends SearchParamters
 				if($v=="PARTNER_COUNTRYRES")
 					$value = $this->loggedInProfileObj->getCOUNTRY_RES();
 				elseif($v=="PARTNER_CITYRES")
-					$value = $this->loggedInProfileObj->getCITY_RES();
+					$value = SearchCommonFunctions::setCityForOtherCondition($this->loggedInProfileObj->getCITY_RES());
 				elseif($v=="PARTNER_COMP")
 					$value = $this->loggedInProfileObj->getCOMPLEXION();
 				elseif($v=="PARTNER_OCC")
