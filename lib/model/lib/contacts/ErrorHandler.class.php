@@ -634,7 +634,7 @@ class ErrorHandler
 	{
 		if($this->errorTypeArr[ErrorHandler::FILTERED])
 		{
-			// die(var_dump($this->checkProfileNOTJunk()));
+			// (var_dump($this->checkProfileNOTJunk()));die();
 			if($this->checkProfileNOTJunk()){
 				$whyFlag = 0;
 				if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
@@ -687,12 +687,17 @@ class ErrorHandler
 	 */
 	function checkProfileNOTJunk(){
 		// units year inches rupees
+		$debug = false;
 		// $Gender = $Sender->getGENDER();
 		
 		$sender = $this->contactHandlerObj->getContactObj()->getSenderObj();
 		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
+
+		// added during hotfix 
+		if(!$debug)
 		if($receiver->getPROFILEID()%103>20)
 			return true;
+
 		$senderArr = array(
 			"age" => $sender->getAGE(),
 			"height" => $sender->getHEIGHT(),
@@ -721,10 +726,18 @@ class ErrorHandler
 		$receiverArr["clusture"] = $dppReligions;
 
 
+		$receiverArr["age"] = $receiver->getAGE();
+		$receiverArr["height"] = $receiver->getHEIGHT();
+
         // var_dump($senderArr); var_dump($receiverArr);
         // die();
 
+		/*$senderArr["age"]   = 19;
+		$receiverArr["age"] = 21;
+		$receiverArr["LAGE"] = 23;
+		$receiverArr["HAGE"] = 50;
 
+		$senderArr["height"] = 10;*/
 
         // var_dump(in_array($senderArr["clusture"], $receiverArr["clusture"]));
 		
@@ -767,12 +780,14 @@ class ErrorHandler
 		$ageExtraCheck = false;
 		switch ($senderArr['gender']) {
 			case 'M':
-				if(in_array(($senderArr["age"] - $receiverArr["age"]), array(-1,0,1,2,3,4,5))){
+				$v = $senderArr["age"] - $receiverArr["age"];
+				if(in_array($v, array(-1,0,1,2,3,4,5))) {
 					$ageExtraCheck = true;
 				}
 				break;
 			case 'F':
-				if(in_array(($receiverArr['age'] - $senderArr['age']), array(-1,0,1,2,3,4,5))){
+				$v = $receiverArr['age'] - $senderArr['age'];
+				if(in_array($v, array(-1,0,1,2,3,4,5))) {
 					$ageExtraCheck = true;
 				}
 				break;
@@ -781,56 +796,76 @@ class ErrorHandler
 		$heightExtraCheck = false;
 		switch ($senderArr['gender']) {
 			case 'M':
-				if(in_array(($senderArr["height"] - $receiverArr["height"]), array(2,3,4,5,6,7))){
+				$v = $senderArr["height"] - $receiverArr["height"];
+				if(in_array($v, array(2,3,4,5,6,7))) {
 					$heightExtraCheck = true;
 				}
 				break;
 			case 'F':
-				if(in_array(($receiverArr['height'] - $senderArr['height']), array(2,3,4,5,6,7))){
-					$ageExtraCheck = true;
+				$v = $receiverArr['height'] - $senderArr['height'];
+				if(in_array($v, array(2,3,4,5,6,7))) {
+					$heightExtraCheck = true;
 				}
 				break;
 		}
 
-		$junkFlag = false;
-		/* age check */
+		$log = array();
+		// age check
 		if(strlen($senderArr["age"]) == 0 || 
 			(($senderArr["age"] >= ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) && 
-				$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])) &&
-				$ageExtraCheck
-			)){
-			/* height check */
+						$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])
+						) &&
+			$ageExtraCheck
+			)) {
+			// height check
 			if(strlen($senderArr["height"]) == 0 || 
 				(($senderArr["height"] >= ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) && 
-								$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])) &&
-					$heightExtraCheck
-				)){
-				/* income check  */
+				 				$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])
+				 				) &&
+				$heightExtraCheck
+				)) {
+				// income check
 				if(strlen($senderArr["income"]) == 0 || 
 					($senderArr["income"] >= ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"]))){
-				/* religion clusture check */
-					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
+				// religion clusture check
+					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0 || 1){
 						// $junkFlag = true;
 						// die();
 						// NOT JUNK IF REACHED HERE
+						if($debug) die("- NO JUNK");
 						return true;
 					}else{
-						$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
-						$this->contactHandlerObj->setJunkData($receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture']);
+						echo $debug ? " junk_due_to_religion " : null;
+						$log["type"] = "RELIGION_JUNK";
+						$log["data"] = $receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture'];
 					}
 				}else{
-					$this->contactHandlerObj->setJunkType("INCOME_JUNK");
-					$this->contactHandlerObj->setJunkData("s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"]);
+					echo $debug ? " junk_due_to_income " : null;
+					$log["type"] = "INCOME_JUNK";
+					$log["data"] = "s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"];
 				}
 			}else{
-				$this->contactHandlerObj->setJunkType("HEIGHT_JUNK");
-				$this->contactHandlerObj->setJunkData("s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"]);
+				echo $debug ? " junk_due_to_height " : null;
+				$log["type"] = "HEIGHT_JUNK";
+				$log["data"] = "s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"];
 			}
 		}else{
-			$this->contactHandlerObj->setJunkType("AGE_JUNK");
-			$this->contactHandlerObj->setJunkData("s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"]);
+			echo $debug ? " junk_due_to_age " : null;
+			$log["type"] = "AGE_JUNK";
+			$log["data"] = "s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"];
 		}
 		// die();
+		// 
+		
+		
+		$this->contactHandlerObj->setJunkType($log["type"]);
+		$this->contactHandlerObj->setJunkData($log["data"]);
+		// var_dump($log);
+		
+		if($debug){
+			var_dump($senderArr); var_dump($receiverArr);
+			die("- JUNK");
+		}
 		return false;
 
 		// die();
