@@ -43,6 +43,7 @@ class Producer
 					$str = "\nRabbitMQ Error in producer, Connection to both rabbitmq brokers failed with host-> " . JsConstants::$rabbitmqConfig['FIRST_SERVER']['HOST'] . " and " . JsConstants::$rabbitmqConfig['SECOND_SERVER']['HOST'] . "\t 1sDiskAlarm: ".$alarmStr."Line:" . __LINE__;
 					RabbitmqHelper::sendAlert($str, "default");
 					$this->setRabbitMQServerConnected(0);
+                    JsMemcache::getInstance()->incrCount("Connectionlost");
 					return;
 				}
 			} else {
