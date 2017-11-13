@@ -61,6 +61,7 @@ if(is_array($notUpdatedFiles)){
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = sendMonitoringSMS($message,$from,$v,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $v);
         debugLog($smsState);
     }*/
     sendAlertMail(implode(",", $notUpdatedFiles));
