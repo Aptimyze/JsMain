@@ -1241,7 +1241,7 @@ class ContactsMemcache {
       return $this->_memcache;
     }
     else {
-      jsException::log("Object is not set.");
+      jsException::log("contacts memcache Object is not set.");
     }
 
   }
