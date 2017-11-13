@@ -35,7 +35,12 @@ class Producer
 		if (JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER") == true || $this->serverConnection('FIRST_SERVER') == false) {
 			if (MQ::FALLBACK_STATUS == true && $useFallbackServer == true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0) {
 				if (JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER") == true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER") == true || $this->serverConnection('SECOND_SERVER') == false) {
-					$str = "\nRabbitMQ Error in producer, Connection to both rabbitmq brokers failed with host-> " . JsConstants::$rabbitmqConfig['FIRST_SERVER']['HOST'] . " and " . JsConstants::$rabbitmqConfig['SECOND_SERVER']['HOST'] . "\tLine:" . __LINE__;
+                    $firstServerDiskAlarmValue = JsMemcache::getInstance()->get("mqDiskAlarmValueFIRST_SERVER");
+                    $secondServerDiskAlarmValue = JsMemcache::getInstance()->get("mqDiskAlarmValueSECOND_SERVER");
+                    $firstServerMemoryAlarmValue = JsMemcache::getInstance()->get("mqMemoryAlarmValueFIRST_SERVER");
+                    $secondServerMemoryAlarmValue = JsMemcache::getInstance()->get("mqMemoryAlarmValueSECOND_SERVER");
+                    $alarmStr = "1stDiskAlarm:".$firstServerDiskAlarmValue."\t 2ndDiskAlarm:".$secondServerDiskAlarmValue."\t 1stMemoryAlarm:".$firstServerMemoryAlarmValue."\t 2ndMemoryAlarm:".$secondServerMemoryAlarmValue."\t";
+					$str = "\nRabbitMQ Error in producer, Connection to both rabbitmq brokers failed with host-> " . JsConstants::$rabbitmqConfig['FIRST_SERVER']['HOST'] . " and " . JsConstants::$rabbitmqConfig['SECOND_SERVER']['HOST'] . "\t 1sDiskAlarm: ".$alarmStr."Line:" . __LINE__;
 					RabbitmqHelper::sendAlert($str, "default");
 					$this->setRabbitMQServerConnected(0);
 					return;
