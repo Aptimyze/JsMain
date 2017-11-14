@@ -234,13 +234,13 @@ class Inbox implements Module
 		$tupleService->setLoginProfileObj($this->profileObj);
                 $key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
                 $contactIdToRet = $key;
-		$keyCount = $key."_COUNT";
                 if($infoTypeNav["PAGE"] == "VISITORS"){
                     if($infoTypeNav["matchedOrAll"])
                         $key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"]."_".$infoTypeNav["matchedOrAll"];
                     else
                         $key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"]."_A";
                 }
+                $keyCount = $key."_COUNT";
 		$infoType = $infoTypeNav["PAGE"];
 		// Set limit too high as pagination not implemented in channels others than desktop for messages
 		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && ($infoTypeNav["NUMBER"]==null || MobileCommon::isApp()==null))
