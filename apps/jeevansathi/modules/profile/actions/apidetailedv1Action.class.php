@@ -325,6 +325,8 @@ class apidetailedv1Action extends sfAction
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
 		}
+                if(MobileCommon::isAndroidApp() && $this->loginProfile->getPROFILEID()%9 >= 1)
+                        $out['show_vsp'] = false;
 		//adding an extra flag which was in detailedAction but was missing from the api
 		$out["astroSent"] = $this->checkIfAstroSent();
 		return $out;
