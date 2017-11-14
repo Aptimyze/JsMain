@@ -85,4 +85,10 @@ print_R($x);die;
 //print_r($aa);
 //$aa = $pf->get("PROFILEID", "9474668", "USERNAME,AGE,ALT_MOBILE,PG_COLLEGE,CITY_BIRTH,AUTO_EXPIRY_DATE","");
 //print_r($aa);
-?>
+
+$j = new ProfileContact();
+$pid = "3777";
+$x  = $j->getArray(array("PROFILEID"=>$pid),"","","*");
+//$x  = $j->getProfileContacts("9474668");
+print_R($x);
+ProfileCacheLib::getInstance()->removeFieldsFromCache($pid,"ProfileContact");
