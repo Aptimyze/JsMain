@@ -8,10 +8,9 @@ class ServerStatus
 		$this->serverUrls = array(61=>"http://10.10.18.61/server-status",
 					62=>"http://10.10.18.62/server-status",
 					63=>"http://10.10.18.63/server-status",
-					65=>"http://10.10.18.65/server-status",
-				//	85=>"http://10.10.18.85/server-status",
-					73=>"http://10.10.18.88/server-status",
-					72=>"http://10.10.18.72/server-status");
+					73=>"http://10.10.18.73/server-status",
+					72=>"http://10.10.18.72/server-status"
+				);
 		$this->highThreshold = 0;
 		$this->midThreshold = 10;
 		$this->messages = array("high"=>":-( Khatam hai ye",
