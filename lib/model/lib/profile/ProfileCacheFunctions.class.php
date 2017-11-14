@@ -11,7 +11,7 @@ class ProfileCacheFunctions
 	{
 		return ProfileCacheConstants::PROFILE_CACHE_PREFIX.trim($key);
 	}
-	private function getRawKey($decoratedKey)
+	public static function getRawKey($decoratedKey)
 	{
 		$prefix = ProfileCacheConstants::PROFILE_CACHE_PREFIX;
 		if (substr($decoratedKey, 0, strlen($prefix)) == $prefix)
@@ -241,7 +241,7 @@ class ProfileCacheFunctions
                         $fields = self::getRelevantFields($fields, $storeName, $allStoreFields);
                         $demandedFields = self::getRelevantKeysName($fields,$prefix,'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
                 }
-                return $demandedFields;
+                return array_unique($demandedFields);
         }
         /**
      * @param $arrFields
@@ -272,6 +272,18 @@ class ProfileCacheFunctions
 			self::logThis(LoggingEnums::LOG_INFO, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
 		}
         return $array;
+    }
+    public static function getPrefixedFieldForDbData($fieldsArray,$storeName=""){
+            $prefix = self::getStorePrefix($storeName);
+            $delim = ProfileCacheConstants::KEY_PREFIX_DELIMITER;
+            if(is_array($prefix)){
+            }else{
+                    foreach($fieldsArray as $ky=>$value){
+                            $fieldsArray[$prefix.$delim.$ky] = $value;
+                            unset($fieldsArray[$ky]);
+                    }
+            }
+            return($fieldsArray);
     }
 
 }

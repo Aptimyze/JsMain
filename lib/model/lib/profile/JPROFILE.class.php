@@ -222,7 +222,6 @@ class JPROFILE
     {
         if(
             JPROFILE::ENABLE_GETFORPARTIALKEYS &&
-            !ProfileCacheFunctions::isCommandLineScript() &&
             is_array($valueArray) &&
             count($valueArray) == 1 &&
             $valueArray['PROFILEID'] &&
@@ -257,14 +256,18 @@ class JPROFILE
                 $tempValueArray['PROFILEID'] = $result['notCachedPids'];
                 $result = $result['cachedResult'];
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-                
                 if(strlen($tempValueArray['PROFILEID']) !== 0)
                 {
                     // get result from store for remaining pids
-                    $storeResult = $this->getJprofileObj()->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    if(ProfileCacheFunctions::isCommandLineScript()){
+                            $storeResult = $this->getJprofileObj()->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    }else{
+                                $storeResult = $this->getDataForNonCommandLine($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    }
                     // merge the cache result and the store result if there exists data in cache
                     $result = array_merge($result, $storeResult);
                 }
+                
                 if($result === "" || empty($result) || $result === null || $result === false)
                 {
                     LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
@@ -276,9 +279,29 @@ class JPROFILE
                 }
             }
         }
-        return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        if(ProfileCacheFunctions::isCommandLineScript()){
+                return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }else{
+                return $this->getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }
     }
-
+    private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
+        $fieldsArr = explode(",",$fields);
+        $fieldsAll = "*";
+        $storeFullResult = $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fieldsAll, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        ProfileCacheLib::getInstance()->cacheForMultiple("PROFILEID", $storeFullResult, __CLASS__);
+        if($fields == "*"){
+                return $storeFullResult;
+        }
+        $storeResult = array();
+        foreach($storeFullResult as $ky=>$storeData){
+                foreach($fieldsArr as $fieldName){
+                        $storeResult[$ky][$fieldName] = $storeData[$fieldName];
+                }
+        }
+        return $storeResult;
+        
+    }
     public function getProfileIdsThatSatisfyConditions($equality_cond_arr = '', $between_cond = '')
     {
         return $this->getJprofileObj()->getProfileIdsThatSatisfyConditions($equality_cond_arr, $between_cond);

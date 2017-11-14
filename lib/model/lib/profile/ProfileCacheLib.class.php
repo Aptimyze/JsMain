@@ -138,6 +138,7 @@ class ProfileCacheLib
     {
             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "updateCache"."\n", FILE_APPEND);
+        
         if ((false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) || (false === $this->isCached($szCriteria, $key, array_keys($paramArr), $storeName, true)))
 	{
             return false;
@@ -149,7 +150,6 @@ class ProfileCacheLib
 	{
             $bUpdateFromMysql = $this->processGenericWhereClause($key, $extraWhereCnd) ? false : true;
         }
-
         if ($bUpdateFromMysql) 
 	{
             ProfileCacheFunctions::logThis(LoggingEnums::LOG_DEBUG, "Updating from myql: Criteria: {$szCriteria} , Value: {$key} & extraWhereCnd : {$extraWhereCnd}");
@@ -363,8 +363,7 @@ class ProfileCacheLib
         file_put_contents($fileName, "processGenericWhereClause"."\n", FILE_APPEND);
         $arrData = $this->getFromLocalCache($key);
         $arrAllowedWhereCnd = array('activatedKey=1','activatedKey= 1','activatedKey = 1','activatedKey =1');
-
-        if (in_array($szWhereCnd, $arrAllowedWhereCnd) && $arrData['activatedKey'] == '1') {
+        if (in_array($szWhereCnd, $arrAllowedWhereCnd) && $arrData['bi.activatedKey'] == '1') {
             return true;
         }
 
@@ -548,28 +547,26 @@ class ProfileCacheLib
         if(false === ProfileCacheFunctions::validateCriteria($criteria)) {
             return false;
         }
-        
         //Get Relevant Fields
-        $arrFields = $this->getRelevantFields($fields, $storeName);
-        
+        $arrFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
+
         //Get Decorated keys
         $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
         
         //Get Records from Cache
         $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields,self::REDIS_BUCKET_2);
-        
         //Check data
         if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
           return false;
         }
-        
         //Remove Duplicate Suffix
+        $prefix =ProfileCacheFunctions::getStorePrefix($storeName);
         if(is_array($arrResponse) && count($arrResponse)) {
             foreach($arrResponse as $key=>$val) {
-                $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
+                    $val = ProfileCacheFunctions::getOriginalKeysNameWithValues($val,$prefix,'',self::KEY_PREFIX_DELIMITER);
+                    $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
             }
         }
-        
         //TODO : Handle Exception Cases  
         return array_values($arrResponse);
     }
@@ -583,13 +580,17 @@ class ProfileCacheLib
     {
             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "cacheForMultiple"."\n", FILE_APPEND);
+        
+        $storeData = array();
         foreach($arrResponse as $key=>$rowData){
-            $rowData = $this->addDuplicateSuffix($rowData, $storeName);
-            $arrData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $rowData;
+            //$rowData = $this->addDuplicateSuffix($rowData, $storeName);
+            $data = ProfileCacheFunctions::getPrefixedFieldForDbData($rowData,$storeName);
+            $storeData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $data;
+            //$arrData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $rowData;
             unset($arrResponse[$key]);
         }
-      
-      $this->storeForMultipleProfileInCache($arrData);
+       // print_r($storeData);die;
+      $this->storeForMultipleProfileInCache($storeData);
       //TODO : Handle Exception Cases
     }
     
@@ -608,9 +609,13 @@ class ProfileCacheLib
             continue;
         }
         if(false === $this->isDataExistInCache($value)) {
+                return false;
+          //unset($arrData[$key]);
           ProfileCacheFunctions::logThis(LoggingEnums::LOG_INFO, "Cache does not exist for {$key}");
-          return false;
         }
+      }
+      if(empty($arrData)){
+             // return false;
       }
       return true;
     }
@@ -622,8 +627,16 @@ class ProfileCacheLib
      */
     private function isDataExistInCache($arr)
     {
+            $empy =array();
       foreach($arr as $k=>$v){      
-        if(is_null($v)) return false;
+        if(is_null($v)){
+                $empy[$k] = $v;
+        }
+      }
+     // print_r($arr);
+     // print_r($empy);
+      if(count($empy) == count($arr)){
+              return false;
       }
       return true;
     }
@@ -635,6 +648,7 @@ class ProfileCacheLib
      */
     private function storeForMultipleProfileInCache($arrData)
     {
+            //print_r($arrData);die;
             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "storeForMultipleProfileInCache"."\n", FILE_APPEND);
       //Set Hash Object
@@ -838,7 +852,7 @@ class ProfileCacheLib
       }
 
       //Get Relevant Fields
-      $arrFields = $this->getRelevantFields($fields, $storeName);
+      $arrFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
       
       //Get Decorated keys
       $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
@@ -851,7 +865,8 @@ class ProfileCacheLib
 
       // Get array of profile ids for which data doesnt exist in cache
       $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
-
+//print_r($arrFields);
+//print_r($arrResponse);die;
       // Array of profile ids which exist in cache
       $cachedPids = array_diff($arrKey, $arrPids);
 

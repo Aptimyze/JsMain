@@ -84,10 +84,10 @@ class ProfileEducation
     
     //For $from== 'mailer', different handling required
     //
-    /*if (0 === strlen($from) && 
+    if (0 === strlen($from) && 
         !is_array($pid) && 
         ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__)
-      ) {*/
+      ) {
       
       $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
       
@@ -95,7 +95,7 @@ class ProfileEducation
         $bServedFromCache = true;
         $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
       }
-   // }
+    }
     
     if(strlen($from) && is_array($pid)) {
       $result = ProfileCacheLib::getInstance()->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $pid,"PROFILEID,PG_COLLEGE,PG_DEGREE,UG_DEGREE,OTHER_UG_DEGREE,OTHER_PG_DEGREE,SCHOOL,COLLEGE,OTHER_UG_COLLEGE,OTHER_PG_COLLEGE,SCREENING,EDU_LEVEL_NEW",__CLASS__);
@@ -122,11 +122,11 @@ class ProfileEducation
       $dummyResult['PROFILEID'] = $pid;
       $dummyResult['PG_COLLEGE'] = ProfileCacheConstants::NOT_FILLED;
       
-      ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult);
+      ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
     }
     
     if(is_array($pid)){
-      ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
+      ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
     }
     return $result;
   }

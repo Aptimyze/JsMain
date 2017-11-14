@@ -65,10 +65,10 @@ class ProfileContact
 			}
 
 			$result = $this->objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
-
+                                
 			if(is_array($pid_arr))
 			{
-				ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
+				ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
 			}
 
 			return $result;
