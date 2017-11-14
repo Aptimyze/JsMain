@@ -5507,14 +5507,16 @@ updateEduLevelChanges =function(eduLevelVal)
               $(this).find(".aadhardiv").addClass("edpbox1");
       });
       $("#verify-aadhaar").bind('click',function(event){
+                showCommonLoader();
                 var url="/static/criticalActionLayerDisplay";
                 var ajaxData={'layerId':24};
                 var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
                 ajaxConfig.success=function(response){
+                  hideCommonLoader();
+                  $("#outerCalContainer").remove();
                   $('body').css('overflow','hidden');
-                  $('body').prepend(response);
+                  $('body').prepend("<div id='outerCalContainer'>"+response+"</div>");
                   showLayerCommon('criticalAction-layer');
                   $('.js-overlay').unbind('click');
                 }

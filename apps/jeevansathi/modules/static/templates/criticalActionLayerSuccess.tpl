@@ -941,6 +941,11 @@ var CALInnerHtml;
 var TRYAGAINTXT = "Try Again";
 var TryAgainClick = false;
 var AadharResponseShown = false;
+
+var nameErrorObj = null;
+var aadharErrorObj = null;
+var consentErrorObj = null;
+
 function restoreContent(){
   TryAgainClick = true;
   $("#aadharField").val("");
