@@ -44,6 +44,7 @@ EOF;
 
         // get details of each profile
         $utility = new ExclusivePendingInterestUtility();
+        
         $interestDetails2 = $utility->getProfileInterestDetails($pendingInterestList);
         
         // preparing the input format for receiving the Receiver Details
@@ -57,7 +58,11 @@ EOF;
             $values = $utility->populateValueParameter($key, $value);
             $receiverDetails = $mailerServiceObj->getRecieverDetails($key, $values, $this->mailerName, $widgetArray);
             $usersList = $receiverDetails["USERS"];
-
+            
+            // check if no user is received, no further processing is needed.
+            if(empty($usersList)) {
+                break;
+            }
             $receiverDetails["USERS"] = $utility->bumpUpPhotoListing($usersList);
             if (is_array($receiverDetails)) {
                 
@@ -66,28 +71,28 @@ EOF;
             
                 $mailerLinks = $mailerServiceObj->getLinks();
                 $this->smarty->assign('mailerLinks',$mailerLinks);
-                // change to $key
-                        $agentDetails = $utility->getAgentDetails($key);        
-                        $this->smarty->assign('mailerName',$agentDetails["EMAIL"]);
-                
-                	$receiverDetails["AGENT_PHONE"] = $agentDetails["AGENT_PHONE"];
-                	$receiverDetails["AGENT_NAME"] = $agentDetails["AGENT_NAME"];
-                        
-                        $subjectAndBody = $utility->getSubjectAndBody();
-                        $receiverDetails["body"]=$subjectAndBody["body"];
-                        $subject = $subjectAndBody["subject"];
-                        
-                        $this->smarty->assign('data',$receiverDetails);
-                        $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
 
-                    //Sending mail and tracking sent status
-                    $flag = $mailerServiceObj->sendAndVerifyMail($receiverDetails["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$key,$agentDetails["EMAIL"],$agentDetails["AGENT_NAME"],'','',$agentDetails["EMAIL"]);
-                    if ($flag == 'Y') {
-                        // if mail is sent successfully, update the exclusive mail log table with the status
-                        // of mail sent to pending interest column. Refer table
-                        $billingExclusiveMailLog = new billing_EXCLUSIVE_MAIL_LOG();
-                    	$billingExclusiveMailLog->updatePendingInterestMailStatus($key, 'Y');
-                    } 
+                $agentDetails = $utility->getAgentDetails($key);        
+                $this->smarty->assign('mailerName',$agentDetails["EMAIL"]);
+                
+                $receiverDetails["AGENT_PHONE"] = $agentDetails["AGENT_PHONE"];
+                $receiverDetails["AGENT_NAME"] = $agentDetails["AGENT_NAME"];
+                        
+                $subjectAndBody = $utility->getSubjectAndBody();
+                $receiverDetails["body"]=$subjectAndBody["body"];
+                $subject = $subjectAndBody["subject"];
+                        
+                $this->smarty->assign('data',$receiverDetails);
+                $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
+
+                //Sending mail and tracking sent status
+                $flag = $mailerServiceObj->sendAndVerifyMail($receiverDetails["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$key,$agentDetails["EMAIL"],$agentDetails["AGENT_NAME"],'','',$agentDetails["EMAIL"]);
+                if ($flag == 'Y') {
+                    // if mail is sent successfully, update the exclusive mail log table with the status
+                    // of mail sent to pending interest column. Refer table
+                    $billingExclusiveMailLog = new billing_EXCLUSIVE_MAIL_LOG();
+                    $billingExclusiveMailLog->updatePendingInterestMailStatus($key, 'Y');
+                    }
                 }
         }
     }

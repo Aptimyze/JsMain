@@ -1370,27 +1370,27 @@ public function getSendersPending($chunkStr)
     }
     
     public function getReceivedDetailsForMatchMailer($profilesId,$time, $type) {
-    	try {
+        try {
             $result = array();
+            $sql = "SELECT * FROM newjs.CONTACTS "
+                    . "WHERE SENDER IN ($profilesId) AND TYPE = :TYPE "
+                    . "AND TIME >= :TIME AND SEEN = 'N' "
+                    . "ORDER BY TIME DESC";
             
-            $sql = "SELECT * FROM "
-                    . "(SELECT SENDER, RECEIVER, TIME FROM CONTACTS WHERE "
-                        . "RECEIVER IN ($profilesId) AND TYPE = :TYPE "
-                        . "AND TIME >= :TIME ORDER BY TIME DESC LIMIT 5) "
-                    . "con ORDER BY con.TIME";
-			$prep = $this->db->prepare($sql);
-			$prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
-			$prep->bindValue(':TIME',$time,PDO::PARAM_STR);
-			$prep->execute();
-			$prep->setFetchMode(PDO::FETCH_ASSOC);
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(':TYPE',$type,PDO::PARAM_STR);
+            $prep->bindValue(':TIME',$time,PDO::PARAM_STR);
+            $prep->execute();
+            $prep->setFetchMode(PDO::FETCH_ASSOC);
 
-			while ($row = $prep->fetch()) {
-                            $result[$row["RECEIVER"]][$row["SENDER"]] = $row["TIME"];
-			}
-			return $result;
-    	} catch (Exception $e) {
-    		throw new jsException($e);
-    	}
+            while($row = $prep->fetch()) {
+                $result[] = $row;
+            }
+            
+            return $result;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
     }
     
     

@@ -29,6 +29,7 @@ class ExclusivePendingInterestUtility {
                         $result["SHARD3"][] = $profileId;
                     }
                 }
+                
         return $result;
     }
     
@@ -42,10 +43,11 @@ class ExclusivePendingInterestUtility {
     public function getProfileInterestDetails($profileIdArray) {
         $shardBasedProfileIds = $this->profileIdShardSeperation($profileIdArray);
         $result = array();
+        
         for($i = 1; $i <= $this->numberOfShards; $i++ ) {
             if(!empty($shardBasedProfileIds["SHARD".$i])) {
-                $result1 = $this->getShardBasedProfileInterestDetails("shard".$i."_slave", $shardBasedProfileIds["SHARD".$i]);
-                $result = $result + $result1;
+                $tempResult = $this->getShardBasedProfileInterestDetails("shard".$i."_slave", $shardBasedProfileIds["SHARD".$i]);
+                $result = $result + $tempResult;
             }
         }
         return $result;
@@ -64,7 +66,15 @@ class ExclusivePendingInterestUtility {
         $contactsObj = new newjs_CONTACTS($dbName);
         $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
         $result = $contactsObj->getReceivedDetailsForMatchMailer( implode(",", $profileIdArray), $lastWeekMailDate, $type);
-        return $result;
+
+
+        // casting result array to the required format for further processing
+        $arraySize = sizeof($result);
+        $resultArray = array();
+        for($i=0; $i < $arraySize; $i++) {
+            $resultArray[$result[$i]["SENDER"]][$result[$i]["RECEIVER"]] =  $result[$i]["TIME"];
+        }
+        return $resultArray;
     }
         
     
@@ -151,6 +161,8 @@ class ExclusivePendingInterestUtility {
     
     public function castToInputObject($data) {
         
+        
+        // picking top five results
         foreach ($data as $receiver => $sender) {
                 
                 $count = 0;
@@ -161,10 +173,27 @@ class ExclusivePendingInterestUtility {
                         break;
                 }
                 $data[$receiver] = $temp;
+                unset($temp);
         }
+
+        // reversing the values of an associative array
+        foreach ($data as $key => $value) {
+            $start = 0;
+            $end = sizeof($value)-1;
+            
+            while($start < $end) {
+                $tempValue = $value[$start];
+                $value[$start] = $value[$end];
+                $value[$end] = $tempValue;
+                $start++;
+                $end -- ;
+            }
+            $data[$key] = $value;
+        }
+            
         return $data;
     }
-    
+
     /**
      * This method separates the profiles with the photos and arranges the
      * profiles with photos at the top.
@@ -178,7 +207,6 @@ class ExclusivePendingInterestUtility {
         $result2;
         
         foreach ($userDetails as $key => $value) {
-            
             if($value->HAVEPHOTO == 'Y') {
                 $result1[] = $value;
             }
@@ -197,9 +225,7 @@ class ExclusivePendingInterestUtility {
         else {
             return $result2;
         }
-        
     }
-        
     
 }
 
