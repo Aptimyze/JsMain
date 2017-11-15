@@ -25,7 +25,10 @@
 		 */
 		$(document).ready(function()
 		{
-		 	aboutLength = $("#YOURINFO").val().length;
+		 	aboutLength=0;
+            if($("#YOURINFO").val()!=null && $("#YOURINFO").val()!=undefined){
+                aboutLength = $("#YOURINFO").val().length;
+            }
 			$("#minimum_characters_length").val("NULL");
 
 

@@ -1007,14 +1007,16 @@ class DetailedViewApi
 		$this->m_arrOut['father_occ'] = null;
 		if($objProfile->getDecoratedFamilyBackground())
 		{
-			$this->m_arrOut['father_occ'] = ApiViewConstants::$arrFatherOcc_Mapping[$objProfile->getFAMILY_BACK()];
+			//$this->m_arrOut['father_occ'] = ApiViewConstants::$arrFatherOcc_Mapping[$objProfile->getFAMILY_BACK()];
+			$this->m_arrOut['father_occ']= $objProfile->getDecoratedFamilyBackground();
 		}
 
 		//Mother Occ
 		$this->m_arrOut['mother_occ'] = null;
 		if($objProfile->getMOTHER_OCC())
 		{
-			$this->m_arrOut['mother_occ'] = ApiViewConstants::$arrMotherOcc_Mapping[$objProfile->getMOTHER_OCC()];
+			//$this->m_arrOut['mother_occ'] = ApiViewConstants::$arrMotherOcc_Mapping[$objProfile->getMOTHER_OCC()];
+			$this->m_arrOut['mother_occ'] = $objProfile->getDecoratedMotherOccupation();
 		}
 
 		//Sibling Info

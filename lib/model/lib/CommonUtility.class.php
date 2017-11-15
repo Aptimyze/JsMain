@@ -1168,5 +1168,20 @@ die;
         $from_name = "Jeevansathi Info";
         SendMail::send_email($to,$msgBody, $subject, $from,"","","","","","","1","",$from_name);
     }
+    
+    public static function logTechAlertSms($message, $phoneMob, $smsKey = "TECH_ALERTS"){
+        try{
+            $profileid = 0;
+            $smsType = "M";
+            $date = date('Y-m-d');
+            $sentStatus = "Y";
+
+            $smsDetailObj = new newjs_SMS_DETAIL();
+            $smsDetailObj->insert($profileid, $smsType, $smsKey, $message, $phoneMob, $date, $sentStatus);
+        }
+        catch(Exception $ex){
+            return;
+        }
+    }
     }
 ?>

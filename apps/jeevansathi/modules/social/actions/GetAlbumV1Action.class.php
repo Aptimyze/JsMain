@@ -78,6 +78,15 @@ class GetAlbumV1Action extends sfActions
 						{
 							foreach($album as $k=>$v)
 							{
+								if(MobileCommon::isApp() && $v->getOrdering()=="0" && $k==0){
+										if($v->getProfilePic235Url())
+												$profilePicUrl=$v->getProfilePic235Url();
+										else if($v->getMainPicUrl())
+												$profilePicUrl=$v->getMainPicUrl();
+										else
+												$profilePicUrl="";
+								}
+
 								$albumArr[$k]["pictureid"] = $v->getPICTUREID();
 								$albumArr[$k]["url"] = $v->getMainPicUrl();
 							}
@@ -123,8 +132,11 @@ class GetAlbumV1Action extends sfActions
 					{
 						if($request->getParameter("onlyCount"))
 							$respObj->setResponseBody($albumArr);
+						elseif($profilePicUrl)
+                                                        $respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos"),"profilePicUrl"=>$profilePicUrl));
 						else
-							$respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos")));
+						$respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos")));
+						
 					}
 				}
 				elseif($showLayer) //this is added in case conditional photo access layer is to be shown

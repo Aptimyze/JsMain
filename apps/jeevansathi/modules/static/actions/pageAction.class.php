@@ -28,8 +28,11 @@ class pageAction extends sfAction
 	private $staticPageArray=array("fraudalert"=>"Fraud Alert","disclaimer"=>"Terms & Conditions","thirdparty"=>"Third Party T&C","privacypolicy"=>"Privacy Policy","privacyfeatures"=>"Privacy Features");
 	public function execute($request)
 	{
+
             
 		$type=$request->getParameter("type");
+		if(!$type)
+			$type="disclaimer";
 		$this->pageName=$type;
 		$this->legalPageTabs=$this->staticPageArray;
 		//print_r($type);die;
