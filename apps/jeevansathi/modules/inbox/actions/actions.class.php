@@ -157,6 +157,11 @@ class inboxActions extends sfActions
 			switch($infoTypeId)
 			{
 				case "1":
+				if($request->getParameter("androidMyjsNew"))
+				{
+					//Do nothing
+				}
+				else{
 					$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 					if($currentCount)
 					{
@@ -191,6 +196,7 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
+				}
 					break;
 				case "9":
 					$photoRCurrentCount=$profileMemcacheObj->get("PHOTO_REQUEST_NEW");
@@ -403,7 +409,7 @@ public function executePerformV2(sfWebRequest $request)
 			{
 				$module= "ContactCenterAPP";
 				$infoTypeId = $request->getParameter("infoTypeId");
-				if($request->getParameter("JSMS_MYJS"))
+				if($request->getParameter("JSMS_MYJS") || $request->getParameter("androidMyjsNew"))
 					$fromMyjs=true;
 				else
 					$fromMyjs=false;
