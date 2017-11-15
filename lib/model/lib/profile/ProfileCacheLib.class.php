@@ -750,18 +750,17 @@ class ProfileCacheLib
     {
         //Prepend Prefix on key
         $szKey = ProfileCacheFunctions::getDecoratedKey($key);
-        
         //Get Columns to delete
-        $arrColumns = $this->getRelevantFields($fields, $storeName);
-        
+               $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
         //Remove Common Fields
-        foreach($arrColumns as $k=>$v) {
+
+        foreach($demandedFields as $k=>$v) {
             if(in_array($v, ProfileCacheConstants::$arrCommonFieldsMap))
-                unset($arrColumns[$k]);
+                unset($demandedFields[$k]);
         }
 
         
-        return $this->deleteSubFields($szKey, $arrColumns);
+        return $this->deleteSubFields($szKey, $demandedFields);
     }
     
     /**
