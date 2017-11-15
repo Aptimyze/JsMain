@@ -216,6 +216,10 @@ class ProfileCacheFunctions
 		{
 			$arrFields = ProfileCacheConstants::$arrProfileFilter;
 		}
+                else if(false !== stristr($storeName, "Jpartner")) 
+		{
+			$arrFields = ProfileCacheConstants::$arrJpartnerColumns;
+		}
 		return $arrFields;
 	}
         public static function getFinalFieldsArrayWithPrefix($storeName,$fields){
@@ -256,7 +260,7 @@ class ProfileCacheFunctions
 		} 
 		else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) 
 		{
-			$array = ProfileCacheConstants::$arrHashSubKeys;
+			$array = ProfileCacheFunctions::getAllSubKeys();
 		} 
 		else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) 
 		{
@@ -265,7 +269,7 @@ class ProfileCacheFunctions
 			{
 				$array[$k] = trim($v);
 			}
-			$array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $array);
+			$array = array_intersect(ProfileCacheFunctions::getAllSubKeys(), $array);
 		}
 		if(is_array($arrFields) && count(array_diff(array_unique($arrFields),$array)))
 		{
@@ -284,6 +288,10 @@ class ProfileCacheFunctions
                     }
             }
             return($fieldsArray);
+    }
+    
+    public static function getAllSubKeys(){
+        return array_unique(array_merge(ProfileCacheConstants::$arrJProfileColumns,ProfileCacheConstants::$arrJProfileContact,ProfileCacheConstants::$arrJpartnerColumns,ProfileCacheConstants::$arrJProfile_EducationColumns,ProfileCacheConstants::$arrNativePlaceColumns,ProfileCacheConstants::$arrAstroDetailsColumns,ProfileCacheConstants::$arrFSOColumns,ProfileCacheConstants::$arrJProfileAlertsColumn,ProfileCacheConstants::$arrAUTO_EXPIRY,ProfileCacheConstants::$arrJHobbyColumns,ProfileCacheConstants::$arrOldYourInfo,ProfileCacheConstants::$arrAutoExpiry,ProfileCacheConstants::$arrProfileFilter,ProfileCacheConstants::$arrAadharVerifyColumns));
     }
 
 }
