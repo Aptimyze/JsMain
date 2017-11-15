@@ -29,7 +29,8 @@ constructor(props){
 
     calCounter    : 10,
     Counter       : 10,// used to set calCounter when its value changed and need to come back to intiial
-    layerToShow   : "mainScreen", // timerScreen mainScreen successScreen
+    layerToShow   : "mainScreen",
+    cTextStyle    :   {paddingLeft: "8px" ,overflowY:'hidden'} // timerScreen mainScreen successScreen
   };
 
   this.calIds = {
@@ -59,10 +60,11 @@ constructor(props){
 
   this.currentWindowHeight = window.innerHeight;
   this.savedAadhaarNumber = '';
+  this.savedUserName = '';
 }
 
 hideButtons(){
-  let newClassName = (this.currentWindowHeight > window.innerHeight ) ? 'dispnone' : '';
+  let newClassName = (this.currentWindowHeight*0.60 > window.innerHeight ) ? 'dispnone' : '';
     this.setState({
       buttonClass : newClassName
     });
@@ -94,6 +96,17 @@ componentDidMount(){
   {
 
   }
+
+  let consentTextHeight = $i("consentText").offsetHeight;
+  let scrollableDivHeight = $i("scrollableDiv").offsetHeight;
+  let innerDivHeight = $i("innerDiv").offsetHeight;
+
+  if(innerDivHeight - scrollableDivHeight > 1){
+    this.setState({cTextStyle:{ height: consentTextHeight - (innerDivHeight - scrollableDivHeight) , overflowY: "hidden"}});
+    // $i("consentText").style.maxHeight = consentTextHeight - (innerDivHeight - scrollableDivHeight) - 20;
+  }
+  else 
+    $i('readMoreId').style.display = 'none';
 
   this.setState({
     
@@ -301,6 +314,7 @@ verifyButtonClickHandler(){
   var aadhaarNumber = $i(this.calIds['aadhaarNumber']).value;
   this.savedAadhaarNumber = aadhaarNumber;
   var userName = $i(this.calIds['userName']).value;
+  this.savedUserName = userName;
   var consentCheckbox = $i(this.calIds['consentCheckbox']).checked;
   // console.log(aadhaarNumber, userName, consentCheckbox);
 
@@ -354,13 +368,15 @@ criticalLayerButtonsAction(url,clickAction,button) {
 setAadhaarCalData(){
   // console.log(this.props.calData);
   // console.log(this.calData);
+  let maxHeightScrollabeDiv = (this.currentWindowHeight-105);
   return(
         <div>
         {this.state.insertError == true ? <TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError> : null}
         {this.state.layerToShow == "loadingScreen" ? <div><Loader show="page"></Loader></div> : null}
           <div style={{backgroundColor: '#09090b',height: this.currentWindowHeight}}>
 
-            <div id="scrollableDiv" style={{maxHeight: (this.currentWindowHeight-105)+'px',overflowY:'scroll'}}>
+            <div id="scrollableDiv" style={{maxHeight: maxHeightScrollabeDiv+'px',overflowY:'scroll'}}>
+            <div id="innerDiv">
               <div  className="posrel pad18Incomplete">
                 <div className="br50p txtc" style={{'height':'8px'}}>
                 </div>
@@ -380,8 +396,8 @@ setAadhaarCalData(){
               <div className="pad1 lh25 fontlig f14" style={{color:'#cccccc'}}>{this.calText[0]}</div>
               <div  className="posrel pt20"></div>
               <div className="pad1 lh25 fontlig f14" style={{color:'#cccccc'}}>{this.calText[1]}</div>
-              <input tabindex="2" id={this.calIds['userName']} style={{color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}} type="text" defaultValue={this.calData.NAME_OF_USER}/>
-              <img src="/images/jspc/myjsImg/pencil.png" className="pos-abs" style={{cursor: "pointer",right:"9px",top:"5px"}} />
+              <input tabindex="2" id={this.calIds['userName']} style={{color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}} type="text" defaultValue={this.savedUserName == '' ? this.calData.NAME_OF_USER : this.savedUserName}/>
+              <img onClick={() => {$i(this.calIds['userName']).focus();}} src="/images/jspc/myjsImg/pencil.png" className="pos-abs" style={{cursor: "pointer",right:"9px",top:"5px"}} />
               <div className="errorMessage f13 color2" style={{...this.state.errorUserNameStyle}} id={this.calIds['errorUserName']}>
                   {this.errorUserNameText}
               </div>
@@ -392,13 +408,16 @@ setAadhaarCalData(){
               <div className="errorMessage f13 padl10 color2" style={{...this.state.errorConsentCheckboxStyle}} id={this.calIds['errorConsentCheckbox']}>{this.errorConsentCheckboxText}</div>
               <div className="txtc fontlig white f14 padl10" style={{color:'#cccccc'}}>
               <input className="fl" style={{height: "17px", width : "17px"}} id={this.calIds['consentCheckbox']} type="checkbox" defaultChecked="checked" />
-              <div id="consentText" className="txtl f13" style={{paddingLeft: "8px", height: "40px",overflowY:'hidden'}}>{this.props.calData.LEGAL_TEXT}<br/><br/></div>
-              <div style={{ fontWeight : "bolder", padding: "6px"}} onClick={(e)=>{
-                let ele = $i("consentText");
-                ele.style.overflowY='auto';ele.style.height='initial';e.target.style.display='none';}}>See All</div>
+              <div id="consentText" className="txtl f13" style={this.state.cTextStyle}>{this.props.calData.LEGAL_TEXT}</div>
+              <div id="readMoreId" style={{ fontWeight : "bolder", padding: "6px"}} onClick={(e)=>
+                {
+                this.setState({cTextStyle : {overflowY:'auto',height:'initial'}});
+                e.target.style.display = 'none';  
+              }
+            }>read more</div>
               </div>
             </div>
-
+            </div>
 
           </div>
             <div  className={this.state.buttonClass} style={{bottom : "0px", position: "fixed", "width": "100%"}}>
@@ -411,12 +430,10 @@ setAadhaarCalData(){
 }
 
 setAadhaarTimerScreen(){
-  let errorView;
-  if(this.state.insertError){
-    errorView = (<TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError>);
-  }
+  
   return(
       <div>
+      {this.state.insertError == true ? <TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError> : null}
           <div style={{backgroundColor: '#09090b',height:this.currentWindowHeight}}>
             <div  className="posrel pad18Incomplete">
               <div className="br50p txtc" style={{'height':'100px'}}>
@@ -447,12 +464,10 @@ setAadhaarTimerScreen(){
 
 
 setAadhaarFinalScreen(){
-  let errorView;
-  if(this.state.insertError){
-    errorView = (<TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError>);
-  }
+  
   return(
       <div>
+      {this.state.insertError == true ? <TopError timeToHide={this.state.errorMessage} message={this.state.errorMessage}></TopError> : null}
           <div style={{backgroundColor: '#09090b',height:window.innerHeight}}>
             <div  className="posrel pad18Incomplete">
               <div className="br50p txtc" style={{'height':'100px'}}>
