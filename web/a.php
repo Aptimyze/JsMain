@@ -11,11 +11,11 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 
 // jprofile education
-$j = ProfileEducation::getInstance();
+//$j = ProfileEducation::getInstance();
 //$x  = $j->getProfileEducation("9474668");
 //$x  = $j->update("9474668",array("PG_COLLEGE"=>"'AIIMS'"));
-$x  = $j->getProfileEducation(array("9474668","144111"),1);
-print_R($x);die;
+//$x  = $j->getProfileEducation(array("9474668","144111"),1);
+//print_R($x);die;
 
 // native place
 //$j = ProfileNativePlace::getInstance();
@@ -103,8 +103,8 @@ print_R($x);die;
 //$objProCacheLib = ProfileCacheLib::getInstance();
 //$result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileidArray,$fields,__CLASS__);
 //print_r($result);die;
-//$pf = ProfileCacheLib::getInstance();
-//$aa = $pf->get("PROFILEID", "9474668", "*","");
+$pf = ProfileCacheLib::getInstance();
+$aa = $pf->cacheThis("PROFILEID", "9474668",array("USERNAME"=>"tttt"),"");
 //print_r($aa);
 //$aa = $pf->get("PROFILEID", "9474668", "*","ProfileEducation");
 //print_r($aa);

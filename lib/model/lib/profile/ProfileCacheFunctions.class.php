@@ -60,7 +60,11 @@ class ProfileCacheFunctions
                 {
                         foreach($array as $k=>$v)
                         {
-                                $array[$prefix.$prefixDelimiter.$k.$suffixDelimiter.$suffix]=$v;
+                                if(is_array($prefix)){
+                                        
+                                }else{
+                                        $array[$prefix.$prefixDelimiter.$k.$suffixDelimiter.$suffix]=$v;
+                                }
                                 unset($array[$k]);
                         }
                 }
@@ -229,10 +233,11 @@ class ProfileCacheFunctions
 		}
 		return $arrFields;
 	}
-        public static function getFinalFieldsArrayWithPrefix($storeName,$fields){
+        public static function getFinalFieldsArrayWithPrefix($storeName,$fields,$data = array()){
                 $allStoreFields =self::getColumnArr($storeName) ;
                 $prefix = self::getStorePrefix($storeName);
                 $demanField = explode(",",$fields);
+                $dataArray = array();
                 if($storeName == ""){
                         $demandedFields = array();
                         foreach($allStoreFields as $k=>$fieldArray){
@@ -242,6 +247,12 @@ class ProfileCacheFunctions
                                         $demandedFields1 = self::getRelevantKeysName($intersect,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
                                         $demandedFields = array_merge($demandedFields,$demandedFields1);
                                         $demanField = array_diff($demanField, $intersect);
+                                        if(!empty($data)){
+                                                foreach($demandedFields1 as $fl){
+                                                        $str = str_replace($prefix[$k].ProfileCacheConstants::KEY_PREFIX_DELIMITER,"",$fl);
+                                                        $dataArray[$fl] = $data[$str];
+                                                }
+                                        }
                                         $fields = implode(",",$demanField);
                                         if(trim($fields) == ""){
                                                 break;
@@ -251,6 +262,15 @@ class ProfileCacheFunctions
                 }else{
                         $fields = self::getRelevantFields($fields, $storeName, $allStoreFields);
                         $demandedFields = self::getRelevantKeysName($fields,$prefix,'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
+                        if(!empty($data)){
+                                foreach($demandedFields as $fl){
+                                        $str = str_replace($prefix.ProfileCacheConstants::KEY_PREFIX_DELIMITER,"",$fl);
+                                        $dataArray[$fl] = $data[$str];
+                                }
+                        }
+                }
+                if(!empty($data)){
+                        return $dataArray;
                 }
                 return array_unique($demandedFields);
         }

@@ -38,6 +38,7 @@ class ProfileCacheLib
      * __destruct
      */
     public function __destruct() {
+file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         self::$instance = null;
     }
 
@@ -57,11 +58,14 @@ class ProfileCacheLib
      */
     public static function getInstance()
     {
+                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/instance.txt";
+                file_put_contents($fileName, ""."PreNew::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         if (null === self::$instance) {
             $className =  __CLASS__;
             self::$instance = new $className;
+                file_put_contents($fileName, "\n"."Created::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         }
-
+                file_put_contents($fileName, "\n"."Post::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         return self::$instance;
     }
 
@@ -116,8 +120,8 @@ class ProfileCacheLib
             return false;
         }
         $szKey = ProfileCacheFunctions::getDecoratedKey($key);
-        $prefix = ProfileCacheFunctions::getStorePrefix($storeName);
-        $arrParams = ProfileCacheFunctions::getRelevantKeysNameWithValues($arrParams,$prefix,'',self::KEY_PREFIX_DELIMITER);
+        $arrParams = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,  implode(",",array_keys($arrParams)),$arrParams);
+        
         $this->storeInCache($szKey, $arrParams);
         if (false === ProfileCacheFunctions::isCommandLineScript("set")) 
 	{
