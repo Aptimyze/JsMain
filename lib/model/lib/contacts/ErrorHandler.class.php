@@ -681,20 +681,18 @@ class ErrorHandler
 	}
 	/**
 	 * Check if the profile is Junk.
-	 * Returns `true` when contact is `NOT Junk` else false
+	 * NOTE : Returns `true` when contact is `NOT Junk` else false
 	 * @return bool
 	 * @uses $contactHandlerObj
 	 */
 	function checkProfileNOTJunk(){
 		// units year inches rupees
-		$debug = false;
 		// $Gender = $Sender->getGENDER();
 		
 		$sender = $this->contactHandlerObj->getContactObj()->getSenderObj();
 		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
 
 		// added during hotfix 
-		if(!$debug)
 		if($receiver->getPROFILEID()%103>20)
 			return true;
 
@@ -777,6 +775,9 @@ class ErrorHandler
 			);
 
 		// $ageExtraCheck
+		// extra check for age logic as follows : 
+		// (Maleage - Femaleage > 5) OR (Maleage - Femaleage < -1)
+		// eg : 
 		$ageExtraCheck = false;
 		switch ($senderArr['gender']) {
 			case 'M':
@@ -793,6 +794,9 @@ class ErrorHandler
 				break;
 		}
 		// $heightExtraCheck
+		// extra check for height, logic as follows :
+		// (Maleht -Femaleht > 7) OR (Maleht - Femaleht) < 2)
+
 		$heightExtraCheck = false;
 		switch ($senderArr['gender']) {
 			case 'M':
@@ -832,25 +836,20 @@ class ErrorHandler
 						// $junkFlag = true;
 						// die();
 						// NOT JUNK IF REACHED HERE
-						if($debug) die("- NO JUNK");
 						return true;
 					}else{
-						echo $debug ? " junk_due_to_religion " : null;
 						$log["type"] = "RELIGION_JUNK";
 						$log["data"] = $receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture'];
 					}
 				}else{
-					echo $debug ? " junk_due_to_income " : null;
 					$log["type"] = "INCOME_JUNK";
 					$log["data"] = "s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"];
 				}
 			}else{
-				echo $debug ? " junk_due_to_height " : null;
 				$log["type"] = "HEIGHT_JUNK";
 				$log["data"] = "s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"];
 			}
 		}else{
-			echo $debug ? " junk_due_to_age " : null;
 			$log["type"] = "AGE_JUNK";
 			$log["data"] = "s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"];
 		}
@@ -862,10 +861,7 @@ class ErrorHandler
 		$this->contactHandlerObj->setJunkData($log["data"]);
 		// var_dump($log);
 		
-		if($debug){
-			var_dump($senderArr); var_dump($receiverArr);
-			die("- JUNK");
-		}
+		
 		return false;
 
 		// die();
