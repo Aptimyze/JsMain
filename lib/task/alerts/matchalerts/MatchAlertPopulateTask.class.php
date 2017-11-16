@@ -44,6 +44,20 @@ EOF;
 				sleep(300);
 			}
 		}
+                /** Start Matchalert Notification **/
+                $dailyMatchalerNotifObj =new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
+                $flag=1;
+                while($flag)
+                {
+                        $cnt = $dailyMatchalerNotifObj->countNotSentMails();
+                        if($cnt==0)
+                                $flag=0;
+                        else
+                        {
+                                sleep(300);
+                        }
+                }
+                /**  Ends **/
 
 	        /**
 		*daily monitoring
@@ -60,6 +74,7 @@ EOF;
 		$matchalerts_MATCHALERTS_TO_BE_SENT->truncateTable();
 
 		$matchalerts_MAILER->truncateTable();
+		$dailyMatchalerNotifObj->truncateTable();
 
 		$matchalerts_LOG_TEMP = new matchalerts_LOG_TEMP;
 		$matchalerts_LOG_TEMP->truncateTable();

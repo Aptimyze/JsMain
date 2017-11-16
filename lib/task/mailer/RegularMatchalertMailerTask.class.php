@@ -292,11 +292,16 @@ EOF;
       $otherProfileid = $data["USERS"][0]->getPROFILEID();
       $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
       $otherPicIosUrl = $this->getValidImage($data["USERS"][0]->getProfilePic450Url());
-      $cacheKey = "MA_NOTIFICATION_".$receiver;
-      $seperator = "#";
-      $preSetCache = JsMemcache::getInstance()->get($cacheKey);
-      if($preSetCache){
-          $explodedVal = explode($seperator,$preSetCache);
+
+      //$cacheKey = "MA_NOTIFICATION_".$receiver;
+      //$seperator = "#";
+      //$preSetCache = JsMemcache::getInstance()->get($cacheKey);
+
+      $status ='N';
+      $dailyMatchalerNotifObj =new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
+      $explodedVal =$dailyMatchalerNotifObj->getRecordForReceiver($receiver,$status);
+      if(is_array($explodedVal)){
+          /*$explodedVal = explode($seperator,$preSetCache);
           $count = $count+$explodedVal[0];
           if($this->getValidImage($otherPicUrl) == "D"){
             $otherPicUrl = $explodedVal[2];
@@ -305,24 +310,37 @@ EOF;
           if($this->getValidImage($otherPicIosUrl) == "D"){
               $otherPicIosUrl = $explodedVal[4];
               $otherProfileid = $explodedVal[1];
+          }*/
+          $count = $count+$explodedVal['COUNT'];
+          if($this->getValidImage($otherPicUrl) == "D"){
+            $otherPicUrl = $explodedVal['OT_PIC_URL'];
+            $otherProfileid = $explodedVal['OT_PROFILEID'];
           }
+          if($this->getValidImage($otherPicIosUrl) == "D"){
+              $otherPicIosUrl = $explodedVal['OT_PIC_IOS_URL'];
+              $otherProfileid = $explodedVal['OT_PROFILEID'];
+          }
+          $id =$explodedVal['ID'];
+          $dailyMatchalerNotifObj->updateRecord($id,$receiverLastLoginDate,$otherProfileid,$otherPicUrl,$otherPicIosUrl,$count,$status);
       }
       else{
-          $body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
+          $dailyMatchalerNotifObj->addRecord($receiver,$otherProfileid,$otherPicUrl,$otherPicIosUrl,$count,$receiverLastLoginDate,$status);
+          /*$body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
           $type = "MA_NOTIFICATION";
           $queueData = array('process' =>'MA_NOTIFICATION',
                             'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
                           );
           $producerObj = new JsNotificationProduce();
-          $producerObj->sendMessage($queueData);
+          $producerObj->sendMessage($queueData);*/
       }
-      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
+      /*$cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
       $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
+      */
       $monitoringKey = "MA_N_".date('Y-m-d');
       if(!JsMemcache::getInstance()->get($monitoringKey)){
           JsMemcache::getInstance()->set($monitoringKey,date('Y-m-d H:i:s'),79200);
       }
-      JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
+      /*JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);*/
   }
   
   public function getValidImage($url){
