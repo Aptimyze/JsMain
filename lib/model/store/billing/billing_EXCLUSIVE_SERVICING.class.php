@@ -350,7 +350,6 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             while ($res = $prep->fetch()) {
                 $result[$res['AGENT_USERNAME']][] = $res;
             }
-
             return $result;
         } catch (Exception $e) {
             throw new jsException($e);
@@ -476,6 +475,7 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
                 $output[] = $result;
             }
             return $output;
+            
         } catch (Exception $e) {
             throw new jsException($e);
         }
@@ -491,6 +491,35 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         return $res->fetch(PDO::FETCH_ASSOC)["AGENT_USERNAME"];
     }
     
+    public function getData(){
+        try{
+            $sql = "SELECT CLIENT_ID,BILLID,ID  FROM billing.EXCLUSIVE_SERVICING ";
+            $res = $this->db->prepare($sql);
+            //$res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $res->execute();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                
+                $output[] = $result;
+            }
+            return $output;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+        
+    }
+    
+    public function updateBillingDate($id,$billid){
+        try{
+            $sql = "UPDATE billing.EXCLUSIVE_SERVICING SET BILLID =:BILLID where ID = :ID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":ID", $id, PDO::PARAM_INT);
+            $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $result = $res->execute();
+           
+        }catch(Exception $e){
+            throw  new jsException($e);
+        }
+    }
     
 }
 ?>
