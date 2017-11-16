@@ -32,7 +32,7 @@ EOF;
             $profileId = $value["CLIENT_ID"];
             $legacyBillid = $value["BILLID"];
             $id=$value["ID"];
-            $result = $serviceObj->getMaxExpiryExclusive($profileId);
+            $result = $serviceObj->getMaxExpiryExclusive($profileId,$legacyBillid);
             if($result!=null){
                 $billid = $result["BILLID"];
                 $expiryDate = $result["EXP_DT"];

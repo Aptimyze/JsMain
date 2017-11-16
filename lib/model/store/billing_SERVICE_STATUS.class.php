@@ -25,11 +25,16 @@ class BILLING_SERVICE_STATUS extends TABLE {
 
     } 
 
-    public function getMaxExpiryExclusive($profileid){
+    public function getMaxExpiryExclusive($profileid,$billid=0){
         try{
-            $sql="SELECT EXPIRY_DT AS EXP_DT,BILLID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND PROFILEID=:PROFILEID AND ACTIVE IN('E','Y') ORDER BY EXPIRY_DT DESC limit 1";
+            $sql="SELECT EXPIRY_DT AS EXP_DT,BILLID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND PROFILEID=:PROFILEID AND ACTIVE IN('E','Y') ";
+            if($billid != 0)
+                $sql.= " AND BILLID=:BILLID";
+            $sql.=" ORDER BY EXPIRY_DT DESC limit 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            if($billid != 0)
+                $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();
             if($result=$prep->fetch(PDO::FETCH_ASSOC))
             {
