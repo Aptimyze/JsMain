@@ -88,7 +88,13 @@ class ProfileNativePlace
         $result = self::$objNativePlaceMysql->InsertRecord($arrRecordData);
         
         if($result && isset($arrRecordData['PROFILEID'])) {
-            ProfileCacheLib::getInstance()->insertInCache($arrRecordData['PROFILEID'], $arrRecordData);
+                if(!$arrRecordData["NATIVE_CITY"]){
+                        $arrRecordData['NATIVE_CITY']='';
+                }
+                if(!$arrRecordData["NATIVE_STATE"]){
+                        $arrRecordData['NATIVE_STATE']='';
+                }
+            ProfileCacheLib::getInstance()->insertInCache($arrRecordData['PROFILEID'], $arrRecordData,__CLASS__);
         }
         return $result;
     }
@@ -142,7 +148,7 @@ class ProfileNativePlace
         
         if(is_null($result)) { 
             //TODO check PROFILEID is Valid or not
-            $dummyResult = array('PROFILEID'=>$iProfileID, "NATIVE_COUNTRY"=>ProfileCacheConstants::NOT_FILLED, "NATIVE_STATE"=>"", "NATIVE_CITY" => "");
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $iProfileID);
         }
         
         if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
@@ -199,25 +205,27 @@ class ProfileNativePlace
         
         //Get Records from Mysql
         $result = self::$objNativePlaceMysql->getNativeDataForMultipleProfiles($profileidArray);
-        
+        //echo "adads";print_r($result);die;
         if(is_array($result) && count($result) !== count($profileidArray)) {
             $arrDataNotExist = array();
             foreach($result as $key=>$val){
                 $arrDataNotExist[] = $val['PROFILEID'];
             }
             $arrDataNotExist = array_diff($profileidArray, $arrDataNotExist);
+            //print_r($arrDataNotExist);die;
             $dummyArray = array();
             foreach($arrDataNotExist as $k => $v){
-                $dummyArray[] = array('PROFILEID'=>$v, "NATIVE_COUNTRY"=>ProfileCacheConstants::NOT_FILLED, "NATIVE_STATE"=>"", "NATIVE_CITY" => "");
+                    $data = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $v);
+                    $dummyArray[] = $data;
             }
         }
         
         if(is_array($result) && count($result)) {
-            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
         }
         
         if($dummyArray && is_array($dummyArray) && count($dummyArray)) {
-            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray);
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray,__CLASS__);
         }
         return $result;
     }

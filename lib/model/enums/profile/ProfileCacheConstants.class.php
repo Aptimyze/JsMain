@@ -490,7 +490,7 @@ class ProfileCacheConstants
                                         "SATURN_RETRO_COMBUST",
                                         "VARA",
                                         "MASA",
-                                        HAVE_ASTRO
+                                        "HAVE_ASTRO"
                                     );
     
     public static $arrDuplicateFieldsMap = array(
@@ -617,9 +617,9 @@ class ProfileCacheConstants
 					"ProfileNativePlace"=>"ni",
 					"JHOBBYCacheLib"=>"hi",
 					"ProfileAUTO_EXPIRY"=>"xi",
-					"FILTER"=>"fl",
-					"YOUR_INFO_OLD"=>"yo",
-					"Alerts"=>"al",
+					"ProfileFilter"=>"fl",
+					"ProfileYourInfoOld"=>"yo",
+					"JprofileAlertsCache"=>"al",
 					"ProfileContact"=>"cn",
 					"ProfileFSO"=>"fs",
 					"aadharVerification"=>"av",
@@ -633,10 +633,10 @@ class ProfileCacheConstants
                                         "ProfileAstro"=>"arrAstroDetailsColumns",
                                         "ProfileContact"=>"arrJProfileContact",
                                         "JHOBBYCacheLib"=>"arrJHobbyColumns",
-                                        "Alerts"=>"arrJProfileAlertsColumn",
-                                        "YOUR_INFO_OLD"=>"arrOldYourInfo",
+                                        "JprofileAlertsCache"=>"arrJProfileAlertsColumn",
+                                        "ProfileYourInfoOld"=>"arrOldYourInfo",
                                         "ProfileAUTO_EXPIRY"=>"arrAutoExpiry",
-                                        "FILTER"=>"arrProfileFilter"
+                                        "ProfileFilter"=>"arrProfileFilter"
                                 );
     public static function getKeyData($storeName){
             

@@ -176,8 +176,10 @@ class ProfileCacheLib
         }
 
         $paramArr[ProfileCacheConstants::CACHE_HASH_KEY] = $iProfileID;
-        if(false === isset($paramArr[ProfileCacheConstants::ACTIVATED_KEY])) {
-            $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
+        if($storeName == "JPROFILE"){
+                if(false === isset($paramArr[ProfileCacheConstants::ACTIVATED_KEY])) {
+                    $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
+                }
         }
 
         return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $iProfileID, $paramArr, $storeName);
@@ -223,10 +225,10 @@ class ProfileCacheLib
                         {
                                         if(isset($this->arrRecords[intval($key)][$col]) && $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) 
                                         {
-                                                $iProfileID = $arrData['PROFILEID'];
-                                                $arrData = array_fill_keys($allStoreFields[$col1], ProfileCacheConstants::NOT_FILLED);
-                                                $arrData['PROFILEID'] = $iProfileID;
-                                                break;
+//                                                $iProfileID = $arrData['PROFILEID'];
+//                                                $arrData = array_fill_keys($allStoreFields[$col1], ProfileCacheConstants::NOT_FILLED);
+//                                                $arrData['PROFILEID'] = $iProfileID;
+                                                //break;
                                         }
                         }
                 }
@@ -238,8 +240,20 @@ class ProfileCacheLib
                 //$indexKey = substr($k, 0, $isDuplicateField);
             }
             $arrOut[$indexKey] = $arrData[$k];
+        }  
+        $keywthioutPRefix = 0;
+        foreach($arrOut as $k=>$v){
+                if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
+                        $keywthioutPRefix = 1;
+                }
         }
-	$arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER);       
+        if($keywthioutPRefix == 1){
+                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
+                $a = print_r($arrOut,true);
+                file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+        }
+        
+        $arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER); 
         return $arrOut;
     }
 
@@ -323,8 +337,9 @@ class ProfileCacheLib
 		return false;
 	}
 	$localCacheFields = array_keys($localCacheData);
-        //print_r($localCacheData);die;
+        //print_r($localCacheData);
 	$isSubset = (count(array_diff($demandedFields,$localCacheFields))==0);
+        //var_dump($isSubset);die;
         if (!$isSubset) 
 	{
             return false;
@@ -547,6 +562,7 @@ class ProfileCacheLib
         if(false === ProfileCacheFunctions::validateCriteria($criteria)) {
             return false;
         }
+        
         //Get Relevant Fields
         $arrFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
 
@@ -559,6 +575,7 @@ class ProfileCacheLib
         if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
           return false;
         }
+        
         //Remove Duplicate Suffix
         $prefix =ProfileCacheFunctions::getStorePrefix($storeName);
         if(is_array($arrResponse) && count($arrResponse)) {
@@ -568,6 +585,19 @@ class ProfileCacheLib
             }
         }
         //TODO : Handle Exception Cases  
+        $keywthioutPRefix = 0;
+        foreach($arrResponse as $ky=>$arrOut){
+                foreach($arrOut as $k=>$v){
+                        if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
+                                $keywthioutPRefix = 1;
+                        }
+                }
+        }
+        if($keywthioutPRefix == 1){
+                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
+                $a = print_r($arrResponse,true);
+                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+        }
         return array_values($arrResponse);
     }
     
@@ -580,7 +610,6 @@ class ProfileCacheLib
     {
             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
         file_put_contents($fileName, "cacheForMultiple"."\n", FILE_APPEND);
-        
         $storeData = array();
         foreach($arrResponse as $key=>$rowData){
             //$rowData = $this->addDuplicateSuffix($rowData, $storeName);
@@ -605,7 +634,7 @@ class ProfileCacheLib
       foreach($arrData as $key=>$value)
       {
         if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
-            unset($arrData[$key]);
+            //unset($arrData[$key]);
             continue;
         }
         if(false === $this->isDataExistInCache($value)) {
@@ -879,11 +908,24 @@ class ProfileCacheLib
           $cachedResult[] = $this->removeDuplicateSuffix($val, $storeName);
         }
       }
-
+      
       $result = array(
         'cachedResult' => $cachedResult,
         'notCachedPids' => implode(',', $arrPids),
       );
+      $keywthioutPRefix = 0;
+        foreach($cachedResult as $ky=>$arrOut){
+                foreach($arrOut as $k=>$v){
+                        if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
+                                $keywthioutPRefix = 1;
+                        }
+                }
+        }
+        if($keywthioutPRefix == 1){
+                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
+                $a = print_r($cachedResult,true);
+                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+        }
       return $result;
     }
 

@@ -285,5 +285,16 @@ class ProfileCacheFunctions
             }
             return($fieldsArray);
     }
+    public static function setNotFilledArray($storeName,$profileId){
+                $dummyResult = array();
+                if($storeName != ""){
+                        $dummyFields = self::getColumnArr($storeName) ;
+                        foreach($dummyFields as $field){
+                               $dummyResult[$field] = ProfileCacheConstants::NOT_FILLED;
+                        }
+                        $dummyResult["PROFILEID"] = $profileId;
+                }
+                return $dummyResult;
+    }
 
 }

@@ -104,7 +104,6 @@ class ProfileFilter
         if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__)) {
             //Get From Cache
             $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
-
             if (false !== $result) {
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
@@ -125,7 +124,7 @@ class ProfileFilter
         $result = $this->getDBConnection()->fetchEntry($iProfileId);
         
         if(is_null($result)) { 
-            $dummyResult = array('PROFILEID'=>$iProfileId, "AGE"=>ProfileCacheConstants::NOT_FILLED);
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $iProfileId);
         }
         
         if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
@@ -156,6 +155,11 @@ class ProfileFilter
         if (is_array($result) && false !== $result) {
             $bServedFromCache = true;
             $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            foreach($result as $k=>$out){
+                        if(in_array(ProfileCacheConstants::NOT_FILLED, $out)) {
+                                unset($result[$k]);
+                        }
+                }
         }
         
         if(is_array($result) && count($result)) {
@@ -173,17 +177,19 @@ class ProfileFilter
         }
         
         //Get Records from Mysql
-        $result = $this->getDBConnection()->fetchFilterDetailsForMultipleProfiles($arrProfileIds);
-        
+        $result = $this->getDBConnection()->fetchFilterDetailsForMultipleProfiles($arrProfileIds);        
         if(is_array($result) && count($result) !== count($arrProfileIds)) {
             $arrDataNotExist = array();
             foreach($result as $key=>$val){
                 $arrDataNotExist[] = $val['PROFILEID'];
             }
             $arrDataNotExist = array_diff($arrProfileIds, $arrDataNotExist);
-            $dummyArray = array();
-            foreach($arrDataNotExist as $k => $v){
-                $dummyArray[] = array('PROFILEID'=>$v, "AGE"=>ProfileCacheConstants::NOT_FILLED);
+            if(!empty($arrDataNotExist)){
+                $dummyArray = array();
+                foreach($arrDataNotExist as $k => $v){
+                        $data =  ProfileCacheFunctions::setNotFilledArray(__CLASS__, $v);
+                        $dummyArray[] = $data;
+                }
             }
         }
         
@@ -267,7 +273,6 @@ class ProfileFilter
     public function updateRecord($iProfileId,$arrRecordData)
     {
         $bResult = $this->getDBConnection()->updateRecord($iProfileId, $arrRecordData);
-        
         if(true === $bResult) {
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileId, __CLASS__);
         }
@@ -315,7 +320,9 @@ class ProfileFilter
             $objProfileCache = ProfileCacheLib::getInstance();
         
             foreach($profileIdArr as $key => $val) {
-                $objProfileCache->removeFieldsFromCache($val['PROFILEID'], __CLASS__);
+                    $arrRecordData[$field] = "Y";
+                $objProfileCache->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $val['PROFILEID'], __CLASS__);
+                //$objProfileCache->removeFieldsFromCache($val['PROFILEID'], __CLASS__);
             }
         }
         return $bResult;        
