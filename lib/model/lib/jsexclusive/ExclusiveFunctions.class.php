@@ -463,7 +463,7 @@ class ExclusiveFunctions{
             $success = $exclusiveServicingLogObj->addDeletedProfileFromExclusiveServicing($profilesInfo);
         if($success == true){
             if($flag == 'X' && $billid != 0){
-                $exclusiveServicingObj->removeExclusiveClientEntry($profileid,$billid);
+                $exclusiveServicingObj->removeExclusiveClientEntry($profileid,"",$billid);
             }else if($flag == 'D'){
                 $exclusiveServicingObj->removeExclusiveClientEntry($profileid);
             }
