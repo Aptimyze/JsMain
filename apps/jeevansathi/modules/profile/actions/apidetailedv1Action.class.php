@@ -160,7 +160,18 @@ class apidetailedv1Action extends sfAction
 		//Now Create OutPut Array
 		$arrOut = $this->BakeMyView();
 		$arrOut['USERNAME']=$this->profile->getUSERNAME();
+////////////lightning cal code starts here/////////////////////////////////
 
+// redis implementation
+// 
+	$request->setParameter('calFromPD',1);
+	$request->setParameter('layerId',19);
+	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+	$layerData = ob_get_contents();
+	ob_end_clean();
+	$layerData = json_decode($layerData, true);
+	$arrOut['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+///////////////////
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
     	{
