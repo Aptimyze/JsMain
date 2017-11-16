@@ -91,7 +91,7 @@ class ProfileCacheLib
 		return true;
         }
         $this->storeInLocalCache($key);
-
+        
         if (false === $this->checkFieldsAvailability($key, $demandedFields, $storeName)) 
 	{
 		ProfileCacheFunctions::logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
@@ -303,7 +303,7 @@ class ProfileCacheLib
 		} 
 		else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) 
 		{
-			$array = ProfileCacheConstants::$arrHashSubKeys;
+			$array = ProfileCacheFunctions::getAllSubKeys();
 		} 
 		else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) 
 		{
@@ -312,7 +312,7 @@ class ProfileCacheLib
 			{
 				$array[$k] = trim($v);
 			}
-			$array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $array);
+			$array = array_intersect(ProfileCacheFunctions::getAllSubKeys(), $array);
 		}
 		if(count(array_diff(array_unique($arrFields),$array)))
 		{
@@ -781,11 +781,14 @@ class ProfileCacheLib
         $szKey = ProfileCacheFunctions::getDecoratedKey($key);
         //Get Columns to delete
                $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
+               //print_r($demandedFields);die;
         //Remove Common Fields
 
         foreach($demandedFields as $k=>$v) {
             if(in_array($v, ProfileCacheConstants::$arrCommonFieldsMap))
                 unset($demandedFields[$k]);
+            else
+                unset($this->arrRecords[intval($key)][$v]);
         }
 
         
@@ -944,14 +947,14 @@ class ProfileCacheLib
         if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
           $arrFields = ProfileCacheFunctions::getColumnArr($storeName);
         } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
-            $arrFields = ProfileCacheConstants::$arrHashSubKeys;
+            $arrFields = ProfileCacheFunctions::getAllSubKeys();
         } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = explode(',',$arrFields);
             foreach($arrFields as $k=>$v)
                 $arrFields[$k] = trim($v);
         }
         //TODO: If $arrFields is not an array, handle this case
-        $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_intersect(ProfileCacheFunctions::getAllSubKeys(), $arrFields);
         $array = array_unique($array);
 
         if(count(array_diff(array_unique($arrFields),$array)))
