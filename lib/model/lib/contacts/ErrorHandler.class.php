@@ -832,7 +832,7 @@ class ErrorHandler
 				if(strlen($senderArr["income"]) == 0 || 
 					($senderArr["income"] >= ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"]))){
 				// religion clusture check
-					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0 || 1){
+					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
 						// $junkFlag = true;
 						// die();
 						// NOT JUNK IF REACHED HERE
