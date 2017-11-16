@@ -140,7 +140,7 @@ class JPROFILE
         }
         if ( is_array($result) && 
 	     isset($result['PROFILEID']) &&
-	     false === ProfileCacheFunctions::isCommandLineScript()
+	     false === ProfileCacheFunctions::isCommandLineScript("set")
 	) {
             ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
         }
@@ -259,7 +259,7 @@ class JPROFILE
                 if(strlen($tempValueArray['PROFILEID']) !== 0)
                 {
                     // get result from store for remaining pids
-                    if(ProfileCacheFunctions::isCommandLineScript()){
+                    if(ProfileCacheFunctions::isCommandLineScript("set")){
                             $storeResult = $this->getJprofileObj()->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
                     }else{
                                 $storeResult = $this->getDataForNonCommandLine($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
@@ -279,7 +279,7 @@ class JPROFILE
                 }
             }
         }
-        if(ProfileCacheFunctions::isCommandLineScript()){
+        if(ProfileCacheFunctions::isCommandLineScript("set")){
                 return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
         }else{
                 return $this->getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);

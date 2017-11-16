@@ -1,10 +1,17 @@
 <?php
 class ProfileCacheFunctions 
 {
-	
-	public static function isCommandLineScript()
+	private function allowSetFromCommandLine($getOrset=""){
+                if(ProfileCacheConstants::ALLOW_CLI_SET == 1 || $getOrset == "get"){
+                        return true;
+                }
+                return false;
+        }
+	public static function isCommandLineScript($getOrset="")
 	{
-		return false;
+                //if($this->allowSetFromCommandLine($getOrset)){
+                        return false;
+                //}
 		return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
 	}
 	public static function getDecoratedKey($key)

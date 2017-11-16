@@ -94,7 +94,9 @@ class JHOBBYCacheLib extends TABLE
             }
             $dummyResult[ProfileCacheConstants::CACHE_CRITERIA] = $pid;
             
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            }
         }
 
         if ($onlyValues) {
@@ -194,7 +196,9 @@ class JHOBBYCacheLib extends TABLE
                 $dummyResult['PROFILEID'] = $pid;
             }
             //Cache the RAW DATA
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            }
         }
 
         $hobbies = array();

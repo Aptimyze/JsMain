@@ -113,19 +113,19 @@ class ProfileEducation
     //Get Records from Mysql
     $result = self::$objEducationMysql->getProfileEducation($pid, $from);
     
-    if(is_array($result) && !is_array($pid) && false === ProfileCacheFunctions::isCommandLineScript()) {
+    if(is_array($result) && !is_array($pid) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
       $result['PROFILEID'] = $pid;
       ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
     }
     
-    if(false === $result && false === ProfileCacheFunctions::isCommandLineScript()) {
+    if(false === $result && false === ProfileCacheFunctions::isCommandLineScript("set")) {
       $dummyResult['PROFILEID'] = $pid;
       $dummyResult['PG_COLLEGE'] = ProfileCacheConstants::NOT_FILLED;
       
       ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
     }
     
-    if(is_array($pid)){
+    if(is_array($pid) && false === ProfileCacheFunctions::isCommandLineScript("set")){
       ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
     }
     return $result;

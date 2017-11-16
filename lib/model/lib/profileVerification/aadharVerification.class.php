@@ -131,7 +131,9 @@ class aadharVerification
                         $aadharArr['REQUEST_ID'] = "";
                         $aadharArr['VERIFY_STATUS'] = "";
                 }
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
+                if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
+                }
 		return $aadharDetails;
 	}
 

@@ -27,6 +27,7 @@ class ProfileCacheConstants
     const DUPLICATE_FIELD_DELIMITER = "-d-";
     const GETARRAY_PROFILEID_LIMIT = 50;
     const KEY_PREFIX_DELIMITER = ".";
+    const ALLOW_CLI_SET = 0;
 
         public static $arrJProfileColumns = array(
                                         "PROFILEID",

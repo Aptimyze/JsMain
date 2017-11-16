@@ -95,7 +95,9 @@ class JprofileAlertsCache
             {  
                 foreach ($profileArr as $key => $value) {
                         $tempInsertResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $value);
-                        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                        }
                 }
 
                 return $newOutput;
@@ -109,11 +111,15 @@ class JprofileAlertsCache
              {
 
                 $tempInsertResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $value);
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                }
 
              }
              else{
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                     if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+                     }
             }
                 }
 
@@ -248,8 +254,9 @@ class JprofileAlertsCache
              $dummyResult['RESULT_VAL'] = $tempInsertResult;
         }
 
-
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+        }
 
         return $result;  
             

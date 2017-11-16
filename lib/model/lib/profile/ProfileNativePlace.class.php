@@ -151,12 +151,12 @@ class ProfileNativePlace
                 $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $iProfileID);
         }
         
-        if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript()) {
+        if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $result['PROFILEID'] = $iProfileID;
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
         }
         
-        if (is_array($dummyResult) && false === ProfileCacheFunctions::isCommandLineScript()) {
+        if (is_array($dummyResult) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
         }
         return $result;
@@ -220,11 +220,11 @@ class ProfileNativePlace
             }
         }
         
-        if(is_array($result) && count($result)) {
+        if(is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
         }
         
-        if($dummyArray && is_array($dummyArray) && count($dummyArray)) {
+        if($dummyArray && is_array($dummyArray) && count($dummyArray) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray,__CLASS__);
         }
         return $result;

@@ -76,7 +76,7 @@ class ProfileCacheLib
     public function isCached($criteria, $key, $fields, $storeName="", $fromUpdate=false)
     {
 //IN USE
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript() && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria))) 
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript("get") && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria))) 
 	{
 		return false;
         }
@@ -119,7 +119,7 @@ class ProfileCacheLib
         $prefix = ProfileCacheFunctions::getStorePrefix($storeName);
         $arrParams = ProfileCacheFunctions::getRelevantKeysNameWithValues($arrParams,$prefix,'',self::KEY_PREFIX_DELIMITER);
         $this->storeInCache($szKey, $arrParams);
-        if (false === ProfileCacheFunctions::isCommandLineScript()) 
+        if (false === ProfileCacheFunctions::isCommandLineScript("set")) 
 	{
             $this->updateInLocalCache($key, $arrParams);
         }
@@ -199,7 +199,7 @@ class ProfileCacheLib
         file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
 //IN USE
         //var_dump($this->isCached($szCriteria, $key, $fields, $storeName));die;
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript()||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName)))  // CHECK THIS
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript("get")||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName)))  // CHECK THIS
 	{
 		return false;
         }
