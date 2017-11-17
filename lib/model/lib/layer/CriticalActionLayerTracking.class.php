@@ -114,7 +114,7 @@ class CriticalActionLayerTracking
         return $value;
     }
     if($checkForIndependentCal){
-      $memObject->set($loginData['PROFILEID'].'_NO_LI_CAL',1,10800);
+      $memObject->set($profileId.'_NO_LI_CAL',1,10800);
       return 0;
     }
         //default condition for minimum time difference between layers
