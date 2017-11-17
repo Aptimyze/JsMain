@@ -15,6 +15,12 @@
 <div id="profileScorePage">
 
 </div>
+<script>
+    $( document ).ready(function() {
+        $('#profileScorePage').load('/operations.php/commoninterface/ProfileScoreStats?cid=~$cid`&profileid=~$profileid`');
+    });
+</script>
+
 
 ~if $curlReq eq ''`
 	<!-- Botom Link section  Start -->
@@ -24,9 +30,4 @@
 	~include_partial('global/footer')`
 ~/if`
 
-<script>
-    $( document ).ready(function() {
-        $('#profileScorePage').load('/operations.php/commoninterface/ProfileScoreStats?cid=~$cid`&profileid=~$profileid`');
-    });
-</script>
 
