@@ -1021,9 +1021,9 @@ class crmInterfaceActions extends sfActions
                 	}else{
                 		$this->rawData[$i]["MEM_UPGRADE"] = "N";
                 	}
-                	$this->rawData[$i]["SGST"]=$taxData[$billid]["SGST"];
-                	$this->rawData[$i]["IGST"]=$taxData[$billid]["IGST"];
-                	$this->rawData[$i]["CGST"]=$taxData[$billid]["CGST"];
+                    $this->rawData[$i]["SGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["SGST"]/118,2);
+                    $this->rawData[$i]["IGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["IGST"]/118,2);
+                    $this->rawData[$i]["CGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["CGST"]/118,2);
                 }
                 //Start:JSC-2667: Commented as change in legacy data not required 
                 //$this->rawData      = $this->filterData($this->rawData);
@@ -1047,7 +1047,7 @@ class crmInterfaceActions extends sfActions
         $agentAllocationDetailsObj = new AgentAllocationDetails();
         $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
         $priv                      = explode('+', $priv);
-        if (in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv) || in_array('BMI', $priv)) {
             $this->showOptions = 1;
         }
     }
@@ -1419,7 +1419,7 @@ class crmInterfaceActions extends sfActions
             $activeCat = $communityWelcomeDiscountObj->getActiveGroupByCategories();
             $communityWelcomeDiscountObj->startTransaction();
             $communityWelcomeDiscountObj->markAllInactive();
-            $this->$error = 0;
+            $this->error = 0;
             foreach($activeCat as $cat => $communityArr){
                 foreach($communityArr as $key=>$communityId){
                     unset($params);
@@ -1446,14 +1446,19 @@ class crmInterfaceActions extends sfActions
                 $this->message = "Discount updated successfully";
             }
         }       
-        
+        $otherCommunityIndex = 0;
         $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
         foreach($activeCommunityWiseDiscount as $catId=>$comArr){
             foreach($comArr as $key=>$val){
+                if($val["COMMUNITY"]=="0")
+                    $otherCommunityIndex = $catId;
                 $data[$catId]["NAME"][]= $val["COMMUNITY"]=="0"?"Others":FieldMap::getFieldLabel("community", $val["COMMUNITY"]);
                 $data[$catId]["DISCOUNT"] = $val["DISCOUNT"];
             }
         }
+        $lastIndex = count($data);
+        if($otherCommunityIndex != $lastIndex)
+            list($data[$otherCommunityIndex],$data[$lastIndex]) = array($data[$lastIndex],$data[$otherCommunityIndex]);
         $this->data = $data;
         
         $membershipHandlerObj = new MembershipHandler();

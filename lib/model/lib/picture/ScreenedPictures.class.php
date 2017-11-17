@@ -282,6 +282,13 @@ class ScreenedPicture extends Picture
         **/
         public function get($paramArr=array(),$getFromMasterR='')
         {
+		/** 
+		* handled by lavesh/ankit tempor, @esha need to fix
+		* Picture caching was not working for more than 1 params, so we have unseting ordering, however if pictureid comes cache wont be used as isCacheable will be false bcoz of condition there where they expect count paramarr == 1. 
+		*/
+		$tempParamArr = $paramArr;
+		unset($paramArr["ORDERING"]);
+
 		if (PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__)) 
 		{
 			if(PictureNewCacheLib::getInstance()->isCached($paramArr,__CLASS__))
@@ -302,7 +309,7 @@ class ScreenedPicture extends Picture
 				PictureNewCacheLib::getInstance()->cacheThis($paramArr['PROFILEID'],$encodedData);
 				$this->logTableConsumed();
 			}
-			$result = PictureNewCacheLib::getInstance()->processWhere($result,$paramArr);
+			$result = PictureNewCacheLib::getInstance()->processWhere($result,$tempParamArr);
 		}
 		else
 		{
@@ -310,7 +317,7 @@ class ScreenedPicture extends Picture
 				 $photoObj=new PICTURE_NEW("newjs_masterRep");
 			else
 				$photoObj=new PICTURE_NEW;
-			$result=$photoObj->get($paramArr);
+			$result=$photoObj->get($tempParamArr);
 		}
 		return $result;
 	}
@@ -443,7 +450,11 @@ class ScreenedPicture extends Picture
 			$paramArr = $whereCondition;
 			if(is_array($whereCondition['PROFILEID']))
 			{
-				unset($paramArr['PROFILEID']);
+				/**
+				* handled by lavesh/ankit tempor, @esha need to fix
+				* unsetting complate array as fallback was giving the complete data.
+				*/
+				unset($paramArr);
 				$paramArr['PROFILEID']=current($whereCondition['PROFILEID']);
 				if ( PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__))
 				{
@@ -456,7 +467,13 @@ class ScreenedPicture extends Picture
 							if (false !== $result)
 							{
 								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-							}							
+							}		
+							/**
+							* Maintain ordering
+							*/					
+							if(is_array($result)){
+								usort($result, function ($a, $b) { return $a['ORDERING'] - $b['ORDERING']; });
+							}
 							$this->logCacheConsumed();
 						}
 						else

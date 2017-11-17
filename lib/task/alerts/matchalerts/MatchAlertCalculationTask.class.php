@@ -51,7 +51,7 @@ EOF;
                 
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
-                $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
+                $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . LowDppMatchesCheck::$mailerFreq ) );
                 $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
                 $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
                 $todayDate = date("Y-m-d H:i:s");
@@ -84,7 +84,7 @@ EOF;
                                         $matchLogic = $v["MATCH_LOGIC"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
-                                                if($loggedInProfileObj->getPROFILEID()%11<=1){
+                                                if($loggedInProfileObj->getPROFILEID()%99<=49){
                                                         if($matchLogic == "O"){
                                                                 $strictDppObj = new StrictDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
                                                                 $totalResults = $strictDppObj->getMatches();

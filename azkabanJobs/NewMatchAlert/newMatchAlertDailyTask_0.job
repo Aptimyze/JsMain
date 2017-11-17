@@ -1,0 +1,2 @@
+type=command
+command=${php5} -q ${docRoot}/symfony mailer:NewMatchAlert 3 0 1

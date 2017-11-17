@@ -102,8 +102,9 @@ foreach($resultQueues as $arr)
 }
 if($msgOverflow == 1 && $serverid == "FIRST_SERVER"){
   //echo "killAndRestartConsumer"."\n";
-
-  RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  if($queue_data->name != MessageQueues::$INSTANT_NOTIFICATION_QUEUE){
+    RabbitmqHelper::sendRMQAlertSMS($overflowQueueData);
+  }
   //die("123");
   //kill and start consumers again
   $this->killAndRestartConsumer();
@@ -123,6 +124,7 @@ foreach($resultAlarm as $row)
   if($row->mem_used >= MessageQueues::SAFE_LIMIT)
   {
     JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,true);
+    JsMemcache::getInstance()->set("mqMemoryAlarmValue".$serverid,$row->mem_used);
     $str="\nRabbitmq Error Alert: Memory alarm to be raised soon on the first server. Shifting Server";
     RabbitmqHelper::sendAlert($str,"default");
     
@@ -133,9 +135,10 @@ foreach($resultAlarm as $row)
     JsMemcache::getInstance()->set("mqMemoryAlarm".$serverid,false);
     
   }
-  if(($row->disk_free - $row->disk_free_limit) < MessageQueues::SAFE_LIMIT)
+  if(($row->disk_free - $row->disk_free_limit) < MessageQueues::DISK_SAFE_LIMIT)
   {
     JsMemcache::getInstance()->set("mqDiskAlarm".$serverid,true);
+    JsMemcache::getInstance()->set("mqDiskAlarmValue".$serverid,$row->disk_free - $row->disk_free_limit);
     $str="\nRabbitmq Error Alert: Disk alarm to be raised soon on the first server. Shifting server";
     
     RabbitmqHelper::sendAlert($str,"default");
@@ -286,12 +289,11 @@ return true;
     else{
         $this->consumerToCountMapping = array(
                                   MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND=>MessageQueues::DELETE_RETRIEVE_CONSUMER_COUNT,
-                                  MessageQueues::UPDATESEEN_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,
-                                  MessageQueues::UPDATESEENPROFILE_STARTCOMMAND=>MessageQueues::UPDATE_SEEN_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::UPDATECRITICALINFO_STARTCOMMAND=>MessageQueues::UPDATE_CRITICAL_INFO_CONSUMER_COUNT            ,
                                   MessageQueues::PROFILE_CACHE_STARTCOMMAND=>MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
+                                  MessageQueues::CRONSCREENINGMAILERQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGMAILERCONSUMERCOUNT,
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::WRITEMESSAGECONSUMERCOUNT,
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,

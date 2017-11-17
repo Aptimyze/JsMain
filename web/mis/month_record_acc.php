@@ -42,7 +42,7 @@ if (authenticated($checksum)) {
         if ($mode2 == 'DONE' || $mode2 == 'REFUND') {
             if($newTable == 1){
                 if($mode2 == "DONE"){
-                    $sql .= " AND a.STATUS IN ('DONE','BOUNCE','CANCEL', 'CHARGE_BACK') ";
+                    $sql .= " AND a.STATUS IN ('DONE','BOUNCE','CANCEL', 'CHARGE_BACK','REFUND') ";
                 }
                 else{
                     $sql .= " AND a.STATUS='$mode2' ";

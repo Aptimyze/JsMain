@@ -11,6 +11,10 @@ header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 header('Pragma: no-cache');
 include ("time1.php");
+
+global $screeningRep;
+$screeningRep = false;
+
 include ("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
@@ -103,7 +107,14 @@ if (authenticated($cid)) {
 		$service_mes = $myrow['SERVICE_MESSAGES'];
 		$source = $myrow['SOURCE'];
 		$std = $myrow['STD'];
-                $activatedWithoutYourInfo = $_POST["activatedWithoutYourInfo"];
+                $sqlAct = "SELECT PROFILEID FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO WHERE PROFILEID='$pid'";
+		$resAct = mysql_query_decide($sqlAct) or die("$sqlAct" . mysql_error_js());
+		$rowAct = mysql_fetch_assoc($resAct);
+                if($rowAct['PROFILEID'])
+                    $activatedWithoutYourInfo = 1;
+                else
+                    $activatedWithoutYourInfo = 0;
+                
 		if ($activated == 'U' || ($activated == 'Y' && (!areAllBitsSet($screening_val) || $activatedWithoutYourInfo)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
 			if ($name != "" || $name_hob != "" || $name_contact != "" || $name_edu != "") {
 				if ($name != "") {
@@ -356,8 +367,11 @@ if (authenticated($cid)) {
             $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
             $activated_without_yourInfoObj->delete($pid);
         //}
-            
-        $objUpdate = JProfileUpdateLib::getInstance();
+        global $screeningRep;
+        if($screeningRep)
+            $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+        else
+            $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
 				if ($str_edu) {         
@@ -530,7 +544,12 @@ if (authenticated($cid)) {
 				foreach($log_val as $item)
 					$log_val1[]=addslashes(stripslashes($item));
 				$log_values = implode("','", $log_val1);
-				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values','$user',now(),'M','$count_screen')";
+                                if($val == "new")
+                                    $screenNewEdit = 2;
+                                
+                                else
+                                    $screenNewEdit = 3;
+				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENING,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values',$screenNewEdit,'$user',now(),'M','$count_screen')";
 				mysql_query_decide($sql_mod) or die(mysql_error_js()."at line 367");
 				//added by sriram.
 				if ($do_gender_related_changes) {
@@ -771,9 +790,22 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-                                            if(!$activatedWithoutYourInfo)
-						CommonFunction::sendWelcomeMailer($pid);
+                                            if(!$activatedWithoutYourInfo){
+                                                try
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_MAILER, 'data' => array('type' => 'WELCOME_MAILER','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+							}
+                                                        else{
+                                                            CommonFunction::sendWelcomeMailer($pid);
+                                                        }
+						}
+						catch(Exception $e) {}
                                             }
+                                        }
 						//send_email($to, $MESSAGE);
 				}
 				else
@@ -1268,6 +1300,15 @@ $oldUrl.="&lavesh=$lavesh";
 				        $item[] = "PHOTO_DISPLAY";
 				        }*/
 			/********End of - Code Added by sriram on May 22 2007********/
+			
+			$nameOfUserForObscene = $nameOfUserObj->getNameData($profileid);
+			$nameOfUserForObsceneArray = $nameOfUserObj->getValidNames();
+			
+			if(is_array($nameOfUserForObscene)){
+				$nameOfUserForObsceneArray= array_merge($nameOfUserForObsceneArray,explode(" ",$nameOfUserForObscene[$profileid]["NAME"]));
+			}
+			
+			
 			if (!$uname_set) {
 				$item[] = "USERNAME";
 				$smarty->assign("SHOWUSERNAME", "Y");
@@ -1314,8 +1355,15 @@ $oldUrl.="&lavesh=$lavesh";
 				$item[] = "YOURINFO";
 				$smarty->assign("SHOWYOURINFO", "Y");
 				$smarty->assign("YOURINFOvalue", strip_tags($myrow['YOURINFO']));
+				
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 				$obsceneWord=getObsceneWords($myrow['YOURINFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_INFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
+				$smarty->assign("OBSCENE_WORDS_YOURINFO",$obsceneWord);
+				
 				if($val=="edit")
 				{
 					$sql = "SELECT YOUR_INFO_OLD from newjs.YOUR_INFO_OLD where PROFILEID=$profileid";
@@ -1333,14 +1381,25 @@ $oldUrl.="&lavesh=$lavesh";
 				$item[] = "FAMILYINFO";
 				$smarty->assign("SHOWFAMILYINFO", "Y");
 				$smarty->assign("FAMILYINFOvalue", strip_tags($myrow['FAMILYINFO']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 					$obsceneWord=getObsceneWords($myrow['FAMILYINFO'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_FAMILYINFO",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_FAMILY", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$spouse_set) {
 				$item[] = "SPOUSE";
 				$smarty->assign("SHOWSPOUSE", "Y");
 				$smarty->assign("SPOUSEvalue", strip_tags($myrow['SPOUSE']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 				$obsceneWord=getObsceneWords($myrow['SPOUSE'],$obscene);
+				
+				$smarty->assign("OBSCENE_WORDS_SPOUSE",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_SPOUSE", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
 			}
@@ -1356,7 +1415,11 @@ $oldUrl.="&lavesh=$lavesh";
 				$item[] = "EDUCATION";
 				$smarty->assign("SHOWEDUCATION", "Y");
 				$smarty->assign("EDUCATIONvalue", strip_tags($myrow['EDUCATION']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
 				$obsceneWord=getObsceneWords($myrow['EDUCATION'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_EDUCATION",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_EDUCATION", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
 			}
@@ -1384,7 +1447,11 @@ $oldUrl.="&lavesh=$lavesh";
 				$item[] = "JOB_INFO";
 				$smarty->assign("SHOWJOBINFO", "Y");
 				$smarty->assign("JOB_INFOvalue", strip_tags($myrow['JOB_INFO']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
 				$obsceneWord=getObsceneWords($myrow['JOB_INFO'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_JOB_INFO",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_JOBINFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$fatherinfo_set) {
@@ -1475,6 +1542,7 @@ $oldUrl.="&lavesh=$lavesh";
 			$smarty->assign("mstatus_err", $mstatus_err);
 			$smarty->assign("date_err", $date_err);
 			$smarty->assign("info_err", $info_err);
+			
 			$smarty->display("screen_new.htm");
 		}
 	}
@@ -1586,14 +1654,18 @@ function getAge($newDob) {
 }
 	function getObsceneWords($message,$obscene)
 	{
-
 		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
 		$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $message);
 		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
-
+		$string_replaced_special_characters = trim(preg_replace('/\s+/', ' ', $string_replaced_special_characters));
 		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
-   		$result = array_intersect($messageArr, $obscene);
-   		$resultstr=implode(',',array_values($result));
+		$messageFinal= implode(",",$messageArr);
+		$messageFinal= strtolower($messageFinal);
+		$messageArr= explode(",",$messageFinal);
+		$obscene=explode(",",strtolower(implode(",",$obscene)));
+		$result = array_map('trim',array_filter(array_intersect($messageArr, $obscene)));
+        $resultstr=implode(',',array_values($result));
+        $resultstr= trim($resultstr,",");
    		return $resultstr;
 	}
   
@@ -1603,7 +1675,11 @@ function getAge($newDob) {
    */
   function markProfileUnderScreening($iProfileID)
 	  {
-    $objUpdate = JProfileUpdateLib::getInstance();
+    global $screeningRep;
+    if($screeningRep)
+        $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+    else
+        $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
     $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");
     if(false === $result) {

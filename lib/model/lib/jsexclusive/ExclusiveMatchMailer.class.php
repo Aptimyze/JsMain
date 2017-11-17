@@ -5,7 +5,7 @@
 * Helper class for MatchMailer
 */
 class ExclusiveMatchMailer {
-	
+    
 	public function getAcceptances($receivers) {
 		$result = array();
 
@@ -84,7 +84,7 @@ class ExclusiveMatchMailer {
 
 	public function getAcceptancesForMatchMailer($dbName,$profilesId){
 		$contactsObj = new newjs_CONTACTS($dbName);
-        $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
+                $lastWeekMailDate = date('Y-m-d h:m:s',strtotime(" -7 days"));
 		$res1 = $contactsObj->getSentAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
 		$flag=1;
 		$result = array();
@@ -98,9 +98,10 @@ class ExclusiveMatchMailer {
 				}
 			}
 		}	
-		if($flag == 0)
-			$res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
-
+		if($flag == 0) {
+                    // This method will return the list of Acceptance list
+                    $res2 = $contactsObj->getReceivedAcceptancesForMatchMailer($profilesId,$lastWeekMailDate);
+                }
 		if (is_array($res2) && !empty($res2)) {
 			foreach ($res2 as $key => $value) {
 				foreach ($value as $k => $v) {
@@ -225,11 +226,14 @@ class ExclusiveMatchMailer {
 					unset($agentDetail[$key]["FIRST_NAME"]);
 					unset($agentDetail[$key]["LAST_NAME"]);
 				}
-				foreach ($newResult as $key => $value) {
+				foreach ($newResult as $key => $value) {    
 					$newResult[$key]["AGENT_DETAIL"] = $agentDetail[$result[$key]["AGENT_USERNAME"]];
 					$flag=0;
-					// print_r($value);die;
 					foreach ($value as $k => $v) {
+					    if($newResult[$key][$k]["STATUS"]=="F0"){
+					        unset($newResult[$key][$k]);
+					        continue;
+					    }
 						if(is_numeric($k))
 							$flag=1;
 						if(is_array($v)){
@@ -255,16 +259,16 @@ class ExclusiveMatchMailer {
 								$reason = explode("|", $v["FOLLOWUP_1"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" || $reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";    	    
+									if($reason[0]=="Others")
+	   							    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_1"] = $reason[0];
 							}
 							if($v["FOLLOWUP_2"]){
 								$reason = explode("|", $v["FOLLOWUP_2"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable" ||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_2"] = $reason[0];
 							} 
 							if (!$v["FOLLOWUP2_DT"]) {
@@ -281,8 +285,8 @@ class ExclusiveMatchMailer {
 								$reason = explode("|", $v["FOLLOWUP_3"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								    $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_3"] = $reason[0];
 							}
 
@@ -295,13 +299,12 @@ class ExclusiveMatchMailer {
 									continue;
 								}
 							}
-							
 							if($v["FOLLOWUP_4"]){
 								$reason = explode("|", $v["FOLLOWUP_4"]);
 								if($reason[0] == "RNR/Switched off" || $reason[0] == "Not reachable"||$reason[0]=="RNR/Switched off/Not reachable")
 									$reason[0] = "Non Contactable";
-								if($reason[0]=="Others")
-								    $reason[0]="Member already communicating with another profile";
+									if($reason[0]=="Others")
+								        $reason[0]=$reason[1];
 								$newResult[$key][$k]["FOLLOWUP_4"] = $reason[0];
 							}
 							
@@ -329,6 +332,7 @@ class ExclusiveMatchMailer {
 				}
 			}
 		}
+		
 		if(is_array($updateArr)){
 			$updateStr = implode(",", $updateArr);
 			$followupObj->updateMailerFlag($updateStr);

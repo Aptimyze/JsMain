@@ -25,6 +25,27 @@ class BILLING_SERVICE_STATUS extends TABLE {
 
     } 
 
+    public function getMaxExpiryExclusive($profileid,$billid=0){
+        try{
+            $sql="SELECT EXPIRY_DT AS EXP_DT,BILLID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND PROFILEID=:PROFILEID AND ACTIVE IN('E','Y') ";
+            if($billid != 0)
+                $sql.= " AND BILLID=:BILLID";
+            $sql.=" ORDER BY EXPIRY_DT DESC limit 1";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            if($billid != 0)
+                $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+            $prep->execute();
+            if($result=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                return $result;
+            }
+            return ;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+   
     public function getUpsellEligibleProfiles()
     {
         try
@@ -93,6 +114,24 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
+    
+    public function getExclusiveProfileForDates($expDate1){
+        try{
+            $sql="SELECT MAX(EXPIRY_DT) as EDATE,PROFILEID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND ACTIVE IN('Y') AND EXPIRY_DT>=:EXPDATE1 GROUP BY PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EXPDATE1",$expDate1,PDO::PARAM_STR);
+            //$prep->bindValue(":EXPDATE2",$expDate2,PDO::PARAM_STR);
+            $prep->execute();
+            while($result=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $profiles[$result['PROFILEID']]=$result['EDATE'];
+            }
+            return $profiles;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+    
     public function getMaxExpiryProfilesForDates($expDate1,$expDate2)
     {
         try

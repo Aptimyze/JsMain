@@ -259,17 +259,17 @@ function layerClose()
       similarProfileCheckSum = "";
     if(typeof NAVIGATOR=="undefined" || !NAVIGATOR)
       var NAVIGATOR="";
-       
+
         if(typeof getNAVIGATOR == "function" && NAVIGATOR==""){
             NAVIGATOR = getNAVIGATOR();
         }
             //if(window.location.href.search('toShowECP')!=-1)
             {
-    if(canIShowNext(similarProfileCheckSum,profilechecksum))       
-                {     
+    if(canIShowNext(similarProfileCheckSum,profilechecksum))
+                {
       //if(!ISBrowser("UC"))
-       //    enableLoader();  
-                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1";
+       //    enableLoader();
+                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1"+(((typeof SPA_CE!='undefined') && (SPA_CE=='Y')) ? "&fromSPA_CE=1" : "" );
                 }
             }
   }
@@ -651,14 +651,14 @@ function afterAction(result,action, index,isPrime){
 	}
         $("#ce_photo").attr("src", photo[index]);
         $("#profilePhoto").attr("src", photo[index]);
-    if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");  
+     if(window.location.hash.length===0 && ((typeof SPA_CE=='undefined') || (SPA_CE!='Y') || (result.actiondetails && result.actiondetails.writemsgbutton) || (result.actiondetails && result.actiondetails.errmsglabel) ) )      
+       historyStoreObj.push(browserBackCommonOverlay,"#pushce");
     var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
     if(ignoreFromPrime)
     {
         result.button_after_action.buttons = result.button_after_action.buttons.others;
         result.buttondetails.button = result.buttondetails.buttons.primary[0];
-        
+
     }
     if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
@@ -1573,15 +1573,15 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		}else{
 			 button+='pad5new ';
 		}
-		 button+='"><div class="posrel"><div id="primeWid_'+profileNoId+'"><a tupleNo="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl">';
+		 button+='"><div class="posrel"><div id="primeWid_'+profileNoId+'"><a tupleNo="id'+profileNoId+'" href="javascript:void(0);" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl">';
 		if(page!="viewSimilar"){
 				button+='<i class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i>';
 		}
-   
-    
+
+
 		button+='<div></div>'+
 				'<span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"/><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"/><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"/></a></div>';
-    
+
 		if(page!="viewSimilar"){
 
 				button+='<div class="posabs srp_pos2">'+
@@ -1594,8 +1594,8 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
         }
     else
     {
-     
-      button+='<div id="buttons_'+profileNoId+'"><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'" style="display: inline-block;border-right: 1px solid white;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl"><i style="height:20px" class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div></div></div><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'_1" style="display: inline-block;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'_1" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'_1" href="#" id="Prime_'+profileNoId+'_1" class="fontlig f13 whitecursp dispbl"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div></div></div>';
+
+      button+='<div id="buttons_'+profileNoId+'"><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'" style="display: inline-block;border-right: 1px solid white;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'" href="javascript:void(0);" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl"><i style="height:20px" class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div></div></div><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'_1" style="display: inline-block;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'_1" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'_1" href="#" id="Prime_'+profileNoId+'_1" class="fontlig f13 whitecursp dispbl"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div></div></div>';
       //button+='"><div class="fullwid bg7 clearfix" id="buttons_'+profileNoId+'"><div class="wid49p dispibl txtc" id="PrimeColor_'+profileNoId+'"><div id="primeWid_'+profileNoId+'"><a class="dispbl" style="width:115px"  tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'"><i class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div><div class="wid49p dispibl txtc ot_hgt1" id="PrimeColor_'+profileNoId+'_1" style="border-left:1px solid #fff;padding:12px 0 10px"><div id="primeWid_'+profileNoId+'"><a tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div>';
     }
 			disablePrimary[profileNoId]=false;

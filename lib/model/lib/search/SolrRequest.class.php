@@ -501,7 +501,7 @@ class SolrRequest implements RequestHandleInterface
                         }
                         if($loggedInProfileObj->getCITY_RES())
                         {
-																$filterQuery = $filterQuery."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".$loggedInProfileObj->getCITY_RES()."),0,1)),1,0),";
+                                $filterQuery = $filterQuery."if(and(tf(CITY_RES_FILTER,Y),if(tf(PARTNER_CITYRES,".SearchCommonFunctions::setCityForOtherCondition($loggedInProfileObj->getCITY_RES())."),0,1)),1,0),";
                         }
 												if($loggedInProfileObj->getMTONGUE())
                         {

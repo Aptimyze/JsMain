@@ -34,6 +34,11 @@ class CommunicationHistory
 		$messagelog    = $messagelogObj->getCommunicationHistory($this->loginProfile->getPROFILEID(), $this->otherProfile->getPROFILEID());
 		if (!empty($messagelog))
 			foreach ($messagelog as $key => $value) {
+				if($value[OBSCENE] == 'Y' && !$value['MESSAGE'] && $value['TYPE'] == 'R')
+                {
+                    unset($messagelog[$key]);
+                    continue;
+                }
 				$ids = $value["ID"];
 				if ($value[OBSCENE] == 'N')
 					$id_array[] = $ids;
@@ -79,7 +84,7 @@ class CommunicationHistory
 				$message_log[$value['DATE']]["type"]  = $type . $side;
 				$message_log[$value['DATE']]["who"]     = $who;
 				if($value['MESSAGE']){
-					if(strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false)
+					if((strpos($value['MESSAGE'],"||")!==false || strpos($value['MESSAGE'],"--")!==false ) && $value['TYPE']=="I")
 					{
 						$messageArr=explode("||",$value['MESSAGE']);
 						$eoiMsgCount = count($messageArr);

@@ -87,6 +87,8 @@ class PhotoHandler implements VariableHandler {
 			break;
 		case 'mailer':
 			$photo=$photo_obj ? $photo_obj->getSearchPicUrl() : PictureService::getRequestOrNoPhotoUrl('requestPhoto', 'SearchPicUrl', $viewing->getGENDER());
+		case 'contactMailer':
+			$photo=$photo_obj ? $photo_obj->getProfilePic450Url() : PictureService::getRequestOrNoPhotoUrl('requestPhoto', 'ProfilePic450Url', $viewing->getGENDER());
 			break;
 		}
 	}

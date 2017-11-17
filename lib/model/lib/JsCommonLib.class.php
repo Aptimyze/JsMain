@@ -543,6 +543,11 @@ public static function insertConsentMessageFlag($profileid) {
                                 $CODE['Income']='gnf';
                                 $CODE['Annual Income']='gnf';
                         }
+                        if(stristr($profile->getCITY_RES(), "OT"))
+                                $cityRes = substr($profile->getCITY_RES(), 0,2)."00";
+                        else
+                                $cityRes = $profile->getCITY_RES();
+                        
 			$cityArr=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_CITYRES()));
 			if($jpartnerObj->getSTATE())
 			{
@@ -562,12 +567,12 @@ public static function insertConsentMessageFlag($profileid) {
                         $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
                         $nativeState = $nativeData['NATIVE_STATE'];
                         $nativeCity = $nativeData['NATIVE_CITY'];
-                        if(strlen($profile->getCITY_RES())==2){
-                            $resState = $profile->getCITY_RES();
+                        if(strlen($cityRes)==2){
+                            $resState = $cityRes;
                             if(is_array($stateArr) && in_array($resState,$stateArr))
                                 $CODE['CITYRES']='gnf';
                         }
-                        if((is_array($stateArr) && in_array($nativeState,$stateArr)) || (is_array($ARR) && (in_array($profile->getCITY_RES(),$ARR) || ($nativeCity && in_array($nativeCity,$ARR)))))
+                        if((is_array($stateArr) && in_array($nativeState,$stateArr)) || (is_array($ARR) && (in_array($cityRes,$ARR) || ($nativeCity && in_array($nativeCity,$ARR)))))
 				$CODE['CITYRES']='gnf';
 		}
 		return $CODE;	

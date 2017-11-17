@@ -122,7 +122,7 @@ class apidetailedv1Action extends sfAction
 
                 // VA Whitelisting
                 //whiteListing of parameters
-                DetailActionLib::whiteListParams($request);
+                //DetailActionLib::whiteListParams($request);
 
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
@@ -287,7 +287,7 @@ class apidetailedv1Action extends sfAction
                     }
                 }
         //this part is used to add dpp_Ticks for dppMatching on Android
-        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite())
+        if(MobileCommon::isAndroidApp() || MobileCommon::isNewMobileSite() || MobileCommon::isIOSApp())
         {
         	$tickArr = array();
 

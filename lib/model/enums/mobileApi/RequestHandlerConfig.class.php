@@ -15,7 +15,8 @@ class RequestHandlerConfig
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
         "notificationOpenedTracking"=>array("v1"=>"notificationOpenedTrackingV1"),
-        "notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1")),
+        "notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1"),
+        "updateTracking"=>array("v1"=>"updateTrackingV1")),
     "search"=>array(
         "partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
         "perform"=>array("v1"=>"performV1","v2"=>"","v3"=>"performV1"),
@@ -38,8 +39,7 @@ class RequestHandlerConfig
                 "info"=>array("v1"=>"ApiContactUsV1","v2"=>"","v3"=>"ApiContactUsV1")),
     "membership"=>array(
                 "membershipDetails"=>array("v1"=>"ApiMembershipDetailsV1","v2"=>"ApiMembershipDetailsV2","v3"=>"ApiMembershipDetailsV3"),
-                "deactivateCurrentMembership"=>array("v1"=>"DeactivateCurrentMembershipV1")
-                ),
+                "deactivateCurrentMembership"=>array("v1"=>"DeactivateCurrentMembershipV1")),//,"updateRestoreId"=>array("v1"=>"UpdateRestoreIdV1")),
     "profile"=>array(
         "editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
        	"downloadHoroscope" => array("v1" => "downloadHoroscopeV1", "v2" => "", "v3" => "downloadHoroscopeV1"),

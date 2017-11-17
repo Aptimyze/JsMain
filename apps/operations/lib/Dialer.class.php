@@ -116,7 +116,7 @@ class Dialer
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
 	
-                                if($analyticScore<70){
+                                if($analyticScore<$scoreRange1){
                                 	$this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
                                         continue;  
 				}     
@@ -186,14 +186,18 @@ class Dialer
                                         $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
                                         $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
 
-					if($campaignName=='noida'){
+					if($campaignName=='noida' || $campaignName=='delhi'){
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}	
-					elseif($campaignName=='mumbai'){
+					elseif($campaignName=='mumbai' || $campaignName=='pune'){
 						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
 					}
-					if($discount>=$discountRange1 && $discount<=$discountRange2)
-						$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+					if($discount>=$discountRange1 && $discount<=$discountRange2){
+						if($profileid%4==2 || $profileid%4==3)
+							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+						else
+							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+					}
 					else
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
 				}	

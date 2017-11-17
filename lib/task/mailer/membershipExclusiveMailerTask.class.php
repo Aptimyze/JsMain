@@ -53,6 +53,7 @@ EOF;
 				} else {
 					$currency = "DOL";
 				}
+                                $dataArr["username"] = $subsArr[$profileid]['USERNAME'];
 				$dataArr['currency'] =$currency;
 				$mmObj->sendMembershipMailer($mailId, $profileid, $dataArr);
 				unset($dataArr);
@@ -60,7 +61,7 @@ EOF;
 			}
 		}
 		unset($mmObj);
-                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com";
+                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com,anurag.tripathi@jeevansathi.com";
 		$latest_date	=date("Y-m-d");
                 $subject        ="Exclusive Feerback Monthly Mailer for ".date("jS F Y", strtotime($latest_date));
                 $fromEmail      ="From:JeevansathiCrm@jeevansathi.com";

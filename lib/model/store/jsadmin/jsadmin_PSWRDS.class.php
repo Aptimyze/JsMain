@@ -887,5 +887,15 @@ class jsadmin_PSWRDS extends TABLE
             throw new jsException($e);
         }
     }
+    
+     public function getAgentContactDetails($agentUsername) {
+        $sql = "SELECT FIRST_NAME, LAST_NAME, PHONE, EMAIL FROM jsadmin.PSWRDS "
+                . "WHERE USERNAME = :AGENT_USERNAME LIMIT 1";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
+        $res->execute();
+        
+        return $res->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>

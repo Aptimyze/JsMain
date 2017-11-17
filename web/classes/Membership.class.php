@@ -1406,7 +1406,7 @@ class Membership
         {
             $subject = $this->username . " has paid for Exclusive services";
             $msg = "Date: " . date("Y-m-d", strtotime($this->entry_dt)) . ", Amount: " . $this->curtype . " " . $this->amount; 
-            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'rajeev.kailkhura@naukri.com,sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com,deepa.negi@naukri.com');
+            SendMail::send_email('smarth.katyal@jeevansathi.com, suruchi.kumar@jeevansathi.com,webmaster@jeevansathi.com,rishabh.gupta@jeevansathi.com,kanika.tanwar@jeevansathi.com,princy.gulati@jeevansathi.com', $msg, $subject, 'payments@jeevansathi.com', 'sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com');
         }
         
         $this->sendInstantSms();
@@ -1455,6 +1455,7 @@ class Membership
         		if($actDiscPerc>=$siteDiscPerc)
         			$netDiscPer =$actDiscPerc-$siteDiscPerc;
         		if($netDiscPer>=5){
+        		    $total = $total + $siteDisc;
                     $msg  = "'{$this->username}' has been given a discount greater than visible on site, <br>";
                     $msg .= "Total Gross Value of Products Sold: $this->curtype $total /- <br>";
                     $msg .= "Products billed: $this->serviceName <br>";

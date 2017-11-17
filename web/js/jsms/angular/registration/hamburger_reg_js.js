@@ -52,7 +52,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 			this.alreadyUpdated=false;
                         this.type = $(element).attr('dshow').toLowerCase();
 
-                        var preFetchArray = ["height","country_res","state_res","reg_city_jspc","edu_level_new","occupation","income","reg_mstatus","reg_mtongue","religion"];
+                        var preFetchArray = ["height","country_res","state_res","reg_city_jspc","edu_level_new","occupation","income","reg_mstatus","reg_mtongue","religion","res_status"];
                         if(preFetchArray.indexOf(this.type) != -1) {
                             staticTables.getData(this.type);
                         }

@@ -62,10 +62,11 @@ EOF;
             
             //Common Parameters required in mailer links
             $data["commonParamaters"] ="/".$receiverechecksum."/".$receiverProfilechecksum;
-            $data["subject"]= "Get more matching profiles in your Inbox by broadening your Desired Partner Profile"; 
-            $data["body"]="We always strive to send the most relevant matches to you based on your Desired Partner Profile. It looks like your Desired Partner Profile could be too strict, which may reduce the number of interests and relevant daily recommendations you receive.<br><br>
-Please <a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>Edit Desired Partner Profile</a> to get more relevant matches.<br><br>
-If you require any assistance with your editing your Desired Partner Profile, do look out for suggestions (available on Desktop Site as of now) while you are editing a section. You may also call us at our toll-free number or Email us at help@jeevansathi.com, so that we can help you set a Desired Partner Profile which best suits your needs.";
+            $data["subject"]= "Update your 'Desired Partner Profile' to receive more Daily Recommendations"; 
+            $data["body"] = "We have very limited new matches available for you based on the <a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>'Desired Partner Profile'</a> mentioned on your profile.<br /><br />
+You may like to <a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>review your Desired Partner Profile</a> and check if you can relax some of your preferences to receive more matches. <br /><br />You should ideally have 500 Mutual Matches to be receiving 20 matches every day (The number of Mutual Matches you have is displayed on top of 'Desired Partner Profile' page),<br /><br />
+You may also want some of the matches you can have a look at your Desired Partner Matches, just in case you missed them:<br /><br />
+<a href='".$mailerLinks['SUGGESTED_MATCHES'].$data['commonParamaters']."?From_Mail=Y&stype=".$data['stypeMatch']."'>Desired Partner Matches</a>";
             $data["showDpp"]= 1;
             $data["mailSentDate"] = date("Y-m-d H:i:s");
             $subject ='=?UTF-8?B?' . base64_encode($data["subject"]) . '?=';

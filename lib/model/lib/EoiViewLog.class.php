@@ -33,9 +33,9 @@ class EoiViewLog{
             $condition["WHERE"]["IN"]["RECEIVER"] = $receiver;
             $condition["WHERE"]["NOT_IN"]["SEEN"] = 'Y';
             if($filtered=="Y")
-				$condition["WHERE"]["IN"]["FILTERED"] = 'Y';
+				$condition["WHERE"]["IN"]["FILTERED"] = array('J', 'Y');
 			elseif($filtered=="N")
-				$condition["WHERE"]["NOT_IN"]["FILTERED"] = 'Y';
+				$condition["WHERE"]["NOT_IN"]["FILTERED"] = array('J', 'Y');
             $eoiSenderArray=(new ContactsRecords())->getContactedProfileArray($receiver,$condition);
             
             foreach ($eoiSenderArray as $key => $value) 

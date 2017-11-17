@@ -100,7 +100,7 @@ EOF;
                 /**
                  * send csv as mail
                  */
-                $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com,anoop.singhal@naukri.com,pawan.tripathi@naukri.com";
+                $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com,anoop.singhal@naukri.com,pawan.tripathi@naukri.com,shilpi.sharma@naukri.com";
                 $cc = "manoj.rana@naukri.com,vibhor.garg@jeevansathi.com";
                 //$to = "ankita.g@jeevansathi.com";
                 $message = "Please find attached excel sheet containing requested data";

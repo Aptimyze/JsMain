@@ -251,6 +251,7 @@ class ApiResponseHandler
                         {
                                 $output["selfUsername"] = $loggedIn->getUSERNAME();
                                 $output["selfGender"] = $loggedIn->getGENDER();
+                                $output["showAndBeyond"] = CommonFunction::showAndBeyondPixel($loggedIn->getPROFILEID());
                         }
                 }
 

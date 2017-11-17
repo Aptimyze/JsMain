@@ -15,8 +15,10 @@ class DialerDncScrubing
 		if($dateTime) 
 			$squery1 .=" and Login_Timestamp>='$dateTime'";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
-		while($srow1 = mssql_fetch_array($sresult1))
-			$dnc_array[] = $srow1["PROFILEID"];
+		while($srow1 = mssql_fetch_array($sresult1)){
+			if($srow1["PROFILEID"]>0)
+				$dnc_array[] = $srow1["PROFILEID"];
+		}
 		return $dnc_array;
 	}
         public function compute_dnc_array_forSalesCampaign($campaign_name, $leadId)
@@ -40,7 +42,7 @@ class DialerDncScrubing
 		$profileid_str = implode(",",$dnc_array);
 		if($profileid_str!=''){
 			$sql_vd="select PROFILEID from newjs.CONSENT_DNC WHERE PROFILEID IN ($profileid_str)";
-			$res_vd = mysql_query($sql_vd,$this->db_js) or $this->logError($squery1);
+			$res_vd = mysql_query($sql_vd,$this->db_js_111) or $this->logError($sql_vd,$campaign_name,$this->db_js_111); 
 			while($row_vd = mysql_fetch_array($res_vd))
 				$opt_in_profiles[] = $row_vd["PROFILEID"];
 		}
@@ -57,8 +59,8 @@ class DialerDncScrubing
         	                $table ='incentive.RENEWAL_IN_DIALER';
         	        else
         	                $table ='incentive.IN_DIALER';
-        	        $sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE!='N'";
-        	        $res_vd = mysql_query($sql_vd,$this->db_js) or die($sql_vd.mysql_error($this->db_js));
+        	        $sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE='Y'";
+        	        $res_vd = mysql_query($sql_vd,$this->db_js_111) or $this->logError($sql_vd,$campaign_name,$this->db_js_111);
         	        while($row_vd = mysql_fetch_array($res_vd))
         	                $eligible_profiles[] = $row_vd["PROFILEID"];
         	}
@@ -96,7 +98,7 @@ class DialerDncScrubing
 
 				$updateString ='Dial_Status='.$dialStatus;
 				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateString',now(),'OPTIN')";
-				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
+				mysql_query($log_query,$this->db_js_111) or $this->logError($log_query, $campaign_name, $this->db_js_111); 
 			}
 		}
 	}
@@ -113,7 +115,7 @@ class DialerDncScrubing
                                 mssql_query($query1,$this->db_dialer) or $this->logError($query1,$campaign_name,$this->db_dialer,1);
 
                                 $log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo','$campaign_name','Dial_Status=1',now(),'OPTIN')";
-                                mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
+                                mysql_query($log_query,$this->db_js_111) or $this->logError($log_query, $campaign_name, $this->db_js_111);
                         }
                 }
         }
@@ -131,7 +133,7 @@ class DialerDncScrubing
 	{
 		$profileArr =array();
 		$sql= "SELECT PROFILEID,ACTIVATED FROM newjs.JPROFILE WHERE PHONE_MOB='$phoneNo' OR PHONE_WITH_STD='$phoneNo'";
-		$res=mysql_query($sql,$this->db_js) or die($sql.mysql_error($this->db_js));
+		$res=mysql_query($sql,$this->db_js_111) or $this->logError($sql,$campaign_name,$this->db_js_111); 
 		while($myrow = mysql_fetch_array($res)){
 			if($myrow['ACTIVATED']!='D')
 				$profileArr[] = $myrow["PROFILEID"];
@@ -139,12 +141,12 @@ class DialerDncScrubing
 
 		if(count($profileArr)==0){
 			$sql1= "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE ALT_MOBILE='$phoneNo'";
-			$res1=mysql_query($sql1,$this->db_js) or die($sql1.mysql_error($this->db_js));
+			$res1=mysql_query($sql1,$this->db_js_111) or $this->logError($sql1,$campaign_name,$this->db_js_111); 
 			while($myrow1 = mysql_fetch_array($res1)){
 
 				$pid = $myrow1["PROFILEID"];
 				$sql2= "SELECT PROFILEID FROM newjs.JPROFILE WHERE PROFILEID='$pid' AND ACTIVATED!='D'";
-				$res2=mysql_query($sql2,$this->db_js) or die($sql2.mysql_error($this->db_js));
+				$res2=mysql_query($sql2,$this->db_js_111) or $this->logError($sql2,$campaign_name,$this->db_js_111);
 				if($myrow2 = mysql_fetch_array($res2)){
 					$profileArr[] =$myrow2["PROFILEID"];
                         	}
@@ -154,8 +156,11 @@ class DialerDncScrubing
 	}
 	public function logError($sql,$campaignName='',$dbConnect='',$ms='')
 	{
+		$processName ='Optin-Process';
+		if(!$campaignName)
+			$campaignName ='Optin-Process';
                 $dialerLogObj =new DialerLog();
-                $dialerLogObj->logError($sql,$campaignName,$dbConnect,$ms);
+                $dialerLogObj->logError($sql,$campaignName,$dbConnect,$ms, $processName);
 	}
 }
 ?>

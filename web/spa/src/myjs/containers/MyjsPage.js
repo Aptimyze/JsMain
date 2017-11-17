@@ -31,7 +31,8 @@ export class CheckDataPresent extends React.Component{
 constructor(props){
 	super(props);
 }
-	componentDidMount(){
+componentDidMount(){
+	if(this.props.mountFun)this.props.mountFun();
 	this.props.restApiFun();
 }
 	render(){
@@ -69,17 +70,21 @@ export  class MyjsPage extends React.Component {
   		super();
 			jsb9Fun.recordBundleReceived(this,new Date().getTime());
 			jsb9Fun.setJsb9Key(this,'JSNEWMOBMYJSURL');
-		this.state=
-		{
-			myjsApi: false,
-			hamApi: false,
-			showPromo: false,
-			deviceHeight: window.innerHeight
-		}
+			this.state=
+			{
+				myjsApi: false,
+				hamApi: false,
+				showPromo: false,
+				deviceHeight: window.innerHeight,
+				didUpdateCall: false,
+				loaderStyle: {display:'none'}
+			}
+		this.GAObject = new GA();
   	}
 
   	componentDidMount()
   	{
+			this.callEventListner();
   		if(this.props.myjsData.timeStamp==-1 || ( (new Date().getTime() - this.props.myjsData.timeStamp) > this.props.myjsData.apiData.cache_interval) ){ // caching conditions go here in place of true
 			this.firstApiHits(this);
 			this.ieApi = false;
@@ -92,24 +97,19 @@ export  class MyjsPage extends React.Component {
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
 				this.firstApiHits(this);
 			}
-		}
-		this.checkforgap("mount");
-
+		//	this.hideLoader('hide');
+		}		
+		this.GAObject.trackJsEventGA("jsms","new","1");
 	}
 
 
 	componentDidUpdate(){
-		if(this.props.myjsData.modFetched){
-			this.restApiHits(this);
-		}
-		this.callEventListner();
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 	}
 
 	componentWillReceiveProps(nextProps)
 	{
-		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched && !nextProps.myjsData.ieFetched){
-			this.restApiHits(this);
+		if(nextProps.myjsData.hamFetched && nextProps.myjsData.fetched){
 		}
 		else{
 			if(!this.props.myjsData.fetched || !this.props.myjsData.hamFetched){
@@ -133,7 +133,7 @@ export  class MyjsPage extends React.Component {
 		if(document.getElementById('perspective')){
 			current = document.getElementById('perspective').clientHeight;
 		}
-		if(current>this.state.deviceHeight)
+		if(current > (this.state.deviceHeight +70))
 			return 1;
 		else
 			return 0;
@@ -152,6 +152,7 @@ export  class MyjsPage extends React.Component {
 	}
 
 	componentWillUnmount(){
+		window.removeEventListener('scroll',this.scrollFun,false);
 		this.props.jsb9TrackRedirection(new Date().getTime(),this.url);
 	}
 
@@ -175,7 +176,10 @@ export  class MyjsPage extends React.Component {
 	}
 
   	callEventListner(){
-   		window.addEventListener('scroll', (event) => {this.restApiHits(event)});
+			this.scrollFun = (event) => {
+				this.restApiHits(true)
+			};
+   		window.addEventListener('scroll', this.scrollFun,false );
   	}
 
   	firstApiHits(obj){
@@ -186,61 +190,73 @@ export  class MyjsPage extends React.Component {
 		    });
 		}
   		else if(!this.state.hamApi){
-		    this.props.hitApi_Ham();
+		    this.props.hitApi_Ham(this);
 		    this.setState({
 		    	hamApi: true
 		    });
 		}
   	}
 
-  	restApiHits()
+  	restApiHits(fromScroll)
 		{
+			if(fromScroll)
+			{
+				this.scrolledOnce = 1;
+				window.removeEventListener('scroll',this.scrollFun,false);
+			}
 			try
 			{
-				if(this.isScreenFull() && event.type != "scroll" && !this.props.myjsData.modFetched)
+				if(!this.scrolledOnce && (this.isScreenFull())  )
 				{
 					 return;
 				}
-				if(!this.props.myjsData.ieFetched)
+				// else{
+				// 	if(event.type == "scroll"){
+				// 		this.setState({
+				// 			is_already_scrolled:true
+				// 		})
+				// 	}
+				// }
+				if(!this.ieMounted)
 				{
 					if(!this.ieApi)
 					{
 						this.ieApi = true;
-					this.props.hitApi_IE();
+					this.props.hitApi_IE(this);
 					}
 				}
-				else if(!this.props.myjsData.irFetched)
+				else if(!this.irMounted)
 				{
 					if(!this.irApi)
 					{
 						this.irApi = true;
-						this.props.hitApi_IR();
+						this.props.hitApi_IR({containerObj:this});
 					}
 				}
-				else if(!this.props.myjsData.modFetched)
+				else if(!this.modMounted)
 				{
 					if(!this.modApi)
 					{
 						this.modApi = true;
-						this.props.hitApi_MOD();
+						this.props.hitApi_MOD(this);
 					}
 				}
-				else if(!this.props.myjsData.vaFetched)
+				else if(!this.vaMounted)
 				{
 					if(!this.vaApi)
 					{
 						this.vaApi = true;
-							this.props.hitApi_VA();
+						this.props.hitApi_VA(this);
+
 					}
 				}
-				else if(!this.props.myjsData.drFetched)
+				else if(!this.drMounted)
 				{
 					if(!this.drApi)
 					{
 						this.drApi = true;
-						this.props.hitApi_DR();
+						this.props.hitApi_DR(this);
 					}
-					this.checkforgap("lastcall");
 				}
 			}
 
@@ -251,29 +267,17 @@ export  class MyjsPage extends React.Component {
 			}
 
 		}
-		checkforgap(param)
+		hideLoader(param)
 		{
+
       let ele=document.getElementById("JBrowserGap");
-      if ( (navigator.userAgent.indexOf('SamsungBrowser/') >= 0) || (navigator.userAgent.indexOf(' UCBrowser/') >= 0) )
+			if(param=='hide')
 			{
-
-					ele.style.height="100px";
-          if(param=="mount")
-    			{
-    				//alert("in mpunt");
-    				if(ele.classList.contains("dn") )
-    				{
-    					ele.classList.remove("dn");
-    				}
-    			}
-    			else if(param=="lastcall")
-    			{
-
-    				if(!ele.classList.contains("dn") )
-    				{
-    					ele.classList.add("dn");
-    				}
-    			}
+				this.setState({loaderStyle:{display:'none'}});
+			}
+			else if(param=="show")
+			{
+				this.setState({loaderStyle:{display:'block'}});
 			}
 
 		}
@@ -283,7 +287,7 @@ export  class MyjsPage extends React.Component {
 			this.props.myjsData.apiDataIR.paginationHit = true;
 			var nextPage = parseInt(this.props.myjsData.apiDataIR.page_index);
 			nextPage++;
-			this.props.hitApi_IR(nextPage);
+			this.props.hitApi_IR({nextPage:nextPage});
 		}
   	render() {
 		var promoView;
@@ -319,24 +323,24 @@ export  class MyjsPage extends React.Component {
 
 
 			if(this.props.myjsData.ieFetched){
-	    	var interestExpView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
+	    	var interestExpView = <CheckDataPresent mountFun={()=>{this.ieMounted=1;}} restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.ieFetched} blockname={"int_exp"} data={this.props.myjsData.apiDataIE} url='/inbox/23/1'/>
 	    }
 
-	    if(this.props.myjsData.irFetched && this.props.myjsData.apiDataIR.profiles){
-	    	var interestRecView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} apiHit={()=>this.props.hitApi_IR()} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
+	    if(this.props.myjsData.irFetched ){
+	    	var interestRecView = <MyjsSlider mountFun={()=>{this.irMounted=1;}} restApiFun={this.restApiHits.bind(this)} showLoader='1' cssProps={this.state.cssProps} apiNextPage={this.hitIRforPagination.bind(this)} fetched={this.props.myjsData.irFetched} displayProps = {DISPLAY_PROPS} title='Interest Received' history={this.props.history} location={this.props.location} listing ={this.props.myjsData.apiDataIR} listingName = 'interest_received' url='inbox/1/1'/>
 	    }
 
-	    if(this.props.myjsData.modFetched && this.props.myjsData.apiDataMOD.profiles){
-	    	var matchOfTheDayView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
+	    if(this.props.myjsData.modFetched){
+	    	var matchOfTheDayView = <MyjsSlider mountFun={()=>{this.modMounted=1;}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.modFetched} displayProps = {DISPLAY_PROPS} title='Match of the Day' listing ={this.props.myjsData.apiDataMOD} location={this.props.location} history={this.props.history} listingName = 'match_of_the_day' url='/inbox/24/1'/>
 	    }
 	    if(this.props.myjsData.vaFetched ){
-	    	var MyjsProfileVisitorView = <CheckDataPresent restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
+	    	var MyjsProfileVisitorView = <CheckDataPresent mountFun={()=>{this.vaMounted=1;}} restApiFun={this.restApiHits.bind(this)} fetched={this.props.myjsData.vaFetched} location={this.props.location} history={this.props.history} blockname={"prf_visit"} data={this.props.myjsData.apiDataVA}/>
 	    }
-	    if(this.props.myjsData.drFetched && this.props.myjsData.apiDataDR.profiles)
+	    if(this.props.myjsData.drFetched)
 	    {
-				var dailyRecommendationsView = <MyjsSlider restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'match_alert' url='/inbox/7/1'/>
+				var dailyRecommendationsView = <MyjsSlider mountFun={()=>{this.drMounted=1;this.setState({allHitsDone:true});}} restApiFun={this.restApiHits.bind(this)} cssProps={this.state.cssProps} fetched={this.props.myjsData.drFetched} displayProps = {DISPLAY_PROPS} title='Daily Recommendations' listing ={this.props.myjsData.apiDataDR} location={this.props.location} history={this.props.history} listingName = 'dailymatches' hitFromMyjs='1' url='/inbox/7/1'/>
 	    }
-			if(   (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched) )
+			if( this.state.allHitsDone && ( (this.props.myjsData.drFetched) || (this.props.myjsData.vaFetched)|| (this.props.myjsData.irFetched)) )
 			{
 				var noDatablockView=<NodataBlock restApiFun={this.restApiHits.bind(this)} data={this.props.myjsData}/>
 			}
@@ -355,11 +359,10 @@ export  class MyjsPage extends React.Component {
     	}
 
   		return(
-  		<div id="MyjsPage" style={style}>
+  		<div id="MyjsPage" style={{}}>
   			{promoView}
 	  		<div className="fullheight" id="mainContent">
-			  	<MetaTagComponents page="MyjsPage"/>
-			  	<GA ref="GAchild" />
+			  	<MetaTagComponents page="MyjsPage"/>			  	
 				<div className="perspective" id="perspective">
 					<div className="" id="pcontainer">
 									{MyjsHeadHTMLView}
@@ -375,7 +378,9 @@ export  class MyjsPage extends React.Component {
 									{noDatablockView}
 									{ShowBrowserNotificationView}
 					</div>
-					<div id="JBrowserGap"></div>
+					<div id="JBrowserGap" style={this.state.loaderStyle} className={"fullwid txtc "} >
+						<img className="pt20" src="https://static.jeevansathi.com/images/jsms/commonImg/loader.gif"/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -401,26 +406,39 @@ const mapDispatchToProps = (dispatch) => {
         jsb9TrackRedirection : (time,url) => {
 			jsb9Fun.recordRedirection(dispatch,time,url)
 		},
-     	hitApi_DR: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1',{},'SET_DR_DATA','POST',dispatch);
+     	hitApi_DR: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL1+'?&searchBasedParam=matchalerts&caching=1&JSMS_MYJS=1&myjs=1&listingName=dailymatches&hitFromMyjs=1',{},'SET_DR_DATA','POST',dispatch).then(()=> {
+            	containerObj.hideLoader('hide');
+							window.removeEventListener('scroll',containerObj.scrollFun,false);
+						});
 		},
-     	hitApi_MOD: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_MOD_DATA','POST',dispatch);
+     	hitApi_MOD: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=24&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_MOD_DATA','POST',dispatch).then(()=>{
+
+            });
         },
-  	    hitApi_IR: (nextPage) => {
+  	    hitApi_IR: (obj) => {
 					let reducerName = '';
-					if(typeof nextPage == 'undefined'){ nextPage=1;reducerName = 'SET_IR_DATA';}
+					if(typeof obj.nextPage == 'undefined'){ obj.nextPage=1;reducerName = 'SET_IR_DATA';}
 					else { reducerName = 'SET_IR_PAGINATION';}
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=1&pageNo='+nextPage+'&caching=1&JSMS_MYJS=1',{},reducerName,'POST',dispatch);
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=1&pageNo='+obj.nextPage+'&caching=1&JSMS_MYJS=1',{},reducerName,'POST',dispatch).then(()=>{
+
+            });;
         },
-        hitApi_VA: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1',{},'SET_VA_DATA','POST',dispatch);
+        hitApi_VA: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=5&pageNo=1&matchedOrAll=A&caching=1&JSMS_MYJS=1',{},'SET_VA_DATA','POST',dispatch).then(()=>{
+
+            });;
         },
-        hitApi_IE: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_IE_DATA','POST',dispatch);
+        hitApi_IE: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL2+'?&infoTypeId=23&pageNo=1&caching=1&JSMS_MYJS=1',{},'SET_IE_DATA','POST',dispatch).then(()=>{
+
+            });;
         },
-        hitApi_Ham: () => {
-            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch);
+        hitApi_Ham: (containerObj) => {
+            return commonApiCall(CONSTANTS.MYJS_CALL_URL3,{},'SET_HAM_DATA','POST',dispatch).then(()=>{
+            	containerObj.restApiHits(); containerObj.hideLoader("show");
+            });
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
 				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})

@@ -115,6 +115,9 @@ class ProcessHandler
           $smarty->assign('mailerLinks',$mailerLinks);
 
           $widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+          if($body["body"]){
+              $body = $body["body"];
+          }
           $agentEmail = $body["AGENT_EMAIL"];
           $agentName = $body["AGENT_NAME"];
           $agentPhone = $body["AGENT_PHONE"];
@@ -143,6 +146,8 @@ class ProcessHandler
               } else {
                   $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
               }
+          } else {
+              $exclusiveFuncObj->updateStatusForProposalMail($pid,$body["USER1"],'I');
           }
           break;
     }
@@ -219,7 +224,7 @@ try{
 }
   /**
    * 
-   * Function for sending notifications.
+   * Function for sending notifications (Send Instant App Notification from MESSAGE-QUEUE).
    * 
    * @access public
    * @param $type,$body
@@ -231,16 +236,6 @@ try{
     $message 		=$body['message'];
     $exUrl		=$body['exUrl'];
     $extraParams 	=$body['extraParams'];		    
-
-    /*switch($type)
-    {
-      case 'ACCEPTANCE' :  $instantNotificationObj = new InstantAppNotification("ACCEPTANCE");
-                           $instantNotificationObj->sendNotification($receiverid, $senderid);
-                           break;
-      case 'MESSAGE'    :  $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
-                           $instantNotificationObj->sendNotification($receiverid, $senderid, $message);  
-                           break;
-    }*/
 
     // Handle All Instant App Notification	
     $notificationKey =$type;	
@@ -263,7 +258,7 @@ try{
     {
       switch($type)
       {
-        case "BROWSER_NOTIFICATION" : GcmNotificationsSender::handleNotification($type,$body,false);
+        case "BROWSER_NOTIFICATION" : FcmNotificationsSenderHandler::handleNotification($type,$body,false);
                                       break;
         case "FSOAPP_NOTIFICATION"  : GcmNotificationsSender::handleNotification($type,$body,true);
                                       break;
@@ -271,7 +266,7 @@ try{
     }    
   }
  
-  // Instant Browser Notification	 
+  // Instant Browser Notification (Add Instant Browser Notification to MESSAGE-QUEUE)	 
   public function sendInstantNotification($type, $body)
   {
     if($body){
@@ -504,7 +499,6 @@ try{
          $producerObj=new Producer();
          $producerObj->sendMessage($reSendData);
      }
-
  }
 
   public function logDuplicate($phone,$profileId)

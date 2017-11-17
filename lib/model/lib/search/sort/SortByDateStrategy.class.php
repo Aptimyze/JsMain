@@ -24,7 +24,9 @@ class SortByDateStrategy extends SearchSort implements SortStrategyInterface
   public function __construct($SearchParamtersObj, $loggedInProfileObj = '') {
     $this->SearchParamtersObj = $SearchParamtersObj;
     $this->setReverseDPPSort(); // to set reverse DPP sorting
-    parent::isPhotoSorting($SearchParamtersObj, $loggedInProfileObj);
+    if($this->SearchParamtersObj->getIS_APCron())
+        $usePhotoSorting = 1;
+    parent::isPhotoSorting($SearchParamtersObj, $loggedInProfileObj,$usePhotoSorting);
     parent::isFilterSorting($loggedInProfileObj);
     
     parent::setReverseDppSorting($loggedInProfileObj, 1);
@@ -62,7 +64,7 @@ class SortByDateStrategy extends SearchSort implements SortStrategyInterface
       $counter++;
     }
 
-    $sortString[$counter] = "LAST_LOGIN_DT";
+    $sortString[$counter] = "SORT_DT";
     $sortAscOrDesc[$counter] = $this->sortByDesc;
     $counter++;
     if (SearchConfig::$filteredRemove && parent::getFilterSort())
