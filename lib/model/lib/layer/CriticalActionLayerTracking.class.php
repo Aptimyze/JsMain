@@ -87,7 +87,7 @@ class CriticalActionLayerTracking
     $NO_LIGHT_CAL = $calRedisKeys[0][2]; // lightning cal flag
     if($checkForIndependentCal && $NO_LIGHT_CAL==1)
         return 0;
-    else if(($calDayFlag==1 || $calNoDayFlag==1))
+    else if(!$checkForIndependentCal && ($calDayFlag==1 || $calNoDayFlag==1))
         return 0;
 
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
