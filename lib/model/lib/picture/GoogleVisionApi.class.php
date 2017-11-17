@@ -57,7 +57,8 @@ class GoogleVisionApi
 				    }
 				  ]
 				}';
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+		//$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCSQBtJte7cqF6WdKJfkt5QysEw4s-aW9E";
 
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -157,7 +158,8 @@ class GoogleVisionApi
 				    }
 				  ]
 				}';
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+		//$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCSQBtJte7cqF6WdKJfkt5QysEw4s-aW9E";
 
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
