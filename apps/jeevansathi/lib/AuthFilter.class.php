@@ -247,45 +247,13 @@ class AuthFilter extends sfFilter {
 				if ($MOB_COOKIE == 'Y') $request->setAttribute('MOB_YES', 1);
 				//$request->setAttribute('loginData', $data);
 				//$request->setAttribute('protect_obj', $protect_obj);
-				$bmsObj = new BMSHandler();
-				$zedo = $bmsObj->setBMSVariable($data,1,$request);
-				$request->setAttribute("zedo",$zedo);
+				if(MobileCommon::isDesktop()){
+					$bmsObj = new BMSHandler();
+					$zedo = $bmsObj->setBMSVariable($data,1,$request);
+					$request->setAttribute("zedo",$zedo);
+				}
 
 				//Kundli Block
-				if($login)
-				{
-					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					$kundliData=JsMemcache::getInstance()->get($key);
-					if($kundliData)
-                                        {
-                                                $kundli_link = $kundliData;
-                                        }
-					else
-					{
-						$naObj = ProfileAstro::getInstance();
-                                                if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
-						{
-							if(JsConstants::$alertServerEnable) {
-                                                        $kakcc = new KUNDLI_ALERT_KUNDLI_CONTACT_CENTER("newjs_slave");
-                                                        if($kakcc->ifKundliMatchesExist($data["PROFILEID"]))
-								$kundli_link = 2;
-							else
-								$kundli_link = 3;
-                                                        unset($kakcc);
-							}
-							else
-								$kundli_link = 3;
-						}
-                                                else
-                                                       	$kundli_link = 1;
-                                                unset($naObj);
-						JsMemcache::getInstance()->set($key,$kundli_link,1800);
-					}
-				}
-				else
-					$kundli_link = 3;
-
-				$request->setAttribute('kundli_link', $kundli_link);
 				//OLD Variables block
 				//Paid memeber or free member for header link name changes
 				if($data[SUBSCRIPTION]!=""){
