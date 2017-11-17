@@ -599,7 +599,7 @@ class ProfileInformationModuleMap
 			"TITLE"=> "Profile Visitors",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
+			"BUTTONS"=> "INITIATE|SHORTLIST|BLOCK|CONTACT",
 			"TRACKING"=> "stype=AV",
 		),
 		"INTEREST_SENT"=>Array(
@@ -886,7 +886,7 @@ self::$ContactCenterMYJS=Array(
 			"TITLE"=> "Profile Visitors",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "INITIATE|SHORTLIST|BLOCK|CONTACT",
+			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
 			"TRACKING"=> "stype=AV",
 		),
 		"MATCH_ALERT"=>Array(
