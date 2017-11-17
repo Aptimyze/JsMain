@@ -254,8 +254,6 @@ class ApiResponseHandler
                                 $output["showAndBeyond"] = CommonFunction::showAndBeyondPixel($loggedIn->getPROFILEID());
                         }
                 }
-
-
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 
