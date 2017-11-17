@@ -164,6 +164,7 @@ class apidetailedv1Action extends sfAction
 
 // redis implementation
 // 
+try{
 	$request->setParameter('calFromPD',1);
 	$request->setParameter('layerId',19);
 	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
@@ -171,6 +172,11 @@ class apidetailedv1Action extends sfAction
 	ob_end_clean();
 	$layerData = json_decode($layerData, true);
 	$arrOut['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+	}
+	catch (Exception $e) {
+	    jsException::log("from pd api lightning cal : ".$e->getMessage());
+	    $arrOut['calObject'] = null;
+	}
 ///////////////////
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
