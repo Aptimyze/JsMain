@@ -257,7 +257,7 @@ $css_arr[]=array("apps/jeevansathi/modules/common/templates/CALJSMSSuccess"   =>
 $css_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $css_arr[]=array("jspc/static/postWeddingServices_css"    => "2");
 $css_arr[]=array(""    => "2");
-$css_arr[]=array("apps/jeevansathi/lib/SPA"     => "3");
+$css_arr[]=array("apps/jeevansathi/lib/SPA"      => "4");
 $css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMailer"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
 $css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSAGE_LOG"   => "1");
@@ -521,7 +521,7 @@ $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"          => "72");
 $js_arr[]=array("jsms/login/mobForgotPass_js"   => "16");
 $js_arr[]=array("jsms/login/resetPass_js"   => "5");
-$js_arr[]=array("jsms/hamburger/ham_js"     => "63");
+$js_arr[]=array("jsms/hamburger/ham_js"      => "64");
 $js_arr[]=array("jsms/settings/mobChangePass_js"   => "5");
 $js_arr[]=array("jsms/404/mob404_js" => "2");
 $js_arr[]=array("jsms/search/searchByProfileId_js"   => "8");
