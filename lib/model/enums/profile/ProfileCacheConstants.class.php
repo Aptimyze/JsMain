@@ -404,7 +404,7 @@ class ProfileCacheConstants
 
     public static $arrAadharVerifyColumns = array(
                                         'PROFILEID',
-                                        'AADHAR_ID',
+                                        'AADHAR_NO',
                                         'REQUEST_ID',
                                         'VERIFY_STATUS',
                                     );
@@ -418,10 +418,10 @@ class ProfileCacheConstants
 					"ProfileFilter"=>"fl",
 					"ProfileYourInfoOld"=>"yo",
 					"JprofileAlertsCache"=>"al",
-					"ProfileContact"=>"cn",
+					"ProfileContact"=>"ci",
 					"ProfileFSO"=>"fs",
 					"aadharVerification"=>"av",
-                                        "Jpartner"=>"di",
+                                        "Jpartner"=>"di", // nameofuser.nu,profileVerification.pv,apcallhistoryinfo.ch,coverphoto.co,additionalreligioninfo.ri,rel_info_muslim.rim,rel_info_sikh.ris,rel_info_chirstian.ric,rel_info_parsi.rip
 					/*""=>"",
 					""=>"",*/
 				);

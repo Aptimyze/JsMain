@@ -231,6 +231,14 @@ class ProfileCacheFunctions
 		{
 			$arrFields = ProfileCacheConstants::$arrJpartnerColumns;
 		}
+                else if($storeName ==  "aadharVerification") 
+		{
+			$arrFields = ProfileCacheConstants::$arrAadharVerifyColumns;
+		}
+                else if($storeName ==  "ProfileYourInfoOld") 
+		{
+			$arrFields = ProfileCacheConstants::$arrOldYourInfo;
+		}
 		return $arrFields;
 	}
         public static function getFinalFieldsArrayWithPrefix($storeName,$fields,$data = array()){
@@ -243,7 +251,7 @@ class ProfileCacheFunctions
                         foreach($allStoreFields as $k=>$fieldArray){
                                 $Flds = self::getColumnArr($k);
                                 $intersect = array_intersect($demanField, $Flds);
-                                if(count($intersect)>0){
+                                if($fields != "*" && count($intersect)>0){
                                         $demandedFields1 = self::getRelevantKeysName($intersect,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
                                         $demandedFields = array_merge($demandedFields,$demandedFields1);
                                         $demanField = array_diff($demanField, $intersect);
@@ -256,6 +264,15 @@ class ProfileCacheFunctions
                                         $fields = implode(",",$demanField);
                                         if(trim($fields) == ""){
                                                 break;
+                                        }
+                                }elseif($fields == "*"){
+                                      $demandedFields1 = self::getRelevantKeysName($Flds,$prefix[$k],'',ProfileCacheConstants::KEY_PREFIX_DELIMITER);
+                                      $demandedFields = array_merge($demandedFields,$demandedFields1);
+                                        if(!empty($data)){
+                                                foreach($demandedFields1 as $fl){
+                                                        $str = str_replace($prefix.ProfileCacheConstants::KEY_PREFIX_DELIMITER,"",$fl);
+                                                        $dataArray[$fl] = $data[$str];
+                                                }
                                         }
                                 }
                         }
@@ -331,6 +348,15 @@ class ProfileCacheFunctions
     
     public static function getAllSubKeys(){
         return array_unique(array_merge(ProfileCacheConstants::$arrJProfileColumns,ProfileCacheConstants::$arrJProfileContact,ProfileCacheConstants::$arrJpartnerColumns,ProfileCacheConstants::$arrJProfile_EducationColumns,ProfileCacheConstants::$arrNativePlaceColumns,ProfileCacheConstants::$arrAstroDetailsColumns,ProfileCacheConstants::$arrFSOColumns,ProfileCacheConstants::$arrJProfileAlertsColumn,ProfileCacheConstants::$arrAUTO_EXPIRY,ProfileCacheConstants::$arrJHobbyColumns,ProfileCacheConstants::$arrOldYourInfo,ProfileCacheConstants::$arrAutoExpiry,ProfileCacheConstants::$arrProfileFilter,ProfileCacheConstants::$arrAadharVerifyColumns));
+    }
+    public static function removeAstroFields($haveAstro,$keys){
+            if($haveAstro == "0"){
+                    print_r($keys);die;
+                    $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix("ProfileAstro","*");
+                    $keys = array_diff($keys,$demandedFields);
+                    $keys[] = "ai.HAVE_ASTRO";
+            }
+            return $keys;
     }
 
 }

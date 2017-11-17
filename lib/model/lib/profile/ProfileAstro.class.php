@@ -111,8 +111,16 @@ class ProfileAstro
         }
 
         //Get Records from Mysql
-        $result = self::$objAstroDetailMysql->getAstros($pid);
-
+        //$result = self::$objAstroDetailMysql->getAstros($pid); // getting all data because in getAstroDeatils we need complete data.
+        $result = self::$objAstroDetailMysql->getAstroDetails(array($pid),"*");
+        
+        $fieldsArr = explode(",",$fields);
+        $res = array();
+        foreach($result as $result){
+                foreach($fieldsArr as $key){
+                        $res[$key] = $result[$key];
+                }
+        }
         //Request to Cache this Record, on demand
         if(is_array($result) && count($result)) {
           $result['PROFILEID'] = $pid;
@@ -126,8 +134,7 @@ class ProfileAstro
             $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
-        
-        return $result;
+        return $res;
          
     }
     

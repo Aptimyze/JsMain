@@ -89,7 +89,7 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
 		return true;
         }
         $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,$fields);
-        //print_r($demandedFields);die;
+        
         if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $demandedFields)) 
 	{
 		return true;
@@ -121,7 +121,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
         }
         $szKey = ProfileCacheFunctions::getDecoratedKey($key);
         $arrParams = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,  implode(",",array_keys($arrParams)),$arrParams);
-        
         $this->storeInCache($szKey, $arrParams);
         if (false === ProfileCacheFunctions::isCommandLineScript("set")) 
 	{
@@ -341,9 +340,9 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
 		return false;
 	}
 	$localCacheFields = array_keys($localCacheData);
-        //print_r($localCacheData);
+        $demandedFields = ProfileCacheFunctions::removeAstroFields($localCacheData["ai.HAVE_ASTRO"], $demandedFields);
 	$isSubset = (count(array_diff($demandedFields,$localCacheFields))==0);
-        //var_dump($isSubset);die;
+        //print_r(array_diff($demandedFields,$localCacheFields));die;
         if (!$isSubset) 
 	{
             return false;
