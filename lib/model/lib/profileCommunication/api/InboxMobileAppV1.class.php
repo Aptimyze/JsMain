@@ -618,6 +618,8 @@ class InboxMobileAppV1
 								$button[] = $buttonObj->getIgnoreButton('','',1);
 							else if($value!="PHOTO")
 								$button[] = $buttonObj->getCustomButtonByBName($value,$page);
+							elseif($value == "BLOCK")
+							    $button[] = $buttonObj->getIgnoreButton('','');
 							else
 								$button[] = ButtonResponse::getAlbumButton($tupleObj->getPHOTO_COUNT(),$tupleObj->getGENDER());
 						}

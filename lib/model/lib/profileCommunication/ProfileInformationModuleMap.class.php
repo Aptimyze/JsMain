@@ -886,7 +886,7 @@ self::$ContactCenterMYJS=Array(
 			"TITLE"=> "Profile Visitors",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
+			"BUTTONS"=> "INITIATE|SHORTLIST|BLOCK|CONTACT",
 			"TRACKING"=> "stype=AV",
 		),
 		"MATCH_ALERT"=>Array(
