@@ -3,6 +3,7 @@ class HamburgerApp
 {
 	public static function getHamburgerDetails($profileid,$version='',$forwardingArray)
         {
+
 		$moduleName = $forwardingArray['moduleName'];
 		$actionName = $forwardingArray['actionName'];
 		$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
@@ -12,31 +13,39 @@ class HamburgerApp
 		$profileObj=LoggedInProfile::getInstance('newjs_master');
 		$profileObj->getDetail("","","*");
 		$profilePic = $profileObj->getHAVEPHOTO();
+
+		
+		
 		if (empty($profilePic))
 			$profilePic="N";
 		if($profilePic  && $profilePic!="N")
 		{
-			$pictureServiceObj=new PictureService($profileObj);
-			$profilePicObj = $pictureServiceObj->getProfilePic();
-			if($profilePicObj)
-                        {
-			if($profilePic=='U')
-				$picUrl = $profilePicObj->getProfilePic235Url();
-			else
-				$picUrl = $profilePicObj->getProfilePic120Url();
-			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
-                        $thumbNail =$photoArray;
-			}
-
-		}
-                else
+			$thumbNail=JsMemcache::getInstance()->get($profileid."_HamburgerPicUrl");
+			if(!$thumbNail)
+			{
+				$pictureServiceObj=new PictureService($profileObj);
+				$profilePicObj = $pictureServiceObj->getProfilePic();
+				if($profilePicObj)
                 {
-                        $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
-                        $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
-                }
+					if($profilePic=='U')
+						$picUrl = $profilePicObj->getProfilePic235Url();
+					else
+						$picUrl = $profilePicObj->getProfilePic120Url();
+					$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
+                    $thumbNail =$photoArray;
+				}
+				JsMemcache::getInstance()->set($profileid."_HamburgerPicUrl",$thumbNail);
+			}
+		}
+        else
+        {
+            $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
+            $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
+        }
 			
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
+
 			$memHandlerObj = new MembershipHandler();
 			$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 			$membershipMessage = $data2['hamburger_message'];
@@ -88,6 +97,7 @@ class HamburgerApp
 				$hamburgerDetails['ACC_BY_ME'] = self::convertoInt($profileMemcacheObj->get('ACC_BY_ME'));
 				$hamburgerDetails['NOT_REP'] = self::convertoInt($profileMemcacheObj->get('NOT_REP'));
 				$hamburgerDetails['ACTIVATED'] = $profileObj->getACTIVATED();
+
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
@@ -101,6 +111,7 @@ class HamburgerApp
 					else
 						$hamburgerDetails['SAVE_SEARCH'] = 0;
 				}
+
 			if(sfContext::getInstance()->getRequest()->getParameter("androidMyjsNew") || $isNewMobileSite){
 				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 	         		$hamburgerDetails['PHOTO_REQUEST_NEW']=0;
@@ -126,7 +137,6 @@ class HamburgerApp
 					$hamburgerDetails['DEC_BY_ME'] = 0;
 			$hamburgerDetails['TOTAL_NEW']=JsCommon::convert99($hamburgerDetails['AWAITING_RESPONSE_NEW'] + $hamburgerDetails['ACC_ME_NEW'] + $hamburgerDetails['MESSAGE_NEW'] + $hamburgerDetails['PHOTO_REQUEST_NEW'] + $hamburgerDetails['JUST_JOINED_NEW'] + $hamburgerDetails["FILTERED_NEW"] + $hamburgerDetails['DEC_ME_NEW']);
 		     }
-
 			return $hamburgerDetails;
 		}
         }

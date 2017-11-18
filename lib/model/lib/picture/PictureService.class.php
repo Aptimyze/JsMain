@@ -730,6 +730,7 @@ class PictureService
                                 MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
                                 $memCacheObject = JsMemcache::getInstance();
                                 $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_HamburgerPicUrl");
 
                         }
 			else
@@ -751,6 +752,7 @@ class PictureService
                         MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
                         $memCacheObject = JsMemcache::getInstance();
                         $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+                        $memCacheObject->remove($this->profileObj->getPROFILEID(). "_HamburgerPicUrl");
                         
 		}
 		else
@@ -1254,6 +1256,7 @@ class PictureService
 	{
 		$memCacheObject = JsMemcache::getInstance();
 		$memCacheObject->remove($this->profileObj->getPROFILEID() . "_THUMBNAIL_PHOTO");
+		$memCacheObject->remove($this->profileObj->getPROFILEID() . "_HamburgerPicUrl");
 	}
   protected function updateProfileCompletionScore($profileId){
     $cScoreObj = ProfileCompletionFactory::getInstance(null,null,$profileId);

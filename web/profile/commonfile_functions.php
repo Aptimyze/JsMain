@@ -744,6 +744,8 @@ $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   =
 $js_arr[]=array("sw_fcm"    => "2");
 $js_arr[]=array("apps/operations/lib/Dialer"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"     => "3");
+$js_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
+$js_arr[]=array("lib/model/lib/picture/GoogleVisionApi"   => "1");
 return $js_arr;
 }
 function getJavascript(){

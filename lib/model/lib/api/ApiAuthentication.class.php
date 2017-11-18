@@ -226,6 +226,7 @@ Abstract class ApiAuthentication
 		else
 			$loggedInProfileObj=LoggedInProfile::getInstance();
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
+		
 		//If any changes Found then logout user
 		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
 		{
