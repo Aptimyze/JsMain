@@ -9,9 +9,9 @@ class ProfileCacheFunctions
         }
 	public static function isCommandLineScript($getOrset="")
 	{
-                //if($this->allowSetFromCommandLine($getOrset)){
+                if(self::allowSetFromCommandLine($getOrset)){
                         return false;
-                //}
+                }
 		return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
 	}
 	public static function getDecoratedKey($key)
@@ -351,7 +351,6 @@ class ProfileCacheFunctions
     }
     public static function removeAstroFields($haveAstro,$keys){
             if($haveAstro == "0"){
-                    print_r($keys);die;
                     $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix("ProfileAstro","*");
                     $keys = array_diff($keys,$demandedFields);
                     $keys[] = "ai.HAVE_ASTRO";

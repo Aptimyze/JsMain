@@ -87,8 +87,7 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
             
             if(count($noResult) === 0) {
-                $dummyResult = array();
-                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
             } else {
                 $dummyResult = $result;
             }
@@ -188,8 +187,7 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
 
             if (0 === count($noResult)) {
-                $dummyResult['PROFILEID'] = $pid;
-                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
             }
             else {
                 $dummyResult = $result;

@@ -1,6 +1,9 @@
 <?php
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
+$j = new JHOBBYCacheLib();
+$x  = $j->getUserHobbies("99407105");
+print_R($x);die;
 
 $j = ProfileAstro::getInstance();
 $x  = $j->getAstroDetails(array("144111"),"");

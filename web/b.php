@@ -5,6 +5,6 @@ $pf = ProfileCacheLib::getInstance();
 //$aa = $pf->get("PROFILEID", "144111","*","JPROFILE");
 //$aa = $pf->get("PROFILEID", "144111","*","ProfileEducation");
 //$aa = $pf->get("PROFILEID", "144111","*");
-$aa = $pf->get("PROFILEID", "144111","*","ProfileAstro");
+$aa = $pf->get("PROFILEID", "99407105","*","");
 print_r($aa);die;
 ?>

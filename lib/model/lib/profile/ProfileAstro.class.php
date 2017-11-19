@@ -132,6 +132,7 @@ class ProfileAstro
         
         if(0 === count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
+            $dummyResult["HAVE_ASTRO"] = 0;
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
         return $res;
@@ -217,7 +218,9 @@ class ProfileAstro
             $arrDataNotExist = array_diff($profileidArray, $arrDataNotExist);
             $dummyArray = array();
             foreach($arrDataNotExist as $k => $v){
-                $dummyArray[] = $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$v);
+                    $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$v);
+                    $dummyResult["HAVE_ASTRO"] = 0;
+                    $dummyArray[] = $dummyResult;
             }
         }
         
