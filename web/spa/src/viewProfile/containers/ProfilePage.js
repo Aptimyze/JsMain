@@ -22,6 +22,7 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import axios from "axios";
+import CalObject from '../../cal/components/CalObject';
 
 
 class ProfilePage extends React.Component {
@@ -217,7 +218,7 @@ class ProfilePage extends React.Component {
     }
 swipeNextProfile(nextOrPrev){
       let _this=this;
-      document.getElementById("swipePage").classList.add("animateLeft");
+//      document.getElementById("swipePage").classList.add("animateLeft");
       document.getElementById("validProfile").classList.remove("dn");
       _this.setState({
           dataLoaded: false
@@ -566,7 +567,7 @@ swipeNextProfile(nextOrPrev){
                 <i className="mainsp arow2"></i>
             </div>;
         }
-        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
+//        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
         var historyIcon;
         if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1" && this.state.ownView == false) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -632,6 +633,10 @@ swipeNextProfile(nextOrPrev){
 
         if(this.state.dataLoaded)
         {
+        if(this.props.calData && !this.props.myjsData.calShown){
+                 return (<CalObject myjsApiHit={null} calData={this.props.calData} myjsObj={this.props.setCALShown} />);
+        }
+
             if(this.state.ownView == false)
             {
                 if(this.props.AboutInfo.gender == "Male")
@@ -656,7 +661,7 @@ swipeNextProfile(nextOrPrev){
             }
 
 
-            document.getElementById("swipePage").classList.remove("animateLeft");
+          //  document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
                 let profiledata = {
@@ -808,7 +813,6 @@ swipeNextProfile(nextOrPrev){
                 {errorView}
                 {loaderView}
                 {historyView}
-                {swipeView}
                 <div className="fullheight bg4" id="mainContent">
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
@@ -871,7 +875,8 @@ const mapStateToProps = (state) => {
        Jsb9Reducer : state.Jsb9Reducer,
        buttonDetails: state.ProfileReducer.buttonDetails,
        contactAction: state.contactEngineReducer,
-       historyObject : state.historyReducer.historyObject
+       historyObject : state.historyReducer.historyObject,
+       calData : state.ProfileReducer.calObject
     }
 }
 
@@ -906,7 +911,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
-        }
+        },
+        setCALShown : ()=> {dispatch({type: 'SET_CAL_SHOWN',payload:{}});}
+
       }
 }
 
