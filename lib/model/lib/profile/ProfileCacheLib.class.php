@@ -122,10 +122,10 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
         $szKey = ProfileCacheFunctions::getDecoratedKey($key);
         $arrParams = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix($storeName,  implode(",",array_keys($arrParams)),$arrParams);
         $this->storeInCache($szKey, $arrParams);
-        if (false === ProfileCacheFunctions::isCommandLineScript("set")) 
-	{
+        //if (false === ProfileCacheFunctions::isCommandLineScript("set")) 
+	//{
             $this->updateInLocalCache($key, $arrParams);
-        }
+        //}
         return true;
     }
 
