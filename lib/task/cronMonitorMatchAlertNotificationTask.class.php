@@ -42,16 +42,21 @@ EOF;
 
     $to 	= "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
     $curTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));
-    $stTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 25 minutes'));
+    $stTime 	= date('Y-m-d H:i:s', strtotime('+0 hour 20 minutes'));
     $hr 	= date('H', strtotime('+10 hour 30 minutes'));
-    $hrArr 	= array('02','03','04','05','06','07','08','09');	
+    $hrArr 	= array('02','03','04','05','06','07','08');	
 
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
 
-    //if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08"){
+    $notificationDailyObj = new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
+    $countArr = $notificationDailyObj->getDataForDuration($stTime, $curTime);
+    $countN =$countArr['N'];
+    $countY =$countArr['Y'];		
+    $countT =$countN+$countY;	
 
-    if($count==0 && !in_array("$hr",$hrArr)){
+    //if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08"){
+    if(($count==0 || $countY==0) && !in_array("$hr",$hrArr)){
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
         if(!$mailerStartTime){
@@ -61,26 +66,38 @@ EOF;
         }
         else{
             $offsetTime = date('Y-m-d H:i:s', strtotime("+1 hour",  strtotime($mailerStartTime)));
-            //print_r(array("mailerStartTime"=>$mailerStartTime,"offsetTime"=>$offsetTime,"currentTime"=>date('Y-m-d H:i:s')));
+            print_r(array("mailerStartTime"=>$mailerStartTime,"offsetTime"=>$offsetTime,"currentTime"=>date('Y-m-d H:i:s')));
             if(strtotime(date('Y-m-d H:i:s')) > strtotime($offsetTime)){ 
-
+		
                 $matchalertSentObject = new matchalerts_MATCHALERTS_TO_BE_SENT();
                 $count = $matchalertSentObject->getTotalCountWithScript(1, 0);
                 print_r(array("initial count"=>$count));
                 if ($count != 0 && $count != "") {
+
+		    // New monitoring
+                    if($countT!=0){
+                        if($countN!=0 && $countY==0)
+                                $msg = "MatchAlert Instant Notification Sending Issue ";
+		    }	
+                    elseif($countT==0){
+	            	$msg = "MatchAlert Instant Notification Not Generating from Mailer";
+			
+                    }
                     $matchalertMailertObject = new matchalerts_MAILER("matchalerts_slave");
                     $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
                     print_r(array('FinalCount'=>$MailersCount));
                     if($MailersCount[0]["CNT"] != 0){
                         //$rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
-                        $msg = "Match Alert Instant Notification Not Going";
-                        $this->sendAlertMail($to, $msg, $msg);
-                        $this->sendAlertSMS();
+                        $msg = "Match Alert Instant Notification Delivery Issue";
+                    }
+                    if($msg){
+                            $this->sendAlertMail($to, $msg, $msg);
+                            $this->sendAlertSMS();
                     }
                 }
             }
             else{
-                $msg = "MatchAlert Started from @$mailerStartTime";
+                $msg = "MatchAlert Started @$mailerStartTime";
                 $to = "manoj.rana@naukri.com";
                 $this->sendAlertMail($to, $msg, $msg);
                 $this->sms("9999216910",$msg);
@@ -111,7 +128,7 @@ EOF;
             $message    = "Mysql Error Count have reached ".$msg." $t";
         }
         else{
-            $message    = "Mysql Error Count have reached InstantNotificationConsumer killed $t";
+            $message    = "Mysql Error Count have reached InstantNotificationMatchalert $t";
         }
         $from           = "JSSRVR";
         $profileid      = "144111";

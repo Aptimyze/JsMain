@@ -113,6 +113,25 @@ class MOBILE_API_DAILY_MATCHALERT_NOTIFICATION extends TABLE{
                 }
                 return NULL;
         }
+        public function getDataForDuration($stTime, $endTime)
+        {
+                try{
+                        $sql = "SELECT count(*) CNT,STATUS FROM $this->databaseName.DAILY_MATCHALERT_NOTIFICATION WHERE IST_ENTRY_DATE > :IST_START_DATE AND IST_ENTRY_DATE <:IST_END_DATE GROUP BY STATUS";
+                        $res = $this->db->prepare($sql);
+			$res->bindValue(":IST_START_DATE",$stTime,PDO::PARAM_STR);
+			$res->bindValue(":IST_END_DATE",$endTime,PDO::PARAM_STR);
+                        $res->execute();
+                        while($rowSelectDetail = $res->fetch(PDO::FETCH_ASSOC)){
+				$status =$rowSelectDetail['STATUS'];
+                                $cntArr[$status] = $rowSelectDetail['CNT'];
+                        }
+                        return $cntArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+                return NULL;
+        }
 	public function truncateTable()
         {
                 try{
