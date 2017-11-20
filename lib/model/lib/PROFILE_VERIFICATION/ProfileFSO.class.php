@@ -112,7 +112,9 @@ class ProfileFSO
         
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['FSO_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        }
         return $result;
          
     }
