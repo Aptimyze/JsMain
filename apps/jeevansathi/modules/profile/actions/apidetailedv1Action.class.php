@@ -164,7 +164,7 @@ class apidetailedv1Action extends sfAction
 
 // redis implementation
 //
-if(MobileCommon::isNewMobileSite())
+if(false && MobileCommon::isNewMobileSite())
 {
 		try{
 			$request->setParameter('calFromPD',1);
