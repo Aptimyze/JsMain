@@ -571,11 +571,23 @@ class Jpartner
 		{
 			$this->profileid=$profileid;
 			$this->myDb=$myDb;
-		}	
-		$sql="SELECT SQL_CACHE $parameter FROM $this->table WHERE PROFILEID=$profileid $WhereCondition";
-		$result = $mysqlObj->executeQuery($sql,$myDb) ;
-		$myrow =$mysqlObj->fetchAssoc($result);
-
+		}
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__);
+                    if (false !== $result) {
+                        $fetchedArr = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                }
+                else{
+                    $sql="SELECT SQL_CACHE * FROM $this->table WHERE PROFILEID=$profileid";
+                    $result = $mysqlObj->executeQuery($sql,$myDb) ;
+                    $fetchedArr =$mysqlObj->fetchAssoc($result);
+                    if(is_null($result)) { 
+                        $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
+                    }
+                    ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
+                }
+                $myrow = newjs_JPARTNER::getArrayWithRequiredFieldAndConditions($fetchedArr,$parameter,$WhereCondition);
 		if($myrow)
 		{
 			foreach ($myrow as $key => $value)
@@ -633,6 +645,7 @@ class Jpartner
 			}
 			$sql="UPDATE $this->table SET $specialcase WHERE PROFILEID=$this->PROFILEID";
 			$mysqlObj->executeQuery($sql,$myDb);
+                        ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		}
 		else
 		{
@@ -679,7 +692,8 @@ class Jpartner
 				}
 				else
 					$this->partnerProfileUpdated=0;
-			}	
+			}
+                        ProfileCacheLib::getInstance()->updateCache($this->getArrayToSetInCache(), ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, __CLASS__);
 		}
 		$db=connect_db();
 	}
@@ -693,6 +707,7 @@ class Jpartner
 	{
 		$sql="DELETE FROM $this->table WHERE PROFILEID=$this->PROFILEID";
 		$mysqlObj->executeQuery($sql,$myDb);
+                ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__);
 		$db=connect_db();
 		$sql="REPLACE INTO newjs.SWAP_JPARTNER (PROFILEID) VALUES ('$this->PROFILEID')";
 		$mysqlObj->executeQuery($sql,$db) ;
@@ -716,6 +731,12 @@ class Jpartner
 
 		$sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
 		$result = $mysqlObj->executeQuery($sql_p,$myDb) ;
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, '*', __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, '*', __CLASS__);
+                    if (false !== $result) {
+                        $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                }
 		$myrow =$mysqlObj->fetchAssoc($result);
 		{
 			$gender=$myrow['GENDER'];
@@ -887,5 +908,13 @@ class Jpartner
 			 $mysqlObj->executeQuery($sql,$db) ;
 		}
 	}
+        
+        function getArrayToSetInCache(){
+            $arrToSet = $this->getJpartnerArray();
+            $arrToSet['PROFILEID'] = $this->PROFILEID;
+            $arrToSet['DPP'] = $this->DPP;
+            $arrToSet['DATE'] = $this->DATE;
+            return $arrToSet;
+        }
 }
 ?>

@@ -5,7 +5,7 @@
  * @created 2012-08-21
  */
 
-class newjs_JPARTNER extends TABLE
+class newjsShard_JPARTNER extends TABLE
 {
         public function __construct($dbname="")
         {

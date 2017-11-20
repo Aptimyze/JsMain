@@ -435,7 +435,8 @@ class ProfileCacheConstants
                                         "JprofileAlertsCache"=>"arrJProfileAlertsColumn",
                                         "ProfileYourInfoOld"=>"arrOldYourInfo",
                                         "ProfileAUTO_EXPIRY"=>"arrAutoExpiry",
-                                        "ProfileFilter"=>"arrProfileFilter"
+                                        "ProfileFilter"=>"arrProfileFilter",
+                                        "Jpartner"=>"arrJpartnerColumns"
                                 );
     public static function getKeyData($storeName){
             
