@@ -178,6 +178,7 @@ try{
 	    jsException::log("from pd api lightning cal : ".$e->getMessage());
 	    $arrOut['calObject'] = null;
 	}
+}
 ///////////////////
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
