@@ -262,6 +262,7 @@ $css_arr[]=array("apps/jeevansathi/modules/mailer/templates/PendingInterestMaile
 $css_arr[]=array("apps/jeevansathi/modules/static/actions/actions"   => "1");
 $css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSAGE_LOG"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/register/actions/newJsmsPage1Action"   => "1");
+$css_arr[]=array("apps/jeevansathi/config/app"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -510,18 +511,18 @@ $js_arr[]=array("jsms/angular/registration/lib/angular-resource_min" => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular-route_min" => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular-touch_min" => "2");
 $js_arr[]=array("jsms/angular/registration/scripts/app" => "5");
-$js_arr[]=array("jsms/angular/registration/scripts/controllers"          => "53");
+$js_arr[]=array("jsms/angular/registration/scripts/controllers"           => "54");
 $js_arr[]=array("jsms/angular/registration/scripts/services" => "6");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"  => "28");
-$js_arr[]=array("jsms/angular/registration/scripts/factories"         => "60");
-$js_arr[]=array("jsms/angular/registration/hamburger_reg_js"    => "36");
+$js_arr[]=array("jsms/angular/registration/scripts/factories"          => "61");
+$js_arr[]=array("jsms/angular/registration/hamburger_reg_js"     => "37");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                       => "115");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"            => "54");
 $js_arr[]=array("jsms/search/inview"   => "5");
 $js_arr[]=array("jsms/login/newMobLogin_js"          => "72");
 $js_arr[]=array("jsms/login/mobForgotPass_js"   => "16");
 $js_arr[]=array("jsms/login/resetPass_js"   => "5");
-$js_arr[]=array("jsms/hamburger/ham_js"      => "64");
+$js_arr[]=array("jsms/hamburger/ham_js"       => "65");
 $js_arr[]=array("jsms/settings/mobChangePass_js"   => "5");
 $js_arr[]=array("jsms/404/mob404_js" => "2");
 $js_arr[]=array("jsms/search/searchByProfileId_js"   => "8");
@@ -564,9 +565,9 @@ $js_arr[]=array("jspc/myjs/myjs_js"      => "97");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"        => "121");
 $js_arr[]=array("jspc/myjs/engBarJs_js"       => "47");
 $js_arr[]=array("jspc/common/nano"   => "8");
-$js_arr[]=array("jspc/registration/registrationJspc_js"      => "48");
-$js_arr[]=array("jspc/registration/validation_js"    => "38");
-$js_arr[]=array("jspc/common/commonJspc_js"                        => "71");
+$js_arr[]=array("jspc/registration/registrationJspc_js"       => "49");
+$js_arr[]=array("jspc/registration/validation_js"     => "39");
+$js_arr[]=array("jspc/common/commonJspc_js"                         => "72");
 $js_arr[]=array("jspc/search/hslider" => "3");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min" => "3");
 $js_arr[]=array("jspc/search/test1" => "3");
@@ -746,6 +747,7 @@ $js_arr[]=array("apps/operations/lib/Dialer"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"     => "3");
 $js_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $js_arr[]=array("lib/model/lib/picture/GoogleVisionApi"   => "1");
+$js_arr[]=array("apps/jeevansathi/config/app"   => "1");
 return $js_arr;
 }
 function getJavascript(){
