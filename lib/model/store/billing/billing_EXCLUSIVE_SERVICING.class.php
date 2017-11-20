@@ -521,5 +521,34 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
+    public function getWelcomeMailCount($date, $emailStageType) {
+        try {
+            $startTime = $date." 00:00:00";
+            $endTime = $date." 23:59:59";
+            
+            $sql = "SELECT COUNT(*) FROM billing.EXCLUSIVE_SERVICING "
+                    . "WHERE SERVICE_SET_DT >= :START_DATE AND SERVICE_SET_DT <= :END_DATE"
+                    . " AND EMAIL_STAGE = :EMAIL_STAGE_TYPE";
+            
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DATE", $startTime, PDO::PARAM_STR);
+            $res->bindValue(":END_DATE", $endTime, PDO::PARAM_STR);
+            $res->bindValue(":EMAIL_STAGE_TYPE", $emailStageType, PDO::PARAM_STR);
+            
+             $res->execute();
+            $queryResult = $res->fetch(PDO::FETCH_ASSOC);
+            $count = $queryResult["COUNT(*)"];
+            
+            if(!isset($count))
+                $count = 0;
+            return $count;
+            
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    
+    
+    
 }
 ?>
