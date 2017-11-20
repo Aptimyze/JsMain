@@ -2,8 +2,8 @@
 class MOBILE_API_DAILY_MATCHALERT_NOTIFICATION extends TABLE{
         public function __construct($dbname="")
         {
-        	//$dbname ='notification_master';
-                $this->databaseName ='MOBILE_API';
+        	$dbname ='notification_master';
+                $this->databaseName ='NOTIFICATION_NEW';
                 parent::__construct($dbname);
         }
 	public function addRecord($receiver, $otherProfileid, $otherPicUrl, $otherPicIosUrl, $count, $receiverLastLoginDate, $status)

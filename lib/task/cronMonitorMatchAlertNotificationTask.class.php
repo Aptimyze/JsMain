@@ -48,14 +48,14 @@ EOF;
 
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
-    //print_r(array("curTime"=>$curTime,"stTime"=>$stTime,"curHr"=>$hr,"count"=>$count));
 
-    //if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08" || $hr == "09"){
+    //if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08"){
+
     if($count==0 && !in_array("$hr",$hrArr)){
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
         if(!$mailerStartTime){
-            $msg = "Match Alert Not Started";
+            $msg = "Match Alert Not Started Yet";
             $this->sendAlertMail($to, $msg, $msg);
             $this->sendAlertSMS($msg);
         }

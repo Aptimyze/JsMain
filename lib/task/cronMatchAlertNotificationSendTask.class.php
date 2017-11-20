@@ -43,15 +43,15 @@ EOF;
       sfContext::createInstance($this->configuration);
 
 	// Code added by Bhavna
-        if(CommonUtility::runFeatureInDaytime(1,8)){
-                $memObject = JsMemcache::getInstance();
-                $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
-                unset($memObject);
-                if($tableEmpty == 1){
-                }else{
-                        successfullDie();
-                }
-        }
+      if(CommonUtility::runFeatureInDaytime(1,8)){
+              $memObject = JsMemcache::getInstance();
+              $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
+              unset($memObject);
+              if($tableEmpty == 1){
+              }else{
+                      successfullDie();
+              }
+      }
       $noOfScripts = $arguments["noOfScripts"];
       $currentScript = $arguments["currentScript"];
       $limit = 1000;
