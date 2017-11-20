@@ -11,3 +11,5 @@ all:
     enable_login: off
   dialerSmsNearestBranchDetailsV1:
     enable_login: off
+  ApiGetOnlineProfilesV1:
+      enable_login: off

@@ -756,7 +756,7 @@ class LoggingManager
                 $dataOutput = json_encode($dataOutput);
                 $currDate = Date('Y-m-d');
                 try{
-		$filePath =  $this->serverLogPath."/coolMetric/$currDate/".$currDate."_".$body['type'].".log";
+		$filePath =  $this->serverLogPath."/coolMetric/$currDate"."_".$body['type']."/".$currDate."_".$body['type'].".log";
                 if(!file_exists(dirname($filePath)))
                     mkdir(dirname($filePath), 0777, true);                
 		$fileResource = fopen($filePath,"a");
