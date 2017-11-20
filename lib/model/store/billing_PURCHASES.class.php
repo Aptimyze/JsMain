@@ -89,6 +89,23 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
+    public function getExclusiveProfile($date){
+        try{
+            $sql = "SELECT PROFILEID,ENTRY_DT FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":ENTRY_DT", $date, PDO::PARAM_INT);
+            
+            $prep->execute();
+            $profiles = array();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                $profiles[$result["PROFILEID"]] = $result["ENTRY_DT"];
+            }
+            return $profiles;
+        }catch(PDOException $e){
+            throw new jsException($e);
+        }
+    }
+    
     public function isPaidBefore($profileid, $time='')
     {
         try
