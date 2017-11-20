@@ -1,7 +1,7 @@
 <?php
 class ProfileCacheFunctions 
 {
-	private function allowSetFromCommandLine($getOrset=""){
+	public static function allowSetFromCommandLine($getOrset=""){
                 if(ProfileCacheConstants::ALLOW_CLI_SET == 1 || $getOrset == "get"){
                         return true;
                 }
