@@ -558,12 +558,33 @@ public function executeCALRedirection($request){
       die;
     }
 
+
+public function executeGetCALData($request){
+  //Api Response Object
+  $layerToDisplay=$request->getParameter("layerId");
+  $data = array();
+  if(!$layerToDisplay){
+    $status = ResponseHandlerConfig::$NO_CAL_LAYERID;
+  }
+
+  else {
+      $status = ResponseHandlerConfig::$SUCCESS;
+      $data = CriticalActionLayerDataDisplay::getDataValue($layerToDisplay);
+  }
+  $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+  $apiResponseHandlerObj->setHttpArray($status);
+  $apiResponseHandlerObj->setResponseBody(array('calObject'=>$data));
+  $apiResponseHandlerObj->generateResponse();
+  return sfView::NONE;
+  die;
+
+}
 //PostWeddingServices page
   public function executePostWeddingServices(sfWebRequest $request)
   {
     $loginData = $request->getAttribute("loginData");
     $this->finalResponse=array();
-     $loggedInProfileObj = LoggedInProfile::getInstance(); 
+     $loggedInProfileObj = LoggedInProfile::getInstance();
     if($loggedInProfileObj->getPROFILEID()){
       $loggedInProfileObj->getDetail($loggedInProfileObj->getPROFILEID(),"PROFILEID","*");
 
