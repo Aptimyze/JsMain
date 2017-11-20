@@ -113,6 +113,7 @@ EOF;
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
         $date = date("Y-m-d h");
     }
     

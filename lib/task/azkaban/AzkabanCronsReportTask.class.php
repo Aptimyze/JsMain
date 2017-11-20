@@ -74,12 +74,16 @@ EOF;
 					$from           = "JSSRVR";
 					$profileid      = "144111";
 					$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                    CommonUtility::logTechAlertSms($message, $mobile);
 					$mobile         = "9873639543";
 					$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                    CommonUtility::logTechAlertSms($message, $mobile);
 					$mobile         = "9868673709";
 					$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                    CommonUtility::logTechAlertSms($message, $mobile);
 					$mobile         = "9999216910";
                                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                                        CommonUtility::logTechAlertSms($message, $mobile);
                                         $this->manageRestartAzkaban();
                                         
                                         
@@ -97,12 +101,16 @@ EOF;
                                 $from           = "JSSRVR";
                                 $profileid      = "144111";
                                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                                CommonUtility::logTechAlertSms($message, $mobile);
                                 $mobile         = "9873639543";
                                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                                CommonUtility::logTechAlertSms($message, $mobile);
                                 $mobile         = "9868673709";
 				$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
 				$mobile         = "9999216910";
 				$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
                                 $this->manageRestartAzkaban();
 			}
 		}

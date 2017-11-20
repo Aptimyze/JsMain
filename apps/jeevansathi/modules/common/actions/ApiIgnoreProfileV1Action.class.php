@@ -15,7 +15,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 	const BLOCK 			= 1;
 	const STATUS			= 2;
 	const IGNORED_LIMIT			= 4000;
-        const IGNOREDMESSAGE    ="This profile will be removed from your search results and other lists. This profile will not be able to contact you any further.";
+        const IGNOREDMESSAGE    ="This profile will be removed from your search results and will not be able to contact you.";
 	private $m_iResponseStatus;
 	private $loginProfile;
 	private $ignoreProfile;

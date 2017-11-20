@@ -160,7 +160,26 @@ class apidetailedv1Action extends sfAction
 		//Now Create OutPut Array
 		$arrOut = $this->BakeMyView();
 		$arrOut['USERNAME']=$this->profile->getUSERNAME();
+////////////lightning cal code starts here/////////////////////////////////
 
+// redis implementation
+//
+if(false){
+try{
+	$request->setParameter('calFromPD',1);
+	$request->setParameter('layerId',19);
+	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+	$layerData = ob_get_contents();
+	ob_end_clean();
+	$layerData = json_decode($layerData, true);
+	$arrOut['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
+	}
+	catch (Exception $e) {
+	    jsException::log("from pd api lightning cal : ".$e->getMessage());
+	    $arrOut['calObject'] = null;
+	}
+}
+///////////////////
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
     	{
@@ -325,6 +344,8 @@ class apidetailedv1Action extends sfAction
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
 		}
+                if(MobileCommon::isAndroidApp() && $this->loginProfile->getPROFILEID()%9 >= 1)
+                        $out['show_vsp'] = false;
 		//adding an extra flag which was in detailedAction but was missing from the api
 		$out["astroSent"] = $this->checkIfAstroSent();
 		return $out;

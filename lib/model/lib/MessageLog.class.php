@@ -364,9 +364,11 @@ if($limit == 1000000)
 						}
 					else
 					{
-							$draftsObj = new ProfileDrafts($profileObj);
-							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
-							unset($draftsObj);
+					    /* $draftsObj = new ProfileDrafts($profileObj);
+					     $message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+					     unset($draftsObj); */
+					    
+					    $message= Messages::getMessage(Messages::AP_MESSAGE_RM,array('USERNAME'=>$profileObj->getUSERNAME(), 'RMNUMBER'=>$this->getRMNumber($profileObj)));
 					}
 				}
 				else{
@@ -374,6 +376,19 @@ if($limit == 1000000)
 				}
 
 		return $message;		
+	}
+	
+	private function getRMNumber($profileObj){
+	    if($profileObj == null)
+	        return null;
+	        
+	        $exclusiveFunctionsObj=new ExclusiveFunctions();
+	        $execDetails=$exclusiveFunctionsObj->getRMDetails($profileObj->getPROFILEID());
+	        $rmPhone = $execDetails["PHONE"];
+	        if($rmPhone){
+	            return "+91-".$rmPhone;
+	        }
+	        return null;
 	}
 
 	public function toUpdateRB($messageArr,$sender,$receiver)

@@ -36,7 +36,8 @@ const ProfileReducer = (state={
 			astroSent: action.payload.astroSent,
 			pageInfo: action.payload.page_info,
 			fetchedProfilechecksum: action.payload.about.username,
-			buttonDetails: action.payload.buttonDetails
+			buttonDetails: action.payload.buttonDetails,
+			calObject : action.payload.calObject
 		}
 		break;
 		case "SHOW_HISTORY_INFO":

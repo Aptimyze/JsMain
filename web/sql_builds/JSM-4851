@@ -1,0 +1,8 @@
+use GeoIP;
+CREATE TABLE `ScraperIPs` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `IP` varchar(25) DEFAULT NULL,
+  `PROFILEID` int(11) unsigned DEFAULT NULL,
+  `EMAIL` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MYISAM;
