@@ -26,6 +26,7 @@ class ExclusiveFunctions{
 				$pogRBInterestsPool[$key]['PROFILEID'] = $pid;
 				$pogRBInterestsPool[$key]['USERNAME'] = $profileObj->getUSERNAME();
 				$pogRBInterestsPool[$key]['ABOUT_ME'] = $profileObj->getYOURINFO();
+				$pogRBInterestsPool[$key]['PROFILE_CHECKSUM'] = md5($pid)."i".$pid;
 				if(!empty($pogRBInterestsPool[$key]['ABOUT_ME'])){
 					$pogRBInterestsPool[$key]['ABOUT_ME'] = substr($pogRBInterestsPool[$key]['ABOUT_ME'], 0,1000);
 				}
@@ -34,6 +35,7 @@ class ExclusiveFunctions{
 				
 				if($oppGender!=$clientParams["gender"]){
 	        		if (!empty($profilePic) && $profilePic != 'N'){
+					$pogRBInterestsPool[$key]['HAVEPHOTO'] = 'Y';
 	        			$pictureServiceObj=new PictureService($profileObj);
 	            		$profilePicObj = $pictureServiceObj->getProfilePic();
 	            		if(!empty($profilePicObj)){

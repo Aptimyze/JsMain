@@ -1,4 +1,9 @@
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
+<script language="javascript">
+function MM_openBrWindow(theURL,winName,features){
+        window.open(theURL,winName,features);
+}
+</script>
 <body>
 	<br>
 	<div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
@@ -29,13 +34,16 @@
 					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 					    ~if $valued.GUNA_SCORE`
-					    	<td height="10" align="CENTER"><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
+					    	<td height="10" align="CENTER"><br><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
 					    ~else`
 					    	<td height="10" align="CENTER"></td>
 						~/if`
 				    </tr>
 					<tr class="formhead" align="left">
-					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`">
+					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`"><br>
+					      ~if $valued.PHOTO_URL neq '' && $valued.HAVEPHOTO eq 'Y'`	
+						      <a href="" onclick="MM_openBrWindow('/P/photocheck.php?profilechecksum=~$valued.PROFILE_CHECKSUM`&seq=1','','width=400,height=500,scrollbars=yes'); return false;">Click here for Album</a>
+						~/if`
 					    </td>
 					    <td height="21" align="CENTER" style="font-weight: normal;">~$valued.ABOUT_ME`</td>
 					    <td height="21" align="CENTER"><input type="checkbox" name="DISCARD[]" value="~$valued.PROFILEID`">DISCARD<input type="hidden" name="ACCEPT[]" value="~$valued.PROFILEID`"></td></td>
