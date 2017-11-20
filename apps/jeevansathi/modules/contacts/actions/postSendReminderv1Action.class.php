@@ -100,7 +100,7 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
                                 if($request->getParameter('API_APP_VERSION')>=80)
-					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray['errmsglabel'] = "Reminder sent. Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
 					$responseArray["headerthumbnailurl"] = $thumbNail;;
 		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
                  		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
@@ -156,7 +156,7 @@ class postSendReminderv1Action extends sfAction
 						$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
 						if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 						{
-							$responseArray["footerbutton"]["label"]  = "Buy paid membership";
+							$responseArray["footerbutton"]["label"]  = "Upgrade";
 							$responseArray["footerbutton"]["value"] = "";
 							$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						}
