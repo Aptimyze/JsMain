@@ -35,7 +35,7 @@ class crmParams
 	public static $inDialerCampaign			=array("noida","mumbai","pune","delhi");
 	public static $inDialerCampaignNewArr           =array("noidaAuto");
 	public static $nonAutoCampaign			=array('mumbai','pune','nri');
-	public static $salesRegularValueRange		=array('SCORE1'=>'70','SCORE2'=>'90','SCORE3'=>'100','DISCOUNT1'=>'50','DISCOUNT2'=>'70');
+	public static $salesRegularValueRange		=array('SCORE1'=>'41','SCORE2'=>'91','SCORE3'=>'100','DISCOUNT1'=>'1','DISCOUNT2'=>'80');
         public static $salesRegularCampaignTables	=array("noida"=>"incentive_SALES_CSV_DATA_NOIDA","mumbai"=>"incentive_SALES_CSV_DATA_MUMBAI","pune"=>"incentive_SALES_CSV_DATA_PUNE","nri"=>"incentive_SALES_CSV_DATA_NRI","delhi"=>"incentive_SALES_CSV_DATA_DELHI","noidaAuto"=>"incentive_SALES_CSV_DATA_NOIDA_NEW");
 
 	// Other Sales Campaign Tables for Processes
@@ -44,6 +44,9 @@ class crmParams
 	public static $crmCsvTables                     =array("DAILY_GHARPAY"=>"incentive_GHARPAY_CSV_DATA","QA_ONLINE"=>"incentive_QA_ONLINE_CSV_DATA");
 	public static $campaignNames			=array('renewal'=>'JS_RENEWAL','renewalMah'=>'OB_RENEWAL_MAH');
 
+        // CRM Mailer Process
+        public static $maxProfileIdRetrievalLimit       = 5;
+        
 	// Field Sales Process	
 	public static $fieldSalesIgnoreCommunity	=array(1,3,16,17,31);
 	public static $fieldSalesPincodeMappedCity      =array("DE00","MH04","MH08");

@@ -60,7 +60,7 @@ class FamilyTab extends React.Component {
     	if(this.props.family.father_occ)
     	{
     		father_occ = <div>
-    			<div className="f12 color1">Father is</div>
+    			<div className="f12 color1">Father's Occupation</div>
             	<div className="fontlig pb15" id="vpro_father_occ" >
             		{this.props.family.father_occ}
             	</div>
@@ -71,7 +71,7 @@ class FamilyTab extends React.Component {
     	if(this.props.family.mother_occ)
     	{
     		mother_occ = <div>
-    			<div className="f12 color1">Mother is</div>
+    			<div className="f12 color1">Mother's Occupation</div>
             	<div className="fontlig pb15" id="vpro_mother_occ" >
             		{this.props.family.mother_occ}
             	</div>

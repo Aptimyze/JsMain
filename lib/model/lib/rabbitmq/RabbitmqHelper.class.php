@@ -167,7 +167,9 @@ class RabbitmqHelper
         $mobileNumberArr = array("nitesh"=>"9953178503","lavesh"=>"9818424749","pankaj"=>"9810300513");
     }
     foreach($mobileNumberArr as $k=>$v){
-        RabbitmqHelper::smsRMQ($v,$msg);
+        if (strpos($msg, MQ::$INSTANT_NOTIFICATION_QUEUE) !== false) {
+            RabbitmqHelper::smsRMQ($v,$msg);
+        }
     }
   }
   
@@ -182,6 +184,7 @@ class RabbitmqHelper
     $from           = "JSSRVR";
     $profileid      = "144111";
     $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+    CommonUtility::logTechAlertSms($message, $mobile);
    
   }
   

@@ -23,23 +23,28 @@ const MyjsReducer = (state={
 		case 'SET_DR_DATA':
 		state = {
 			...state,
-			apiDataDR:action.payload,
-			drFetched : true
+			apiDataDR:{...action.payload,totalOffset : action.payload.no_of_results},
+			drFetched : true,
+
 		}
 		break;
 		case 'SET_MOD_DATA':
 		state = {
 			...state,
-			apiDataMOD:action.payload,
-			modFetched : true
+			apiDataMOD:{...action.payload,totalOffset : action.payload.total},
+			modFetched : true,
+			totalOffset : action.payload.total
+
 		}
 		break;
 		case 'SET_IR_DATA':
 
 		state = {
 			...state,
-			apiDataIR:action.payload,
-			irFetched : true
+			apiDataIR:{...action.payload,totalOffset : action.payload.total},
+			irFetched : true,
+			totalOffset : action.payload.total
+
 		}
 		break;
 		case 'SET_VA_DATA':
@@ -95,15 +100,17 @@ const MyjsReducer = (state={
 						key = 'apiDataDR';
 					break;
 				}
-				let newArray = arr['profiles'].slice(), oldCount = arr.total;
-
-				newArray.splice(action.payload.index,1);
+//				let newArray = arr['profiles'].slice(),
+					let countKey = key=='apiDataDR' ? 'no_of_results' : 'total';
+					let oldCount = parseInt(arr[countKey]);
+				//newArray.splice(action.payload.index,1);
+				arr['profiles'][action.payload.index]['dontShow'] = true;
 				state = {
 					...state,
 					[key] : {
 						...arr,
-						profiles : newArray,
-						total : --oldCount
+						profiles : arr['profiles'],
+						[countKey] : --oldCount
 					}
 				}
 				break;

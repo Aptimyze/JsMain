@@ -135,6 +135,7 @@ EOF;
 //    foreach ($arrMob as $mobile1){
 //      var_dump($mobile1." ".$message);
 //      $smsState = send_sms($message, $from, $mobile1, $profileid, '', 'Y');
+//      CommonUtility::logTechAlertSms($message, $mobile1);
 //    }
   }
   

@@ -64,7 +64,7 @@ if(authenticated($cid))
 			$sql = "UPDATE billing.PAYMENT_DETAIL SET STATUS='CANCEL' WHERE BILLID = '$billid'";
 			mysql_query_decide($sql) or logError_sums($sql,1);
 
-			$sql = "UPDATE billing.PURCHASE_DETAIL_NEW SET STATUS='CANCEL' WHERE BILLID = '$billid'";
+			$sql = "UPDATE billing.PURCHASE_DETAIL SET STATUS='CANCEL' WHERE BILLID = '$billid'";
 			mysql_query_decide($sql) or logError_sums($sql,1);
                         $membershipObj->stop_service($billid,$profileid);
 

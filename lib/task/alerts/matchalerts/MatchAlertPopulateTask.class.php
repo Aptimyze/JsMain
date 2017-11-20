@@ -68,7 +68,7 @@ EOF;
 		/* truncate tables */
                 
                 //delete one month old entries
-                $beforeDate = date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
+                $beforeDate = date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . LowDppMatchesCheck::$mailerFreq ) );
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
                 $lowMatchesCheckObj->deleteBeforeDate($beforeDate);
 

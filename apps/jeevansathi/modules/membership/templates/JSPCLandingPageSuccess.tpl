@@ -493,8 +493,8 @@
                     ~if $data.currency eq '$'`
                         <div class="fontreg f18 lh30">Call Rahul @ +91-8800909042</div>
                     ~else`
-                        <div class="fontreg f18 lh30">Call us @ 1800-3010-6299</div>
-                        <!-- <div class="fontreg f18 lh30">Call Rahul @ 1800-3010-6299</div> -->
+                        <div class="fontreg f18 lh30">Call us @ 1-800-419-6299</div>
+                        <!-- <div class="fontreg f18 lh30">Call Rahul @ 1-800-419-6299</div> -->
                     ~/if`
                 </div>
             </div>

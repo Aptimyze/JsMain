@@ -74,11 +74,6 @@ EOF;
             //Block for scheduled notification
             $processObj->setmethod("SCHEDULED");
             
-            echo "before PENDING_EOI \n";
-            $processObj->setnotificationKey("PENDING_EOI");
-            $browserNotificationObj->addNotification($processObj);
-            echo "After PENDING_EOI \n";
-            
             echo "before MEM_EXPIRE \n";
             $processObj->setnotificationKey("MEM_EXPIRE");
             $browserNotificationObj->addNotification($processObj);

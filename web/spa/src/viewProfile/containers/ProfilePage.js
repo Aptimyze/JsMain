@@ -22,6 +22,7 @@ import MetaTagComponents from '../../common/components/MetaTagComponents';
 import {removeProfileLocalStorage,getProfileKeyLocalStorage} from "../../common/components/CacheHelper";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 import axios from "axios";
+import CalObject from '../../cal/components/CalObject';
 
 
 class ProfilePage extends React.Component {
@@ -34,6 +35,8 @@ class ProfilePage extends React.Component {
         let profilechecksum = getParameterByName(window.location.href,"profilechecksum");
         let responseTracking = getParameterByName(window.location.href,"responseTracking");
         let stype = getParameterByName(window.location.href,"stype");
+        let listingName = getParameterByName(window.location.href,"listingName");
+        let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
         let ownView = false;
         if(getParameterByName(window.location.href,"preview") == 1) {
             ownView = true;
@@ -58,7 +61,8 @@ class ProfilePage extends React.Component {
             stype:stype,
             disablePhotoLink: false,
             callApi: false,
-            listingName: "",
+            listingName: listingName,
+            hitFromMyjs:hitFromMyjs,
             ownView:ownView,
             ucbrowser:false,
             nextProfileFetched:false
@@ -73,6 +77,7 @@ class ProfilePage extends React.Component {
         if (navigator.userAgent.indexOf(' UCBrowser/') >= 0) {
           this.state.ucbrowser = true;
         }
+        this.GAObject = new GA();
     }
 
     componentDidUpdate(prevprops) {
@@ -103,6 +108,8 @@ class ProfilePage extends React.Component {
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
             let fromViewSimilar = getParameterByName(window.location.href,"fromViewSimilar");
+            let listingName = getParameterByName(window.location.href,"listingName");
+            let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
 
             urlString = "?actual_offset=" + parseInt(actual_offset)+ "&total_rec=" + total_rec;
 
@@ -130,6 +137,12 @@ class ProfilePage extends React.Component {
             }
             if(typeof fromViewSimilar != "undefined"){
                 urlString += "&fromViewSimilar=" + fromViewSimilar;
+            }
+            if(listingName != undefined && listingName != "undefined" && listingName != null){
+                urlString += "&listingName=" + listingName;
+            }
+            if(hitFromMyjs != undefined && hitFromMyjs != "undefined" && hitFromMyjs != null){
+                urlString += "&hitFromMyjs=" + hitFromMyjs;
             }
         }
         this.props.showProfile(this, urlString);
@@ -194,7 +207,7 @@ class ProfilePage extends React.Component {
 
         });
 
-
+        this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
     nextPrevPostDecline(){
@@ -205,7 +218,7 @@ class ProfilePage extends React.Component {
     }
 swipeNextProfile(nextOrPrev){
       let _this=this;
-      document.getElementById("swipePage").classList.add("animateLeft");
+//      document.getElementById("swipePage").classList.add("animateLeft");
       document.getElementById("validProfile").classList.remove("dn");
       _this.setState({
           dataLoaded: false
@@ -218,7 +231,7 @@ swipeNextProfile(nextOrPrev){
       let t1,t2;
       t1 = nextOrPrev=='next' ? 'nextProfileVisit' : 'prevProfileVisit';
       t2 = nextOrPrev=='next' ? _this.state.nextDataApi : _this.state.prevDataApi;
-      _this.refs.GAchild.trackJsEventGA("Profile Description-jsms",t1,"")
+      _this.GAObject.trackJsEventGA("Profile Description-jsms",t1,"");
       _this.props.showProfile(_this, t2);
 
       if ( getCookie("AUTHCHECKSUM") )
@@ -256,6 +269,14 @@ swipeNextProfile(nextOrPrev){
             if(this.state.similarOf != null){
                 nextUrl += "&similarOf=" + this.state.similarOf;
                 nextDataApi += "&similarOf=" + this.state.similarOf;
+            }
+            if(this.state.listingName != null){
+                nextUrl += "&listingName=" + this.state.listingName;
+                nextDataApi += "&listingName=" + this.state.listingName;
+            }
+            if(this.state.hitFromMyjs != null){
+                nextUrl += "&hitFromMyjs=" + this.state.hitFromMyjs;
+                nextDataApi += "&hitFromMyjs=" + this.state.hitFromMyjs;
             }
 
             this.props.fetchNextPrevData(this, nextDataApi, "saveLocalNext");
@@ -296,6 +317,14 @@ swipeNextProfile(nextOrPrev){
             if(this.state.similarOf != null){
                 prevUrl += "&similarOf=" + this.state.similarOf;
                 prevDataApi += "&similarOf=" + this.state.similarOf;
+            }
+            if(this.state.listingName != null){
+                prevUrl += "&listingName=" + this.state.listingName;
+                prevDataApi += "&listingName=" + this.state.listingName;
+            }
+            if(this.state.hitFromMyjs != null){
+                prevUrl += "&hitFromMyjs=" + this.state.hitFromMyjs;
+                prevDataApi += "&hitFromMyjs=" + this.state.hitFromMyjs;
             }
             //this.props.fetchNextPrevData(this, prevDataApi, "saveLocalPrev");
             this.setState({
@@ -338,6 +367,8 @@ swipeNextProfile(nextOrPrev){
             let NAVIGATOR = getParameterByName(window.location.href,"NAVIGATOR");
             let toShowECP = getParameterByName(window.location.href,"toShowECP");
             let similarOf = getParameterByName(window.location.href,"similarOf");
+            let listingName = getParameterByName(window.location.href,"listingName");
+            let hitFromMyjs = getParameterByName(window.location.href,"hitFromMyjs");
 
 
             if(total_rec == "undefined") {
@@ -364,7 +395,9 @@ swipeNextProfile(nextOrPrev){
                 NAVIGATOR: NAVIGATOR,
                 similarOf: similarOf,
                 toShowECP: toShowECP,
-                nextProfileFetched:false
+                listingName:listingName,
+                hitFromMyjs:hitFromMyjs,
+                nextProfileFetched:false,
                 },this.setNextPrevLink);
             }
 
@@ -534,7 +567,7 @@ swipeNextProfile(nextOrPrev){
                 <i className="mainsp arow2"></i>
             </div>;
         }
-        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
+//        var swipeView = <div id="swipePage" className="loader simple white loaderimage posRight100p"></div>;
         var historyIcon;
         if(getCookie("AUTHCHECKSUM") && this.props.responseStatusCode != "1" && this.state.ownView == false) {
             historyIcon = <div id="historyIcon" onClick={() => this.initHistory()} className="posabs vpro_pos1">
@@ -600,6 +633,10 @@ swipeNextProfile(nextOrPrev){
 
         if(this.state.dataLoaded)
         {
+        if(this.props.calData && !this.props.myjsData.calShown){
+                 return (<CalObject myjsApiHit={null} calData={this.props.calData} myjsObj={this.props.setCALShown} />);
+        }
+
             if(this.state.ownView == false)
             {
                 if(this.props.AboutInfo.gender == "Male")
@@ -624,7 +661,7 @@ swipeNextProfile(nextOrPrev){
             }
 
 
-            document.getElementById("swipePage").classList.remove("animateLeft");
+          //  document.getElementById("swipePage").classList.remove("animateLeft");
             if(this.props.responseStatusCode == "0") {
 
                 let profiledata = {
@@ -771,13 +808,11 @@ swipeNextProfile(nextOrPrev){
         }
         return (
             <div style={this.state.profilePageStyle} id="ProfilePage">
-                <GA ref="GAchild" />
                 {metaTagView}
                 {promoView}
                 {errorView}
                 {loaderView}
                 {historyView}
-                {swipeView}
                 <div className="fullheight bg4" id="mainContent">
                     <div id="tabHeader" className="fullwid bg1">
                         <div className="padd22 txtc">
@@ -840,7 +875,8 @@ const mapStateToProps = (state) => {
        Jsb9Reducer : state.Jsb9Reducer,
        buttonDetails: state.ProfileReducer.buttonDetails,
        contactAction: state.contactEngineReducer,
-       historyObject : state.historyReducer.historyObject
+       historyObject : state.historyReducer.historyObject,
+       calData : state.ProfileReducer.calObject
     }
 }
 
@@ -875,7 +911,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
-        }
+        },
+        setCALShown : ()=> {dispatch({type: 'SET_CAL_SHOWN',payload:{}});}
+
       }
 }
 

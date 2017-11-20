@@ -43,6 +43,7 @@ class JPROFILE
 
     public function __construct($dbname = "")
     {
+        $this->dbName = $dbname;
         //self::$objProfileMysql = NEWJS_JPROFILE::getInstance($dbname);
     }
 
@@ -531,6 +532,10 @@ class JPROFILE
     {
         return $this->getJprofileObj()->getProfileQualityRegistationData($registerDate);
     }
+    public function getProfileCampaingnRegistationData($registerDate)
+    {
+        return $this->getJprofileObj()->getProfileCampaingnRegistationData($registerDate);
+    }
 
     public function getAllSubscriptionsArr($profileArr)
     {
@@ -805,8 +810,12 @@ class JPROFILE
     public function getJprofileObj()
     {
         if(!self::$objProfileMysql)
-             self::$objProfileMysql = NEWJS_JPROFILE::getInstance($dbname);
+             self::$objProfileMysql = NEWJS_JPROFILE::getInstance($this->dbName);
         return self::$objProfileMysql;
+    }
+    public function getRegistrationMisCampaignsData($fromDate, $toDate, $groupType)
+    {
+        return $this->getJprofileObj()->getRegistrationMisCampaignsData($fromDate, $toDate, $groupType);
     }
 }
 ?>

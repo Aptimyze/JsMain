@@ -1339,10 +1339,14 @@ var padding = 31;
           }
           if(ele1.name == "countryReg" && target.html() != "India"){
             $("#pincode_selector").addClass("disp-none");
+            $("#residentialStatus_selector").removeClass("disp-none");
             $("#pin_value").val("");
             inputData["pincode"] = "";
             inputData["city_res"] = "";
           }
+	if(ele1.name == "countryReg" && target.html() == "India"){
+	            $("#residentialStatus_selector").addClass("disp-none");
+	}
           ele1.selected = target.text();
           ele1.selectedId = target.parent().attr('id');
           chosenValDb = target.parent().attr("data-dbVal");
@@ -1438,6 +1442,13 @@ var padding = 31;
                 inputData["state_res"] = "";
                 regField["stateReg"].selected = "";
                 $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
+
+            $("#residentialStatus_value").val("");
+            $("#residentialStatus_span-text").html("");
+                $("#stateReg").val("");
+                inputData["res_status"] = "";
+                regField["residentialStatus"].selected = "";
+                $("#residentialStatus-list_set").find(".activeopt").removeClass("activeopt");
           }
           if (ele1.name == "familyCity")
           {
@@ -2101,7 +2112,7 @@ $(document).ready(function () {
         datatype: 'json',
         cache: true,
         async: true,
-        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid},
+        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid, campaignData: campaignData},
         beforeSend: function (xhr) {
            showCommonLoader(); 
         },

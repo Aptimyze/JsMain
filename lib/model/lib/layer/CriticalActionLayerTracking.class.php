@@ -74,7 +74,22 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending,$checkForIndependentCal='')
   {//return 23;
+   //
+   //
+
     $profileId = $profileObj->getPROFILEID();
+
+    /////// check from redis begin here
+    $memObject = JsMemcache::getInstance();
+    $calRedisKeys = $memObject->getMultiKeys(array($profileId.'_CAL_DAY_FLAG',$profileId.'_NOCAL_DAY_FLAG',$profileId.'_NO_LI_CAL'));
+    $calDayFlag = $calRedisKeys[0][0];
+    $calNoDayFlag = $calRedisKeys[0][1]; // 
+    $NO_LIGHT_CAL = $calRedisKeys[0][2]; // lightning cal flag
+    if($checkForIndependentCal && $NO_LIGHT_CAL==1)
+        return 0;
+    else if(!$checkForIndependentCal && ($calDayFlag==1 || $calNoDayFlag==1))
+        return 0;
+
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
@@ -98,11 +113,10 @@ class CriticalActionLayerTracking
       if(self::checkFinalLayerConditions($profileObj,$value,'',$getTotalLayers))
         return $value;
     }
-    if($checkForIndependentCal)
+    if($checkForIndependentCal){
+      $memObject->set($profileId.'_NO_LI_CAL',1,10800);
       return 0;
-    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1 || JsMemcache::getInstance()->get($profileId.'_NOCAL_DAY_FLAG')==1)
-              return 0;
-
+    }
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
 
@@ -114,6 +128,7 @@ class CriticalActionLayerTracking
           }
 
         }
+    
 
 // in the order of priority
         for ($i=1;;$i++)
@@ -281,6 +296,7 @@ return 0;
                             $layerData = ob_get_contents();
                             ob_end_clean();
                             $dppSugg=json_decode($layerData,true);
+                            if(is_array($dppSugg['dppSuggObject']))   $dppSugg = $dppSugg['dppSuggObject'];
                             if(is_array($dppSugg) && is_array($dppSugg['dppData']))
                             {
                               foreach ($dppSugg['dppData'] as $key => $value)
@@ -351,6 +367,7 @@ return 0;
                               $layerData = ob_get_contents();
                               ob_end_clean();
                               $dppSugg=json_decode($layerData,true);
+                              if(is_array($dppSugg['dppSuggObject']))   $dppSugg = $dppSugg['dppSuggObject'];
                               if(is_array($dppSugg) && is_array($dppSugg['dppData']))
                               {
                                 foreach ($dppSugg['dppData'] as $key => $value)

@@ -88,8 +88,10 @@ class UploadPhoto extends PictureService
 			}
 			else
 			{
-				if($this->uploadSource=="mobileUpload")
-					$this->mobileUploadOrientation($v);
+				$orientataion = sfContext::getInstance()->getRequest()->getParameter('Orientation');
+                if($this->uploadSource=="mobileUpload" || $orientataion)
+                   $this->mobileUploadOrientation($v);
+				
 
 				$picInfo = $this->copyPic($v,$nonScreenedPicObj);
 				
@@ -134,13 +136,18 @@ class UploadPhoto extends PictureService
 	{
 		PictureFunctions::setHeaders();
 		$imageHeaderInfo = exif_read_data($image["tmp_name"]);
-
+		$orientation = sfContext::getInstance()->getRequest()->getParameter('Orientation');
 		if(array_key_exists($imageHeaderInfo["Orientation"],PictureStaticVariablesEnum::$orientationToAngle))
 		{
 			$angle = PictureStaticVariablesEnum::$orientationToAngle[$imageHeaderInfo["Orientation"]];
 
 			PictureFunctions::rotateImage($image["tmp_name"],$angle,$image["type"]);
 		}
+		elseif(array_key_exists($orientation,PictureStaticVariablesEnum::$orientationToAngle)){
+            PictureFunctions::rotateImage($image["tmp_name"],PictureStaticVariablesEnum::$orientationToAngle[$orientation],$image["type"]);
+
+        }
+
 		return true;
 	}
 	public function oldMobileDataConversion($files)

@@ -222,6 +222,7 @@
 				var countryField = $scope.fields[3];
 				$scope.initStateWidget();
 				$scope.initCityWidget();
+				$scope.initResStatusWidget();
 			}
 			if(indexPos=='4')
 			{
@@ -296,6 +297,22 @@
 			{
 				pinCodeField.show=false;
 			}
+		}
+		$scope.initResStatusWidget = function()
+		{
+			var countryField = $scope.fields[3];
+			var resStatusField = $scope.fields[7];
+		        var resStatusFieldIndex=7;
+			if(countryField.userDecision!='' && parseInt(countryField.userDecision) != 51)
+			{
+				resStatusField.show =true;
+			}
+			else
+			{
+				resStatusField.show =false;
+			}
+			Gui.resetField('s2','dindex',resStatusFieldIndex);
+
 		}
 		$scope.initStateWidget = function()
 		{
@@ -384,6 +401,7 @@
 		$scope.initStateWidget();
 		$scope.initCityWidget();
 		$scope.initGenderWidget();
+		$scope.initResStatusWidget();
 		$scope.enableNextBtn();
 	});
 
@@ -1543,8 +1561,9 @@
 					).then(function() {
 						if($scope.success==1)
 						{
-							if($scope.isPhoneMob)
-								setTimeout(function(){window.location="/phone/jsmsDisplay";},1000);
+							if($scope.isPhoneMob){
+								setTimeout(function(){window.location="/phone/jsmsDisplay?fromReg=1";},1000);
+							}
 							else
 								setTimeout(function(){window.location="/profile/mainmenu.php";},1000);
 						}

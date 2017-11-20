@@ -496,8 +496,8 @@ class ProfileMemcache
         $this->_memcache      = JsMemcache::getInstance()->getHashAllValue($this->_getProfileKey($this->_getProfileId()));
         if ($this->_memcache && is_array($this->_memcache))
             return $this->_memcache;
-        else
-            jsException::log("Object is not set.");
+        //else
+            //jsException::log("Profile Memcache Object is not set for Id : ".$this->_getProfileId());
     }
     
     /**
