@@ -4,6 +4,7 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include_once("connect.inc");
+include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $dbS=connect_slave();
 
 $today=date("Y-m-d");
@@ -53,10 +54,13 @@ if($prob)
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 
         $mobile         = "9953457479";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 
         $mobile         = "9711304800";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 }

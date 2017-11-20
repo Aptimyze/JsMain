@@ -55,6 +55,8 @@ class Messages
 
   const CONTACT_ERROR = "Object is not contact obj";
   const AP_MESSAGE = "This is an Interest sent by Jeevansathi on behalf of {{USERNAME}} as part of the 'Response Booster' service. Your profile strictly matches {{USERNAME}} Desired Partner preferences. You may accept the interest by clicking on the 'Accept' button.";
+  const AP_MESSAGE_RM = "This is an Interest sent by the Relationship Manager on behalf of {{USERNAME}} as part of the personalized ‘Exclusive Service'. Your profile strictly matches the Desired Partner preferences of {{USERNAME}}. You may accept the interest by clicking on the 'Accept' button and call us on {{RMNUMBER}} to take it forward.";
+  
   const IGNORED_MESSAGE = "You cannot perform this action as {{USERNAME}} has blocked you.";
   const I_IGNORE_MESSAGE = "You cannot perform this action as you blocked {{USERNAME}}.";
   const SAMEGENDER = "You cannot initiate contact with profile(s) of the same gender.";

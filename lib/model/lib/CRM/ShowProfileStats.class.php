@@ -76,9 +76,11 @@ class ShowProfileStats
         /**
          * @return array
          */
-        public function geMainProfileStats($profileDetailArr)
+        public function geMainProfileStats($loginProfile)
         {
-		$profileCompletion =$profileDetailArr['profileCompletion']['PCS'];
+            $cScoreObject = ProfileCompletionFactory::getInstance(null,$loginProfile,null);
+
+		$profileCompletion =$cScoreObject->getProfileCompletionScore();
 		$this->profileCompletion =$profileCompletion;
                 $this->getOnlineStatus();
                 $this->getMembesrhipDetails();

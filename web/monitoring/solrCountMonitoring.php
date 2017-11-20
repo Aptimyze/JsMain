@@ -63,6 +63,7 @@ function sendJJSMS($flag =""){
                                 $response.= fread($fd, 4096);
                         }
                         fclose($fd);
+                        CommonUtility::logTechAlertSms($smsMessage, $mobPhone);
                 }
         }
 }

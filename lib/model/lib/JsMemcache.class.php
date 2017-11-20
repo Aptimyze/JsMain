@@ -1065,7 +1065,23 @@ class JsMemcache extends sfMemcacheCache{
  		}
 
 	}
+	public function getMultiKeys($keyArray){
+		        if(self::isRedis()) {
+            if($this->client) {
+                try {
+                    $pipe = $this->client->pipeline();
+                    $pipe->mget($keyArray);
+                    $finalArr = $pipe->execute();
+                    return $finalArr;
+                }
+                catch (Exception $e) {
+                    jsException::log("error in getMultiKeys($key)".$e->getMessage());
+                    return false;
+                }
+            }
+        }
 
+	}
     public function zScorePipelining($key,$profileIdArr){
         if(self::isRedis()) {
             if($this->client) {
