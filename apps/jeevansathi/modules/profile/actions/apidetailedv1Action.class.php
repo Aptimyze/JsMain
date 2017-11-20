@@ -163,7 +163,8 @@ class apidetailedv1Action extends sfAction
 ////////////lightning cal code starts here/////////////////////////////////
 
 // redis implementation
-// 
+//
+if(false){
 try{
 	$request->setParameter('calFromPD',1);
 	$request->setParameter('layerId',19);
