@@ -10,7 +10,7 @@
                 <div class="pl31 prflist1 js-familyView">
                     <ul class="clearfix">
                     <li>
-                      <p class="fontlig color12 pt15">Mother is</p>
+                      <p class="fontlig color12 pt15">Mother's Occupation</p>
                       <p class="pt2 pr20">
                         <span id="mother_occView" ~if $bEditView && $apiData["family"]["mother_occ"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["mother_occ"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["mother_occ"] neq null || $bEditView`
@@ -22,7 +22,7 @@
                       </p>
                     </li>
                     <li>
-                      <p class="fontlig color12 pt15">Father is</p>
+                      <p class="fontlig color12 pt15">Father's Occupation</p>
                       <p class="pt2 pr20">
                         <span id="father_occView" ~if $bEditView && $apiData["family"]["father_occ"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["father_occ"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["father_occ"] neq null || $bEditView`

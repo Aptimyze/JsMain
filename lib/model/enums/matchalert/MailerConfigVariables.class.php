@@ -29,7 +29,7 @@ class MailerConfigVariables
         
         /* Match Alerts unified logic changes start here  */
         
-        public static $UNIFIED_LOGIC_MAILER_COUNT = 16; // matchalerts Profiles limit to be sent in mailer
+        public static $UNIFIED_LOGIC_MAILER_COUNT = 20; // matchalerts Profiles limit to be sent in mailer
         public static $UNIFIED_LOGIC_LIST_COUNT = 20; // matchalerts Profiles limit to be added in list
         
         public static $sortByStrictTrends = "ST";
