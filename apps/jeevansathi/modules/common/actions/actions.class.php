@@ -641,7 +641,7 @@ class commonActions extends sfActions
         }     else if($request->getParameter("button") && ($request->getParameter("layerR") || $request->getParameter("layerId"))) {
         $button=$request->getParameter("button");
     	$layerToShow=$request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId");
-
+        $memObj = JsMemcache::getInstance();
         if($layerToShow==9 && $button=='B1'){
 
 
@@ -708,10 +708,14 @@ class commonActions extends sfActions
             $name_pdo->updateName($loginData['PROFILEID'],$nameArr);
 
         }
-                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+        if($layerToShow==19)
+        {
+            $memObj->set($loginData['PROFILEID'].'_NO_LI_CAL',1,10800);
+        }
+                if($memObj->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
                 {
  		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
-                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                   $memObj->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
                 }
 
         }

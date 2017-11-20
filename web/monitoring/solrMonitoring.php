@@ -57,27 +57,35 @@ if(!empty($fromServer) || !empty($downServers))
                 $from           = "JSSRVR";
                 $profileid      = "144111";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
 
                 $mobile         = "9873639543";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
 
                 $mobile         = "9711304800";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
 
                 $mobile         = "9773889652";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
                 
                 $mobile         = "9711818214";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
                 
                 $mobile         = "8376883735";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
                 
                 $mobile         = "9810300513";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
                 
                 $mobile         = "9953457479";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
         }
         if(!empty($downServers)){
                 $sendSMS = 0;
@@ -94,15 +102,19 @@ if(!empty($fromServer) || !empty($downServers))
                         $from           = "JSSRVR";
                         $profileid      = "144111";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        CommonUtility::logTechAlertSms($message, $mobile);
 
                         $mobile         = "9773889652";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        CommonUtility::logTechAlertSms($message, $mobile);
                         
                         $mobile         = "8376883735";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        CommonUtility::logTechAlertSms($message, $mobile);
                         
                         $mobile         = "9873639543";
                         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                        CommonUtility::logTechAlertSms($message, $mobile);
                 }
         }
 }

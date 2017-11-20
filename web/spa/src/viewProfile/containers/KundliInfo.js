@@ -124,7 +124,7 @@ class KundliInfo extends React.Component {
                 classAsign = "astroMem";
             }
 
-            AstroReport = <button id="getAstro" onClick={() => this.initAstro(classAsign)} className={classAsign + " fontlig lh40 astroBtn1 fr wid48p"}>Get Astro Report</button>
+            AstroReport = <button id="getAstro" onClick={() => this.initAstro(classAsign)} className={classAsign + " fontlig lh40 astroBtn1 fl wid48p"}>Get Astro Report</button>
         }
     	var downloadHoroscope;
     	if(this.props.about.othersHoroscope == "Y" && (this.props.about.toShowHoroscope == "Y" || this.props.about.toShowHoroscope == ""))
@@ -132,7 +132,7 @@ class KundliInfo extends React.Component {
                var urlString = "/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ this.props.about.username + "&SIM_USERNAME="+ this.props.about.username+ "&type=Horoscope&checksum=&otherprofilechecksum="+this.props.profilechecksum+"&randValue=890&GENDER="+this.props.about.gender;
 
             downloadHoroscope = <a href = {urlString}>
-                    <button id="downloadHoroscope" className="fontlig lh40 astroBtn1 wid49p">Download Horoscope</button>
+                    <button id="downloadHoroscope" className="fontlig lh40 astroBtn1 wid49p fr">Download Horoscope</button>
                 </a>
 
 
@@ -278,8 +278,8 @@ class KundliInfo extends React.Component {
         {
             horoAndAstroSection = <div>
             <div className="clearfix pb20 pt20">
-            {downloadHoroscope}
             {AstroReport}
+            {downloadHoroscope}
             </div>
             {horo_match}
             <div className="clearfix pb15" id="gunaScore"></div></div>;
