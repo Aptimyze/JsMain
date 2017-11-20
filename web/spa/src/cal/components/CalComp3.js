@@ -355,7 +355,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
           }// end case
         break;
       }
-     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+     CALCommonCall(url,clickAction,this.state.myjsObj).then(()=>{this.CALButtonClicked=0;});
      return true;
 
 }
@@ -483,13 +483,13 @@ setAadhaarFinalScreen(){
             </div>
 
             <div style={{bottom : "0", position: "fixed", "width": "100%"}}>
-                <div id='CALButtonTryAgain' onClick={this.props.myjsObj} className="bg7 f18 white lh30 fullwid dispbl txtc lh50" >OK</div>
+                <div id='CALButtonTryAgain' onClick={this.state.myjsObj} className="bg7 f18 white lh30 fullwid dispbl txtc lh50" >OK</div>
             </div>
-            
+
 
           </div>
         </div>
-    ); 
+    );
 };
 
 
