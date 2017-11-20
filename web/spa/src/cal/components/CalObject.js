@@ -47,11 +47,11 @@ export default class calObjectClass extends React.Component
           if(!this.state.calData)return (<div><Loader show="page"></Loader></div>);
           if(this.calCompArray1.indexOf(this.state.calData.LAYERID) != -1) {
             return(<div><CalComp1 myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
-          } else if(this.calCompArray2.indexOf(this.calData.LAYERID) != -1){
+          } else if(this.calCompArray2.indexOf(this.state.calData.LAYERID) != -1){
             return(<div><CalComp2 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
           }
-          else if(this.calCompArray3.indexOf(this.calData.LAYERID) != -1){
-            return(<div><CalComp3 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.props.calData}/></div>);
+          else if(this.calCompArray3.indexOf(this.state.calData.LAYERID) != -1){
+            return(<div><CalComp3 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
           }
 
       }
@@ -66,7 +66,7 @@ export default class calObjectClass extends React.Component
     commonApiCall('/static/getCALData',{layerId:this.state.layerId}).then((response)=>{
       if(response.calObject)
       _this.setState({
-        calData : calObject
+        calData : response.calObject
       });
       else {
         _this.setState({

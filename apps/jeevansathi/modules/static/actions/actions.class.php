@@ -570,6 +570,14 @@ public function executeGetCALData($request){
   else {
       $status = ResponseHandlerConfig::$SUCCESS;
       $data = CriticalActionLayerDataDisplay::getDataValue($layerToDisplay);
+      switch($data['LAYERID']){
+        case '24':
+          $loginData=$request->getAttribute("loginData");
+          $nameData=(new NameOfUser())->getNameData($loginData['PROFILEID']);
+          $nameOfUser=$nameData[$profileId]['NAME'];
+          $data['NAME_OF_USER'] = $nameOfUser ? $nameOfUser : NULL;
+        break;
+      }
   }
   $apiResponseHandlerObj = ApiResponseHandler::getInstance();
   $apiResponseHandlerObj->setHttpArray($status);

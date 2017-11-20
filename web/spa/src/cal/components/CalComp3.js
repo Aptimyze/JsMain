@@ -4,7 +4,7 @@ import CALCommonCall from './CommonCALFunctions';
 import { commonApiCall } from "../../common/components/ApiResponseHandler";
 import * as CONSTANTS from '../../common/constants/apiConstants';
 let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
-
+import {getParameterByName} from '../../common/components/UrlDecoder';
 import {skippableCALS} from './CommonCALFunctions';
 import TopError from "../../common/components/TopError"
 import { ErrorConstantsMapping } from "../../common/constants/ErrorConstantsMapping";
@@ -19,6 +19,7 @@ export  class calComp3 extends React.Component{
 constructor(props){
   super(props);
   this.calData = this.props.calData;
+  this.notMyJs = getParameterByName(window.location.href,'fromEdit')=='1';
   this.state = {
     insertError : false,
     errorMessage : '',
@@ -30,7 +31,10 @@ constructor(props){
     calCounter    : 10,
     Counter       : 10,// used to set calCounter when its value changed and need to come back to intiial
     layerToShow   : "mainScreen",
-    cTextStyle    :   {paddingLeft: "8px" ,overflowY:'hidden'} // timerScreen mainScreen successScreen
+    cTextStyle    :   {paddingLeft: "8px" ,overflowY:'hidden'},
+    myjsObj : this.notMyJs ?
+    ()=>{console.log('back');history.back();} :
+    props.myjsObj // timerScreen mainScreen successScreen
   };
 
   this.calIds = {
