@@ -153,8 +153,9 @@ function displayOverlayContent(payMode) {
     $("div.selectedOption:first").trigger('click');
 }
 
-function addPayCard(e) {
-    if(checkEmptyOrNull(readCookie('device'))){
+function addPayCard(e,isMaterialApp) {
+    isMaterialApp = (typeof isMaterialApp !== 'undefined') ?  isMaterialApp : false;
+    if(checkEmptyOrNull(readCookie('device'))&& !isMaterialApp){
       $('div.selectedOption').removeClass(readCookie('device')+'_selected_d');
     } else {
       $('div.selectedOption').removeClass('selected_d');
@@ -168,7 +169,7 @@ function addPayCard(e) {
     } else {
         $("#paymentMode").val($(e).attr('payMode'));
     }
-    if(checkEmptyOrNull(readCookie('device'))){
+    if(checkEmptyOrNull(readCookie('device'))&& !isMaterialApp){
       $(e).closest('div.selectedOption').addClass(readCookie('device')+'_selected_d');
     } else {
       $(e).closest('div.selectedOption').addClass('selected_d');
