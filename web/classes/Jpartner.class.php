@@ -707,7 +707,7 @@ class Jpartner
 	{
 		$sql="DELETE FROM $this->table WHERE PROFILEID=$this->PROFILEID";
 		$mysqlObj->executeQuery($sql,$myDb);
-                ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__);
+                ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		$db=connect_db();
 		$sql="REPLACE INTO newjs.SWAP_JPARTNER (PROFILEID) VALUES ('$this->PROFILEID')";
 		$mysqlObj->executeQuery($sql,$db) ;
@@ -729,15 +729,17 @@ class Jpartner
 	        if(!$COMPANY)
         	        $COMPANY='JS';
 
-		$sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
-		$result = $mysqlObj->executeQuery($sql_p,$myDb) ;
-                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, '*', __CLASS__)){
-                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, '*', __CLASS__);
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__);
                     if (false !== $result) {
                         $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                     }
                 }
-		$myrow =$mysqlObj->fetchAssoc($result);
+                else{
+                    $sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
+                    $result = $mysqlObj->executeQuery($sql_p,$myDb) ;
+                    $myrow =$mysqlObj->fetchAssoc($result);
+                }
 		{
 			$gender=$myrow['GENDER'];
 			$children=$myrow['CHILDREN'];
