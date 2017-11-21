@@ -36,6 +36,7 @@
   <!--start:main body-->
 </div>
 <script type="text/javascript">
+  var appVersion = "~$data.appVersion`";
   var AndroidPromotion = 0;
   var skipVasPageMembershipBased = JSON.parse("~$skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
   var upgradeMem = "~$upgradeMem`";
@@ -74,7 +75,7 @@
             }
             url = "/membership/jsms?" + paramStr;
             if(checkEmptyOrNull(readCookie('device'))){
-              url += '&device=' + readCookie('device');
+              url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
             }
             window.location.href = url;
           } 

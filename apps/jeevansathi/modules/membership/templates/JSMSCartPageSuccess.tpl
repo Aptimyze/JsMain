@@ -40,7 +40,7 @@
 							<div id="removeServ" class="color3 pt10"></div>
 							<div id="removeMsg" class="pt10 rv2_colr2"></div>
 						</div>
-						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">
+						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">
 							<div id="removeBtn" vasId="" memId="" class="dispcell rv2_brdrright1 wid50p txtc rv2_lh60 cursp">Remove</div>
 							<div id="removeCncl" class="dispcell wid50p txtc cursp">Cancel</div>
 						</div>
@@ -64,7 +64,7 @@
 							<div id="removeServCoup" class="color3 pt10"></div>
 							<div id="removeMsgCoup" class="pt10 rv2_colr2"></div>
 						</div>
-						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">
+						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">
 							<div id="changeBtn" vasId="" memId="" class="dispcell rv2_brdrright1 wid50p txtc rv2_lh60 cursp">Remove</div>
 							<div id="removeCnclCoup" class="dispcell wid50p txtc cursp">Cancel</div>
 						</div>
@@ -211,7 +211,7 @@
 				</div>
 				~/if`
 				~if $data.apply_coupon_text`
-				<div id="enterCouponBtn" class="txtc pt22 f16 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` fontlig cursp">~$data.apply_coupon_text`</div>
+				<div id="enterCouponBtn" class="txtc pt22 f16 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` fontlig cursp">~$data.apply_coupon_text`</div>
 				~/if`
 				<div id="cartBottomText" class="txtc f16 color8 fontlig pt30">~$data.cart_bottom_text`</div>
 				
@@ -222,11 +222,13 @@
 	<!--start:main body-->
 	<!--start:continue button-->
 	<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple">~$data.continueText`</div>
+	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple">~$data.continueText`</div>
 	</div>
 	<!--end:continue button-->
 </div>
 <script type="text/javascript">
+    var appVersion = "~$data.appVersion`";
+    var androidAppVersionForMaterial = "~VariableParams::$androidAppVersionForMaterial`";
     var isCityEntered = "~$isCityEntered`";
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
@@ -303,13 +305,13 @@
 			}
 			if(vasId){
 				removeFromVas(vasId);
-				callRedirectManager();
+				callRedirectManager(appVersion);
 			} else if(memId){
 				eraseCookie('mainMem');
 				eraseCookie('mainMemDur');
 				url = "/membership/jsms?"+"displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				window.location.href = url;
 			}
@@ -328,13 +330,13 @@
 					url = "/membership/jsms?"+"displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				window.location.href = url;
 			} else if(memId){
 				url = "/membership/jsms?"+"displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				window.location.href = url;
 			}
@@ -385,13 +387,13 @@
 						url = "/membership/jsms?"+"displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					}
 					if(checkEmptyOrNull(readCookie('device'))){
-						url += '&device=' + readCookie('device');
+						url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 					}
 					window.location.href = url;
 				} else if(memId){
 					url = "/membership/jsms?"+"displayPage=1";
 					if(checkEmptyOrNull(readCookie('device'))){
-						url += '&device=' + readCookie('device');
+						url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 					}
 					window.location.href = url;
 				}
@@ -401,7 +403,7 @@
 			if(readCookie('backState') == "couponMain"){
 				url = "/membership/jsms?displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "couponVas") {
@@ -412,7 +414,7 @@
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
@@ -423,7 +425,7 @@
 					url = "/membership/jsms?displayPage=1";
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device');
+					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				window.location.href = url;
 			} else {
@@ -464,7 +466,7 @@
 		    ~/if`
                 url = "/membership/jsms?" + paramStr;
                 if(checkEmptyOrNull(readCookie('device'))){
-                    url += '&device=' + readCookie('device');
+                    url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
                 }
                 window.location.href = url;
             } else{
@@ -477,7 +479,7 @@
 			var upgradeMem = "~$data.upgradeMem`";
 			url = "/membership/jsms?displayPage=4";
 			if(checkEmptyOrNull(readCookie('device'))){
-				url += '&device=' + readCookie('device');
+				url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 			}
 			if(checkEmptyOrNull(upgradeMem)){
 				url += "&upgradeMem="+upgradeMem;
