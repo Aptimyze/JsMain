@@ -634,20 +634,9 @@ class ErrorHandler
 	{
 		if($this->errorTypeArr[ErrorHandler::FILTERED])
 		{
-			// (var_dump($this->checkProfileNOTJunk()));die();
-			if($this->checkProfileNOTJunk()){
-				$whyFlag = 0;
-				if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
-					$whyFlag = 1;
-				
-				$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
-				if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
-				{ 
-					return true;
-				}
-			}
-			else{
-				// checkProfileNOTJunk returned false
+			// (print_r($this->checkProfileJunk()));die();
+			if($this->checkProfileJunk()){
+
 				$this->contactHandlerObj->setIsJunk(true);
 				if($this->contactHandlerObj->getAction()=='POST'){
 					$whyFilter=new MIS_WHY_FILTER();
@@ -657,6 +646,17 @@ class ErrorHandler
 						$this->contactHandlerObj->getJunkType(),
 						$this->contactHandlerObj->getJunkData(),
 						'Y');
+			}
+			else{
+					$whyFlag = 0;
+					if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
+						$whyFlag = 1;
+					
+					$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
+					if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
+					{ 
+						return true;
+					}
 				}
 				return true;
 			}
@@ -685,7 +685,7 @@ class ErrorHandler
 	 * @return bool
 	 * @uses $contactHandlerObj
 	 */
-	function checkProfileNOTJunk(){
+	function checkProfileJunk(){
 		// units year inches rupees
 		// $Gender = $Sender->getGENDER();
 		
@@ -727,15 +727,23 @@ class ErrorHandler
 		$receiverArr["age"] = $receiver->getAGE();
 		$receiverArr["height"] = $receiver->getHEIGHT();
 
-        // var_dump($senderArr); var_dump($receiverArr);
+        // print_r($senderArr);
+        // print_r($receiverArr);
         // die();
 
-		/*$senderArr["age"]   = 19;
-		$receiverArr["age"] = 21;
-		$receiverArr["LAGE"] = 23;
-		$receiverArr["HAGE"] = 50;
+		// $senderArr["age"]   = 16;
+		// $receiverArr["age"] = 18;
+		// $receiverArr["LAGE"] = 20;
+		// $receiverArr["HAGE"] = 26;
+		// 
+		
+		// $senderArr["height"]   = 16;
+		// $receiverArr["height"] = 15;
+		// $receiverArr["LHEIGHT"] = 19;
+		// $receiverArr["HHEIGHT"] = 26;
+		
 
-		$senderArr["height"] = 10;*/
+		// $senderArr["height"] = 10;
 
         // var_dump(in_array($senderArr["clusture"], $receiverArr["clusture"]));
 		
@@ -782,13 +790,13 @@ class ErrorHandler
 		switch ($senderArr['gender']) {
 			case 'M':
 				$v = $senderArr["age"] - $receiverArr["age"];
-				if(in_array($v, array(-1,0,1,2,3,4,5))) {
+				if(!in_array($v, array(-1,0,1,2,3,4,5))) {
 					$ageExtraCheck = true;
 				}
 				break;
 			case 'F':
 				$v = $receiverArr['age'] - $senderArr['age'];
-				if(in_array($v, array(-1,0,1,2,3,4,5))) {
+				if(!in_array($v, array(-1,0,1,2,3,4,5))) {
 					$ageExtraCheck = true;
 				}
 				break;
@@ -801,70 +809,58 @@ class ErrorHandler
 		switch ($senderArr['gender']) {
 			case 'M':
 				$v = $senderArr["height"] - $receiverArr["height"];
-				if(in_array($v, array(2,3,4,5,6,7))) {
+				if(!in_array($v, array(2,3,4,5,6,7))) {
 					$heightExtraCheck = true;
 				}
 				break;
 			case 'F':
 				$v = $receiverArr['height'] - $senderArr['height'];
-				if(in_array($v, array(2,3,4,5,6,7))) {
+				if(!in_array($v, array(2,3,4,5,6,7))) {
 					$heightExtraCheck = true;
 				}
 				break;
 		}
 
-		$log = array();
-		// age check
-		if(strlen($senderArr["age"]) == 0 || 
-			(($senderArr["age"] >= ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) && 
-						$senderArr["age"] <= ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])
-						) &&
-			$ageExtraCheck
-			)) {
-			// height check
-			if(strlen($senderArr["height"]) == 0 || 
-				(($senderArr["height"] >= ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) && 
-				 				$senderArr["height"] <= ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])
-				 				) &&
-				$heightExtraCheck
-				)) {
-				// income check
-				if(strlen($senderArr["income"]) == 0 || 
-					($senderArr["income"] >= ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"]))){
-				// religion clusture check
-					if(in_array($senderArr["clusture"], $receiverArr["clusture"]) || strlen($receiverArr["PARTNER_RELIGION"]) == 0){
-						// $junkFlag = true;
-						// die();
-						// NOT JUNK IF REACHED HERE
-						return true;
-					}else{
-						$log["type"] = "RELIGION_JUNK";
-						$log["data"] = $receiverArr["PARTNER_RELIGION"]."|r:".$senderArr['religion'].",c:".$senderArr['clusture'];
-					}
-				}else{
-					$log["type"] = "INCOME_JUNK";
-					$log["data"] = "s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"];
-				}
-			}else{
-				$log["type"] = "HEIGHT_JUNK";
-				$log["data"] = "s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"];
-			}
-		}else{
-			$log["type"] = "AGE_JUNK";
-			$log["data"] = "s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"];
-		}
-		// die();
-		// 
+		$ageCheck = ($senderArr["age"] < ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) || $senderArr["age"] > ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])) ? true : false;
 		
-		
-		$this->contactHandlerObj->setJunkType($log["type"]);
-		$this->contactHandlerObj->setJunkData($log["data"]);
-		// var_dump($log);
-		
-		
-		return false;
+		$heightCheck = ($senderArr["height"] < ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) || $senderArr["height"] > ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])) ? true : false;
 
-		// die();
+		$incomeCheck = ($senderArr["income"] < ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"])) ? true : false;
+
+		$clustureCheck = in_array($senderArr["clusture"], $receiverArr["clusture"]) ? false : true;
+
+		// print_r(array($ageCheck, $ageExtraCheck, $heightCheck, $heightExtraCheck));
+		// age check
+		if(strlen($senderArr["age"]) != 0 && ( $ageCheck && $ageExtraCheck )) {
+			$this->contactHandlerObj->setJunkType("AGE_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"]);
+			// return "age junk";
+			return true;
+		}
+		// height check
+		if(strlen($senderArr["height"]) != 0 && ( $heightCheck && $heightExtraCheck )){
+			$this->contactHandlerObj->setJunkType("HEIGHT_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"]);
+			// return "height junk";
+			return true;
+		}
+		// income check
+		if(strlen($senderArr["income"]) != 0 && $incomeCheck) {
+			$this->contactHandlerObj->setJunkType("INCOME_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"]);
+			// return "income junk";
+			return true;
+		}
+		// religion check
+		if($clustureCheck && strlen($receiverArr["PARTNER_RELIGION"]) != 0) {
+			$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
+			$this->contactHandlerObj->setJunkData("s:".$senderArr["PARTNER_RELIGION"]."|r:".$reveiverArr['religion'].",c:".$senderArr['clusture']);
+			// return "religion junk";
+			return true;
+		}
+		// return "not junk";
+		// not junk
+		return false;
 	}
 	
 	/**
