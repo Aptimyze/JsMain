@@ -434,5 +434,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             throw new jsException($ex);
         }
     }
+    
+    
 }
 ?>

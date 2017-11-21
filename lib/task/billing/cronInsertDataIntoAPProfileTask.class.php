@@ -17,7 +17,7 @@ class cronInsertDataIntoAPProfileTask extends sfBaseTask
     $this->briefDescription    = 'Get the data from the service_status to ap_profile';
     $this->detailedDescription = <<<EOF
      The [cronexecuteConsumer|INFO] copy the data if not present:
-     [php symfony cron:cronInsertDataIntoAPProfileTask] 
+     [php symfony cron:cronInsertDataIntoAPProfile] 
 EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
@@ -43,8 +43,10 @@ EOF;
     foreach ($profileArray as $key => $value){
         $aprofileInfo->insertIntoAPProfileInfo($key,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
         $maxDate = $value;
+        break;
     }
     $incentive->setHandledDate(18,$maxDate);
+    
   }
 
 

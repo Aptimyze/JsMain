@@ -99,5 +99,23 @@ class billing_PAYMENT_DETAIL_NEW extends TABLE{
             throw new jsException($ex);
         }
     }
+    
+    public function getFirstEntryDate($profileId,$status){
+        try {
+            print_r("cbdjb");print_r($profileId);print_r("cbdjb");die();
+            $sql = "SELECT PROFILEID,MIN(ENTRY_DT) from billing.PAYMENT_DETAIL_NEW WHERE PROFILEID IN ($profileId) AND STATUS = :STATUS GROUP BY PROFILEID";
+            $prep = $this->db->prepare($sql);
+            //$prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
+            $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
+            $prep->execute();
+            while($result= $prep->fetch(PDO::FETCH_ASSOC)){
+                $res[$result["PROFILEID"]] = $result["ENTRY_DT"];
+            }
+            print_r($res);die();
+            return $res;
+        } catch (Exception $e) {
+            throw new jsException($ex);
+        }
+    }
 
 }
