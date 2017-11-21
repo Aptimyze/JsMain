@@ -82,6 +82,7 @@ class ProfilePage extends React.Component {
 
     componentDidUpdate(prevprops) {
       //  console.log('componentDidUpdate');
+      this.bindPage();
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 
 
@@ -151,65 +152,71 @@ class ProfilePage extends React.Component {
             axios.get("/api/v1/profile/detail"+urlString+"&ul=1");
         }
 
-        let _this = this;
-        document.getElementById("ProfilePage").style.height = window.innerHeight+"px";
-        document.getElementById("photoParent").style.height = window.innerWidth +"px";
-        var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
-
-        if(document.getElementById("animated-background")) {
-            document.getElementById("animated-background").style.height = backHeight + "px";
-        }
-        if(this.state.gender == "M" & this.state.ownView == false) {
-            this.setState({
-               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
-            })
-        } else if(this.state.gender == "F" & this.state.ownView == false) {
-            this.setState({
-               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
-            })
-        } else if(this.state.gender == "F" & this.state.ownView == true) {
-            this.setState({
-               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
-            })
-        } else {
-            this.setState({
-               defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
-            })
-        }
-        let startX, endX;
-        let stype = getParameterByName(window.location.href,"stype");
-        document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
-            startX = e.changedTouches[0].clientX;
-            endX = 0;
-        });
-        document.getElementById("ProfilePage").addEventListener('touchmove', function(e) {
-            endX = e.changedTouches[0].clientX;
-        });
-        document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
-          // console.log('swipe in');
-          // console.log(document.getElementById("comHistoryOverlay"));
-          if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
-          {
-            return;
-          }
-          else if(stype == "KM" || stype =="WC") //swipe to be disabled for Kundli Listing
-          {
-            return;
-          }
-          else {
-            if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
-              _this.swipeNextProfile('next');
-              //console.log("s1");
-            } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
-              _this.swipeNextProfile('prev');
-            }
-          }
-
-        });
+        this.bindPage();
 
         this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
+    bindPage(){
+      let _this = this;
+      let mainEle = document.getElementById("ProfilePage");
+      if(!mainEle || this.AlreadyBound || !this.state.dataLoaded) return;
+      this.AlreadyBound = 1;
+      mainEle.style.height = window.innerHeight+"px";
+      document.getElementById("photoParent").style.height = window.innerWidth +"px";
+      var backHeight = window.innerHeight - document.getElementById("tabHeader").clientHeight - document.getElementById("photoParent").clientHeight -26;
+
+      if(document.getElementById("animated-background")) {
+          document.getElementById("animated-background").style.height = backHeight + "px";
+      }
+      if(this.state.gender == "M" & this.state.ownView == false) {
+          this.setState({
+             defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
+          })
+      } else if(this.state.gender == "F" & this.state.ownView == false) {
+          this.setState({
+             defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+          })
+      } else if(this.state.gender == "F" & this.state.ownView == true) {
+          this.setState({
+             defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_f.png?noPhoto"
+          })
+      } else {
+          this.setState({
+             defaultPicData : "https://static.jeevansathi.com/images/picture/450x450_m.png?noPhoto"
+          })
+      }
+      let startX, endX;
+      let stype = getParameterByName(window.location.href,"stype");
+      document.getElementById("ProfilePage").addEventListener('touchstart', function(e) {
+          startX = e.changedTouches[0].clientX;
+          endX = 0;
+      });
+      document.getElementById("ProfilePage").addEventListener('touchmove', function(e) {
+          endX = e.changedTouches[0].clientX;
+      });
+      document.getElementById("ProfilePage").addEventListener('touchend', function(e) {
+        // console.log('swipe in');
+        // console.log(document.getElementById("comHistoryOverlay"));
+        if( (document.getElementById("comHistoryOverlay")!=null) || (document.getElementById("WriteMsgComponent")!=null) || (document.getElementById("overlayove_threedot")!=null)||(document.getElementById("reportAbuseContainer")!=null) || (document.getElementById("reportAbuseContainer")!=null)  ||  (document.getElementById("ReportInvalid")!=null || (document.getElementById("viewContactLayer")!=null) || _this.state.nextProfileFetched == false) )
+        {
+          return;
+        }
+        else if(stype == "KM" || stype =="WC") //swipe to be disabled for Kundli Listing
+        {
+          return;
+        }
+        else {
+          if (endX != 0 && startX - endX > 100 && _this.state.nextUrl != "") {
+            _this.swipeNextProfile('next');
+            //console.log("s1");
+          } else if (endX != 0 && endX - startX > 100 && _this.state.prevUrl != "") {
+            _this.swipeNextProfile('prev');
+          }
+        }
+
+      });
+    }
     nextPrevPostDecline(){
       if(this.state.nextUrl != "")
         this.swipeNextProfile('next');
