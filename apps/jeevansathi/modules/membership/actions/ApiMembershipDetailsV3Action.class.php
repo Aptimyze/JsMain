@@ -90,7 +90,7 @@ class ApiMembershipDetailsV3Action extends sfAction
                 $stringParams = json_encode($allParams);
                 $serverStr    = "\n<br>\n<br>\n<br>" . json_encode($_SERVER);
                 if (JsConstants::$whichMachine == 'prod') {
-                    SendMail::send_email('avneet.bindra@jeevansathi.com, vibhor.garg@jeevansathi.com', $stringParams . $serverStr, 'Failure in Unknown Case', 'js-sums@jeevansathi.com', 'avneetbindra180691@gmail.com', '', '', '', '', '', '', '', 'Membership Alerts');
+                    SendMail::send_email('vibhor.garg@jeevansathi.com', $stringParams . $serverStr, 'Failure in Unknown Case', 'js-sums@jeevansathi.com', '', '', '', '', '', '', '', '', 'Membership Alerts');
                 }
                 return sfView::NONE;
                 die;
