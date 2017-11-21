@@ -165,7 +165,7 @@ class IncomeMapping
         **/
 	private function getSortbyValues()
 	{
-		if($this->incomeArr["minIR"]==0 || $this->incomeArr["maxID"]==0 || ($this->incomeArr["minID"]>0 && $this->incomeArr["minIR"]==0))
+		if($this->incomeArr["minIR"]==0 || $this->incomeArr["maxIR"]==0 || $this->incomeArr["minID"]==0 || $this->incomeArr["maxID"]==0 || ($this->incomeArr["minID"]>0 && $this->incomeArr["minIR"]==0))
 			$this->noIncomeCase = 1;
 		else
 			$this->noIncomeCase = 0;
