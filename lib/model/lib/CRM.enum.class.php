@@ -35,7 +35,7 @@ class crmParams
 	public static $inDialerCampaign			=array("noida","mumbai","pune","delhi");
 	public static $inDialerCampaignNewArr           =array("noidaAuto");
 	public static $nonAutoCampaign			=array('mumbai','pune','nri');
-	public static $salesRegularValueRange		=array('SCORE1'=>'90','SCORE2'=>'96','SCORE3'=>'100','DISCOUNT1'=>'50','DISCOUNT2'=>'70');
+	public static $salesRegularValueRange		=array('SCORE1'=>'41','SCORE2'=>'91','SCORE3'=>'100','DISCOUNT1'=>'1','DISCOUNT2'=>'80');
         public static $salesRegularCampaignTables	=array("noida"=>"incentive_SALES_CSV_DATA_NOIDA","mumbai"=>"incentive_SALES_CSV_DATA_MUMBAI","pune"=>"incentive_SALES_CSV_DATA_PUNE","nri"=>"incentive_SALES_CSV_DATA_NRI","delhi"=>"incentive_SALES_CSV_DATA_DELHI","noidaAuto"=>"incentive_SALES_CSV_DATA_NOIDA_NEW");
 
 	// Other Sales Campaign Tables for Processes

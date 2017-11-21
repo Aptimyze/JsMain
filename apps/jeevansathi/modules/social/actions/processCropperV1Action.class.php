@@ -61,6 +61,7 @@ class processCropperV1Action extends sfActions
             // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
                 $memCacheObject->remove($profileid . "_THUMBNAIL_PHOTO");
+                $memCacheObject->remove($profileid . "_HamburgerPicUrl");
 
                 $respObj = ApiResponseHandler::getInstance();
                 if($output == 1)

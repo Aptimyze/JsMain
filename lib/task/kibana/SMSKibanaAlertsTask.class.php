@@ -143,6 +143,7 @@ EOF;
             $response.= fread($fd, 4096);
           }
           fclose($fd);
+          CommonUtility::logTechAlertSms($this->smsMessage, $mobPhone);
         }
       }
   }

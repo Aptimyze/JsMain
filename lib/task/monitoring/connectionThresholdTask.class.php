@@ -11,7 +11,8 @@ class connectionThresholdTask extends sfBaseTask
     * @var const EMAIL_TO comma separated email ids
   */
   //const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com,kunal.test02@gmail.com";
-  const EMAIL_TO = "bhavana.kadwal@jeevansathi.com,lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,nitesh.s@gmail.com,vibhor.garg@jeevansathi.com,pankaj.khandelwal@Jeevansathi.com,ankit.shukla@jeevansathi.com,esha.jain@jeevansathi.com,manoj.rana@naukri.com";
+  //const EMAIL_TO = "bhavana.kadwal@jeevansathi.com,lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,nitesh.s@gmail.com,vibhor.garg@jeevansathi.com,pankaj.khandelwal@Jeevansathi.com,ankit.shukla@jeevansathi.com,esha.jain@jeevansathi.com,manoj.rana@naukri.com";
+  const EMAIL_TO = "lavesh.rawat@gmail.com,niteshsethi1987@gmail.com";
   private $SMS_TO = array('9773889652','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
@@ -32,7 +33,7 @@ class connectionThresholdTask extends sfBaseTask
   /*
    * @var array $thresholdValue having threshold value for each server   
    */
-  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>350,"alertsSlave"=>350,"masterRep"=>600,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300,"dnc"=>500);
+  static $thresholdValue = array("master"=>680,"masterRO"=>680,"shard1"=>350,"shard2"=>350,"shard3"=>350,"viewSimilar"=>300,"bmsSlave"=>650,"alertsSlave"=>350,"masterRep"=>650,"shard1Rep"=>300,"shard2Rep"=>300,"shard3Rep"=>300,"shard1Slave"=>300,"shard2Slave"=>300,"shard3Slave"=>300,"dnc"=>500);
   
   protected function configure()
   {
@@ -201,6 +202,7 @@ EOF;
             $response.= fread($fd, 4096);
           }
           fclose($fd);
+          CommonUtility::logTechAlertSms($this->smsMessage, $mobPhone);
         }
       }
   }

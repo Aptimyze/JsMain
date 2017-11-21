@@ -250,6 +250,10 @@ class RegistrationFunctions
                     $religionInfo = (array)$loginProfileObj->getReligionInfo(1);
                     $completeFields["jamaat"] = $religionInfo['JAMAAT'];
                 }
+		if($completeFields["countryReg"] && $completeFields["countryReg"]!="51")
+		{
+			$completeFields["residentialStatus"] = $loginProfileObj->getRES_STATUS();
+		}
                 $country_res=$loginProfileObj->getCOUNTRY_RES();
                 $completeFields["countryReg"] = $country_res;
                 if($country_res==51 || $country_res==128){
@@ -288,4 +292,35 @@ class RegistrationFunctions
             $affectedRows = $jprofileObj->updateEmail($email,$email.RegistrationEnums::$emailModification.($max+1));
             return $affectedRows;
         }
+        
+        
+        /*
+        * fetching Campaign related parmeters
+        */
+       public static function getCampaignVars($request,$jsonFormat=0)
+       {     
+             foreach(RegistrationEnums::$campaignParamList as $key=>$val){
+                 $value = $request->getParameter($key);
+                 if($value && !in_array($val,$checkArr)){
+                     $campArr[$key]= $value;
+                     $checkArr[] = trim($val,'{}');
+                 }
+             }
+             if($jsonFormat)
+                return json_encode($campArr,JSON_FORCE_OBJECT);
+             return $campArr;
+       }
+       
+       /*
+        * store campaign variables
+        */
+       
+       public static function putCampaignVars($profileId,$campaignVars){
+            foreach(RegistrationEnums::$campaignParamList as $key=>$val){
+                 if($campaignVars[$key])
+                     $campArr[$key]= trim($campaignVars[$key],'{}');
+            }
+            $campVarObj = new MIS_CAMPAIGN_KEYWORD_TRACKING();
+            $campVarObj->insertEntry($profileId, $campArr);
+       }
 }

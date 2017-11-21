@@ -42,7 +42,11 @@ EOF;
 	if(!sfContext::hasInstance())
 		sfContext::createInstance($this->configuration);
         
+        $nonPeakTime = 0;
+        $msgSent =0;
         if(CommonUtility::runFeatureInDaytime(1,8)){
+                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/matchalertsMailers.txt";
+                $nonPeakTime = 1;
                 $memObject = JsMemcache::getInstance();
                 $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
                 unset($memObject);
@@ -58,8 +62,8 @@ EOF;
         $lock = $LockingService->getFileLock($file,1);
         if(!$lock)
         	successfullDie();
-        
-        
+        	
+       
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictTrends;
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictNonTrends;
         $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedNonTrends;
@@ -84,6 +88,14 @@ EOF;
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
+                        if($pid < 18493735 && $nonPeakTime == 1){
+                                if($msgSent == 0){
+                                        SendMail::send_email("lavesh.rawat@gmail.com,bhavana.kadwal@gmail.com", "Match alerts Mailer called at the time of computation", "ALERT:: Match Alert Mailer called at night" . date('y-m-d h:i:s'));
+                                        $this->sendSMS();
+                                        $msgSent = 1;
+                                }
+                                file_put_contents($fileName, "Mailer Called :: ".$pid."\n", FILE_APPEND);
+                        }
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
 
@@ -114,10 +126,12 @@ EOF;
                                 }
                                 
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
-        $data["mailSentDate"] = date("Y-m-d H:i:s");
+				
+				$data["mailSentDate"] = date("Y-m-d H:i:s");   
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
+				
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
                 $this->setMatchAlertNotificationCache($data);
 			}
@@ -184,7 +198,11 @@ EOF;
   protected function getSubjectAndBody($firstUser,$count,$logic,$profileId,$dppLink="")
   {
 	$subject = array();
+	$defaultTimezone=date_default_timezone_get();
+    date_default_timezone_set('Asia/Kolkata');// changing into IST
 	$today = date("d M");
+	date_default_timezone_set($defaultTimezone); // Changing back to default
+
         $matchStr = " Matches";
         $these = ' these';
         if($count==1){
@@ -313,5 +331,26 @@ EOF;
         $photo = $url;
     return $photo;
   }
+  private function sendSMS() {
+                $date = date("Y-m-d h");
+                $from = "JSSRVR";
+                $profileid = "144111";
+                $smsMessage = "Mysql Error Count have reached mailer night within 5 minutes";
+                $mobileArr = array("9818424749", "9773889652", "9773889617");
+                foreach ($mobileArr as $mobPhone) {
+                        $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";
+                        $xml_content = "%3CSMS%20UDH=%220%22%20CODING=%221%22%20TEXT=%22" . urlencode($smsMessage) . "%22%20PROPERTY=%220%22%20ID=%22" . $profileid . "%22%3E%3CADDRESS%20FROM=%22" . $from . "%22%20TO=%22" . $mobPhone . "e%22%20SEQ=%22" . $profileid . "%22%20TAG=%22%22/%3E%3C/SMS%3E";
+                        $xml_end = "%3C/MESSAGE%3E";
+                        $xml_code = $xml_head . $xml_content . $xml_end;
+                        $fd = @fopen("http://api.myvaluefirst.com/psms/servlet/psms.Eservice2?data=$xml_code&action=send", "rb");
+                        if ($fd) {
+                                $response = '';
+                                while (!feof($fd)) {
+                                        $response.= fread($fd, 4096);
+                                }
+                                fclose($fd);
+                        }
+                }
+        }
 
 }

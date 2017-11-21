@@ -5,7 +5,7 @@ class MessageQueues
 {
   CONST CONSUMERCOUNT = 8;  //Number of instances of Consumer class run at a time.  
   CONST BUFFER_INSTANT_NOTIFICATION_CONSUMER_COUNT = 3; //Number of instances of BufferInstantNotificationConsumer class run at a time.  
-  CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 10;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
   CONST SCREENINGMAILERCONSUMERCOUNT = 1;  //Number of instances of ScreeningMailerConsumer class run at a time.
   CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
@@ -37,9 +37,10 @@ class MessageQueues
   CONST VIEW_LOG = "ViewLogQueue";
   CONST FALLBACK_SERVER_MSGPICK_COUNT = 10; 
   //per queue msg limit mapping
-  public static $upperMessageLimitPerQueue = array("default"=>50000,"INSTANT_NOTIFICATION_QUEUE"=>90000);
+  public static $upperMessageLimitPerQueue = array("default"=>50000,"INSTANT_NOTIFICATION_QUEUE"=>400000);
   public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE","DelayedMailQueue","MatchAlertNotification","WriteMsgDelayedQueue"); //queues not to be considered for msg upper limit alert
-  CONST SAFE_LIMIT = 700000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
+  CONST SAFE_LIMIT = 2000000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
+  CONST DISK_SAFE_LIMIT = 700000000;     //Limit in MB's for the difference between disk memory allowed and disk memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
   CONST PASSIVE = false;      //If set, the server will reply with Declare-Ok if the queue already exists with the same name, and raise an error if queue with the given name doesnt exist.

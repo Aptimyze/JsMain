@@ -42,8 +42,10 @@ EOF;
 			$message        = "Mysql Error Count have reached APeoifail $totalRecords within 5 minutes";
 			$from           = "JSSRVR";
 			$profileid      = "144111";
-			foreach($arrMob as $mobile1)
+			foreach($arrMob as $mobile1){
 				$smsState = send_sms($message,$from,$mobile1,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile1);
+            }
 			
 		}
 		else

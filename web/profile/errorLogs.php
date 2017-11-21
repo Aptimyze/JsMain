@@ -19,6 +19,7 @@ if($tot_cnt > 100)
 	$from 		= "JSSRVR";
 	$profileid 	= "111";
 	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+    CommonUtility::logTechAlertSms($message, $mobile);
 	if($smsState)
 		log_file($file);	
 }

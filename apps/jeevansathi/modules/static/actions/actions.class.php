@@ -333,6 +333,10 @@ class staticActions extends sfActions
           }
           else{
               $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
+              if ( strpos($this->referer,'static/hideCheckPassword') !== false )
+              {
+                $this->referer = '/';
+              }
           }
         }
 
@@ -350,8 +354,10 @@ class staticActions extends sfActions
 
         public function executeUnHideResult(sfWebRequest $request) 
         {
+
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
+              $this->referer = '/static/settings';
           }
         }
 
@@ -1092,6 +1098,10 @@ public function executeAppredirect(sfWebRequest $request)
 					$outData['family_income'][$x]=$mergedArr;
 				}
 			}
+			if($val=="res_status")
+			{
+				
+			}
 			if($val=="state_india" || $val=="native_country")
 			{
 				$optionalArr = array("0"=>array("0"=>"Select"));
@@ -1196,6 +1206,10 @@ public function executeAppredirect(sfWebRequest $request)
 		}
                 if($k == "relationship_reg")
                   $output=$this->getField("relationship");
+		if($k=="res_status")
+		{
+			$output = $this->getResStatus();
+		}
 		if($k=="country_res" || $k=="p_country")
 		{
 		$output=$this->getCountry($k);
@@ -1652,6 +1666,17 @@ if($k=="state_res")
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
 	  return $Arr;
+  }
+  private function getResStatus()
+  {
+          $Arr[0]=FieldMap::getFieldLabel("rstatus",'',1);
+          foreach($Arr as $key=>$val)
+                  {
+                                foreach($val as $k=>$v)
+                                        $output[]=array($k=>$v);
+                  }
+          return array($output);
+
   }
   private function getCountry($onlyCountry)
   {

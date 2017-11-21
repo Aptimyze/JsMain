@@ -40,7 +40,8 @@ var arrErors = {
 	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
 	"NAME_ERROR":"Name should have alphabets only",
         "CASTEMUSLIM_REQUIRED":"Please provide a Caste",
-        "JAMAAT_REQUIRED":"Please provide a Jamaat"
+        "JAMAAT_REQUIRED":"Please provide a Jamaat",
+	"RESIDENTIALSTATUS_REQUIRED":"Please mention your residential status"
 };
 //regular expressions for validations
 var name_regex = /^[a-zA-Z\s\.\']*$/;
@@ -1126,3 +1127,28 @@ return pincodeValidator;
    })();
    this.horoscopeMatchValidator=horoscopeMatchValidator;
  }).call(this);
+
+
+
+
+(function() {
+    var residentialStatusValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(residentialStatusValidator,validator);
+      //constructor
+      function residentialStatusValidator(fieldElement) {
+      residentialStatusValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      residentialStatusValidator.prototype.validate = function()
+      {
+        var residentialStatus = this.getValue("residentialStatus");
+        residentialStatusValidator.prototype.parent.validate.call(this,residentialStatus);
+        if(this.error)
+                return false;
+        return true;
+      }
+   return residentialStatusValidator;
+   })();
+   this.residentialStatusValidator=residentialStatusValidator;
+ }).call(this);
+

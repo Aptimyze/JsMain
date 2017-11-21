@@ -174,7 +174,7 @@ class DppRelaxation {
                         if (in_array(trim($value, ' '), $delhiNcrCities)) {
                                 if (!$filledNcr) {
                                         $filledNcr = 1;
-                                        $finalCity.=',' . implode(',', $delhiNcrCities);
+                                        $finalCity.=',' . implode(',', $delhiNcrCities).",DE000";
                                 }
                         } else if (in_array($value, $mumbaiRegionValues)) {
                                 if (!$filledMumbai) {

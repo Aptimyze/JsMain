@@ -528,10 +528,13 @@ function mysql_error1($db)
         $profileid      = "144111";
         $mobile         = "9773889617";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
         $mobile         = "9818424749";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
         $mobile         = "9873639543";
 	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+    CommonUtility::logTechAlertSms($message, $mobile);
 }
 
 function DayDiff($StartDate, $StopDate)
