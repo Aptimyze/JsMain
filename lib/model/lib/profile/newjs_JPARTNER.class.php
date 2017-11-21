@@ -31,10 +31,11 @@ class newjs_JPARTNER
 	{
                 //this function removes As Clause of Mysql
                 $arr = self::removeAsAndReturnFields($fields);
-                
-                $fields = $arr[0];
-                //this array is to replace keys with those of AS clause
-                $changeAtReturn = $arr[1];
+                if(is_array($arr)){
+                    $fields = $arr[0];
+                    //this array is to replace keys with those of AS clause
+                    $changeAtReturn = $arr[1];
+                }
                 
                 if($paramArr['PROFILEID']){
                     if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $paramArr['PROFILEID'], $fields, $this->cacheClassJpartner)){
@@ -46,15 +47,15 @@ class newjs_JPARTNER
                     else{
                         $myrow =  $this->JpartnerStoreObj->get($paramArr,"*");
                         //Also Set in cache
-                        ProfileCacheLib::getInstance()->updateCache($myrow, ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, $this->cacheClassJpartner);
+                        ProfileCacheLib::getInstance()->updateCache($myrow[0], ProfileCacheConstants::CACHE_CRITERIA, $paramArr['PROFILEID'], $this->cacheClassJpartner);
                         
                         //This function filters only those keys which are asked for
                         $myrow[0] = self::getArrayWithRequiredFieldAndConditions($myrow[0],$fields);
                     }
                 }
-                
                 //replacing keys of AS clause
-                $myrow[0] = self::getChangedKeysArr($myrow[0],$changeAtReturn);
+                if($changeAtReturn)
+                    $myrow[0] = self::getChangedKeysArr($myrow[0],$changeAtReturn);
                 
                 return $myrow;
 	}
@@ -63,12 +64,23 @@ class newjs_JPARTNER
 	{
                 $arr = self::removeAsAndReturnFields($fields);
                 
-                $fields = $arr[0];
-                
-                //this array is to replace keys with those of AS clause
-                $changeAtReturn = $arr[1];
+                if(is_array($arr)){
+                    $fields = $arr[0];
+
+                    //this array is to replace keys with those of AS clause
+                    $changeAtReturn = $arr[1];
+                }
                 $objProCacheLib = ProfileCacheLib::getInstance();
-                $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileIdArr,$fields,$this->cacheClassJpartner);
+                
+                if(!stristr($fields, "PROFILEID"))
+                    $fieldsToFetch = $fields.",PROFILEID";
+                else
+                    $fieldsToFetch = $fields.",PROFILEID";
+                
+                //get multiple profiles data from Cache
+                $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileIdArr,$fieldsToFetch,$this->cacheClassJpartner);
+                
+                //Handle not filled Case
                 if (is_array($result) && false !== $result) {
                     $bServedFromCache = true;
                     $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
@@ -79,23 +91,33 @@ class newjs_JPARTNER
                     }
                 }
                 
+                //Format response data
                 if(is_array($result) && count($result)) {
                     $tempResult = array();
                     foreach($result as $k=>$v){
-                        $tempResult[$v['PROFILEID']] = $v;
+                        $proId = $v['PROFILEID'];
+                        if(!stristr($fields, "PROFILEID"))
+                            unset($v['PROFILEID']);
+                        
+                        if($changeAtReturn)
+                            $tempResult[$proId] = self::getChangedKeysArr($v,$changeAtReturn);
+                        else
+                            $tempResult[$proId] = $v;
+                        
                         unset($result[$k]);
                     }
                     $result = $tempResult;
                 }
                 
+                //If Profiles found from Cache return them
                 if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-                    print_r($result);die;
                     return $result;
                 }
                 
-                //Get Records from Mysql
-                $result = $this->JpartnerStoreObj->getDataForMultipleProfiles($profileIdArr,"*");  
+                // else Get Records from Mysql
+                $result = $this->JpartnerStoreObj->getDataForMultipleProfiles($profileIdArr,"*");
                 
+                //If not all profiles' data found in table create not filled in array
                 if(is_array($result) && count($result) !== count($profileIdArr)) {
                     $arrDataNotExist = array();
                     foreach($result as $key=>$val){
@@ -111,10 +133,12 @@ class newjs_JPARTNER
                     }
                 }
 
+                //store in cache
                 if(is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
                     $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result, $this->cacheClassJpartner);
                 }
 
+                //not filled in case in cache
                 if($dummyArray && is_array($dummyArray) && count($dummyArray) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
                     $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray, $this->cacheClassJpartner);
                 }
@@ -122,9 +146,9 @@ class newjs_JPARTNER
                 foreach($result as $key=>$val){
                     $result[$key] = self::getArrayWithRequiredFieldAndConditions($result[$key],$fields,"");
                     //replacing keys of AS clause
-                    $result[$key] = self::getChangedKeysArr($result[$key],$changeAtReturn);
+                    if($changeAtReturn)
+                        $result[$key] = self::getChangedKeysArr($result[$key],$changeAtReturn);
                 }
-                print_r($result);die;
                 return $result;
 	}
 	public function getCount($where,$profileid)
@@ -139,17 +163,17 @@ class newjs_JPARTNER
 	}
 	
 	public function isDppSetByUser($profileId){
-                if($paramArr['PROFILEID']){
-                    if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileId, ProfileCacheConstants::$prefixMapping['Jpartner'].'.DPP', $this->cacheClassJpartner)){
-                        $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileId, ProfileCacheConstants::$prefixMapping['Jpartner'].'.DPP', $this->cacheClassJpartner);
+                if($profileId){
+                    if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileId, 'DPP', $this->cacheClassJpartner)){
+                        $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileId, 'DPP', $this->cacheClassJpartner);
                         if (false !== $result) {
                             $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                         }
+                        return $myrow['DPP'];
                     }
-                    return $myrow['DPP'];
-                }
-                else{
-                    return $this->JpartnerStoreObj->isDppSetByUser($profileId);
+                    else{
+                        return $this->JpartnerStoreObj->isDppSetByUser($profileId);
+                    }
                 }
 	}
 	public function selectPartnerCaste($p_caste,$offset,$limit)
@@ -160,7 +184,7 @@ class newjs_JPARTNER
         
 	public function updateCaste($profileid,$caste,$oldCaste)
 	{
-                $this->JpartnerStoreObj->updateIncomeValueForProfile($profileid,$hincome,$partnerIncome,$oldValue);
+                $this->JpartnerStoreObj->updateCaste($profileid,$caste,$oldCaste);
                 
                 //update in cache
                 $arrToUpdateInCache['PARTNER_CASTE'] = $caste;
@@ -216,21 +240,26 @@ class newjs_JPARTNER
         }
         
         public static function removeAsAndReturnFields($fields){
-            if(strstr($fields, " AS ")){
+            if(stristr($fields, " AS ")){
                 $cArray = explode(",", $fields);
                 foreach($cArray as $key=>$val){
-                    if(strstr($val, " AS ")){
-                        $asSeparate = explode(" AS ",$val);
+                    if(stristr($val, " AS ")){
+                        if(strstr($val, " AS "))
+                            $asSeparate = explode(" AS ",$val);
+                        else if(strstr($val, " as "))
+                            $asSeparate = explode(" as ",$val);
                         $changeAtReturn[trim($asSeparate[0])] = trim($asSeparate[1]);
                         $fieldsNew .= ",".trim($asSeparate[0]);
                     }
                     else
                         $fieldsNew .= ",".trim($val);
                 }
+                
+                $retArr[0] = trim($fieldsNew,",");
+                $retArr[1] = $changeAtReturn;
+                return $retArr;
             }
-            $retArr[0] = trim($fieldsNew,",");
-            $retArr[1] = $changeAtReturn;
-            return $retArr;
+            return $fields;
         }
         
         public static function getChangedKeysArr($completeArr,$fieldsToChange){
