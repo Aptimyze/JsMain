@@ -582,7 +582,9 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
 <!--end:footer--> 
   </div>
 </div>
+<input type="hidden" id="CALayerShow" ></input>
 <script>
+
     var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
     var ViewedUserName = "~$arrOutDisplay["about"]["username"]`";
     var sameGender = "~$arrOutDisplay["about"]["sameGender"]`";
@@ -595,4 +597,13 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     var selfUsername='~$loginProfile->getUSERNAME()`';
     var selfEmail='~$loginProfile->getEMAIL()`';
     var hideUnimportantFeatureAtPeakLoad='~JsConstants::$hideUnimportantFeatureAtPeakLoad`';
+
+    var LAYERDATA = ~$layerData|decodevar`;
+    if(typeof LAYERDATA.calObject != "undefined" && LAYERDATA.calObject){
+      if(typeof LAYERDATA.calObject.LAYERID != "undefined" && LAYERDATA.calObject.LAYERID && LAYERDATA.calObject.LAYERID > 0){
+        console.log("start");
+        document.getElementById("CALayerShow").setAttribute("value", LAYERDATA.calObject.LAYERID);
+        console.log('stop');
+      }
+    }
 </script>
