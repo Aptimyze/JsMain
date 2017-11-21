@@ -152,7 +152,7 @@ criticalLayerButtonsAction(url,clickAction,button) {
             }
             else
               CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-            return;
+            return true;
           break;
 
           case '14':
