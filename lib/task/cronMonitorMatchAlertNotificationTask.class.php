@@ -74,21 +74,23 @@ EOF;
                 print_r(array("initial count"=>$count));
                 if ($count != 0 && $count != "") {
 
-		    // New monitoring
-                    if($countT!=0){
-                        if($countN!=0 && $countY==0)
-                                $msg = "MatchAlert Instant Notification Sending Issue ";
-		    }	
-                    elseif($countT==0){
-	            	$msg = "MatchAlert Instant Notification Not Generating from Mailer";
-			
-                    }
                     $matchalertMailertObject = new matchalerts_MAILER("matchalerts_slave");
                     $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
                     print_r(array('FinalCount'=>$MailersCount));
                     if($MailersCount[0]["CNT"] != 0){
-                        //$rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
-                        $msg = "Match Alert Instant Notification Delivery Issue";
+
+	                    // New monitoring
+	                    if($countT!=0){
+	                        if($countN!=0 && $countY==0)
+	                                $msg = "MatchAlert Instant Notification Sending Issue ";
+	                    }
+	                    elseif($countT==0){
+	                        $msg = "MatchAlert Instant Notification Not Generating from Mailer";
+        	            }
+			    else{	
+                        	//$rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
+                        	$msg = "Match Alert Instant Notification Delivery Issue";
+			    }	  
                     }
                     if($msg){
                             $this->sendAlertMail($to, $msg, $msg);
