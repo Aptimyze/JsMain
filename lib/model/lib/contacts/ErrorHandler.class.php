@@ -646,6 +646,8 @@ class ErrorHandler
 						$this->contactHandlerObj->getJunkType(),
 						$this->contactHandlerObj->getJunkData(),
 						'Y');
+					}
+					return true;
 			}
 			else{
 					$whyFlag = 0;
@@ -657,9 +659,7 @@ class ErrorHandler
 					{ 
 						return true;
 					}
-				}
-				return true;
-			}
+				}			
 		} 
 		return false;
 	}
