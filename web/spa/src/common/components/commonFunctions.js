@@ -92,3 +92,13 @@ export const mtoungueURL = () => {
     }
     return obj;
 }
+
+export const langGateway = (linkid) => {
+    let ctrlHam= document.getElementById(linkid);
+    if(typeof ctrlHam !== undefined && ctrlHam !== null){
+        let url = window.location.href;
+        if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+            ctrlHam.innerHTML = "In English";
+        }
+    }
+}
