@@ -48,7 +48,13 @@ EOF;
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
                 $fromReg = $arguments["fromReg"]; // registered data flag
-                
+                $configObj = new MatchAlertsConfig();
+                if($totalScripts == $configObj->instanceNonPeak){
+                        $memObject=JsMemcache::getInstance();
+                        $memObject->remove('MATCHALERT_POPULATE_EMPTY');
+                        unset($memObject);
+                }
+                unset($configObj);
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
                 $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . LowDppMatchesCheck::$mailerFreq ) );
