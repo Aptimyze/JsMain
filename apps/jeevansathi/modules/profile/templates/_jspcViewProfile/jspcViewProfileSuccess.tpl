@@ -601,9 +601,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     var LAYERDATA = ~$layerData|decodevar`;
     if(typeof LAYERDATA.calObject != "undefined" && LAYERDATA.calObject){
       if(typeof LAYERDATA.calObject.LAYERID != "undefined" && LAYERDATA.calObject.LAYERID && LAYERDATA.calObject.LAYERID > 0){
-        console.log("start");
         document.getElementById("CALayerShow").setAttribute("value", LAYERDATA.calObject.LAYERID);
-        console.log('stop');
       }
     }
 </script>
