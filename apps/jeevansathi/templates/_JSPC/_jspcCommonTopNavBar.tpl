@@ -123,6 +123,7 @@ window.onload=function(){
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
                                 <li><a class="disp_b" href="/search/visitors?matchedOrAll=A">Profile Visitors</a></li>
+                                <li style="display:none"><a href="/common/realSearch"></a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
