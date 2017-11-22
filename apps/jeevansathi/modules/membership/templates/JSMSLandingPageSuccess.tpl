@@ -15,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership','from_source'=>$callbackSource])`
+	~include_component('common', 'jsmsReqCallback',['pageType'=>'membership','from_source'=>$callbackSource,'appVersion'=>$data.appVersion])`
 	<!--start:overlay1
 	<div id="callOvrOne" style="display:none;">
 		<div class="tapoverlay posfix"></div>
@@ -49,11 +49,11 @@
 	<div id="callOvrOneJS" style="display:none;">
 		<div class="tapoverlay posfix"></div>
 		<div class="posabs txtc btmo fontlig bg4 fullwid" style="z-index:110;">
-			<div id="JsCallPhonelNumber" class="f22 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` pt30"><a style="cursor:pointer; color:~if $data.device eq 'Android_app'`#8d1316~else`#d9475c~/if` !important;"href="tel:~$data.topHelp.value`">~$data.topHelp.phone_number`</a></div>
+			<div id="JsCallPhonelNumber" class="f22 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` pt30"><a style="cursor:pointer; color:~if $data.device eq 'Android_app'`#8d1316~else`#d9475c~/if` !important;"href="tel:~$data.topHelp.value`">~$data.topHelp.phone_number`</a></div>
 			<div id="JsCallText" class="f14 color13 pt15">~$data.topHelp.call_text`</div>
 			~if $profileid`
 			<div id="JsCallOrText" class="f13 color1 pad2">~$data.topHelp.or_text`</div>
-			<div id="reqCallBackJS" style="cursor:pointer;"class="f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` pb20">~$data.topHelp.request_callback`</div>
+			<div id="reqCallBackJS" style="cursor:pointer;"class="f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` pb20">~$data.topHelp.request_callback`</div>
 			~else`
 			<div class="pb20"></div>
 			~/if`
@@ -68,7 +68,7 @@
 				<div class="f14 color13"><i class="mainsp mem_coma"></i>
 					<span id="reqCallBackMessageJS"></span>
 					<br>
-					<div id="closeOvrJS" class="fr f14 pt15 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp" style="padding-bottom:30px;padding-right:10px;">Close</div>
+					<div id="closeOvrJS" class="fr f14 pt15 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp" style="padding-bottom:30px;padding-right:10px;">Close</div>
 				</div>
 			</div>
 		</div>
@@ -79,7 +79,7 @@
 		~if $data.dividerText && !($data.upgradeMembershipContent || $data.lightningDealContent)`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
-			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
+			<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.dividerText` <i class="posabs rv2_sprtie1 rv2_pos2 rv2_offb_left"></i> <i class="posabs rv2_sprtie1 rv2_pos3 rv2_offb_right"></i> </div>
 		</div>
 		<!--end:offer div-->
 		~/if`
@@ -108,7 +108,7 @@
 		~if $data.upgradeMembershipContent`
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
-				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad19"> 
+				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_pad19">
 				'~$data.upgradeMembershipContent.upgradeOCBBenefits`' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
@@ -120,7 +120,7 @@
 				<div>
 					<div class="posrel txtc fontlig f15 rv2_pad18 color7">
 					<div>Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership...</div>
-					<div class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">Valid till ~$data.upgradeMembershipContent.jsmsupgradeOfferExpiry`</div>
+					<div class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">Valid till ~$data.upgradeMembershipContent.jsmsupgradeOfferExpiry`</div>
 					</div>
 				</div>
 			<!--end:upgrade offer level2 div-->
@@ -161,7 +161,7 @@
 					<!--start:help-->
 					<div class="pt40 pb30 cursp">
 						<div class="rv2_pad4">
-							<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_brrad1">
+							<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_brrad1">
 								~$data.bottomHelp.title`
 							</div>
 						</div>
@@ -232,7 +232,7 @@
 				~if $data.backgroundText`
 				<!--start:offer div-->
 				<div class="pt10">
-					<div id="backgroundText" class="posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.backgroundText`</div>
+					<div id="backgroundText" class="posrel txtc fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.backgroundText`</div>
 				</div>
 				<!--end:offer div-->
 				~/if`
@@ -275,7 +275,7 @@
 								<!--end:features list -->
 								<!--start:duration-->
 								<div clickdur="~$v.subscription_id`" class="dispnone">
-									<div id="~$v.subscription_id`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">
+									<div id="~$v.subscription_id`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">
 										~$v.selectDurationText`
 									</div>
 									<!--start:option-->
@@ -285,7 +285,7 @@
 											<div class="clearfix">
 												<div class="fl wid80p">
 													<div class="fullwid clearfix">
-														<div id="~$v.subscription_id`~$vd.duration_id`_duration" class="fl ~if $data.device eq 'Android_app'`~$data.device`_montht~else`montht~/if`">~$vd.duration` ~$vd.duration_text`</div>
+														<div id="~$v.subscription_id`~$vd.duration_id`_duration" class="fl ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_montht~else`montht~/if`">~$vd.duration` ~$vd.duration_text`</div>
 														~if $vd.price_strike`
 														<div id="~$v.subscription_id`~$vd.duration_id`_priceStrike" class="fr disct">~$data.currency`~$vd.price_strike`</div>
 														~/if`
@@ -309,9 +309,9 @@
 								~if $v.subscription_id eq 'X' && $profileid`
 								<div id="~$v.subscription_id`_reqCllbckBtn" class="txtc fontlig f16 pt30 padb5">
 									~if $v.request_callback.labelLink`
-										<span id="jsExCallbackTel" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp"><a class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp" href='~$v.request_callback.labelLink`' >~$v.request_callback.label`</a></span> or <span id="jsExCallback" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp">~$v.request_callback.linkText`</span>
+										<span id="jsExCallbackTel" class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp"><a class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp" href='~$v.request_callback.labelLink`' >~$v.request_callback.label`</a></span> or <span id="jsExCallback" class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp">~$v.request_callback.linkText`</span>
 									~else`
-										<span class="color8">~$v.request_callback.label`</span> <span id="jsExCallback" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp">~$v.request_callback.linkText`</span>
+										<span class="color8">~$v.request_callback.label`</span> <span id="jsExCallback" class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp">~$v.request_callback.linkText`</span>
 									~/if`
 								</div>
 								~/if`
@@ -319,7 +319,7 @@
 							<!--end:description-->
 							<!--start:view duration goes display none on tappin on it "add class dispnone" to hide it-->
 							<div class="mt1 dur_click cursp">
-								<div clickid="~$v.subscription_id`" class="bg15 f18 fontlig ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad6 duration_click">
+								<div clickid="~$v.subscription_id`" class="bg15 f18 fontlig ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_pad6 duration_click">
 									<div class="rv2_wid1">
 										<div id="~$v.subscription_id`_viewDurationBtn" class="posrel">~$v.viewDurationText`<i class="rv2_sprtie1 rv2_arow1 posabs rv2_pos4"></i> </div>
 									</div>
@@ -358,7 +358,7 @@
 									<!--end:features list -->
 									<!--start:duration-->
 									<div id="~$v.vas_key`" class="vas_durations">
-										<div id="~$v.vas_key`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">~$v.selectDurationText`</div>
+										<div id="~$v.vas_key`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">~$v.selectDurationText`</div>
 										<!--start:option-->
 										<div class="disptbl rv2_brdr2 rv2_brrad1 fullwid fontlig">
 											~foreach from=$v.vas_options key=vk item=vd name=vasDurLoop`
@@ -405,7 +405,7 @@
 					<!--start:help-->
 					<div class="pt40 pb30 cursp">
 						<div class="rv2_pad4">
-							<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_brrad1">
+							<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_brrad1">
 								~$data.bottomHelp.title`
 							</div>
 						</div>
@@ -420,20 +420,22 @@
 	~if $data.upgradeMembershipContent`
 		<!--start:upgrade pay button-->
 		<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-			<div id="upgradeMainMemBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW 
+			<div id="upgradeMainMemBtn" class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW
 			</div>
 		</div>
 		<!--end:upgrade pay button-->
  	~else`
 		<!--start:continue button-->
 		<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-		<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> ~$data.continueText` </div>
+		<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> ~$data.continueText` </div>
 		</div>
 		<!--end:continue button-->
 	~/if`
 	
 </div>
 <script type="text/javascript">
+	var appVersion = "~$data.appVersion`";
+	var androidAppVersionForMaterial = "~VariableParams::$androidAppVersionForMaterial`";
 	var AndroidPromotion = 0;
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
@@ -457,7 +459,7 @@
 		}
 		~/if`
 		if(checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))){
-			if(checkEmptyOrNull(readCookie('device'))){
+			if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 				$("#"+readCookie("mainMem")+readCookie("mainMemDur")).addClass(readCookie('device')+'_selected_d');
 			} else {
 				$("#"+readCookie("mainMem")+readCookie("mainMemDur")).addClass('selected_d');
@@ -485,14 +487,14 @@
 			var that = this;
 			$(".durSel").each(function(){
 				if(this!=that){
-					if(checkEmptyOrNull(readCookie('device'))){
+					if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 						$(this).removeClass(readCookie('device')+'_selected_d');
 					} else {
 						$(this).removeClass('selected_d');
 					}
 				}
 			});
-			if(checkEmptyOrNull(readCookie('device'))){
+			if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 				if($(this).hasClass(readCookie('device')+'_selected_d')){
 					if(readCookie('backState') != "changePlan") {
 						$(this).removeClass(readCookie('device')+'_selected_d')
@@ -518,7 +520,7 @@
 		$(".vasClick").click(function(e){
 			var that = this;
 			$(this).parent().find('.vasClick').each(function(){
-				if(checkEmptyOrNull(readCookie('device'))){
+				if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 					if($(this).hasClass(readCookie('device')+'_vassel') && this!=that){
 						$(this).removeClass(readCookie('device')+'_vassel');
 					}
@@ -528,7 +530,7 @@
 					}
 				}
 			});
-			if(checkEmptyOrNull(readCookie('device'))){
+			if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 				if($(that).hasClass(readCookie('device')+'_vassel')){
 					$(that).removeClass(readCookie('device')+'_vassel');
 				} else {
@@ -544,7 +546,7 @@
 			trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
 			var checkedFlag = 0;
 			$("body").find('.vasClick').each(function(){
-				if(checkEmptyOrNull(readCookie('device'))){
+				if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 					if($(this).hasClass(readCookie('device')+'_vassel')){
 						checkedFlag++;
 					}
@@ -694,7 +696,7 @@
 					paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")+"&selectedVas=";
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					paramStr += '&device=' + readCookie('device');
+					paramStr += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				if(paramStr){
 					url = "~sfConfig::get('app_site_url')`/membership/jsms?" + paramStr;
@@ -709,14 +711,14 @@
 					{
 						paramStr = "displayPage=3&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					} else {
-						paramStr = "displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur")
+						paramStr = "displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					}
 				} else {
 					e.preventDefault();
 					return;
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					paramStr += '&device=' + readCookie('device');
+					paramStr += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				if(paramStr){
 					url = "~sfConfig::get('app_site_url')`/membership/jsms?" + paramStr;
@@ -727,13 +729,13 @@
 				~if $data.vasContent`
 				var paramStr = "";
 				if(checkEmptyOrNull(readCookie("selectedVas"))){
-					paramStr = "displayPage=3&selectedVas="+readCookie('selectedVas');    
+					paramStr = "displayPage=3&selectedVas="+readCookie('selectedVas');
 				} else {
 					e.preventDefault();
 					return;
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					paramStr += '&device=' + readCookie('device');
+					paramStr += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				if(paramStr){
 					url = "~sfConfig::get('app_site_url')`/membership/jsms?" + paramStr;
@@ -780,7 +782,7 @@
 	            createCookie('mainMemDur', mainMemDur);
 				var paramStr = "displayPage=3&mainMem="+mainMem+"&mainMemDur="+mainMemDur+"&upgradeMem="+upgradeType;
 				if(checkEmptyOrNull(readCookie('device'))){
-					paramStr += '&device=' + readCookie('device');
+					paramStr += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
 				}
 				url = "~sfConfig::get('app_site_url')`/membership/jsms?" + paramStr;
 				eraseCookie('backState');

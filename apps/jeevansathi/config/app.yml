@@ -26,7 +26,7 @@ all:
   PROFILE_IGNORED_BY_OTHER: "You cannot view this profile as the profile has blocked you"
   PROFILE_IGNORED_BY_ME: "You cannot view <USERNAME>'s profile as you have blocked <USERNAME>. To view <USERNAME>'s profile, unblock <USERNAME> from blocked members list"
   PROFILE_NOT_FOUND: "Sorry, the profile you requested was not found"
-  PROFILE_SCREENED: "This profile is currently being Screened. Kindly view this profile after 24 hours"
+  PROFILE_SCREENED: "This profile is under screening.Kindly check after 24 hours."
   PROFILE_HIDDEN:  "This profile is currently hidden. Please check after a couple of weeks"
   PROFILE_NO_CONTACT: "Sorry, you cannot view this user's profile as the user has chosen to show profile only to contacted members"
   PROFILE_FILTERED: "Sorry, you cannot view this profile as you have been FILTERED"

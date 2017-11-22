@@ -126,7 +126,7 @@ class postEOIv1Action extends sfAction
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
                                 if($request->getParameter('API_APP_VERSION')>=80 && $this->getParameter($request,"page_source") != "chat")
-					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+					$responseArray['errmsglabel'] = "Interest sent. Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
 		                        $responseArray["headerthumbnailurl"] = $thumbNail;
                         		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
                         		$responseArray["selfthumbnailurl"] = $ownthumbNail;
@@ -235,7 +235,7 @@ class postEOIv1Action extends sfAction
 						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 						$MembershipMessage = $data2['hamburger_message']['top']; 
                         $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
-						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
+						$responseArray["footerbutton"]["label"]  = "Upgrade";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -261,7 +261,7 @@ class postEOIv1Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
-				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
+				$responseArray["errmsglabel"] = "Your interest is saved & will be sent after screening (may take upto 24 hours)";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile Under Screening";
 			}
