@@ -25,14 +25,7 @@
     </script>
     <input type="hidden" id="CALayerShow" value="~$CALayerShow`"></input>
     
-    <!-- <input type="hidden" id="DiscountPercentage" value="~$lightningCALData.discountPercentage`"></input>
-    <input type="hidden" id="DiscountSubtitle" value="~$lightningCALData.discountSubtitle`"></input>
-    <input type="hidden" id="Symbol" value="~$lightningCALData.symbol`"></input>
-    <input type="hidden" id="StartDate" value="~$lightningCALData.startDate`"></input>
-    <input type="hidden" id="OldPrice" value="~$lightningCALData.oldPrice`"></input>
-    <input type="hidden" id="NewPrice" value="~$lightningCALData.newPrice`"></input>
-    <input type="hidden" id="TimeForLightning" value="~$lightningCALData.lightningCALTime`"></input> -->
-
+  
     <input type="hidden" id="showConsentMsgId" value="~$showConsentMsg`"> ~if $videoLinkLayer neq 'N'`
     <div id="videoLinkDivID" class="fullwid" style="background-color:#fdfdfd">
         <div class="container mainwid pos-rel txtc lh61">
