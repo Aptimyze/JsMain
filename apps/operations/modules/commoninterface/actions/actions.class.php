@@ -422,4 +422,63 @@ class commoninterfaceActions extends sfActions
         $this->message = "Gateway changed to ".$this->newGateway;
     }
   }
+  public function executeGetChangeInfo(sfWebRequest $request) 
+  {
+    $formArr = $request->getParameterHolder()->getAll();
+    $this->cid = $formArr['cid'];
+    $this->errorMsg = "";
+    $this->isSubmit =0;
+    if ($formArr['submit']) {
+            if($formArr["user_username"] == ""){
+                    $this->errorMsg = "Please enter Username";
+            }else{
+                        $this->profile = Operator::getInstance();
+			$this->username=$formArr["user_username"];
+			$this->profile->getDetail($formArr["user_username"],'USERNAME','PROFILEID');
+                        if($this->profile->getPROFILEID()==NULL || $this->profile->getPROFILEID()=='') //if invalid username
+                        {
+                                $this->errorMsg = "Wrong Username entered!";
+                        }else{
+                                $this->isSubmit =1;
+                                $this->fieldsToGet = array("GENDER"=>"0", "RELIGION"=>"religion", "CASTE"=>"caste","PHONE_MOB"=>"0","EMAIL"=>"0","COUNTRY_RES"=>"country","CITY_RES"=>"city_india","MTONGUE"=>"community_small","INCOME"=>"income_level","EDU_LEVEL_NEW"=>"edu_level_new","OCCUPATION"=>"occupation","MANGLIK"=>"manglik","MSTATUS"=>"mstatus","DTOFBIRTH"=>"0","PRIVACY"=>"0","PHOTO_DISPLAY"=>"photo_privacy","SHOWPHONE_MOB"=>"privacy_option");
+                                $this->fieldsToGetLabel = array("GENDER"=>"Gender","RELIGION"=>"Religion", "CASTE"=>"Caste","PHONE_MOB"=>"Phone Mobile","EMAIL"=>"Email","COUNTRY_RES"=>"country","CITY_RES"=>"City","MTONGUE"=>"Mtongue","INCOME"=>"Income","EDU_LEVEL_NEW"=>"Education","OCCUPATION"=>"Occupation","MANGLIK"=>"Manglik","MSTATUS"=>"Mstatus","DTOFBIRTH"=>"Date of Birth","PRIVACY"=>"Privacy","PHOTO_DISPLAY"=>"Photo Privacy","SHOWPHONE_MOB"=>"Show Mobile");
+                                $editLogObj = new NEWJS_EDIT_LOG("crm_slave");
+                                $changeData = $editLogObj->getDetails($this->profile->getPROFILEID(),implode(",",array_keys($this->fieldsToGet)));
+                                $changedArray = array();
+                                foreach($changeData as $k=>$data){
+                                        $a = array_filter($data);
+                                        if(empty($a) || (count($a) == 2 && $a["DTOFBIRTH"] == "0000-00-00")){
+                                        }else{
+                                                foreach($this->fieldsToGet as $ky=>$lbl){
+                                                        if($lbl != "0" && $data[$ky] !="0" && $data[$ky] !=""){
+                                                                if($lbl == "city_india"){
+                                                                        if(substr($data[$ky], 2) == "OT"){
+                                                                                $data[$ky] = FieldMap::getFieldLabel("state_india",substr($data[$ky],0,2))." Others";
+                                                                        }else{
+                                                                                $data[$ky] = FieldMap::getFieldLabel($lbl,$data[$ky]);
+                                                                        }
+                                                                }else{
+                                                                        $data[$ky] = FieldMap::getFieldLabel($lbl,$data[$ky]);
+                                                                }
+                                                        }elseif($data[$ky] == "0"){
+                                                                $data[$ky] = "";
+                                                        }elseif($data[$ky] == "0000-00-00"){
+                                                                $data[$ky] = "";
+                                                        }
+                                                }
+                                                $changedArray[$k] = $data;
+                                        }
+                                }
+                                $this->changedArray = $changedArray;
+                        }
+            }            
+    }
+    if($this->errorMsg == ""){
+            if($this->isSubmit == 1){
+                    
+            }else{
+            }
+    }else{
+    }
+  }
 }
