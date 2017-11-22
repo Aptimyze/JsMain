@@ -473,12 +473,5 @@ class commoninterfaceActions extends sfActions
                         }
             }            
     }
-    if($this->errorMsg == ""){
-            if($this->isSubmit == 1){
-                    
-            }else{
-            }
-    }else{
-    }
   }
 }
