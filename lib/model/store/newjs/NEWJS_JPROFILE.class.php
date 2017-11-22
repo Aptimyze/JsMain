@@ -1055,15 +1055,23 @@ class NEWJS_JPROFILE extends TABLE
 
     public function getEntryDtJprofile($profileArray){
         try{
-            //$in  = str_repeat('?,', count($profileArray) - 1) . '?';
-            $sql = "SELECT PROFILEID,ENTRY_DT  FROM newjs.JPROFILE WHERE PROFILEID IN ($profileArray)";
+            $sql = "SELECT PROFILEID,ENTRY_DT  FROM newjs.JPROFILE WHERE PROFILEID IN (";
+            $COUNT=1;
+            foreach($profileArray as $key => $value){
+                $valueToSearch[] = ":KEY".$COUNT;
+                $bind["KEY".$COUNT]["VALUE"] = $value;
+                $COUNT++;
+            }
+            $values = implode(",",$valueToSearch).");";
+            $sql .= $values;
             $prep = $this->db->prepare($sql);
-            //$prep->bindValue(":PROFILEID",$in,PDO::PARAM_STR);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_STR);
+            }
             $prep->execute();
             while($result  = $prep->fetch(PDO::FETCH_ASSOC)){
                 $res[$result["PROFILEID"]] = $result["ENTRY_DT"];
             }
-            //print_r($res);die();
             return $res;
         }catch(Exception $e){
             throw new jsException($e);

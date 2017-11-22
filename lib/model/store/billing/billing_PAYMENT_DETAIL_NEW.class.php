@@ -102,16 +102,25 @@ class billing_PAYMENT_DETAIL_NEW extends TABLE{
     
     public function getFirstEntryDate($profileId,$status){
         try {
-            print_r("cbdjb");print_r($profileId);print_r("cbdjb");die();
-            $sql = "SELECT PROFILEID,MIN(ENTRY_DT) from billing.PAYMENT_DETAIL_NEW WHERE PROFILEID IN ($profileId) AND STATUS = :STATUS GROUP BY PROFILEID";
+            $sql = "SELECT PROFILEID,MIN(ENTRY_DT) as DATE from billing.PAYMENT_DETAIL_NEW WHERE PROFILEID IN (";
+                    $COUNT=1;
+                    foreach($profileId as $key => $value){
+                        $valueToSearch[] = ":KEY".$COUNT;
+                        $bind["KEY".$COUNT]["VALUE"] = $value;
+                        $COUNT++;
+                    }
+            $values = implode(",",$valueToSearch).")";
+            $sql .= $values;
+            $sql.=" AND STATUS = :STATUS GROUP BY PROFILEID";
             $prep = $this->db->prepare($sql);
-            //$prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_INT);
+            }
             $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
             $prep->execute();
             while($result= $prep->fetch(PDO::FETCH_ASSOC)){
-                $res[$result["PROFILEID"]] = $result["ENTRY_DT"];
+                $res[$result["PROFILEID"]] = $result["DATE"];
             }
-            print_r($res);die();
             return $res;
         } catch (Exception $e) {
             throw new jsException($ex);
