@@ -371,7 +371,7 @@ class MembershipAPIResponseHandler {
                 $output = $this->generatePayAtBranchesPageResponse();
             }
         }
-        
+        $output["appVersion"] = $this->appVersion;
         if (isset($output) && !empty($output)) {
             return $this->response = $output;
         } 

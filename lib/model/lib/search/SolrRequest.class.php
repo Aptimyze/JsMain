@@ -766,10 +766,11 @@ class SolrRequest implements RequestHandleInterface
                                 $dArr["minID"] = 0;
                                 $this->searchParamtersObj->setLINCOME_DOL("0");
                         }
-                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
-                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
-                        $rArr["minIR"] = $incomeHighValue;
-                        $this->searchParamtersObj->setLINCOME($incomeHighValue);
+                       // $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        //$incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
+                        //$rArr["minIR"] = $incomeHighValue;
+                        //$this->searchParamtersObj->setLINCOME($incomeHighValue);
+                        $this->searchParamtersObj->setLINCOME($rArr["minIR"]);
                         unset($incomeMapObj);
                 }
                 if($incomeHighValue != ""){

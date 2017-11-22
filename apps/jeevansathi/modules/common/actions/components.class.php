@@ -69,7 +69,6 @@ class commonComponents extends sfComponents{
         
         $loginData = $request->getAttribute('loginData');
         $this->profileid = $loginData['PROFILEID'];
-        
         if(MobileCommon::isApp() || MobileCommon::isAppWebView()){
         	$this->device = "Android_app";
         	$this->channel = "JSAA";
@@ -89,7 +88,7 @@ class commonComponents extends sfComponents{
                 "value" => "18004196299",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource="
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device ."&appVersion=".$this->appVersion. "&channel=" . $this->channel . "&callbackSource="
             );
         } 
         else {
@@ -100,7 +99,7 @@ class commonComponents extends sfComponents{
                 "value" => "+911204393500",
                 "or_text" => "OR",
                 "request_callback" => "Request Callback",
-                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device . "&channel=" . $this->channel . "&callbackSource="
+                "params" => "processCallback=1&INTERNAL=1&execCallbackType=JS_ALL&tabVal=1&profileid=" . $this->profileid . "&device=" . $this->device ."&appVersion=".$this->appVersion. "&channel=" . $this->channel . "&callbackSource="
             );
         }
         $this->data = $data;
