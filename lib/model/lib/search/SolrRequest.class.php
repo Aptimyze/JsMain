@@ -8,7 +8,7 @@ class SolrRequest implements RequestHandleInterface
 {
 	private $searchResults;
 	private $solrPagination;
-        private $solrCurlTimeout = 400;
+        private $solrCurlTimeout = 800;
 	/**
 	* constructor of solr Request class
 	* @param responseObj contains information about output type (array/xml/...) and engine used(solr/sphinx/mysql....)

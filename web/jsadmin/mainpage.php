@@ -635,6 +635,9 @@ if (isset($data)) //successful login
          if (in_array('P', $priv) || in_array('MG', $priv) || in_array('ARB', $priv)) {
              $linkarr[]="<a href=\"$SITE_URL/jsadmin/addRemoveBuzzwords.php?cid=$cid\">Add / Remove Buzzwords</a>";
          }
+         if (in_array('CSSUP', $priv) || in_array('P', $priv) || in_array('MG', $priv) || in_array('CSEXEC', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/getChangeInfo?cid=$cid\">User Info Change History</a>";
+         }
     }
 
     $smarty->assign("linkarr", $linkarr);

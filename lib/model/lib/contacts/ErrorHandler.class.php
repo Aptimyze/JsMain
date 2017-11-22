@@ -694,7 +694,7 @@ class ErrorHandler
 
 		// added during hotfix 
 		if($receiver->getPROFILEID()%103>20)
-			return true;
+			return false;
 
 		$senderArr = array(
 			"age" => $sender->getAGE(),
