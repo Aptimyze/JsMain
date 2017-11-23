@@ -846,9 +846,9 @@ class csvGenerationHandler
 				}					
 				// DNC No. check filter
 				$phoneNumStack =array("PHONE1"=>"$dataArr[PHONE_MOB]","PHONE2"=>"$dataArr[PHONE_ALTERNATE]","PHONE3"=>"$dataArr[PHONE_WITH_STD]");
-				$DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
-				$isDNC    =$DNCArray['STATUS'];
-				if($isDNC){
+				//$DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
+				//$isDNC    =$DNCArray['STATUS'];
+				//if($isDNC){
 	                                // Optin-check
 	                                $optinStatus =$AgentAllocDetailsObj->isOptinProfile($profileid);
 	                                if(!$optinStatus){
@@ -857,7 +857,7 @@ class csvGenerationHandler
 	                                        $this->salesCsvProfileLog($profileid,$username,'N','NON_OPTIN','Y');
 	                                        continue;
 	                                }
-				}
+				//}
 				foreach($phoneNumStack as $key=>$value){
 					if($value && !$phone1)
 						$phone1 =$value;
@@ -1026,9 +1026,9 @@ class csvGenerationHandler
                                 }
 					
                                 $phoneNumStack =array("PHONE1"=>"$dataArr[PHONE_MOB]","PHONE2"=>"$dataArr[PHONE_ALTERNATE]","PHONE3"=>"$dataArr[PHONE_WITH_STD]");
-                                $DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
-                                $isDNC    =$DNCArray['STATUS'];
-                                if($isDNC){
+                                //$DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
+                                //$isDNC    =$DNCArray['STATUS'];
+                                //if($isDNC){
                                         // Optin-check
                                         $optinStatus =$AgentAllocDetailsObj->isOptinProfile($profileid);
                                         if(!$optinStatus){
@@ -1038,7 +1038,7 @@ class csvGenerationHandler
                                             $this->fpCsvProfileLog($profileid,'','N','NON_OPTIN','Y','','','',$processName);
                                             continue;
                                         }
-                                }
+                                //}
                                 foreach($phoneNumStack as $key=>$value){
                                         if($value && !$phone1)
                                                 $phone1 =$value;

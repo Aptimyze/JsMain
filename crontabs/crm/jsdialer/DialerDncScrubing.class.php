@@ -66,13 +66,14 @@ class DialerDncScrubing
         	}
         	return $eligible_profiles;
 	}
-	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='',$autoCampaign='')
+	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='',$autoCampaign='', $eligiblePool=array(), $eligibleCampaignArr)
 	{
+		$scbValue ='Schedule Call Back';
 		$dialerHandlerObj =new DialerHandler($this->db_js, $this->db_js_111, $this->db_dialer);
 		if($autoCampaign)
-			$squery1 = "SELECT SelectedOption,Call_Start_Time,easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
+			$squery1 = "SELECT Last_disposition,SelectedOption,Call_Start_Time,easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
 		else
-			$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
+			$squery1 = "SELECT Last_disposition,easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
                 if($dateTime)
                         $squery1 .=" and Login_Timestamp>='$dateTime'";
 
@@ -82,12 +83,22 @@ class DialerDncScrubing
 			$ecode = $srow1["easycode"];
 			$proid = $srow1["PROFILEID"];
 			$alloted = $srow1['AGENT'];
+			$lastDisp =trim($srow1['Last_disposition']);
 			if($ecode){
-	                        if($alloted)
-	                                $dialStatus ='2';
-	                        else
-	                                $dialStatus ='1';
-
+	                        if($lastDisp==$scbValue){
+	                                $dialStatus ='3';
+				}
+	                        else{
+					if(in_array("$campaign_name", $eligibleCampaignArr)){
+						if(in_array($proid, $eligiblePool))
+		                        	        $dialStatus ='1';
+						else
+							$dialStatus ='0';
+					}
+					else{
+						$dialStatus ='1';
+					}
+				}
 				if($autoCampaign && $dialStatus==1){
 		                        $SelectedOption = $dialer_data["SelectedOption"];
         		                $Call_Start_Time = $dialer_data["Call_Start_Time"];
