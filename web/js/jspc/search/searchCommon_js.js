@@ -103,7 +103,9 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
   /** 
    * Verification seal  display handling LATER 
    */
-  
+    var showAadhaar = "disp-none";
+    var showVisit = "disp-none";
+    var verificationCount = 0;
     if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2 || val1.complete_verification_status == 3)    {
         verificationSeal = ""; //val1.verification_seal;
         if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2){
@@ -121,7 +123,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
             }
             else{
                 showVisit = "disp-none";
-                showAadhaar = ""
+                showAadhaar = "";
                 verificationSealDoc = "disp-none";
                 verificationDocumentsList = null;
             }
@@ -129,7 +131,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
         }
         else{
             showAadhaar = "pb10";
-            showVisit = ""
+            showVisit = "";
             verificationCount = 2;
             if(val1.verification_seal instanceof Array){
                 verificationDocumentsList = val1.verification_seal.join(",</li><li>");
