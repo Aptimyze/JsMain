@@ -60,7 +60,7 @@ EOF;
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
         if(!$mailerStartTime){
-            $msg = "Match Alert Not Started Yet";
+            $msg = "Match Alert Mailer Not Started Yet";
             $this->sendAlertMail($to, $msg, $msg);
             $this->sendAlertSMS($msg);
         }
@@ -78,28 +78,27 @@ EOF;
                     $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
                     print_r(array('FinalCount'=>$MailersCount));
                     if($MailersCount[0]["CNT"] != 0){
-
 	                    // New monitoring
 	                    if($countT!=0){
 	                        if($countN!=0 && $countY==0)
 	                                $msg = "MatchAlert Instant Notification Sending Issue ";
 	                    }
-	                    elseif($countT==0){
+	                    elseif($countT==0)
 	                        $msg = "MatchAlert Instant Notification Not Generating from Mailer";
-        	            }
-			    else{	
-                        	//$rmqObj->killConsumerForCommand(MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND);
+			    else	
                         	$msg = "Match Alert Instant Notification Delivery Issue";
-			    }	  
                     }
                     if($msg){
                             $this->sendAlertMail($to, $msg, $msg);
                             $this->sendAlertSMS();
                     }
                 }
+		else{
+			// Matchalert calculation stops
+		}
             }
             else{
-                $msg = "MatchAlert Started @$mailerStartTime";
+                $msg = "MatchAlert Mailr Started @$mailerStartTime";
                 $to = "manoj.rana@naukri.com";
                 $this->sendAlertMail($to, $msg, $msg);
                 $this->sms("9999216910",$msg);
