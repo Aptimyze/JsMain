@@ -54,23 +54,24 @@ EOF;
       }
       $noOfScripts = $arguments["noOfScripts"];
       $currentScript = $arguments["currentScript"];
-      $limit = 1000;
+      $limit = 500;
       $curTime = date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));	
       $offsetTime = date('Y-m-d H:i:s', strtotime("-1 hour",  strtotime($curTime)));
       $status='N';	
 
       $dailyMatchalerNotifObj =new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
       $dataArr =$dailyMatchalerNotifObj->getRecords($offsetTime,$status,$noOfScripts, $currentScript,$limit);
+      $instantNotificationObj =new InstantAppNotification("MATCHALERT");
+	
       if(is_array($dataArr)){
       	foreach($dataArr as $key=>$dataVal){ 
 		//print_r($dataVal);
-		$this->processMatchAlertNotification($dataVal,$dailyMatchalerNotifObj);
+		$this->processMatchAlertNotification($dataVal,$dailyMatchalerNotifObj, $instantNotificationObj);
 	}
       }
   }
-  public function processMatchAlertNotification($body,$dailyMatchalerNotifObj){
-        $instantNotificationObj =new InstantAppNotification("MATCHALERT");
-
+  public function processMatchAlertNotification($body,$dailyMatchalerNotifObj, $instantNotificationObj){
+        //$instantNotificationObj =new InstantAppNotification("MATCHALERT");
         /*$notificationParams["RECEIVER"] = $body["PROFILEID"];
         $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
         $seperator = "#";
