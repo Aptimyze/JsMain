@@ -34,7 +34,7 @@ function MM_openBrWindow(theURL,winName,features){
 					    <td height="21" align="CENTER"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$valued.PROFILEID`" target="_blank">~$valued.USERNAME`</a>
 					    </td>
 					    ~if $valued.GUNA_SCORE`
-					    	<td height="10" align="CENTER"><br><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
+					    	<td height="10" align="CENTER"><div style="font-size:18px;color:~if $valued.GUNA_SCORE lt 18`#d9475c~else`#000000~/if`;">~$valued.GUNA_SCORE`/36</div></td>
 					    ~else`
 					    	<td height="10" align="CENTER"></td>
 						~/if`
