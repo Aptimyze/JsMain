@@ -106,6 +106,11 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     var showAadhaar = "disp-none";
     var showVisit = "disp-none";
     var verificationCount = 0;
+    var verificationDocumentsList = null;
+    var verificationSealDoc;
+    var verificationSeal;
+    var showAdharTxt;
+    var showVisitTxt;
     if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2 || val1.complete_verification_status == 3)    {
         verificationSeal = ""; //val1.verification_seal;
         if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2){
