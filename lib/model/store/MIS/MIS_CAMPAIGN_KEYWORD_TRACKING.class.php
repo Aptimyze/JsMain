@@ -72,4 +72,31 @@ class MIS_CAMPAIGN_KEYWORD_TRACKING extends TABLE{
                         jsException::nonCriticalError("Error in campaign Mis error");
                 }
         }
+        
+        public function getActiveProfile($isPaid){
+            try{
+                $profilesArr = array();
+                $sql = "SELECT PROFILEID from MIS.CAMPAIGN_KEYWORD_TRACKING WHERE IS_PAID IS :IS_PAID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":IS_PAID",$isPaid,PDO::PARAM_STR);
+                $prep->execute();
+                while ($res = $prep->fetch(PDO::FETCH_ASSOC))
+                    $profilesArr[] = $res['PROFILEID'];
+                return $profilesArr;
+            }catch(PDOException $e){
+                jsException::nonCriticalError("Error in campaign Mis error");
+            }
+        }
+        
+        public function updateIsPaidStatus($profileid,$isPaid){
+            try{
+                $sql = "UPDATE MIS.CAMPAIGN_KEYWORD_TRACKING SET IS_PAID = :IS_PAID WHERE  PROFILEID=:PROFILEID ";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":IS_PAID",$isPaid,PDO::PARAM_STR);
+                $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+                $prep->execute();
+            }catch(Exception $e){
+                throw new jsException($e);
+            }
+        }
 }
