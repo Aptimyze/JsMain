@@ -163,7 +163,8 @@ class apidetailedv1Action extends sfAction
 ////////////lightning cal code starts here/////////////////////////////////
 
 // redis implementation
-// 
+//
+if(false){
 try{
 	$request->setParameter('calFromPD',1);
 	$request->setParameter('layerId',19);
@@ -177,6 +178,7 @@ try{
 	    jsException::log("from pd api lightning cal : ".$e->getMessage());
 	    $arrOut['calObject'] = null;
 	}
+}
 ///////////////////
 		$respObj = ApiResponseHandler::getInstance();
 		if($x)
@@ -342,6 +344,8 @@ try{
                 if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 3) {
 			$out['show_vsp'] = false;
 		}
+                if(MobileCommon::isAndroidApp() && $this->loginProfile->getPROFILEID()%9 >= 1)
+                        $out['show_vsp'] = false;
 		//adding an extra flag which was in detailedAction but was missing from the api
 		$out["astroSent"] = $this->checkIfAstroSent();
 		return $out;

@@ -371,7 +371,7 @@ class MembershipAPIResponseHandler {
                 $output = $this->generatePayAtBranchesPageResponse();
             }
         }
-        
+        $output["appVersion"] = $this->appVersion;
         if (isset($output) && !empty($output)) {
             return $this->response = $output;
         } 
@@ -1830,7 +1830,11 @@ class MembershipAPIResponseHandler {
                 $top = "FLASH DEAL";
                 //$bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'><del>$currencySymbol$startingPrice</del></span> $currencySymbol$discountedPrice</p>";
                 $bottom = "<p class='fontlig f16 pt5'>Prices starting @ $currencySymbol$discountedPrice</p>";
-                $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST (IST)";
+                if($this->device == "Android_app"){
+                    $extra = "<span class='f20'>$disc% OFF</span> on all plans";
+                }else{
+                    $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST (IST)";
+                }
                 $expiryDate = $response['expiryDate'];
                 $valid = "Valid for";
             }
@@ -1960,8 +1964,13 @@ class MembershipAPIResponseHandler {
                 $startingPrice = $response['origStartingPrice'];
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
-                $top = "FLASH DEAL";
-                $bottom = "FLAT $disc% OFF on all Plans, Prices starting @ $currencySymbol$discountedPrice";
+                if($this->device == "Android_app"){
+                    $top = "FLASH DEAL - FLAT $disc% OFF";
+                    $bottom = "Upgrade Membership";
+                }else{
+                    $top = "FLASH DEAL";
+                    $bottom = "FLAT $disc% OFF on all Plans, Prices starting @ $currencySymbol$discountedPrice";
+                }
                 //$bottom = "$disc% OFF on all Plans.";
                 //$bottom = "Upgrade Membership";
                 $extra = "FD";
