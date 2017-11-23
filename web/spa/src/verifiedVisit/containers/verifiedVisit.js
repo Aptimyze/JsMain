@@ -76,7 +76,7 @@ class VerifiedVisit extends React.Component {
                padd = "f13 color1 pt5 pb10";
            aadharData = <div>
                         <div className="f15 fb">Aadhaar</div>
-                    <div className={padd}>Aadhaar Number is verified</div>
+                    <div className={padd}>Aadhar is verified against name</div>
                     </div>;
         }
         return(

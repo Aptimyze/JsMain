@@ -347,7 +347,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,pr
 	<div class="centerDiv">\
 	<div class="textDiv fullwid app_txtc">\
         <div class="'+showAdharTxt+'"><div class="f15 fb">Aadhaar</div>\
-	<div class="f13 color1 pt10">Aadhaar Number is verified</div></div>\
+	<div class="f13 color1 pt10">Aadhar is verified against name</div></div>\
 	<div class="'+showVisitTxt+'"><div class="f15 fb">Profile is verified by visit</div>\
 	<a class="loadStaticPage"><div class="f13 color2 pt10">What is this?</div></a></div>\
 	<div class="pt25 f13 docProvided">Documents Provided</div>\

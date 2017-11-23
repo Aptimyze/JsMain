@@ -29,7 +29,7 @@
                         <div class="pos-abs verIcNo"><div class="verIcInnNo">{verificationCount}</div></div> 
                         <span class="hoverDiv js-verificationPage">
                             <div class="{showAadhaar}"><div class="f14 fontreg blueColor">Aadhaar</div>
-                            <div class="f12 fontreg lightgrey z999 cursp pt5">Aadhaar Number is verified</div></div>
+                            <div class="f12 fontreg lightgrey z999 cursp pt5">Aadhar is verified against name</div></div>
                             <div class="{showVisit}"><div class="f14 fontreg blueColor">Verified by visit</div>
                             <div class="f12 pt5 fontreg lightgrey {verificationSealDoc}">Documents provided:</div>
                             <ul id="appendDocs" class="f12 fontreg lightgrey {verificationSealDoc}">
