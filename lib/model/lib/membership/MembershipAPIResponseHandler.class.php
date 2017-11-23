@@ -1810,8 +1810,8 @@ class MembershipAPIResponseHandler {
         else {
             $validityCheck = 1;
         }
-       
-        
+
+
         if ($validityCheck && is_array($overrideMsg) && !empty($overrideMsg['top']) && !empty($overrideMsg['bottom'])) {
             $top = $overrideMsg['top'];
             $bottom = json_decode(json_encode($overrideMsg['bottom']) , true);
@@ -1830,7 +1830,7 @@ class MembershipAPIResponseHandler {
                 $top = "FLASH DEAL";
                 //$bottom = "<p class='fontlig f16 pt5'>Plans starts @ <span class='strike cutcol1 opa70'><del>$currencySymbol$startingPrice</del></span> $currencySymbol$discountedPrice</p>";
                 $bottom = "<p class='fontlig f16 pt5'>Prices starting @ $currencySymbol$discountedPrice</p>";
-                if($this->device == "Android_app"){
+                if(MobileCommon::isApp()=='A'){
                     $extra = "<span class='f20'>$disc% OFF</span> on all plans";
                 }else{
                     $extra = "<span class='f20'>$disc% OFF</span> on all plans till $endTimeIST (IST)";
@@ -1964,7 +1964,7 @@ class MembershipAPIResponseHandler {
                 $startingPrice = $response['origStartingPrice'];
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
-                if($this->device == "Android_app"){
+                if(MobileCommon::isApp()=='A'){
                     $top = "FLASH DEAL - FLAT $disc% OFF";
                     $bottom = "Upgrade Membership";
                 }else{
