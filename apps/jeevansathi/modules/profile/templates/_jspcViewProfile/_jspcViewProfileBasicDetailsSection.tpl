@@ -42,13 +42,15 @@
                                 </span>
                         ~/if`
                        ~/if`
-                 ~if $apiData['about']['verification_value'] neq "0"`
+                 ~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "2" || $apiData['about']['complete_verification_status'] eq "3"`
                                     <span class="verified3" style="position:relative;">
 
                                     	<i class="verIcon js-verificationPage "></i>
-
+                                        <div class="pos-abs verIcNo"><div class="verIcInnNo">~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "2"`1~else`2~/if`</div></div> 
                                     	<span class="hoverDiv3 js-verificationPage">
-
+                                                ~if $apiData['about']['complete_verification_status'] eq "2" || $apiData['about']['complete_verification_status'] eq "3"`         <div class="f14 fontreg blueColor">Aadhaar</div>
+                                                <div class="f12 fontreg lightgrey ~if $apiData['about']['complete_verification_status'] eq '3'`pb10~/if`">Aadhaar Number is verified</div>~/if`
+                                                ~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "3"`
                                     		<div class="f14 fontreg blueColor">Verified by visit</div>
                        ~if $apiData['about']['verification_value'] neq "1"`
                                    			<div class="f12 pt10 fontreg lightgrey ">Documents provided:</div>
@@ -62,7 +64,7 @@
 								~/if`
 							~/foreach`
                                     		</ul>
-			~/if`
+			~/if`~/if`
 
                                     		<a href="/static/agentinfo" class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</a>
 

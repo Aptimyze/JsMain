@@ -799,7 +799,7 @@ ul.matchtabs li.active{border-bottom:0px solid #34495e}
 .hoverDiv {
         position: absolute;
         margin-top: -14px;
-        width: 125px;
+        width: 148px;
         padding: 14px;
         background-color: white;
         -webkit-box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
@@ -844,3 +844,21 @@ ul.matchtabs li.active{border-bottom:0px solid #34495e}
 .colr_grey{color:#808080}
 .padl15{padding-left: 15px;}
 .srppt28{padding-top: 28px}
+.verIcNo{   background-color: #DF6D8A;
+            color: #fff;
+            font-size: 9px;
+            width: 16px;
+            height: 12px;
+            border-radius: 50%;
+            text-align: center;
+            /* vertical-align: middle; */
+            /* display: table-cell; */
+            padding-top: 2px;
+            padding-bottom: 2px;
+            display: table;
+            top:-10px;
+            left:19px;
+            }
+.verIcInnNo{display: table-cell;
+            vertical-align: middle;
+            text-align: center;}

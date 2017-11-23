@@ -16,6 +16,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	private $nonEditable=3;
 	private $textArea=4;
 	private $fileArea=6;
+        private $redirect=7;
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
 		$dbHobbies = new JHOBBYCacheLib();
@@ -491,7 +492,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
                     $aadhaarNoText = $aadhaarNo;
                 }
                 
-		$basicArr[AADHAAR][OnClick][]=$this->getApiFormatArray("AADHAAR",$aadhaarNoText,$aadhaarNo,'','','',$this->textArea);
+		$basicArr[AADHAAR][OnClick][]=$this->getApiFormatArray("AADHAAR",$aadhaarNoText,$aadhaarNo,'','',$this->redirect);
 		//your info
 		$basicArr[YOURINFO][outerSectionName]="About Me";
 		$basicArr[YOURINFO][outerSectionKey]="AboutMe";
@@ -1280,11 +1281,11 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     }
     
     public function formatAadhaarNo($aadhaarNo)
-    {    
+    {
     	for($i=0;$i<=strlen($aadhaarNo)-4;$i = $i+4){
-            $returnString .= " ".substr($aadhaarNo,$i-4,4); 
+            $returnString .= substr($aadhaarNo,$i,4)." "; 
         }
-        return $returnString;
+        return trim($returnString);
     }
 }
 ?>

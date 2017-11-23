@@ -704,6 +704,10 @@ function UpdateOverlayTags(string,json,indexPos)
 		string=string.replace(/\{\{displayDiv\}\}/g,"dn");
 		string=string.replace(/\{\{backGroundColor\}\}/g,"back-Gray");
 	}
+        else if(json.action == 7){
+            if(json.key == "AADHAAR")
+                    window.location.href= "/cal?layerId=24&fromEdit=1";
+        }
 	string=string.replace(/\{\{backGroundColor\}\}/g,"bg4");
 	if(json.action==1 || json.action==6)
             string=string.replace(/\{\{HS\}\}/g,"display:none");

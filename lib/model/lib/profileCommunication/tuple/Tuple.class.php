@@ -175,8 +175,6 @@ class Tuple {
 
     public function getCOMPLETE_VERIFICATION_STATUS()
     {
-        if(MobileCommon::isApp())
-        {
             $aadharObj = new aadharVerification();
             $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
             unset($aadharObj);
@@ -191,14 +189,6 @@ class Tuple {
             }
             else
                 return $verificationSeal;
-        }
-        else
-        {
-            if($this->getVERIFICATION_SEAL())
-                return 1;
-            else
-                return 0;
-        }
     }
         public function setprofileObject($x) {
         $this->profileObject=$x;

@@ -33,7 +33,7 @@ constructor(props){
     layerToShow   : "mainScreen",
     cTextStyle    :   {paddingLeft: "8px" ,overflowY:'hidden'},
     myjsObj : this.notMyJs ?
-    ()=>{console.log('back');history.back();} :
+    ()=>{window.location.href="/profile/viewprofile.php?ownview=1#Details";} :
     props.myjsObj // timerScreen mainScreen successScreen
   };
 

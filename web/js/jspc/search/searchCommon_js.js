@@ -103,21 +103,52 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
   /** 
    * Verification seal  display handling LATER 
    */
-var verificationDocumentsList;
-  if (val1.verification_seal) {
-    verificationSeal = ""; //val1.verification_seal;
-    verificationSealDoc = "";
-    if(val1.verification_seal instanceof Array){
-      verificationDocumentsList = val1.verification_seal.join(",</li><li>");
-      verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
-    }else{
-        verificationSealDoc = "disp-none";    
+  
+    if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2 || val1.complete_verification_status == 3)    {
+        verificationSeal = ""; //val1.verification_seal;
+        if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2){
+            verificationCount = 1;
+            if(val1.complete_verification_status == 1){
+                showVisit = "";
+                showAadhaar = "disp-none";
+                if(val1.verification_seal instanceof Array){
+                    verificationDocumentsList = val1.verification_seal.join(",</li><li>");
+                    verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
+                    verificationSealDoc = "";
+                }
+                else
+                    verificationSealDoc = "disp-none";
+            }
+            else{
+                showVisit = "disp-none";
+                showAadhaar = ""
+                verificationSealDoc = "disp-none";
+                verificationDocumentsList = null;
+            }
+            verificationCount = 1;
+        }
+        else{
+            showAadhaar = "pb10";
+            showVisit = ""
+            verificationCount = 2;
+            if(val1.verification_seal instanceof Array){
+                verificationDocumentsList = val1.verification_seal.join(",</li><li>");
+                verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
+                verificationSealDoc = "";
+            }
+            else
+                verificationSealDoc = "disp-none";
+            showAdharTxt = "";
+            showVisitTxt = "pt10";
+            verificationCount = 2;
+        }
     }
-  } else {
-    verificationSeal = "disp-none";
-    verificationSealDoc = "disp-none";
-    verificationDocumentsList = null;
-  }
+    else{
+        verificationCount = 0;
+        verificationSeal = "disp-none";
+        verificationSealDoc = "disp-none";
+        verificationDocumentsList = null;
+    }
 
   if (val1.photo.label != null) val1.photo.label = 1;
   else val1.photo.label = 0;
@@ -221,6 +252,9 @@ var verificationDocumentsList;
     '{profilechecksum}': removeNull(val1.profilechecksum),
     '{verificationSeal}': removeNull(verificationSeal),
     '{verificationSealDoc}': removeNull(verificationSealDoc),
+    '{verificationCount}': removeNull(verificationCount),
+    '{showAadhaar}': removeNull(showAadhaar),
+    '{showVisit}': removeNull(showVisit),
     '{verificationDocumentsList}': removeNull(verificationDocumentsList),
     '{featuredProfile}': removeNull(featuredProfile),
     '{featureProfileCount}': removeNull(featureProfileCount),
