@@ -39,9 +39,12 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
 
+        ini_set('max_execution_time',0);
+        ini_set('memory_limit',-1);
 	// Code added by Bhavna
       if(CommonUtility::runFeatureInDaytime(1,8)){
               $memObject = JsMemcache::getInstance();
@@ -54,25 +57,26 @@ EOF;
       }
       $noOfScripts = $arguments["noOfScripts"];
       $currentScript = $arguments["currentScript"];
-      $limit = 1000;
+      $limit = 5000;
       $curTime = date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));	
       $offsetTime = date('Y-m-d H:i:s', strtotime("-1 hour",  strtotime($curTime)));
       $status='N';	
 
       $dailyMatchalerNotifObj =new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
       $dataArr =$dailyMatchalerNotifObj->getRecords($offsetTime,$status,$noOfScripts, $currentScript,$limit);
+      $instantNotificationObj =new InstantAppNotification("MATCHALERT");	
       if(is_array($dataArr)){
       	foreach($dataArr as $key=>$dataVal){ 
 		//print_r($dataVal);
-		$this->processMatchAlertNotification($dataVal,$dailyMatchalerNotifObj);
+		$this->processMatchAlertNotification($dataVal,$dailyMatchalerNotifObj, $instantNotificationObj);
 	}
       }
   }
-  public function processMatchAlertNotification($body,$dailyMatchalerNotifObj){
-        $instantNotificationObj =new InstantAppNotification("MATCHALERT");
+  public function processMatchAlertNotification($body,$dailyMatchalerNotifObj, $instantNotificationObj){
 
-        /*$notificationParams["RECEIVER"] = $body["PROFILEID"];
-        $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
+        //$instantNotificationObj =new InstantAppNotification("MATCHALERT");
+        $notificationParams["RECEIVER"] = $body["RECEIVER"];
+        /*$cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
         $seperator = "#";
         $preSetCache = JsMemcache::getInstance()->get($cacheKey);*/
 
