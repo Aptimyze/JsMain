@@ -131,7 +131,8 @@ class SortByBroaderDppScore extends SortByTrendsScore {
 //                $counter++;
                 
                 // Sort by last login dt
-                $dppSortString[$counter] = "SORT_DT";
+                //$dppSortString[$counter] = "SORT_DT";
+                $dppSortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
                 
