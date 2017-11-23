@@ -86,7 +86,7 @@ class jsexclusiveActions extends sfActions {
 			$this->infoMsg = "No more clients left for screening for logged in RM..";
 		}
 		else{
-			$this->clientId = $this->assignedClients[$this->clientIndex];
+			$this->clientId = '144111';//$this->assignedClients[$this->clientIndex];
 			$assistedProductObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
 			$pogRBInterestsPids = $assistedProductObj->getPOGInterestEligibleProfiles($this->clientId);
 			//$pogRBInterestsPids = array(543);
