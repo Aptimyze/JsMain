@@ -89,7 +89,7 @@ class PreWriteMessagev2Action extends sfAction
 			else
 			{
 				$responseArray["errmsglabel"]= "Upgrade membership to Send messages & initiate chat with ".$this->Profile->getUSERNAME();
-				$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+				$responseArray["footerbutton"]["label"]  = "Upgrade";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 				$responseArray["footerbutton"]["text"] = $MembershipMessage;

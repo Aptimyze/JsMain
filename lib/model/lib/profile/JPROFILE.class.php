@@ -47,7 +47,6 @@ class JPROFILE
         //self::$objProfileMysql = NEWJS_JPROFILE::getInstance($dbname);
     }
 
-
     /**
      * @fn getInstance
      * @brief fetches the instance of the class
@@ -551,6 +550,11 @@ class JPROFILE
         return $this->getJprofileObj()->getProfilesWithGivenRegDates($dateArr);
     }
 
+    public function getEntryDtJprofile($profileArray)
+    {
+        return $this->getJprofileObj()->getEntryDtJprofile($profileArray);
+    }
+    
     /*
      * this function return array of profileids who have registered within given dates
      * @param - date after which users have registered
