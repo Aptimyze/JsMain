@@ -68,7 +68,7 @@ constructor(props){
 }
 
 hideButtons(){
-  let newClassName = (this.currentWindowHeight*0.60 > window.innerHeight ) ? 'dispnone' : '';
+  let newClassName = (this.currentWindowHeight*0.70 > window.innerHeight ) ? 'dispnone' : '';
     this.setState({
       buttonClass : newClassName
     });
@@ -393,7 +393,7 @@ setAadhaarCalData(){
               <div  className="posrel pt20">
               </div>
 
-              <input tabindex="1" type="tel" id={this.calIds['aadhaarNumber']} style={{width: "80%", fontSize: "1.7em", color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}}  placeholder="Aadhaar No." defaultValue={this.savedAadhaarNumber}/>
+              <input  maxLength="12" pattern="([0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9]|[0-9])" tabindex="1" type="tel" id={this.calIds['aadhaarNumber']} style={{width: "80%", fontSize: "1.7em", color:'#cccccc', borderBottom: '1px solid',textAlign:'center'}}  placeholder="Aadhaar No." defaultValue={this.savedAadhaarNumber}/>
               <div className="errorMessage f13 color2" style={{...this.state.errorAadhaarNumberStyle}} id={this.calIds['errorAadhaarNumber']}>
                   {this.errorAadhaarNumberText}
               </div>
