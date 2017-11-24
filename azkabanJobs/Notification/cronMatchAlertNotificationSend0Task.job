@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony notification:cronMatchAlertNotificationSend 3 0 
+command=${php5} ${docRoot}/symfony notification:cronMatchAlertNotificationSend 8 0 

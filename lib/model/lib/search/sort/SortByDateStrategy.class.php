@@ -64,9 +64,9 @@ class SortByDateStrategy extends SearchSort implements SortStrategyInterface
       $counter++;
     }
 
-    //$sortString[$counter] = "SORT_DT";
-    $sortString[$counter] = "LAST_LOGIN_DT";
-    $sortAscOrDesc[$counter] = $this->sortByDesc;
+    $sortString[$counter] = "SORT_DT";
+    //$sortString[$counter] = "LAST_LOGIN_DT";
+    $sortAscOrDesc[$counter] = $this->sortByAsc;
     $counter++;
     if (SearchConfig::$filteredRemove && parent::getFilterSort())
     	$this->SearchParamtersObj->setFL_ATTRIBUTE("*,FILTER_SCORE:" . parent::getFilterSortScore());

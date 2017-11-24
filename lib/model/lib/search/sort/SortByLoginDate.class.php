@@ -30,9 +30,9 @@ class SortByLoginDate extends SearchSort implements SortStrategyInterface {
                         $counter++;
                 }*/
                 
-                //$sortString[$counter] = "SORT_DT";
-                $sortString[$counter] = "LAST_LOGIN_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $sortString[$counter] = "SORT_DT";
+                //$sortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
     
                 //Paid members sorting

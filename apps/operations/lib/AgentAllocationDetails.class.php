@@ -1886,7 +1886,7 @@ public function checkDNC($phoneNumberArray)
 	$DNCArr=array();
 	$DNC_NumberArr=array();
 	$selectedArr=array();
-	$status=true;
+	$status=false;
 	$dncListObj=new dnc_DNC_LIST();
 
 	if(!is_array($phoneNumberArray) || count($phoneNumberArray)=='0')
@@ -1905,13 +1905,14 @@ public function checkDNC($phoneNumberArray)
 			$DNCArr[$key] =$val;
 			$key1 =$key."S";
 			$DNCArr[$key1] ='Y';
+			$status =true;
 		}
 		else{
 			$DNCArr[$key] =$val;
 			$key1 =$key."S";
 			$DNCArr[$key1] ='N';
-			if(in_array($val,$selectedArr))
-				$status =false;
+			//if(in_array($val,$selectedArr))
+			//	$status =false;
 		}
 	}
 	$DNCArr['STATUS'] =$status;
