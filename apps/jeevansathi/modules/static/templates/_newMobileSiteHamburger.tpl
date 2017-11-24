@@ -11,7 +11,7 @@
         ~assign var=translateURL value= JsConstants::$marathiTranslateURL`
     ~/if`
     <script>
-        var ctrlHam= document.getElementById("~$linkID`");
+        var ctrlHam= document.getElementById("~$langID`");
         if(typeof ctrlHam !== undefined && ctrlHam !== null){
             let url = window.location.href;
             url = url.split(".")[0];
@@ -38,7 +38,7 @@
                             <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a  href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl">Download  App | 3MB only </a></div>
                             <div class="dispnone" id="appleAppDownloadLink1"><a style="margin-left:14px"  href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl">Download iOS App </a></div>
                             <div class="dispibl mr10 fr">
-                                <div id="~linkID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~langText`</div>
+                                <div id="~langID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~langText`</div>
                             </div>
                         </li>
                         <div style="height: 1px;padding: 0px 20px;"><div style="background-color: white;height: 1px;opacity: .5;"></div></div>
@@ -267,7 +267,7 @@
 
 ~else`
     <script>
-        var ctrlHam= document.getElementById("~$linkID`");
+        var ctrlHam= document.getElementById("~$langID`");
         if(typeof ctrlHam !== undefined && ctrlHam !== null){
             let url = window.location.href;
             url = url.split(".")[0];
@@ -288,7 +288,7 @@
                             <div class="dispnone" id="appleAppDownloadLink1"><a href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a>
                             </div>
                             <div class="fr dispibl">
-                                <div id="~linkID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~langText`</div>
+                                <div id="~langID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~langText`</div>
                             </div>
                         </li>
                         <div style="height: 1px;padding: 0px 20px;">
