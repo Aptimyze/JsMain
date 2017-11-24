@@ -158,7 +158,7 @@ class CommonUtility
         $actionDate->setTimezone($tz);
                $diff = $actionDate->diff($todayDate);
                $daydiff = $diff->days;
-               if($daydiff < 1)
+               if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
                {
                        //$lastOnlineStr = 'today';
                        $lastOnlineStr .= $actionDate->format('h:i A');
