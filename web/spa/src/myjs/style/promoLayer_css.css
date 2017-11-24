@@ -1,9 +1,9 @@
 	#chatPormoMS .cpbg1{ background-color:#e4e4e4}
 	#chatPormoMS .setshare {
-		/*top:50%;left:50%;transform:translate(-50%, -50%);-webkit-transform:translate(-50%, -50%);-ms-transform:translate(-50%, -50%);*/
-		width : 100%; bottom: 1px;
+		top:50%;left:50%;transform:translate(-50%, -50%);-webkit-transform:translate(-50%, -50%);-ms-transform:translate(-50%, -50%);
+		/*width : 100%; bottom: 1px;*/
 	}
-	#chatPormoMS .closeCP {position: absolute;right:10px;top: -42px;width: 20px;height: 20px;}
+	#chatPormoMS .closeCP {width: 20px;height: 20px;position: absolute;right:28px; top: -4px}
 	#chatPormoMS .closeCP:before, .closeCP:after {position: absolute;left: 15px;content: ' ';height: 20px;width: 2px;background-color: #405367;}
 	#chatPormoMS .closeCP:before { transform: rotate(45deg);-webkit-transform: rotate(45deg);-ms-transform:rotate(45deg)}
 	#chatPormoMS .closeCP:after { transform: rotate(-45deg);-webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg);}
