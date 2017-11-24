@@ -91,7 +91,10 @@ export const mtoungueURL = () => {
     url = url.split(".")[0];
     if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
         obj.langText = "In English";
-        obj.translateURL = "http://www.jeevansathi.com";
+        obj.translateURL = CONSTANTS.SITE_URL;
+        if(!getCookie("AUTHCHECKSUM")){
+            obj.translateURL += "/P/logout.php";
+        }
     }
     return obj;
 }

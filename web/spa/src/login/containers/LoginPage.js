@@ -340,7 +340,7 @@ class LoginPage extends React.Component {
         let url = window.location.href;
         url = url.split(".")[0];
         if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
-            newHref = "http://www.jeevansathi.com";
+            newHref = CONSTANTS.SITE_URL + "/P/logout.php";
             langText = "In English";
         }
         return (

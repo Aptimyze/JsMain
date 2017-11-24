@@ -17,7 +17,10 @@
             url = url.split(".")[0];
             if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
                 ~assign var=langText value= "In English"`
-                ~assign var=translateURL value= "http://www.jeevansathi.com"`
+                ~assign var=translateURL value= "~JsConstants::$siteUrl`"`
+                if(!readCookie("AUTHCHECKSUM")){
+                    ~assign var=translateURL value= "~$translateURL`/P/logout.php"`
+                }
             }
         }
     </script>
