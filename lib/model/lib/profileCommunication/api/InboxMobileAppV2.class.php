@@ -853,9 +853,12 @@ class InboxMobileAppV2
                                $profile[$count]["size"]=$tupleObj->getMOBPHOTOSIZE();
                                $timeText = $tupleObj->getDecoratedTime();
                                $timeTextAppend = $timeText;
-                               if(stripos($timeText,'today') === false){
+                               if(stripos($timeText,'AM') === false && stripos($timeText,'PM') === false){
                                  $timeTextAppend = 'on '.$timeTextAppend;
                                }
+                               else{
+								   $timeTextAppend = 'at '.$timeTextAppend;
+						       }
                                if($infoKey=="NOT_INTERESTED" || $infoKey=="NOT_INTERESTED_BY_ME"){
                                	$profile[$count]["timetext"] = $timeText;
 
@@ -909,7 +912,7 @@ class InboxMobileAppV2
 				{
 							if($profile[$count]["interest_viewed_date"]!=null)
 							{
-								$eoiViewedText = "Interest viewed".((stripos($profile[$count]["interest_viewed_date"],'today')=== false)?' on ':" ").$profile[$count]["interest_viewed_date"];
+								$eoiViewedText = "Interest viewed".((stripos($profile[$count]["interest_viewed_date"],'AM')=== false && stripos($profile[$count]["interest_viewed_date"],'PM')=== false)?' on ':" at ").$profile[$count]["interest_viewed_date"];
 								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
 								if(!MobileCommon::isDesktop())
 									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
@@ -972,10 +975,10 @@ class InboxMobileAppV2
 					$ignoreButton["buttons"]["others"] = null;
 					$profile[$count]["buttonDetailsJSMS"] = $buttonObj::buttonDetailsMerge($ignoreButton);
 					$profile[$count]["seen"]="Y";
-                                        if(stripos($profile[$count]["timetext"],'today') === false){
+                                        if(stripos($profile[$count]["timetext"],'AM') === false && stripos($profile[$count]["timetext"],'PM') === false){
                                           $profile[$count]["timetext"] = "Blocked On ".$profile[$count]["timetext"];
                                         }else{
-                                          $profile[$count]["timetext"] = "Blocked ".$profile[$count]["timetext"];
+                                          $profile[$count]["timetext"] = "Blocked at ".$profile[$count]["timetext"];
                                         }
 
 

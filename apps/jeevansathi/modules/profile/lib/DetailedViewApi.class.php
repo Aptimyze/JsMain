@@ -464,7 +464,7 @@ class DetailedViewApi
                 if($this->m_actionObject->ISONLINE && MobileCommon::isDesktop())
                     $this->m_arrOut['last_active'] = "Online now";
                 else
-                    $this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToDay($objProfile->getLAST_LOGIN_DT());
+                    $this->m_arrOut['last_active'] = "Last Online ".CommonUtility::convertDateToISTDay($objProfile->getLAST_LOGIN_DT());
 
         $mtongue = $objProfile->getMTONGUE();
         $communityLabel = FieldMap::getFieldLabel("community_small",$mtongue);
