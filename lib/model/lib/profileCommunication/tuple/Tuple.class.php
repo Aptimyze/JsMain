@@ -551,7 +551,7 @@ public function getPIC_ID($x="") {
 	{
 		$lastLogin = explode("T",$lastLoginDate);
 		$lastLoginDate = $lastLogin[0];
-		$lastOnlineStr = "Last Online ".CommonUtility::convertDateToDay($lastLoginDate);
+		$lastOnlineStr = "Last Online ".CommonUtility::convertDateToISTDay($lastLoginDate);
 		return $lastOnlineStr;
 	}
 	public function getDecoratedTime()
@@ -563,7 +563,7 @@ public function getPIC_ID($x="") {
 		if(is_numeric($lastLoginDate))
 		{	$lastLoginDate =  date("Y-m-j",strtotime("2005-01-01 +$lastLoginDate days"));
 		}
-		$lastOnlineStr = CommonUtility::convertDateToDay($lastLoginDate);
+		$lastOnlineStr = CommonUtility::convertDateToISTDay($lastLoginDate);
 		return $lastOnlineStr;
 	}
 	
