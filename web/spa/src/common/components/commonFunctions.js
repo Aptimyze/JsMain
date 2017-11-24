@@ -67,10 +67,10 @@ export const $c = (className) => {
 }
 
 export const translateSite = (translateURL) => {
-    if(translateURL.indexOf('hindi')!=-1){
+    if(translateURL.indexOf('hindi')!==-1){
         setCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         setCookie("jeevansathi_marathi_site_new","N",100,".jeevansathi.com");
-    } else if(translateURL.indexOf('marathi')!=-1){
+    } else if(translateURL.indexOf('marathi')!==-1){
         setCookie("jeevansathi_marathi_site_new","Y",100,".jeevansathi.com");
         setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
     }else {
@@ -82,23 +82,16 @@ export const translateSite = (translateURL) => {
 
 export const mtoungueURL = () => {
     let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink",langText:"Hindi Version"};
-    if(localStorage.getItem("self_MTONGUE") == 20 && false){
+    if(localStorage.getItem("self_MTONGUE") === 20 && false){
         obj.translateURL = CONSTANTS.MARATHI_SITE;
         obj.linkId = "marathiLink";
         obj.langText = "Marathi Version";
     }
-    if(getCookie("jeevansathi_hindi_site_new") == "Y" || getCookie("jeevansathi_marathi_site_new") == "Y"){
+    let url = window.location.href;
+    url = url.split(".")[0];
+    if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+        obj.langText = "In English";
         obj.translateURL = "http://www.jeevansathi.com";
     }
     return obj;
-}
-
-export const langGateway = (linkid) => {
-    let ctrlHam= document.getElementById(linkid);
-    if(typeof ctrlHam !== undefined && ctrlHam !== null){
-        let url = window.location.href;
-        if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
-            ctrlHam.innerHTML = "In English";
-        }
-    }
 }

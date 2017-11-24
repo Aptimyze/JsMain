@@ -336,13 +336,13 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
-        let newHref;
-        if(getCookie("AUTHCHECKSUM")) {
-            newHref = CONSTANTS.HINDI_SITE+"?AUTHCHECKSUM="+getCookie("AUTHCHECKSUM")+"&newRedirect=1";
-        } else {
-             newHref = CONSTANTS.HINDI_SITE;
+        let newHref = CONSTANTS.HINDI_SITE, langText = "हिंदी में";
+        let url = window.location.href;
+        url = url.split(".")[0];
+        if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+            newHref = "http://www.jeevansathi.com";
+            langText = "In English";
         }
-
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>                
@@ -372,7 +372,7 @@ class LoginPage extends React.Component {
                                             {appDownloadView}
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">हिंदी में</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
                                             </div>
                                         </div>
                                     </div>

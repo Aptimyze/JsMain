@@ -1,7 +1,7 @@
 require ('../style/ham.css')
 import React from "react";
 import {Link} from "react-router-dom";
-import { getAndroidVersion, getIosVersion, mtoungueURL, translateSite, langGateway} from "../../common/components/commonFunctions";
+import { getAndroidVersion, getIosVersion, mtoungueURL, translateSite} from "../../common/components/commonFunctions";
 import {getCookie,setCookie,removeCookie} from '../../common/components/CookieHelper';
 import axios from "axios";
 import * as CONSTANTS from '../../common/constants/apiConstants'
@@ -512,7 +512,7 @@ class HamMain extends React.Component {
 
         let obj = mtoungueURL();
         let translateURL = obj.translateURL, linkId = obj.linkId, langText = obj.langText;
-        langGateway(linkId);
+
         let listingView =
     <div>
     <ul id="scrollElem" className="fontreg white listingHam listingStyle overAutoHidden">
