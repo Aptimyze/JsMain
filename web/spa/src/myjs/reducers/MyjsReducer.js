@@ -16,6 +16,7 @@ const MyjsReducer = (state={
 			...state,
 			apiData:action.payload,
 			calShown : false,
+			promoShown: false,
 			fetched : true,
 			timeStamp : new Date().getTime()
 		}
@@ -141,6 +142,12 @@ const MyjsReducer = (state={
 					state = {
 						...state,
 						calShown: true
+						}
+				break;
+				case 'SET_PROMO_SHOWN':
+					state = {
+						...state,
+						promoShown: true
 						}
 				break;
 	}
