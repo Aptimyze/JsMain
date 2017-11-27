@@ -1,4 +1,9 @@
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
+<script language="javascript">
+function MM_openBrWindow(theURL,winName,features){
+        window.open(theURL,winName,features);
+}
+</script>
 <body>
 	<br>
 	<div style="background-color:lightblue;text-align:center;font-size:12px;width:80%;margin-left:131px;">
@@ -35,7 +40,10 @@
 						~/if`
 				    </tr>
 					<tr class="formhead" align="left">
-					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`">
+					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`"><br>
+					      ~if $valued.PHOTO_URL neq '' && $valued.HAVEPHOTO eq 'Y'`	
+						      <a href="" onclick="MM_openBrWindow('/P/photocheck.php?profilechecksum=~$valued.PROFILE_CHECKSUM`&seq=1','','width=400,height=500,scrollbars=yes'); return false;">Click here for Album</a>
+						~/if`
 					    </td>
 					    <td height="21" align="CENTER" style="font-weight: normal;">~$valued.ABOUT_ME`</td>
 					    <td height="21" align="CENTER"><input type="checkbox" name="DISCARD[]" value="~$valued.PROFILEID`">DISCARD<input type="hidden" name="ACCEPT[]" value="~$valued.PROFILEID`"></td></td>

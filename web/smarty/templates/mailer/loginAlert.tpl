@@ -64,6 +64,9 @@
                       </font></td>
               </tr>
               <tr>
+                      <td style="color:#bbb9b9; padding-top: 7px;">*Location is approximate based on the login's IP address.</td>
+              </tr>
+              <tr>
                       <td><br /><font color="#000000">
                       
                       <b>If this was you:</b><br>

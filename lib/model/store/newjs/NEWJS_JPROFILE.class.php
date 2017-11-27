@@ -1053,6 +1053,30 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
+    public function getEntryDtJprofile($profileArray){
+        try{
+            $sql = "SELECT PROFILEID,ENTRY_DT  FROM newjs.JPROFILE WHERE PROFILEID IN (";
+            $COUNT=1;
+            foreach($profileArray as $key => $value){
+                $valueToSearch[] = ":KEY".$COUNT;
+                $bind["KEY".$COUNT]["VALUE"] = $value;
+                $COUNT++;
+            }
+            $values = implode(",",$valueToSearch).");";
+            $sql .= $values;
+            $prep = $this->db->prepare($sql);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_STR);
+            }
+            $prep->execute();
+            while($result  = $prep->fetch(PDO::FETCH_ASSOC)){
+                $res[$result["PROFILEID"]] = $result["ENTRY_DT"];
+            }
+            return $res;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
     /*
      * this function return array of profileids who have registered within given dates
      * @param - date after which users have registered

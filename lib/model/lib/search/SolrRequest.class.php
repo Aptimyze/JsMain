@@ -8,7 +8,7 @@ class SolrRequest implements RequestHandleInterface
 {
 	private $searchResults;
 	private $solrPagination;
-        private $solrCurlTimeout = 400;
+        private $solrCurlTimeout = 800;
 	/**
 	* constructor of solr Request class
 	* @param responseObj contains information about output type (array/xml/...) and engine used(solr/sphinx/mysql....)
@@ -766,10 +766,11 @@ class SolrRequest implements RequestHandleInterface
                                 $dArr["minID"] = 0;
                                 $this->searchParamtersObj->setLINCOME_DOL("0");
                         }
-                        $incomeMapObj = new IncomeMapping($rArr,$dArr);
-                        $incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
-                        $rArr["minIR"] = $incomeHighValue;
-                        $this->searchParamtersObj->setLINCOME($incomeHighValue);
+                       // $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                        //$incomeHighValue = $incomeMapObj->getImmediateHigherIncome("hincome",$rArr["minIR"]);
+                        //$rArr["minIR"] = $incomeHighValue;
+                        //$this->searchParamtersObj->setLINCOME($incomeHighValue);
+                        $this->searchParamtersObj->setLINCOME($rArr["minIR"]);
                         unset($incomeMapObj);
                 }
                 if($incomeHighValue != ""){
