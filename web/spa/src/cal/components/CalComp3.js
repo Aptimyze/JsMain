@@ -19,7 +19,8 @@ export  class calComp3 extends React.Component{
 constructor(props){
   super(props);
   this.calData = this.props.calData;
-  this.notMyJs = getParameterByName(window.location.href,'fromEdit')=='1';
+  this.notMyJs = getParameterByName(window.location.href,'fromEdit')=='1'; // add conditions for multtiple pages here
+  this.track = !this.notMyJs;
   this.state = {
     insertError : false,
     errorMessage : '',
@@ -189,9 +190,6 @@ startTimer(UserName){
     _this.hitAadhaarStatusApi(_this, UserName);
   }
   let COUNTER = setInterval(function(){
-    // updateCount( UserName);
-    // console.log("type",typeof _this.state.calCounter);
-    // console.log("value",_this.state.calCounter);
     if ( typeof _this.state.calCounter == "number")
     {
       _this.setState({calCounter : _this.state.calCounter-1});
@@ -210,10 +208,8 @@ startTimer(UserName){
   }, 1000);
 }
 hitAadhaarStatusApi(v, UserName){
-  // console.log(v.state.calCounter, UserName);
 
   commonApiCall(this.getStatusApiUrl(UserName), {}, '', 'POST').then((response) => {
-    // console.log(response);
     switch(response.VERIFIED){
       case 'N':
         this.setState({calCounter : response.MESSAGE});
@@ -229,13 +225,11 @@ hitAadhaarStatusApi(v, UserName){
         }
       break;
     }
-  });  
+  });
 }
 hitAadhaarApi(UserName, Aadhaar){
   this.setState({"layerToShow" : "loadingScreen"});
-  // console.log("inside hitapi");
 commonApiCall(this.getApiUrl(UserName, Aadhaar), {}, '', 'POST').then((response) => {
-  // console.log(response);
 
     if(response.responseStatusCode==1){
       this.showError(response.ERROR);
@@ -255,17 +249,13 @@ commonApiCall(this.getApiUrl(UserName, Aadhaar), {}, '', 'POST').then((response)
 validateAadhaarNumber(v){
   var len = v.length;
   v = ""+parseInt(v);
-  this.debug && console.log(len, v.length, aadhaarVerificationCheck(v)());
   if(len == 12 && len == v.length && aadhaarVerificationCheck(v)() && v.length == 12){
-    this.debug && console.log("valid aadhar number");
     return true;
   }return false;
 }
 validateUserName(v){
   var r = validateNameOfUser(v);
-  this.debug && console.log("name", validateNameOfUser(v),  v);
   if(r.responseCode == 1){
-    this.debug && console.log("nameValidation", r.responseMessage);
     this.errorUserNameText = r.responseMessage;
   }else if(r){
     return true;
@@ -273,7 +263,6 @@ validateUserName(v){
   return false;
 }
 checkConsentCheckbox(v){
-  this.debug && console.log("checkbox", v);
   return v;
 }
 
@@ -310,17 +299,15 @@ verifyButtonClickHandler(){
 
 // this.ErrorConsentCheckboxShowHide();
 //   this.ErrorAadhaarNumberShowHide();
-//   this.ErrorUserNameShowHide();  
+//   this.ErrorUserNameShowHide();
 // return;
 
-  this.debug && console.log("b1 clicked");
-  
+
   var aadhaarNumber = $i(this.calIds['aadhaarNumber']).value;
   this.savedAadhaarNumber = aadhaarNumber;
   var userName = $i(this.calIds['userName']).value;
   this.savedUserName = userName;
   var consentCheckbox = $i(this.calIds['consentCheckbox']).checked;
-  // console.log(aadhaarNumber, userName, consentCheckbox);
 
   if(this.validateAadhaarNumber(aadhaarNumber)){
     if(this.validateUserName(userName)){
@@ -349,13 +336,20 @@ criticalLayerButtonsAction(url,clickAction,button) {
           // this.setState({layerToShow : "timerScreen"});
           // this.startTimer();
 
-          if(button === 'B1'){
+          if(button === 'B1')
+          {
+                 if(this.track)
+                    this.state.myjsObj();
+                else
                  CALCommonCall(url,clickAction).then(()=>{this.CALButtonClicked=0;});
                  return true;
           }// end case
         break;
       }
-     CALCommonCall(url,clickAction,this.state.myjsObj).then(()=>{this.CALButtonClicked=0;});
+    if(this.track)
+      this.state.myjsObj();
+    else
+      CALCommonCall(url,clickAction,this.state.myjsObj).then(()=>{this.CALButtonClicked=0;});
      return true;
 
 }
@@ -370,8 +364,6 @@ criticalLayerButtonsAction(url,clickAction,button) {
 */
 
 setAadhaarCalData(){
-  // console.log(this.props.calData);
-  // console.log(this.calData);
   let maxHeightScrollabeDiv = (this.currentWindowHeight-105);
   return(
         <div>
@@ -406,7 +398,7 @@ setAadhaarCalData(){
                   {this.errorUserNameText}
               </div>
               </div>
-              
+
 
               <div className="txtc color16" style={{fontWeight : "bolder"}}>Consent</div>
               <div className="errorMessage f13 padl10 color2" style={{...this.state.errorConsentCheckboxStyle}} id={this.calIds['errorConsentCheckbox']}>{this.errorConsentCheckboxText}</div>

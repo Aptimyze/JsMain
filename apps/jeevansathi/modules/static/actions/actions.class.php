@@ -582,7 +582,7 @@ public function executeGetCALData($request){
         case '24':
           $loginData=$request->getAttribute("loginData");
           $nameData=(new NameOfUser())->getNameData($loginData['PROFILEID']);
-          $nameOfUser=$nameData[$profileId]['NAME'];
+          $nameOfUser=$nameData[$loginData['PROFILEID']]['NAME'];
           $data['NAME_OF_USER'] = $nameOfUser ? $nameOfUser : NULL;
         break;
       }
