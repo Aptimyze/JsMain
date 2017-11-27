@@ -506,6 +506,25 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
 
       }
       break;
+      
+      case 'HEIGHT':
+      if(!prevState.objectCounter['HEIGHT']) prevState.objectCounter['HEIGHT']={};
+      if(!classCounter)
+      {
+        if(elem.data.LHEIGHT)
+          prevState.objectCounter['HEIGHT'].LHEIGHT = elem.data.LHEIGHT;
+        if(elem.data.HHEIGHT)
+            prevState.objectCounter['HEIGHT'].HHEIGHT = elem.data.HHEIGHT;
+      }
+      else
+      {
+        if(elem.data.HHEIGHT)
+          delete prevState.objectCounter['HEIGHT'].HHEIGHT;
+        if(elem.data.LHEIGHT)
+          delete prevState.objectCounter['HEIGHT'].LHEIGHT;
+
+      }
+      break;
 
     }
     return prevState;
@@ -548,7 +567,17 @@ getSuggestions()
                 }
                 basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
 
-            } else if (elem.type == "INCOME") {
+            }
+            else if (elem.type == "HEIGHT") {
+                counter++;
+                let tempCount = counter;
+
+                if (elem.data && elem.data.HHEIGHT && elem.data.LHEIGHT ) {
+                    childEle =  (<div id="LHEIGHT_HHEIGHT" style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() =>this.toggleClass(tempCount,elem,'HEIGHT')} className="suggestOptionRangeHeight suggestOption brdr18 fontreg color8 f16 txtc" > {elem.data.LHEIGHT + ' - ' + elem.data.HHEIGHT} </div>);
+                }
+                basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
+
+            }else if (elem.type == "INCOME") {
               let LDS='',LRS='';
 
               counter++;
@@ -588,6 +617,9 @@ var objectCounter = this.state.objectCounter;
 
 if(objectCounter['AGE'] && objectCounter['AGE']['LAGE'])
     sendObj.push({"type":'AGE',"data":objectCounter['AGE']});
+
+if(objectCounter['HEIGHT'] && objectCounter['HEIGHT']['LHEIGHT'])
+    sendObj.push({"type":'HEIGHT',"data":objectCounter['HEIGHT']});
 
 if(objectCounter['INCOME'] && (objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS']))
     sendObj.push({"type":'INCOME',"data":objectCounter['INCOME']});

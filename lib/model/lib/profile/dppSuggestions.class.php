@@ -48,7 +48,16 @@ class dppSuggestions
 		if($type == "RELIGION")
 		{
 			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
-		}		
+		}	
+                if($type == "HEIGHT"){
+                        $valueArr["data"] = $this->getSuggestionForHeight($loggedInProfileObj, $valArr);
+                }
+                if($type == "DRINK"){
+                        $valueArr = $this->getSuggestionForDrinkOrSmoke('drink',$valArr);
+                }
+                if($type == "SMOKE"){
+                        $valueArr = $this->getSuggestionForDrinkOrSmoke('smoke',$valArr);
+                }
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
 			if ($type == "EDUCATION")
@@ -68,7 +77,7 @@ class dppSuggestions
 			}
 		}
 		$valueArr["type"] = $type;
-		if($type == "AGE" || $type == "INCOME")
+		if($type == "AGE" || $type == "INCOME" || $type == "HEIGHT")
 		{
 			$valueArr["range"] = 1;
 		}
@@ -79,8 +88,8 @@ class dppSuggestions
 		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
-		}	
-		
+		}
+                
 		return $valueArr;
 	}
 
@@ -621,5 +630,53 @@ class dppSuggestions
 		}	
 		return $finalArr;
 	}
+        public function getSuggestionForHeight($loggedInProfileObj,$valueArr=array()){
+            $arr=DppAutoSuggestEnum::$HEIGHT_ARRAY;
+            $height=$loggedInProfileObj->getHEIGHT();
+            $gender=$loggedInProfileObj->getGENDER();
+            foreach($arr as $K=>$V)
+            {
+                foreach($V as $k=>$v)
+                {
+                    if($K==$gender)
+                        if($k==$height){
+                            foreach ($v as $k1=>$v1){
+                                $sugHgt[0] = $k1;
+                                $sugHgt[1] = $v1;
+                            }
+                        }
+                }
+            }
+            if($valueArr[0] < $sugHgt[0])
+                $sugHgt[0] = $valueArr[0];
+            if($valueArr[1] > $sugHgt[1])
+                $sugHgt[1] = $valueArr[1];
+            $mapValues = FieldMap::getFieldLabel("height_json","",1);
+            $finalRet['LHEIGHT'] = $mapValues[$sugHgt[0]];
+            $finalRet['HHEIGHT'] = $mapValues[$sugHgt[1]];
+            return $finalRet;
+        }
+        
+        public function getSuggestionForDrinkOrSmoke($type,$valueArr=array()){
+            if(!in_array('Y', $valueArr)){
+                if(!in_array('N', $valueArr) && !in_array('O', $valueArr))
+                    $toReturn = array('O','N');
+                else if(!in_array('O', $valueArr))
+                    $toReturn = array('O');
+                else if(!in_array('N', $valueArr))
+                    $toReturn = array('N');
+            }
+            else if(!in_array('O', $valueArr)){
+                if(!in_array('N', $valueArr))
+                    $toReturn = array('N');
+            }
+            else
+                $toReturn = array();
+            $mapValues = FieldMap::getFieldLabel($type,"",1);
+            foreach($toReturn as $k=>$v){
+                $finalReturn[$v] = $mapValues[$v];
+            }
+            return $finalReturn;
+        }
 }
 ?>
