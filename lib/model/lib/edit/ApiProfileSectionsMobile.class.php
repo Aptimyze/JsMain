@@ -488,7 +488,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
                 $aadhaarNo = '';
                 $aadhaarNoText= 'Verify Aadhaar';
                 if($aadhaarStatus == 'Y'){
-                    $aadhaarNo = $this->formatAadhaarNo($aadhaarDetails[$this->profile->getPROFILEID()][AADHAR_NO]);
+                    $aadhaarNo = "Your Aadhaar no. is verified (".$this->formatAadhaarNo($aadhaarDetails[$this->profile->getPROFILEID()][AADHAR_NO]).")";
                     $aadhaarNoText = $aadhaarNo;
                 }
                 
