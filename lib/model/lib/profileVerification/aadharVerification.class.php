@@ -153,6 +153,7 @@ class aadharVerification
 		$objProCacheLib = ProfileCacheLib::getInstance();
 		self::$aadharObj->resetAadharDetails($profileId);
 		$objProCacheLib->removeFieldsFromCache($profileId,__CLASS__,$fields);
+		$objProCacheLib->__destruct();
 	}
 
 	private function logCacheConsumeCount($funName)

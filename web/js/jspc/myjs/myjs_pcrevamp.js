@@ -618,6 +618,7 @@ if(CALayerShow!='0')
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
 ajaxConfig.success=function(response){
+$('body').css('overflow','hidden');
 $('body').prepend(response);
   showLayerCommon('criticalAction-layer');
       if(CALayerShow==19)
@@ -625,7 +626,9 @@ $('body').prepend(response);
   showTimerForLightningCal(time);
 }
   if(CALayerShow==9) 
-      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');
+        $('body').css("overflow", "initial");
+        closeCurrentLayerCommon();});
   else
     $('.js-overlay').unbind('click');
 }
@@ -1003,7 +1006,28 @@ var buttonClicked=0;
        return true;
      
     }    
-    
+
+/**
+ * This function is for CAL 24 : a special case where is also used as popup in edit page of dp
+ * In order to prevent some cal features like tracking this function is shifted here and 
+ * for "edit js " dummy function with same name are to be added so no error occurs in complete
+ * flow. On edit js only closing functionality is required but on CAL layer (set cookie, cal tracking and close)
+ * features are required
+ *
+ * @param      {"B1" or "B2"}  button   The button
+ * @param      {integer layer id}  layerId  The layer identifier
+ */
+function trackingCAL(button/*B1/B2*/, layerId){
+  try{
+  Set_Cookie('calShown', 1, 1200);
+  var URL="/common/criticalActionLayerTracking?";
+  $.ajax({
+      url: URL,
+      type: "POST",
+      data: {"button":button,"layerId":layerId},
+  });
+  }catch(err){}
+}    
 function criticalLayerButtonsAction(clickAction,button) {
 
 
@@ -1044,7 +1068,10 @@ function criticalLayerButtonsAction(clickAction,button) {
                         data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
                     if(layerId!=13 || button!='B1')
+                    {
                         closeCurrentLayerCommon();
+                        $('body').css("overflow", "initial");
+                    }
                     if(layerId == 14)
                     {
                       $("#alternateEmailSentLayer").hide();
