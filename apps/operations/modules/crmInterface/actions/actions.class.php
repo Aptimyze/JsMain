@@ -1466,5 +1466,29 @@ class crmInterfaceActions extends sfActions
         unset($membershipHandlerObj);
     }
 
+    public function executeLogClientInfo(sfWebRequest $request){
+        if($request->getParameter("submit")){
+            $loggedInAgentname = $request->getParameter('name');
+            $username = $request->getParameter("username");
+            $remarks = $request->getParameter("remarks");
+            $profileObj = NEWJS_JPROFILE::getInstance("crm_slave");
+            if($username != null || !empty($username)){
+                $profileId = $profileObj->getProfileIdFromUsername($username);
+                $incentive = new incentive_LOGGING_CLIENT_INFO();
+                if($profileId!=null && !empty($profileId)){
+                    $result = $incentive->insertIntoLoggingClientInfo($profileId, $remarks,$loggedInAgentname,date("Y-m-d H:i:s"));
+                    if($result == true){
+                        $mainAdmin = new incentive_MAIN_ADMIN("crm_slave");
+                        $crmId = $mainAdmin->getAllotedExecForProfile($profileId);
+                        $jsadmin = new jsadmin_PSWRDS("crm_slave");
+                        $to = $jsadmin->getEmail($crmId);
+                        $subject = "Respond Request";
+                        $msgBody="ProfileID = ".$username."<br>"."AgentName = ".$loggedInAgentname."<br>"."Remarks = ".$remarks;
+                        SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                    }
+                }
+            }
+        }
+    }
 }
 
