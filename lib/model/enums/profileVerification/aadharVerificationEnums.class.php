@@ -13,7 +13,15 @@ class aadharVerificationEnums
     	'apikey:786c16d4-9b01-42bd-a64d-b8d046abb52b',
     	'Content-Type:application/json',
 		);
-
+		
+	public static $aadharHeaderArrAuthbridge = array(
+    	'client_id:786c16d4-9b01-42bd-a64d-b8d046abb52b',
+    	'Content-Type:application/json',
+		);
+	const URLTOHITAUTHBRIDGE = "https://authbridge.info/truthscreen/api/v1/idsearch";
+	const AADHARDOCTYPEAUTHBRIDGE=22;
+	const TOKENAUTHBRIDGE = "";
+	const TRAFFICTOAUTHBRIDGE=20;
 	const NOTVERIFIED = "N";
 	const AADHARLENGTH = 12;
 	const IMPROPERFORMAT = "Aadhaar Id is not in proper format";

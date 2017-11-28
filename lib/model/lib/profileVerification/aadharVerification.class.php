@@ -76,6 +76,33 @@ class aadharVerification
 			return 0;
 		}
 	}
+	
+	
+	public function callAadharVerificationAuthBridgeApi($aadharId,$nameOfUser,$profileId,$username)
+	{
+		$aadharArr = array();
+		$urlToHit = aadharVerificationEnums::URLTOHITAUTHBRIDGE;
+		$headerArr = aadharVerificationEnums::$aadharHeaderArrAuthbridge;
+
+		$aadharArr["docType"] = aadharVerificationEnums::AADHARDOCTYPEAUTHBRIDGE;
+		$aadharArr["docNumber"] = $aadharId;
+		$aadharArr["name"] = $nameOfUser;
+		$jsonAadhar = json_encode($aadharArr);
+		$hashed = hash('SHA512', $jsonAadhar); // SHA512 hashing required for Authbridge
+		$authBridgeBody = 
+		$response = json_decode(CommonUtility::sendCurlPOSTRequest($urlToHit,$authBridgeBody,"",$headerArr));
+		$reqId = $response->request_id;
+		if($reqId)
+		{
+			$date = date("Y-m-d H:i:s");
+			$this->insertAadharDetails($profileId,$username,$date,$aadharId,$reqId);
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
 
 	public function insertAadharDetails($profileId,$username,$date,$aadharId,$reqId)
 	{
