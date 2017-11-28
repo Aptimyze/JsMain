@@ -147,7 +147,11 @@ class LoginV1Action extends sfActions
 	
 	$responseData = $loginObj->checkForMultipleProfiles($email, $password);       //$email is emailOrMobile
 	if($responseData['isSuccess'] == false){       //multiple profiles for same mobile
-	    $apiObj->setHttpArray($responseData['data']);
+	    $errorData = $responseData['data'];
+	    if(!$errorData){
+	        $errorData = ResponseHandlerConfig::$FLOGIN_EMAIL_ERR;
+	    }
+	    $apiObj->setHttpArray($errorData);
 	    $apiObj->generateResponse();
 	    die;
 	}else{                                     //single profile available
