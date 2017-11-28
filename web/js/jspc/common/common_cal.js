@@ -7,7 +7,7 @@ function formatTime(i) {
 }
 
 function criticalLayerButtonsAction(clickAction,button){
-  console.log("clicked cal ", clickAction, button);
+  // console.log("clicked cal ", clickAction, button);
 if(buttonClicked)return;    
 buttonClicked=1;
 var calTracking = '';
@@ -96,10 +96,3 @@ function CriticalActionLayer(){
     $.myObj.ajax(ajaxConfig);
   }
 }
-// $(document).ready(function() {
-//   var CALayerShow=$("#CALayerShow").val();
-//   if(!(typeof(CALayerShow)=='undefined' ||  !CALayerShow) && CALayerShow!='0'){
-//     CriticalActionLayer();
-//   }
-// });
-// if(typeof LAYERDATA.calObject != "undefined" && LAYERDATA.calObject && typeof LAYERDATA.calObject.LAYERID != "undefined" && LAYERDATA.calObject.LAYERID && LAYERDATA.calObject.LAYERID > 0) CriticalActionLayer();
