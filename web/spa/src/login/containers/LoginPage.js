@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
         this.state = {
             insertError: false,
             errorMessage: "",
-            timeToHide: 3000,
+            timeToHide: 5000,
             showLoader: false,
             showPromo: false,
             showCaptchDiv: false,
@@ -308,7 +308,7 @@ class LoginPage extends React.Component {
                                     <div className="icons1 uicon"></div>
                                 </div>
                                 <div className="fl clasone wid80p">
-                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig f15" name="email" placeholder="Email" />
+                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig f15" name="email" placeholder="Email Id / Primary Mobile Number" />
                                 </div>
                                 <div id="emailErr1" className="fl wid10p txtr dn">
                                     <i className="mainsp err2_icon vertmid"></i>

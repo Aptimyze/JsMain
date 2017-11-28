@@ -145,7 +145,7 @@ class LoginV1Action extends sfActions
 	$registrationid=$request->getParameter("registrationid");
 	$rememberMe=$request->getParameter("rememberme");
 	
-	$responseData = $loginObj->checkForMultipleProfiles($email);       //$email is emailOrMobile
+	$responseData = $loginObj->checkForMultipleProfiles($email, $password);       //$email is emailOrMobile
 	if($responseData['isSuccess'] == false){       //multiple profiles for same mobile
 	    $apiObj->setHttpArray($responseData['data']);
 	    $apiObj->generateResponse();

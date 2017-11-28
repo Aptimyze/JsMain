@@ -49,11 +49,12 @@ Abstract class ApiAuthentication
 	}
 	
 	/**
-	 * check if multiple profiles are present per mobile number and get data for single profile.
+	 * check if multiple profiles are present per mobile number, check for unique profile with given password 
+	 * and get data for single profile.
 	 * 
 	 * @return array => {"isSuccess", "data"}
 	 */
-	public function checkForMultipleProfiles($emailOrMobile){
+	public function checkForMultipleProfiles($emailOrMobile, $password){
 	    $response = array();
 	    $isSuccess = false;
 	    $data = null;
@@ -67,26 +68,35 @@ Abstract class ApiAuthentication
 	        }else{
 	            $dbJprofile= new JPROFILE();
 	            $MultipleProfilesPerPhone = 0;
-	            $SingleProfileFound = 0;
+	            $SingleUniqueProfileFound = 0;
 	            
 	            $profileColumns = "MOB_STATUS,PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT";
 	            if($this->flag == 'E'){
 	                $data = $dbJprofile->get($this->finalString, "EMAIL", $profileColumns);
 	                $isSuccess = true;
 	            }else if($this->flag == 'M'){
-	                for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleProfileFound); $i--){
+	                for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleUniqueProfileFound); $i--){
 	                    $phone_mob= substr($this->finalString, -$i);
-	                    $arr=array('PHONE_MOB'=>"'$phone_mob'", 'MOB_STATUS'=>'Y');
+	                    $arr=array('PHONE_MOB'=>"'$phone_mob'");
 	                    $excludeArr=array('ACTIVATED'=>"'D'");
 	                    $data=$dbJprofile->getArray($arr,$excludeArr,'',$profileColumns);
 	                    if(count($data) == 1){
 	                        //  1 unique profile found
 	                        $data = $data[0];
 	                        $isSuccess = true;
-	                        $SingleProfileFound = 1;
+	                        $SingleUniqueProfileFound = 1;
 	                    }else if(count($data) > 1){
-	                        $MultipleProfilesPerPhone = 1;
-	                        $isSuccess = false;
+	                        $responseData = $this->checkUniquePasswordInMultipleProfiles($data, $password);
+	                        $hasUniquePassword = $responseData['hasUniquePassword'];
+	                        
+	                        if($hasUniquePassword == true){
+	                            $data = $responseData['rowData'];
+	                            $isSuccess = true;
+	                            $SingleUniqueProfileFound = 1;
+	                        }else{
+	                            $MultipleProfilesPerPhone = 1;
+	                            $isSuccess = false;
+	                        }
 	                    }
 	                }
 	            }
@@ -100,6 +110,31 @@ Abstract class ApiAuthentication
 	    $response["isSuccess"] = $isSuccess;
 	    $response["data"] = $data;
 	    return $response;
+	}
+	
+	private function checkUniquePasswordInMultipleProfiles($profileData, $password){
+	   $response = array();
+	   $hasUniquePassword = false;
+	   $responseData = null;
+	   
+	   if($profileData && $password){
+	       foreach ($profileData as $rowData){
+	           if(PasswordHashFunctions::validatePassword($password, $rowData['PASSWORD'])){       //password matches
+	               if($hasUniquePassword == true){
+	                   $hasUniquePassword = false;
+	                   $responseData = null;
+	                   break;
+	               }
+	               
+	               $responseData = $rowData;
+	               $hasUniquePassword = true;
+	           }
+	       }
+	   }
+	   
+	   $response['hasUniquePassword'] = $hasUniquePassword;
+	   $response['rowData'] = $responseData;
+	   return $response;
 	}
 	
 	public function validate($email){
