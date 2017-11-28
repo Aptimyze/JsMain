@@ -132,7 +132,7 @@ class ProfileAstro
         
         if(0 === count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
             $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
-            $dummyResult["HAVE_ASTRO"] = 0;
+            $dummyResult["HAVE_ASTRO"] = 'N';
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
         return $res;
@@ -219,7 +219,7 @@ class ProfileAstro
             $dummyArray = array();
             foreach($arrDataNotExist as $k => $v){
                     $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$v);
-                    $dummyResult["HAVE_ASTRO"] = 0;
+                    $dummyResult["HAVE_ASTRO"] = "N";
                     $dummyArray[] = $dummyResult;
             }
         }
@@ -326,6 +326,7 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->updateRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
+            $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
     
@@ -343,6 +344,10 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->replaceRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
+                if($arrRecordData["TYPE"] && $arrRecordData["TYPE"]=="U")
+                        $arrRecordData["HAVE_ASTRO"] = 'N';
+                else
+                        $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
         

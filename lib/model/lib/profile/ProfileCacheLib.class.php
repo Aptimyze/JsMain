@@ -905,13 +905,15 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
       $cachedPids = array_diff($arrKey, $arrPids);
 
       $cachedResult = False;
+      $prefix = ProfileCacheFunctions::getStorePrefix($storeName);
       if(!empty($cachedPids))
       {
         $cachedResult = array();
         foreach ($cachedPids as $key)
         {
           $val = $arrResponse[ProfileCacheFunctions::getDecoratedKey($key)];
-          $cachedResult[] = $this->removeDuplicateSuffix($val, $storeName);
+          $arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($val,$prefix,'',self::KEY_PREFIX_DELIMITER); 
+          $cachedResult[] = $this->removeDuplicateSuffix($arrOut, $storeName);
         }
       }
       
