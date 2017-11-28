@@ -230,8 +230,12 @@ class myjsActions extends sfActions
 //////////////////////////////////
 
          //If we want to get fresh data for membership
-
-
+         
+        $showAppPromo = false;
+          if(MobileCommon::isNewMobileSite()){
+          $promoObj = new PromoLib();
+          $showAppPromo = $promoObj->showPromo("chatPromo",$pid,$loggedInProfileObj);
+        }
 
         if($oldMyjsApi){
           $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
@@ -291,7 +295,7 @@ class myjsActions extends sfActions
       $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
       $appV1DisplayJson['currentTime'] = date('Y-m-d H:i:s');
-
+      $appV1DisplayJson['showAppPromo'] = $showAppPromo;
 
       $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
       $respObj->setUserActionState(1);
