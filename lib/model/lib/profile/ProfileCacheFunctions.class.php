@@ -350,7 +350,7 @@ class ProfileCacheFunctions
         return array_unique(array_merge(ProfileCacheConstants::$arrJProfileColumns,ProfileCacheConstants::$arrJProfileContact,ProfileCacheConstants::$arrJpartnerColumns,ProfileCacheConstants::$arrJProfile_EducationColumns,ProfileCacheConstants::$arrNativePlaceColumns,ProfileCacheConstants::$arrAstroDetailsColumns,ProfileCacheConstants::$arrFSOColumns,ProfileCacheConstants::$arrJProfileAlertsColumn,ProfileCacheConstants::$arrAUTO_EXPIRY,ProfileCacheConstants::$arrJHobbyColumns,ProfileCacheConstants::$arrOldYourInfo,ProfileCacheConstants::$arrAutoExpiry,ProfileCacheConstants::$arrProfileFilter,ProfileCacheConstants::$arrAadharVerifyColumns));
     }
     public static function removeAstroFields($haveAstro,$keys){
-            if($haveAstro == "0"){
+            if($haveAstro == "0" || $haveAstro == "N"){
                     $demandedFields = ProfileCacheFunctions::getFinalFieldsArrayWithPrefix("ProfileAstro","*");
                     $keys = array_diff($keys,$demandedFields);
                     $keys[] = "ai.HAVE_ASTRO";
