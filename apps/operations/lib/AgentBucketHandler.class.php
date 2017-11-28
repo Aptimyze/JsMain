@@ -752,5 +752,10 @@ class AgentBucketHandler
        	}
        	return true;
     }
+    
+    public function deleteFromLoggingClientInfo(){
+        $incentive = new incentive_LOGGING_CLIENT_INFO();
+        $incentive->DeleteLastThirtyDaysEntires();
+    }
 }
 ?>
