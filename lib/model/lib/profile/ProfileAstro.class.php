@@ -326,6 +326,7 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->updateRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
+            $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
     
@@ -343,6 +344,10 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->replaceRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
+                if($arrRecordData["TYPE"] && $arrRecordData["TYPE"]=="U")
+                        $arrRecordData["HAVE_ASTRO"] = 'N';
+                else
+                        $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
         
