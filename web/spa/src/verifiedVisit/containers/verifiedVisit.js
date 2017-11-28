@@ -25,9 +25,9 @@ class VerifiedVisit extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {   
-        if(nextProps.documentsVerified) {
+        if(nextProps.verifiedData.documentsVerified) {
             this.setState({
-                documentsVerified : nextProps.documentsVerified
+                documentsVerified : nextProps.verifiedData.documentsVerified
             });    
         }  
         this.setState({
