@@ -264,6 +264,7 @@ $css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSA
 $css_arr[]=array("apps/jeevansathi/modules/register/actions/newJsmsPage1Action"   => "1");
 $css_arr[]=array("apps/jeevansathi/config/app"   => "1");
 $css_arr[]=array("apps/operations/lib/csvGenerationHandler"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -749,6 +750,7 @@ $js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"     => "3");
 $js_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $js_arr[]=array("lib/model/lib/picture/GoogleVisionApi"   => "1");
 $js_arr[]=array("apps/jeevansathi/config/app"   => "1");
+$js_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 return $js_arr;
 }
 function getJavascript(){
