@@ -130,6 +130,7 @@ class aadharVerification
                         $aadharArr['AADHAR_NO'] = "";
                         $aadharArr['REQUEST_ID'] = "";
                         $aadharArr['VERIFY_STATUS'] = "";
+                        $aadharArr['PROFILEID'] = $profileId;
                 }
                 if(false === ProfileCacheFunctions::isCommandLineScript("set")){
                         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
