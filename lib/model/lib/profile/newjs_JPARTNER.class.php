@@ -43,9 +43,16 @@ class newjs_JPARTNER
                         if (false !== $result) {
                             $myrow[0] = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                         }
+                        
+                        if(in_array(ProfileCacheConstants::NOT_FILLED, $myrow[0])) {
+                            $myrow[0] = null;
+                        }
                     }
                     else{
                         $myrow =  $this->JpartnerStoreObj->get($paramArr,"*");
+                        if(!$myrow) {
+                            $myrow[0] = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $paramArr['PROFILEID']);
+                        }   
                         //Also Set in cache
                         ProfileCacheLib::getInstance()->updateCache($myrow[0], ProfileCacheConstants::CACHE_CRITERIA, $paramArr['PROFILEID'], $this->cacheClassJpartner);
                         
@@ -132,7 +139,7 @@ class newjs_JPARTNER
                         }
                     }
                 }
-
+                
                 //store in cache
                 if(is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
                     $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result, $this->cacheClassJpartner);
@@ -168,6 +175,9 @@ class newjs_JPARTNER
                         $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileId, 'DPP', $this->cacheClassJpartner);
                         if (false !== $result) {
                             $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                        }
+                        if(in_array(ProfileCacheConstants::NOT_FILLED, $myrow)) {
+                            $myrow = null;
                         }
                         return $myrow['DPP'];
                     }

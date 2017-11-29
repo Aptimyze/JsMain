@@ -577,12 +577,16 @@ class Jpartner
                     if (false !== $result) {
                         $fetchedArr = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                     }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $fetchedArr)) {
+                       $fetchedArr = null;
+                    }
                 }
                 else{
                     $sql="SELECT SQL_CACHE * FROM $this->table WHERE PROFILEID=$profileid";
                     $result = $mysqlObj->executeQuery($sql,$myDb) ;
                     $fetchedArr =$mysqlObj->fetchAssoc($result);
-                    if(is_null($result)) { 
+                    if(!$fetchedArr) { 
                         $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
                     }
                     ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
@@ -733,6 +737,10 @@ class Jpartner
                     $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__);
                     if (false !== $result) {
                         $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $myrow)) {
+                       $myrow = null;
                     }
                 }
                 else{
