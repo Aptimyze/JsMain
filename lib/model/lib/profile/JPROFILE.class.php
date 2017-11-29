@@ -287,6 +287,8 @@ class JPROFILE
     }
     private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
         $fieldsArr = explode(",",$fields);
+	$defaultFieldsRequired = array("HAVE_JCONTACT", "HAVEPHOTO", "MOB_STATUS", "LANDL_STATUS", "SUBSCRIPTION", "INCOMPLETE", "ACTIVATED", "PHOTO_DISPLAY", "GENDER", "PRIVACY");
+	$fieldsArr = array_merge($fieldsArr,$defaultFieldsRequired);
         $fieldsAll = "*";
         $storeFullResult = $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fieldsAll, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
         ProfileCacheLib::getInstance()->cacheForMultiple("PROFILEID", $storeFullResult, __CLASS__);
