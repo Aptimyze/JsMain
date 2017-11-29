@@ -79,10 +79,10 @@ class newjs_JPARTNER
                 }
                 $objProCacheLib = ProfileCacheLib::getInstance();
                 
-                if(!stristr($fields, "PROFILEID"))
+                if(!stristr($fields, "PROFILEID") && $fields != "*")
                     $fieldsToFetch = $fields.",PROFILEID";
                 else
-                    $fieldsToFetch = $fields.",PROFILEID";
+                    $fieldsToFetch = $fields;
                 
                 //get multiple profiles data from Cache
                 $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileIdArr,$fieldsToFetch,$this->cacheClassJpartner);
