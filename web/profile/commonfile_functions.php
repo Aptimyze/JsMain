@@ -264,6 +264,8 @@ $css_arr[]=array("lib/model/store/NOTIFICATION_NEW/MOBILE_API_NOTIFICATION_MESSA
 $css_arr[]=array("apps/jeevansathi/modules/register/actions/newJsmsPage1Action"   => "1");
 $css_arr[]=array("apps/jeevansathi/config/app"   => "1");
 $css_arr[]=array("apps/operations/lib/csvGenerationHandler"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
+$css_arr[]=array("web/spa/dist/app"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -569,6 +571,7 @@ $js_arr[]=array("jspc/common/nano"   => "8");
 $js_arr[]=array("jspc/registration/registrationJspc_js"       => "49");
 $js_arr[]=array("jspc/registration/validation_js"     => "39");
 $js_arr[]=array("jspc/common/commonJspc_js"                         => "72");
+$js_arr[]=array("jspc/common/common_cal" => '1');
 $js_arr[]=array("jspc/search/hslider" => "3");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min" => "3");
 $js_arr[]=array("jspc/search/test1" => "3");
@@ -741,7 +744,7 @@ $js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburg
 $js_arr[]=array("web/spa/dist/0.250ec2ac5c0c3a9a1d72.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/0"   => "1");
 $js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
-$js_arr[]=array("web/spa/dist/app"   => "1");
+$js_arr[]=array("web/spa/dist/app"    => "2");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
 $js_arr[]=array("sw_fcm"    => "2");
 $js_arr[]=array("apps/operations/lib/Dialer"   => "1");
@@ -749,6 +752,8 @@ $js_arr[]=array("apps/jeevansathi/modules/static/actions/actions"     => "3");
 $js_arr[]=array("apps/jeevansathi/lib/AuthFilter"   => "1");
 $js_arr[]=array("lib/model/lib/picture/GoogleVisionApi"   => "1");
 $js_arr[]=array("apps/jeevansathi/config/app"   => "1");
+$js_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
+$js_arr[]=array("web/spa/dist/app.76a26e0382665aef40dc.bundle"   => "1");
 return $js_arr;
 }
 function getJavascript(){

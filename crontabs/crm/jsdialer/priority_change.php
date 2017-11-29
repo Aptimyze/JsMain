@@ -79,6 +79,8 @@ if(count($camp_array)>0)
 {
 	for($i=0;$i<count($camp_array);$i++)
 	{
+		$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
+
 		$campaign_name = $camp_array[$i];
 		//Connection at DialerDB
 		//Part-1 : Priortization
