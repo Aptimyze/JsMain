@@ -15,7 +15,9 @@ const PageNotFound = asyncComponent(() => import('./../components/PageNotFound')
 const LoginPage = asyncComponent(() => import('./../../login/containers/LoginPage')
   .then(module => module.default), { name: 'LoginPage' });
 const LogoutPage = asyncComponent(() => import('./../../login/containers/LogoutPage')
-  .then(module => module.default), { name: 'LogoutPage' });
+    .then(module => module.default), { name: 'LogoutPage' });
+const CAL = asyncComponent(() => import('./../../cal/components/CalObject')
+      .then(module => module.default), { name: 'LogoutPage' });
 
 
 import {
@@ -50,6 +52,7 @@ class EnsureLoggedInContainer extends React.Component
                         <Route path='/myjs' component={MyjsPage} />
                         <Route path='/profile/mainmenu.php' component={MyjsPage} />
                         <Route path='/P/logout.php' component={LogoutPage} />
+                        <Route path='/cal' component={CAL} />
                         <Route component={PageNotFound} />
                         </Switch>
                         </div>

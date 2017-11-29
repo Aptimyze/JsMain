@@ -24,15 +24,18 @@
             <!--start:name-->
             <div class="srpbdr4 fontlig clearfix pb3">
                 <span class="sprtxt1 f24 usernameOfTuple">{username}</span>
-                <span class="verified {verificationSeal}">
+                <span class="verified pos-rel {verificationSeal}">  
                         <i class="verIcon js-verificationPage {verificationSeal}"></i>
+                        <div class="pos-abs verIcNo"><div class="verIcInnNo">{verificationCount}</div></div> 
                         <span class="hoverDiv js-verificationPage">
-                            <div class="f14 fontreg blueColor">Verified by visit</div>
-                            <div class="f12 pt10 fontreg lightgrey {verificationSealDoc}">Documents provided:</div>
+                            <div class="{showAadhaar}"><div class="f14 fontreg blueColor">Aadhaar</div>
+                            <div class="f12 fontreg lightgrey z999 cursp pt5">Aadhar is verified against name</div></div>
+                            <div class="{showVisit}"><div class="f14 fontreg blueColor">Verified by visit</div>
+                            <div class="f12 pt5 fontreg lightgrey {verificationSealDoc}">Documents provided:</div>
                             <ul id="appendDocs" class="f12 fontreg lightgrey {verificationSealDoc}">
                                     {verificationDocumentsList}
                             </ul>
-                            <div class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</div>
+                            <div class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</div></div>
                         </span>
                 </span>  
                 <span id = "idG{profileNoId}" class="gunaScore-{profilechecksum} f17 fontreg sprtxt1 pt6 padl15 js-gunaScore"></span>

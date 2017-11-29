@@ -928,22 +928,15 @@ class SearchApiDisplay
 
     public function getFinalVerificationStatus($verificationStatus,$pid)
     {
-    	if(MobileCommon::isApp())
-		{
-			$aadharObj = new aadharVerification();
-   			$aadharArr = $aadharObj->getAadharDetails($pid);   			
-   			unset($aadharObj);
-   			$aadharStatus = $aadharArr[$pid]["VERIFY_STATUS"];
-   			if($verificationStatus == 1 && $aadharStatus == "Y")
-				return 3;   		
-			elseif($aadharStatus == "Y")
-				return 2;
-   			else
-   				return $verificationStatus;
-		}
-		else
-		{
-			return $verificationStatus;
-		}
+        $aadharObj = new aadharVerification();
+        $aadharArr = $aadharObj->getAadharDetails($pid);
+        unset($aadharObj);
+        $aadharStatus = $aadharArr[$pid]["VERIFY_STATUS"];
+        if($verificationStatus == 1 && $aadharStatus == "Y")
+                return 3;   		
+        elseif($aadharStatus == "Y")
+                return 2;
+        else
+                return $verificationStatus;
     }
 }

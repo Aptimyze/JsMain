@@ -967,7 +967,6 @@ var buttonClicked=0;
        return true;
      
     }    
-    
 
 
 function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
