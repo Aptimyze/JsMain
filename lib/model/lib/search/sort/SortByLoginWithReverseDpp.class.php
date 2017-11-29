@@ -48,7 +48,8 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
 //                $counter++;
                 
                 $sortString[$counter] = "SORT_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                //$sortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
                 
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);

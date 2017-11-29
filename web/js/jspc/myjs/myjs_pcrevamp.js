@@ -599,46 +599,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
 engagementCounts.prototype.noResultCase = function() {
 }
 
-function CriticalActionLayer(){
-var CALayerShow=$("#CALayerShow").val();
-if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || (getCookie("calShown") && (CALayerShow!='19')) ) return;
-if(CALayerShow!='0')
-  {
-      
-    var layer=$("#CALayerShow").val();
-    var discount_percentage=$("#DiscountPercentage").val();
-    var discount_subtitle=$("#DiscountSubtitle").val();
-    var start_date=$("#StartDate").val();
-    var old_price=$("#OldPrice").val();
-    var new_price=$("#NewPrice").val();
-    var time = $("#TimeForLightning").val();
-    var symbol = $("#Symbol").val();
-    var url="/static/criticalActionLayerDisplay";
- var ajaxData={'layerId':layer , 'discountPercentage':discount_percentage , 'discountSubtitle':discount_subtitle , 'startDate':start_date , 'oldPrice':old_price , 'newPrice':new_price,'time':time,'symbol':symbol};
- var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
-
-ajaxConfig.success=function(response){
-$('body').css('overflow','hidden');
-$('body').prepend(response);
-  showLayerCommon('criticalAction-layer');
-      if(CALayerShow==19)
-{        var time = $("#TimeForLightning").val();
-  showTimerForLightningCal(time);
-}
-  if(CALayerShow==9) 
-      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');
-        $('body').css("overflow", "initial");
-        closeCurrentLayerCommon();});
-  else
-    $('.js-overlay').unbind('click');
-}
-
-$.myObj.ajax(ajaxConfig);
-
-}
-
-
-}
 
 
 function showConsentLayer(){
@@ -828,7 +788,8 @@ if($("#showConsentMsgId").val()=='Y')
 else {
       var CALayerShow=$("#CALayerShow").val();
       if(!(typeof(CALayerShow)=='undefined' ||  !CALayerShow) && CALayerShow!='0') 
-  	     	CriticalActionLayer();
+  	     	 CriticalActionLayer()
+          ;
       else if (showHelpScreen=='Y') {
               showHelpScreenFunction();
                           }
@@ -1007,92 +968,6 @@ var buttonClicked=0;
      
     }    
 
-/**
- * This function is for CAL 24 : a special case where is also used as popup in edit page of dp
- * In order to prevent some cal features like tracking this function is shifted here and 
- * for "edit js " dummy function with same name are to be added so no error occurs in complete
- * flow. On edit js only closing functionality is required but on CAL layer (set cookie, cal tracking and close)
- * features are required
- *
- * @param      {"B1" or "B2"}  button   The button
- * @param      {integer layer id}  layerId  The layer identifier
- */
-function trackingCAL(button/*B1/B2*/, layerId){
-  try{
-  Set_Cookie('calShown', 1, 1200);
-  var URL="/common/criticalActionLayerTracking?";
-  $.ajax({
-      url: URL,
-      type: "POST",
-      data: {"button":button,"layerId":layerId},
-  });
-  }catch(err){}
-}    
-function criticalLayerButtonsAction(clickAction,button) {
-
-
-                if(buttonClicked)return;    
-                buttonClicked=1;
-                var calTracking = '';
-                var layerId= $("#CriticalActionlayerId").val();
-                
-                    var newNameOfUser='',namePrivacy='';
-                    if(layerId==9 && button=='B1')
-                    {   
-                        newNameOfUser = ($("#nameInpCAL").val()).trim();
-                        validation=validateUserName(newNameOfUser);
-                        if(validation!==true)
-                        {
-                            
-                            $("#CALNameErr").text(validation);
-                            $("#CALNameErr").show();
-                            buttonClicked=0;
-                            return;
-                        }
-                        
-                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
-                        
-                      }
-                    if(layerId==18)
-                    {   
-                        calTracking  +=( '&occupText=' + $(".js-otheroccInp input").val().trim());
-                        
-                      }
-
-                    Set_Cookie('calShown', 1, 1200);
-                    if(clickAction=="close" || clickAction=='RCB') {
-                    var URL="/common/criticalActionLayerTracking?"+calTracking;
-                    $.ajax({
-                        url: URL,
-                        type: "POST",
-                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
-                    });
-                    if(layerId!=13 || button!='B1')
-                    {
-                        closeCurrentLayerCommon();
-                        $('body').css("overflow", "initial");
-                    }
-                    if(layerId == 14)
-                    {
-                      $("#alternateEmailSentLayer").hide();
-                    }
-                    if(clickAction=='RCB')
-                    {
-                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
-                        $('.js-dd ul li[value="M"]').trigger('click');
-                    }
-                /* GA tracking */
-                GAMapper("GA_CAL_NO", {"layerId": layerId, "button": button});
-                }
-                else {
-                  /*GA tracking */
-                  GAMapper("GA_CAL_YES", {"layerId": layerId, "button": button});
-                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
-                }
-
-
-                
-        }
 
 function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
 {

@@ -150,6 +150,7 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
+        CriticalActionLayer();
        	
       });
       $('.js-hasaction').click(function() {

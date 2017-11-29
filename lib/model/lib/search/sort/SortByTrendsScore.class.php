@@ -169,7 +169,8 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
 //                $counter++;
                 
                 $sortString[$counter] = "SORT_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                //$sortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
                 $this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);
