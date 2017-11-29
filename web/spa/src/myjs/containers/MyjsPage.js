@@ -17,6 +17,7 @@ import GA from "../../common/components/GA";
 import Loader from "../../common/components/Loader";
 import MetaTagComponents from '../../common/components/MetaTagComponents';
 import CalObject from '../../cal/components/CalObject';
+import PromoObject from '../components/PromoObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import AppPromo from "../../common/components/AppPromo";
 import ShowBrowserNotification from '../components/ShowBrowserNotification';
@@ -299,6 +300,9 @@ export  class MyjsPage extends React.Component {
   		// if(!this.props.myjsData.fetched){
 	   //       return (<div><Loader show="page"></Loader></div>)
 	   //  }
+  		if(this.props.myjsData.apiData.showAppPromo && !this.props.myjsData.promoShown){
+				 return (<PromoObject calData={this.props.myjsData.apiData.calObject} setPromoShown={this.props.setPromoShown} />);
+	    }
 	    if(this.props.myjsData.apiData.calObject && !this.props.myjsData.calShown){
 				 return (<CalObject myjsApiHit={this.props.hitApi_MYJS.bind(this)} calData={this.props.myjsData.apiData.calObject} myjsObj={this.props.setCALShown} />);
 	    }
@@ -441,7 +445,8 @@ const mapDispatchToProps = (dispatch) => {
             });
         },
 				resetTimeStamp : ()=> dispatch({type: 'RESET_MYJS_TIMESTAMP',payload:{}}),
-				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}})
+				setCALShown : ()=> dispatch({type: 'SET_CAL_SHOWN',payload:{}}),
+				setPromoShown : ()=> dispatch({type: 'SET_PROMO_SHOWN',payload:{}})
 
     }
 }
