@@ -697,7 +697,10 @@ class Jpartner
 				else
 					$this->partnerProfileUpdated=0;
 			}
-                        ProfileCacheLib::getInstance()->updateCache($this->getArrayToSetInCache(), ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, __CLASS__);
+                        if(!$this->isPartnerProfileExist($myDb,$mysqlObj))
+                            ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
+                        else
+                            ProfileCacheLib::getInstance()->updateCache($this->getArrayToSetInCache(), ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, __CLASS__);
 		}
 		$db=connect_db();
 	}
