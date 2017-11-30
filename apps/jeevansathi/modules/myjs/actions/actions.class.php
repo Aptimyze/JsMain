@@ -569,12 +569,12 @@ class myjsActions extends sfActions
     	sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
     	$layerData = ob_get_contents();
     	ob_end_clean();
-    	$layerData=json_decode($layerData,true);
+    $this->layerData = $layerData;
+      $layerData=json_decode($layerData,true);
 
         $calObject=$layerData['calObject']?$layerData['calObject']:null;
 
-		$this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
-
+    $this->CALayerShow = $calObject[LAYERID] ? $calObject[LAYERID] : '0';
     if($this->CALayerShow == 19)
     {
     $this->lightningCALData = $calObject;
