@@ -135,7 +135,8 @@ class SortByRelaxedDpp extends SortByTrendsScore {
 
                 // Sort by last login dt
                 $dppSortString[$counter] = "SORT_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                //$dppSortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
 
                 $this->SearchParamtersObj->setSORTING_CRITERIA($dppSortString);

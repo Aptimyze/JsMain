@@ -47,6 +47,5 @@ if('serviceWorker' in navigator)
 }
 else {
     $("#permissionResponse").html("Please enable blocked notifications for this site in chrome://settings");
-        setTimeout(function(){window.close();},10000);
 }
 }

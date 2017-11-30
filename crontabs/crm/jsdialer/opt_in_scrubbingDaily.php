@@ -29,6 +29,7 @@ foreach($campaignArr as $key=>$campaignName)
         	$autoCampaign ='';
 
 	$dateTime ='';
+	$eligiblePool =array();
 	if($campaignName=='FP_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-22.5*60*60);
 	elseif($campaignName=='UPSELL_JS')
@@ -42,17 +43,18 @@ foreach($campaignArr as $key=>$campaignName)
 			$renewal =1;
 		else
 			$renewal ='';
-		$opt_in_array1	=$dialerDncScrubingObj->compute_eligible_in_array($opt_in_array, $renewal,$autoCampaign);
-		unset($opt_in_array);
-		$opt_in_array =$opt_in_array1;
+		$eligiblePool	=$dialerDncScrubingObj->compute_eligible_in_array($opt_in_array, $renewal,$autoCampaign);
+		//unset($opt_in_array);
+		//$opt_in_array =$opt_in_array1;
 	}
 	// common computation
 	for($i=0;$i<count($opt_in_array);$i++){
 	        $profileid =$opt_in_array[$i];
-	        $dialerDncScrubingObj->start_opt_in_profiles($campaignName,$profileid,$dateTime,$autoCampaign);
+	        $dialerDncScrubingObj->start_opt_in_profiles($campaignName,$profileid,$dateTime,$autoCampaign, $eligiblePool,$eligibleCampaignArr);
 	}
 	unset($dnc_array);
 	unset($opt_in_array);
+	unset($eligiblePool);
 	$msg[] =$campaignName;
 }
 
