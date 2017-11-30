@@ -1385,7 +1385,8 @@ class csvGenerationHandler
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
-					$source =$campaignName;
+					//$source =$campaignName;
+					$source = $callTimeArr[$profileid]['CALLBACK_SOURCE'];
                                         //$csvDateTime =$processObj->getStartDate();
 					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
