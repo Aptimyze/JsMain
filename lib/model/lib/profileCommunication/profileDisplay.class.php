@@ -27,6 +27,7 @@ class profileDisplay{
                                 $infoTypenav['matchedOrAll']= 'M';
                             else
                                 $infoTypenav['matchedOrAll']= 'A';
+                            $key = $key."_".$infoTypenav['matchedOrAll'];
                         }
 			$pageNo = ceil($offset/$config[$infoType]["COUNT"]);
 			$infoTypenav["PAGE"] = $infoType;
@@ -44,7 +45,7 @@ class profileDisplay{
 			$data = unserialize(JsMemcache::getInstance()->get($key));
 		}
 		if(count($data) <$offset)
-			return null;
+                    return null;
 		$i=1;
 		foreach($data as $key=>$keyData)
 		{

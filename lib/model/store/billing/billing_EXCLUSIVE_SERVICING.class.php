@@ -309,7 +309,7 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		{
 		  if($clientId)
 		  {
-		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID AND SCREENED_STATUS=:SCREENED_STATUS";
+		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID";
 		    if(!empty($agentUsername))
 		        $sql.= " AND AGENT_USERNAME=:AGENT_USERNAME";
 		    if($billid != 0)
@@ -320,7 +320,7 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
     		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
 		    if($billid != 0)
                 $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-		    $res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
+		    //$res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
 		    $res->execute();
 		  }
 		}

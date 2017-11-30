@@ -127,7 +127,7 @@ jspcViewProfileSuccess:
     X-UA-Compatible:    IE=edge
   stylesheets:    [jspc/profile/view/jspcViewProfile_css,jspc/contactEngine/contactEngine_css,jspc/common/NProgress,jspc/common/3DotLoader]
 
-  javascripts:    [jspc/search/hslider@bottom,jspc/profile/view/jspcViewProfile_js@bottom,jspc/contactEngine/contactEngine,jspc/photo/photoRequest_js@bottom,jspc/common/jquerymCustomScrollbarConcat,jspc/contactEngine/contactEngineButtons,jspc/common/nano,jspc/common/photoAlbum@bottom]
+  javascripts:    [jspc/search/hslider@bottom,jspc/profile/view/jspcViewProfile_js@bottom,jspc/contactEngine/contactEngine,jspc/photo/photoRequest_js@bottom,jspc/common/jquerymCustomScrollbarConcat,jspc/contactEngine/contactEngineButtons,jspc/common/nano,jspc/common/photoAlbum@bottom,jspc/common/common_cal@bottom]
   layout: jspcLayout
 
 jspcEditProfileSuccess:

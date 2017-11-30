@@ -73,27 +73,30 @@ class CriticalActionLayerTracking
    * @return- boolean value to display layer or not
    */
   public static function getCALayerToShow($profileObj,$interestsPending,$checkForIndependentCal='')
-  {//return 23;
+  {
+     // return 19;
    //
    //
-
+//   return 2;
+//   return 9;
     $profileId = $profileObj->getPROFILEID();
 
     /////// check from redis begin here
     $memObject = JsMemcache::getInstance();
     $calRedisKeys = $memObject->getMultiKeys(array($profileId.'_CAL_DAY_FLAG',$profileId.'_NOCAL_DAY_FLAG',$profileId.'_NO_LI_CAL'));
-    $calDayFlag = $calRedisKeys[0][0];
-    $calNoDayFlag = $calRedisKeys[0][1]; // 
-    $NO_LIGHT_CAL = $calRedisKeys[0][2]; // lightning cal flag
-    if($checkForIndependentCal && $NO_LIGHT_CAL==1)
+    $calDayFlag = unserialize($calRedisKeys[0][0]);
+    $calNoDayFlag = unserialize($calRedisKeys[0][1]); //
+    $NO_LIGHT_CAL = unserialize($calRedisKeys[0][2]); // lightning cal flag
+     if($checkForIndependentCal && $NO_LIGHT_CAL==1)
         return 0;
-    else if(!$checkForIndependentCal && ($calDayFlag==1 || $calNoDayFlag==1))
+  else  if(!$checkForIndependentCal && ($calDayFlag==1 || $calNoDayFlag==1))
         return 0;
 
+//
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-    /* make sure no layer opens before one day */
+  /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
 
@@ -503,7 +506,7 @@ return 0;
 
                   case '24':
 
-                      if(MobileCommon::isApp() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) /*&& ($profileid%19)==0*/) 
+                      if(!MobileCommon::isNewMobileSite() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];

@@ -214,6 +214,9 @@ class membershipActions extends sfActions
                 $data            = $this->fetchApiData($apiParams, $request, 3);
                 $data            = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
                 $profileId = $data["userDetails"]["PROFILEID"];
+                if($data["device"]=="Android_app"){
+                    JsMemcache::getInstance()->set($profileId."_appVersion",$data["appVersion"],15*60*60);
+                }
                 if(is_numeric($profileId))
                     JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage1Url);
@@ -225,6 +228,9 @@ class membershipActions extends sfActions
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
                 $profileId = $data["userDetails"]["PROFILEID"];
+                if($data["device"]=="Android_app" && !$data["appVersion"]){
+                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
+                }
                 if(is_numeric($profileId))
                     JsMemcache::getInstance()->delete($profileId."_currency");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage2Url);
@@ -236,6 +242,9 @@ class membershipActions extends sfActions
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
                 $profileId = $data["userDetails"]["PROFILEID"];
+                if($data["device"]=="Android_app" && !$data["appVersion"]){
+                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
+                }
                 $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileId);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
@@ -244,7 +253,7 @@ class membershipActions extends sfActions
                 $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
                 $this->upgradeMem = $upgradeMem;
                 $template                         = 'JSMSCouponPage';
-
+                $data["appVersion"] = $request->getParameter("API_APP_VERSION");
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);
                 break;
 
@@ -261,6 +270,9 @@ class membershipActions extends sfActions
                     $currency = "DOL";
                 else
                     $currency = "RS";
+                if($data["device"]=="Android_app" && !$data["appVersion"]){
+                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
+                }
                 JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage5Url);
                 break;

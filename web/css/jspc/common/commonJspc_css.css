@@ -499,6 +499,9 @@ input:focus {
 .wid300 {
     width: 300px
 }
+.wid351 {
+    width: 351px
+}
 
 .wid380 {
     width: 380px
@@ -532,6 +535,9 @@ input:focus {
 
 .lh19 {
     line-height: 19px
+}
+.lh34 {
+    line-height: 34px
 }
 
 

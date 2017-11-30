@@ -618,6 +618,7 @@ class FieldForm extends sfForm
 						$phone_updated = 1;
 						$mob_updated = 1;
 						$jprofileFieldArr['MOB_STATUS']='N';
+						$jprofileFieldArr['LANDL_STATUS']='N';
 						////////////////////////////
 					$memObject=JsMemcache::getInstance();
 					$memObject->delete($this->loggedInObj->getPROFILEID().'_PHONE_VERIFIED');			
@@ -644,6 +645,7 @@ class FieldForm extends sfForm
 					{
 						$phone_updated = 1;
 						$phone_changed = 1;
+						$jprofileFieldArr['MOB_STATUS']='N';
 						$jprofileFieldArr['LANDL_STATUS']='N';
 						$jprofileFieldArr['PHONE_WITH_STD'] = $jprofileFieldArr[STD] . $jprofileFieldArr[PHONE_RES];
 					}

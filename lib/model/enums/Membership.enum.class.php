@@ -81,6 +81,8 @@ class VariableParams
 
     public static $iOSVersion = 6.2;
 
+    public static $androidAppVersionForMaterial = 113;
+
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',

@@ -175,8 +175,6 @@ class Tuple {
 
     public function getCOMPLETE_VERIFICATION_STATUS()
     {
-        if(MobileCommon::isApp())
-        {
             $aadharObj = new aadharVerification();
             $aadharArr = $aadharObj->getAadharDetails($this->PROFILEID);
             unset($aadharObj);
@@ -191,14 +189,6 @@ class Tuple {
             }
             else
                 return $verificationSeal;
-        }
-        else
-        {
-            if($this->getVERIFICATION_SEAL())
-                return 1;
-            else
-                return 0;
-        }
     }
         public function setprofileObject($x) {
         $this->profileObject=$x;
@@ -551,7 +541,7 @@ public function getPIC_ID($x="") {
 	{
 		$lastLogin = explode("T",$lastLoginDate);
 		$lastLoginDate = $lastLogin[0];
-		$lastOnlineStr = "Last Online ".CommonUtility::convertDateToDay($lastLoginDate);
+		$lastOnlineStr = "Last Online ".CommonUtility::convertDateToISTDay($lastLoginDate);
 		return $lastOnlineStr;
 	}
 	public function getDecoratedTime()
@@ -563,7 +553,7 @@ public function getPIC_ID($x="") {
 		if(is_numeric($lastLoginDate))
 		{	$lastLoginDate =  date("Y-m-j",strtotime("2005-01-01 +$lastLoginDate days"));
 		}
-		$lastOnlineStr = CommonUtility::convertDateToDay($lastLoginDate);
+		$lastOnlineStr = CommonUtility::convertDateToISTDay($lastLoginDate);
 		return $lastOnlineStr;
 	}
 	
