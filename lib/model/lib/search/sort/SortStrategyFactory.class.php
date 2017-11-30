@@ -53,6 +53,8 @@ class SortStrategyFactory
 			return new SortByRelaxedDpp($SearchParamtersObj,$loggedInProfileObj);
                 if($slogic == SearchSortTypesEnums::SortByStrictNonTrends || $slogic == SearchSortTypesEnums::SortByStrictTrends) 
 			return new SortByStrictDpp($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByPhotoForAP)
+                        return new SortByPhotoForAP($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }
