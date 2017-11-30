@@ -576,7 +576,8 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID','PREFERRED_TIME_IST'=>'PREFERRED_TIME_IST','SOURCE'=>'SOURCE');
+			unset($fieldNameArr['EOI']);
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID','PREFERRED_TIME_IST'=>'PREFERRED_TIME_IST','EOI'=>'SOURCE');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')
