@@ -53,10 +53,10 @@ class dppSuggestions
                         $valueArr["data"] = $this->getSuggestionForHeight($loggedInProfileObj, $valArr);
                 }
                 if($type == "DRINK"){
-                        $valueArr = $this->getSuggestionForDrinkOrSmoke('drink',$valArr);
+                        $valueArr["data"] = $this->getSuggestionForDrinkOrSmoke('drink',$valArr);
                 }
                 if($type == "SMOKE"){
-                        $valueArr = $this->getSuggestionForDrinkOrSmoke('smoke',$valArr);
+                        $valueArr["data"] = $this->getSuggestionForDrinkOrSmoke('smoke',$valArr);
                 }
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
@@ -64,7 +64,7 @@ class dppSuggestions
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
-			else
+			else if($type != "SMOKE" && $type != "DRINK")
 			{
 				foreach($valArr as $k2=>$v2)
 				{
@@ -658,7 +658,7 @@ class dppSuggestions
         }
         
         public function getSuggestionForDrinkOrSmoke($type,$valueArr=array()){
-            if(!in_array('Y', $valueArr)){
+            if(in_array('Y', $valueArr)){
                 if(!in_array('N', $valueArr) && !in_array('O', $valueArr))
                     $toReturn = array('O','N');
                 else if(!in_array('O', $valueArr))
@@ -666,7 +666,7 @@ class dppSuggestions
                 else if(!in_array('N', $valueArr))
                     $toReturn = array('N');
             }
-            else if(!in_array('O', $valueArr)){
+            else if(in_array('O', $valueArr)){
                 if(!in_array('N', $valueArr))
                     $toReturn = array('N');
             }
