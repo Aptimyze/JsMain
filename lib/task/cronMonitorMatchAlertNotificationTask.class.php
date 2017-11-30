@@ -56,7 +56,7 @@ EOF;
     $countY =$countArr['Y'];		
     $countT =$countN+$countY;	
 
-    if(($count==0 || $countY==0 || $countT==0) && !in_array("$hr",$hrArr)){
+    if(($count==0 || $countN==0 || $countT==0) && !in_array("$hr",$hrArr)){
 
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
