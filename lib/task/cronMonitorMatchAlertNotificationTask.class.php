@@ -40,7 +40,8 @@ EOF;
       sfContext::createInstance($this->configuration);
     include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-    $to 	= "lavesh.rawat@jeevansathi.com,bhavana.kadwal@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
+    $to 	= "manoj.rana@naukri.com"; 	
+    //$to 	= "lavesh.rawat@jeevansathi.com,bhavana.kadwal@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
     $curTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));
     $stTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 20 minutes'));
     $hr 	= date('H', strtotime('+10 hour 30 minutes'));
@@ -116,15 +117,17 @@ EOF;
 		$msg = "MatchAlert Notification Not Generated from Mailer";
 	}	
 	if($count==0){
-		$msg .= " + MatchAlert Notification Delivery Issue";
+		$msg = " + MatchAlert Notification Delivery Issue";
 	}
-	$msg .="\n Pending:$countN##Sent:$countY##Delivered:$count";   
+	if($msg)
+		$msg .="\n Pending:$countN##Delivered:$count";   
 	return $msg;
   } 
 
 
   public function sendAlertSMS($msg=''){
-    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"");
+    //$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"");
+    $mobileNumberArr = array("manoj"=>"9999216910");	
     foreach($mobileNumberArr as $k=>$v){
         $this->sms($v,$msg);
     }
