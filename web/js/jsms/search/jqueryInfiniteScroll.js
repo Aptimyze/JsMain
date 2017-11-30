@@ -332,18 +332,25 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults,pr
 
 	tupleStructure+='<div class="posabs srp_pos3 searchNavigation showDetails '+verifyIcon+'" id="{TEST_ME_ID}" data-doc="'+profilechecksum+'" tupleno="idd'+idd+'">\
 	<a href="javascript:void(0);">\
+        <div class="posabs outerAlbumIcon '+showVerificationCount+'">\
+        <div class="bg4 txtc disptbl crBoxCount">\
+        <div class="f14 color6 dispcell vertmid">'+verificationCount+'</div>\
+        </div>\
+        </div>\
 	<div class="bg13 opa50 txtc white opa70 fontreg crBoxIcon">\
 	<div class="pt8"> <i class="mainsp verified"></i> </div>\
 	</div>\
 	</a>\
 	</div>\
-	<div class="docLayer dispnone">\
+	<div class="docLayer dispnone" id="docLayer'+idd+'">\
 	<div class="vOverlay js-docVerified" id="js-docVerifiedidd'+idd+'">\
 	<div class="centerDiv">\
 	<div class="textDiv fullwid app_txtc">\
-	<div class="f15 fb">Profile is verified by visit</div>\
-	<a class="loadStaticPage"><div class="f13 color2 pt10">What is this?</div></a>\
-	<div class="pt25 f13 color1 docProvided">Documents Provided</div>\
+        <div class="'+showAdharTxt+'"><div class="f15 fb">Aadhaar</div>\
+	<div class="f13 color1 pt10">Aadhar is verified against name</div></div>\
+	<div class="'+showVisitTxt+'"><div class="f15 fb">Profile is verified by visit</div>\
+	<a class="loadStaticPage"><div class="f13 color2 pt10">What is this?</div></a></div>\
+	<div class="pt25 f13 docProvided">Documents Provided</div>\
 	<div class="pt10 wid90p resf1 putData"></div>\
 	</div>\
 	<div class="bottonDiv fullwid color2 app_txtc cursp pad4 f18"><span class="okClick dispibl wid150">Ok</span></div>\
@@ -936,17 +943,35 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 	else
 		primeButtonLabel = '';
 
-	if(val1.verification_seal)
-	{
-		verificationSeal=val1.verification_seal;
-		verifyIcon="";
-	}
-	else
-	{
-		verifyIcon="dispnone";
-		verificationSeal=null;
-
-	}
+        if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2 || val1.complete_verification_status == 3){
+            if(val1.complete_verification_status == 1 || val1.complete_verification_status == 2){
+                verificationCount = 1;
+                if(val1.complete_verification_status == 1){
+                    showAdharTxt = "dispnone";
+                    showVisitTxt = "";
+                }
+                else{
+                    showAdharTxt = "";
+                    showVisitTxt = "dispnone";
+                }
+            }
+            else{
+                showAdharTxt = "";
+                showVisitTxt = "pt10";
+                verificationCount = 2;
+            }
+            showVerificationCount = "";
+            verificationSeal=val1.verification_seal;
+            verifyIcon="";
+        }
+        else{
+            showAdharTxt = "dispnone";
+            showVisitTxt = "dispnone";
+            verificationCount = 0;
+            showVerificationCount = "dispnone";
+            verifyIcon="dispnone";
+            verificationSeal=null;
+        }
 
 	if(val1.photo.label!=null)
 		val1.photo.label=1;

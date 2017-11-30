@@ -14,7 +14,7 @@ if (isset($data)) //successful login
     $name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $name);	
     $username = preg_replace('/[^A-Za-z0-9\. -_]/', '', $username);
     $center = getcenter_for_walkin($name);
-
+    
     if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://crm.jeevansathi.com') {
         if (in_array('S', $priv) || in_array('FTA', $priv) || in_array('M', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/searchpage.php?user=$name&cid=$cid\">Search Profile</a>";
@@ -95,7 +95,7 @@ if (isset($data)) //successful login
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/selectGateway\">Select Gateway Redirection</a>";
         }
-
+        
     } else {
         //    if(in_array('MA',$priv)||in_array("MC",$priv)||in_array("CSEXEC",$priv)||in_array("CSSUP",$priv)||in_array("LTFSUP",$priv)||in_array("LTFHD",$priv)||in_array("SLSUP",$priv)||in_array("SLHD",$priv)||in_array("SLMGR",$priv)||in_array("SLSMGR",$priv)||in_array("SLHDO",$priv)||in_array("AUTLOG",$priv) || in_array("SupFld",$priv) || in_array("MgrFld",$priv) || in_array("PA",$priv))
         if (in_array("LTFHD", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("AUTLOG", $priv)) {
@@ -611,7 +611,7 @@ if (isset($data)) //successful login
           if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
             $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/fetchAbuseInvalidData\">Fetch Abuse and Invalid Report</a>";
 
-        if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+        if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array('PDR', $priv))
             $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request user to delete profile</a>";
 
         if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
@@ -639,7 +639,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/getChangeInfo?cid=$cid\">User Info Change History</a>";
          }
     }
-
+    $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/logClientInfo?cid=$cid\">Logging Client Info</a>";
     $smarty->assign("linkarr", $linkarr);
     $smarty->assign("CID", $cid);
     $smarty->assign("SITE_URL", $SITE_URL);

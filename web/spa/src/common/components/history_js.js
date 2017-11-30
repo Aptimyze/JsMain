@@ -8,7 +8,7 @@ export default class HistoryStore
 constructor(){
 	this.History=[];
 	var _this=this;
-	window.onpopstate = function(event) {
+	window.addEventListener('popstate' ,function(event) {
 		if(_this.History.length<=0) return;
 	    // if(event.state)
 	    // {
@@ -24,7 +24,7 @@ constructor(){
 		// 	history.back();
 		// 	}
 		// }
-	};
+	}); 
 }
 
 		push(fnc,hashVal)

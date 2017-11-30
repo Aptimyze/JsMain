@@ -195,6 +195,22 @@
                         <span class="~if ($editApiResponse.Details.NAME.value|count_characters) eq 0 || $editApiResponse.Details.NAME.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 
                           <span class="disp_ib color5 f13" > Under Screening</span></span>
                       </p>  
+                      <p class="f17 pt10 fontlig" id="aadhaarLabelParent"><span class="edpcolr2" >Aadhaar No.</span> - 
+                        ~if isset($arrOutDisplay.about.aadhar) and $arrOutDisplay.about.aadhar neq $notFilledInText and $editApiResponse.Details.AADHAAR.verifyStatus eq 'Y'`
+                          <span class="color11" id='aadhaarView'>
+                            ~$arrOutDisplay.about.aadhar`
+                          </span>
+                          ~else`
+                          <span class="color5" id='aadhaarView'>
+                            ~$notFilledInText`
+                          </span>
+                        ~/if`
+                        ~if $editApiResponse.Details.AADHAAR.value neq '' and $editApiResponse.Details.AADHAAR.verifyStatus eq 'Y'`
+                          <span class= "js-undSecMsg"><span class="edpcolr2 f13" > Verified</span></span>
+                        ~else`
+                          <span class= "js-undSecMsg disp-none"><span class="edpcolr2 f13" > Verified</span></span>
+                        ~/if`
+                      </p>  
                       <ul class="clearfix fontreg">
                         <li>
                           <p class="color12 pt15 fontlig">Height</p>

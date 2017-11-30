@@ -300,8 +300,6 @@ abstract class JsPhotoScreen_Tracking
                         include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
                         $sms=new InstantSMS("PROFILE_APPROVE",$pid);
                         $sms->send();
-                        $sms=new InstantSMS("DETAIL_CONFIRM",$pid);
-                        $sms->send();
                         $sms=new InstantSMS("MTONGUE_CONFIRM",$pid);
                         $sms->send();
                         try

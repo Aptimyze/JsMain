@@ -167,10 +167,11 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         {
         	try
         	{
-        		$sql = "SELECT COUNT(*) as TOTALCOUNT FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE IS_CALCULATED = 'N' AND PROFILEID%:TOTAL_SCRIPT=:SCRIPT";
+        		$sql = "SELECT COUNT(*) as TOTALCOUNT FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE IS_CALCULATED = 'N' AND FROM_REG=:FROM_REG AND PROFILEID%:TOTAL_SCRIPT=:SCRIPT";
         		$prep = $this->db->prepare($sql);
                         $prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
                         $prep->bindValue(":SCRIPT",$currentScript,PDO::PARAM_INT);
+                        $prep->bindValue(":FROM_REG","0",PDO::PARAM_STR);
         		$prep->execute();
         		while($row = $prep->fetch(PDO::FETCH_ASSOC))
         		{
