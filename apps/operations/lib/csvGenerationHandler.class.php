@@ -1333,6 +1333,10 @@ class csvGenerationHandler
                                         $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
 					if(in_array("$campaignName",$nonAutoCampaign)){
 						$dialerEligible ='Y';
+                                                if($dataArr['ALLOTED_TO']=='')
+                                                        $dialerDialStatus =1;
+                                                else
+                                                        $dialerDialStatus=2;
 					}else{
 						if($score>=$scoreRange2 && $dialerDialStatus==1){
 							$dialerEligible ='Y';
