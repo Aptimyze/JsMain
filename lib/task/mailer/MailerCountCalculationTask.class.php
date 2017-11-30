@@ -70,7 +70,8 @@ EOF;
                 . "<br>Awaiting responses mail sent on $mailerCheckDate = $pendingInterestMailerCount";
         
         $to = "sandhya.singh@jeevansathi.com, anjali.singh@jeevansathi.com, "
-                . "anurag.tripathi@jeevansathi.com, piyush.joshi@jeevansathi.com";
+                . "anurag.tripathi@jeevansathi.com, piyush.joshi@jeevansathi.com, "
+                . " tushar.gandhi@jeevansathi.com, manoj.rana@naukri.com";
         
         SendMail::send_email($to, $body, $subject);
     }

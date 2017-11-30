@@ -132,7 +132,7 @@ class billing_ExclusiveProposalMailer extends TABLE{
 
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
-            $prep->bindValue(":STATUS",$status,PDO::PARAM_INT);
+            $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
             $prep->execute();
             $prep->setFetchMode(PDO::FETCH_ASSOC);
             while ($row = $prep->fetch()){

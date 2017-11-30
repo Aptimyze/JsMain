@@ -54,7 +54,8 @@ EOF;
         private function sendmail($date, $count) {
             
             $to = "sandhya.singh@jeevansathi.com, anjali.singh@jeevansathi.com, "
-                . "anurag.tripathi@jeevansathi.com, piyush.joshi@jeevansathi.com";
+                . "anurag.tripathi@jeevansathi.com, piyush.joshi@jeevansathi.com, "
+                    . "tushar.gandhi@jeevansathi.com, manoj.rana@naukri.com";
             $body = "<br>Welcome Mails sent on $date = $count ";
             $subject = "Daily JS exclusive Weekly followup Mailer stats report ".$date;
             

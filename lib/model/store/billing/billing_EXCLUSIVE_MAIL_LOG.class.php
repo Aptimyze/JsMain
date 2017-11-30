@@ -101,7 +101,7 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
             
             $prep = $this->db->prepare($sql);
             $prep->bindValue(':STATUS',$status,PDO::PARAM_STR);
-            $prep->bindValue(':DATE',$date,PDO::PARAM_INT);
+            $prep->bindValue(':DATE',$date,PDO::PARAM_STR);
             $prep->execute();
             $queryResult = $prep->fetch(PDO::FETCH_ASSOC);
             $count = $queryResult["COUNT"];
@@ -121,7 +121,7 @@ class billing_EXCLUSIVE_MAIL_LOG extends TABLE {
             
             $prep = $this->db->prepare($sql);
             $prep->bindValue(':STATUS',$status,PDO::PARAM_STR);
-            $prep->bindValue(':DATE',$date,PDO::PARAM_INT);
+            $prep->bindValue(':DATE',$date,PDO::PARAM_STR);
             $prep->execute();
             $queryResult = $prep->fetch(PDO::FETCH_ASSOC);
             $count = $queryResult["COUNT"];
