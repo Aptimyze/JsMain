@@ -48,8 +48,14 @@ class aadharVerificationStatusV1Action extends sfActions
 				$nameOfUserArr = $nameOfUserObj->getNameData($this->profileId);		
 				if (strcasecmp($nameOfUserArr[$this->profileId]["NAME"], $this->nameOfUser) != 0) //check if the user changed the name on the CAL
 				{
-					$nameArr["NAME"] = $this->nameOfUser;
-					$nameOfUserObj->updateName($this->profileId,$nameArr);				
+                                        if($nameOfUserArr){
+                                            $nameArr["NAME"] = $this->nameOfUser;
+                                            $nameOfUserObj->updateName($this->profileId,$nameArr);				
+                                        }
+                                        else{
+                                            $nameToUpdate = $this->nameOfUser;
+                                            $nameOfUserObj->insertName($this->profileId,$nameToUpdate);
+                                        }
 				}
 				$aadharVerificationObj = new aadharVerification();
 				$aadharVerificationObj->updateVerificationStatus($this->profileId,aadharVerificationEnums::VERIFIED);

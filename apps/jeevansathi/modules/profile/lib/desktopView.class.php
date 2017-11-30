@@ -139,6 +139,15 @@ class desktopView extends DetailedViewApi
         $this->m_arrOut['name'] = $szName;
       }
       unset($nameOfUserOb);
+      $aadharVerificationObj = new aadharVerification();
+        $aadharArr = $aadharVerificationObj->getAadharDetails($objProfile->getPROFILEID());
+        if($aadharArr[$objProfile->getPROFILEID()]["VERIFY_STATUS"] == "Y")
+                $this->m_arrOut['aadhar']=$aadharArr[$objProfile->getPROFILEID()]["AADHAR_NO"];
+        else
+                $this->m_arrOut['aadhar']="";
+        
+        unset($aadharVerificationObj);
+                
       /*$name_pdo = new incentive_NAME_OF_USER();
       $this->m_arrOut['name'] = ApiViewConstants::getNullValueMarker();
       

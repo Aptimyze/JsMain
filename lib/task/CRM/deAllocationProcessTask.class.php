@@ -83,5 +83,6 @@ EOF;
 	
 		echo $msg;
         }
+        $agentBucketHandlerObj->deleteFromLoggingClientInfo();
   }
 }
