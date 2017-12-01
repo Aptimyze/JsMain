@@ -5,6 +5,8 @@
  *********************************************************************************************/
 include "MysqlDbConstants.class.php";
 include_once "DialerLog.class.php";
+include("DialerApplication.class.php");
+include('PriorityHandler.class.php');
 $dialerLogObj = new DialerLog();
 
 //Open connection at JSDB
@@ -12,6 +14,16 @@ $db_js     = mysql_connect(MysqlDbConstants::$misSlave['HOST'], MysqlDbConstants
 $db_master = mysql_connect(MysqlDbConstants::$master['HOST'], MysqlDbConstants::$master['USER'], MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
 $db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'], MysqlDbConstants::$slave111['USER'], MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'], MysqlDbConstants::$dialer['USER'], MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
+
+include_once($dir.'/plugins/predis-1.1/autoload.php');
+$ifSingleRedis ='tcp://172.10.18.75:6380';
+
+// Redis Data fetch
+$client = new Predis\Client($ifSingleRedis);
+$onlineProfilesArr = $client->zRange('online_user', 0, -1);
+
+$priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer,$db_master);
+$dialerApplicationObj = new DialerApplication();
 
 $campaignName   = 'OB_JS_RCB';
 $action         = 'STOP';
@@ -22,6 +34,7 @@ $profilesArr   = fetchProfiles($db_master);
 
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
+$allDataArr	=$profilesArr['ALL_DATA'];
 if(is_array($inEligibleArr))
 	$profileStrIneligible = implode(",", $inEligibleArr);
 
@@ -39,6 +52,24 @@ if (!empty($allocatedArr) && !empty($paidArr)) {
 }
 $eligibleArrNew = array_unique($eligibleArrNew);
 $eligibleArrNew = array_values($eligibleArrNew);
+
+// Prioritization logic
+if(count($allDataArr)>0){
+    foreach($allDataArr as $profileid=>$csvEntryDate){
+
+        $dialerData =$priorityHandlerObj->getDialerProfileForPriority($campaignName,array($profileid));
+        if(!$dialerData)
+            continue;
+
+        if($dialerApplicationObj->checkProfileInProcess($profileid,true,false,true)){
+            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,6);
+        } else if(in_array($profileid,$onlineProfilesArr)){
+            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,5);
+        } else{
+            $priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
+        }
+    }
+}
 
 // Stop profiles which are 2 days old
 if ($profileStrIneligible != '') {
@@ -89,8 +120,9 @@ function fetchProfiles($db_js)
         } else {
             $inEligibleArr[] = $pid;
         }
+        $allDataArr[$pid] =$myrow['CSV_ENTRY_DATE'];
     }
-    return array("ELIGIBLE" => $eligibleArr, "IN_ELIGIBLE" => $inEligibleArr);
+    return array("ELIGIBLE" => $eligibleArr, "IN_ELIGIBLE" => $inEligibleArr,"ALL_DATA"=>$allDataArr);
 }
 
 function deleteProfiles($db_master, $profiles)

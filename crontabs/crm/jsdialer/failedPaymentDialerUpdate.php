@@ -6,6 +6,7 @@
 *********************************************************************************************/
 include_once("MysqlDbConstants.class.php");
 include("DialerLog.class.php");
+include("DialerApplication.class.php");
 include('PriorityHandler.class.php');
 $dialerLogObj =new DialerLog();
 
@@ -20,7 +21,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_master);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer,$db_master);
-
+$dialerApplicationObj = new DialerApplication();
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
 $campaignName	='FP_JS';
 $action		='STOP';
@@ -48,14 +49,21 @@ if(count($allDataArr)>0){
 		if(!$dialerData)
 			continue;
 
-		if(strtotime($csvEntryDate)>=$last20MinTime){
-			// Prioritize - with new priority
-			$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);			
+		if(strtotime($csvEntryDate >= $last20MinTime)){
+            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,5);
+		} else if ($dialerApplicationObj->checkProfileInProcess($profileid,false)){
+            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,4);
+		} else{
+            $priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
 		}
-		else{
+		/*Old Prioritization logic
+		 * if(strtotime($csvEntryDate)>=$last20MinTime){
+			// Prioritize - with new priority
+			$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);
+		}else{
 			// De-prioritize - with old priority
 			$priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
-		}		
+		}*/
 	}
 }
 
