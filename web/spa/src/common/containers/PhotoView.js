@@ -10,12 +10,22 @@ import VerifiedVisit from "../../verifiedVisit/containers/verifiedVisit"
 class PhotoView extends React.Component {
     constructor(props) {
         super();
+        let verificationCount = props.verification_status;
+        if(props.verification_status == 3)
+        {
+            verificationCount = 2;
+        }
+        else if(props.verification_status)
+        {
+            verificationCount = 1;
+        } 
         this.state = {
             showLoader: false,
             insertError: false,
             errorMessage: "",
             timeToHide: 3000,
-            showVerified: false
+            showVerified: false,
+            verificationCount:verificationCount
         };
     }
     componentWillReceiveProps(nextProps) {
@@ -144,10 +154,15 @@ class PhotoView extends React.Component {
         }
 
         var verificationView;
-        if(this.props.verification_status == 1)
+        if(this.props.verification_status)
         {
             verificationView =  <div className="posabs srp_pos3 searchNavigation showDetails" id="id1">
                 <div id="album1">
+                <div className="posabs outerAlbumIcon">
+                <div className="bg4 txtc disptbl crBoxCount">
+                <div className="f14 color6 dispcell vertmid">{this.state.verificationCount}</div>
+                </div>
+                </div>
                     <div className="bg13 opa50 txtc white opa70 fontreg crBoxIcon">
                         <div className="pt8" onClick={(e) => this.showVerification(e)}>
                             <i className="mainsp verified"></i>
@@ -165,7 +180,7 @@ class PhotoView extends React.Component {
 
         var verifyLayer;
         if(this.state.showVerified == true) {
-            verifyLayer = <VerifiedVisit closeOverlay={()=>this.closeOverlay()} profilechecksum={this.props.profilechecksum}></VerifiedVisit>
+            verifyLayer = <VerifiedVisit closeOverlay={()=>this.closeOverlay()} profilechecksum={this.props.profilechecksum} verification_status={this.props.verification_status}></VerifiedVisit>
         }
 
 

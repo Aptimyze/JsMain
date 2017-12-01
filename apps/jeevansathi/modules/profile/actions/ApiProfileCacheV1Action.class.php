@@ -94,6 +94,7 @@ class ApiProfileCacheV1Action extends sfAction
       case "flush":
         $iProfileID = $this->request->getParameter('profileid');
         $res = ProfileCacheLib::getInstance()->removeCache($iProfileID);
+	$this->deleteCALKeys($iProfileID);
         if($res)
           $arr = array('msg'=>"Success");
         else
@@ -104,5 +105,13 @@ class ApiProfileCacheV1Action extends sfAction
     if(isset($arr))
       return $arr;
   }
+  private function deleteCALKeys($profileId){
+    $redis = JsMemcache::getInstance();
+    $redis->delete($profileId.'_NOCAL_DAY_FLAG');
+    $redis->delete($profileId.'_CAL_DAY_FLAG');
+    $redis->delete($profileId.'_NO_LI_CAL');
+  return true;
+}
+
 }
 ?>
