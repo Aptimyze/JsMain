@@ -149,6 +149,28 @@ class CommonUtility
         return $jsDate;
 
     }
+    
+     public static function convertDateToISTDay($date){
+              $tz = new DateTimeZone("Asia/Calcutta");
+        $todayDate = new DateTime("now");
+        $todayDate->setTimezone($tz);
+              $actionDate = new DateTime($date);
+        $actionDate->setTimezone($tz);
+               $diff = $actionDate->diff($todayDate);
+               $daydiff = $diff->days;
+               if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
+               {
+                       //$lastOnlineStr = 'today';
+                       $lastOnlineStr .= $actionDate->format('h:i A');
+               }
+               else
+               {
+                      $lastOnlineStr= $actionDate->format('d-M-y');
+               }
+              
+                return $lastOnlineStr;
+  }
+
 
     /** This function is added by Reshu Rajput
      * This function returns IP address of the current user

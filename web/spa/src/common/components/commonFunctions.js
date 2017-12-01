@@ -81,10 +81,10 @@ export const translateSite = (translateURL) => {
 }
 
 export const mtoungueURL = () => {
-    let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink1",langText:"Hindi Version"};
+    let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink",langText:"Hindi Version"};
     if(localStorage.getItem("self_MTONGUE") === 20 && false){
         obj.translateURL = CONSTANTS.MARATHI_SITE;
-        obj.linkId = "marathiLink1";
+        obj.linkId = "marathiLink";
         obj.langText = "Marathi Version";
     }
     let url = window.location.href;

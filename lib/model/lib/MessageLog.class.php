@@ -104,7 +104,9 @@ class MessageLog
 				$RBmessage['TYPE'] = $value['TYPE'];
  				$RBmessage['DATE'] = $value['TIME'];
                                 $profileObj = new Profile('',$value['SENDER']);
+                                $profileObj->getDetail();
                                 $receiverObj = new Profile('',$value['RECEIVER']);
+                                $receiverObj->getDetail();
 				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$value['COUNT']);
 				unset($profileObj);
 				unset($receiverObj);
@@ -208,7 +210,9 @@ class MessageLog
 			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $rbData)
 			{ 
                           $receiverObj = new Profile('',$value['RECEIVER']);
+                          $receiverObj->getDetail();
                           $profileObj = new Profile('',$value['SENDER']);
+                          $profileObj->getDetail();
 			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$rbData['COUNT']);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}

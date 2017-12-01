@@ -1,13 +1,13 @@
 
 <!--start:top header hamburger-->
 ~assign var=langText value= "Hindi Version"`
-~assign var=langID value= "hindiLink1"`
+~assign var=langID value= "hindiLink"`
 ~assign var=translateURL value= JsConstants::$hindiTranslateURL`
 
 ~if $loggedIn`
     ~if $mtongue eq 20 && false`
         ~assign var=langText value= "Marathi Version"`
-        ~assign var=langID value= "marathiLink1"`
+        ~assign var=langID value= "marathiLink"`
         ~assign var=translateURL value= JsConstants::$marathiTranslateURL`
     ~/if`
     <script>

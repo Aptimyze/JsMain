@@ -8,7 +8,6 @@ include_once("MysqlDbConstants.class.php");
 include("DialerLog.class.php");
 include('PriorityHandler.class.php');
 $dialerLogObj =new DialerLog();
-
 //Open connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
 $db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
@@ -28,6 +27,7 @@ $str		='Dial_Status=0';
 $npriority	=5;
 $last20MinTime	=date("Y-m-d H:i:s",time()-10.5*60*60-25*60);
 $last20MinTime	=strtotime($last20MinTime);
+$scbValue 	='Schedule Call Back';	
 
 $profilesArr 	=fetchProfiles($db_master);
 $eligibleArr	=$profilesArr['ELIGIBLE'];
@@ -41,6 +41,7 @@ $eligibleArrNew	=array_unique($eligibleArrNew);
 $eligibleArrNew =array_values($eligibleArrNew);
 
 // Prioritization logic
+
 if(count($allDataArr)>0){
 	foreach($allDataArr as $profileid=>$csvEntryDate){
 
@@ -60,35 +61,49 @@ if(count($allDataArr)>0){
 }
 
 // Stop profiles which are paid and allocated
-if(count($eligibleArrNew>0)){
-	foreach($eligibleArrNew as $key=>$profileid){
-		
-		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
-		mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
-		addLog($profileid,$campaignName,$str,$action,$db_js_111);
+if(count($eligibleArrNew>0)) {
+    foreach($eligibleArrNew as $key=>$profileid){
+			$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
+			mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+			deleteProfiles($db_master,$profileid);	
+			addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
-	/*if(is_array($deleteArr)){
-		$profileStr     =implode(",",$deleteArr);
-		deleteProfiles($db_master,$profileStr);
-		unset($deleteArr);	
-	}*/
 }
 
 // Stop profiles which are 12 hours old
 if(is_array($inEligibleArr)){
-	$profileStr     =implode(",",$inEligibleArr);
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime'";
+	//$profileStr     =implode(",",$inEligibleArr);
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' and Last_disposition!='$scbValue'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
-
+        foreach($inEligibleArr as $key=>$pid){
+		$getLatDisposition =checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
+            if($getLatDisposition!=$scbValue)
+			$pidArr[] =$pid;
+	}
+	$profileStr     =implode(",",$pidArr);
 	if($profileStr)
 		deleteProfiles($db_master,$profileStr);
-	foreach($inEligibleArr as $key=>$profileid){
+	foreach($pidArr as $key=>$profileid){
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
 }
 
 
 /* Functions added */
+function updateDialStatus($profileid,$dialStatus,$db_master)
+{
+        $sql= "update incentive.SALES_CSV_DATA_FAILED_PAYMENT SET DIAL_STATUS='$dialStatus' WHERE PROFILEID='$profileid'";
+        $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_master));
+
+}
+function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj)
+{
+	$squery1 = "SELECT Last_disposition FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' AND Last_disposition='$scbValue'";
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
+	if($srow1 = mssql_fetch_array($sresult1))
+		$lastDisp =trim($srow1['Last_disposition']);
+	return $lastDisp;
+}
 // Add logging
 function addLog($profileid,$campaignName,$str='',$action,$db_js_111)
 {

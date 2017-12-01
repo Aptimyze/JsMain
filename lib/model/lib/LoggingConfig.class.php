@@ -31,7 +31,7 @@
 				LoggingEnums::SERVER_PARAM => false
 				),
 			LoggingEnums::NEW_LOGIN_TRACK => array(
-				LoggingEnums::LOGGING => false,
+				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
 				LoggingEnums::DIRECTORY => true,
 				LoggingEnums::STACKTRACE => false,

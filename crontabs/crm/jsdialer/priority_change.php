@@ -12,7 +12,7 @@ $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
-$ifSingleRedis ='tcp://172.10.18.75:6380';
+$ifSingleRedis ='tcp://172.10.18.75:6379';
 
 // Redis Data fetch 
 $client = new Predis\Client($ifSingleRedis);
@@ -79,6 +79,8 @@ if(count($camp_array)>0)
 {
 	for($i=0;$i<count($camp_array);$i++)
 	{
+		$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
+
 		$campaign_name = $camp_array[$i];
 		//Connection at DialerDB
 		//Part-1 : Priortization

@@ -41,10 +41,15 @@ var selectedListValue;
 			var ele=this;
 			
 			$(this).bind(clickEventType,function(){
-				
+                            
 				setOverlayLocation();
-				UpdateOverlayLayer(attr);
-                                RemoveDnClass(pageJson,attr);
+                                if(attr.split(",")[1] == "AADHAAR"){
+                                    window.location.href= "/cal?layerId=24&fromEdit=1";
+                                }
+                                else{
+                                    UpdateOverlayLayer(attr);
+                                    RemoveDnClass(pageJson,attr);
+                                }
 				 
 				return false;
 		});

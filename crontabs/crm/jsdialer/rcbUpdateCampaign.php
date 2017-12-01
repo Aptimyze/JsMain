@@ -17,7 +17,7 @@ $campaignName   = 'OB_JS_RCB';
 $action         = 'STOP';
 $str            = 'Dial_Status=0';
 $date2DayBefore = date("Y-m-d H:i:s", time() - 58 * 60 * 60);
-
+$scbValue 	='Schedule Call Back';	
 $profilesArr   = fetchProfiles($db_master);
 
 $eligibleArr   = $profilesArr['ELIGIBLE'];
@@ -43,11 +43,19 @@ $eligibleArrNew = array_values($eligibleArrNew);
 // Stop profiles which are 2 days old
 if ($profileStrIneligible != '') {
     // Set dial status=0 for paid campaign
-    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore'";
+    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition!='$scbValue'";
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-    deleteProfiles($db_master, $profileStrIneligible);
 
-    foreach ($inEligibleArr as $key => $profileid) {
+    foreach($inEligibleArr as $key=>$pid) {
+	$getLatDisposition =checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
+	if($getLatDisposition!=$scbValue)
+		$pidArr[] =$pid;
+    }
+    $profileStr     =implode(",",$pidArr);
+    if($profileStr)
+	deleteProfiles($db_master,$profileStr);
+    
+    foreach ($pidArr as $key => $profileid) {
 	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
     }
 }
@@ -55,12 +63,12 @@ if ($profileStrIneligible != '') {
 // Stop profiles which are paid and allocated
 if (count($eligibleArrNew > 0)) {
     foreach ($eligibleArrNew as $key => $profileid) {
-
-        $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
-        mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-        addLog($profileid, $campaignName, $str, $action, $db_js_111);
+            $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
+            mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
+	    deleteProfiles($db_master,$profileid);	
+            addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
-    $profileStrEligible = implode(",", $eligibleArrNew);
+//    $profileStrEligible = implode(",", $eligibleArrNew);
     /*if (is_array($deleteArr)){
          $profileStrDel = implode(",", $deleteArr);
          deleteProfiles($db_master, $profileStrDel);
@@ -91,6 +99,21 @@ function fetchProfiles($db_js)
         }
     }
     return array("ELIGIBLE" => $eligibleArr, "IN_ELIGIBLE" => $inEligibleArr);
+}
+
+function updateDialStatus($profileid,$dialStatus,$db_master)
+{
+        $sql= "update incentive.SALES_CSV_DATA_RCB SET DIAL_STATUS='$dialStatus' WHERE PROFILEID='$profileid'";
+        $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_master));
+
+}
+function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj)
+{
+	$squery1 = "SELECT Last_disposition FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' AND Last_disposition='$scbValue'";
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
+	if($srow1 = mssql_fetch_array($sresult1))
+		$lastDisp =trim($srow1['Last_disposition']);
+	return $lastDisp;
 }
 
 function deleteProfiles($db_master, $profiles)

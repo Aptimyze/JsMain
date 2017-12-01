@@ -372,7 +372,7 @@ class LoginPage extends React.Component {
                                             {appDownloadView}
 
                                             <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin1" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
                                             </div>
                                         </div>
                                     </div>

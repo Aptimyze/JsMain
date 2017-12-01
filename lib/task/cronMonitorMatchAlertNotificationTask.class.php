@@ -40,11 +40,12 @@ EOF;
       sfContext::createInstance($this->configuration);
     include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-    $to 	= "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
+    $to 	= "manoj.rana@naukri.com"; 	
+    //$to 	= "lavesh.rawat@jeevansathi.com,bhavana.kadwal@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
     $curTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));
-    $stTime 	= date('Y-m-d H:i:s', strtotime('+0 hour 20 minutes'));
+    $stTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 20 minutes'));
     $hr 	= date('H', strtotime('+10 hour 30 minutes'));
-    $hrArr 	= array('02','03','04','05','06','07','08');	
+    $hrArr 	= array('02','03','04','05','06','07','08','09');	
 
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
@@ -55,63 +56,78 @@ EOF;
     $countY =$countArr['Y'];		
     $countT =$countN+$countY;	
 
-    //if($count==0 && !($hr == "02" || $hr == "03" || $hr == "04" || $hr == "05" || $hr == "06" || $hr == "07" || $hr == "08"){
-    if(($count==0 || $countY==0) && !in_array("$hr",$hrArr)){
+    if(($count==0 || $countN==0 || $countT==0) && !in_array("$hr",$hrArr)){
+
         $monitoringKey = "MA_N_".date('Y-m-d');
         $mailerStartTime = JsMemcache::getInstance()->get($monitoringKey);
-        if(!$mailerStartTime){
-            $msg = "Match Alert Mailer Not Started Yet";
-            $this->sendAlertMail($to, $msg, $msg);
-            $this->sendAlertSMS($msg);
-        }
-        else{
-            $offsetTime = date('Y-m-d H:i:s', strtotime("+1 hour",  strtotime($mailerStartTime)));
-            print_r(array("mailerStartTime"=>$mailerStartTime,"offsetTime"=>$offsetTime,"currentTime"=>date('Y-m-d H:i:s')));
-            if(strtotime(date('Y-m-d H:i:s')) > strtotime($offsetTime)){ 
+
+        $offsetTime = date('Y-m-d H:i:s', strtotime("+1 hour",  strtotime($mailerStartTime)));
+        if(strtotime(date('Y-m-d H:i:s')) > strtotime($offsetTime)){ 
 		
                 $matchalertSentObject = new matchalerts_MATCHALERTS_TO_BE_SENT();
-                $count = $matchalertSentObject->getTotalCountWithScript(1, 0);
-                print_r(array("initial count"=>$count));
-                if ($count != 0 && $count != "") {
+                $countTbs = $matchalertSentObject->getTotalCountWithScript(1, 0);
 
-                    $matchalertMailertObject = new matchalerts_MAILER("matchalerts_slave");
-                    $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
-                    print_r(array('FinalCount'=>$MailersCount));
-                    if($MailersCount[0]["CNT"] != 0){
-	                    // New monitoring
-	                    if($countT!=0){
-	                        if($countN!=0 && $countY==0)
-	                                $msg = "MatchAlert Instant Notification Sending Issue ";
-	                    }
-	                    elseif($countT==0)
-	                        $msg = "MatchAlert Instant Notification Not Generating from Mailer";
-			    else	
-                        	$msg = "Match Alert Instant Notification Delivery Issue";
-                    }
-                    if($msg){
-                            $this->sendAlertMail($to, $msg, $msg);
-                            $this->sendAlertSMS();
-                    }
+                $matchalertMailertObject = new matchalerts_MAILER("matchalerts_slave");
+                $MailersCount = $matchalertMailertObject->getMailerProfiles("COUNT(*) as CNT");
+		$MailerCountNet = $MailersCount[0]["CNT"];
+
+                if($MailerCountNet!=0){
+			$msg = $this->checkCount($countN, $countY, $countT, $count);
                 }
-		else{
-			// Matchalert calculation stops
+		elseif($countTbs==0 && $MailerCountNet ==0){
+    			$startTime = date('Y-m-d', strtotime('+10 hour 30 minutes'))." 00:00:00"; 
+    			$countArr = $notificationDailyObj->getDataForDuration($startTime, $curTime);
+			$msg = $this->checkTotalCount($countArr);
 		}
-            }
-            else{
-                $msg = "MatchAlert Mailr Started @$mailerStartTime";
-                $to = "manoj.rana@naukri.com";
+		else{
+			$msg = $this->checkCount($countN, $countY, $countT, $count);
+		}
+		if($msg){
+			$this->sendAlertMail($to, $msg, $msg);
+			$this->sendAlertSMS($msg);
+		}
+        }
+        else{
+        	$msg = "MatchAlert Mailer Started @$mailerStartTime and Notification Not Started";
                 $this->sendAlertMail($to, $msg, $msg);
-                $this->sms("9999216910",$msg);
-            }
+		$this->sendAlertSMS($msg);
         }
     }
   }
-  
+
+  public function checkTotalCount($countArr){
+	$msg ='';
+        $countN =$countArr['N'];
+        $countY =$countArr['Y'];
+	$countT =$countN+$countY;
+	if($countY < 450000){
+		$msg ="All Notification not sent";
+		$msg .="\n Total Generated:$countT##Pending:$countN##Sent:$countY";	
+	}
+	return $msg;
+  } 
+
+  public function checkCount($countN=0, $countY=0, $countT=0, $count=0){
+	$msg ='';
+	if($countT!=0){
+		if($countN==0)
+			$msg = "MatchAlert Notification Generation Issue from Mailer";
+	}
+	elseif($countT==0){
+		$msg = "MatchAlert Notification Not Generated from Mailer";
+	}	
+	if($count==0){
+		$msg = " + MatchAlert Notification Delivery Issue";
+	}
+	if($msg)
+		$msg .="\n Pending:$countN##Delivered:$count";   
+	return $msg;
+  } 
+
+
   public function sendAlertSMS($msg=''){
-    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910");
-    if(JsConstants::$whichMachine == "test"){
-        $mobileNumberArr = array("nitish"=>"8989931104");
-    }
+    //$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"");
+    $mobileNumberArr = array("manoj"=>"9999216910");	
     foreach($mobileNumberArr as $k=>$v){
         $this->sms($v,$msg);
     }
@@ -126,10 +142,10 @@ EOF;
   public function sms($mobile,$msg){
         $t = time();
         if($msg){
-            $message    = "Mysql Error Count have reached ".$msg." $t";
+            $message    = "Mysql Error Count have reached".$msg." $t";
         }
         else{
-            $message    = "Mysql Error Count have reached InstantNotificationMatchalert $t";
+            $message    = "Mysql Error Count have reached Matchalert Notification $t";
         }
         $from           = "JSSRVR";
         $profileid      = "144111";

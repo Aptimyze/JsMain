@@ -587,7 +587,7 @@ else {
 		$profilesEOI = $eoiViewLogObj->getMutipleEoiViewed($profileIds,$this->getLoginProfile());
 		if (is_array($profilesEOI)) {
 			foreach ($profilesEOI as $pid => $value) {
-				$profileArray[$pid]["INTEREST_VIEWED_DATE"] = CommonUtility::convertDateToDay($value["DATE"]);
+				$profileArray[$pid]["INTEREST_VIEWED_DATE"] = CommonUtility::convertDateToISTDay($value["DATE"]);
 			}
 			return $profileArray;
 		}

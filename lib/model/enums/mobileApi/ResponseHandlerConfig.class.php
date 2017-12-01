@@ -143,8 +143,7 @@ class ResponseHandlerConfig
 	 //aadhar errors
 	 public static $AADHAR_ALREADY_VERIFIED = array("message" => "This Aadhaar number is already verified for another profile on Jeevansathi.", "statusCode" => '1');
 	 public static $AADHAR_ALREADY_VERIFIED_BY_SAME = array("message" => "Aadhaar number is verified", "statusCode" => '1');
+	 public static $NO_CAL_LAYERID = array("message" => "No Layer Id Passed in params", "statusCode" => '1');
 }
 
 ?>
-
-
