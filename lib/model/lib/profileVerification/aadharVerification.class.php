@@ -83,19 +83,22 @@ class aadharVerification
 		$aadharArr = array();
 		$urlToHit = aadharVerificationEnums::URLTOHITAUTHBRIDGE;
 		$headerArr = aadharVerificationEnums::$aadharHeaderArrAuthbridge;
-
+		$aadharArr["transID"]=md5(uniqid($profileId, true));
 		$aadharArr["docType"] = aadharVerificationEnums::AADHARDOCTYPEAUTHBRIDGE;
 		$aadharArr["docNumber"] = $aadharId;
 		$aadharArr["name"] = $nameOfUser;
 		$jsonAadhar = json_encode($aadharArr);
-		$hashed = hash('SHA512', $jsonAadhar); // SHA512 hashing required for Authbridge
-		$authBridgeBody = 
-		$response = json_decode(CommonUtility::sendCurlPOSTRequest($urlToHit,$authBridgeBody,"",$headerArr));
-		$reqId = $response->request_id;
+		$authBridgeBody = EncryptionAESCipher::encrypt(aadharVerificationEnums::TOKENAUTHBRIDGE, $jsonAadhar);
+		$request["requestData"]= $authBridgeBody;
+		$requestJson = json_encode($request);
+		$decrypted = CommonUtility::sendCurlPOSTRequest($urlToHit,$requestJson,"",$headerArr);
+		$response= json_decode($decrypted);
+		$response = json_decode(EncryptionAESCipher::decrypt(aadharVerificationEnums::TOKENAUTHBRIDGE,$response->responseData));
+		$reqId = $response->status;
 		if($reqId)
 		{
 			$date = date("Y-m-d H:i:s");
-			$this->insertAadharDetails($profileId,$username,$date,$aadharId,$reqId);
+			$this->insertAadharDetails($profileId,$username,$date,$aadharId,$aadharArr["transID"]);
 			return 1;
 		}
 		else

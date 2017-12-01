@@ -15,12 +15,12 @@ class aadharVerificationEnums
 		);
 		
 	public static $aadharHeaderArrAuthbridge = array(
-    	'client_id:786c16d4-9b01-42bd-a64d-b8d046abb52b',
-    	'Content-Type:application/json',
+    	'username:Test1@jeevansathi.com',
+    	'Content-Type:Application/json',
 		);
-	const URLTOHITAUTHBRIDGE = "https://authbridge.info/truthscreen/api/v1/idsearch";
+	const URLTOHITAUTHBRIDGE = "https://www.truthscreen.com/api/v2.2/idsearch";
 	const AADHARDOCTYPEAUTHBRIDGE=22;
-	const TOKENAUTHBRIDGE = "";
+	const TOKENAUTHBRIDGE = "Auth@123";
 	const TRAFFICTOAUTHBRIDGE=20;
 	const NOTVERIFIED = "N";
 	const AADHARLENGTH = 12;
