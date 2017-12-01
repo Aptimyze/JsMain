@@ -1333,6 +1333,10 @@ class csvGenerationHandler
                                         $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
 					if(in_array("$campaignName",$nonAutoCampaign)){
 						$dialerEligible ='Y';
+                                                if($dataArr['ALLOTED_TO']=='')
+                                                        $dialerDialStatus =1;
+                                                else
+                                                        $dialerDialStatus=2;
 					}else{
 						if($score>=$scoreRange2 && $dialerDialStatus==1){
 							$dialerEligible ='Y';
@@ -1385,7 +1389,8 @@ class csvGenerationHandler
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
-					$source =$campaignName;
+					//$source =$campaignName;
+					$source = $callTimeArr[$profileid]['CALLBACK_SOURCE'];
                                         //$csvDateTime =$processObj->getStartDate();
 					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)

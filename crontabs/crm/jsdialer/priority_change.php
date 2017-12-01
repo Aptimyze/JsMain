@@ -12,7 +12,7 @@ $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
-$ifSingleRedis ='tcp://172.10.18.75:6380';
+$ifSingleRedis ='tcp://172.10.18.75:6379';
 
 // Redis Data fetch 
 $client = new Predis\Client($ifSingleRedis);
