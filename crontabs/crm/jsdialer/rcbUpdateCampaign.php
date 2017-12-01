@@ -47,7 +47,7 @@ if ($profileStrIneligible != '') {
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
 
     foreach($inEligibleArr as $key=>$pid) {
-	$getLatDisposition =checkProfileDisposition($pid,$campaignName);
+	$getLatDisposition =checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
 	if($getLatDisposition!=$scbValue)
 		$pidArr[] =$pid;
     }
@@ -65,8 +65,7 @@ if (count($eligibleArrNew > 0)) {
     foreach ($eligibleArrNew as $key => $profileid) {
             $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
             mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-            $dialStatus =0;
-            updateDialStatus($profileid,$dialStatus,$db_master);
+	    deleteProfiles($db_master,$profileid);	
             addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
 //    $profileStrEligible = implode(",", $eligibleArrNew);
