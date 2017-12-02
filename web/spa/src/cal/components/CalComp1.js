@@ -147,12 +147,15 @@ criticalLayerButtonsAction(url,clickAction,button) {
                     return;
                 }
                 CALParams="&namePrivacy="+this.state.namePrivacy+"&newNameOfUser="+newNameOfUser;
-            CALCommonCall(url+CALParams,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+            this.props.showLoader();
+            CALCommonCall(url+CALParams,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
 
             }
-            else
-              CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-            return true;
+            else{
+              this.props.showLoader();
+              CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
+            }
+          return true;
           break;
 
           case '14':
@@ -165,7 +168,8 @@ criticalLayerButtonsAction(url,clickAction,button) {
           }
           break;
     }
-    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+    this.props.showLoader();
+    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
     return true;
 
 }
@@ -368,15 +372,18 @@ validateAltEmailAndSave()
               this.CALButtonClicked=0;
               return false;
             }
+        this.props.showLoader();
         commonApiCall(CONSTANTS.EDIT_SUBMIT+'?editFieldArr[ALT_EMAIL]='+altEmailUser,{},'','POST').then((response) =>
         {
             if(response.responseStatusCode==1)
             {
             this.showError(response.responseMessage);
             this.CALButtonClicked=0;
+            this.props.hideLoader();
             return false;
             }
-         CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
+         this.props.showLoader();
+         CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
          let msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
          this.setState({emailVeriConfirmation:true,altEmailMessage:msg});
          return true;
@@ -385,14 +392,17 @@ validateAltEmailAndSave()
 
 
 sendEmailConfirmationLink(){
+  this.props.showLoader();
   commonApiCall('/api/v1/profile/sendEmailVerLink?emailType=2',{},'','POST').then((response) =>
   {
       if(response.responseStatusCode==1)
       {
       this.showError(response.responseMessage);
+      this.props.hideLoader();
       return false;
       }
-   CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
+   this.props.showLoader();
+   CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
    this.setState({emailVeriConfirmation:true,altEmailMessage:response.responseMessage});
    return true;
  });
@@ -631,8 +641,10 @@ objectCounter['others'].forEach(function(elem){
 });
 
 var url = JSON.stringify(sendObj).split('"').join("%22");
+this.props.showLoader();
 commonApiCall('/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,{},'','POST').then((response) =>
 {
+  this.props.hideLoader();
   this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1');
 });
 
