@@ -658,12 +658,18 @@ class ProfileMemcacheService
         $chat          = new ChatLog;
     	$msgCountArray = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
         $chatCountArray=$chat->getChatLogContactCount($this->profileid,$skipProfile,$considerProfiles);
+        if(!$chatCountArray)
+            $chatCountArray=array();
+        if(!$msgCountArray)
+            $msgCountArray=array();
         $finalArray=array_merge($msgCountArray,$chatCountArray);
+
        /* print_r($chatCountArray);
         print_r($msgCountArray);
         print_r($finalArray);*/
         $arr=array();       
         foreach ($finalArray as $key => $value) {
+
             if(!array_key_exists($value['SENDER'], $arr))
             {
                $MESSAGE++;
@@ -677,7 +683,7 @@ class ProfileMemcacheService
                     $MESSAGE_NEW++;
             }
         }
-    } 
+    }
 		$this->memcache->set('MESSAGE',$MESSAGE ? $MESSAGE : 0);
         $this->memcache->set('MESSAGE_NEW',$MESSAGE_NEW ? $MESSAGE_NEW : 0);
        
