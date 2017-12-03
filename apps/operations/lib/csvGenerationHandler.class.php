@@ -1954,8 +1954,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerPriority($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer')
-		{
+		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer') {
 			 if($allotedTo=='')
 			 {
 				 if($score>=81 && $score<=100)
@@ -1970,9 +1969,7 @@ class csvGenerationHandler
 		}
 		else
 		{
-			if($processName=='rcbCampaignInDialer')
-				$priority =8;
-			elseif($processName=='upsellProcessInDialer')
+			if($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
 				$priority='6';
