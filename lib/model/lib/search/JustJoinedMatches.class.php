@@ -87,8 +87,8 @@ class JustJoinedMatches extends PartnerProfile
 				$this->addJustJoinedDate();
 		$this->addSpecificCondition();
 		
-		//This is AB for  Reverse DPP Match condition for Males onle with profile is mod 101 <=50
-		if($this->loggedInProfileObj->getGENDER() == 'M' && $this->loggedInProfileObj->getPROFILEID()%101 <=50){
+		//This is  for  Reverse DPP Match condition for Males onle 
+		if($this->loggedInProfileObj->getGENDER() == 'M'){
 			$reverseCriteria = PredefinedSearchFactory::getSetterBy('MembersLookingForMe',$this->loggedInProfileObj);
 			$reverseCriteria->getSearchCriteria();
 			if($this->loggedInProfileObj->getGENDER() == 'F')
