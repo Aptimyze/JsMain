@@ -137,7 +137,7 @@ if(count($camp_array)>0)
 					$npriority='9';
 					$expectedDialStatus = '1';
 					$sourceType = "PAYMENT_HIT";
-				} elseif (!in_array($profileid,$pro_array2)){
+				} else{
 					$sourceType = "ONLINE";
 					if($analytic_score>90 && $analytic_score<=100){
 						$npriority='7';
@@ -163,7 +163,7 @@ if(count($camp_array)>0)
 					$npriority='0';
 					$expectedDialStatus = '2';
 					$sourceType = "PAYMENT_HIT";
-				} elseif (!in_array($profileid,$pro_array2)){
+				} else{
 					$cnt1++;
 					$sourceType = "ONLINE";
 					if($analytic_score>95 && $analytic_score<=100){
