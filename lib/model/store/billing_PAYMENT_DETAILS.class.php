@@ -388,7 +388,6 @@ class BILLING_PAYMENT_DETAIL extends TABLE
                     $output[$result['BILLID']] = $result;
                 }
             }
-            unset($totalAmount);
             return $output;
         }
         catch(PDOException $e) {
