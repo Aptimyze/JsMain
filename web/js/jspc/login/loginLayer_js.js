@@ -331,7 +331,7 @@ function LoginBinding()
                 	GAMapper("GAV_LL_SHOW",{action:"by user action"});
                 	GAMapper("GA_SEARCH_LOGGEDOUT_ALBUM");
 					$("#loginRegistration").addClass("loginAlbumSearch");
-					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
+					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
 				}
 				else if($(this).hasClass("loginProfileSearch")){
 					/* flag for user action resulting for login layer */
