@@ -553,7 +553,7 @@ class SolrRequest implements RequestHandleInterface
 
                 //Fso Verified Dpp Matches
                 if($this->searchParamtersObj->getFSO_VERIFIED()){
-                $this->filters[]="&fq=VERIFICATION_SEAL:(/".$this->searchParamtersObj->getFSO_VERIFIED().".*/)";}
+                $this->filters[]="&fq=VERIFICATION_SEAL:(/".$this->searchParamtersObj->getFSO_VERIFIED().".*.".$this->searchParamtersObj->getAADHAAR_VERIFIED()."/)";}
                 //Fso Verified Dpp Matches
          
 		if(is_array($this->clustersToShow))

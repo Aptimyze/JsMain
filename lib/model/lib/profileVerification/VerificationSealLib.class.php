@@ -80,6 +80,13 @@ class VerificationSealLib {
                         }
                 }
                 $sealFinalArr = array_replace($sealInitiate, $makeSeal);
+                $aadhaarObj = new aadharVerification();
+                $proID = $this->pID[0];
+                $aadhaarDetails = $aadhaarObj->getAadharDetails($proID);
+                if($aadhaarDetails[$proID]['AADHAR_NO'] && $aadhaarDetails[$proID]['VERIFY_STATUS'] == 'Y')
+                    $sealFinalArr[] = 'A';
+                else
+                    $sealFinalArr[] = 'N';
                 $finalVerificationSeal = implode(",", $sealFinalArr);
                 $sealUpdateObj = new newjs_SWAP();
 		if(is_array($this->pID) && count($this->pID)==1)
