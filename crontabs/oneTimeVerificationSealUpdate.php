@@ -36,7 +36,7 @@ foreach($genderArr as $key=>$val){
     while($row = $mysqlObjS->fetchAssoc($resultS))
     { 
         if($row['PROFILEID']){
-            if(in_array($row['PROFILEID'], $aadharArr))
+            if(in_array($row['PROFILEID'], $aadhaarArr))
                 $toConcat = ",A";
             else
                 $toConcat = ",N";
