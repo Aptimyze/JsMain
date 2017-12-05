@@ -7,7 +7,7 @@ include("MysqlDbConstants.class.php");
 include("DialerHandler.class.php");
 include('PriorityHandler.class.php');
 include("DialerApplication.class.php");
-
+$dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
 $ifSingleRedis ='tcp://172.10.18.75:6379';
 

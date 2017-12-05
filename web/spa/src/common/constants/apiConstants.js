@@ -17,6 +17,7 @@ export const CONTACT_ENGINE_API = {"CONTACT_DETAIL":"/api/v2/contacts/contactDet
 export const PHOTALBUM_API = "/api/v1/social/getAlbum";
 export const HINDI_SITE = "http://hindi.jeevansathi.com";
 export const MARATHI_SITE = "http://jsmarathi.mox.net.in";
+export const SITE_URL = "https://www.jeevansathi.com";
 export const BROWSWER_NOTIFICATION = "/api/v1/notification/notificationLayerSettings";
 export const PROFILE_GUNA_LOCAL_STORAGE_SIZE = 15;
 export const PROFILE_GUNA_LOCAL_STORAGE_TIME_LIMIT = 300; //seconds;
