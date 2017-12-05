@@ -182,18 +182,17 @@ function createCookie(name, value, days,specificDomain) {
 }
 
 function translateSite(translateURL){
-    newHref = translateURL+"?AUTHCHECKSUM="+readCookie("AUTHCHECKSUM");
-    if(translateURL.indexOf('hindi')!=-1){
+    if(translateURL.indexOf('hindi')!==-1){
         createCookie("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
         createCookie("jeevansathi_marathi_site_new","N",100,".jeevansathi.com");
-    } else if(translateURL.indexOf('marathi')!=-1){
+    } else if(translateURL.indexOf('marathi')!==-1){
         createCookie("jeevansathi_marathi_site_new","Y",100,".jeevansathi.com");
         createCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
     }else {
         createCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
         createCookie("jeevansathi_marathi_site_new","N",100,".jeevansathi.com");
     }
-    window.location.href = newHref;
+    window.location.href = translateURL;
 }
 
 $("[hamburgermenu]").each(function(){
