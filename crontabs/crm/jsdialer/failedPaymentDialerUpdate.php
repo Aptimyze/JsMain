@@ -65,27 +65,32 @@ if(count($eligibleArrNew>0)) {
     foreach($eligibleArrNew as $key=>$profileid){
 			$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
 			mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
-			deleteProfiles($db_master,$profileid);	
+			//deleteProfiles($db_master,$profileid);	
 			addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
 }
 
 // Stop profiles which are 12 hours old
-if(is_array($inEligibleArr)){
-	//$profileStr     =implode(",",$inEligibleArr);
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' and Last_disposition!='$scbValue'";
+        $query0 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' AND Last_disposition IS NULL";
+        mssql_query($query0,$db_dialer) or $dialerLogObj->logError($query0,$campaignName,$db_dialer,1);
+
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' AND Last_disposition IS NOT NULL AND Last_disposition!='$scbValue'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+
+if(is_array($inEligibleArr)){
         foreach($inEligibleArr as $key=>$pid){
 		$getLatDisposition =checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
             if($getLatDisposition!=$scbValue)
 			$pidArr[] =$pid;
 	}
+  if(is_array($pidArr)){
 	$profileStr     =implode(",",$pidArr);
 	if($profileStr)
 		deleteProfiles($db_master,$profileStr);
 	foreach($pidArr as $key=>$profileid){
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
+  }
 }
 
 

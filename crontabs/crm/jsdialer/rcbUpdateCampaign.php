@@ -43,7 +43,11 @@ $eligibleArrNew = array_values($eligibleArrNew);
 // Stop profiles which are 2 days old
 if ($profileStrIneligible != '') {
     // Set dial status=0 for paid campaign
-    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition!='$scbValue'";
+
+    $query0 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition IS NULL";
+    mssql_query($query0, $db_dialer) or $dialerLogObj->logError($query0, $campaignName, $db_dialer, 1);
+
+    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition IS NOT NULL AND Last_disposition!='$scbValue'";
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
 
     foreach($inEligibleArr as $key=>$pid) {
@@ -51,6 +55,7 @@ if ($profileStrIneligible != '') {
 	if($getLatDisposition!=$scbValue)
 		$pidArr[] =$pid;
     }
+  if(is_array($pidArr)){
     $profileStr     =implode(",",$pidArr);
     if($profileStr)
 	deleteProfiles($db_master,$profileStr);
@@ -58,6 +63,7 @@ if ($profileStrIneligible != '') {
     foreach ($pidArr as $key => $profileid) {
 	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
     }
+  }
 }
 
 // Stop profiles which are paid and allocated
@@ -68,12 +74,6 @@ if (count($eligibleArrNew > 0)) {
 	    deleteProfiles($db_master,$profileid);	
             addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
-//    $profileStrEligible = implode(",", $eligibleArrNew);
-    /*if (is_array($deleteArr)){
-         $profileStrDel = implode(",", $deleteArr);
-         deleteProfiles($db_master, $profileStrDel);
-         unset($deleteArr);
-    }*/
 }
 
 // mail added
