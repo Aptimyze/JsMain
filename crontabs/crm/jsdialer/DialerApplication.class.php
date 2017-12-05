@@ -17,7 +17,7 @@ class DialerApplication {
 
         if($inRR){
             $rrPaymentObj =new incentive_LOGGING_CLIENT_INFO();
-            if($rrPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-23.5*60*60)))
+            if($rrPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-22.5*60*60)))
                 return true;
         }
         return false;
