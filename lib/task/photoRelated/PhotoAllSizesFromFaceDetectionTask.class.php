@@ -76,8 +76,8 @@ EOF;
 					if(strstr($value["MobileAppPicUrl"],"mainPic"))
 						$value["MobileAppPicUrl"] = '';
 
-					if(strstr($value["OriginalPicUrl"],"mediacdn.jeevansathi.com"))
-                                                $value["OriginalPicUrl"] = str_replace("mediacdn.jeevansathi.com/","jeevansathi.s3.amazonaws.com/",$value["OriginalPicUrl"]);
+					if(strstr($value["OriginalPicUrl"],"mediacdn.jeevansathi.com") && strpos($value["OriginalPicUrl"],"O-")==FALSE)
+                                              $value["OriginalPicUrl"] = str_replace("mediacdn.jeevansathi.com/","jeevansathi.s3.amazonaws.com/",$value["OriginalPicUrl"]);
 					$profileObj = Operator::getInstance("", $value["PROFILEID"]);
 					$profileObj->getDetail("","","HAVEPHOTO");
 					$value['PROFILE_TYPE'] = $this->getProfileType($profileObj->getHAVEPHOTO());

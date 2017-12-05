@@ -74,9 +74,9 @@ class SPA {
             if($redirectUrl!= "")
             {
                 if($request->getcookie("jeevansathi_marathi_site_new")=='Y'){
-                    header("Location:".JsConstants::$marathiTranslateURL."/spa/dist/index.html#"."?AUTHCHECKSUM=".$request->getParameter('AUTHCHECKSUM'));
+                    header("Location:".JsConstants::$marathiTranslateURL."/spa/dist/index.html#");
                 } else if ($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
-                    header("Location:".JsConstants::$hindiTranslateURL."/spa/dist/index.html#"."?AUTHCHECKSUM=".$request->getParameter('AUTHCHECKSUM'));
+                    header("Location:".JsConstants::$hindiTranslateURL."/spa/dist/index.html#");
                 }
             }
             else
