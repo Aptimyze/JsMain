@@ -754,6 +754,7 @@ $js_arr[]=array("lib/model/lib/picture/GoogleVisionApi"   => "1");
 $js_arr[]=array("apps/jeevansathi/config/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $js_arr[]=array("web/spa/dist/app.76a26e0382665aef40dc.bundle"   => "1");
+$js_arr[]=array("crontabs/crm/jsdialer/rcbUpdateCampaign"   => "1");
 return $js_arr;
 }
 function getJavascript(){
