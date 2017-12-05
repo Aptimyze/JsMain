@@ -127,7 +127,7 @@ EOF;
 
   public function sendAlertSMS($msg=''){
     //$mobileNumberArr = array("manoj"=>"9999216910");
-    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"9650350387");
+    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"9773889652");
     foreach($mobileNumberArr as $k=>$v){
         $this->sms($v,$msg);
     }
