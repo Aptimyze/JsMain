@@ -205,13 +205,6 @@
             ~assign var="tag" value=CommonUtility::getUserType($profileid)`
         ~/if`
 
-        ~if $module eq 'static' && $action eq 'logoutPage'`
-            localStorage.removeItem("login");
-            localStorage.setItem("logout",1);
-        ~elseif $profileid`
-            localStorage.removeItem("logout");
-            localStorage.setItem("login",1);
-        ~/if`
         slider();
         ~if $module neq 'register'`
             initializeTopNavBar("~$loggedIn`","~$profileid`","~$module`","~$action`");

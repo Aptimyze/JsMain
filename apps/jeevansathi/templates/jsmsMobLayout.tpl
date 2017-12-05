@@ -82,13 +82,7 @@
 		~assign var="userDetails" value=CommonUtility::getFreshChatDetails($trackProfileId)`
 		~assign var="tag" value=CommonUtility::getUserType($trackProfileId)`
 	~/if`
-	~if $module eq 'static' && $action eq 'logoutPage'`
-		localStorage.removeItem("login");
-		localStorage.setItem("logout",1);
-	~elseif $profileid`
-		localStorage.removeItem("logout");
-		localStorage.setItem("login",1);
-	~/if`
+
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";
@@ -161,7 +155,7 @@ var domainCode={};
         </div>
   ~if $showFreshChat`
     ~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
-        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
+        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag])`
      ~/if`
   ~/if`
   </body>

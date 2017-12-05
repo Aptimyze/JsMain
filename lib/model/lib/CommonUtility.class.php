@@ -805,8 +805,8 @@ class CommonUtility
 
     /*checkFreshChatPanelCondition
     * check whether to show chat panel or not acc to module
-    * @inputs: $module,$action
-    * @return: $showChat
+    * @inputs: $module, $action, $profileID
+    * @return: $showFreshChat
     */
     public static function checkFreshChatPanelCondition($module, $action, $profileid){
         $freshChatAvailModuleArr = ["membership","register"];
