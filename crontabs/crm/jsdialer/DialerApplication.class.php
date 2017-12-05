@@ -5,7 +5,7 @@ class DialerApplication {
     public function checkProfileInProcess($profileID,$inFP=true,$inRCB=true,$inRR=true){
         if($inFP){
             $failedPaymentObj = new billing_TRACKING_FAILED_PAYMENT();
-            if($failedPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-1*60*60)))
+            if($failedPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-11.5*60*60)))
                 return true;
         }
 
@@ -17,7 +17,7 @@ class DialerApplication {
 
         if($inRR){
             $rrPaymentObj =new incentive_LOGGING_CLIENT_INFO();
-            if($rrPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-12*60*60)))
+            if($rrPaymentObj->searchProfileInCSV($profileID,date("Y-m-d H:i:s",time()-22.5*60*60)))
                 return true;
         }
         return false;

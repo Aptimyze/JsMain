@@ -1096,7 +1096,7 @@ class CommonUtility
 
     }
 
-    /*function to redirect site to appropriate language based on cookie
+    /*function to redirect site to appropriate language based  on cookie
     * @inputs: $request
     * @return : $redirectUrl
     */
@@ -1107,7 +1107,7 @@ class CommonUtility
 
         if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
             if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
-                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 if(isset($_SERVER["REQUEST_URI"])){
                     $newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
                     if(strpos($newRedirectUrl,"?") != false){
@@ -1116,13 +1116,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
-                return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+                return (JsConstants::$hindiTranslateURL."?newRedirect=1");
             }
             else if($request->getcookie("redirected_hindi_new")=='Y'){
-                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
                     $newRedirectUrl = JsConstants::$hindiTranslateURL;
@@ -1135,13 +1135,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
             }
         } else if($request->getcookie("jeevansathi_marathi_site_new")=='Y'){
             if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_marathi_new")!='Y'){
-                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 if(isset($_SERVER["REQUEST_URI"])){
                     $newRedirectUrl = JsConstants::$marathiTranslateURL.$_SERVER["REQUEST_URI"];
                     if(strpos($newRedirectUrl,"?") != false){
@@ -1150,13 +1150,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
-                return (JsConstants::$marathiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+                return (JsConstants::$marathiTranslateURL."?newRedirect=1");
             }
             else if($request->getcookie("redirected_marathi_new")=='Y'){
-                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
                     $newRedirectUrl = JsConstants::$marathiTranslateURL;
@@ -1169,7 +1169,7 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
             }
@@ -1179,16 +1179,16 @@ class CommonUtility
                 return 1;
             }
             if($request->getcookie("redirected_hindi_new")=='Y'){
-                @setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
-                return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);
+                @setcookie('redirected_hindi_new', 'N', 0, "/",".jeevansathi.com");
+                return (JsConstants::$siteUrl);
             }
             else if($request->getcookie("redirected_marathi_new")=='Y'){
-                @setcookie('redirected_marathi_new', 'N', 0, "/","jeevansathi.com");
-                return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);
+                @setcookie('redirected_marathi_new', 'N', 0, "/",".jeevansathi.com");
+                return (JsConstants::$siteUrl);
             }
             else{
-                @setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
-                @setcookie('redirected_marathi_new', 'N', 0, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'N', 0, "/",".jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'N', 0, "/",".jeevansathi.com");
             }
         }
         return $redirectUrl;

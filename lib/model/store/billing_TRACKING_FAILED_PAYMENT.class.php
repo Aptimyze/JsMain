@@ -98,7 +98,7 @@ class billing_TRACKING_FAILED_PAYMENT extends TABLE {
 
     public function searchProfileInCSV($profileID,$entryDate){
         try{
-            $sql = "SELECT PROFILEID FROM billing.TRACKING_FAILED_PAYMENT WHERE ENTRY_DATE >= :ENTRY_DATE AND PROFILEID = :PROFILEID LIMIT 1";
+            $sql = "SELECT PROFILEID FROM billing.TRACKING_FAILED_PAYMENT WHERE ENTRY_DT >= :ENTRY_DATE AND PROFILEID = :PROFILEID";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DATE",$entryDate,PDO::PARAM_STR);
             $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);

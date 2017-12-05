@@ -103,6 +103,7 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
         {
           case "9":
             removeCookie("AUTHCHECKSUM");
+            removeCookie("AUTHCHECKSUM","www.jeevansathi.com");
             // localStorage.clear();
             window.location.href="/login?prevUrl="+window.location.href;
             break;
@@ -165,6 +166,11 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
             localStorage.setItem('GENDER',response.data.selfGender);
           }
 
+          if(response.data.selfMtongue)
+          {
+              localStorage.setItem('self_MTONGUE',response.data.selfMtongue);
+          }
+
           if(response.data.USERNAME)
           {
             localStorage.setItem('USERNAME',response.data.USERNAME);
@@ -183,6 +189,11 @@ export  function commonApiCall(callUrl,data,reducer,method,dispatch,trackJsb9,co
           if (response.data.selfUsername)
           {
             localStorage.setItem('USERNAME',response.data.selfUsername);
+          }
+
+          if(response.data.selfMtongue)
+          {
+              localStorage.setItem('self_MTONGUE',response.data.selfMtongue);
           }
         }
 

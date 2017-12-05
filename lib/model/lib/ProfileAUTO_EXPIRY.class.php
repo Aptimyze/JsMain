@@ -61,7 +61,9 @@ class ProfileAUTO_EXPIRY
         $result = $this->getProfileExpiryObj()->getDate($profileid);
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? ProfileCacheConstants::NOT_FILLED : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        }
         return $result;
          
     }

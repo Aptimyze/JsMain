@@ -40,12 +40,12 @@ EOF;
       sfContext::createInstance($this->configuration);
     include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-    $to 	= "manoj.rana@naukri.com"; 	
-    //$to 	= "lavesh.rawat@jeevansathi.com,bhavana.kadwal@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
+    //$to 	= "manoj.rana@naukri.com"; 	
+    $to 	= "lavesh.rawat@jeevansathi.com,bhavana.kadwal@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";	
     $curTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));
     $stTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 20 minutes'));
     $hr 	= date('H', strtotime('+10 hour 30 minutes'));
-    $hrArr 	= array('02','03','04','05','06','07','08','09');	
+    $hrArr 	= array('01','02','03','04','05','06','07','08','09');	
 
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
@@ -116,7 +116,7 @@ EOF;
 	elseif($countT==0){
 		$msg = "MatchAlert Notification Not Generated from Mailer";
 	}	
-	if($count==0){
+	if($countT!=0 && $count==0){
 		$msg = " + MatchAlert Notification Delivery Issue";
 	}
 	if($msg)
@@ -126,8 +126,8 @@ EOF;
 
 
   public function sendAlertSMS($msg=''){
-    //$mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"");
-    $mobileNumberArr = array("manoj"=>"9999216910");	
+    //$mobileNumberArr = array("manoj"=>"9999216910");
+    $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","lavesh"=>"9818424749","bhavna"=>"9773889652");
     foreach($mobileNumberArr as $k=>$v){
         $this->sms($v,$msg);
     }

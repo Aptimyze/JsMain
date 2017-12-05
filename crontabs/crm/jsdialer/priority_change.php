@@ -132,74 +132,74 @@ if(count($camp_array)>0)
 			$query1 = "";
 			$query = "";
 			if($allocated){
-				if($dialed_today){
-                    $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-				}else{
-                    $cnt1++;
-					if(in_array($profileid,$page1) || $dialerApplicationObj->checkProfileInProcess($profileid)){
-                        $npriority='9';
-                        $expectedDialStatus = '1';
-                        $sourceType = "PAYMENT_HIT";
-					} elseif (!in_array($profileid,$pro_array2)){
-						$sourceType = "ONLINE";
-						if($analytic_score>90 && $analytic_score<=100){
-                            $npriority='7';
-                            $expectedDialStatus = '1';
-						} else if($analytic_score>80 && $analytic_score<=90){
-                            $npriority='6';
-                            $expectedDialStatus = '1';
-						} else{
-                            //No change
-							$ignore=1;
-						}
+				$cnt1++;
+				if(in_array($profileid,$page1) || $dialerApplicationObj->checkProfileInProcess($profileid)){
+					$npriority='9';
+					$expectedDialStatus = '1';
+					$sourceType = "PAYMENT_HIT";
+				} else{
+					$sourceType = "ONLINE";
+					if($analytic_score>90 && $analytic_score<=100){
+						$npriority='7';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>80 && $analytic_score<=90){
+						$npriority='6';
+						$expectedDialStatus = '1';
+					} else{
+						//No change
+						$ignore=1;
 					}
-                    $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-                    $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='$expectedDialStatus', LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
-                    $query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-                    $log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','$sourceType','Y')";
 				}
-			} else{
-                if($dialed_today){
-                    $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-                }else{
-                    if(in_array($profileid,$page2)){
-                        $npriority='0';
-                        $expectedDialStatus = '2';
-                        $sourceType = "PAYMENT_HIT";
-                    } elseif (!in_array($profileid,$pro_array2)){
-                        $cnt1++;
-                        $sourceType = "ONLINE";
-                        if($analytic_score>95 && $analytic_score<=100){
-                            $npriority='9';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>90){
-                            $npriority='8';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>85){
-                            $npriority='7';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>80){
-                            $npriority='6';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>75){
-                            $npriority='5';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>70){
-                            $npriority='4';
-                            $expectedDialStatus = '1';
-                        } else if($analytic_score>60){
-                            $npriority='3';
-                            $expectedDialStatus = '1';
-                        } else{
-                            //No change
-							$ignore=1;
-						}
-                    }
+				if($dialed_today){
+					$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
+				}else{
 					$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-                    $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='$expectedDialStatus',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
-                    $query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-                    $log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','$sourceType','N')";
-                }
+				}
+				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='$expectedDialStatus', LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
+				$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
+				$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','$sourceType','Y')";
+			} else{
+				if(in_array($profileid,$page2)){
+					$npriority='0';
+					$expectedDialStatus = '2';
+					$sourceType = "PAYMENT_HIT";
+				} else{
+					$cnt1++;
+					$sourceType = "ONLINE";
+					if($analytic_score>95 && $analytic_score<=100){
+						$npriority='9';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>90){
+						$npriority='8';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>85){
+						$npriority='7';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>80){
+						$npriority='6';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>75){
+						$npriority='5';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>70){
+						$npriority='4';
+						$expectedDialStatus = '1';
+					} else if($analytic_score>60){
+						$npriority='3';
+						$expectedDialStatus = '1';
+					} else{
+						//No change
+						$ignore=1;
+					}
+				}
+				if($dialed_today){
+					$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
+				}else{
+					$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
+				}
+				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='$expectedDialStatus',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
+				$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
+				$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','$sourceType','N')";
 			}
 
 			if(!$ignore)
