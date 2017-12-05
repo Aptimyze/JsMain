@@ -47,6 +47,9 @@
 	<link rel="manifest" href="/manifest.json">
 
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
+	~assign var=module value=$sf_request->getParameter('module')`
+	~assign var=action value=$sf_request->getParameter('action')`
+    ~assign var=showFreshChat value= CommonUtility::checkFreshChatPanelCondition($module,$action,$trackProfileId)`
     ~include_title`
     ~use helper = SfMinify`
 
@@ -75,7 +78,17 @@
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
-
+	~if $showFreshChat && $trackProfileId`
+		~assign var="userDetails" value=CommonUtility::getFreshChatDetails($trackProfileId)`
+		~assign var="tag" value=CommonUtility::getUserType($trackProfileId)`
+	~/if`
+	~if $module eq 'static' && $action eq 'logoutPage'`
+		localStorage.removeItem("login");
+		localStorage.setItem("logout",1);
+	~elseif $profileid`
+		localStorage.removeItem("logout");
+		localStorage.setItem("login",1);
+	~/if`
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";
@@ -146,9 +159,9 @@ var domainCode={};
         	<img border="0">
         
         </div>
-  ~if $sf_request->getParameter('module') eq 'membership' || $sf_request->getParameter('module') eq 'help'`
+  ~if $showFreshChat`
     ~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
-        ~include_partial('global/freshDesk')`
+        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
      ~/if`
   ~/if`
   </body>
