@@ -48,7 +48,7 @@ EOF;
   $FilesArr = file($FileName , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
   $headerArr = array(
-        'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
+        'Authorization:Basic dmlkdXNoaUBuYXVrcmkuY29tOnZpZHVzaGkxMjM=',
         'Content-Type:application/json'
         );
 

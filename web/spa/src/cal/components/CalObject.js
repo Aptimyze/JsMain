@@ -41,17 +41,18 @@ export default class calObjectClass extends React.Component
 
   }
   render() {
+    let loaderDiv = this.state.showLoader ?  (<Loader show="page"></Loader>) : (<div></div>);
 
       if(!this.state.error)
       {
           if(!this.state.calData)return (<div><Loader show="page"></Loader></div>);
           if(this.calCompArray1.indexOf(this.state.calData.LAYERID) != -1) {
-            return(<div><CalComp1 myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
+            return(<div>{loaderDiv}<CalComp1 hideLoader={this.hideLoader.bind(this)} showLoader={this.showLoader.bind(this)} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
           } else if(this.calCompArray2.indexOf(this.state.calData.LAYERID) != -1){
-            return(<div><CalComp2 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
+            return(<div>{loaderDiv}<CalComp2 hideLoader={this.hideLoader.bind(this)} showLoader={this.showLoader.bind(this)} myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
           }
           else if(this.calCompArray3.indexOf(this.state.calData.LAYERID) != -1){
-            return(<div><CalComp3 myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
+            return(<div>{loaderDiv}<CalComp3 hideLoader={this.hideLoader.bind(this)} showLoader={this.showLoader.bind(this)} myjsApiHit={this.props.myjsApiHit} myjsObj={this.props.myjsObj} calData={this.state.calData}/></div>);
           }
 
       }
@@ -76,5 +77,11 @@ export default class calObjectClass extends React.Component
     });
 
   }
+  showLoader(){
+  this.setState({showLoader:true});
+}
+  hideLoader(){
+  this.setState({showLoader:false});
+}
 
 }
