@@ -559,7 +559,7 @@ class successStoryActions extends sfActions
         $this->mailerid = $request->getParameter("mailid");
         $this->mailerid = urldecode($this->mailerid);
         $this->FetchProfile($request);
-        $jprofile = new JPROFILE('newjs_slave');
+        $jprofile = new JPROFILE();
         $loggedInObj = LoggedInProfile::getInstance();
         $spouse_name = trim($request->getParameter(spouse_name));
         $spouse_id = trim($request->getParameter(spouse_id));

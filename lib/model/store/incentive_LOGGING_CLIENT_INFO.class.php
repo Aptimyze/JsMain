@@ -36,9 +36,9 @@ class incentive_LOGGING_CLIENT_INFO extends TABLE
         }
     }
 
-    public function searchProfileInCSV($profileID){
+    public function searchProfileInCSV($profileID,$entryDT){
         try{
-            $sql = "SELECT PROFILEID FROM incentive.LOGGING_CLIENT_INFO WHERE PROFILEID = :PROFILEID AND ENTRY_DT<=:ENTRY_DT";
+            $sql = "SELECT USERNAME FROM incentive.LOGGING_CLIENT_INFO WHERE USERNAME = :PROFILEID AND ENTRY_DT>=:ENTRY_DT";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
             $prep->bindValue(":ENTRY_DT",$entryDT,PDO::PARAM_STR);
