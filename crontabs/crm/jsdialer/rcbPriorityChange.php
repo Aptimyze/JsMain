@@ -6,6 +6,14 @@
 include("MysqlDbConstants.class.php");
 include("DialerHandler.class.php");
 include('PriorityHandler.class.php');
+include("DialerApplication.class.php");
+$dir ="/home/developer/jsdialer";
+include_once($dir.'/plugins/predis-1.1/autoload.php');
+$ifSingleRedis ='tcp://172.10.18.75:6379';
+
+// Redis Data fetch
+$client = new Predis\Client($ifSingleRedis);
+$onlineProfilesArr = $client->zRange('online_user', 0, -1);
 
 // Live Connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
@@ -17,6 +25,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer);
+$dialerApplicationObj = new DialerApplication();
 $campaign_nameArr =array('OB_JS_RCB');
 $limit =10;
 $todayDate =date("Y-m-d H:i:s");
@@ -46,12 +55,13 @@ foreach($campaign_nameArr as $key=>$campaignName)
 
 				$slotExist =$priorityHandlerObj->getTimeSlot($diffInMin);
 				if($slotExist){
-					$npriority =$priority-1;
-					if($npriority>=0){
-						// Prioritize - with new priority
-						echo $profileid."=>".$npriority."--";
-						$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);
-					}
+                    if($dialerApplicationObj->checkProfileInProcess($profileid,true,false,true)){
+                        $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,6);
+                    } else if(in_array($profileid,$onlineProfilesArr)){
+                        $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,5);
+                    } else{
+                        $priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
+                    }
 				}
 			}
 		}
