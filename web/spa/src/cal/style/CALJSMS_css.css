@@ -40,6 +40,11 @@
             margin: 6px auto;
             width: 200px;
         }
+        
+        .suggestOptionRangeHeight {
+            margin: 6px auto;
+            width: 255px;
+        }
 
         .mb30 {
             margin-bottom: 30px

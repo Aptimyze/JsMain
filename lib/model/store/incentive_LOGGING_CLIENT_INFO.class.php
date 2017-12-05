@@ -34,6 +34,22 @@ class incentive_LOGGING_CLIENT_INFO extends TABLE
         {
             throw new jsException($e);
         }
-        return $result;
-    }        
+    }
+
+    public function searchProfileInCSV($profileID){
+        try{
+            $sql = "SELECT PROFILEID FROM incentive.LOGGING_CLIENT_INFO WHERE PROFILEID = :PROFILEID AND ENTRY_DT<=:ENTRY_DT";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+            $prep->bindValue(":ENTRY_DT",$entryDT,PDO::PARAM_STR);
+            $prep->execute();
+            if($res=$prep->fetch(PDO::FETCH_ASSOC)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
