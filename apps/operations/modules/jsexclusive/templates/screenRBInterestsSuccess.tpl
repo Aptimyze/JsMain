@@ -39,13 +39,39 @@ function MM_openBrWindow(theURL,winName,features){
 					    	<td height="10" align="CENTER"></td>
 						~/if`
 				    </tr>
+				    
 					<tr class="formhead" align="left">
 					    <td height="21" align="CENTER"><img src="~$valued.PHOTO_URL`"><br>
 					      ~if $valued.PHOTO_URL neq '' && $valued.HAVEPHOTO eq 'Y'`	
 						      <a href="" onclick="MM_openBrWindow('/P/photocheck.php?profilechecksum=~$valued.PROFILE_CHECKSUM`&seq=1','','width=400,height=500,scrollbars=yes'); return false;">Click here for Album</a>
 						~/if`
 					    </td>
-					    <td height="21" align="CENTER" style="font-weight: normal;">~$valued.ABOUT_ME`</td>
+					    <td>
+					    	<table style="margin:auto;width:100%; text-align:center">
+         			       		<tr>	
+                    				<td  colspan="4" height="21" align="CENTER" style="font-weight: normal;">~$valued.ABOUT_ME`</td>                    
+    			            	</tr>
+    			            	<tr><td height="10"></td></tr>
+    			            	<tr style="font-weight:normal;width:100%;">
+    			            		<td style="width:20%">~$valued.AGE`</td>
+    			            		<td style="width:20%">~$valued.OCCUPATION`</td>
+    			            		<td style="width:40%">~$valued.PG_DEGREE` : ~$valued.PG_COLLEGE`</td>
+    			            		<td style="width:20%">~$valued.GOTHRA`</td>
+    			            	</tr>
+    			            	<tr style="font-weight:normal;">
+				  					<td style="width:20%">~$valued.CITY_RES`,~$valued.STATE_RES`,~$valued.COUNTRY_RES`</td>
+						    		<td style="width:20%">~$valued.INCOME`</td>
+						   		 	<td style="width:40%">~$valued.UG_DEGREE` : ~$valued.UG_COLLEGE`</td>
+				   				 	<td style="width:20%">~$valued.FAMILY_STATUS`</td>
+				  				</tr >
+    			            	<tr style="font-weight:normal;">
+    			            		<td style="width:20%">~$valued.CITY_BIRTH`</td>
+    			            		<td style="width:20%"></td>
+    			            		<td style="width:40%"></td>
+				    				<td style="width:20%">~$valued.RES_STATUS`</td>	
+    			            	</tr>
+        			    	</table> 
+					    </td>
 					    <td height="21" align="CENTER"><input type="checkbox" name="DISCARD[]" value="~$valued.PROFILEID`">DISCARD<input type="hidden" name="ACCEPT[]" value="~$valued.PROFILEID`"></td></td>
 				    </tr>
 				    
