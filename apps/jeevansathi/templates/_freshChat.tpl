@@ -54,4 +54,4 @@
     ~/if`
     };
 </script>
-<script src="~FreshChat::$widgetUrl`" async></script>
+<script src="https://wchat.freshchat.com/js/widget.js" async></script>

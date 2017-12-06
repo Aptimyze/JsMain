@@ -6,7 +6,7 @@
 ~assign var=profileid value= $sf_request->getAttribute('profileid')`
 ~assign var=zedoValue value= $sf_request->getAttribute('zedo')`
 ~assign var=zedo value= $zedoValue["zedo"]`
-~assign var=showFreshChat value= CommonUtility::checkFreshChatPanelCondition($module,$action,$profileid)`
+~assign var=phoneVerified value= JsMemcache::getInstance()->get($profileid|cat:"_PHONE_VERIFIED")`
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
@@ -200,10 +200,13 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $showFreshChat && $profileid`
-            ~assign var="userDetails" value=CommonUtility::getFreshChatDetails($profileid)`
-            ~assign var="tag" value=CommonUtility::getUserType($profileid)`
+        ~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index') || $module eq 'register'  || $action eq 'phoneVerificationPcDisplay' || $module eq 'static' && $action eq 'logoutPage' || $phoneVerified != 'Y'`
+            ~if $profileid`
+                ~assign var="userDetails" value=CommonUtility::getFreshChatDetails($profileid)`
+                ~assign var="tag" value=CommonUtility::getUserType($profileid)`
+            ~/if`
         ~/if`
+
         ~if $module eq 'static' && $action eq 'logoutPage'`
             localStorage.removeItem("login");
             localStorage.setItem("logout",1);
@@ -218,7 +221,7 @@
     });
 </script>
 
-~if $showFreshChat`
+~if $module eq 'membership' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index') || $module eq 'register'  || $action eq 'phoneVerificationPcDisplay' || $module eq 'static' && $action eq 'logoutPage' || $phoneVerified != 'Y'`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
     ~/if`

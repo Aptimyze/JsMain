@@ -960,7 +960,6 @@ class SelectGatewayRedirect{
 
 class FreshChat{
     public static $token = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
-    public static $widgetUrl = "https://wchat.freshchat.com/js/widget.js";
 }
 
 ?>
