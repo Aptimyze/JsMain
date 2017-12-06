@@ -1,7 +1,7 @@
 <?php 
 /**
  * This file updates the Verification seal values to another value
- * Author: Ankit Shukla 8th Aug 2016
+ * Author: Ankit Shukla 29 Nov 2017
  */
 $flag_using_php5 = 1;
 include_once("/usr/local/scripts/DocRoot.php");
@@ -21,12 +21,12 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 
 $genderArr = array('MALE','FEMALE');
 
-$sqlAd = "SELECT PROFILEID FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE VERIFY_STATUS = 'Y'";
+/*$sqlAd = "SELECT PROFILEID FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE VERIFY_STATUS = 'Y'";
 $resultAd = $mysqlObjS->executeQuery($sqlAd,$connSlave) or $mysqlObjS->logError($sqlAd);
 
 while($row = $mysqlObjS->fetchAssoc($resultAd)){
     $aadhaarArr[] = $row['PROFILEID'];
-}
+}*/
 
 
 foreach($genderArr as $key=>$val){
@@ -36,12 +36,35 @@ foreach($genderArr as $key=>$val){
     while($row = $mysqlObjS->fetchAssoc($resultS))
     { 
         if($row['PROFILEID']){
-            if(in_array($row['PROFILEID'], $aadhaarArr))
-                $toConcat = ",A";
-            else
-                $toConcat = ",N";
+            $profileId = $row['PROFILEID'];
+            $sealArr = PROFILE_VERIFICATION_DOCUMENTS_ENUM::$VERIFICATION_SEAL_ARRAY;
+            $docArr = PROFILE_VERIFICATION_DOCUMENTS_ENUM::$ATTRIBUTE_DOCUMENT;
 
-            $sqlU = "UPDATE newjs.SEARCH_".$val." SET VERIFICATION_SEAL = CONCAT(VERIFICATION_SEAL,'".$toConcat."') WHERE PROFILEID = ".$row['PROFILEID'];
+            $sealInitiate = array_fill(0, count($sealArr), "N");
+            $fsoObj = ProfileFSO::getInstance("newjs_slave");
+            if ($fsoObj->check($profileId) == 0) {
+                    $makeSeal[0] = "0";
+            } else {
+                    $makeSeal[0] = "F";
+                    $sealObj = new PROFILE_VERIFICATION_DOCUMENTS("newjs_slave");
+                    $seal = $sealObj->sealDetails($profileId);
+                    if($seal != 0){
+                      foreach ($seal as $sealKey => $sealValue) {
+                              $makeSeal[$sealArr[$sealKey]] = array_flip($docArr[$sealKey])[$sealValue];
+                      }
+                    }
+            }
+            $sealFinalArr = array_replace($sealInitiate, $makeSeal);
+            $aadhaarObj = new aadharVerification("newjs_slave");
+            $proID = $profileId;
+            $aadhaarDetails = $aadhaarObj->getAadharDetails($proID);
+            if($aadhaarDetails[$proID]['AADHAR_NO'] && $aadhaarDetails[$proID]['VERIFY_STATUS'] == 'Y')
+                $sealFinalArr[] = 'A';
+            else
+                $sealFinalArr[] = 'N';
+            $finalVerificationSeal = implode(",", $sealFinalArr);
+
+            $sqlU = "UPDATE newjs.SEARCH_".$val." SET VERIFICATION_SEAL = '".$finalVerificationSeal."' WHERE PROFILEID = ".$profileId;
             
             $mysqlObjM->executeQuery($sqlU,$connMaster) or $mysqlObjM->logError($sqlU);
         }
