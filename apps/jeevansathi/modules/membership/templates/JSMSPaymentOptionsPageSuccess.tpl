@@ -284,6 +284,14 @@
   $("#pageBack").click(function(e){
       window.history.back();
   });
+  var username = "~$data.userDetails.USERNAME`";
+  var email = "~$data.userDetails.EMAIL`";
+  setInterval(function(){
+    autoPopulateFreshdeskDetails(username,email);
+  },100);
+  setTimeout(function(){
+    autoPopupFreshdesk(username,email);
+  }, 90000);
   // function to make sure window is resized properly on table view 
   $(window).load(function(){
     var h = $(window).height();

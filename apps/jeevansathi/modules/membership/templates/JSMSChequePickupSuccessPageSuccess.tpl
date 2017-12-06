@@ -48,5 +48,13 @@
       url += '&device=' + readCookie('device');
     }
     window.location.href = url;
-  });
+  }); 
+  var username = "~$data.userDetails.USERNAME`";
+  var email = "~$data.userDetails.EMAIL`";
+  setInterval(function(){
+    autoPopulateFreshdeskDetails(username,email);
+  },100);
+  setTimeout(function(){
+    autoPopupFreshdesk(username,email);
+  }, 90000);
 </script>

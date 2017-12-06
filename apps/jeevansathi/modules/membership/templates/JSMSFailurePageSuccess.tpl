@@ -102,10 +102,18 @@
         }
       
     });
+    var username = "~$data.userDetails.USERNAME`";
+    var email = "~$data.userDetails.EMAIL`";
+    setInterval(function(){
+      autoPopulateFreshdeskDetails(username,email);
+    },100);
     if("~$data.device eq 'Android_app'`"){
         var host = window.location.hostname;
         $("#goHomeid").attr('href','http://'+host+'/profile/mainmenu.php');
     }
+    setTimeout(function(){
+      autoPopupFreshdesk(username,email);
+    }, 90000);
   });
 </script>
 ~/if`

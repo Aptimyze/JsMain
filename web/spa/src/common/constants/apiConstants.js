@@ -23,6 +23,4 @@ export const PROFILE_GUNA_LOCAL_STORAGE_SIZE = 15;
 export const PROFILE_GUNA_LOCAL_STORAGE_TIME_LIMIT = 300; //seconds;
 export const PROFILE_LOCAL_STORAGE_KEY = "profileLocalStorage";
 export const GUNA_LOCAL_STORAGE__KEY = "gunaLocalStorage";
-export const COMM_HISTORY = "/api/v1/contacts/history";
-export const FRESHCHAT_WIDGET_URL = "https://wchat.freshchat.com/js/widget.js";
-export const FRESHCHAT_TOKEN = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
+export const COMM_HISTORY = "/api/v1/contacts/history"
