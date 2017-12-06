@@ -87,11 +87,6 @@ EOF;
 			$this->sendAlertSMS($msg);
 		}
         }
-        else{
-        	$msg = "MatchAlert Mailer Started @$mailerStartTime and Notification Not Started";
-                $this->sendAlertMail($to, $msg, $msg);
-		$this->sendAlertSMS($msg);
-        }
     }
   }
 
