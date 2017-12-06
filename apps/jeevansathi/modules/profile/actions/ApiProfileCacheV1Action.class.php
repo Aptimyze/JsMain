@@ -19,7 +19,7 @@ class ApiProfileCacheV1Action extends sfAction
     $respObj=ApiResponseHandler::getInstance();
     
     //if env is producation then allow only post method
-    if(JsConstants::$whichMachine == 'prod' && false === $this->request->isMethod('POST')){
+    if(JsConstants::$whichMachine == 'prod'){
       $respObj->setHttpArray(ResponseHandlerConfig::$POST_PARAM_INVALID);
       $respObj->generateResponse();
       die;
@@ -81,21 +81,13 @@ class ApiProfileCacheV1Action extends sfAction
   {
     switch(strtolower(trim($command)))
     {
-      case "flushall":
-        try{
-          if(JsMemcache::getInstance()->client instanceof Predis\Client) {
-            $res = JsMemcache::getInstance()->client->flushall();
-            $arr = array('msg'=>$res->__toString());
-          }
-        } catch(Exception $ex) {
-          $arr = array('error'=>$ex->getMessage());
-        }
-      break;
       case "flush":
         $iProfileID = $this->request->getParameter('profileid');
         $res = ProfileCacheLib::getInstance()->removeCache($iProfileID);
-	     $this->deleteCALKeys($iProfileID);
-	     $this->deleteIgnoreKeys($iProfileID);
+	         $this->deleteCALKeys($iProfileID);
+    	     $this->deleteIgnoreKeys($iProfileID);
+           $this->removeProfileMemcacheData($iProfileID);
+           $this->removePictureCacheData($iProfileID);
         if($res)
           $arr = array('msg'=>"Success");
         else
@@ -119,5 +111,19 @@ class ApiProfileCacheV1Action extends sfAction
     return true;
 }
 
+ private function removeProfileMemcacheData($profileId){
+    $redis = JsMemcache::getInstance();
+    $redis->delete("_k_".$profileId);
+    return true;
+}
+
+private function removePictureCacheData($profileId){
+    $redis = JsMemcache::getInstance();
+    $redis->delete("PIC_NEW:".$profileId);
+    return true;
+}
+
+
 }
 ?>
+
