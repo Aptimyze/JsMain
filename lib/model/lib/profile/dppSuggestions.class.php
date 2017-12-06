@@ -50,7 +50,7 @@ class dppSuggestions
 			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
 		}	
                 if($type == "HEIGHT"){
-                        $valueArr["data"] = $this->getSuggestionForHeight($loggedInProfileObj, $valArr);
+                        $valueArr = $this->getSuggestionForHeight($loggedInProfileObj, $valArr);
                 }
                 if($type == "DRINK"){
                         $valueArr["data"] = $this->getSuggestionForDrinkOrSmoke('drink',$valArr);
@@ -647,13 +647,15 @@ class dppSuggestions
                         }
                 }
             }
+            if($sugHgt[0] >= $valueArr[0] && $sugHgt[1] <= $valueArr[1])
+                return array();
             if($valueArr[0] < $sugHgt[0])
                 $sugHgt[0] = $valueArr[0];
             if($valueArr[1] > $sugHgt[1])
                 $sugHgt[1] = $valueArr[1];
             $mapValues = FieldMap::getFieldLabel("height_json","",1);
-            $finalRet['LHEIGHT'] = $mapValues[$sugHgt[0]];
-            $finalRet['HHEIGHT'] = $mapValues[$sugHgt[1]];
+            $finalRet['data']['LHEIGHT'] = $mapValues[$sugHgt[0]];
+            $finalRet['data']['HHEIGHT'] = $mapValues[$sugHgt[1]];
             return $finalRet;
         }
         
