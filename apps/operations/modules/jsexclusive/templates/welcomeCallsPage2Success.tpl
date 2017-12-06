@@ -74,7 +74,26 @@
         </form>
     </tr>
     <tr><td></td><td></td><td ~if $error eq '1'`style="color: red;"~/if`>~$message`</td></tr>
-
+    <tr class="formhead" align="center" width="100%">
+        <td colspan="3"  height="30">
+            <font size=3>Client Notes</font>
+        </td>
+    </tr>
+    <tr>
+    <form action="/operations.php/jsexclusive/clientNotesSubmission?client=~$client`" id="clientNotesForm">
+            <td>
+                <textarea rows="3" placeholder="Please note down any comments/info which will help you screen the interests for this particular profile.You can always edit this later in Screen RB interest module" 
+                          cols="70" name="notes" id="notes" form="clientNotesForm">~$clientNotes`</textarea>
+                <input type="hidden" id="client" name ="client" value="~$client`">
+                <input type="hidden" id="sourcePage" name ="sourcePage" value="welcomeCallsPage2">
+            </td>
+            <td>
+            <center>
+                <input type="submit" name="submit" value="Save Note" >
+            </center>
+            </td>
+        </form>
+    </tr>
     </tr><br>
     ~else`
     <tr>
