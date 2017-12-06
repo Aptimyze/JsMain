@@ -2,9 +2,6 @@
 <link rel="stylesheet" href="~sfConfig::get('app_img_url')`/jsadmin/jeevansathi.css" type="text/css">
 <link rel="stylesheet" href="~sfConfig::get('app_img_url')`/profile/images/styles.css" type="text/css">
 
-
-
-
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
 
 <table width="70%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -80,19 +77,16 @@
         </td>
     </tr>
     <tr>
-    <form action="/operations.php/jsexclusive/clientNotesSubmission?client=~$client`" id="clientNotesForm">
             <td>
                 <textarea rows="3" placeholder="Please note down any comments/info which will help you screen the interests for this particular profile.You can always edit this later in Screen RB interest module" 
-                          cols="70" name="notes" id="notes" form="clientNotesForm">~$clientNotes`</textarea>
+                          cols="70" name="notes" id="notes" maxlength="2000">~$clientNotes`</textarea>
                 <input type="hidden" id="client" name ="client" value="~$client`">
-                <input type="hidden" id="sourcePage" name ="sourcePage" value="welcomeCallsPage2">
             </td>
             <td>
             <center>
-                <input type="submit" name="submit" value="Save Note" >
+                <input type="button" value="Save Note" onclick='sendClientNotes()'>
             </center>
             </td>
-        </form>
     </tr>
     </tr><br>
     ~else`

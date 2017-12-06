@@ -1,3 +1,26 @@
+function sendClientNotes() {
+    console.log("Method called successfully");
+    var notes = document.getElementById("notes").value;
+        console.log(notes);
+    var client = document.getElementById("client").value;
+    console.log(client);
+    var relativeUrl = "clientNotesSubmission?client="+client;
+
+        $.ajax({
+            type: 'POST',
+            url: relativeUrl,
+            data:{
+                notes: notes,
+                client: client,
+           },
+           success: function(data) {
+                 console.log("Success");
+                 alert("Notes saved successfully");
+           }
+        });
+}
+
+
 $(document).ready(function() {
 	//bind click action on status button
  $(".jsc-ExStatus").bind('click', function() {

@@ -3,6 +3,7 @@
 function MM_openBrWindow(theURL,winName,features){
         window.open(theURL,winName,features);
 }
+
 </script>
 <body>
 	<br>
@@ -22,24 +23,19 @@ function MM_openBrWindow(theURL,winName,features){
 		~/if`
 	~/if`
 	</div>
-        <form id="ClientNotesForm" action="clientNotesSubmission?client=~$clientId`">
         <input type="hidden" id="client" name ="client" value="~$clientId`">
-        <input type="hidden" id="sourcePage" name ="sourcePage" value="screenRBInterest">
             <table border="0" align="center" width="80%" table-layout="auto" style="border-spacing: 10px;">
             <tr class="formhead" align="LEFT">
                 <td height="21" width="10%"align="CENTER">
                     <img src="~$clientData.clientImage`">
                 <td align="CENTER" width="85%">
-                    <textarea rows="5" style="width:100%" id="notes" name="notes" form="ClientNotesForm">
-                        ~$clientData.clientNotes`
-                    </textarea>
+                    <textarea maxlength="2000" rows="5" style="width:100%" id="notes" name="notes">~$clientData.clientNotes`</textarea>
                 </td>
                 <td height="10" align="CENTER" width="5%"> 
-                    <input type="submit" value="Save Note">
+                    <input type="button" value="Save Note" onclick="sendClientNotes()">
                 </td>
 	   </tr>
         </table>
-       </form>
         
 	<br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">

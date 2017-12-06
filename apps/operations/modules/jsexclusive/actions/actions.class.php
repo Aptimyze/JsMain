@@ -75,7 +75,7 @@ class jsexclusiveActions extends sfActions {
 		//$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
-		
+                
 		if(empty($this->clientIndex) || !is_numeric($this->clientIndex)){
 			$this->clientIndex = 0;
 		}
@@ -761,19 +761,12 @@ class jsexclusiveActions extends sfActions {
         $screenRBInterestPage = "screenRBInterest";
         $clientId = $request['client'];
         $notes = $request['notes'];
-        $this->client = $request->getParameter('client');
-        if($notes) {
-            $exclusiveClientNotesObject = new incentive_EXCLUSIVE_CLIENT_NOTES();
-            $exclusiveClientNotesObject->setClientNotes($clientId, $notes);
-        }
         
-        $sourcePage = $request['sourcePage'];
-        if($sourcePage == $welcomeCallsPage2Page) {
-            $this->forwardTo("jsexclusive","welcomeCallsPage2?client=".$clientId);
-        }
-        else {
-            $this->forwardTo("jsexclusive","screenRBInterests?client=".$clientId."&cid=".$this->cid);
-        }
+        $this->client = $request->getParameter('client');
+
+        $exclusiveClientNotesObject = new incentive_EXCLUSIVE_CLIENT_NOTES();
+        $exclusiveClientNotesObject->setClientNotes($clientId, $notes);
+        die;
     }
     
     public function executeAddFollowUpFromMatchMail($request){
