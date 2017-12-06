@@ -418,6 +418,10 @@ class SMSLib
             case "URL_EDIT_HOROSCOPE":
                 $longURL = $this->SITE_URL . "/P/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&ownview=1&EditWhatNew=AstroData";
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
+                
+            case "EDIT_BASIC_PROFILE_URL":
+                $longURL = $this->SITE_URL . "/P/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&ownview=1";
+                return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"],'','#Details');
 
             case "EOI_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&responseTracking=" . JSTrackingPageType::SMS;

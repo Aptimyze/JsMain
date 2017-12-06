@@ -164,5 +164,10 @@ class aadharVerification
         else
             return 0;
     }
+    
+    public function getProfilesForAadhaarVerificationMailer($entry_date,$login_date,$sendEvery){
+        $profilesToReturn = self::$aadharObj->getProfilesWhoHaveUnverifiedAadhaar($entry_date,$login_date,$sendEvery);
+        return $profilesToReturn;
+    }
 
 }
