@@ -45,8 +45,10 @@ class EncryptionAESCipher
 	data to encrypt
 	* @return encrypted data in base64 encoding with "iv" attached at end after a colon":"
 	*/
-	public static function encrypt($key, $data) {
-		$vi = self::getIV();
+	public static function encrypt($key, $data,$ivFlag=0) {
+		if($ivFlag){
+			$iv = self::getIV();
+		}
 		$key=hash ('sha512' , $key,false );
 		$key=substr($key,0,self::CIPHER_KEY_LEN);
 		$encodedEncryptedData = base64_encode(openssl_encrypt($data, self::OPENSSL_CIPHER_NAME,self::fixKey($key), OPENSSL_RAW_DATA, $iv));

@@ -34,4 +34,6 @@ class aadharVerificationEnums
 	CONST VERIFIED = "Y";
 	CONST ALREADYVERIFIED = "This Aadhaar number is already verified for another profile on Jeevansathi.";
 	CONST ALREADYVERIFIEDBYSAME = "Your Aadhaar is already verified.";
+	const AADHARENCRYPTIONKEY = "300688";
+	const TIMEOUT = 500;
 }
