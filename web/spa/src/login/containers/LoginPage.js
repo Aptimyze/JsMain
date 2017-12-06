@@ -83,6 +83,11 @@ class LoginPage extends React.Component {
        {
            this.addCaptchaDiv();
        }
+
+       if(localStorage.getItem('login')){
+           this.addFreshChatWidget();
+       }
+
        _this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
@@ -139,6 +144,29 @@ class LoginPage extends React.Component {
             script.async = true;
             document.body.appendChild(script);
         }
+    }
+
+    addFreshChatWidget() {
+        var script = document.createElement("script");
+        script.src = CONSTANTS.FRESHCHAT_WIDGET_URL;
+        script.async = true;
+        script.onSuccess = this.deleteFreshChat();
+        document.body.appendChild(script);
+    }
+
+    deleteFreshChat(){
+        window.fcSettings = {
+            token: CONSTANTS.FRESHCHAT_TOKEN,
+            host: "https://wchat.freshchat.com",
+            onInit: function() {
+                window.fcWidget.on('widget:loaded', function() {
+                    window.fcWidget.user.clear();
+                    window.fcWidget.destroy();
+                    localStorage.removeItem("login");
+                    localStorage.setItem("logout",1);
+                });
+            }
+        };
     }
 
     showError(inputString) {

@@ -803,6 +803,32 @@ class CommonUtility
         }
     }*/
 
+    /*checkFreshChatPanelCondition
+    * check whether to show chat panel or not acc to module
+    * @inputs: $module, $action, $profileID
+    * @return: $showFreshChat
+    */
+    public static function checkFreshChatPanelCondition($module, $action, $profileid){
+        $freshChatAvailModuleArr = ["membership","register"];
+        $freshChatAvailActioneArr = ["phoneVerificationPcDisplay"];
+        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        $showFreshChat = false;
+        if($profileid){
+            $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
+            if($phoneNotVerified != 'Y'){
+                $phoneNotVerified = true;
+            } else{
+                $phoneNotVerified = false;
+            }
+        } else{
+            $phoneNotVerified = false;
+        }
+        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
+            $showFreshChat = true;
+        }
+        return $showFreshChat;
+    }
+
     public static function getFreshDeskDetails($profileid=''){
         if(!empty($profileid) && is_numeric($profileid) && $profileid != ''){
             $profileObj = LoggedInProfile::getInstance();
