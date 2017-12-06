@@ -654,7 +654,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
-		$check_day 		=JSstrToTime(date("Y-m-d",time()+29*24*60*60));
+		$check_day 		=JSstrToTime(date("Y-m-d",time()+15*24*60*60));
 		$today_day              =JSstrToTime(date("Y-m-d"));
 	}
 	if($method=='FIELD_SALES'){	
