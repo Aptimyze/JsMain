@@ -82,16 +82,15 @@
 		~assign var="userDetails" value=CommonUtility::getFreshChatDetails($trackProfileId)`
 		~assign var="tag" value=CommonUtility::getUserType($trackProfileId)`
 	~/if`
-	console.log("~$module`","-","~$action`");
-    ~if $module eq 'static' && $action eq 'logoutPage'`
+	var profileID = "~$trackProfileId`";
+	if(!readCookie("AUTHCHECKSUM")){
+		~assign var="logout" value=1`
 		localStorage.removeItem("login");
 		localStorage.setItem("logout",1);
-    ~elseif $trackProfileId`
+	} else if(profileID){
 		localStorage.removeItem("logout");
 		localStorage.setItem("login",1);
-    ~/if`
-	if(!readCookie("AUTHCHECKSUM"))
-		~assign var="logout" value=1`
+	}
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
         domainCode[".jeevansathi.co.in"]="UA-20941176-1";
