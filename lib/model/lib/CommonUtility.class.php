@@ -814,14 +814,16 @@ class CommonUtility
         $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
         $showFreshChat = false;
         if($profileid){
-            $phoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
-            if($phoneVerified != 'Y'){
-                $phoneVerified = 'N';
+            $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
+            if($phoneNotVerified != 'Y'){
+                $phoneNotVerified = true;
+            } else{
+                $phoneNotVerified = false;
             }
         } else{
-            $phoneVerified = false;
+            $phoneNotVerified = false;
         }
-        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneVerified == 'N'){
+        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
             $showFreshChat = true;
         }
         return $showFreshChat;
