@@ -16,8 +16,8 @@
                 <!--start:div-->
                 <div class="clearfix">
                     <div class="fl wid661">
-                        <p class="color5 f19">Why are you verifying my Aadhar details?</p>
-                        <p class="color11 f15 pt10">This is for the benefit of our users, which includes you. By verifying Aadhar, we are trying to make sure that users on Jeevansathi are not misrepresenting their identity.</p>
+                        <p class="color5 f19">Why are you verifying my Aadhaar details?</p>
+                        <p class="color11 f15 pt10">This is for the benefit of our users, which includes you. By verifying Aadhaar, we are trying to make sure that users on Jeevansathi are not misrepresenting their identity.</p>
                     </div>
                     <div class="fr wid200">
                       <div class="kycImg1 kycIcon1 mauto mt10"></div>
@@ -27,8 +27,8 @@
                  <!--start:div-->
                 <div class="clearfix pt40">
                     <div class="fl wid661">
-                        <p class="color5 f19">What are benefits of verifying my Aadhar?</p>
-                        <p class="color11 f15 pt10">By verifying Aadhar, you can signal to other users that your profile is genuine, and address any apprehensions they may have. You will also featured in 'Verified Profiles' listing.</p>
+                        <p class="color5 f19">What are benefits of verifying my Aadhaar?</p>
+                        <p class="color11 f15 pt10">By verifying Aadhaar, you can signal to other users that your profile is genuine, and address any apprehensions they may have. You will also featured in 'Verified Profiles' listing.</p>
                     </div>
                     <div class="fr wid200">
                       <div class="kycImg1 kycIcon2 mauto mt10"></div>
@@ -38,34 +38,25 @@
                  <!--start:div-->
                 <div class="clearfix pt40">
                     <div class="fl wid661">
-                        <p class="color5 f19">Is it mandatory to verify my Aadhar?</p>
-                        <p class="color11 f15 pt10">It is optional for now, but we strongly suggest you to verify Aadhar to let other users know that your profile is genuine.</p>
-                    </div>
-                    <div class="fr wid200">
-                      <div class="kycImg1 kycIcon2 mauto mt10"></div>
-                    </div>            
+                        <p class="color5 f19">Is it mandatory to verify my Aadhaar?</p>
+                        <p class="color11 f15 pt10">It is optional for now, but we strongly suggest you to verify Aadhaar to let other users know that your profile is genuine.</p>
+                    </div>           
                 </div>            
                 <!--end:div-->
                 <!--start:div-->
                 <div class="clearfix pt40">
                     <div class="fl wid661">
-                        <p class="color5 f19">Will my Aadhar number be shown to anyone?</p>
-                        <p class="color11 f15 pt10">Your Aadhar number will NOT be shown to other users and not be shared by any third parties unless if required by law. It will just be displayed to other users that your ‘Aadhar has been verified against your profile’.</p>
-                    </div>
-                    <div class="fr wid200">
-                      <div class="kycImg1 kycIcon2 mauto mt10"></div>
-                    </div>            
+                        <p class="color5 f19">Will my Aadhaar number be shown to anyone?</p>
+                        <p class="color11 f15 pt10">Your Aadhaar number will NOT be shown to other users and not be shared by any third parties unless if required by law. It will just be displayed to other users that your ‘Aadhaar has been verified against your profile’.</p>
+                    </div>           
                 </div>            
                 <!--end:div-->
                 <!--start:div-->
                 <div class="clearfix pt40">
                     <div class="fl wid661">
                         <p class="color5 f19">How can I be certain that my identity will be protected?</p>
-                        <p class="color11 f15 pt10">We at Jeevansathi take your privacy seriously. You can be completely assured that your Aadhar number will not even be accessible to internal staff, unless required by law. Your information is stored in a secured database, with stringent steps implemented to prevent data theft.</p>
-                    </div>
-                    <div class="fr wid200">
-                      <div class="kycImg1 kycIcon2 mauto mt10"></div>
-                    </div>            
+                        <p class="color11 f15 pt10">We at Jeevansathi take your privacy seriously. You can be completely assured that your Aadhaar number will not even be accessible to internal staff, unless required by law. Your information is stored in a secured database, with stringent steps implemented to prevent data theft.</p>
+                    </div>           
                 </div>            
                 <!--end:div-->
              </div>

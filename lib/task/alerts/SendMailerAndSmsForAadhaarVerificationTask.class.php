@@ -35,6 +35,8 @@ EOF;
         $login_date = date('Y-m-d', strtotime('-15 days'));
         $sendEveryDays = 15;
         $profileToSendMailer = $aadhaarLibObj->getProfilesForAadhaarVerificationMailer($entry_date,$login_date,$sendEveryDays);
+//        $profileToSendMailer[7486833]['PROFILEID'] = 7486833;
+//        $profileToSendMailer[7486833]['USERNAME'] = "RSZ3229";
         $mailerLogObj = new PROFILE_VERIFICATION_AADHAR_VERIFICATION_MAILER_LOG();
         
         foreach($profileToSendMailer as $profileId=>$arr){
