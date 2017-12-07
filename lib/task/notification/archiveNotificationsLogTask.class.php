@@ -31,6 +31,8 @@ $this->addOptions(array(
 		ini_set("memory_limit","-1");		
 		$sdate = date('Y-m-d', time()-2*86400);
 		$edate = date('Y-m-d', time()-1*86400);
+		$todayDate =date('Y-m-d H:i:s');
+
 		$notificationLogObj1 =new MOBILE_API_NOTIFICATION_LOG;
 		$notificationLogObj1->deleteRecordDateWise($sdate,$edate);		
 		$notificationLogObj2 =new MOBILE_API_NOTIFICATION_MESSAGE_LOG;
@@ -39,5 +41,12 @@ $this->addOptions(array(
                 $notificationLogObj3->deleteRecordDateWise($sdate,$edate);
 		$notificationLogObj3 =new MOBILE_API_LOCAL_NOTIFICATION_LOG;
                 $notificationLogObj3->deleteRecordDateWise($sdate,$edate);
+
+		$date15DaysBack = date("Y-m-d", strtotime("$todayDate -15 days"))." 00:00:00";
+		$loginTrackingTemp =new test_LOGIN_TRACKING_TEMP('crm_slave');
+		$loginTrackingTemp->deleteFromTempPool($date15DaysBack);
+		$maxDate = $loginTrackingTemp->getMaxDate();
+		$loginTrackingTemp->addInTempPool($maxDate);
+
   }
 }

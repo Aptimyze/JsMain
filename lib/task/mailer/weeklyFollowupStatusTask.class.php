@@ -56,7 +56,7 @@ EOF;
             $to = "sandhya.singh@jeevansathi.com, anjali.singh@jeevansathi.com, "
                 . "anurag.tripathi@jeevansathi.com, piyush.joshi@jeevansathi.com, "
                     . "tushar.gandhi@jeevansathi.com, manoj.rana@naukri.com";
-            $body = "<br>Welcome Mails sent on $date = $count ";
+            $body = "<br>Weekly Followup Mails sent on $date = $count ";
             $subject = "Daily JS exclusive Weekly followup Mailer stats report ".$date;
             
             SendMail::send_email($to, $body, $subject);

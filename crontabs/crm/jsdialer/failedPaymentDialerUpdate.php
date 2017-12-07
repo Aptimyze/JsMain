@@ -35,12 +35,13 @@ $eligibleArr	=$profilesArr['ELIGIBLE'];
 $inEligibleArr	=$profilesArr['IN_ELIGIBLE'];
 $allDataArr	=$profilesArr['ALL_DATA'];
 
-$allocatedArr	=getAllocatedProfiles($eligibleArr,$db_master);
+//$allocatedArr	=getAllocatedProfiles($eligibleArr,$db_master);
+$allPids	=array_keys($allDataArr);
+$deletedArr	=$dialerApplicationObj->getDeletedProfiles($allPids,$db_js);
 $paidArr	=getPaidProfiles($eligibleArr,$db_master,$dateTime);
-$eligibleArrNew	=array_merge($allocatedArr,$paidArr);
+$eligibleArrNew	=array_merge($paidArr,$deletedArr);
 $eligibleArrNew	=array_unique($eligibleArrNew);
 $eligibleArrNew =array_values($eligibleArrNew);
-
 // Prioritization logic
 
 if(count($allDataArr)>0){
@@ -71,29 +72,41 @@ if(count($allDataArr)>0){
 // Stop profiles which are paid and allocated
 if(count($eligibleArrNew>0)) {
     foreach($eligibleArrNew as $key=>$profileid){
-			$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
-			mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
-			deleteProfiles($db_master,$profileid);	
-			addLog($profileid,$campaignName,$str,$action,$db_js_111);
+		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
+		mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+		//deleteProfiles($db_master,$profileid);	
+		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
 }
 
 // Stop profiles which are 12 hours old
-if(is_array($inEligibleArr)){
-	//$profileStr     =implode(",",$inEligibleArr);
-	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' and Last_disposition!='$scbValue'";
+        $query0 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' AND Last_disposition IS NULL";
+        mssql_query($query0,$db_dialer) or $dialerLogObj->logError($query0,$campaignName,$db_dialer,1);
+
+	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' AND Last_disposition IS NOT NULL AND Last_disposition!='$scbValue'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+
+if(is_array($inEligibleArr)){
         foreach($inEligibleArr as $key=>$pid){
-		$getLatDisposition =checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
-            if($getLatDisposition!=$scbValue)
+		$getLatDispositionArr 	=checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
+		$getLatDisposition	=$getLatDispositionArr['Last_disposition'];
+		$easyCode 		=$getLatDispositionArr['easycode'];
+            	if($getLatDisposition==$scbValue){
+		  $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=3 WHERE PROFILEID='$pid' AND Dial_Status!='3' AND easycode='$easyCode'";
+		  mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+		}	
+		else{
 			$pidArr[] =$pid;
+		}
 	}
+  if(is_array($pidArr)){
 	$profileStr     =implode(",",$pidArr);
 	if($profileStr)
 		deleteProfiles($db_master,$profileStr);
 	foreach($pidArr as $key=>$profileid){
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
+  }
 }
 
 
@@ -106,10 +119,14 @@ function updateDialStatus($profileid,$dialStatus,$db_master)
 }
 function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj)
 {
-	$squery1 = "SELECT Last_disposition FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' AND Last_disposition='$scbValue'";
+	$lastDisp =array();
+	$squery1 = "SELECT top 1 Last_disposition,easycode FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' order by Login_Timestamp DESC";
 	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
-	if($srow1 = mssql_fetch_array($sresult1))
-		$lastDisp =trim($srow1['Last_disposition']);
+	if($srow1 = mssql_fetch_array($sresult1)){
+		$val =$srow1['Last_disposition'];
+		if($val==$scbValue)
+			$lastDisp =$srow1;
+	}
 	return $lastDisp;
 }
 // Add logging

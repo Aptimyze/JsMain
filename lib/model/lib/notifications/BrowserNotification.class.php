@@ -58,13 +58,41 @@ class BrowserNotification{
                 $pos = strpos($notificationDay, $today);
                 if($notificationDay == 'D' || $pos!==false )
                 {
-                    $browserProfilesData = $this->getChannelWiseRegId($processObj);
+                    $browserProfilesData0 = $this->getChannelWiseRegId($processObj);
+                    //print_r($browserProfilesData0);
+                    //$browserProfilesData = $this->filterProfiles($browserProfilesData,$processObj);
                     //print_r($browserProfilesData);
-                    $browserProfilesData = $this->filterProfiles($browserProfilesData,$processObj);
-                    //print_r($browserProfilesData);
-                    $notificationData = $this->getNotificationData($browserProfilesData, $processObj);
-                    //print_r($notificationData);
-                    $this->insert($notificationData,$processObj);
+
+                    /* New Code Start */
+                    $chunkSize = 1000;
+                    foreach($browserProfilesData0 as $key0=>$val0){
+                        $browserProfilesData =$val0;
+                 
+                        foreach($browserProfilesData as $key=>$val){
+                                $browserProfilesData1[][$key] =$val;
+                        }
+                        //print_r($browserProfilesData1);die;
+                        $chunkPoolArr = array_chunk($browserProfilesData1, $chunkSize);
+                        unset($browserProfilesData1);
+                        //print_r($chunkPoolArr);die;
+                        foreach($chunkPoolArr as $key=>$browserProfilesData2){
+                                foreach($browserProfilesData2 as $key1=>$val1){
+                                        foreach($val1 as $key2=>$val2){
+                                                $browserProfilesData3[$key0][$key2]=$val2;
+                                        }
+                                }
+                                //echo "\n======\n";print_r($browserProfilesData3);die;
+                                $browserProfilesData4 = $this->filterProfiles($browserProfilesData3,$processObj);
+                                unset($browserProfilesData3);
+                                $notificationData = $this->getNotificationData($browserProfilesData4, $processObj);
+                                unset($browserProfilesData4);
+                                $this->insert($notificationData,$processObj);
+                                unset($notificationData);
+                        }
+                    }
+                    /* Ends */
+                    /*$notificationData = $this->getNotificationData($browserProfilesData, $processObj);
+                    $this->insert($notificationData,$processObj);*/
                 }
             }
         }
