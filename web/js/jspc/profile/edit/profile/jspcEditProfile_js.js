@@ -2410,7 +2410,7 @@ EditApp = function(){
       var regExIndianLandline=/^[0-9]\d{2,4}[-. ]?\d{6,8}$/;
       var regExInternational=/^\+(?:[0-9][-. ]? ?){6,15}[0-9]$/;
       
-      var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+      var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
       var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
       
       var isd_regex = /^[+]?[0-9]+$/;
@@ -2604,7 +2604,7 @@ EditApp = function(){
       }
       
       var validatePhone = function(fieldKey){
-        
+
         var isdFieldID      = '#'+fieldKey.toLowerCase()+'-isd';
         var stdFieldID      = '#'+fieldKey.toLowerCase()+'-std';
         var mobileFieldID   = '#'+fieldKey.toLowerCase()+'-mobile';
