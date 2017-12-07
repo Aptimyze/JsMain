@@ -90,7 +90,8 @@ EOF;
                                         $matchLogic = $v["MATCH_LOGIC"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
-                                                if($loggedInProfileObj->getPROFILEID()%99<=49){
+                                                //if($loggedInProfileObj->getPROFILEID()%99<=49){
+                                                if(1){
                                                         if($matchLogic == "O"){
                                                                 $strictDppObj = new StrictDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
                                                                 $totalResults = $strictDppObj->getMatches();
