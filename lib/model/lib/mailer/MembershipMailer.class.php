@@ -581,12 +581,15 @@ class MembershipMailer {
 		$services = explode(",",$services);
 		$servMain = NULL;
 		$vasNames = array();
-		
+		$astroFlag=0;
 		foreach($services as $keyMain=>$valMain){
 			$tempId = $memHandlerObj->retrieveCorrectMemID($valMain);
 			$benefitMsg = VariableParams::$newApiPageOneBenefits;
         	$benefitArr = VariableParams::$newApiPageOneBenefitsVisibility;
-			$vasArr = VariableParams::$newApiVasNamesAndDescription;			
+			$vasArr = VariableParams::$newApiVasNamesAndDescription;
+			if($tempId=="A"){
+			    $astroFlag=1;
+			}
 			if ($tempId == "X") {
 				$servMain = $tempId;
             	$benefits = VariableParams::$newApiPageOneBenefitsJSX;
@@ -624,9 +627,8 @@ class MembershipMailer {
         
         if(!empty($servMain)){
         	$subject = "Congratulations! We welcome you as an " . $memHandlerObj->getUserServiceName($servMain) . " member on Jeevansathi";
-        } else {
-        	$subject = implode(', ', $vasNames) . " activated on your account";
         }
+       
         
         $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
@@ -645,6 +647,15 @@ class MembershipMailer {
         
         $email_sender->send();
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
+        if($astroFlag){
+            $mailerSubject = " Congratulations on purchasing Astro compatibility. Important information you need to know";
+            $mailer = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,"1839");
+            $mailerTpl = $mailer->setProfileId($profileid);
+            $obj = $mailerTpl->getSmarty();
+            $mailerTpl->setSubject($subject);
+            $smartyObj->assign("mailerLinks",$mailerLinks);
+            $email_sender->send();
+        }
         return $deliveryStatus;
 
     }
