@@ -419,7 +419,7 @@ private static $subjectArray=array(
 '1835'=>array('MAIL_ID'=>'1835','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$membershipName`'),
 '1836'=>array('MAIL_ID'=>'1836','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Contact details viewed by you in your last membership'),
 '1837'=>array('MAIL_ID'=>'1837','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'I have shortlisted some profiles for you, please go through them | ~$CURR_MAIL_DATE`'),
-'1839'=>array('MAIL_ID'=>'1839','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> '),
+'1839'=>array('MAIL_ID'=>'1839','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>' Congratulations on purchasing Astro compatibility. Important information you need to know'),
 '1841'=>array('MAIL_ID'=>'1841','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your profile on Jeevansathi.com has been marked incomplete'),
 '1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
 '1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
