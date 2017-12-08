@@ -818,7 +818,6 @@ class csvGenerationHandler
 			$dataLimit         =$processObj->getLimit();
 			$max_dt 	   =$processObj->getEndDate();
 			foreach($profiles as $profileid=>$dataArr){
- 
 				$username     =$dataArr['USERNAME'];
 
 				// Data Limit exceed check
@@ -903,7 +902,7 @@ class csvGenerationHandler
 					$this->salesCsvProfileLog($profileid,$username,'N','ANALYTIC_SCORE_ZERO',$analyticScore);
 					continue;
 				}
-
+                                
 								// filtered profile stored to check campaign limit
 				$campaignCntArr[$campaignName] +=1;
 				$dataArr['ALLOTED_TO'] 		=$allotedAgent;
@@ -1331,36 +1330,48 @@ class csvGenerationHandler
 				if($processName=="SALES_REGULAR"){
                                         $campaignName           =$dataArr['CAMPAIGN_NAME'];
                                         $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
-					if(in_array("$campaignName",$nonAutoCampaign)){
+					
+                                        // non auto campaign ,.ie, mumbai pune nri will go here
+                                        if(in_array("$campaignName",$nonAutoCampaign)) {
 						$dialerEligible ='Y';
                                                 if($dataArr['ALLOTED_TO']=='')
                                                         $dialerDialStatus =1;
                                                 else
                                                         $dialerDialStatus=2;
-					}else{
-						if($score>=$scoreRange2 && $dialerDialStatus==1){
-							$dialerEligible ='Y';
-							$dialerEligibleNew ='N';
-							$dialerDialStatusNew =0;
-						}
-						else{
-							$dialerEligibleNew ='N';
-							$dialerDialStatusNew =$dialerDialStatus;
-							if($dialerDialStatusNew==1){
-								if($profileid%4==2 || $profileid%4==3){
-									$dialerEligibleNew ='Y';
-								}
-								else{
-									$dialerDialStatusNew=2;
-									$dialerEligibleNew ='N';
-								}
-							}
-							else
-								$dialerDialStatusNew=0;
-							$dialerDialStatus =2;		
-							$dialerEligible ='N';
-						}
-					}	
+					}
+                                        // auto campaign - noida, delhi, delhi-auto will go here
+                                        else {
+                                            // defines the start and end of score range
+                                            $scoreRangeBase = $salesRegularRangeValue['SCORE71'];
+                                            $scoreRangeMax = $salesRegularRangeValue['SCORE90'];
+                                            
+                                            $dialerEligible = 'N';
+                                            // initially, we assume that the profile will not enter the auto table
+                                            $dialerEligibleNew ='N';
+                                            $dialerDialStatusNew =0;
+                                            
+                                            // the profile is now eligible to for calling, validating further for auto table
+                                            if($score >= $scoreRangeBase && $score <= $scoreRangeMax) {
+                                             // valid for auto table, hence setting making ineligible in new table, and eligible in auto table
+                                                $dialerEligible = 'N';
+                                                $dialerEligibleNew = 'Y';
+                                                
+                                                $dialerDialStatusNew = $dialerDialStatus;
+                                                $dialerDialStatus = 0;
+                                             } 
+                                             else {
+                                                    // logic - if profileid % 11 == 1, do not call
+                                                    if($profileid % 11 == 1) {
+                                                        $dialerDialStatus = 0;
+                                                    }
+                                                    else {
+                                                        // verify if the call is really eligible for calling
+                                                        if($dialerDialStatus == 1) {
+                                                            $dialerEligible = 'Y';
+                                                        }
+                                                    }
+                                             }
+                                        }
 					$leadId         =$campaignName.$leadIdSuffix;	
 					$leadId 	=str_replace('pune','mumbai',$leadId);
 					$tablesName 	=$salesRegularCampaignTables[$campaignName];
