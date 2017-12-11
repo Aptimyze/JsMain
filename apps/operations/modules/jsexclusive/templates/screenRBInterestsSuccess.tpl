@@ -24,6 +24,7 @@ function MM_openBrWindow(theURL,winName,features){
 	~/if`
 	</div>
         <input type="hidden" id="client" name ="client" value="~$clientId`">
+        ~if $clientData`
             <table border="0" align="center" width="80%" table-layout="auto" style="border-spacing: 10px;">
             <tr class="formhead" align="LEFT">
                 <td height="21" width="10%"align="CENTER">
@@ -39,6 +40,7 @@ function MM_openBrWindow(theURL,winName,features){
                 </td>
 	   </tr>
         </table>
+        ~/if`
         <br><br>
         <br><br> <hr size="3">
         <br><br>
