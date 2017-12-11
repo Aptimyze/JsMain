@@ -16,8 +16,8 @@ function MM_openBrWindow(theURL,winName,features){
 	</div>
 	<div style="font-size:12px;width:80%;margin-left:131px;">
 		~if $clientData`
-		<div style="font-size: 15px">Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
-                <div style="font-size: 15px">Client-<a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientName`</a></div>
+		<div style="font-size: 15px"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientUsername`</a></div>
+                <div style="font-size: 15px"><a href="/operations.php/commoninterface/ShowProfileStats?profileid=~$clientId`" target="_blank">~$clientData.clientName`</a></div>
 		~if $clientData.HoroscopeMatch eq 'Y'`
 			<div style="font-size: 20px">Horoscope match is Necessary</div>
 		~/if`
@@ -29,15 +29,20 @@ function MM_openBrWindow(theURL,winName,features){
                 <td height="21" width="10%"align="CENTER">
                     <img src="~$clientData.clientImage`">
                 <td align="CENTER" width="85%">
-                    <textarea maxlength="2000" rows="5" style="width:100%" id="notes" name="notes">~$clientData.clientNotes`</textarea>
+                    <textarea readonly maxlength="2000" rows="5" style="width:100%" id="notes" name="notes">~$clientData.clientNotes`</textarea>
                 </td>
                 <td height="10" align="CENTER" width="5%"> 
+                    <input type="button" value="Edit Note" onclick="enableTextEdit()">
+                    <br>
+                    <br>
                     <input type="button" value="Save Note" onclick="sendClientNotes()">
                 </td>
 	   </tr>
         </table>
-        
-	<br>
+        <br><br>
+        <br><br> <hr size="3">
+        <br><br>
+        <br><br>
 	<form name="screenRBForm" action="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/submitScreenRBInterests" method="post">
 		<input type="hidden" name="clientIndex" value="~$clientIndex`">
 		<input type="hidden" name="clientId" value="~$clientId`">

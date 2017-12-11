@@ -18,6 +18,12 @@ function sendClientNotes() {
                  alert("Notes saved successfully");
            }
         });
+        document.getElementById("notes").readOnly = true;
+}
+
+function enableTextEdit() {
+    console.log("Method called successfully");
+    document.getElementById("notes").readOnly = false;
 }
 
 
