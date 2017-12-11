@@ -145,8 +145,11 @@ EOF;
 	{
 		if($url)
 		{
+			$realUrl = $url;
 			$url = PictureFunctions::getCloudOrApplicationCompleteUrl($url);
-			$isaObj = new ImageServerApi;
+			if(strstr($url,"mediacdn.jeevansathi.com") || strstr($url,"jeevansathi.s3.amazonaws.com"))
+				return $realUrl;
+            $isaObj = new ImageServerApi;
 			
 			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type,$contentType);
 			if($serverOutput && is_array($serverOutput))
