@@ -136,7 +136,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 			return $output;
 		}
                 
-                public function getMessageListing($condition,$skipArray)
+                public function getMessageListing($condition,$skipArray='',$inArray='')
 		{
 			try{
 				if(!$condition["WHERE"]["IN"]["PROFILE"])
@@ -145,7 +145,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					if(count($skipArray)<1000 && count($skipArray)>0)
+					if(is_array($skipArray) && count($skipArray)<1000 && count($skipArray)>0)
 						$skipSql=1;
 					else
 						$skipSql=0;
@@ -164,7 +164,41 @@ class NEWJS_CHAT_LOG extends TABLE{
 						$sender = " AND SENDER ".$str." ";
 						$receiver = "AND RECEIVER ".$str." ";
 					}
-					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (RECEIVER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='A' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (SENDER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='A' ORDER BY DATE DESC";
+					if(is_array($inArray) && count($inArray)<1000 && count($inArray)>0)
+						$inSql = 1;
+					else
+						$inSql = 0;
+					if($inSql)
+					{
+						
+                        $str =  "  IN (";
+						$count = 0;
+						foreach($inArray as $key1=>$value1)
+						{
+								$str = $str.":VALUE".$count.",";
+								$bindInArr["VALUE".$count] = $value1;
+								$count++;
+						}
+						$str = substr($str, 0, -1);
+						$str = $str.")";
+						if(is_array($inArray))
+						{
+							$sender1 = " AND SENDER ".$str." ";
+							$receiver1 = "AND RECEIVER ".$str." ";
+						}
+					}
+					
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (RECEIVER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `RECEIVER` =:PROFILEID";
+					if($sender)
+						$sql.= $sender;
+					if($sender1)
+						$sql.=$sender1;
+					$sql.=" AND  `TYPE` ='A' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (SENDER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `SENDER` =:PROFILEID ";
+					if($receiver)
+						$sql.=$receiver;
+					if($receiver1)
+						$sql.=$receiver1;
+					$sql.=" AND  `TYPE` ='A' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
@@ -174,12 +208,26 @@ class NEWJS_CHAT_LOG extends TABLE{
 							$res->bindValue($k,$v,PDO::PARAM_INT);
 						}
 					}
+					if($inSql){
+						foreach($bindInArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
 					$res->execute();
-					if(!$skipSql)
+					if(is_array($skipArray) && !$skipSql)
 					{
 						while($row = $res->fetch(PDO::FETCH_ASSOC))
 						{
 							if(!in_array($row["PROFILEID"],$skipArray))
+								$output[$row["PROFILEID"]][] = $row;
+						}
+					}
+					else if(!$inSql && is_array($inArray) && count($inArray)>0)
+					{
+						 while($row = $res->fetch(PDO::FETCH_ASSOC))
+						{
+							if(in_array($row["PROFILEID"],$inArray))
 								$output[$row["PROFILEID"]][] = $row;
 						}
 					}
