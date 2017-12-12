@@ -110,13 +110,15 @@ class Dialer
                         $scoreRange3    =$salesRegularRangeValue['SCORE3'];
                         $discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
                         $discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
+                        $maharashtraCampaignMinScore = $salesRegularRangeValue['SCORE4'];
+                        $minScore = $salesRegularRangeValue['SCOREMIN'];
 			
 			foreach($profileArr as $k => $dataFieldArr){
 
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
-	
-                                if($analyticScore<$scoreRange1){
+                                
+                                if($analyticScore<$minScore){
                                 	$this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
                                         continue;  
 				}     
@@ -178,46 +180,40 @@ class Dialer
 
 				// New code
                                 $campaignName   =$inDialerPool[$profileid]['CAMPAIGN_NAME'];
-                                
-                                $scoreBase = $salesRegularRangeValue['SCORE71'];
-                                $scoreMaxLimit = $salesRegularRangeValue['SCORE90'];
-                                
-                                if($campaignName == 'noida' || $campaignName == 'delhi') {
-                                    
-                                    // campaign eligible for auto if score range is from 71 to 90
-                                    if( $analyticScore >= $scoreBase && $analyticScore <= $scoreMaxLimit ) {
-                                        $this->updateIndialerProfileLog($profileid, $username, 'Y', '','','N');
-                                    }
-                                    else {
-                                        $iseligible = ($profileid % 11 == 1) ? 'N' : 'Y';
-                                        $this->updateIndialerProfileLog($profileid, $username, $iseligible,'','','O');
-                                    }
-                                }
-                                else {
-                                        if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3) {
-                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-                                            $this->updateIndialerProfileLog($profileid,$username,'N','','','N');
-                                        }
-				
-                                        elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2) {
-                                            $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
-                                            $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
-
-                                            if($analyticScore>=70)
-                                                   $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-                                            else
-                                                   $this->updateIndialerProfileLog($profileid,$username,'N','','','O');
-
-                                            if($discount>=$discountRange1 && $discount<=$discountRange2){
-                                                    if($profileid%4==2 || $profileid%4==3)
-                                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
-                                                    else
-                                                            $this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+				if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3){
+                                        if($campaignName == 'delhi' || $campaignName == 'noida') {
+                                            if($profileid % 11 != 1) {
+                                                $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            }else 
+                                            {
+                                                $this->updateIndialerProfileLog($profileid,$username,'N','','','O');
                                             }
-                                            else
-                                                    $this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
                                         }
-                                }
+                                        else {
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                        }
+                                        $this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+				}
+				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2) {
+                                        $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
+                                        $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
+
+					if($campaignName=='noida' || $campaignName=='delhi') {
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+					}	
+					elseif($campaignName=='mumbai' || $campaignName=='pune'){
+                                            if($analyticScore>=$maharashtraCampaignMinScore)
+						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            else
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+					}
+                                        
+					if($discount>=$discountRange1 && $discount<=$discountRange2){
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
+					}
+					else
+                                            $this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
+				}	
 				//$this->updateIndialerProfileLog($profileid,$username,'Y');
 				unset($jProfileArr);
 				unset($dispositionDetArr);

@@ -1342,8 +1342,8 @@ class csvGenerationHandler
                                         // auto campaign - noida, delhi, delhi-auto will go here
                                         else {
                                             // defines the start and end of score range
-                                            $scoreRangeBase = $salesRegularRangeValue['SCORE71'];
-                                            $scoreRangeMax = $salesRegularRangeValue['SCORE90'];
+                                            $scoreRangeBase = $salesRegularRangeValue['SCORE1'];
+                                            $scoreRangeMax = $salesRegularRangeValue['SCORE2'];
                                             
                                             $dialerEligible = 'N';
                                             // initially, we assume that the profile will not enter the auto table
@@ -1351,7 +1351,7 @@ class csvGenerationHandler
                                             $dialerDialStatusNew =0;
                                             
                                             // the profile is now eligible to for calling, validating further for auto table
-                                            if($score >= $scoreRangeBase && $score <= $scoreRangeMax) {
+                                            if($score >= $scoreRangeBase && $score < $scoreRangeMax) {
                                              // valid for auto table, hence setting making ineligible in new table, and eligible in auto table
                                                 $dialerEligible = 'N';
                                                 $dialerEligibleNew = 'Y';
