@@ -2850,7 +2850,7 @@ class MembershipHandler
                 }
             }
             JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
-            return $discount?$discount:$otherDiscount;
+            return $discount;
         }
     }
     
@@ -2859,9 +2859,6 @@ class MembershipHandler
             $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
             if($discountArr){
                 $discount = $discountArr[$communityId];
-                if(!($discount && $discount >= 0)){
-                    $discount = $discountArr[0];
-                }
             }
             else{
                 $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();
