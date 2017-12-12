@@ -1,5 +1,5 @@
 <?php
-include_once('DialerLog.class.php');
+include_once('/home/developer/jsdialer/DialerLog.class.php');
 class DialerHandler
 {
         public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
@@ -230,7 +230,8 @@ class DialerHandler
 							$updateArr[] ="Dial_Status=0";
 					}
 					else{
-						if($dialStatus!='0' && $dialStatus!='9')
+						//if($dialStatus!='0' && $dialStatus!='9')
+						if($dialStatus!='9')	
 							$updateArr[] ="Dial_Status=0";
 					}
 				}
