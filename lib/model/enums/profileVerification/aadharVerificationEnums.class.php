@@ -13,7 +13,15 @@ class aadharVerificationEnums
     	'apikey:786c16d4-9b01-42bd-a64d-b8d046abb52b',
     	'Content-Type:application/json',
 		);
-
+		
+	public static $aadharHeaderArrAuthbridge = array(
+    	'username:Test1@jeevansathi.com',
+    	'Content-Type:Application/json',
+		);
+	const URLTOHITAUTHBRIDGE = "https://www.truthscreen.com/api/v2.2/idsearch";
+	const AADHARDOCTYPEAUTHBRIDGE=22;
+	const TOKENAUTHBRIDGE = "Auth@123";
+	const TRAFFICTOAUTHBRIDGE=20;
 	const NOTVERIFIED = "N";
 	const AADHARLENGTH = 12;
 	const IMPROPERFORMAT = "Aadhaar Id is not in proper format";
@@ -26,4 +34,6 @@ class aadharVerificationEnums
 	CONST VERIFIED = "Y";
 	CONST ALREADYVERIFIED = "This Aadhaar number is already verified for another profile on Jeevansathi.";
 	CONST ALREADYVERIFIEDBYSAME = "Your Aadhaar is already verified.";
+	const AADHARENCRYPTIONKEY = "300688";
+	const TIMEOUT = 500;
 }
