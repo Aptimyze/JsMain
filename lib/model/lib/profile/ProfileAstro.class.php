@@ -90,7 +90,7 @@ class ProfileAstro
         $objProCacheLib = ProfileCacheLib::getInstance();
         
         if ($objProCacheLib->isCached('PROFILEID', $pid,$fields , __CLASS__)) {
-            $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);  
+            $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);                       
             //so for that case also we are going to query mysql
             if (false !== $result) {
                 $bServedFromCache = true;
@@ -111,31 +111,23 @@ class ProfileAstro
         }
 
         //Get Records from Mysql
-        //$result = self::$objAstroDetailMysql->getAstros($pid); // getting all data because in getAstroDeatils we need complete data.
-        $result = self::$objAstroDetailMysql->getAstroDetails(array($pid),"*");
+        $result = self::$objAstroDetailMysql->getAstros($pid);
         
-        $fieldsArr = explode(",",$fields);
-        $res = array();
-        foreach($result as $result){
-                foreach($fieldsArr as $key){
-                        $res[$key] = $result[$key];
-                }
-        }
         //Request to Cache this Record, on demand
         if(is_array($result) && count($result)) {
           $result['PROFILEID'] = $pid;
         }
         
-        if ( is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
+        if ( is_array($result) && count($result) && false === $objProCacheLib->isCommandLineScript()) {
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
         }
         
-        if(0 === count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
-            $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
-            $dummyResult["HAVE_ASTRO"] = 'N';
+        if(0 === count($result)) {
+            $dummyResult = array('PROFILEID'=>$pid, "LAGNA_DEGREES_FULL"=>ProfileCacheConstants::NOT_FILLED);
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
-        return $res;
+        
+        return $result;
          
     }
     
@@ -183,7 +175,7 @@ class ProfileAstro
         
         if($result && count($result)) {
             foreach($result as $k=>$v){
-                if(in_array(ProfileCacheConstants::NOT_FILLED, $v)/*$v['LAGNA_DEGREES_FULL'] === ProfileCacheConstants::NOT_FILLED*/) {
+                if($v['LAGNA_DEGREES_FULL'] === ProfileCacheConstants::NOT_FILLED) {
                     unset($result[$k]);
                 }
             }
@@ -209,7 +201,7 @@ class ProfileAstro
         
         //Get Records from Mysql
         $result = self::$objAstroDetailMysql->getAstroDetails($profileidArray, $fields,$setWithProfileId,$shutDownConnections);
-        //print_r($result);die;
+        
         if(is_null($result) || (is_array($result) && count($result) !== count($profileidArray))) {
             $arrDataNotExist = array();
             foreach($result as $key=>$val){
@@ -218,17 +210,15 @@ class ProfileAstro
             $arrDataNotExist = array_diff($profileidArray, $arrDataNotExist);
             $dummyArray = array();
             foreach($arrDataNotExist as $k => $v){
-                    $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$v);
-                    $dummyResult["HAVE_ASTRO"] = "N";
-                    $dummyArray[] = $dummyResult;
+                $dummyArray[] = array('PROFILEID'=>$v, "LAGNA_DEGREES_FULL"=>ProfileCacheConstants::NOT_FILLED);
             }
         }
         
-        if(is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
+        if(is_array($result) && count($result)) {
             $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result, __CLASS__);
         }
         
-        if($dummyArray && is_array($dummyArray) && count($dummyArray) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
+        if($dummyArray && is_array($dummyArray) && count($dummyArray)) {
             $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray, __CLASS__);
         }
                 
@@ -271,9 +261,7 @@ class ProfileAstro
         
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['HAVE_ASTRO'] = (intval($result) === 0) ? 'N' : $result;
-        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
-        }
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
     }
     
@@ -326,7 +314,6 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->updateRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
-            $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
     
@@ -344,10 +331,6 @@ class ProfileAstro
     {
         $bResult = self::$objAstroDetailMysql->replaceRecord($iProfileID, $arrRecordData);
         if(true === $bResult) {
-                if($arrRecordData["TYPE"] && $arrRecordData["TYPE"]=="U")
-                        $arrRecordData["HAVE_ASTRO"] = 'N';
-                else
-                        $arrRecordData["HAVE_ASTRO"] = '1';
             ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
         }
         
