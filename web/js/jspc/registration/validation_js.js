@@ -47,7 +47,7 @@ var arrErors = {
 var name_regex = /^[a-zA-Z\s\.\']*$/;
 var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 var isd_regex = /^([+]{0,1}[0-9]{1,3})$/;
-var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
 var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 var isdCodes = ["0", "91","+91"];
 //pincode array and validation starting substring for particular states
