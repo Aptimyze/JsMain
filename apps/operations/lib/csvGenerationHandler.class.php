@@ -987,11 +987,10 @@ class csvGenerationHandler
                                         // if the community is either Tamil, Telugu, Malayalam, or Kannada, 
                                         // then this profile need not be considered in case of failedpayments
                                         
-                                        $motherTongue = FieldMap::getFieldLabel("community", $dataArr['MTONGUE']);
+                                        $motherTongue = $dataArr['MTONGUE'];
                                         
-                                        if($motherTongue == "Kannada" || $motherTongue == "Telugu" 
-                                                || $motherTongue == "Malayalam" || $motherTongue == "Tamil") {
-                                            print_r("\nCommunity Check for language\n");
+                                        if(in_array($motherTongue, crmParams::$eliminateMotherTongues)) {
+                                            $filter['MOTHER_TONGUE']++;
                                             $this->fpCsvProfileLog($profileid,'','N','MOTHER_TONGUE','Y','','','',$processName);
                                             continue; // skipping the current profile
                                         }
@@ -2420,6 +2419,11 @@ class csvGenerationHandler
                                 if($process=='renewalProcessInDialer'){
                                     $cnt    =$cnt-$filter['lastLoginCnt'];
                                     $fpRegLogObj->insertCount($dd,'LAST_LOGIN',$filter['lastLoginCnt'],$cnt,$process);
+                                }
+                                
+                                if($process == 'failedPaymentInDialer') {
+                                    $cnt    =$cnt-$filter['MOTHER_TONGUE'];
+                                    $fpRegLogObj->insertCount($dd,'MOTHER_TONGUE',$filter['MOTHER_TONGUE'],$cnt,$process);
                                 }
 				
 		}
