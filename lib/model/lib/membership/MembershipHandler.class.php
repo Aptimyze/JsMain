@@ -2457,10 +2457,9 @@ class MembershipHandler
             $paymentDetailsObj = new BILLING_PAYMENT_DETAIL();
             $billid = $purDet['BILLID'];
             $billidArr = Array($purDet['BILLID']);
-            $details = $paymentDetailsObj->getAllDetailsForBillidArr($billidArr);
+            $prevAmt= $paymentDetailsObj->getAllDetailsForBillidArr($billidArr,"","",1);
             //print_r("Details: ". $details."\n");print_r($details);
-            
-            $prevAmt = $details[$billid]['AMOUNT'];
+            //$prevAmt = $details[$billid]['AMOUNT'];
             //Sum of amount in paymentdetails(which is after discount) and discount amount in purchases 
             $prevTotAmt = $prevAmt + $prevDiscAmt;
         //End: JSC-2938: Changes for getting actual billing amount

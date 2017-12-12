@@ -693,8 +693,8 @@ class ErrorHandler
 		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
 
 		// added during hotfix 
-		if($receiver->getPROFILEID()%103>20)
-			return false;
+		/*if($receiver->getPROFILEID()%103>20)
+			return false;*/
 
 		$senderArr = array(
 			"age" => $sender->getAGE(),
