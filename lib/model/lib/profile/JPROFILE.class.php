@@ -289,7 +289,7 @@ class JPROFILE
     }
     private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
         $arrPid = explode(',', $valueArray['PROFILEID']);
-        if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
+        if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT || @strstr($fields,"("))
         {
            return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
         }
@@ -305,7 +305,7 @@ class JPROFILE
         $storeResult = array();
         foreach($storeFullResult as $ky=>$storeData){
                 foreach($fieldsArr as $fieldName){
-                        $storeResult[$ky][$fieldName] = $storeData[$fieldName];
+	       		$storeResult[$ky][$fieldName] = $storeData[$fieldName];
                 }
         }
         return $storeResult;
