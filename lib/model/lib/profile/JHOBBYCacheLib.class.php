@@ -87,14 +87,15 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
             
             if(count($noResult) === 0) {
-                $dummyResult = array();
-                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
             } else {
                 $dummyResult = $result;
             }
             $dummyResult[ProfileCacheConstants::CACHE_CRITERIA] = $pid;
             
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            }
         }
 
         if ($onlyValues) {
@@ -186,15 +187,16 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
 
             if (0 === count($noResult)) {
-                $dummyResult['PROFILEID'] = $pid;
-                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
+                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
             }
             else {
                 $dummyResult = $result;
                 $dummyResult['PROFILEID'] = $pid;
             }
             //Cache the RAW DATA
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            }
         }
 
         $hobbies = array();
