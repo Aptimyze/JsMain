@@ -110,7 +110,7 @@ EOF;
 				if($serverOutput["deleted"]=="Y")
 					$serverUrl =IMAGE_SERVER_ENUM::$cloudArchiveUrl."/".$serverOutput["urlFile"];
 			}
-			else
+			elseif(strpos($serverOutput,"ERR_UNUSED_PID")==FALSE)
 			{
 				$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
 			}
