@@ -22,6 +22,7 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		$this->loginProfile = LoggedInProfile::getInstance('newjs_master');	
 		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
+                $this->hHeight = $this->getFieldMapLabels("height_json",'',1);
 		$calLayer = 1;
 
 		$apiProfileSectionObj=  ApiProfileSections::getApiProfileSectionObj($this->loginProfile);		
@@ -82,6 +83,13 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 							{
 								$finalDppArr["P_".$k] = array_search($v,$this->hIncomeDol);
 							}						
+						}
+					}
+                                        elseif ($value->type == "HEIGHT")
+					{
+						foreach($value->data as $k=>$v)
+						{
+								$finalDppArr["P_".$k] = array_search($v,$this->hHeight);
 						}
 					}
 					else
