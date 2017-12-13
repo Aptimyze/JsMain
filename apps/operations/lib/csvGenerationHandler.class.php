@@ -83,6 +83,11 @@ class csvGenerationHandler
                         $paidCampaignObj =new incentive_SALES_CSV_DATA_RCB();
                         $paidCampaignObj->updateDialStatus($dateTime);
                 }
+                
+                elseif($processName=="renewalProcessInDialer"){
+                        $fpCsvTempObj =new incentive_PROCESS_CSV_DATA_TEMP('newjs_master');
+                        $fpCsvTempObj->delete($processName);
+                }
 	}
 	public function storeTemporaryProfiles($processObj,$profiles)
 	{
