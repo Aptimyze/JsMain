@@ -235,9 +235,9 @@ class ProfileCacheLib
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($arrOut,true);
-                file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrOut,true);
+                //file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         
         $arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER); 
@@ -548,25 +548,22 @@ class ProfileCacheLib
         
         //Remove Duplicate Suffix
         $prefix =ProfileCacheFunctions::getStorePrefix($storeName);
+        $keywthioutPRefix = 0;
         if(is_array($arrResponse) && count($arrResponse)) {
             foreach($arrResponse as $key=>$val) {
+                    foreach($val as $ky=>$vy){
+                                if(strpos($ky, self::KEY_PREFIX_DELIMITER) === false){
+                                        $keywthioutPRefix = 1;
+                                }
+                     }
                     $val = ProfileCacheFunctions::getOriginalKeysNameWithValues($val,$prefix,'',self::KEY_PREFIX_DELIMITER);
                     $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
             }
         }
-        //TODO : Handle Exception Cases  
-        $keywthioutPRefix = 0;
-        foreach($arrResponse as $ky=>$arrOut){
-                foreach($arrOut as $k=>$v){
-                        if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
-                                $keywthioutPRefix = 1;
-                        }
-                }
-        }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($arrResponse,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrResponse,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         return array_values($arrResponse);
     }
@@ -889,9 +886,9 @@ class ProfileCacheLib
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($cachedResult,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($cachedResult,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
       return $result;
     }
