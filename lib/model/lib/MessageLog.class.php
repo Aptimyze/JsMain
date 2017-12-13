@@ -157,9 +157,12 @@ class MessageLog
 		}
 
 
-                
+               
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
-                $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
+                if(InboxEnums::$messageLogInQuery)
+					$profileChatArray = $chatLogObj->getMessageListing($condition,'',$inArray);
+				else
+					$profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)

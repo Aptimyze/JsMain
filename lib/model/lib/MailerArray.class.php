@@ -437,6 +437,7 @@ private static $subjectArray=array(
 '1859'=>array('MAIL_ID'=>'1859','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Submit your success story and get a free gift!'),
 '1884'=>array('MAIL_ID'=>'1884','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile ~$deletedUserName` has been deleted after you reported abuse'),
 '1885'=>array('MAIL_ID'=>'1885','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Weekly Followup status Mail ~$date`'),
+'1886'=>array('MAIL_ID'=>'1886','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
 );
 public static function getLink($Id){
 

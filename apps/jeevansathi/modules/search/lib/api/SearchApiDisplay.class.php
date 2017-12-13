@@ -444,15 +444,18 @@ class SearchApiDisplay
 				else
 					$this->finalResultsArray[$pid]['BOLDLISTING']='N';
 
-				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']); 
-				$this->finalResultsArray[$pid]['VERIFICATION_SEAL']=$this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL']);
-                                if($this->finalResultsArray[$pid]['VERIFICATION_SEAL'])
+				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']);
+                                $documentsAndAadhaar = $this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL'],$withAadhaar = 1);
+                                
+                                if($documentsAndAadhaar['documents'])
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
                                 
+                                $this->finalResultsArray[$pid]['VERIFICATION_SEAL'] = $documentsAndAadhaar['documents'];
+                                
                 //aadhar verification part
-                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$pid);
+                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getAadhaarAndVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$documentsAndAadhaar);
 
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
@@ -847,7 +850,7 @@ class SearchApiDisplay
 	* This function is used to get seal info i.e. decode VERIFICATION SEAL
 	* @param - $verificationSeal Verification Seal of user as per API requirement
 	*/
-	public function getSealInfo($verificationSeal='0')
+	public function getSealInfo($verificationSeal='0',$withAadhaar=0)
 	{ 
 			if($verificationSeal == '0')
 				return 0;
@@ -875,14 +878,35 @@ class SearchApiDisplay
 											break;
 											
 									}
+                                                                        if($withAadhaar && $value == 'A')
+                                                                           $hasAadhaar = 1;
 							}
 						}
 				}
-				if(!is_array($displaySeal))
+                                if($withAadhaar && $hasAadhaar){
+                                    if(is_array($displaySeal))
+                                        $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                    else
+                                        $returnArr['documents'] = 1;
+                                    
+                                    $returnArr['Aadhaar'] = "A";
+                                    return $returnArr;
+                                }
+                                
+                                if(!is_array($displaySeal)){
+                                        if($withAadhaar){
+                                            $returnArr['documents'] = 1;
+                                            return $returnArr;
+                                        }
 					return 1;
-				
+                                }
+                                
 				return array_values(array_unique($displaySeal));
 			}
+                        if($withAadhaar && in_array('A', $verificationSeal)){
+                                    $returnArr['Aadhaar'] = "A";
+                                    return $returnArr;
+                        }
 			return 0;
 							
 		
@@ -938,5 +962,15 @@ class SearchApiDisplay
                 return 2;
         else
                 return $verificationStatus;
+    }
+    
+    private function getAadhaarAndVerificationStatus($verificationStatus,$seal){
+        if($verificationStatus && $seal['Aadhaar'] == 'A')
+            return 3;
+        else if(in_array('A', $seal))
+            return 2;
+        else if($verificationStatus)
+            return 1;
+        return 0;
     }
 }
