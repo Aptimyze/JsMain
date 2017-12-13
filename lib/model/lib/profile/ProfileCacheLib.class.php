@@ -548,20 +548,17 @@ class ProfileCacheLib
         
         //Remove Duplicate Suffix
         $prefix =ProfileCacheFunctions::getStorePrefix($storeName);
+        $keywthioutPRefix = 0;
         if(is_array($arrResponse) && count($arrResponse)) {
             foreach($arrResponse as $key=>$val) {
+                    foreach($val as $ky=>$vy){
+                                if(strpos($ky, self::KEY_PREFIX_DELIMITER) === false){
+                                        $keywthioutPRefix = 1;
+                                }
+                     }
                     $val = ProfileCacheFunctions::getOriginalKeysNameWithValues($val,$prefix,'',self::KEY_PREFIX_DELIMITER);
                     $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
             }
-        }
-        //TODO : Handle Exception Cases  
-        $keywthioutPRefix = 0;
-        foreach($arrResponse as $ky=>$arrOut){
-                foreach($arrOut as $k=>$v){
-                        if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
-                                $keywthioutPRefix = 1;
-                        }
-                }
         }
         if($keywthioutPRefix == 1){
                 $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
