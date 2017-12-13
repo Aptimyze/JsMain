@@ -104,7 +104,7 @@ class SolrRequest implements RequestHandleInterface
         {
 		$this->clustersToShow = $clustersToShow;
 		$this->results_cluster = $results_cluster;
-
+                
 		if($cachedSearch)
 			$this->solrPostParams = $cachedSearch["URL"];
 		else
@@ -552,8 +552,13 @@ class SolrRequest implements RequestHandleInterface
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches
-                if($this->searchParamtersObj->getFSO_VERIFIED()){
-                $this->filters[]="&fq=VERIFICATION_SEAL:(/".$this->searchParamtersObj->getFSO_VERIFIED().".*/)";}
+                if($this->searchParamtersObj->getFSO_VERIFIED() && $this->searchParamtersObj->getAADHAAR_VERIFIED()){
+                    $this->filters[]="&fq=VERIFICATION_SEAL:(/".$this->searchParamtersObj->getFSO_VERIFIED().".*/) OR VERIFICATION_SEAL:(/.*.".$this->searchParamtersObj->getAADHAAR_VERIFIED()."/)";
+                }
+                else if($this->searchParamtersObj->getFSO_VERIFIED()){
+                    $this->filters[]="&fq=VERIFICATION_SEAL:(/".$this->searchParamtersObj->getFSO_VERIFIED().".*/)";
+                }
+                    
                 //Fso Verified Dpp Matches
          
 		if(is_array($this->clustersToShow))
