@@ -78,8 +78,9 @@ class ProfileYourInfoOld
                 $dummyResult['YOUR_INFO_OLD'] = $result;
                 $dummyResult['PROFILEID'] = $pid;
             }
-
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+            }
             return $result;
 
         }
