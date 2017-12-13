@@ -21,7 +21,7 @@ import PromoObject from '../components/PromoObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import AppPromo from "../../common/components/AppPromo";
 import ShowBrowserNotification from '../components/ShowBrowserNotification';
-
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -101,6 +101,30 @@ export  class MyjsPage extends React.Component {
 		//	this.hideLoader('hide');
 		}		
 		this.GAObject.trackJsEventGA("jsms","new","1");
+
+		var url = 'https://www.gstatic.com/firebasejs/3.6.1/firebase.js';
+        var browserNotification = document.createElement("script");
+        browserNotification.src = url;
+        browserNotification.async = true;
+        document.head.appendChild(browserNotification);
+        
+		var url = 'https://www.gstatic.com/firebasejs/4.3.1/firebase-app.js';
+        var browserNotification = document.createElement("script");
+        browserNotification.src = url;
+        browserNotification.async = true;
+        document.head.appendChild(browserNotification);
+
+        var url = 'https://www.gstatic.com/firebasejs/4.3.1/firebase-messaging.js';
+        var browserNotification = document.createElement("script");
+        browserNotification.src = url;
+        browserNotification.async = true;
+        document.head.appendChild(browserNotification);
+
+		var url = API_SERVER_CONSTANTS.API_SERVER+'/js/main_sw_register.js';
+        var browserNotification = document.createElement("script");
+        browserNotification.src = url;
+        browserNotification.async = true;
+        document.head.appendChild(browserNotification);
 	}
 
 
