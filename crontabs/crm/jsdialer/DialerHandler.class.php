@@ -727,6 +727,17 @@ class DialerHandler
 		}
 		return $dialStatus;
 	}
+        public function updateDialStatusInDialer($profileid,$campaignName,$processName='')
+        {
+		$squery ="UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0',Last_disposition='Done' WHERE PROFILEID='$profileid'";
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1,$processName);
+        }
+	public function addLog($profileid,$campaignName,$str,$action)
+	{
+        	$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','$str',now(),'$action')";
+        	mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
+	}
+
 
 }
 ?>
