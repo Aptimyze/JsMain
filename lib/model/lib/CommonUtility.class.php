@@ -677,16 +677,14 @@ class CommonUtility
         /*
           Comment below two lines and uncomment commented line. For date time change.
         */
-        $createDate = new DateTime($date);
-        $date = $createDate->format('Y-m-d');
-        // $tz = new DateTimeZone("Asia/Calcutta");
+        $tz = new DateTimeZone("Asia/Calcutta");
         $todayDate = new DateTime("now");
-        //$todayDate->setTimezone($tz);
+        $todayDate->setTimezone($tz);
         $actionDate = new DateTime($date);
-        //$actionDate->setTimezone($tz);
+        $actionDate->setTimezone($tz);
         $diff = $actionDate->diff($todayDate);
         $daydiff = $diff->days;
-        if($daydiff < 1)
+        if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
         {
             $lastOnlineStr = 'today';
             //$lastOnlineStr .= ' '.$actionDate->format('h:i A');
