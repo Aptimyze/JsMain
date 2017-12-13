@@ -288,6 +288,11 @@ class JPROFILE
         }
     }
     private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
+        $arrPid = explode(',', $valueArray['PROFILEID']);
+        if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
+        {
+           return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }
         $fieldsArr = explode(",",$fields);
 	$defaultFieldsRequired = array("HAVE_JCONTACT", "HAVEPHOTO", "MOB_STATUS", "LANDL_STATUS", "SUBSCRIPTION", "INCOMPLETE", "ACTIVATED", "PHOTO_DISPLAY", "GENDER", "PRIVACY");
 	$fieldsArr = array_merge($fieldsArr,$defaultFieldsRequired);
