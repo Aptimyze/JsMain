@@ -235,9 +235,9 @@ class ProfileCacheLib
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($arrOut,true);
-                file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrOut,true);
+                //file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         
         $arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER); 
@@ -561,9 +561,9 @@ class ProfileCacheLib
             }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($arrResponse,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrResponse,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         return array_values($arrResponse);
     }
@@ -886,9 +886,9 @@ class ProfileCacheLib
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
-                $a = print_r($cachedResult,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($cachedResult,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
       return $result;
     }
