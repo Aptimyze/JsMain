@@ -828,7 +828,7 @@ EditApp = function(){
         
 	if(fieldObject.key=="AADHAAR")
 	{
-	var nameSettingDOM = '            <div id="verify-aadhaar" class="disp_ib pos-abs r0 mr5 cursp bg_pink wid127 txtc" style="right: -143px;top: -1px;height: 40px;"><div style="position: relative;"> <div class="pos-abs z1 wid300 edpbox1 aadhardiv" style="right: -285px;"> <div class="edpp6">   <div class="pos-rel bg-white brdr-1 fullwid edpp7">     <i class="edpic8 sprite2 pos-abs edppos3"></i>     <div class="txtc fontreg">   <p class="colr5 f15 lh30">Provide your Aadhaar no and verify?</p>   <p class="f13 color11">To edit Gender,  please contact customer care: 1-800-419-6299 / help@jeevansathi.com</p>     </div>   </div> </div>  </div> <span id="showText" class="colrw fontlig f16 lh40">Verify</span></div>';
+	var nameSettingDOM = '            <div id="verify-aadhaar" class="disp_ib pos-abs r0 mr5 cursp bg_pink wid127 txtc" style="right: -143px;top: -1px;height: 40px;"><div style="position: relative;"> <div class="pos-abs z1 wid300 edpbox1 aadhardiv" style="right: -285px;"> <div class="edpp6">   <div class="pos-rel bg-white brdr-1 fullwid edpp7">     <i class="edpic8 sprite2 pos-abs edppos3"></i>     <div class="txtc fontreg">   <p class="colr5 f15 lh30">Provide your Aadhaar no and verify?</p>   <p class="f13 color11">We are moving towards making jeevansathi.com a secured website.</p>     </div>   </div> </div>  </div> <span id="showText" class="colrw fontlig f16 lh40">Verify</span></div>';
 	fieldDivDom.append(nameSettingDOM);
 	}
       
