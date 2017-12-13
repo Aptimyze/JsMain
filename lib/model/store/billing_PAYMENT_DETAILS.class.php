@@ -365,7 +365,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="") {
+    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="",$handlingPartPayments="") {
         try {
         	$billidStr = implode(",", $billidArr);
             $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
@@ -377,8 +377,16 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             }
             $prep = $this->db->prepare($sql);
             $prep->execute();
-            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $output[$result['BILLID']] = $result;
+            if($handlingPartPayments){
+                $totalAmount=0;
+                while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $totalAmount = $totalAmount+$result["AMOUNT"];
+                }
+                return $totalAmount;
+            }else{
+                while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $output[$result['BILLID']] = $result;
+                }
             }
             return $output;
         }

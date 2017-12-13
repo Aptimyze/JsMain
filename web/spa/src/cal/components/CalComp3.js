@@ -331,22 +331,21 @@ criticalLayerButtonsAction(url,clickAction,button) {
       let _this = this;
      switch(this.props.calData.LAYERID)
      {
-
         case '24':
           // this.setState({layerToShow : "timerScreen"});
           // this.startTimer();
 
           if(button === 'B1')
           {
-                 if(this.track)
+                 if(!this.track)
                     this.state.myjsObj();
                 else
-                 CALCommonCall(url,clickAction).then(()=>{this.CALButtonClicked=0;});
+                 CALCommonCall(url,clickAction,this.state.myjsObj).then(()=>{this.CALButtonClicked=0;});
                  return true;
           }// end case
         break;
       }
-    if(this.track)
+    if(!this.track)
       this.state.myjsObj();
     else
       CALCommonCall(url,clickAction,this.state.myjsObj).then(()=>{this.CALButtonClicked=0;});

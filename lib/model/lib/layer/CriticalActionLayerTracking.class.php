@@ -506,7 +506,7 @@ return 0;
 
                   case '24':
 
-                      if(!MobileCommon::isNewMobileSite() && self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) && ($profileid%19)==0) 
+                      if(self::CALAppVersionCheck('24',$request->getParameter('API_APP_VERSION')) ) 
                       {
                           $nameData=(new NameOfUser())->getNameData($profileid);
                           $nameOfUser=$nameData[$profileid]['NAME'];

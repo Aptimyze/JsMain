@@ -35,7 +35,7 @@ class crmParams
 	public static $inDialerCampaign			=array("noida","mumbai","pune","delhi");
 	public static $inDialerCampaignNewArr           =array("noidaAuto");
 	public static $nonAutoCampaign			=array('mumbai','pune','nri');
-	public static $salesRegularValueRange		=array('SCORE1'=>'41','SCORE2'=>'91','SCORE3'=>'100','DISCOUNT1'=>'1','DISCOUNT2'=>'80');
+	public static $salesRegularValueRange		=array('SCORE1'=>'71','SCORE2'=>'91','SCORE3'=>'100','DISCOUNT1'=>'1','DISCOUNT2'=>'80', 'SCORE4' => '70', 'SCOREMIN' => '70');
         public static $salesRegularCampaignTables	=array("noida"=>"incentive_SALES_CSV_DATA_NOIDA","mumbai"=>"incentive_SALES_CSV_DATA_MUMBAI","pune"=>"incentive_SALES_CSV_DATA_PUNE","nri"=>"incentive_SALES_CSV_DATA_NRI","delhi"=>"incentive_SALES_CSV_DATA_DELHI","noidaAuto"=>"incentive_SALES_CSV_DATA_NOIDA_NEW");
 
 	// Other Sales Campaign Tables for Processes
@@ -61,7 +61,7 @@ class crmParams
 	
 	// Sugarcrm LTF Process	
         public static $mother_tongue 			=array(array(20,34),array(31),array(3),array(17),array(16),array(10,19,33,27,7,28,13,14,15,30,12,9,2,18,6,25,5,4,21,22,23,24,29,32));
-        
+        public static $eliminateMotherTongues           =array(16,3,17,31);
         //Sales process wise tracking
         public static $processNames = array("RCB_TELE"=>"Request Call Back Telesales","INBOUND_TELE" => "Inbound Telesales", "CENTER_SALES" => "Center Sales", "FP_TELE" => "Failed Payment Telesales", "CENTRAL_RENEW_TELE" => "Central Renewal Telesales", "FIELD_SALES" => "Field Sales", "FRANCHISEE_SALES" => "Franchisee Sales", "OUTBOUND_TELE" => "Outbound Telesales", "UNASSISTED_SALES" => "Unassisted Sales");
 

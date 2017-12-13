@@ -6,8 +6,11 @@ $message = "";
 $forward = "jsadmin_msg.tpl";
 
 if ($data) {
-	
-	$dbObj = new newjs_OBSCENE_WORDS ();
+	if(strstr($type,"OPS")==FALSE)
+		$dbObj = new newjs_OBSCENE_WORDS ();
+	else
+		$dbObj = new jsadmin_OPS_OBSCENE_WORDS();
+		
 	
 	if ($addBuzzword) {
 		if (empty ( $buzzword )) {
@@ -33,7 +36,7 @@ if ($data) {
 		$wordList = $dbObj->getObsceneWord ( "ASC" );
 		$forward = "addRemoveBuzzwords.htm";
 	}
-	$message .= "<br><a href=\"addRemoveBuzzwords.php?cid=$cid\">Add / Remove buzzword</a>";
+	$message .= "<br><a href=\"addRemoveBuzzwords.php?cid=$cid&type=$type\">$type Add / Remove buzzword</a>";
 } else // user timed out
 {
 	$message = "Your session has been timed out<br>  ";
@@ -41,6 +44,7 @@ if ($data) {
 	$message .= "Login again </a>";
 }
 $smarty->assign ( "MSG", $message );
+$smarty->assign ( "type", $type);
 $smarty->assign ( "wordList", $wordList );
 $smarty->display ( $forward );
 

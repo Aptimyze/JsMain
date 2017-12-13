@@ -45,7 +45,7 @@ EOF;
 date_default_timezone_set('Asia/Kolkata');
 
 $headerArr = array(
-  'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
+  'Authorization:Basic dmlkdXNoaUBuYXVrcmkuY29tOnZpZHVzaGkxMjM=',
   'Content-Type:application/json'
   );
 //get tagName which will be the release version

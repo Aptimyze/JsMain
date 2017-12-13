@@ -938,7 +938,21 @@ class Profile{
 				}
                 return $cityLabel;
         }
-
+        
+        public function getDecoratedState(){
+            $stateLabel = "";
+            if($this->CITY_RES||$this->CITY_RES==='0'){
+                $StateCity = substr($this->CITY_RES, 0, 2);
+                $stateLabel= FieldMap::getFieldLabel("state_india",$StateCity);
+            }
+            else
+            {
+                if(!in_array("CITY_RES",$this->fieldsArray))
+                    ProfileFieldsLogging::callFieldStack(1);
+            }
+            return $stateLabel;
+        }
+        
         /**
          * getDecoratedRelation()
          *

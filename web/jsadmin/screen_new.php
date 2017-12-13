@@ -31,7 +31,7 @@ use MessageQueues as MQ;
 $protect_obj = new protect;
 global $screen_time;
 global $FLAGS_VAL;
-$dbObj = new newjs_OBSCENE_WORDS();
+$dbObj = new jsadmin_OPS_OBSCENE_WORDS();
 global $obscene;
 $obscene = $dbObj->getObsceneWord();
 
