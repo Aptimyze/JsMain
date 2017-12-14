@@ -410,7 +410,7 @@ $js_arr[]=array("jspc/crm/dateSelectionField_js"   => "5");
 $js_arr[]=array("jspc/crm/exclusiveMemAllocation_js"     => "10");
 $js_arr[]=array("jspc/crm/loader_js"   => "6");
 $js_arr[]=array("jspc/crm/exclusiveServicingII_js"   => "9");
-$js_arr[]=array("jspc/crm/exclusiveFollowUps_js"  => "3");
+$js_arr[]=array("jspc/crm/exclusiveFollowUps_js"   => "4");
 $js_arr[]=array("jspc/crm/submitFollowUp_js"   => "4");
 $js_arr[]=array("jspc/crm/changeActiveServiceInterface_js"   => "13");
 $js_arr[]=array("jquery_cookie_js"   => "7");
