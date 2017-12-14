@@ -123,7 +123,7 @@ class EmailSender{
               }
             }
             if (is_array($this->_emailTplArray)) {
-              echo $message = $this->_emailTplArray[$profileid]->getMessage();
+               $message = $this->_emailTplArray[$profileid]->getMessage();
               $subject = $this->_emailTplArray[$profileid]->getProcessedSubject();
               $from = $this->_emailTplArray[$profileid]->getSenderEMailId();
               $replyToAddress = ($this->_emailTplArray[$profileid]->getReplyToEnabled() === "Y") ? 
