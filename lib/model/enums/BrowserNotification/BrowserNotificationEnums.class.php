@@ -64,6 +64,8 @@ class BrowserNotificationEnums
     );
     public static $staticContentNotification = array();  
       
+    public static $appLoginCondition = 7;
+    
     public static $publishedNotificationLog = "/web/uploads/NotificationLogs/PublishedNotifications.txt";
     public static $transferredNotificationlog = "/web/uploads/NotificationLogs/TransferredNotifications.txt";
     public static $addNotificationLog = false;  //add published and transferred msg keys in logs
