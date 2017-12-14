@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2017-10-10
+	Created on 2017-12-14
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -79,6 +79,7 @@
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '73'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PHOTO_UPLOAD_BY_PROFILE_VIEWED','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'74'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_PROFILE_LINK','URL'=>'/profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=kundli','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -153,6 +154,7 @@ private static $linkNameArray=array(
 'ALTERNATE_EMAIL_PROMOTION'=>'71',
 'PAID_MEMBERS_MAILER'=>'72',
 'PHOTO_UPLOAD_BY_PROFILE_VIEWED'=>'73',
+'KUNDLI_PROFILE_LINK'=>'74',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -306,6 +308,7 @@ private static $variableArray=array(
 'CONTACTVIEWERS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'contact viewers link'),
 'RELIGION_CASTE_VALUE_TEMPLATE_2'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion, Small Caste format or simply Full Caste'),
 'NAME_OTHER_PROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'6','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'actual Name of the user of profile'),
+'KUNDLI_PROFILE_LINK'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 );
 private static $subjectArray=array(
 '1703'=>array('MAIL_ID'=>'1703','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
@@ -338,14 +341,14 @@ private static $subjectArray=array(
 '1751'=>array('MAIL_ID'=>'1751','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
 '1752'=>array('MAIL_ID'=>'1752','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
 '1753'=>array('MAIL_ID'=>'1753','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
-'1754'=>array('MAIL_ID'=>'1754','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Expressed Interest in you'),
-'1756'=>array('MAIL_ID'=>'1756','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{NAME_PROFILE:profileid=~$otherProfileId`}}</var> has sent you a reminder.'),
-'1742'=>array('MAIL_ID'=>'1742','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Accepted your interest'),
-'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var>  declined your interest'),
-'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var>  declined your interest'),
+'1754'=>array('MAIL_ID'=>'1754','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Expressed Interest in you'),
+'1756'=>array('MAIL_ID'=>'1756','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a reminder.'),
+'1742'=>array('MAIL_ID'=>'1742','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Accepted your interest'),
+'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var>  declined your interest'),
+'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var>  declined your interest'),
 '1784'=>array('MAIL_ID'=>'1784','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'More Value. Less price. Contact the Profiles you like'),
-'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Cancelled interest in you.'),
-'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Add a photo to make your profile better '),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you.'),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Add a photo to make your profile better '),
 '1755'=>array('MAIL_ID'=>'1755','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Phone is Verified. Upload Photo and get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-'),
 '1757'=>array('MAIL_ID'=>'1757','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Phone verified successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated'),
 '1759'=>array('MAIL_ID'=>'1759','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a personal message'),
@@ -424,7 +427,7 @@ private static $subjectArray=array(
 '1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
 '1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
 '1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
-'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'A','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Please make your photo visible'),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'A','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Please make your photo visible'),
 '1844'=>array('MAIL_ID'=>'1844','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Because, We decide as a family !'),
 '1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
 '1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Feedback request from Jeevansathi.com'),
@@ -437,7 +440,12 @@ private static $subjectArray=array(
 '1859'=>array('MAIL_ID'=>'1859','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Submit your success story and get a free gift!'),
 '1884'=>array('MAIL_ID'=>'1884','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile ~$deletedUserName` has been deleted after you reported abuse'),
 '1885'=>array('MAIL_ID'=>'1885','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Weekly Followup status Mail ~$date`'),
-'1886'=>array('MAIL_ID'=>'1886','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
+'1886'=>array('MAIL_ID'=>'1886','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Congratulations ! Now here is a chance to help others.'),
+'1887'=>array('MAIL_ID'=>'1887','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Jeevansathi profile deleted as per request'),
+'1888'=>array('MAIL_ID'=>'1888','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
+'1889'=>array('MAIL_ID'=>'1889','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Jeevansathi.com password information'),
+'1890'=>array('MAIL_ID'=>'1890','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Here is the promised coupon code'),
+'1891'=>array('MAIL_ID'=>'1891','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
 );
 public static function getLink($Id){
 
