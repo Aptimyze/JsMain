@@ -2,9 +2,6 @@
 <link rel="stylesheet" href="~sfConfig::get('app_img_url')`/jsadmin/jeevansathi.css" type="text/css">
 <link rel="stylesheet" href="~sfConfig::get('app_img_url')`/profile/images/styles.css" type="text/css">
 
-
-
-
 ~include_partial('global/header',["showExclusiveServicingBack"=>'Y'])`
 
 <table width="70%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -74,7 +71,23 @@
         </form>
     </tr>
     <tr><td></td><td></td><td ~if $error eq '1'`style="color: red;"~/if`>~$message`</td></tr>
-
+    <tr class="formhead" align="center" width="100%">
+        <td colspan="3"  height="30">
+            <font size=3>Client Notes</font>
+        </td>
+    </tr>
+    <tr>
+            <td>
+                <textarea rows="3" placeholder="Please note down any comments/info which will help you screen the interests for this particular profile.You can always edit this later in Screen RB interest module" 
+                          cols="70" name="notes" id="notes" maxlength="2000">~$clientNotes`</textarea>
+                <input type="hidden" id="client" name ="client" value="~$client`">
+            </td>
+            <td>
+            <center>
+                <input type="button" value="Save Note" onclick='sendClientNotes()'>
+            </center>
+            </td>
+    </tr>
     </tr><br>
     ~else`
     <tr>
