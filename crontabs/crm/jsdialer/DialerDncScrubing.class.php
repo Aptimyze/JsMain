@@ -87,11 +87,12 @@ class DialerDncScrubing
 			if($ecode){
 				if($campaign_name=='FP_JS'){
 					$paid = $this->getPaidProfile($proid, $dateTime);
-					if(!$paid && !$alloted)
-						$dialStatus ='1';
-					else
+					if($paid)
 						$dialStatus ='0';
-
+					elseif($lastDisp==$scbValue)
+						$dialStatus ='3';
+					else
+						$dialStatus=1;
 				}
 				else{
 	                        	if($lastDisp==$scbValue){
@@ -105,10 +106,7 @@ class DialerDncScrubing
 								$dialStatus ='0';
 						}
 						else{
-						        if(!$alloted)	
-								$dialStatus ='1';
-							else
-								$dialStatus ='0';
+							$dialStatus ='1';
 						}
 					}
 				}

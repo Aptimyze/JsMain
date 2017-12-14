@@ -445,6 +445,7 @@ private static $subjectArray=array(
 '1888'=>array('MAIL_ID'=>'1888','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
 '1889'=>array('MAIL_ID'=>'1889','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Jeevansathi.com password information'),
 '1890'=>array('MAIL_ID'=>'1890','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Here is the promised coupon code'),
+'1891'=>array('MAIL_ID'=>'1891','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
 );
 public static function getLink($Id){
 

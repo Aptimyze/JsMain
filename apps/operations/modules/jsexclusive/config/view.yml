@@ -4,7 +4,7 @@ screenRBInterestsSuccess:
 
   stylesheets:    []
 
-  javascripts:    []
+  javascripts:    [jspc/crm/exclusiveFollowUps_js@bottom]
 
 followupCallerSuccess:
   metas:
@@ -21,3 +21,11 @@ submitFollowupStatusSuccess:
   stylesheets:    []
 
   javascripts:    [jspc/crm/submitFollowUp_js]
+  
+welcomeCallsPage2Success:
+  metas:
+    title:        JsExclusive - Welcome Page 2 success
+
+  stylesheets:    []
+
+  javascripts:    [jspc/crm/exclusiveFollowUps_js@bottom]

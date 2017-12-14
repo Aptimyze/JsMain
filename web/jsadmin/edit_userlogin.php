@@ -109,13 +109,13 @@ if (authenticated($cid))
                                 $empty = 0;
                                 $smarty->assign('check_phone_value',1);
                         }
-                        else if(!in_array($MOD_PHONE[0], array('7','8','9')))
+                        else if(!in_array($MOD_PHONE[0], array('6','7','8','9')))
                         {
                                 $empty = 0;
                                 $smarty->assign('check_phone_initiate',1);
                         }
                 }
-
+                
 		if (!$MOD_CENTER)
                 {
                         $empty=0;

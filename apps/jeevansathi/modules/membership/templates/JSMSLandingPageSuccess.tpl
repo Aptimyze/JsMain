@@ -792,14 +792,6 @@
 		if(source == "REQUEST_CALLBACK"){
 			$('#jsmsReqCallbackBtn').trigger('click');
 		}
-		var username = "~$data.userDetails.USERNAME`";
-		var email = "~$data.userDetails.EMAIL`";
-		setInterval(function(){
-    		autoPopulateFreshdeskDetails(username,email);
-  		},100);
-		setTimeout(function(){
-			autoPopupFreshdesk(username,email);
-		}, 90000);
         showTimerForLightningMemberShipPlan("jsmsLanding");
 	});
 </script>

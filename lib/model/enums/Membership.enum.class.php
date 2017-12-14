@@ -260,7 +260,7 @@ class VariableParams
         ) ,
         "A" => array(
             "name" => "Astro <br>Compatibility",
-            "description" => "Horoscope match a must? Get detailed kundli matching reports with profiles you like.",
+            "description" => "Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
             "visibility" => 0,
             "vas_id" => 2
         ) ,
@@ -298,7 +298,7 @@ class VariableParams
         ) ,
         "A" => array(
             "name" => "Astro Compatibility",
-            "description" => "Get detailed Kundli matching reports with profiles you like",
+            "description" => "Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
             "visibility" => 0,
             "vas_id" => 2
         ) ,
@@ -395,7 +395,7 @@ class VariableParams
         array(
             "icon_id" => "5",
             "icon_name" => "Astro <br>Compatibility",
-            "description" => "Horoscope match a must? Get detailed kundli matching reports with profiles you like.",
+            "description" => "Horoscope match a must? Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
             "visibility" => 0
         ) ,
         array(
@@ -960,6 +960,7 @@ class SelectGatewayRedirect{
 
 class FreshChat{
     public static $token = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
+    public static $widgetUrl = "https://wchat.freshchat.com/js/widget.js";
 }
 
 ?>

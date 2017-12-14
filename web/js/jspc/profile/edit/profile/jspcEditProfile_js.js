@@ -89,7 +89,7 @@ EditApp = function(){
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
-    var eduCareerSectionArray = ["EDU_LEVEL_NEW","SCHOOL","DEGREE_UG","COLLEGE","DEGREE_PG","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","WORK_STATUS","OCCUPATION","COMPANY_NAME","INCOME","MARRIED_WORKING","GOING_ABROAD"];
+    var eduCareerSectionArray = ["EDU_LEVEL_NEW","SCHOOL","DEGREE_UG","COLLEGE","DEGREE_PG","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","OCCUPATION","COMPANY_NAME","INCOME","MARRIED_WORKING","GOING_ABROAD"];
     var horoscopeSectionArray = ["HOROSCOPE_MATCH","SUNSIGN","RASHI","NAKSHATRA","MANGLIK","ASTRO_PRIVACY"];
     var aboutSectionArray = ["YOURINFO","FAMILYINFO","EDUCATION","JOB_INFO"];
     var contactSectionArray = ["EMAIL","ALT_EMAIL","PHONE_MOB","MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","ALT_MOBILE","ALT_MOBILE_OWNER_NAME","ALT_MOBILE_NUMBER_OWNER","PHONE_RES","PHONE_OWNER_NAME","PHONE_NUMBER_OWNER","TIME_TO_CALL_START","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","CONTACT","SHOWADDRESS","PINCODE","PARENTS_CONTACT","SHOW_PARENTS_CONTACT","PARENT_PINCODE"];
@@ -101,7 +101,7 @@ EditApp = function(){
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
-                                "career":"edu_level_new,degree_ug,degree_pg,work_status,occupation,income,working_marriage,going_abroad",
+                                "career":"edu_level_new,degree_ug,degree_pg,occupation,income,working_marriage,going_abroad",
                                 "horoscope":"horoscope_match,rashi,nakshatra,manglik,astro_dob,astro_btime,astro_country_birth,astro_place_birth,sunsign,astro_privacy",
                                 "contact":"isd,mobile_number_owner,alt_mobile_number_owner,phone_number_owner,stdcodes",
                                 "verification": "id_proof_type,addr_proof_type" //,id_proof_val,address_proof_val
@@ -2410,7 +2410,7 @@ EditApp = function(){
       var regExIndianLandline=/^[0-9]\d{2,4}[-. ]?\d{6,8}$/;
       var regExInternational=/^\+(?:[0-9][-. ]? ?){6,15}[0-9]$/;
       
-      var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+      var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
       var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
       
       var isd_regex = /^[+]?[0-9]+$/;
@@ -2604,7 +2604,7 @@ EditApp = function(){
       }
       
       var validatePhone = function(fieldKey){
-        
+
         var isdFieldID      = '#'+fieldKey.toLowerCase()+'-isd';
         var stdFieldID      = '#'+fieldKey.toLowerCase()+'-std';
         var mobileFieldID   = '#'+fieldKey.toLowerCase()+'-mobile';
