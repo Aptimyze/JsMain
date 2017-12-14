@@ -24,16 +24,19 @@ $autoCampArr	=array('JS_NCRNEW_Auto');
 
 $typeArray		=array('PAID','DELETED'); 	
 $str                    ='Dial_Status=0';
-$action			='STOP_P_D';
 $Remove_Paid_Deleted	='Remove_Paid_Deleted';
 $checkTime		=date("Y-m-d H:i:s",time()-14.5*60*60);
 
 foreach($typeArray as $key=>$type)
 {
-	if($type=='PAID')
+	if($type=='PAID'){
 		$processId ='19';
-	elseif($type=='DELETED')
+		$action ='STOP_P';
+	}
+	elseif($type=='DELETED'){
 		$processId ='20';
+		$action ='STOP_D';
+	}
 
         $startDate =$dialerHandlerObj->getLastHandledDate($processId);
 	if(!$startDate || $startDate=='0000-00-00 00:00:00' || (strtotime($startDate)<=strtotime($checkTime))){

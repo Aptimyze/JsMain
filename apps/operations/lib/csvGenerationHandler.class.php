@@ -994,8 +994,10 @@ class csvGenerationHandler
                                         $motherTongue = $dataArr['MTONGUE'];
                                         
                                         if(in_array($motherTongue, crmParams::$eliminateMotherTongues)) {
-                                            $filter['MOTHER_TONGUE']++;
-                                            $this->fpCsvProfileLog($profileid,'','N','MOTHER_TONGUE','Y','','','',$processName);
+						if($fplogging==true) {
+	                                            $filter['MOTHER_TONGUE']++;
+        	                                    $this->fpCsvProfileLog($profileid,'','N','MOTHER_TONGUE','Y','','','',$processName);
+						}
                                             continue; // skipping the current profile
                                         }
 				}
@@ -1393,10 +1395,12 @@ class csvGenerationHandler
                                             // the profile is now eligible to for calling, validating further for auto table
                                             if($score >= $scoreRangeBase && $score < $scoreRangeMax) {
                                              // valid for auto table, hence setting making ineligible in new table, and eligible in auto table
-                                                $dialerEligible = 'N';
-                                                $dialerEligibleNew = 'Y';
-                                                
+
                                                 $dialerDialStatusNew = $dialerDialStatus;
+                                                if($dialerDialStatusNew==1){
+                                                        $dialerEligibleNew = 'Y';
+                                                }
+                                                $dialerEligible = 'N';
                                                 $dialerDialStatus = 0;
                                              } 
                                              else {
