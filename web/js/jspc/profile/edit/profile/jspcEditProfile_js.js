@@ -7440,7 +7440,7 @@ $('.js-previewAlbum').click(function(){
   function getFieldsOnCal()
   {
     desktopSectionArray = {"education":"career","basic":"basic","about":"about",
-      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family"
+      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family","kundli":"horoscope"
     }
     timeoutFieldCheck = 1000;
     section = getUrlParameter('section');

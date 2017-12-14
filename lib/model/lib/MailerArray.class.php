@@ -79,7 +79,8 @@
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '73'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PHOTO_UPLOAD_BY_PROFILE_VIEWED','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-);
+'74'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_PROFILE_LINK','URL'=>'/profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=kundli','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),		    
+		);
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
 'DETAILED_PROFILE_HOME'=>'2',
@@ -153,6 +154,7 @@ private static $linkNameArray=array(
 'ALTERNATE_EMAIL_PROMOTION'=>'71',
 'PAID_MEMBERS_MAILER'=>'72',
 'PHOTO_UPLOAD_BY_PROFILE_VIEWED'=>'73',
+ 'KUNDLI_PROFILE_LINK'=>'74',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -306,6 +308,7 @@ private static $variableArray=array(
 'CONTACTVIEWERS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'contact viewers link'),
 'RELIGION_CASTE_VALUE_TEMPLATE_2'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion, Small Caste format or simply Full Caste'),
 'NAME_OTHER_PROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'6','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'actual Name of the user of profile'),
+'KUNDLI_PROFILE_LINK'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'6','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'astro mailer'),    
 );
 private static $subjectArray=array(
 '1703'=>array('MAIL_ID'=>'1703','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),

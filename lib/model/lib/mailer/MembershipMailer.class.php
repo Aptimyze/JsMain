@@ -648,14 +648,15 @@ class MembershipMailer {
         $email_sender->send();
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         if($astroFlag){
-            $mailerSubject = " Congratulations on purchasing Astro compatibility. Important information you need to know";
+            $mailerSubject= " Congratulations on purchasing Astro compatibility. Important information you need to know";
 
             $mailer = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY, 1839);
             $mailerTpl = $mailer->setProfileId($profileid);
-            // $obj = $mailerTpl->getSmarty();
-            // $mailerTpl->setSubject($mailerSubject);
-            // $smartyObj->assign("mailerLinks",$mailerLinks);
-            $email_sender->send();
+             $obj = $mailerTpl->getSmarty();
+             $mailerTpl->setSubject($mailerSubject);
+             $obj->assign("mailerLinks",$mailerLinks);
+             $obj->assign("profileid",$profileid);
+             $mailer->send();
         }
         return $deliveryStatus;
 

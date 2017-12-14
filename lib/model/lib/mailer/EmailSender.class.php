@@ -283,7 +283,7 @@ class EmailSender{
       $from = $this->email_tpl->getSenderEMailId();
 
       $message = $this->email_tpl->getMessage();
-      	$subject = $this->email_tpl->getProcessedSubject();
+      $subject = $this->email_tpl->getProcessedSubject();
 
 	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID(),$this->mail_id);
 	$canSend = $canSendObj->canSendIt();  
