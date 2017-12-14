@@ -932,8 +932,8 @@ const mapDispatchToProps = (dispatch) => {
             let presenceUrl = `https://presence.jeevansathi.com/jspresence/v1/presence?pfids=${pChecksum}&idType=checksum`;
             commonApiCall(presenceUrl).then((res)=>{
                 
-                //let status = res.data ? (res.data.length ? 1 : 2) : 2;    
-                let status = 1;
+                let status = res.data ? (res.data.length ? 1 : 2) : 2;    
+                //let status = 1;
                 dispatch({type:'SET_ONLINE_CALL',payload:{pc:pChecksum, online:status}});
             });
         }
