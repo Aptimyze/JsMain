@@ -75,7 +75,7 @@ class ProfileCacheLib
     public function isCached($criteria, $key, $fields, $storeName="", $fromUpdate=false)
     {
 //IN USE
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript("get") && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria))) 
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript("get") && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria)) || @strstr($fields,"(")) 
 	{
 		return false;
         }
