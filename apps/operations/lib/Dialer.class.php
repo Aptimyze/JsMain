@@ -110,13 +110,15 @@ class Dialer
                         $scoreRange3    =$salesRegularRangeValue['SCORE3'];
                         $discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
                         $discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
+                        $maharashtraCampaignMinScore = $salesRegularRangeValue['SCORE4'];
+                        $minScore = $salesRegularRangeValue['SCOREMIN'];
 			
 			foreach($profileArr as $k => $dataFieldArr){
 
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
-	
-                                if($analyticScore<$scoreRange1){
+                                
+                                if($analyticScore<$minScore){
                                 	$this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
                                         continue;  
 				}     
@@ -179,30 +181,38 @@ class Dialer
 				// New code
                                 $campaignName   =$inDialerPool[$profileid]['CAMPAIGN_NAME'];
 				if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3){
-					$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-					$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+                                        if($campaignName == 'delhi' || $campaignName == 'noida') {
+                                            if($profileid % 11 != 1) {
+                                                $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            }else 
+                                            {
+                                                $this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+                                            }
+                                        }
+                                        else {
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                        }
+                                        $this->updateIndialerProfileLog($profileid,$username,'N','','','N');
 				}
-				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2){
+				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2) {
                                         $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
                                         $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
 
-					if($campaignName=='noida' || $campaignName=='delhi'){
+					if($campaignName=='noida' || $campaignName=='delhi') {
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}	
 					elseif($campaignName=='mumbai' || $campaignName=='pune'){
-						if($analyticScore>=70)
-							$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-						else
-							$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+                                            if($analyticScore>=$maharashtraCampaignMinScore)
+						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            else
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}
+                                        
 					if($discount>=$discountRange1 && $discount<=$discountRange2){
-						if($profileid%4==2 || $profileid%4==3)
-							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
-						else
-							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
 					}
 					else
-						$this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
+                                            $this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
 				}	
 				//$this->updateIndialerProfileLog($profileid,$username,'Y');
 				unset($jProfileArr);

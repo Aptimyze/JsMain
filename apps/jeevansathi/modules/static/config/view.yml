@@ -134,6 +134,14 @@ agentinfoSuccess:
   stylesheets: [jspc/static/kycss]
   javascripts: [jspc/common/test1]
   layout: jspcLayout
+  
+AadhaarInfoSuccess:
+  metas:
+    title:  Verification Seal Info
+    robots:  noindex, nofollow
+  stylesheets: [jspc/static/kycss]
+  javascripts: [jspc/common/test1]
+  layout: jspcLayout
 mobdisclaimerSuccess:
   metas:
     title: Terms & Condition

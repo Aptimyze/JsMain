@@ -82,11 +82,6 @@
 <script>
 var AndroidPromotion=0;
 $(document).ready(function(){
-    var username = "~$username`";
-    var email = "~$email`";
-    setInterval(function(){
-        autoPopulateFreshdeskDetails(username,email);
-    },100);
     var webView = '~$webView`';
     $("#pageBack").click(function(e){
         window.location.href = "/profile/mainmenu.php";

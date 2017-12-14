@@ -259,11 +259,6 @@
 				window.history.back();
 			}
 		});
-		var username = "~$data.userDetails.USERNAME`";
-		var email = "~$data.userDetails.EMAIL`";
-		setTimeout(function(){
-			autoPopupFreshdesk(username,email);
-		}, 90000);
 	});
 </script>
 ~/if`
