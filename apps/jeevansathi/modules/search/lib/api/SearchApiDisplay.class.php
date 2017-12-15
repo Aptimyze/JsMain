@@ -893,7 +893,10 @@ class SearchApiDisplay
                                         $returnArr['Aadhaar'] = "A";
                                     }
                                     else{
-                                        $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        if(is_array($displaySeal))
+                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        else
+                                            $returnArr['documents'] = 1;
                                     }
                                     return $returnArr;
                                 }
