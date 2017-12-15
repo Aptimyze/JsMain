@@ -1,4 +1,5 @@
 use newjs;
+CREATE TABLE `CITY_NEW_BAKUPDEC` LIKE `CITY_NEW`;
 INSERT INTO `CITY_NEW` ( `ID` , `LABEL` , `VALUE` , `TYPE` , `SORTBY` , `DD_TOP` , `DD_TOP_SORTBY` , `STD_CODE` , `COUNTRY_VALUE` )
 VALUES (
 '', 'Amravati (Maharastra)', 'MH46', 'CITY', '0', NULL , NULL , NULL , '51'
