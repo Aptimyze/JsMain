@@ -223,11 +223,12 @@ $className = get_class($this);
         $MESSAGE = $memMessage['membership_message'];
         break;
 
-      case (!$profileObj->getFAMILYINFO()):
+        //Remove 'About Family' Communication Band on My JS for users not filling 'About Family' and PCS < 50
+      /* case (!$profileObj->getFAMILYINFO()):
         $MESSAGE[myjsCachingEnums::TOP_PART] = 'Add About Family';
         $MESSAGE[myjsCachingEnums::BOTTOM_PART] = 'Get more interests & responses';
         $MESSAGE[myjsCachingEnums::PAGEID] = '4';
-        break;
+        break; */
 
       case ($memMessage['membership_message']):
         $MESSAGE = $memMessage['membership_message'];
