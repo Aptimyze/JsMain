@@ -83,6 +83,11 @@ class csvGenerationHandler
                         $paidCampaignObj =new incentive_SALES_CSV_DATA_RCB();
                         $paidCampaignObj->updateDialStatus($dateTime);
                 }
+                
+                elseif($processName=="renewalProcessInDialer"){
+                        $fpCsvTempObj =new incentive_PROCESS_CSV_DATA_TEMP('newjs_master');
+                        $fpCsvTempObj->delete($processName);
+                }
 	}
 	public function storeTemporaryProfiles($processObj,$profiles)
 	{
@@ -818,7 +823,6 @@ class csvGenerationHandler
 			$dataLimit         =$processObj->getLimit();
 			$max_dt 	   =$processObj->getEndDate();
 			foreach($profiles as $profileid=>$dataArr){
- 
 				$username     =$dataArr['USERNAME'];
 
 				// Data Limit exceed check
@@ -903,7 +907,7 @@ class csvGenerationHandler
 					$this->salesCsvProfileLog($profileid,$username,'N','ANALYTIC_SCORE_ZERO',$analyticScore);
 					continue;
 				}
-
+                                
 								// filtered profile stored to check campaign limit
 				$campaignCntArr[$campaignName] +=1;
 				$dataArr['ALLOTED_TO'] 		=$allotedAgent;
@@ -933,66 +937,90 @@ class csvGenerationHandler
 				$filteredProfiles[] =$dataArr;
 			}
 		}
-		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess' || $processName=='rcbCampaignInDialer'){
+		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess' || $processName=='rcbCampaignInDialer') {
 			$method 		=$processObj->getMethod();	
                         $AgentAllocDetailsObj   =new AgentAllocationDetails();
 			$southIndianCommunity	=crmParams::$southIndianCommunity;
+                        
                         if($processName == 'failedPaymentInDialer' || $processName =='renewalProcessInDialer'){
                             $fplogging=true;
                         }
-                        foreach($profiles as $profileid=>$dataArr){
+                        foreach($profiles as $profileid=>$dataArr) {
 				if(!$profileid)
 					continue;
-
+                                
 				if ($processName == 'rcbCampaignInDialer') {
-                	$allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
-			$subscription =$dataArr['SUBSCRIPTION'];
-                	if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
-                    		continue;
-                	}
-                }
+                                    $allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
+                                    $subscription =$dataArr['SUBSCRIPTION'];
+                	
+                                    if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
+                                            continue;
+                                    }
+                                }
                 
-				if($processName!='rcbCampaignInDialer'){
-	                                if($dataArr["ACTIVATED"]!='Y'){
-                                            if($fplogging==true){
-                                                $filter['notActivatedCnt']++;
-                                                $this->fpCsvProfileLog($profileid,'','N','NOT_ACTIVATED','Y','','','',$processName);
-                                            }
+				if($processName!='rcbCampaignInDialer') {
+	                                
+                                        if($dataArr["ACTIVATED"]!='Y') {
+                                            
+                                                if($fplogging==true) {
+                                                    
+                                                    $filter['notActivatedCnt']++;
+                                                    $this->fpCsvProfileLog($profileid,'','N','NOT_ACTIVATED','Y','','','',$processName);
+                                                }
                                             continue;
                                         }
-	                                if($dataArr["PHONE_FLAG"]=="I"){
-                                            if($fplogging==true){
+                                        
+	                                if($dataArr["PHONE_FLAG"]=="I") {
+                                            if($fplogging==true) {
                                                 $filter['invalidPhoneCnt']++;
                                                 $this->fpCsvProfileLog($profileid,'','N','INVALID_PHONE','Y','','','',$processName);
                                             }   
                                             continue;
                                         }
 				}
-				if($method=='NEW_FAILED_PAYMENT'){
-	                                if($dataArr['GENDER']=="M" && $dataArr["AGE"]<24){
-                                            if($fplogging==true){
-                                                $filter['maleAgeCnt']++;
-                                                $this->fpCsvProfileLog($profileid,'','N','MALE_AGE','Y','','','',$processName);
-                                            }   
+                                
+				if($method=='NEW_FAILED_PAYMENT') {
+	                                if($dataArr['GENDER']=="M" && $dataArr["AGE"]<24) {
+                                                if($fplogging==true) {
+                                                    $filter['maleAgeCnt']++;
+                                                    $this->fpCsvProfileLog($profileid,'','N','MALE_AGE','Y','','','',$processName);
+                                                }   
                                             continue;
                                         }
+                                        
+                                        // if the community is either Tamil, Telugu, Malayalam, or Kannada, 
+                                        // then this profile need not be considered in case of failedpayments
+                                        
+                                        $motherTongue = $dataArr['MTONGUE'];
+                                        
+                                        if(in_array($motherTongue, crmParams::$eliminateMotherTongues)) {
+						if($fplogging==true) {
+	                                            $filter['MOTHER_TONGUE']++;
+        	                                    $this->fpCsvProfileLog($profileid,'','N','MOTHER_TONGUE','Y','','','',$processName);
+						}
+                                            continue; // skipping the current profile
+                                        }
 				}
-				if($method=='RENEWAL'){
+                                
+				if($method=='RENEWAL') {
 					$lastLoginDt 	=$dataArr['LAST_LOGIN_DT'];
 					$checkDay 	=JSstrToTime(date("Y-m-d",time()-14*24*60*60));
-					if(JSstrToTime($lastLoginDt)<$checkDay){
-                                            if($fplogging==true){
+					
+                                        if(JSstrToTime($lastLoginDt)<$checkDay) {
+                                            if($fplogging==true) {
                                                 $filter['lastLoginCnt']++;
                                                 $this->fpCsvProfileLog($profileid,'','N','LAST_LOGIN','Y','','','',$processName);
                                             }
                                             continue;	
                                         }
 				}
-				elseif($method=='PAID_CAMPAIGN'){
+                                
+				elseif($method=='PAID_CAMPAIGN') {
 					// income >35lakh and above
 					$income =$dataArr['INCOME'];
 					$familyIncome =$dataArr['FAMILY_INCOME'];
-					if($income>=24 || $familyIncome>=24)
+					
+                                        if($income>=24 || $familyIncome>=24)
 						continue;
 
 					// South Indian languages and others
@@ -1002,14 +1030,17 @@ class csvGenerationHandler
 
 					// Profile length>700
 	                                $profileLength =strlen($dataArr['YOURINFO'])+strlen($dataArr['FAMILYINFO'])+strlen($dataArr['FATHER_INFO'])+strlen($dataArr['SPOUSE'])+strlen($dataArr['SIBLING_INFO'])+strlen($dataArr['JOB_INFO']);
-					if($profileLength>700)
+					
+                                        if($profileLength>700)
 						continue;		
 				}
+                                
 				// NRI Check
 				$isdVal =$dataArr['ISD'];			
 				$isIndian =$this->isIndianNo($isdVal);
-				if(!$isIndian){	
-                                    if($fplogging==true){
+				
+                                if(!$isIndian) { 	
+                                    if($fplogging==true) {
                                         $filter['nriCnt']++;
                                         $this->fpCsvProfileLog($profileid,'','N','NRI','Y','','','',$processName);
                                     }    
@@ -1018,7 +1049,7 @@ class csvGenerationHandler
 
                                 // DNC No. check filter
 				if(!$dataArr['PHONE_MOB'] && !$dataArr['PHONE_ALTERNATE'] && !$dataArr['PHONE_WITH_STD']){
-                                    if($fplogging==true){
+                                    if($fplogging==true) {
                                         $filter['noPhoneCnt']++;
                                         $this->fpCsvProfileLog($profileid,'','N','NO_PHONE','Y','','','',$processName);
                                     }    
@@ -1028,32 +1059,42 @@ class csvGenerationHandler
                                 $phoneNumStack =array("PHONE1"=>"$dataArr[PHONE_MOB]","PHONE2"=>"$dataArr[PHONE_ALTERNATE]","PHONE3"=>"$dataArr[PHONE_WITH_STD]");
                                 $DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
                                 $isDNC    =$DNCArray['STATUS'];
-                                if($isDNC){
+                                
+                                if($isDNC) {
                                         // Optin-check
                                         $optinStatus =$AgentAllocDetailsObj->isOptinProfile($profileid);
-                                        if(!$optinStatus){
-                                            if($fplogging==true){
+                                        
+                                        if(!$optinStatus) {
+                                            if($fplogging==true) {
                                                 $filter['nonOptinProfileCnt']++;
                                             }
+                                            
                                             $this->fpCsvProfileLog($profileid,'','N','NON_OPTIN','Y','','','',$processName);
                                             continue;
                                         }
                                 }
-                                foreach($phoneNumStack as $key=>$value){
-                                        if($value && !$phone1)
+                                
+                                foreach($phoneNumStack as $key=>$value) {
+                                        
+                                    if($value && !$phone1)
                                                 $phone1 =$value;
-                                        elseif($value && !$phone2)
+                                    
+                                    elseif($value && !$phone2)
                                                 $phone2 =$value;
-                                        if($phone1 && $phone2)
+                                     
+                                    if($phone1 && $phone2)
                                                 break;
                                 }
-				if(!$phone1 && !$phone2){
-                                    if($fplogging==true){
+                                
+				if(!$phone1 && !$phone2) {
+                                    if($fplogging==true) {
                                         $filter['noPhoneExistsCnt']++;
                                     }
+                                    
                                     $this->fpCsvProfileLog($profileid,'','N','NO_PHONE_EXISTS','Y','','','',$processName);
                                     continue;
                                 }
+                                
                                 $dataArr['PHONE1']=$phone1;
                                 $dataArr['PHONE2']=$phone2;
 				$filteredProfiles[] =$dataArr;
@@ -1331,32 +1372,50 @@ class csvGenerationHandler
 				if($processName=="SALES_REGULAR"){
                                         $campaignName           =$dataArr['CAMPAIGN_NAME'];
                                         $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
-					if(in_array("$campaignName",$nonAutoCampaign)){
+					
+                                        // non auto campaign ,.ie, mumbai pune nri will go here
+                                        if(in_array("$campaignName",$nonAutoCampaign)) {
 						$dialerEligible ='Y';
-					}else{
-						if($score>=$scoreRange2 && $dialerDialStatus==1){
-							$dialerEligible ='Y';
-							$dialerEligibleNew ='N';
-							$dialerDialStatusNew =0;
-						}
-						else{
-							$dialerEligibleNew ='N';
-							$dialerDialStatusNew =$dialerDialStatus;
-							if($dialerDialStatusNew==1){
-								if($profileid%4==2 || $profileid%4==3){
-									$dialerEligibleNew ='Y';
-								}
-								else{
-									$dialerDialStatusNew=2;
-									$dialerEligibleNew ='N';
-								}
-							}
-							else
-								$dialerDialStatusNew=0;
-							$dialerDialStatus =2;		
-							$dialerEligible ='N';
-						}
-					}	
+                                                if($dataArr['ALLOTED_TO']=='')
+                                                        $dialerDialStatus =1;
+                                                else
+                                                        $dialerDialStatus=2;
+					}
+                                        // auto campaign - noida, delhi, delhi-auto will go here
+                                        else {
+                                            // defines the start and end of score range
+                                            $scoreRangeBase = $salesRegularRangeValue['SCORE1'];
+                                            $scoreRangeMax = $salesRegularRangeValue['SCORE2'];
+                                            
+                                            $dialerEligible = 'N';
+                                            // initially, we assume that the profile will not enter the auto table
+                                            $dialerEligibleNew ='N';
+                                            $dialerDialStatusNew =0;
+                                            
+                                            // the profile is now eligible to for calling, validating further for auto table
+                                            if($score >= $scoreRangeBase && $score < $scoreRangeMax) {
+                                             // valid for auto table, hence setting making ineligible in new table, and eligible in auto table
+
+                                                $dialerDialStatusNew = $dialerDialStatus;
+                                                if($dialerDialStatusNew==1){
+                                                        $dialerEligibleNew = 'Y';
+                                                }
+                                                $dialerEligible = 'N';
+                                                $dialerDialStatus = 0;
+                                             } 
+                                             else {
+                                                    // logic - if profileid % 11 == 1, do not call
+                                                    if($profileid % 11 == 1) {
+                                                        $dialerDialStatus = 0;
+                                                    }
+                                                    else {
+                                                        // verify if the call is really eligible for calling
+                                                        if($dialerDialStatus == 1) {
+                                                            $dialerEligible = 'Y';
+                                                        }
+                                                    }
+                                             }
+                                        }
 					$leadId         =$campaignName.$leadIdSuffix;	
 					$leadId 	=str_replace('pune','mumbai',$leadId);
 					$tablesName 	=$salesRegularCampaignTables[$campaignName];
@@ -1385,7 +1444,8 @@ class csvGenerationHandler
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
-					$source =$campaignName;
+					//$source =$campaignName;
+					$source = $callTimeArr[$profileid]['CALLBACK_SOURCE'];
                                         //$csvDateTime =$processObj->getStartDate();
 					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
@@ -1949,8 +2009,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerPriority($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer')
-		{
+		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer') {
 			 if($allotedTo=='')
 			 {
 				 if($score>=81 && $score<=100)
@@ -1965,9 +2024,7 @@ class csvGenerationHandler
 		}
 		else
 		{
-			if($processName=='rcbCampaignInDialer')
-				$priority =8;
-			elseif($processName=='upsellProcessInDialer')
+			if($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
 				$priority='6';
@@ -2382,6 +2439,11 @@ class csvGenerationHandler
                                 if($process=='renewalProcessInDialer'){
                                     $cnt    =$cnt-$filter['lastLoginCnt'];
                                     $fpRegLogObj->insertCount($dd,'LAST_LOGIN',$filter['lastLoginCnt'],$cnt,$process);
+                                }
+                                
+                                if($process == 'failedPaymentInDialer') {
+                                    $cnt    =$cnt-$filter['MOTHER_TONGUE'];
+                                    $fpRegLogObj->insertCount($dd,'MOTHER_TONGUE',$filter['MOTHER_TONGUE'],$cnt,$process);
                                 }
 				
 		}

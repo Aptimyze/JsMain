@@ -697,7 +697,7 @@ class searchActions extends sfActions
 	public function executeSummaryProfiles(sfWebRequest $request)
 	{
 		ini_set("max_execution_time",0);
-		ini_set("memory_limit","512M");
+		ini_set("memory_limit","1536M");
 		ini_set("mysql.connect_timeout",-1);
 		ini_set("default_socket_timeout",259200); // 3 days
 		ini_set("log_errors_max_len",0);

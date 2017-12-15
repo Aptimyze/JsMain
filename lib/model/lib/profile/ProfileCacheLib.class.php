@@ -38,7 +38,6 @@ class ProfileCacheLib
      * __destruct
      */
     public function __destruct() {
-file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         self::$instance = null;
     }
 
@@ -58,14 +57,10 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public static function getInstance()
     {
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/instance.txt";
-                file_put_contents($fileName, ""."PreNew::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         if (null === self::$instance) {
             $className =  __CLASS__;
             self::$instance = new $className;
-                file_put_contents($fileName, "\n"."Created::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         }
-                file_put_contents($fileName, "\n"."Post::: ".(self::$instance?"true":"false")."\n", FILE_APPEND);
         return self::$instance;
     }
 
@@ -80,7 +75,7 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
     public function isCached($criteria, $key, $fields, $storeName="", $fromUpdate=false)
     {
 //IN USE
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript("get") && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria))) 
+        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE||(ProfileCacheFunctions::isCommandLineScript("get") && false === $fromUpdate) || (false === ProfileCacheFunctions::validateCriteria($criteria)) || @strstr($fields,"(")) 
 	{
 		return false;
         }
@@ -112,8 +107,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function cacheThis($szCriteria, $key, $arrParams, $storeName="")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "cacheThis"."\n", FILE_APPEND);
 //IN USE
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || (0 === count($arrParams)) || false === ProfileCacheFunctions::validateCriteria($szCriteria)) 
 	{
@@ -139,9 +132,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function updateCache($paramArr, $szCriteria, $key, $storeName="", $extraWhereCnd = "")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "updateCache"."\n", FILE_APPEND);
-        
         if ((false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) || (false === $this->isCached($szCriteria, $key, array_keys($paramArr), $storeName, true)))
 	{
             return false;
@@ -172,8 +162,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function insertInCache($iProfileID, $paramArr, $storeName="")
     {
-             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "insertInCache"."\n", FILE_APPEND);
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
@@ -197,10 +185,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function get($szCriteria, $key, $fields, $storeName="", $arrExtraWhereClause = null)
     {
-        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        $a = print_r($fields,true);
-        file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
-//IN USE
         //var_dump($this->isCached($szCriteria, $key, $fields, $storeName));die;
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE || ProfileCacheFunctions::isCommandLineScript("get")||(false === ProfileCacheFunctions::validateCriteria($szCriteria)) || (false === $this->isCached($szCriteria, $key, $fields, $storeName)))  // CHECK THIS
 	{
@@ -251,9 +235,9 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-                $a = print_r($arrOut,true);
-                file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrOut,true);
+                //file_put_contents($fileName, "get :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         
         $arrOut = ProfileCacheFunctions::getOriginalKeysNameWithValues($arrOut,$prefix,'',self::KEY_PREFIX_DELIMITER); 
@@ -274,9 +258,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function storeInLocalCache($key)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-            
-        file_put_contents($fileName, "storeInLocalCache"."\n", FILE_APPEND);
 //IN USE
         $stTime = ProfileCacheFunctions::createNewTime();
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue(ProfileCacheFunctions::getDecoratedKey($key),'',self::REDIS_BUCKET_2);
@@ -331,8 +312,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function checkFieldsAvailability($key, $demandedFields)
     {
-             $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "checkFieldsAvailability"."\n", FILE_APPEND);
 //IN USE
 	$localCacheData = $this->getFromLocalCache($key);
 	if(0 === count($localCacheData))
@@ -357,8 +336,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function updateInLocalCache($key, $arrFields)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "updateInLocalCache"."\n", FILE_APPEND);
         if(!is_array($arrFields)) {
             return false;
         }
@@ -377,8 +354,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function processGenericWhereClause($key, $szWhereCnd)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "processGenericWhereClause"."\n", FILE_APPEND);
         $arrData = $this->getFromLocalCache($key);
         $arrAllowedWhereCnd = array('activatedKey=1','activatedKey= 1','activatedKey = 1','activatedKey =1');
         if (in_array($szWhereCnd, $arrAllowedWhereCnd) && $arrData['bi.activatedKey'] == '1') {
@@ -409,8 +384,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function storeInCache($szKey, $arrParams)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "storeInCache"."\n", FILE_APPEND);
         //Set Hash Object
         $stTime = ProfileCacheFunctions::createNewTime();
         $bSuccess = false;
@@ -462,8 +435,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function purge($key)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "purge"."\n", FILE_APPEND);
         if(isset($this->arrRecords[intval($key)])){
             unset($this->arrRecords[intval($key)]);
         }
@@ -516,8 +487,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function checkProfileData($iProfileId,$fields="")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "checkProfileData"."\n", FILE_APPEND);
       $data = JsMemcache::getInstance()->getHashAllValue(ProfileCacheConstants::PROFILE_CACHE_PREFIX.$iProfileId,'',self::REDIS_BUCKET_2);
       $allowedFields = explode(",", $fields);
       $bAllFields = false;
@@ -556,8 +525,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "getForMultipleKeys"."\n", FILE_APPEND);
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
         }
@@ -581,25 +548,22 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
         
         //Remove Duplicate Suffix
         $prefix =ProfileCacheFunctions::getStorePrefix($storeName);
+        $keywthioutPRefix = 0;
         if(is_array($arrResponse) && count($arrResponse)) {
             foreach($arrResponse as $key=>$val) {
+                    foreach($val as $ky=>$vy){
+                                if(strpos($ky, self::KEY_PREFIX_DELIMITER) === false){
+                                        $keywthioutPRefix = 1;
+                                }
+                     }
                     $val = ProfileCacheFunctions::getOriginalKeysNameWithValues($val,$prefix,'',self::KEY_PREFIX_DELIMITER);
                     $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
             }
         }
-        //TODO : Handle Exception Cases  
-        $keywthioutPRefix = 0;
-        foreach($arrResponse as $ky=>$arrOut){
-                foreach($arrOut as $k=>$v){
-                        if(strpos($k, self::KEY_PREFIX_DELIMITER) === false){
-                                $keywthioutPRefix = 1;
-                        }
-                }
-        }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-                $a = print_r($arrResponse,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($arrResponse,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
         return array_values($arrResponse);
     }
@@ -611,8 +575,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     public function cacheForMultiple($szCriteria, $arrResponse, $storeName="")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "cacheForMultiple"."\n", FILE_APPEND);
         $storeData = array();
         foreach($arrResponse as $key=>$rowData){
             //$rowData = $this->addDuplicateSuffix($rowData, $storeName);
@@ -681,8 +643,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
     private function storeForMultipleProfileInCache($arrData)
     {
             //print_r($arrData);die;
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "storeForMultipleProfileInCache"."\n", FILE_APPEND);
       //Set Hash Object
         $stTime = ProfileCacheFunctions::createNewTime();
         $bSuccess = false;
@@ -806,8 +766,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function deleteSubFields($szKey, $arrFields)
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "deleteSubFields"."\n", FILE_APPEND);
         //Set Hash Object
         $stTime = ProfileCacheFunctions::createNewTime();
         $bSuccess = false;
@@ -847,8 +805,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function getMulipleDataNotAvailabilityKeys(&$arrData, $arrFields)
     { 
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "getMulipleDataNotAvailabilityKeys"."\n", FILE_APPEND);
       $arrPids = array();
       foreach($arrData as $key=>$value)
       {
@@ -930,9 +886,9 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
                 }
         }
         if($keywthioutPRefix == 1){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-                $a = print_r($cachedResult,true);
-                file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
+                //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ProfileCacheWithoutPrefix.txt";
+                //$a = print_r($cachedResult,true);
+                //file_put_contents($fileName, "getForMultipleKeys :: ".$storeName.":::::".$a."\n", FILE_APPEND);
         }
       return $result;
     }
@@ -944,8 +900,6 @@ file_put_contents($fileName, "\n"."Destruct::: ".(self::$instance?"true":"false"
      */
     private function checkRelevantFields($arrFields, $storeName="")
     {
-            $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/JUSTJOINED_HOUR_COUNT.txt";
-        file_put_contents($fileName, "checkRelevantFields"."\n", FILE_APPEND);
         $bStoreNameExist = strlen($storeName) ? true : false;
         $storeSuffix = $this->getStoreSuffix($storeName);
 

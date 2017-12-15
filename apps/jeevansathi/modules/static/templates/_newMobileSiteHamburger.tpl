@@ -1,7 +1,29 @@
 
 <!--start:top header hamburger-->
+~assign var=langText value= "Hindi Version"`
+~assign var=langID value= "hindiLink"`
+~assign var=translateURL value= JsConstants::$hindiTranslateURL`
 
 ~if $loggedIn`
+    ~if $mtongue eq 20 && false`
+        ~assign var=langText value= "Marathi Version"`
+        ~assign var=langID value= "marathiLink"`
+        ~assign var=translateURL value= JsConstants::$marathiTranslateURL`
+    ~/if`
+    <script>
+        var ctrlHam= document.getElementById("~$langID`");
+        if(typeof ctrlHam !== undefined && ctrlHam !== null){
+            let url = window.location.href;
+            url = url.split(".")[0];
+            if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+                ~assign var=langText value= "In English"`
+                ~assign var=translateURL value= "~JsConstants::$siteUrl`"`
+                if(!readCookie("AUTHCHECKSUM")){
+                    ~assign var=translateURL value= "~$translateURL`/P/logout.php"`
+                }
+            }
+        }
+    </script>
     ~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
     <div id="hamburger" style="width:85%" class="white posfix fullheight">
 
@@ -15,17 +37,11 @@
 
                     <ul id="scrollElem" style="-webkit-overflow-scrolling: touch;" class="fontreg white listingHam overAutoHidden fontHam">
 
-
-
                         <li class="f13 pb8 fontlig">
                             <div id="appDownloadLink1" class="dispnone" style="margin-left:14px"><a  href="/static/appredirect?type=androidMobFooter" target="_blank" class="white fl">Download  App | 3MB only </a></div>
                             <div class="dispnone" id="appleAppDownloadLink1"><a style="margin-left:14px"  href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl">Download iOS App </a></div>
                             <div class="dispibl mr10 fr">
-                                ~if $mtongue eq 20 && false`
-                                    <div id="marathiLink" onclick="translateSite('~JsConstants::$marathiTranslateURL`');" class="white  mar0Imp">Marathi Version</div>
-                                ~else`
-                                    <div id="hindiLink" onclick="translateSite('~JsConstants::$hindiTranslateURL`');" class="white  mar0Imp">Hindi Version</div>
-                                ~/if`
+                                <div id="~$langID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~$langText`</div>
                             </div>
                         </li>
                         <div style="height: 1px;padding: 0px 20px;"><div style="background-color: white;height: 1px;opacity: .5;"></div></div>
@@ -253,6 +269,17 @@
     <!--end:edit profile-->
 
 ~else`
+    <script>
+        var ctrlHam= document.getElementById("~$langID`");
+        if(typeof ctrlHam !== undefined && ctrlHam !== null){
+            let url = window.location.href;
+            url = url.split(".")[0];
+            if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+                ~assign var=langText value= "In English"`
+                ~assign var=translateURL value= "~JsConstants::$siteUrl`/P/logout.php"`
+            }
+        }
+    </script>
     <div id="hamburger" class="white posfix wid90p fullheight">
         <div id="outerHamDiv">
             <div id="mainHamDiv">
@@ -264,7 +291,7 @@
                             <div class="dispnone" id="appleAppDownloadLink1"><a href="/static/appredirect?type=iosMobFooter" target="_blank" class="white fl mar0Imp">Download iOS App </a>
                             </div>
                             <div class="fr dispibl">
-                                <div id="hindiLink" onclick="translateSite('~JsConstants::$hindiTranslateURL`');" class="white mar0Imp">Hindi Version</div>
+                                <div id="~$langID`" onclick="translateSite('~$translateURL`');" class="white  mar0Imp">~$langText`</div>
                             </div>
                         </li>
                         <div style="height: 1px;padding: 0px 20px;">

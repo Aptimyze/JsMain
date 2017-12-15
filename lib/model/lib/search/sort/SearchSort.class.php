@@ -24,6 +24,11 @@ class SearchSort
         * @var String $photoSort
         */
 	private $photoSort;
+        /**
+        * @access private
+        * @var String $havePhotoSort
+        */
+	private $havePhotoSort;
 	/**
         * @access private
         * @var String $filterSort
@@ -74,6 +79,27 @@ class SearchSort
 	public function getPhotoSort()
 	{
 		return $this->photoSort;
+	}
+        
+        /**
+	* Sort by havePhoto
+	* @access public 
+	* @param SearchParamters $SearchParamtersObj
+	* @param mixed $loggedInProfileObj
+	* @param String/bool $usePhotoSorting : Flag if photo sorting is required
+	*/
+	public function isHavePhotoSorting($SearchParamtersObj,$loggedInProfileObj='')
+	{
+		$this->havePhotoSort = "HAVEPHOTO";
+	}
+
+	/**
+	* getter for havephotoSort
+	* @return String $this->havePhotoSort 
+	*/
+	public function getHavePhotoSort()
+	{
+		return $this->havePhotoSort;
 	}
 
 	/**

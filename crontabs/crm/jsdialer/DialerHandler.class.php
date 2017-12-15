@@ -1,5 +1,5 @@
 <?php
-include_once('DialerLog.class.php');
+include_once('/home/developer/jsdialer/DialerLog.class.php');
 class DialerHandler
 {
         public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
@@ -135,6 +135,7 @@ class DialerHandler
 	}
 	public function getLoginWithin15Days($profiles_array)
 	{
+                $loginDtStart   =date("Y-m-d",time()-3*24*60*60)." 00:00:00";
 		$loginWithin15Days = array();
 	        $profileid_str = implode(",",$profiles_array);
         	if($profileid_str){
@@ -142,10 +143,13 @@ class DialerHandler
 	                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
 	                while($row = mysql_fetch_array($res)){
 	                        $pid = $row["PROFILEID"];
-	                        if(strtotime($row["LAST_LOGIN_DT"])>=strtotime(date('Y-m-d',time()-15*86400)))
-	                                $loginWithin15Days[$pid] = 1;
+				$loginTime =$row["LAST_LOGIN_DT"];
+				//if(strtotime($row["LAST_LOGIN_DT"])>=strtotime(date('Y-m-d',time()-3*86400)))
+
+				if(strtotime($loginTime)>=strtotime($loginDtStart))
+	                                $loginWithin15Days[$pid] =1;
 	                        else
-	                                $loginWithin15Days[$pid] = 0;
+	                                $loginWithin15Days[$pid] ='';
 	                }
 	        }
 	        return $loginWithin15Days;
@@ -195,6 +199,7 @@ class DialerHandler
         }
 	public function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$discount_profiles)
 	{
+		$scbValue ='Schedule Call Back';
 		if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_RENEWAL_MAH'){
 			$renewal=true;
 			$discountColumn ='DISCOUNT_PERCENT';
@@ -203,7 +208,7 @@ class DialerHandler
 			$renewal=false;
 			$discountColumn ='VD_PERCENT';
 		}
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
+		$squery1 = "SELECT Last_disposition,easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
@@ -211,18 +216,24 @@ class DialerHandler
 			$proid 			= $srow1["PROFILEID"];
 			$vd_discount_dialer 	= $srow1[$discountColumn];
 			$dialStatus		= $srow1["Dial_Status"];
+			$lastDisp 		= trim($srow1['Last_disposition']);
 			$updateStr		='';
 			$vdDiscount 		=0;
 			$updateArr =array();
 
 			if(in_array($proid,$ignore_array)){
-				if($renewal){
-					if($dialStatus!='0' && $dialStatus!='9')
-						$updateArr[] ="Dial_Status=0";
+				if($lastDisp==$scbValue){
 				}
 				else{
-					if($dialStatus!='0' && $dialStatus!='9')
-						$updateArr[] ="Dial_Status=0";
+					if($renewal){
+						if($dialStatus!='0' && $dialStatus!='9')
+							$updateArr[] ="Dial_Status=0";
+					}
+					else{
+						//if($dialStatus!='0' && $dialStatus!='9')
+						if($dialStatus!='9')	
+							$updateArr[] ="Dial_Status=0";
+					}
 				}
 				if(array_key_exists($proid,$discount_profiles))
 					$vdDiscount = $discount_profiles[$proid];
@@ -257,7 +268,7 @@ class DialerHandler
 			$renewal=false;
                         $discountColumn ='VD_PERCENT';
 		}
-		$squery2 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,old_priority,$discountColumn,SCORE,Dial_Status FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$squery2 = "SELECT Last_disposition,easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,old_priority,$discountColumn,SCORE,Dial_Status FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
 		$sresult2 = mssql_query($squery2,$this->db_dialer) or $this->logError($squery2,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult2))
 		{
@@ -269,6 +280,7 @@ class DialerHandler
 			$dialer_data["discount"] 	= $srow1[$discountColumn];
 			$dialer_data["analytic_score"] 	= $srow1["SCORE"];
 			$dialer_data["dial_status"] 	= $srow1["Dial_Status"];
+			$dialer_data["Last_disposition"]= trim($srow1['Last_disposition']);
 			if($renewal)
 				$dialer_data['expiryDt']= $srow1["EXPIRY_DT"];	
 			if($autoCampaign){
@@ -319,6 +331,13 @@ class DialerHandler
 	}
 	public function data_comparision_renewal($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles)
 	{
+                // scb check
+                $scbValue ='Schedule Call Back';
+                $lastDisp =$dialer_data['Last_disposition'];
+                $lastDispFlag =0;
+                if($lastDisp==$scbValue)
+                        $lastDispFlag =1;
+
 		$profileid = $dialer_data["profileid"];
 		$dialStatus     = $dialer_data["dial_status"];
 		$update_str =array();
@@ -353,7 +372,7 @@ class DialerHandler
 		{
 			if($alloted_to){
 				$update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
-				if($dialStatus!=3 && $dialStatus!=9)
+				if($dialStatus!=3 && $dialStatus!=9 && $lastDispFlag!=1)
 					$update_str[]="Dial_Status='2'";
 			}
 			else{
@@ -364,14 +383,14 @@ class DialerHandler
 				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
-				if($dialStatus!=3 && $dialStatus!=9)
+				if($dialStatus!=3 && $dialStatus!=9 && $lastDispFlag!=1)
 					$update_str[] ="Dial_Status='1'";
 			}
 		}
-		elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='3' && $dialStatus!='9'){
+		elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='3' && $dialStatus!='9' && $lastDispFlag!=1){
 			$update_str[] ="Dial_Status='2'";
 		}
-		elseif(!$alloted_to && $dialStatus!='1' && $dialStatus!='3' && $dialStatus!='9'){
+		elseif(!$alloted_to && $dialStatus!='1' && $dialStatus!='3' && $dialStatus!='9' && $lastDispFlag!=1){
 			$update_str[] ="Dial_Status='1'";
 		}
 
@@ -405,6 +424,13 @@ class DialerHandler
 	}
         public function data_comparision_others($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$login15DaysArr)
         {
+		// scb check
+		$scbValue ='Schedule Call Back';
+		$lastDisp =$dialer_data['Last_disposition'];
+		$lastDispFlag =0;
+		if($lastDisp==$scbValue)
+			$lastDispFlag =1;
+		
 		$autoCampaign =false;
 		if($campaign_name=='JS_NCRNEW_Auto')
 			$autoCampaign =true;
@@ -438,14 +464,14 @@ class DialerHandler
 	                $Call_Start_Time = $dialer_data["Call_Start_Time"];
 			$autoDialStatus =$this->getAutoCampaignDialStatus($SelectedOption,$Call_Start_Time);
 		}
-		if($autoCampaign && $autoDialStatus!=1){
+		if($autoCampaign && $autoDialStatus!=1 && $lastDispFlag!=1){
 			$update_str[]="Dial_Status='0'";
 		}	
                 elseif($alloted_to!=$dialer_data['allocated'])
                 {
                         if($alloted_to){
                                 $update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
-                                if($dialStatus!=3 && $dialStatus!=9)
+                                if($dialStatus!=3 && $dialStatus!=9 && $lastDispFlag!=1)
                                         $update_str[]="Dial_Status='2'";
                         }
                         else{
@@ -456,19 +482,19 @@ class DialerHandler
                                 mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
                                 $update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
-                                if($dialStatus!=3 && $dialStatus!=9 && $login15Days)
+                                if($dialStatus!=3 && $dialStatus!=9 && $login15Days && $lastDispFlag!=1)
                                         $update_str[] ="Dial_Status='1'";
-				elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days)
+				elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days && $lastDispFlag!=1)
 					$update_str[] ="Dial_Status='0'";
                         }
                 }
-                elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='9' && $dialStatus!='3'){
+                elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='9' && $dialStatus!='3' && $lastDispFlag!=1){
                         $update_str[] ="Dial_Status='2'";
                 }
-                elseif($dialStatus!='1' && $dialStatus!='9' && $dialStatus!='3' && $login15Days){
+                elseif($dialStatus!='1' && $dialStatus!='9' && $dialStatus!='3' && $login15Days && $lastDispFlag!=1){
                         $update_str[] ="Dial_Status='1'";
                 }
-		elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days){
+		elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days && $lastDispFlag!=1){
 			$update_str[] ="Dial_Status='0'";
 		}
 
@@ -551,7 +577,8 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID','PREFERRED_TIME_IST'=>'PREFERRED_TIME_IST');
+			unset($fieldNameArr['EOI']);
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID','PREFERRED_TIME_IST'=>'PREFERRED_TIME_IST','EOI'=>'SOURCE');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')
@@ -700,6 +727,17 @@ class DialerHandler
 		}
 		return $dialStatus;
 	}
+        public function updateDialStatusInDialer($profileid,$campaignName,$processName='')
+        {
+		$squery ="UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0',Last_disposition='Done' WHERE PROFILEID='$profileid'";
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1,$processName);
+        }
+	public function addLog($profileid,$campaignName,$str,$action)
+	{
+        	$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','$str',now(),'$action')";
+        	mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
+	}
+
 
 }
 ?>

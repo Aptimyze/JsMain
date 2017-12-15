@@ -125,6 +125,7 @@ class JPROFILE
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
         }
+
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
             //$this->logCacheConsumption();
@@ -256,6 +257,7 @@ class JPROFILE
                 $tempValueArray['PROFILEID'] = $result['notCachedPids'];
                 $result = $result['cachedResult'];
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                
                 if(strlen($tempValueArray['PROFILEID']) !== 0)
                 {
                     // get result from store for remaining pids
@@ -286,7 +288,14 @@ class JPROFILE
         }
     }
     private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
+        $arrPid = explode(',', $valueArray['PROFILEID']);
+        if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT || @strstr($fields,"("))
+        {
+           return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }
         $fieldsArr = explode(",",$fields);
+	$defaultFieldsRequired = array("HAVE_JCONTACT", "HAVEPHOTO", "MOB_STATUS", "LANDL_STATUS", "SUBSCRIPTION", "INCOMPLETE", "ACTIVATED", "PHOTO_DISPLAY", "GENDER", "PRIVACY");
+	$fieldsArr = array_merge($fieldsArr,$defaultFieldsRequired);
         $fieldsAll = "*";
         $storeFullResult = $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fieldsAll, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
         ProfileCacheLib::getInstance()->cacheForMultiple("PROFILEID", $storeFullResult, __CLASS__);
@@ -296,7 +305,7 @@ class JPROFILE
         $storeResult = array();
         foreach($storeFullResult as $ky=>$storeData){
                 foreach($fieldsArr as $fieldName){
-                        $storeResult[$ky][$fieldName] = $storeData[$fieldName];
+	       		$storeResult[$ky][$fieldName] = $storeData[$fieldName];
                 }
         }
         return $storeResult;

@@ -125,7 +125,6 @@ class ProfileNativePlace
         $objProCacheLib =ProfileCacheLib::getInstance();
         if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, 'NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY', __CLASS__)) {
             //Get From Cache
-                
             $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, 'NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY', __CLASS__);
 
             if (false !== $result) {
@@ -135,9 +134,8 @@ class ProfileNativePlace
             
             if($result && $result["NATIVE_COUNTRY"] === ProfileCacheConstants::NOT_FILLED){
                 $result = null;
-            }   
+            }
         }
-        //die("123414");
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;

@@ -85,18 +85,29 @@ class DialerDncScrubing
 			$alloted = $srow1['AGENT'];
 			$lastDisp =trim($srow1['Last_disposition']);
 			if($ecode){
-	                        if($lastDisp==$scbValue){
-	                                $dialStatus ='3';
+				if($campaign_name=='FP_JS'){
+					$paid = $this->getPaidProfile($proid, $dateTime);
+					if($paid)
+						$dialStatus ='0';
+					elseif($lastDisp==$scbValue)
+						$dialStatus ='3';
+					else
+						$dialStatus=1;
 				}
-	                        else{
-					if(in_array("$campaign_name", $eligibleCampaignArr)){
-						if(in_array($proid, $eligiblePool))
-		                        	        $dialStatus ='1';
-						else
-							$dialStatus ='0';
+				else{
+	                        	if($lastDisp==$scbValue){
+	                        	        $dialStatus ='3';
 					}
-					else{
-						$dialStatus ='1';
+	                        	else{
+						if(in_array("$campaign_name", $eligibleCampaignArr)){
+							if(in_array($proid, $eligiblePool))
+		                	        	        $dialStatus ='1';
+							else
+								$dialStatus ='0';
+						}
+						else{
+							$dialStatus ='1';
+						}
 					}
 				}
 				if($autoCampaign && $dialStatus==1){
@@ -165,6 +176,17 @@ class DialerDncScrubing
         	}
         	return $profileArr;
 	}
+	// Fetch Paid profiles
+	function getPaidProfile($profileid,$dateTime)
+	{
+		$sql= "SELECT distinct PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN($profileid) AND STATUS='DONE' AND ENTRY_DT>='$dateTime' AND MEMBERSHIP='Y'";
+		$res=mysql_query($sql,$this->db_js_111) or die($sql.mysql_error($this->db_js_111));
+		while($myrow = mysql_fetch_array($res)){
+			$pid =$myrow["PROFILEID"];
+		}
+		return $pid;
+	}
+
 	public function logError($sql,$campaignName='',$dbConnect='',$ms='')
 	{
 		$processName ='Optin-Process';

@@ -33,9 +33,10 @@ EOF;
 	$arg = $arguments['mailer_key'];
 	$mailer_key = explode("#",$arg);
 
-	if($mailer_key[1] == 'INSERT')
+	if($mailer_key[1] == 'INSERT'){
+	    date_default_timezone_set("Asia/Calcutta");
 		$countObj->insertData($mailer_key[0],0,0,0,0,0,0,date("Y-m-d H:00:00"));
-	else
+	}else
 	{
 		$instanceID = $countObj->getID($mailer_key[0]);
 

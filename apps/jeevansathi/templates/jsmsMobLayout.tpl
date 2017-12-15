@@ -46,7 +46,10 @@
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
 	<link rel="manifest" href="/manifest.json">
 
-    ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
+	~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
+	~assign var=module value=$sf_request->getParameter('module')`
+	~assign var=action value=$sf_request->getParameter('action')`
+	~assign var=showFreshChat value= CommonUtility::checkFreshChatPanelCondition($module,$action,$trackProfileId)`
     ~include_title`
     ~use helper = SfMinify`
 
@@ -75,6 +78,21 @@
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
+
+    ~if $showFreshChat && $trackProfileId`
+		~assign var="userDetails" value=CommonUtility::getFreshChatDetails($trackProfileId)`
+		~assign var="tag" value=CommonUtility::getUserType($trackProfileId)`
+	~/if`
+	var profileID = "~$trackProfileId`";
+	if(!readCookie("AUTHCHECKSUM")){
+		~assign var="logout" value=1`
+		localStorage.removeItem("login");
+		localStorage.setItem("logout",1);
+	} else if(profileID){
+        ~assign var="logout" value=0`
+		localStorage.removeItem("logout");
+		localStorage.setItem("login",1);
+	}
 
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
@@ -146,11 +164,11 @@ var domainCode={};
         	<img border="0">
         
         </div>
-  ~if $sf_request->getParameter('module') eq 'membership' || $sf_request->getParameter('module') eq 'help'`
-    ~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
-        ~include_partial('global/freshDesk')`
-     ~/if`
-  ~/if`
+	~if $showFreshChat`
+		~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
+			~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$trackProfileId,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
+		~/if`
+	~/if`
   </body>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`

@@ -2457,10 +2457,9 @@ class MembershipHandler
             $paymentDetailsObj = new BILLING_PAYMENT_DETAIL();
             $billid = $purDet['BILLID'];
             $billidArr = Array($purDet['BILLID']);
-            $details = $paymentDetailsObj->getAllDetailsForBillidArr($billidArr);
+            $prevAmt= $paymentDetailsObj->getAllDetailsForBillidArr($billidArr,"","",1);
             //print_r("Details: ". $details."\n");print_r($details);
-            
-            $prevAmt = $details[$billid]['AMOUNT'];
+            //$prevAmt = $details[$billid]['AMOUNT'];
             //Sum of amount in paymentdetails(which is after discount) and discount amount in purchases 
             $prevTotAmt = $prevAmt + $prevDiscAmt;
         //End: JSC-2938: Changes for getting actual billing amount
@@ -2851,7 +2850,7 @@ class MembershipHandler
                 }
             }
             JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
-            return $discount?$discount:$otherDiscount;
+            return $discount;
         }
     }
     
@@ -2860,9 +2859,6 @@ class MembershipHandler
             $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
             if($discountArr){
                 $discount = $discountArr[$communityId];
-                if(!($discount && $discount >= 0)){
-                    $discount = $discountArr[0];
-                }
             }
             else{
                 $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();

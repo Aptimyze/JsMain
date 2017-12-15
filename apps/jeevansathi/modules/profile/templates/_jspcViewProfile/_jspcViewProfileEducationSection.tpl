@@ -196,18 +196,6 @@
                       </p>
                     </li>
                     <li>
-                      <p class="color12 pt15">Work Status</p>
-                    <p class="pt2 pr20">
-                        <span id="edit_work_statusView" ~if $bEditView && $apiData["about"]["decorated_work_status"]["work_status"] eq $notFilledInText` class="color5" ~else if $apiData["about"]["decorated_work_status"]["work_status"] eq null` class="notFilledInColor" ~/if` >
-                          ~if $apiData["about"]["decorated_work_status"]["work_status"] neq null || $bEditView`
-                            ~$apiData["about"]["decorated_work_status"]["work_status"]`
-                          ~else`
-                            Not filled in
-                          ~/if`
-                        </span>
-                      </p>
-                    </li>
-                    <li>
                       <p class="color12 pt15" id="company_nameLabelParent">Organization Name 
                       ~if $bEditView`
                         <span class="~if ($editApi.Career.COMPANY_NAME.value|count_characters:true) eq 0 || $editApi.Career.COMPANY_NAME.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 

@@ -19,7 +19,6 @@ class DialerLog
 				$string ="\n DATE:$today \t CAMPAIGN:$campaignName \t QUERY:$sql \t ERROR:".mssql_get_last_message();
 			else
 				$string ="\n DATE:$today \t CAMPAIGN:$campaignName \t QUERY:$sql \t ERROR:".mysql_error($dbConnect);
-			echo $string;
 			fwrite($handle, $string);
 			fclose($handle);
 		}
@@ -31,8 +30,10 @@ class DialerLog
 		}
 
 		// Error mail
-		if($processName)
+		if($processName){
 			$this->sendMail($string,$processName);
+			die();
+		}
 	}
 	public function logOnlinePriority($profileid,$npriority,$dialStatus='',$priorityType='',$campaignName,$sourceType='',$alloted='')
 	{

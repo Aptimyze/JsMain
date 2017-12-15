@@ -115,7 +115,7 @@ class aadharVerification
             return $aadharDetails;
         }             
         //get details using mysql
-		$aadharDetails = self::$aadharObj->getAadharDetails($profileId);
+		$aadharDetails = self::$aadharObj->getAadharDetails($profileId);		
 		//add details to cache
                 if(!empty($aadharDetails)){
                         $aadharArr = array();
@@ -130,6 +130,7 @@ class aadharVerification
                         $aadharArr['AADHAR_NO'] = "";
                         $aadharArr['REQUEST_ID'] = "";
                         $aadharArr['VERIFY_STATUS'] = "";
+                        $aadharArr['PROFILEID'] = $profileId;
                 }
                 if(false === ProfileCacheFunctions::isCommandLineScript("set")){
                         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
@@ -173,6 +174,11 @@ class aadharVerification
         }
         else
             return 0;
+    }
+    
+    public function getProfilesForAadhaarVerificationMailer($entry_date,$login_date,$sendEvery){
+        $profilesToReturn = self::$aadharObj->getProfilesWhoHaveUnverifiedAadhaar($entry_date,$login_date,$sendEvery);
+        return $profilesToReturn;
     }
 
 }

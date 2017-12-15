@@ -243,7 +243,8 @@ class ProfileCacheConstants
                                     );
 
     public static $arrFSOColumns = array(
-                                        'PROFILEID'    
+                                        'PROFILEID',
+					'FSO_EXISTS' 
                                     );
     public static $arrCommonFieldsMap = array(
                                         'PROFILEID',
@@ -436,7 +437,8 @@ class ProfileCacheConstants
                                         "ProfileYourInfoOld"=>"arrOldYourInfo",
                                         "ProfileAUTO_EXPIRY"=>"arrAutoExpiry",
                                         "ProfileFilter"=>"arrProfileFilter",
-                                        "Jpartner"=>"arrJpartnerColumns"
+                                        "Jpartner"=>"arrJpartnerColumns",
+					"ProfileFSO"=>"arrFSOColumns"
                                 );
     public static function getKeyData($storeName){
             
