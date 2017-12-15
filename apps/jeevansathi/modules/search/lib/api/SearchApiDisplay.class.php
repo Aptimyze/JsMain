@@ -883,13 +883,21 @@ class SearchApiDisplay
 							}
 						}
 				}
-                                if($withAadhaar && $hasAadhaar){
-                                    if(is_array($displaySeal))
-                                        $returnArr['documents'] = array_values(array_unique($displaySeal));
-                                    else
-                                        $returnArr['documents'] = 1;
-                                    
-                                    $returnArr['Aadhaar'] = "A";
+                                if($withAadhaar){
+                                    if($hasAadhaar){
+                                        if(is_array($displaySeal))
+                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        else
+                                            $returnArr['documents'] = 1;
+
+                                        $returnArr['Aadhaar'] = "A";
+                                    }
+                                    else{
+                                        if(is_array($displaySeal))
+                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        else
+                                            $returnArr['documents'] = 1;
+                                    }
                                     return $returnArr;
                                 }
                                 

@@ -86,7 +86,7 @@ send_email($to,$msg,$subject);
 function errorEmail($sql,$to)
 {
 $subject="SMS_DETAIL cleanup error";
-$msg='Error while executing query :'.$sql.'.<br> '.mysql_errno() . ": " . mysql_error().'<br><br>Regards,<br> JS'; 
+$msg='Error while executing query :'.$sql.'.<br> '.mysql_errno($db) . ": " . mysql_error($db).'<br><br>Regards,<br> JS'; 
 send_email($to,$msg,$subject);
 die;
 
