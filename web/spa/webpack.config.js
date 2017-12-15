@@ -17,7 +17,7 @@ if(process.env.NODE_ENV === 'production')
  }
  else {
    DIST_DIR = path.resolve(__dirname,"dist");
-   fileNameConfig = "[name].[chunkhash].bundle.js";
+   fileNameConfig = "[name].bundle.js";
    publicPathConfig = '/spa/dist/';
 
 }
