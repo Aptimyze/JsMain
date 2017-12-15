@@ -242,6 +242,30 @@ class visitorAlert_MAILER extends TABLE
         }
     	
     }
+    
+    
+    public function getMailerTableInfo()
+    {
+    	try
+        {
+	            $sql = "SELECT COUNT(*) CNT,SENT FROM visitoralert.MAILER_VISITORS GROUP BY SENT";
+
+	            $pdoStatement = $this->db->prepare($sql);
+
+	            $pdoStatement->execute();
+                    while($row = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+                        $toRet[$row['SENT']] = $row['CNT'];
+                    
+                    return $toRet;
+                    
+        }
+
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    	
+    }
 }
 
 ?>
