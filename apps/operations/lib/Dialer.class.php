@@ -28,7 +28,7 @@ class Dialer
         {
 		$method =$processObj->getMethod();
                 if($method=='IN_DIALER_ELIGIBILITY'){
-			$indialerTempPool =new incentive_IN_DIALER_TEMP_POOL('newjs_slave');
+			$indialerTempPool =new incentive_IN_DIALER_TEMP_POOL('crm_slave');
 			$indialerTempPoolRemove =new incentive_IN_DIALER_TEMP_POOL();
 
                         // DO NOT CALL Filter
@@ -88,10 +88,10 @@ class Dialer
 	public function filterProfiles($profileArr){
 
 		if($profileArr){
-			$alertsObj 	=new JprofileAlertsCache('newjs_slave');
-			$historyObj 	=new incentive_HISTORY('newjs_slave');
-			$jprofileObj    =new JPROFILE('newjs_slave');
-	                $purchaseObj 	=new BILLING_PURCHASES('newjs_slave');
+			$alertsObj 	=new JprofileAlertsCache('crm_slave');
+			$historyObj 	=new incentive_HISTORY('crm_slave');
+			$jprofileObj    =new JPROFILE('crm_slave');
+	                $purchaseObj 	=new BILLING_PURCHASES('crm_slave');
         	        $everPaidPool  	=$purchaseObj->fetchEverPaidPool();
 			$excl_dnc_dt    =@date('Y-m-d',time()-(30-1)*86400);
 			$excl_ni_dt     =@date('Y-m-d',time()-(7-1)*86400);
@@ -110,13 +110,15 @@ class Dialer
                         $scoreRange3    =$salesRegularRangeValue['SCORE3'];
                         $discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
                         $discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
+                        $maharashtraCampaignMinScore = $salesRegularRangeValue['SCORE4'];
+                        $minScore = $salesRegularRangeValue['SCOREMIN'];
 			
 			foreach($profileArr as $k => $dataFieldArr){
 
                         	$analyticScore  =$dataFieldArr['ANALYTIC_SCORE'];
                         	$profileid      =$dataFieldArr['PROFILEID'];
-	
-                                if($analyticScore<$scoreRange1){
+                                
+                                if($analyticScore<$minScore){
                                 	$this->updateIndialerProfileLog($profileid,$username,'N',"ANALYTIC_SCORE",$analyticScore);
                                         continue;  
 				}     
@@ -179,27 +181,38 @@ class Dialer
 				// New code
                                 $campaignName   =$inDialerPool[$profileid]['CAMPAIGN_NAME'];
 				if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3){
-					$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-					$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+                                        if($campaignName == 'delhi' || $campaignName == 'noida') {
+                                            if($profileid % 11 != 1) {
+                                                $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            }else 
+                                            {
+                                                $this->updateIndialerProfileLog($profileid,$username,'N','','','O');
+                                            }
+                                        }
+                                        else {
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                        }
+                                        $this->updateIndialerProfileLog($profileid,$username,'N','','','N');
 				}
-				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2){
+				elseif($analyticScore>=$scoreRange1 && $analyticScore<$scoreRange2) {
                                         $vdDiscountArr  =$vdDiscountObj->getDiscount($profileid);
                                         $discount     	=$vdDiscountArr[$profileid]['DISCOUNT'];
 
-					if($campaignName=='noida' || $campaignName=='delhi'){
+					if($campaignName=='noida' || $campaignName=='delhi') {
 						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}	
 					elseif($campaignName=='mumbai' || $campaignName=='pune'){
+                                            if($analyticScore>=$maharashtraCampaignMinScore)
 						$this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
+                                            else
+						$this->updateIndialerProfileLog($profileid,$username,'N','','','O');
 					}
+                                        
 					if($discount>=$discountRange1 && $discount<=$discountRange2){
-						if($profileid%4==2 || $profileid%4==3)
-							$this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
-						else
-							$this->updateIndialerProfileLog($profileid,$username,'N','','','N');
+                                            $this->updateIndialerProfileLog($profileid,$username,'Y','','','N');
 					}
 					else
-						$this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
+                                            $this->updateIndialerProfileLog($profileid,$username,'N','','','N');		
 				}	
 				//$this->updateIndialerProfileLog($profileid,$username,'Y');
 				unset($jProfileArr);

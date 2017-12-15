@@ -21,19 +21,40 @@ class ExclusiveFunctions{
 		} 
 		foreach ($pogRBInterestsPids as $key => $pid) {
 			$profileObj = new Operator;
-			$profileObj->getDetail($pid,"PROFILEID","PROFILEID,USERNAME,YOURINFO,HAVEPHOTO,GENDER,HOROSCOPE_MATCH");
+			$profileObj->getDetail($pid,"PROFILEID","PROFILEID,USERNAME,YOURINFO,HAVEPHOTO,GENDER,HOROSCOPE_MATCH,AGE,COUNTRY_RES,CITY_RES,OCCUPATION,INCOME,GOTHRA,FAMILY_STATUS,RES_STATUS,CITY_BIRTH,HAVE_JEDUCATION");
 			if($profileObj){
 				$pogRBInterestsPool[$key]['PROFILEID'] = $pid;
 				$pogRBInterestsPool[$key]['USERNAME'] = $profileObj->getUSERNAME();
 				$pogRBInterestsPool[$key]['ABOUT_ME'] = $profileObj->getYOURINFO();
+				$pogRBInterestsPool[$key]['PROFILE_CHECKSUM'] = md5($pid)."i".$pid;
 				if(!empty($pogRBInterestsPool[$key]['ABOUT_ME'])){
-					$pogRBInterestsPool[$key]['ABOUT_ME'] = substr($pogRBInterestsPool[$key]['ABOUT_ME'], 0,1000);
+					$pogRBInterestsPool[$key]['ABOUT_ME'] = substr($pogRBInterestsPool[$key]['ABOUT_ME'], 0,1500);
 				}
+				//Added extra information for the JSC-3569
+				$pogRBInterestsPool[$key]['AGE'] = $profileObj->getAGE();
+				$pogRBInterestsPool[$key]['COUNTRY_RES'] = $profileObj->getDecoratedCountry();
+				$pogRBInterestsPool[$key]['CITY_RES'] = $profileObj->getDecoratedCity();
+				$pogRBInterestsPool[$key]['STATE_RES'] = $profileObj->getDecoratedState();
+				$pogRBInterestsPool[$key]['OCCUPATION'] = $profileObj->getDecoratedOccupation();
+				$pogRBInterestsPool[$key]['INCOME'] = $profileObj->getDecoratedIncomeLevel();
+				$pogRBInterestsPool[$key]['GOTHRA'] = $profileObj->getDecoratedGothra();
+				$pogRBInterestsPool[$key]['FAMILY_STATUS'] = $profileObj->getDecoratedFamilyStatus();
+				$pogRBInterestsPool[$key]['RES_STATUS'] = $profileObj->getDecoratedRstatus();
+				$pogRBInterestsPool[$key]['CITY_BIRTH'] = $profileObj->getDecoratedBirthCity();
+				$educationDetails = $profileObj->getEducationDetail();
+				if($educationDetails){
+				    $pogRBInterestsPool[$key]['PG_DEGREE'] = $educationDetails->PG_DEGREE;
+				    $pogRBInterestsPool[$key]['PG_COLLEGE'] = $educationDetails->PG_COLLEGE;
+				    $pogRBInterestsPool[$key]['UG_DEGREE'] = $educationDetails->UG_DEGREE;
+				    $pogRBInterestsPool[$key]['UG_COLLEGE'] = $educationDetails->COLLEGE;
+				}
+				//end
 				$profilePic = $profileObj->getHAVEPHOTO();
 				$oppGender = $profileObj->getGENDER();
 				
 				if($oppGender!=$clientParams["gender"]){
 	        		if (!empty($profilePic) && $profilePic != 'N'){
+					$pogRBInterestsPool[$key]['HAVEPHOTO'] = 'Y';
 	        			$pictureServiceObj=new PictureService($profileObj);
 	            		$profilePicObj = $pictureServiceObj->getProfilePic();
 	            		if(!empty($profilePicObj)){

@@ -9,6 +9,7 @@
 var retryAttempt = 0;
 var EditApp = {};
 var callBlur = 0;
+var DataUpdated = 0;
 EditApp = function(){
 
   try{
@@ -84,11 +85,11 @@ EditApp = function(){
     var VERIFICATION      = "verification";
     
     var criticalSectionArray   = ["MSTATUS","MSTATUS_PROOF","DTOFBIRTH"];
-    var basicSectionArray   = ["NAME","GENDER","HAVECHILD","HEIGHT","RELIGION","MTONGUE","CASTE","JAMAAT","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var basicSectionArray   = ["NAME","AADHAAR","GENDER","HAVECHILD","HEIGHT","RELIGION","MTONGUE","CASTE","JAMAAT","SECT","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
-    var eduCareerSectionArray = ["EDU_LEVEL_NEW","SCHOOL","DEGREE_UG","COLLEGE","DEGREE_PG","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","WORK_STATUS","OCCUPATION","COMPANY_NAME","INCOME","MARRIED_WORKING","GOING_ABROAD"];
+    var eduCareerSectionArray = ["EDU_LEVEL_NEW","SCHOOL","DEGREE_UG","COLLEGE","DEGREE_PG","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","OCCUPATION","COMPANY_NAME","INCOME","MARRIED_WORKING","GOING_ABROAD"];
     var horoscopeSectionArray = ["HOROSCOPE_MATCH","SUNSIGN","RASHI","NAKSHATRA","MANGLIK","ASTRO_PRIVACY"];
     var aboutSectionArray = ["YOURINFO","FAMILYINFO","EDUCATION","JOB_INFO"];
     var contactSectionArray = ["EMAIL","ALT_EMAIL","PHONE_MOB","MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","ALT_MOBILE","ALT_MOBILE_OWNER_NAME","ALT_MOBILE_NUMBER_OWNER","PHONE_RES","PHONE_OWNER_NAME","PHONE_NUMBER_OWNER","TIME_TO_CALL_START","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","CONTACT","SHOWADDRESS","PINCODE","PARENTS_CONTACT","SHOW_PARENTS_CONTACT","PARENT_PINCODE"];
@@ -100,7 +101,7 @@ EditApp = function(){
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
-                                "career":"edu_level_new,degree_ug,degree_pg,work_status,occupation,income,working_marriage,going_abroad",
+                                "career":"edu_level_new,degree_ug,degree_pg,occupation,income,working_marriage,going_abroad",
                                 "horoscope":"horoscope_match,rashi,nakshatra,manglik,astro_dob,astro_btime,astro_country_birth,astro_place_birth,sunsign,astro_privacy",
                                 "contact":"isd,mobile_number_owner,alt_mobile_number_owner,phone_number_owner,stdcodes",
                                 "verification": "id_proof_type,addr_proof_type" //,id_proof_val,address_proof_val
@@ -122,7 +123,7 @@ EditApp = function(){
     var NON_EDITABLE_TYPE         = "N";
     
     var OPEN_TEXT_TYPE            = "O";
-    var openTextTypeFields        = ["NAME","FAV_BOOK","FAV_FOOD","FAV_MOVIE","FAV_VAC_DEST","FAV_TVSHOW","WEIGHT","PROFILE_HANDLER_NAME","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","DIOCESE","ANCESTRAL_ORIGIN","SCHOOL","COLLEGE","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","COMPANY_NAME","EMAIL","ALT_EMAIL","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","PINCODE","PARENT_PINCODE"];
+    var openTextTypeFields        = ["NAME","FAV_BOOK","FAV_FOOD","FAV_MOVIE","FAV_VAC_DEST","FAV_TVSHOW","WEIGHT","PROFILE_HANDLER_NAME","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","DIOCESE","ANCESTRAL_ORIGIN","SCHOOL","COLLEGE","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","COMPANY_NAME","EMAIL","ALT_EMAIL","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","PINCODE","PARENT_PINCODE","AADHAAR"];
     var UNCOOKED_TYPE		  = "U";
     var unCookedFields = ['DISPLAYNAME'];
     var autoSuggestFields         = ["SUBCASTE","GOTHRA","GOTHRA_MATERNAL","SCHOOL","COLLEGE","PG_COLLEGE","COMPANY_NAME"]; 
@@ -162,7 +163,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city","MSTATUS":"js-mstatus","MSTATUS_PROOF":"js-mstatus_proof","CASTE":"js-caste"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","ALT_EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city","MSTATUS":"js-mstatus","MSTATUS_PROOF":"js-mstatus_proof","CASTE":"js-caste","AADHAAR":"js-aadhaar"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -210,7 +211,9 @@ EditApp = function(){
         }
 			});
     }
-    
+    updateNeedToUpdate = function(){
+            editAppObject.needToUpdate = true;
+    }
     /*
      * getAutoSuggest
      * @param {type} queryData like {q: stringToSend, type: "subcaste", caste: $("#caste_value").val()},
@@ -244,6 +247,7 @@ EditApp = function(){
      * Store Data in editAppObject
      */
     storeData = function(data,textStatus,jqXHR){
+       DataUpdated = 1;
       var userReligion;
       bErrorInEditAjax = false;
       retryStoreData = 0;
@@ -337,6 +341,10 @@ EditApp = function(){
               field.isEditable      = sectionArr[j].edit      === "N" ? false : true;
               field.isUnderScreen   = sectionArr[j].screenBit === "1" ? true  : false;
               field.type            = SINGLE_SELECT_TYPE;/*Single Select Type*/
+              
+              if(sectionArr[j].key == "AADHAAR"){
+                        field.decValue        = typeof sectionArr[j].label_val == "string" ? sectionArr[j].label_val : ""; 
+              }
               if((field.value === null || field.value.length === 0) && field.isUnderScreen ){
                 field.isUnderScreen = false;
               }
@@ -742,7 +750,10 @@ EditApp = function(){
       var fieldDivAttr  = {class:"fl edpbrd3 lh40 edpwid3 edpbrad1 pos-rel"}
       if(fieldObject.key=="NAME")
       	var inputAttr     = {class:"f15 color11 fontlig wid70p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
-      else
+      if(fieldObject.key=="AADHAAR"){
+        var fieldDivAttr  = {class:"fl edpbrd3 wid351 edpbrad1 pos-rel fl edpp5 edpbrad1 edpbg1"}
+      	var inputAttr     = {class:"f15 color11 fontlig wid70p cursp",disabled:"disabled",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
+        } else
       	var inputAttr     = {class:"f15 color11 fontlig wid94p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
       var errorLabelAttr = {class:"pos-abs js-errorLabel errorChosenTop f13 colr5 disp-none"};
       if(debugInfo){
@@ -812,6 +823,12 @@ EditApp = function(){
 	if(fieldObject.key=="NAME")
 	{
 	var nameSettingDOM = '            <div id="hoverDiv" class="disp_ib pos-abs r0 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll disp_ib">Show to All</span><i id="settingsIcon"></i> <ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName"> <li class="selected" id="showYes">Show my name to all </li> <li id="showNo">Don\'t show my name<br> ( You will not be able to see names of other members ) </li>  </ul> </div>';
+	fieldDivDom.append(nameSettingDOM);
+	}
+        
+	if(fieldObject.key=="AADHAAR")
+	{
+	var nameSettingDOM = '            <div id="verify-aadhaar" class="disp_ib pos-abs r0 mr5 cursp bg_pink wid127 txtc" style="right: -143px;top: -1px;height: 40px;"><div style="position: relative;"> <div class="pos-abs z1 wid300 edpbox1 aadhardiv" style="right: -285px;"> <div class="edpp6">   <div class="pos-rel bg-white brdr-1 fullwid edpp7">     <i class="edpic8 sprite2 pos-abs edppos3"></i>     <div class="txtc fontreg">   <p class="colr5 f15 lh30">Provide your Aadhaar no and verify?</p>   <p class="f13 color11">To edit Gender,  please contact customer care: 1-800-419-6299 / help@jeevansathi.com</p>     </div>   </div> </div>  </div> <span id="showText" class="colrw fontlig f16 lh40">Verify</span></div>';
 	fieldDivDom.append(nameSettingDOM);
 	}
       
@@ -2393,7 +2410,7 @@ EditApp = function(){
       var regExIndianLandline=/^[0-9]\d{2,4}[-. ]?\d{6,8}$/;
       var regExInternational=/^\+(?:[0-9][-. ]? ?){6,15}[0-9]$/;
       
-      var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+      var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
       var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
       
       var isd_regex = /^[+]?[0-9]+$/;
@@ -2587,7 +2604,7 @@ EditApp = function(){
       }
       
       var validatePhone = function(fieldKey){
-        
+
         var isdFieldID      = '#'+fieldKey.toLowerCase()+'-isd';
         var stdFieldID      = '#'+fieldKey.toLowerCase()+'-std';
         var mobileFieldID   = '#'+fieldKey.toLowerCase()+'-mobile';
@@ -5301,6 +5318,9 @@ updateEduLevelChanges =function(eduLevelVal)
           onEmailChange(event)
         },0);
       });
+      $('.js-aadhaar').on('keydown',function(event){
+        return false;
+      });
       
       //Save Btn
       $('.js-save').unbind('click').on('click',function(event){
@@ -5480,6 +5500,32 @@ updateEduLevelChanges =function(eduLevelVal)
       $('#daysub').on('click',function(event){
               clickCallBack("day",event,$(this).attr("rel"));
       });
+       $('#verify-aadhaar').mouseover(function(event) {
+              $(this).find(".aadhardiv").removeClass("edpbox1");
+      });
+      $("#verify-aadhaar").mouseout(function(event){
+              $(this).find(".aadhardiv").addClass("edpbox1");
+      });
+      $("#verify-aadhaar").bind('click',function(event){
+                showCommonLoader();
+                var url="/static/criticalActionLayerDisplay";
+                var ajaxData={'layerId':24};
+                var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
+
+                ajaxConfig.success=function(response){
+                  hideCommonLoader();
+                  $("#outerCalContainer").remove();
+                  $('body').css('overflow','hidden');
+                  $('body').prepend("<div id='outerCalContainer'>"+response+"</div>");
+                  showLayerCommon('criticalAction-layer');
+                  $('.js-overlay').unbind('click');
+                }
+
+                $.myObj.ajax(ajaxConfig);
+    
+      });
+ 
+
       $('#cancelBtncritical').on('click',function(event){
                 inputData = {};
                 var dob = editAppObject[CRITICAL]['DTOFBIRTH'].value.split("-");
@@ -5685,8 +5731,10 @@ updateEduLevelChanges =function(eduLevelVal)
             if(debugInfo) $(fieldParentId).find('.js-undSecMsg').removeClass(dispNone);
             $(fieldParentLabel).find('.js-undSecMsg').removeClass(dispNone);
           }else{
-            if(debugInfo) $(fieldParentId).find('.js-undSecMsg').addClass(dispNone);
-            $(fieldParentLabel).find('.js-undSecMsg').addClass(dispNone);
+                  if(fieldObject.key=="AADHAAR" && !fieldObject.decValue.length ){
+                        if(debugInfo) $(fieldParentId).find('.js-undSecMsg').addClass(dispNone);
+                        $(fieldParentLabel).find('.js-undSecMsg').addClass(dispNone);
+                }
           }
           
           var mainField = "";
@@ -5998,6 +6046,16 @@ updateEduLevelChanges =function(eduLevelVal)
                 {
                         $("#havechildParent").show();
                 }
+        }
+        if(key=="aadhar")
+        {
+                if(section['aadhar']==""){
+                        $("#aadhaarView").text("Not filled in").removeClass("edpcolr2").removeClass("color11").addClass("color5");
+                        $("#aadhaarLabelParent").find(".js-undSecMsg").addClass("disp-none");
+                }else{
+                        $("#aadhaarLabelParent").find(".js-undSecMsg").find("span").text("Verified").removeClass("color5").addClass("edpcolr2");
+                }
+                    
         }
           var viewId = '#'+key.toLowerCase()+'View';
           
@@ -6672,7 +6730,9 @@ updateEduLevelChanges =function(eduLevelVal)
     updateMulti:updateMultiFieldsView,
     onSave:onSectionSave,
     getEditAppFields:getEditAppFields,
-    storeFieldChangeValue:storeFieldChangeValue
+    storeFieldChangeValue:storeFieldChangeValue,
+    showHideEditSection:showHideEditSection,
+    updateNeedToUpdate:updateNeedToUpdate
   };
 }();
 
@@ -7380,7 +7440,7 @@ $('.js-previewAlbum').click(function(){
   function getFieldsOnCal()
   {
     desktopSectionArray = {"education":"career","basic":"basic","about":"about",
-      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family"
+      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family","kundli":"horoscope"
     }
     timeoutFieldCheck = 1000;
     section = getUrlParameter('section');
@@ -7410,7 +7470,51 @@ $('.js-previewAlbum').click(function(){
       }                           
     }, timeoutFieldCheck);
   }
+  /**
+ * Only dummy function | Here it only does the job of closing the layer
+ *
+ * @param        clickAction  The click action
+ * @param        button       The button
+ */
+function criticalLayerButtonsAction(clickAction ,button){
+closeCurrentLayerCommon();
+if(button == "B2"){
+        $('#criticalAction-layer').attr("style", "display:none;");
+}else{
+        if(button == ""){
+                DataUpdated = 0;
+                EditApp.updateNeedToUpdate();
+                EditApp.init();
+                var handle = setInterval(function(){
+                        if(DataUpdated == 1){
+                             var aadhar = EditApp.getEditAppFields("basic","AADHAAR");
+                                var name = EditApp.getEditAppFields("basic","NAME");
+                                $("#nameView").html(name.decValue);
+                                if(aadhar.decValue != ""){
+                                        $("#aadhaarView").text(aadhar.decValue).addClass("color11").removeClass("color5");
+                                        $("#aadhaarLabelParent").find(".js-undSecMsg").removeClass("disp-none");
+                                }else{
+                                        $("#aadhaarView").text("Not filled in").removeClass("edpcolr2").removeClass("color11").addClass("color5");
+                                        $("#aadhaarLabelParent").find(".js-undSecMsg").addClass("disp-none");
+                                }
+                                showHideEditSection("basic","hide");
+                                clearInterval(handle);
+                        }
+                },500);
+        }
+}
+$('body').css("overflow", "initial");
+}
 
+/**
+ * Only dummy function
+ *
+ * @param        button   The button
+ * @param        layerId  The layer identifier
+ */
+function trackingCAL(button/*B1/B2*/, layerId){
+ 
+}
   /**
    * opens a field
    * @param  {String} fieldType dropdown or text

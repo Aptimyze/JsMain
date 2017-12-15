@@ -654,7 +654,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
-		$check_day 		=JSstrToTime(date("Y-m-d",time()+29*24*60*60));
+		$check_day 		=JSstrToTime(date("Y-m-d",time()+15*24*60*60));
 		$today_day              =JSstrToTime(date("Y-m-d"));
 	}
 	if($method=='FIELD_SALES'){	
@@ -852,24 +852,26 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 			$mtongue=$profileData[0]['MTONGUE'];
 			$income=$profileData[0]['INCOME'];
 			$familyIncome=$profileData[0]['FAMILY_INCOME'];
-			$premiumIncome=array(13,14,17,18,19,20,21,22,23,24,25,26,27);
+			/*$premiumIncome=array(13,14,17,18,19,20,21,22,23,24,25,26,27);
 			if($level==-2)
 				array_push($premiumIncome,12,16);
 			$exclude_mtongue=array(1,3,16,17,31);
 			if((in_array("$income",$premiumIncome)||in_array("$familyIncome",$premiumIncome)||!$indianNo)&&!in_array("$mtongue",$exclude_mtongue))
-				$premiumProfile=TRUE;
+				$premiumProfile=TRUE;*/
 			//only premium profiles at premium level
-			if(!$premiumProfile && ($level == -2 || $level == -1))
-				continue;
+			/*if(!$premiumProfile && ($level == -2 || $level == -1))
+				continue;*/
 			$thirdDay  =date('Y-m-d',time()-3*86400);
-			$secondDay =date('Y-m-d',time()-2*86400);
+			$secondDay =date('Y-m-d',time()-1*86400);
 
 			$profileRegDate=date('Y-m-d',JSstrToTime($profileData[0]['ENTRY_DT']));
 			//premium profiles activated 3 days before or earlier to non premium level
-			if($premiumProfile && JSstrToTime($profileRegDate) > JSstrToTime($thirdDay) && $level!=-1 && $level!=-2 )
+			/*if($premiumProfile && JSstrToTime($profileRegDate) > JSstrToTime($thirdDay) && $level!=-1 && $level!=-2 )
 				continue;
-			if(!$premiumProfile && JSstrToTime($profileRegDate) > JSstrToTime($secondDay) && $level!=-1 && $level!=-2)
+			if(!$premiumProfile && JSstrToTime($profileRegDate) > JSstrToTime($secondDay) && $level!=-1 && $level!=-2)*/
+			if(JSstrToTime($profileRegDate) > JSstrToTime($secondDay) && $level!=-1 && $level!=-2)
 				continue;
+
 			if(($level!=-1 && $level!=-2 && $level!=-5)||($level==-1 && $indianNo)||($level==-2 && $indianNo))
 			{
 				$phoneNumStack  =array();
@@ -1886,7 +1888,7 @@ public function checkDNC($phoneNumberArray)
 	$DNCArr=array();
 	$DNC_NumberArr=array();
 	$selectedArr=array();
-	$status=true;
+	$status=false;
 	$dncListObj=new dnc_DNC_LIST();
 
 	if(!is_array($phoneNumberArray) || count($phoneNumberArray)=='0')
@@ -1905,13 +1907,14 @@ public function checkDNC($phoneNumberArray)
 			$DNCArr[$key] =$val;
 			$key1 =$key."S";
 			$DNCArr[$key1] ='Y';
+			$status =true;
 		}
 		else{
 			$DNCArr[$key] =$val;
 			$key1 =$key."S";
 			$DNCArr[$key1] ='N';
-			if(in_array($val,$selectedArr))
-				$status =false;
+			//if(in_array($val,$selectedArr))
+			//	$status =false;
 		}
 	}
 	$DNCArr['STATUS'] =$status;

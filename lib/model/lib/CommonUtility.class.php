@@ -149,6 +149,28 @@ class CommonUtility
         return $jsDate;
 
     }
+    
+     public static function convertDateToISTDay($date){
+              $tz = new DateTimeZone("Asia/Calcutta");
+        $todayDate = new DateTime("now");
+        $todayDate->setTimezone($tz);
+              $actionDate = new DateTime($date);
+        $actionDate->setTimezone($tz);
+               $diff = $actionDate->diff($todayDate);
+               $daydiff = $diff->days;
+               if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
+               {
+                       //$lastOnlineStr = 'today';
+                       $lastOnlineStr .= $actionDate->format('h:i A');
+               }
+               else
+               {
+                      $lastOnlineStr= $actionDate->format('d-M-y');
+               }
+              
+                return $lastOnlineStr;
+  }
+
 
     /** This function is added by Reshu Rajput
      * This function returns IP address of the current user
@@ -655,16 +677,14 @@ class CommonUtility
         /*
           Comment below two lines and uncomment commented line. For date time change.
         */
-        $createDate = new DateTime($date);
-        $date = $createDate->format('Y-m-d');
-        // $tz = new DateTimeZone("Asia/Calcutta");
+        $tz = new DateTimeZone("Asia/Calcutta");
         $todayDate = new DateTime("now");
-        //$todayDate->setTimezone($tz);
+        $todayDate->setTimezone($tz);
         $actionDate = new DateTime($date);
-        //$actionDate->setTimezone($tz);
+        $actionDate->setTimezone($tz);
         $diff = $actionDate->diff($todayDate);
         $daydiff = $diff->days;
-        if($daydiff < 1)
+        if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
         {
             $lastOnlineStr = 'today';
             //$lastOnlineStr .= ' '.$actionDate->format('h:i A');
@@ -755,7 +775,8 @@ class CommonUtility
             $user = new memUser($profileid);
             $user->setMemStatus();
             $userType = $user->getUserType();
-            if($userType == 2 || $userType == 6)
+            $freeAndRenewalEligibleTypes = [memUserType::FREE,memUserType::PAID_WITHIN_RENEW,memUserType::EXPIRED_WITHIN_LIMIT,memUserType::EXPIRED_BEYOND_LIMIT];
+            if(in_array($userType,$freeAndRenewalEligibleTypes))
                 return 1;
             else
                 return 0;
@@ -780,6 +801,32 @@ class CommonUtility
             }
         }
     }*/
+
+    /*checkFreshChatPanelCondition
+    * check whether to show chat panel or not acc to module
+    * @inputs: $module, $action, $profileID
+    * @return: $showFreshChat
+    */
+    public static function checkFreshChatPanelCondition($module, $action, $profileid){
+        $freshChatAvailModuleArr = ["membership","register"];
+        $freshChatAvailActioneArr = ["phoneVerificationPcDisplay"];
+        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        $showFreshChat = false;
+        if($profileid){
+            $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
+            if($phoneNotVerified != 'Y'){
+                $phoneNotVerified = true;
+            } else{
+                $phoneNotVerified = false;
+            }
+        } else{
+            $phoneNotVerified = false;
+        }
+        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
+            $showFreshChat = true;
+        }
+        return $showFreshChat;
+    }
 
     public static function getFreshDeskDetails($profileid=''){
         if(!empty($profileid) && is_numeric($profileid) && $profileid != ''){
@@ -1050,7 +1097,7 @@ class CommonUtility
 
     }
 
-    /*function to redirect site to appropriate language based on cookie
+    /*function to redirect site to appropriate language based  on cookie
     * @inputs: $request
     * @return : $redirectUrl
     */
@@ -1061,7 +1108,7 @@ class CommonUtility
 
         if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
             if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
-                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 if(isset($_SERVER["REQUEST_URI"])){
                     $newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
                     if(strpos($newRedirectUrl,"?") != false){
@@ -1070,13 +1117,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
-                return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+                return (JsConstants::$hindiTranslateURL."?newRedirect=1");
             }
             else if($request->getcookie("redirected_hindi_new")=='Y'){
-                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
                     $newRedirectUrl = JsConstants::$hindiTranslateURL;
@@ -1089,13 +1136,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
             }
         } else if($request->getcookie("jeevansathi_marathi_site_new")=='Y'){
             if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_marathi_new")!='Y'){
-                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 if(isset($_SERVER["REQUEST_URI"])){
                     $newRedirectUrl = JsConstants::$marathiTranslateURL.$_SERVER["REQUEST_URI"];
                     if(strpos($newRedirectUrl,"?") != false){
@@ -1104,13 +1151,13 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
-                return (JsConstants::$marathiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+                return (JsConstants::$marathiTranslateURL."?newRedirect=1");
             }
             else if($request->getcookie("redirected_marathi_new")=='Y'){
-                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'Y',time() + 10000000000, "/",".jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
                     $newRedirectUrl = JsConstants::$marathiTranslateURL;
@@ -1123,7 +1170,7 @@ class CommonUtility
                     else{
                         $newRedirectUrl = $newRedirectUrl."?";
                     }
-                    $newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+                    $newRedirectUrl = $newRedirectUrl."newRedirect=1";
                     return $newRedirectUrl;
                 }
             }
@@ -1133,16 +1180,16 @@ class CommonUtility
                 return 1;
             }
             if($request->getcookie("redirected_hindi_new")=='Y'){
-                @setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
-                return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);
+                @setcookie('redirected_hindi_new', 'N', 0, "/",".jeevansathi.com");
+                return (JsConstants::$siteUrl);
             }
             else if($request->getcookie("redirected_marathi_new")=='Y'){
-                @setcookie('redirected_marathi_new', 'N', 0, "/","jeevansathi.com");
-                return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);
+                @setcookie('redirected_marathi_new', 'N', 0, "/",".jeevansathi.com");
+                return (JsConstants::$siteUrl);
             }
             else{
-                @setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
-                @setcookie('redirected_marathi_new', 'N', 0, "/","jeevansathi.com");
+                @setcookie('redirected_hindi_new', 'N', 0, "/",".jeevansathi.com");
+                @setcookie('redirected_marathi_new', 'N', 0, "/",".jeevansathi.com");
             }
         }
         return $redirectUrl;

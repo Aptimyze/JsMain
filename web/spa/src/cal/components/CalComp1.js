@@ -147,12 +147,15 @@ criticalLayerButtonsAction(url,clickAction,button) {
                     return;
                 }
                 CALParams="&namePrivacy="+this.state.namePrivacy+"&newNameOfUser="+newNameOfUser;
-            CALCommonCall(url+CALParams,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+            this.props.showLoader();
+            CALCommonCall(url+CALParams,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
 
             }
-            else
-              CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
-            return true;
+            else{
+              this.props.showLoader();
+              CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
+            }
+          return true;
           break;
 
           case '14':
@@ -165,7 +168,8 @@ criticalLayerButtonsAction(url,clickAction,button) {
           }
           break;
     }
-    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+    this.props.showLoader();
+    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
     return true;
 
 }
@@ -368,15 +372,18 @@ validateAltEmailAndSave()
               this.CALButtonClicked=0;
               return false;
             }
+        this.props.showLoader();
         commonApiCall(CONSTANTS.EDIT_SUBMIT+'?editFieldArr[ALT_EMAIL]='+altEmailUser,{},'','POST').then((response) =>
         {
             if(response.responseStatusCode==1)
             {
             this.showError(response.responseMessage);
             this.CALButtonClicked=0;
+            this.props.hideLoader();
             return false;
             }
-         CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
+         this.props.showLoader();
+         CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
          let msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
          this.setState({emailVeriConfirmation:true,altEmailMessage:msg});
          return true;
@@ -385,14 +392,17 @@ validateAltEmailAndSave()
 
 
 sendEmailConfirmationLink(){
+  this.props.showLoader();
   commonApiCall('/api/v1/profile/sendEmailVerLink?emailType=2',{},'','POST').then((response) =>
   {
       if(response.responseStatusCode==1)
       {
       this.showError(response.responseMessage);
+      this.props.hideLoader();
       return false;
       }
-   CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.CALButtonClicked=0;});
+   this.props.showLoader();
+   CALCommonCall(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
    this.setState({emailVeriConfirmation:true,altEmailMessage:response.responseMessage});
    return true;
  });
@@ -506,6 +516,25 @@ toggleClass(counter,elem,key2,otherCounter,value)  {
 
       }
       break;
+      
+      case 'HEIGHT':
+      if(!prevState.objectCounter['HEIGHT']) prevState.objectCounter['HEIGHT']={};
+      if(!classCounter)
+      {
+        if(elem.data.LHEIGHT)
+          prevState.objectCounter['HEIGHT'].LHEIGHT = elem.data.LHEIGHT;
+        if(elem.data.HHEIGHT)
+            prevState.objectCounter['HEIGHT'].HHEIGHT = elem.data.HHEIGHT;
+      }
+      else
+      {
+        if(elem.data.HHEIGHT)
+          delete prevState.objectCounter['HEIGHT'].HHEIGHT;
+        if(elem.data.LHEIGHT)
+          delete prevState.objectCounter['HEIGHT'].LHEIGHT;
+
+      }
+      break;
 
     }
     return prevState;
@@ -548,7 +577,17 @@ getSuggestions()
                 }
                 basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
 
-            } else if (elem.type == "INCOME") {
+            }
+            else if (elem.type == "HEIGHT") {
+                counter++;
+                let tempCount = counter;
+
+                if (elem.data && elem.data.HHEIGHT && elem.data.LHEIGHT ) {
+                    childEle =  (<div id="LHEIGHT_HHEIGHT" style={!this.state.classCounter[tempCount] ? {} : this.suggStyle } onClick={() =>this.toggleClass(tempCount,elem,'HEIGHT')} className="suggestOptionRangeHeight suggestOption brdr18 fontreg color8 f16 txtc" > {elem.data.LHEIGHT + ' - ' + elem.data.HHEIGHT} </div>);
+                }
+                basicEle = (<div key = {index} className="brdr1 pad2" id={'suggest_' + elem.type}><div id={'heading_' + elem.type} className="txtc fontreg pb10 color8 f16">{elem.heading}</div>{childEle}</div>);
+
+            }else if (elem.type == "INCOME") {
               let LDS='',LRS='';
 
               counter++;
@@ -589,6 +628,9 @@ var objectCounter = this.state.objectCounter;
 if(objectCounter['AGE'] && objectCounter['AGE']['LAGE'])
     sendObj.push({"type":'AGE',"data":objectCounter['AGE']});
 
+if(objectCounter['HEIGHT'] && objectCounter['HEIGHT']['LHEIGHT'])
+    sendObj.push({"type":'HEIGHT',"data":objectCounter['HEIGHT']});
+
 if(objectCounter['INCOME'] && (objectCounter['INCOME']['LRS'] || objectCounter['INCOME']['LDS']))
     sendObj.push({"type":'INCOME',"data":objectCounter['INCOME']});
 
@@ -599,8 +641,10 @@ objectCounter['others'].forEach(function(elem){
 });
 
 var url = JSON.stringify(sendObj).split('"').join("%22");
+this.props.showLoader();
 commonApiCall('/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,{},'','POST').then((response) =>
 {
+  this.props.hideLoader();
   this.criticalLayerButtonsAction(this.props.calData.BUTTON1_URL_ANDROID,this.props.calData.JSMS_ACTION1,'B1');
 });
 

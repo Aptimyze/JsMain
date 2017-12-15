@@ -75,7 +75,7 @@ class jsexclusiveActions extends sfActions {
 		//$assignedClients = $exclusiveObj->getUnScreenedExclusiveMembers($this->name,"ASSIGNED_DT");
 		$this->clientIndex = $request->getParameter("clientIndex");
 		$this->showNextButton = 'N';
-		
+                
 		if(empty($this->clientIndex) || !is_numeric($this->clientIndex)){
 			$this->clientIndex = 0;
 		}
@@ -92,12 +92,25 @@ class jsexclusiveActions extends sfActions {
 			//$pogRBInterestsPids = array(543);
 			unset($assistedProductObj);
 
-			$clientProfileObj = new Operator;
+                        $clientProfileObj = new Operator;
 			$clientProfileObj->getDetail($this->clientId,"PROFILEID","PROFILEID,USERNAME,GENDER,HOROSCOPE_MATCH,CASTE");
 
-			if($clientProfileObj){
-				$this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
-				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N","PROFILEID"=>$this->clientId,"clientCaste"=>$clientProfileObj->getCASTE());
+                        if($clientProfileObj) {
+                                
+                                // get client's Name
+                                $nameOfUserObject = new incentive_NAME_OF_USER();
+                                $name = $nameOfUserObject->getName($this->clientId);
+                            
+                                // get client's Image
+                                $clientImage = $this->getClientImage($clientProfileObj);
+                                
+                                // get client's Notes
+                                $exclusiveClientNotes = new incentive_EXCLUSIVE_CLIENT_NOTES();
+                                $notes = $exclusiveClientNotes->getClientNotes($this->clientId);
+                                $this->horoscopeMatch = $clientProfileObj->getHOROSCOPE_MATCH();
+				$this->clientData = array("clientUsername"=>$clientProfileObj->getUSERNAME(),"HoroscopeMatch"=>"N",
+                                    "PROFILEID"=>$this->clientId,"clientCaste"=>$clientProfileObj->getCASTE(),
+                                    "clientName"=>$name, "clientImage"=>$clientImage, "clientNotes"=>$notes);
 				$this->clientData["HoroscopeMatch"] = $this->horoscopeMatch;
 				$this->clientData["gender"] = $clientProfileObj->getGENDER();
 				unset($clientProfileObj);
@@ -116,6 +129,33 @@ class jsexclusiveActions extends sfActions {
 		}
 	}
 
+        private function getClientImage($clientProfileObj) {
+            $imageStatus = $clientProfileObj->getHAVEPHOTO();
+            
+            if (!empty($imageStatus) && $imageStatus != 'N') {
+                    $pictureServiceObj=new PictureService($clientProfileObj);
+                    $profilePicObj = $pictureServiceObj->getProfilePic();
+	    
+                    if(!empty($profilePicObj)) {
+                        $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$oppGender,true);
+		    
+                        if($photoArray[label] == '' && $photoArray["url"] != null){
+                                return $photoArray["url"];
+		        }
+		    
+                    unset($photoArray);
+                    }
+            }
+            
+            if(empty($clientImage)) {
+                if($clientProfileObj->getGENDER()== "M") {
+                    return sfConfig::get("app_img_url").constant('StaticPhotoUrls::noPhotoMaleProfilePic120Url');
+                }
+                else {
+                    return sfConfig::get("app_img_url").constant('StaticPhotoUrls::noPhotoFemaleProfilePic120Url');
+                }
+            }
+        }
 	/*SubmitScreenRBInterests - submit screened RB interests for clients assigned to logged in RM and filtered by RM
     * @param : $request
     */
@@ -562,6 +602,14 @@ class jsexclusiveActions extends sfActions {
             }
         }
         
+        // fetch the notes if any for the current user
+        $this->clientNotes = $this->getClientNotes($this->client);
+    }
+    
+    private function getClientNotes($clientId) {
+        $exclusiveClientNotesObject = new incentive_EXCLUSIVE_CLIENT_NOTES();
+        $clientNotes = $exclusiveClientNotesObject->getClientNotes($this->client);
+        return ($clientNotes == null) ? null : $clientNotes;
     }
     
     public function executeSetClientServiceDay(sfWebRequest $request) {
@@ -706,6 +754,19 @@ class jsexclusiveActions extends sfActions {
         $this->cid = $request['cid'];
         $exclusiveObj = new billing_EXCLUSIVE_SERVICING();
         $this->todaysClientProfiles = $exclusiveObj->getDayWiseAssignedAgent($request['name'],  strtoupper(date('D')));
+    }
+    
+    public function executeClientNotesSubmission($request) {
+        $welcomeCallsPage2Page = "welcomeCallsPage2";
+        $screenRBInterestPage = "screenRBInterest";
+        $clientId = $request['client'];
+        $notes = $request['notes'];
+        
+        $this->client = $request->getParameter('client');
+
+        $exclusiveClientNotesObject = new incentive_EXCLUSIVE_CLIENT_NOTES();
+        $exclusiveClientNotesObject->setClientNotes($clientId, $notes);
+        die;
     }
     
     public function executeAddFollowUpFromMatchMail($request){
@@ -977,6 +1038,5 @@ class jsexclusiveActions extends sfActions {
 
         array_multisort($sort_col, $dir, $arr);
     }
-
 }
 ?>

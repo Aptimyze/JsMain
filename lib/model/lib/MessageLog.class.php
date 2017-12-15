@@ -104,7 +104,9 @@ class MessageLog
 				$RBmessage['TYPE'] = $value['TYPE'];
  				$RBmessage['DATE'] = $value['TIME'];
                                 $profileObj = new Profile('',$value['SENDER']);
+                                $profileObj->getDetail();
                                 $receiverObj = new Profile('',$value['RECEIVER']);
+                                $receiverObj->getDetail();
 				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$value['COUNT']);
 				unset($profileObj);
 				unset($receiverObj);
@@ -155,9 +157,12 @@ class MessageLog
 		}
 
 
-                
+               
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
-                $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
+                if(InboxEnums::$messageLogInQuery)
+					$profileChatArray = $chatLogObj->getMessageListing($condition,'',$inArray);
+				else
+					$profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)
@@ -208,7 +213,9 @@ class MessageLog
 			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $rbData)
 			{ 
                           $receiverObj = new Profile('',$value['RECEIVER']);
+                          $receiverObj->getDetail();
                           $profileObj = new Profile('',$value['SENDER']);
+                          $profileObj->getDetail();
 			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$rbData['COUNT']);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}

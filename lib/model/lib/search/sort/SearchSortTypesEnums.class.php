@@ -29,6 +29,7 @@ class SearchSortTypesEnums
         // unified match alerts sort types
         const SortByStrictTrends = 'ST'; 
         const SortByStrictNonTrends = 'SNT';
+        const SortByPhotoForAP = 'PAP';
         
         const SortByRelaxedTrends = 'RT'; 
         const SortByRelaxedNonTrends = 'RNT'; 

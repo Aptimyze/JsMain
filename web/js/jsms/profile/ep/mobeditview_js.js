@@ -11,7 +11,7 @@ var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','Foc
 var bCallCreateHoroscope = false;
 var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
 var editInArr = {};
-editInArr['Details'] = new Array("YOURINFO","critical","basic","Ethnicity","Appearance","SpecialCases");
+editInArr['Details'] = new Array("AADHAAR","YOURINFO","critical","basic","Ethnicity","Appearance","SpecialCases");
 editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
 editInArr['Education'] = new Array("EDUCATION","CollegeDetails");
 editInArr['Career']= new Array("JOB_INFO","CarrerDetails","FuturePlans");
@@ -20,6 +20,7 @@ editInArr['Lifestyle']=new Array("Habits","Assets","Skills","hobbies","Interests
 editInArr['Contact']=new Array("PROFILE_HANDLER_NAME","EMAIL","ALT_EMAIL","PHONE_MOB","ALT_MOBILE","PHONE_RES","TIME_TO_CALL_START");
 editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifestyle");
 var editValArr={};
+editValArr["AADHAAR"]=new Array("AADHAAR");
 editValArr["YOURINFO"]=new Array("YOURINFO");
 editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS","RELATION");
 editValArr["critical"] = new Array("DTOFBIRTH","MSTATUS","MSTATUS_PROOF");
@@ -836,7 +837,7 @@ function bindEmailButtons(){
 
 
     mobileSectionArray = {"education":"Education","basic":"Details",
-    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp"
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp","kundli":"Kundli"
     }
 
     section = getUrlParameter('section');

@@ -91,7 +91,7 @@ class billing_EXC_CALLBACK extends TABLE {
     {
         try{
             $profileidArr =array();
-            $sql ="select distinct PROFILEID,PREFERRED_START_TIME_IST from billing.EXC_CALLBACK where PREFERRED_START_TIME_IST>:START_DT AND PREFERRED_START_TIME_IST<=:END_DT AND SERVICEID NOT LIKE 'X%' AND SERVICEID != 'JP' ORDER BY ENTRY_DT ASC";
+            $sql ="select distinct PROFILEID,PREFERRED_START_TIME_IST,CALLBACK_SOURCE from billing.EXC_CALLBACK where PREFERRED_START_TIME_IST>:START_DT AND PREFERRED_START_TIME_IST<=:END_DT AND SERVICEID NOT LIKE 'X%' AND SERVICEID != 'JP' ORDER BY ENTRY_DT ASC";
             $row = $this->db->prepare($sql);
             $row->bindValue(":START_DT",$startDt, PDO::PARAM_STR);
             $row->bindValue(":END_DT",$endDt, PDO::PARAM_STR);

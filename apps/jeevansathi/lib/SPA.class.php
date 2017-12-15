@@ -11,7 +11,7 @@ class SPA {
         // End hindi switch code !
 
         if((MobileCommon::isNewMobileSite() || $request->getParameter("mobile_view") == 'Y') && JsConstants::$SPA['flag'] && !strpos($_SERVER['HTTP_USER_AGENT'],"Googlebot")){
-            $spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view','login_home');
+            $spaUrls = array('login','myjs','viewprofile.php?profilechecksum','MobilePhotoAlbum?profilechecksum','static/forgotPassword','profile/mainmenu.php','com? ','P/logout.php','profile/viewprofile.php','mobile_view','login_home','cal');
             $nonSpaUrls = array('ownview=1');
             $spa = 0;
             $originalArray = array('https://','http://');
@@ -74,9 +74,9 @@ class SPA {
             if($redirectUrl!= "")
             {
                 if($request->getcookie("jeevansathi_marathi_site_new")=='Y'){
-                    header("Location:".JsConstants::$marathiTranslateURL."/spa/dist/index.html#"."?AUTHCHECKSUM=".$request->getParameter('AUTHCHECKSUM'));
+                    header("Location:".JsConstants::$marathiTranslateURL."/spa/dist/index.html#");
                 } else if ($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
-                    header("Location:".JsConstants::$hindiTranslateURL."/spa/dist/index.html#"."?AUTHCHECKSUM=".$request->getParameter('AUTHCHECKSUM'));
+                    header("Location:".JsConstants::$hindiTranslateURL."/spa/dist/index.html#");
                 }
             }
             else

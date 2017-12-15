@@ -18,7 +18,7 @@ export const setCookie = (key,value,hours=1) =>
     return value;
 }
 
-export const removeCookie = (key) =>
+export const removeCookie = (key,domain='.jeevansathi.com') =>
 {
-	 document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'+ ';domain=.jeevansathi.com; path=/';
+	 document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'+ ';domain='+domain+'; path=/';
 }

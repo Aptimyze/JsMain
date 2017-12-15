@@ -561,10 +561,10 @@ class InboxMobileAppV1
                         	$profile[$count]["size"]=$picSize;
                                 $timeText = $tupleObj->getDecoratedTime();
                                 $profile[$count]["time"] = ucfirst($timeText); 
-                               if(stripos($timeText,'today') === false){
+                               if(stripos($timeText,'AM') === false && stripos($timeText,'PM') === false){
                                  $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT(),$tupleObj->getCONTACTS()["TYPE"])." on ".$timeText;
                                }else{
-                                 $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT(),$tupleObj->getCONTACTS()["TYPE"])." ".$timeText;
+                                 $profile[$count]["timetext"] = $this->getDisplaylayerText($tupleObj->getGENDER(),$infoKey,$tupleObj->getCOUNT(),$tupleObj->getCONTACTS()["TYPE"])." at ".$timeText;
                                }
 				$buttonDetails = array();
                                	$profile[$count]["album_count"] = $tupleObj->getPHOTO_COUNT();
@@ -575,7 +575,7 @@ class InboxMobileAppV1
 							$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
 							if($viewedDate!='')
 							{
-								$profile[$count]["timetext"] = "$heshe viewed your interest ".((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate;
+								$profile[$count]["timetext"] = "$heshe viewed your interest ".((stripos($viewedDate,'AM')=== false && stripos($viewedDate,'PM')=== false)?'on ':"at ").$viewedDate;
 							}
 							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
 							{
@@ -616,6 +616,8 @@ class InboxMobileAppV1
 							}
 							elseif($value == "UNBLOCK")
 								$button[] = $buttonObj->getIgnoreButton('','',1);
+							elseif($value == "BLOCK")
+							    $button[] = $buttonObj->getIgnoreButton('','','',true,'Ignore');
 							else if($value!="PHOTO")
 								$button[] = $buttonObj->getCustomButtonByBName($value,$page);
 							else

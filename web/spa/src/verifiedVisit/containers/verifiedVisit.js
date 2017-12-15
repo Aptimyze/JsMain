@@ -12,7 +12,7 @@ class VerifiedVisit extends React.Component {
         super();
         this.state = {
             documentsVerified: "",
-            dataLoaded: false  
+            dataLoaded: false, 
         };
         props.showVerifiedData(props.profilechecksum);
 
@@ -25,9 +25,9 @@ class VerifiedVisit extends React.Component {
 
     componentWillReceiveProps(nextProps)
     {   
-        if(nextProps.documentsVerified) {
+        if(nextProps.verifiedData.documentsVerified) {
             this.setState({
-                documentsVerified : nextProps.documentsVerified
+                documentsVerified : nextProps.verifiedData.documentsVerified
             });    
         }  
         this.setState({
@@ -48,7 +48,16 @@ class VerifiedVisit extends React.Component {
     }
 
     render() {
-        var docsData;
+        var docsData,aadharData,visitData;
+        if(this.props.verification_status == 1 || this.props.verification_status == 3){
+            visitData = <div>
+                            <div className="f15 fb color11">Profile is verified by visit
+                            </div>
+                            <div className="loadStaticPage">
+                            <div onClick={(e) => this.navigateStatic(e)} className="f13 color2 pt10">What is this?</div>
+                            </div>
+                        </div>;
+        }
         if(this.state.dataLoaded == true && this.state.documentsVerified != "") 
         {
             docsData = <div>
@@ -60,22 +69,29 @@ class VerifiedVisit extends React.Component {
                 </div>
             </div>;
         }
+        if(this.props.verification_status == 2 || this.props.verification_status == 3)
+        {
+            let padd = "f13 color1 pt5";
+            if(this.props.verification_status == 3)
+               padd = "f13 color1 pt5 pb10";
+           aadharData = <div>
+                        <div className="f15 fb">Aadhaar</div>
+                    <div className={padd}>Aadhar is verified against name</div>
+                    </div>;
+        }
         return(
             <div className="vOverlay js-docVerified" id="js-docVerified" onClick={(e) => this.preventOverlay(e)}>
-                <div className="centerDiv">
-                    <div className="textDiv fullwid app_txtc">
-                        <div className="f15 fb color11">Profile is verified by visit
-                        </div>
-                    <div className="loadStaticPage">
-                        <div onClick={(e) => this.navigateStatic(e)} className="f13 color2 pt10">What is this?</div>
+               <div className="centerDiv">
+                   <div className="textDiv fullwid app_txtc">
+                   {aadharData}
+                   {visitData}
+                   {docsData}
                     </div>
-                    {docsData}
-                </div>
-                <div onClick={(e) => this.props.historyObject.pop(true)} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
-                    <span className="okClick dispibl wid150">Ok</span>
-                </div>
-                </div>
-            </div>
+               <div onClick={(e) => this.props.historyObject.pop(true)} className="bottonDiv fullwid color2 app_txtc cursp pad4 f18">
+                   <span className="okClick dispibl wid150">Ok</span>
+               </div>
+               </div>
+           </div>
         );
     }
 }

@@ -161,22 +161,26 @@ criticalLayerButtonsAction(url,clickAction,button) {
                        return;
                        }
                      else {
-                       CALCommonCall(url+'&occupText='+occupText,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                        this.props.showLoader();
+                       CALCommonCall(url+'&occupText='+occupText,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
                        this.CALButtonClicked=0;
                        return;
 
                      }
            }
            else {
+                   this.props.showLoader();
                    commonApiCall(CONSTANTS.EDIT_SUBMIT+'?editFieldArr[OCCUPATION]='+this.state.slctdOccCode,{},'','POST').then((response) =>
                    {
                        if(response.responseStatusCode==1)
                        {
                        this.showError(response.responseMessage);
                        this.CALButtonClicked=0;
+                        this.props.hideLoader();
                        return false;
                        }
-                       CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                      this.props.showLoader();
+                       CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
                        return true;
                   });
 
@@ -187,15 +191,18 @@ criticalLayerButtonsAction(url,clickAction,button) {
         case '20':
 
                   var params = `?editFieldArr[COUNTRY_RES]=51&editFieldArr[STATE_RES]=${this.state.slctdStateKey}&editFieldArr[CITY_RES]=${this.state.slctdCityCode}`;
+                  this.props.showLoader();
                     commonApiCall(CONSTANTS.EDIT_SUBMIT+params,{},'','POST').then((response) =>
                    {
                        if(response.responseStatusCode==1)
                        {
                        this.showError(response.responseMessage);
+                        this.props.hideLoader();
                        this.CALButtonClicked=0;
                        return false;
                        }
-                       CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                      this.props.showLoader();
+                       CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
                        return true;
                   });
         break;
@@ -228,15 +235,18 @@ criticalLayerButtonsAction(url,clickAction,button) {
                     countryCode = this.state.slctdCityCode;
                     params += `&editFieldArr[NATIVE_COUNTRY]=${countryCode}`;
                   }
+                this.props.showLoader();
                 commonApiCall(CONSTANTS.EDIT_SUBMIT+params,{},'','POST').then((response) =>
                  {
                      if(response.responseStatusCode==1)
                      {
                      this.showError(response.responseMessage);
                      this.CALButtonClicked=0;
+                    this.props.hideLoader();
                      return;
                      }
-                     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+                    this.props.showLoader();
+                     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
                      return;
                 });
                 return;
@@ -259,10 +269,14 @@ criticalLayerButtonsAction(url,clickAction,button) {
              }
 
              this.setState({showLoader:true});
+              this.props.showLoader();
              commonApiCall(CONSTANTS.EDIT_SUBMIT,dataAboutMe,'','','POST').then((response)=>{
                   this.CALButtonClicked=0;
+                  this.props.hideLoader();
                   if(response.responseStatusCode=="0"){
+                    this.props.showLoader();
                     CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{
+                      this.props.hideLoader();
                       this.CALButtonClicked=0;
                       this.setState({showLoader:false});
                       });
@@ -279,7 +293,8 @@ criticalLayerButtonsAction(url,clickAction,button) {
            }
         break;
       }
-    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.CALButtonClicked=0;});
+    this.props.showLoader();
+    CALCommonCall(url,clickAction,this.props.myjsObj).then(()=>{this.props.hideLoader();this.CALButtonClicked=0;});
     return true;
 
 }
@@ -344,7 +359,9 @@ return(
 
 getOccupationData(url){
 let a =this;
+this.props.showLoader();
 commonApiCall(url,{},'','POST','',false).then((response) => {
+  this.props.hideLoader();
   response = response[0];
   a.setState({
     occData : response

@@ -309,7 +309,7 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
 		{
 		  if($clientId)
 		  {
-		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID AND SCREENED_STATUS=:SCREENED_STATUS";
+		    $sql = "DELETE FROM billing.EXCLUSIVE_SERVICING WHERE CLIENT_ID=:CLIENT_ID";
 		    if(!empty($agentUsername))
 		        $sql.= " AND AGENT_USERNAME=:AGENT_USERNAME";
 		    if($billid != 0)
@@ -320,7 +320,7 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
     		    $res->bindValue(":AGENT_USERNAME", $agentUsername, PDO::PARAM_STR);
 		    if($billid != 0)
                 $res->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-		    $res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
+		    //$res->bindValue(":SCREENED_STATUS", 'N', PDO::PARAM_STR);
 		    $res->execute();
 		  }
 		}
@@ -520,6 +520,35 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
             throw  new jsException($e);
         }
     }
+    
+    public function getWelcomeMailCount($date, $emailStageType) {
+        try {
+            $startTime = $date." 00:00:00";
+            $endTime = $date." 23:59:59";
+            
+            $sql = "SELECT COUNT(*) FROM billing.EXCLUSIVE_SERVICING "
+                    . "WHERE SERVICE_SET_DT >= :START_DATE AND SERVICE_SET_DT <= :END_DATE"
+                    . " AND EMAIL_STAGE = :EMAIL_STAGE_TYPE";
+            
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DATE", $startTime, PDO::PARAM_STR);
+            $res->bindValue(":END_DATE", $endTime, PDO::PARAM_STR);
+            $res->bindValue(":EMAIL_STAGE_TYPE", $emailStageType, PDO::PARAM_STR);
+            
+             $res->execute();
+            $queryResult = $res->fetch(PDO::FETCH_ASSOC);
+            $count = $queryResult["COUNT(*)"];
+            
+            if(!isset($count))
+                $count = 0;
+            return $count;
+            
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+    
+    
     
 }
 ?>
