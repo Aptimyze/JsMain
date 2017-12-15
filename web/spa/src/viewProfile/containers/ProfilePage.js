@@ -930,7 +930,7 @@ const mapDispatchToProps = (dispatch) => {
         setCALShown : ()=> {dispatch({type: 'SET_CAL_SHOWN',payload:{}});},
         updateOnlineInfo : (pChecksum)=> {
             let presenceUrl = `https://presence.jeevansathi.com/jspresence/v1/presence?pfids=${pChecksum}&idType=checksum`;
-            commonApiCall(presenceUrl).then((res)=>{
+            commonApiCall(presenceUrl,'','','','GET').then((res)=>{
                 
                 let status = res.data ? (res.data.length ? 1 : 2) : 2;    
                 //let status = 1;
