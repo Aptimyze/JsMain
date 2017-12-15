@@ -211,19 +211,9 @@ class InstantAppNotification
 	}
   }
 
-  /*send eoi reminder notification on app
-  *@param : $senderName,$receiverProfileid,$reminderMsg
-  */
-  public function sendReminderInstantAppNotification($senderName,$receiverProfileid,$senderProfileid,$reminderMsg)
-  {
-    $subject = $senderName." has sent you a reminder. Kindly respond with an 'Accept'/'Decline'.";
-    $this->sendNotification($receiverProfileid,$senderProfileid,$subject); 
-  }
-
   public function sendMatchAlertNotification($notificationParams=array())
   {
     $this->sendNotification($notificationParams["RECEIVER"],$notificationParams["OTHER_PROFILE"],'','',array("COUNT"=>$notificationParams["COUNT"],"OTHER_PROFILE_URL"=>$notificationParams["OTHER_PROFILE_URL"],"OTHER_PROFILE_IOS_URL"=>$notificationParams["OTHER_PROFILE_IOS_URL"]));
   }
-
 }
 ?>
