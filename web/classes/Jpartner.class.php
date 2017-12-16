@@ -588,16 +588,17 @@ class Jpartner
                     $fetchedArr =$mysqlObj->fetchAssoc($result);
                     if(!$fetchedArr) { 
                         $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
+                        $notFilledCase = 1;
                     }
                     ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
                 }
                 $myrow = newjs_JPARTNER::getArrayWithRequiredFieldAndConditions($fetchedArr,$parameter,$WhereCondition);
-		if($myrow)
+		if($myrow && !$notFilledCase)
 		{
 			foreach ($myrow as $key => $value)
 			{
 				$this->$key=$value;
-				$flag=1;
+                                    $flag=1;
 			}
 		}
 		if($flag)
