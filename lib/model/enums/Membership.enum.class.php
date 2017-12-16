@@ -896,8 +896,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "gtKFFx";
-    public static $PayUTestRsSalt = "eCwWELxi";
+    public static $PayUTestRsMerchantId = "vAt8pr";
+    public static $PayUTestRsSalt = "OhbWVfB0";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';

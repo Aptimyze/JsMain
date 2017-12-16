@@ -47,7 +47,7 @@ foreach($genderArr as $key=>$val){
             } else {
                     $makeSeal[0] = "F";
                     $sealObj = new PROFILE_VERIFICATION_DOCUMENTS("newjs_slave");
-                    $seal = $sealObj->sealDetails($profileId);
+                    $seal = $sealObj->sealDetails(array($profileId));
                     if($seal != 0){
                       foreach ($seal as $sealKey => $sealValue) {
                               $makeSeal[$sealArr[$sealKey]] = array_flip($docArr[$sealKey])[$sealValue];
