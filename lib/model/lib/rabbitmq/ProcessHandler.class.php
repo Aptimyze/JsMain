@@ -418,7 +418,7 @@ try{
                 $todayDate = new DateTime($dob);
                 $actionDate = new DateTime($date);
                 $diff = $actionDate->diff($todayDate);
-                if ($diff->y >= 2) {
+                if (($diff->y >= 2 && ($diff->m > 0 || $diff->d > 0)) || $diff->y > 2) {
                         $deleteInterest = 1;
                 }
                 

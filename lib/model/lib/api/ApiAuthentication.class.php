@@ -47,18 +47,143 @@ Abstract class ApiAuthentication
 	{
 		$this->request=$request;
 	}
+	
+	/**
+	 * check if multiple profiles are present per mobile number, check for unique profile with given password 
+	 * and get data for single profile.
+	 * 
+	 * @return array => {"isSuccess", "data"}
+	 */
+	public function checkForMultipleProfiles($emailOrMobile, $password){
+	    $response = array();
+	    $isSuccess = false;
+	    $data = null;
+	    
+	    $emailOrMobile = trim($emailOrMobile);
+	    if($emailOrMobile){
+	        // Email/Mobile validations and set flag for 'Email/Mobile'
+	        if(!$this->validate($emailOrMobile)){
+	            $isSuccess = false;
+	            $data = ResponseHandlerConfig::$FLOGIN_EMAIL_ERR;
+	        }else{
+	            $dbJprofile= new JPROFILE();
+	            $MultipleProfilesPerPhone = 0;
+	            $SingleUniqueProfileFound = 0;
+	            
+	            $profileColumns = "MOB_STATUS,PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT";
+	            if($this->flag == 'E'){
+	                $data = $dbJprofile->get($this->finalString, "EMAIL", $profileColumns);
+	                $isSuccess = true;
+	            }else if($this->flag == 'M'){
+	                for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleUniqueProfileFound); $i--){
+	                    $phone_mob= substr($this->finalString, -$i);
+	                    $arr=array('PHONE_MOB'=>"'$phone_mob'");
+	                    $excludeArr=array('ACTIVATED'=>"'D'");
+	                    $data=$dbJprofile->getArray($arr,$excludeArr,'',$profileColumns);
+	                    if(count($data) == 1){
+	                        //  1 unique profile found
+	                        $data = $data[0];
+	                        $isSuccess = true;
+	                        $SingleUniqueProfileFound = 1;
+	                    }else if(count($data) > 1){
+	                        $responseData = $this->checkUniquePasswordInMultipleProfiles($data, $password);
+	                        $hasUniquePassword = $responseData['hasUniquePassword'];
+	                        
+	                        if($hasUniquePassword == true){
+	                            $data = $responseData['rowData'];
+	                            $isSuccess = true;
+	                            $SingleUniqueProfileFound = 1;
+	                        }else{
+	                            $MultipleProfilesPerPhone = 1;
+	                            $isSuccess = false;
+	                        }
+	                    }
+	                }
+	            }
+	            
+	            if($this->flag == 'M' && $MultipleProfilesPerPhone){
+	                $data = ResponseHandlerConfig::$FLOGIN_PHONE_ERR;
+	                $isSuccess = false;
+	            }
+	        }
+	    }
+	    $response["isSuccess"] = $isSuccess;
+	    $response["data"] = $data;
+	    return $response;
+	}
+	
+	private function checkUniquePasswordInMultipleProfiles($profileData, $password){
+	   $response = array();
+	   $hasUniquePassword = false;
+	   $responseData = null;
+	   
+	   if($profileData && $password){
+	       foreach ($profileData as $rowData){
+	           if(PasswordHashFunctions::validatePassword($password, $rowData['PASSWORD'])){       //password matches
+	               if($hasUniquePassword == true){
+	                   $hasUniquePassword = false;
+	                   $responseData = null;
+	                   break;
+	               }
+	               
+	               $responseData = $rowData;
+	               $hasUniquePassword = true;
+	           }
+	       }
+	   }
+	   
+	   $response['hasUniquePassword'] = $hasUniquePassword;
+	   $response['rowData'] = $responseData;
+	   return $response;
+	}
+	
+	public function validate($email){
+	    $regex = "/^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})/";
+	    if($email == ''){
+	        return false;
+	    }
+	    else if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+	        $this->flag='E';
+	        $this->finalString=$email;
+	        return true;
+	    }else{
+	        if(strpos($email, '+')===0)
+	            $email=substr($email, 1);
+	            $email=$this->replaceFirstOccurence('-','',$email);
+	            $email = ltrim($email,'0');
+	            $regex = "/^[0-9]{7,}/";
+	            if(preg_match($regex, $email)){
+	                $this->flag='M';
+	                $this->finalString=$email;
+	                return true;
+	            }
+	    }
+	    return false;
+	}
+	
+	private function replaceFirstOccurence($needle, $replace, $haystack){
+	    $pos = strpos($haystack, $needle);
+	    if ($pos !== false) {
+	        $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
+	        return $newstring;
+	    }
+	    return $haystack;
+	}
 
 	
-	public function login($email,$password,$rememberMe)		//to be changed in connect_auth.inc
+	public function login($email,$password,$rememberMe, $data = null)
 	{
 		if($email && $password)
 		{
-			//Get the Login Data from JProfile -->call Store
-			$dbJprofile=new JPROFILE();
+		    if($data == null){    //email login
+		        //Get the Login Data from JProfile -->call Store
+		        $dbJprofile=new JPROFILE();
+		        $paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT';
+		        $loginData=$dbJprofile->get($email,"EMAIL",$paramArr);
+		    }else{                //mobile login
+		        $loginData= $data['data'];
+		    }
 			
-			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT';
-			
-			$loginData=$dbJprofile->get($email,"EMAIL",$paramArr);
 			if(is_array($loginData))
 			{
 				if(PasswordHashFunctions::validatePassword($password, $loginData['PASSWORD'])||$this->hashedPasswordFromDb)
