@@ -1964,13 +1964,8 @@ class MembershipAPIResponseHandler {
                 $startingPrice = $response['origStartingPrice'];
                 $discountedPrice = $response['discountedPrice'];
                 $currencySymbol = $response["currencySymbol"];
-                if(MobileCommon::isApp()=='A'){
-                    $top = "FLASH DEAL - FLAT $disc% OFF";
-                    $bottom = "Upgrade Membership";
-                }else{
-                    $top = "FLASH DEAL";
-                    $bottom = "FLAT $disc% OFF on all Plans, Prices starting @ $currencySymbol$discountedPrice";
-                }
+                $top = "FLASH DEAL - FLAT $disc% OFF";
+                $bottom = "Upgrade Membership";
                 //$bottom = "$disc% OFF on all Plans.";
                 //$bottom = "Upgrade Membership";
                 $extra = "FD";
