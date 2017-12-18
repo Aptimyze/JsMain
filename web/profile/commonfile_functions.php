@@ -267,6 +267,7 @@ $css_arr[]=array("apps/operations/lib/csvGenerationHandler"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $css_arr[]=array("web/spa/dist/app"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/api/actions/LoginV1Action"   => "1");
+$css_arr[]=array("web/spa/dist/0"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -743,7 +744,7 @@ $js_arr[]=array("main_sw_register"      => "6");
 $js_arr[]=array("lib/model/enums/MessageQueues"    => "2");
 $js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"    => "2");
 $js_arr[]=array("web/spa/dist/0.250ec2ac5c0c3a9a1d72.bundle"   => "1");
-$js_arr[]=array("web/spa/dist/0"   => "1");
+$js_arr[]=array("web/spa/dist/0"    => "2");
 $js_arr[]=array("web/spa/dist/app.73154cc44d91aebe58df.bundle"   => "1");
 $js_arr[]=array("web/spa/dist/app"    => "2");
 $js_arr[]=array("apps/jeevansathi/modules/contacts/lib/CommunicationHistory"   => "1");
@@ -756,6 +757,7 @@ $js_arr[]=array("apps/jeevansathi/config/app"   => "1");
 $js_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $js_arr[]=array("web/spa/dist/app.76a26e0382665aef40dc.bundle"   => "1");
 $js_arr[]=array("crontabs/crm/jsdialer/rcbUpdateCampaign"   => "1");
+$js_arr[]=array("web/spa/dist/0.35cc7b43ec3d197ea091.bundle"   => "1");
 return $js_arr;
 }
 function getJavascript(){
