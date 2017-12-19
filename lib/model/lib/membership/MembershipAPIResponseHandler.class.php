@@ -1973,14 +1973,16 @@ class MembershipAPIResponseHandler {
             }
             else if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger",$this);
-                if(MobileCommon::isApp() == 'I'){
-                    $top = "My Membership";
-                }else if(is_array($upgardeMemResponse)){
-                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                if(is_array($upgardeMemResponse)){
+                    if(MobileCommon::isApp() == 'I') {
+                        $top = "My Membership";
+                    } else{
+                        $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
+                    }
+                    $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
+                    $extra = $upgardeMemResponse["upgradeOCBBenefits"];
+                    $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
                 }
-                $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
-                $extra = $upgardeMemResponse["upgradeOCBBenefits"];
-                $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
             }
             else if ($this->renewCheckFlag) {
                 if ($this->fest == 1) {
