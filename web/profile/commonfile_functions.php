@@ -266,6 +266,7 @@ $css_arr[]=array("apps/jeevansathi/config/app"   => "1");
 $css_arr[]=array("apps/operations/lib/csvGenerationHandler"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $css_arr[]=array("web/spa/dist/app"   => "1");
+$css_arr[]=array("apps/jeevansathi/modules/api/actions/LoginV1Action"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -467,7 +468,7 @@ $js_arr[]=array("mouseClickTracking_js"   => "5");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js"    => "46");
 $js_arr[]=array("jsms/profile/ep/hamburger_js"     => "54");
 $js_arr[]=array("jsms/profile/ep/mobedit_js"                   => "78");
-$js_arr[]=array("jsms/profile/ep/mobeditview_js"         => "95");
+$js_arr[]=array("jsms/profile/ep/mobeditview_js"          => "96");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"   => "11");
 $js_arr[]=array("jsms/common/disableScroll_js"   => "7");
 $js_arr[]=array("jsms/utility/sessionStorage_js"   => "10");
@@ -628,7 +629,7 @@ $js_arr[]=array("jspc/common/urlHandling"   => "16");
 $js_arr[]=array("jspc/success_story/imagefit" => "2");
 $js_arr[]=array("jspc/contactus/contactus_js"   => "4");
 $js_arr[]=array("jspc/success_story/successScroll" => "2");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                          => "144");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                           => "145");
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"             => "83");
 $js_arr[]=array("jspc/success_story/foggy"   => "4");
 $js_arr[]=array("jspc/success_story/resizeIe"   => "4");

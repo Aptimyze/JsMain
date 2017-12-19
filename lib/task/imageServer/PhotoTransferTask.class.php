@@ -157,9 +157,13 @@ EOF;
 						if($serverOutput["deleted"]=="Y")
 							$serverUrl =IMAGE_SERVER_ENUM::$cloudArchiveUrl."/".$serverOutput["urlFile"];
 					}
-					elseif(strpos($serverOutput,"ERR_UNUSED_PID")==FALSE)
+					elseif($serverOutput!="ERR_UNUSED_PID")
 					{
-						$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+					}
+					else
+					{
+							$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$deleted);
 					}
 					unset($isaObj);
 				
@@ -175,7 +179,11 @@ EOF;
 					{
 						$server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;// make a function call
 						$serverUrl = $server."/".$serverOutput["urlFile"];
-					}	
+						if(strpos($serverOutput["urlFile"],$id)==FALSE){
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR Diff Id and URl= ".$serverOutput["urlFile"];
+						}	
+					}
+					
 				}
 				else
 				{
@@ -188,6 +196,9 @@ EOF;
 							{
 	                                		        $server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
 	                                        		$serverUrl = $server."/".$serverOutput1["urlFile"];
+	                                        		if(strpos($serverOutput1["urlFile"],$id)==FALSE){
+														$this->errorArray[] = "AUTOID = ".$id." & ERROR Diff Id and URl in ERR_FILE_EXISTS= ".$serverOutput1["urlFile"];
+													}
 	        	                        	}
 		
 	                        		}
