@@ -225,14 +225,24 @@ class SearchApiDisplay
 			$offsetVal=1;
 			$this->viewedGender = $this->searchResultsData[0]['GENDER']; //check!!!!!
 			$decoratedMappingSearchDisplay = SearchConfig::decoratedMappingSearchDisplay();
+			$dbJprofile= new JPROFILE();
+			$arr=array("PROFILEID"=>$this->profileIdStr);
+			$data=$dbJprofile->getArray($arr,'','',"LAST_LOGIN_DT,PROFILEID");
+			$loginData= array();
+			if(is_array($data)){
+				foreach($data as $key=>$v){
+					$loginData[$v["PROFILEID"]] = $v["LAST_LOGIN_DT"];
+				}
+			}
+			
+			
 			foreach($this->profileids as $key=>$pid)
 			{
 				if(!($key == 0 && $this->searchResultsData[$key]['FEATURED']=='Y'))
 					$this->finalResultsArray[$pid]['OFFSET']=$offsetVal++;
 
 				$this->profileObjArr[$key]=Profile::getInstance("",$pid);
-				$this->profileObjArr[$key]->getDetail($pid,"","LAST_LOGIN_DT","");
-				$this->searchResultsData[$key]['LAST_LOGIN_DT'] = $this->profileObjArr[$key]->getLAST_LOGIN_DT()?$this->profileObjArr[$key]->getLAST_LOGIN_DT():$this->searchResultsData[$key]['LAST_LOGIN_DT'];
+				$this->searchResultsData[$key]['LAST_LOGIN_DT'] = $loginData[$pid]?$loginData[$pid]:$this->searchResultsData[$key]['LAST_LOGIN_DT'];
 				$this->profileObjArr[$key]->setHAVEPHOTO($this->searchResultsData[$key]['HAVEPHOTO']);
 				$this->profileObjArr[$key]->setGENDER($this->searchResultsData[$key]['GENDER']);
 				$this->profileObjArr[$key]->setPHOTOSCREEN($this->searchResultsData[$key]['PHOTOSCREEN']);
@@ -366,7 +376,7 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
-					
+				
 				$this->finalResultsArray[$pid]['availforchat']= false;
 				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
 				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
@@ -504,6 +514,7 @@ class SearchApiDisplay
 							
 			}
 		}
+		
 		
 	}
 
@@ -822,6 +833,7 @@ class SearchApiDisplay
 	**/
 	public function getUserLoginStatus($gtalkStatus,$jsChatStatus,$lastLoginDate)
 	{
+		
                 if($jsChatStatus == 1)
                         return 'Online now';
                 elseif($gtalkStatus == 1)
