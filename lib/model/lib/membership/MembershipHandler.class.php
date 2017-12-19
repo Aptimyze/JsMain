@@ -1894,6 +1894,10 @@ class MembershipHandler
             ob_end_clean();
         }
         $data = json_decode($output, true);
+        if(MobileCommon::isApp()=="I" && $data["userType"] == memUserType::UPGRADE_ELIGIBLE){
+            $data["hamburger_message"]["bottom"] = "My Membership";
+            $data["hamburger_message"]["top"] = null;
+        }
         return $data;
     }
 

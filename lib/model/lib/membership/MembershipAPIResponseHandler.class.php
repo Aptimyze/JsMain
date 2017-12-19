@@ -1974,11 +1974,7 @@ class MembershipAPIResponseHandler {
             else if($this->upgradeActive == '1'){
                 $upgardeMemResponse = $this->generateUpgradeMemResponse($request,"Hamburger",$this);
                 if(is_array($upgardeMemResponse)){
-                    if(MobileCommon::isApp() == 'I') {
-                        $top = "My Membership";
-                    } else{
-                        $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
-                    }
+                    $top = "Upgrade to ".$upgardeMemResponse["upgradeMainMemName"];
                     $bottom = $upgardeMemResponse["upgradeCurrency"]."".$upgardeMemResponse["upgradeExtraPay"]." only. Valid till ".date('j M',strtotime($upgardeMemResponse["upgradeOfferExpiry"]));
                     $extra = $upgardeMemResponse["upgradeOCBBenefits"];
                     $expiryDate = $upgardeMemResponse["upgradeOfferExpiry"];
