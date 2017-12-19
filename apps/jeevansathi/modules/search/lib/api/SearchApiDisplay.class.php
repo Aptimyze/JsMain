@@ -231,6 +231,8 @@ class SearchApiDisplay
 					$this->finalResultsArray[$pid]['OFFSET']=$offsetVal++;
 
 				$this->profileObjArr[$key]=Profile::getInstance("",$pid);
+				$this->profileObjArr[$key]->getDetail($pid,"","LAST_LOGIN_DT","");
+				$this->searchResultsData[$key]['LAST_LOGIN_DT'] = $this->profileObjArr[$key]->getLAST_LOGIN_DT()?$this->profileObjArr[$key]->getLAST_LOGIN_DT():$this->searchResultsData[$key]['LAST_LOGIN_DT'];
 				$this->profileObjArr[$key]->setHAVEPHOTO($this->searchResultsData[$key]['HAVEPHOTO']);
 				$this->profileObjArr[$key]->setGENDER($this->searchResultsData[$key]['GENDER']);
 				$this->profileObjArr[$key]->setPHOTOSCREEN($this->searchResultsData[$key]['PHOTOSCREEN']);
@@ -837,7 +839,11 @@ class SearchApiDisplay
 	**/
 	function getLastLogin($lastLoginDate)
 	{
-		$lastLogin = explode("T",$lastLoginDate);
+		if(strpos($lastLoginDate,"T"))
+			$lastLogin = explode("T",$lastLoginDate);
+		else
+			$lastLogin = explode(" ",$lastLoginDate);
+		
 		//$lastLoginDate = $lastLogin[0];
                 // input date format is (date T time Z), After exploding strinf at 'T' and removinf 'Z' from the string date time os passed.
 		$timeText = CommonUtility::convertDateToDay($lastLogin[0].' '.rtrim($lastLogin[1],'Z'));
