@@ -85,6 +85,7 @@ EOF;
 						}
 					}
 				}
+				ProfileCacheLib::getInstance()->__destruct();
 			}
 
 		}
