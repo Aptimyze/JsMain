@@ -744,12 +744,18 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-	    $serviceId =$serviceId."%";
-	    $expiryDate =date("Y-m-d");  	
-            $sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
+            
+            $serviceId =$serviceId."%";
+            $expiryDate =date("Y-m-d");
+            $expiryDate= date("Y-m-d", strtotime("$expiryDate - 15 days"));
+            $activatedDate=date("Y-m-d");
+            $activatedDate = date("Y-m-d", strtotime("$activatedDate- 15 days"));
+            //$sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
+            $sql = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS where (SERVICEID LIKE :SERVICEID AND ( (ACTIVATED_ON <:ACTIVATED_ON AND ACTIVE='Y')OR(EXPIRY_DT>:EXPIRY_DT AND ACTIVE='E')))" ;
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":EXPIRY_DT",$expiryDate,PDO::PARAM_STR);
-	    $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);	
+           $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);
+            $prep->bindValue(":ACTIVATED_ON",$activatedDate,PDO::PARAM_STR);
             $prep->execute();
             while($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profiles[] = $res['PROFILEID'];
