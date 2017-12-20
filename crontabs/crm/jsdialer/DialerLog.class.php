@@ -9,6 +9,7 @@ class DialerLog
 
 	public function logError($sql,$campaignName='',$dbConnect='',$ms='',$processName='')
 	{
+		$handleError	=0;
 		$today 		=@date("Y-m-d H:m:i");
 		$todayDt	=date("Ymd");
 		$filename 	=$this->logFilePath."logerror_$todayDt.txt";
@@ -19,6 +20,7 @@ class DialerLog
 				$string ="\n DATE:$today \t CAMPAIGN:$campaignName \t QUERY:$sql \t ERROR:".mssql_get_last_message();
 			else
 				$string ="\n DATE:$today \t CAMPAIGN:$campaignName \t QUERY:$sql \t ERROR:".mysql_error($dbConnect);
+			echo $string;
 			fwrite($handle, $string);
 			fclose($handle);
 		}
@@ -27,10 +29,13 @@ class DialerLog
 			if(!chmod($filename, 0777)){
 				$string .=" \nCannot change the mode of file ($filename)";
 			}
+			$handleError =1;
+			if(!$processName)
+				$processName ='File Handler Error';
 		}
 
 		// Error mail
-		if($processName){
+		if($processName || $handleError){
 			$this->sendMail($string,$processName);
 			die();
 		}
