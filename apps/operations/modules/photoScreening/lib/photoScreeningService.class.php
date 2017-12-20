@@ -1537,18 +1537,22 @@ class photoScreeningService
 								 $picture[$albumVal]["bit"] = ProfilePicturesTypeEnum::$SCREEN_BITS[$formArr["profilePic_" . $albumVal]];
                                 if ($formArr["profilePic_" . $albumVal] == "APPROVE" || $formArr["albumPic_" . $albumVal] == "APPROVE" || $formArr["profilePic_" . $albumVal] == "RETAIN"){
                                         $approved[] = $albumVal;
+	                                    $photoBookmarkObj = new test_PHOTO_BENCHMARK();
+	                                    $photoBookmarkObj->updateUserEdit($albumVal,"APPROVE");
                                         $approvCount++;
                                 }
                                 elseif ($formArr["profilePic_" . $albumVal] == "DELETE" || $formArr["albumPic_" . $albumVal] == "DELETE"){
 																				
                                         $deleted[] = $albumVal;
+	                                    $photoBookmarkObj = new test_PHOTO_BENCHMARK();
+	                                    $photoBookmarkObj->updateUserEdit($albumVal,"DELETE");
                                         $deleted[] = $albumVal;
 																			
                                 }
                                 elseif ($formArr["profilePic_" . $albumVal] == "EDIT" || $formArr["albumPic_" . $albumVal] == "EDIT"){
 
                                 	$photoBookmarkObj = new test_PHOTO_BENCHMARK();
-                                	$photoBookmarkObj->updateOpenCVEdit($albumVal);
+	                                $photoBookmarkObj->updateUserEdit($albumVal,"EDIT");
                                 	    $edit++;
                                 }
                         }
