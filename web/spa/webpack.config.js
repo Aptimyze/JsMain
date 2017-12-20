@@ -9,7 +9,7 @@ var DIST_DIR = null;
 var fileNameConfig = '';
 var publicPathConfig = '';
 const NameAllModulesPlugin = require('name-all-modules-plugin');
-if(process.env.NODE_ENV !== 'devS')
+if(process.env.NODE_ENV === 'production')
  {
    DIST_DIR = path.resolve(__dirname,"dist");
    fileNameConfig = "[name].[chunkhash].bundle.js";
@@ -17,7 +17,7 @@ if(process.env.NODE_ENV !== 'devS')
  }
  else {
    DIST_DIR = path.resolve(__dirname,"dist");
-   fileNameConfig = "[name].bundle.js";
+   fileNameConfig = process.env.NODE_ENV !== 'devS' ?  "[name].[chunkhash].bundle.js" : "[name].bundle.js";
    publicPathConfig = '/spa/dist/';
 
 }
