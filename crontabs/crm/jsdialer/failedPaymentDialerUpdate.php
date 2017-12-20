@@ -24,6 +24,7 @@ $dialerApplicationObj = new DialerApplication();
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
 $campaignName	='FP_JS';
 $action		='STOP';
+$action1	='STOP-D';
 $str		='Dial_Status=0';
 $npriority	=5;
 $last20MinTime	=date("Y-m-d H:i:s",time()-10.5*60*60-25*60);
@@ -89,7 +90,7 @@ if(is_array($remainArr)){
 		$easyCode 		=$getLatDispositionArr['easycode'];
             	if($getLatDisposition==$scbValue){
 		  $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=3 WHERE PROFILEID='$pid' AND Dial_Status!='3' AND easycode='$easyCode'";
-		  mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+		  mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,'1',$campaignName);
 		}	
 		else{
 			if(in_array($pid,$inEligibleArr))
@@ -101,7 +102,7 @@ if(is_array($remainArr)){
 	if($profileStr)
 		deleteProfiles($db_master,$profileStr);
 	foreach($pidArr as $key=>$profileid){
-		addLog($profileid,$campaignName,$str,$action,$db_js_111);
+		addLog($profileid,$campaignName,$str,$action1,$db_js_111);
 	}
   }
 }
@@ -118,9 +119,10 @@ function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$diale
 {
 	$lastDisp =array();
 	$squery1 = "SELECT top 1 Last_disposition,easycode FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' order by Login_Timestamp DESC";
-	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,'1',$campaignName);
 	if($srow1 = mssql_fetch_array($sresult1)){
 		$val =$srow1['Last_disposition'];
+		$val =trim($val);
 		if($val==$scbValue)
 			$lastDisp =$srow1;
 	}

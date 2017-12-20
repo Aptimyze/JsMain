@@ -18,6 +18,7 @@ mysql_query("set session wait_timeout=2000",$db_master);
 $dialerApplicationObj = new DialerApplication();
 $campaignName   = 'OB_JS_RCB';
 $action         = 'STOP';
+$action1	= 'STOP-D';	
 $str            = 'Dial_Status=0';
 $date2DayBefore = date("Y-m-d H:i:s", time() - 48 * 60 * 60);
 $scbValue 	='Schedule Call Back';	
@@ -52,7 +53,7 @@ if(is_array($inEligibleArrNew)) {
         $easyCode               =$getLatDispositionArr['easycode'];
         if($getLatDisposition==$scbValue){
         	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=3 WHERE PROFILEID='$pid' AND Dial_Status!='3' AND easycode='$easyCode'";
-                mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+                mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,'1',$campaignName);
         }
 	else{
 		$pidArr[] =$pid;
@@ -64,7 +65,7 @@ if(is_array($inEligibleArrNew)) {
 	deleteProfiles($db_master,$profileStr);
     
     foreach ($pidArr as $key => $profileid) {
-	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
+	addLog($profileid, $campaignName, $str, $action1, $db_js_111);	
     }
   }
 }
@@ -108,9 +109,10 @@ function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$diale
 {
         $lastDisp =array();
         $squery1 = "SELECT top 1 Last_disposition,easycode FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' order by CSV_ENTRY_DATE DESC";
-        $sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
+        $sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,'1',$campaignName);
         if($srow1 = mssql_fetch_array($sresult1)){
                 $val =$srow1['Last_disposition'];
+		$val =trim($val);
                 if($val==$scbValue)
                         $lastDisp =$srow1;
         }
