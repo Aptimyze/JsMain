@@ -17,7 +17,7 @@ $setVersionUrl = "https://jsba99.atlassian.net/rest/api/2/issue/";
 date_default_timezone_set('Asia/Kolkata');
 
 $headerArr = array(
-				'Authorization:Basic dmlkdXNoaTp2aWR1c2hp',
+				'Authorization:Basic c3VuZW5kcmEuZ3VwdGFAamVldmFuc2F0aGkuY29tOnN1bmVuZHJhQDc3Nw==',
 				'Content-Type:application/json'
 				);
 //get tagName which will be the release version

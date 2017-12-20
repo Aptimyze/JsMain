@@ -12,7 +12,7 @@ const NameAllModulesPlugin = require('name-all-modules-plugin');
 if(process.env.NODE_ENV === 'production')
  {
    DIST_DIR = path.resolve(__dirname,"dist");
-   fileNameConfig = "[name].[chunkhash].bundle.js";
+   fileNameConfig = "[name].bundle.js";
    publicPathConfig = staticServer.STATIC_SERVER+'/spa/dist/';
  }
  else {

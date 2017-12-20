@@ -5,9 +5,15 @@ export default class BasicInfo extends React.Component {
     constructor(props) {
         super();
         this.state = {'lastClicked':true};
+        this.GAObject = new GA();
     }
     showChatOnAppLayer(e){
-
+        let gender = 1;
+        if(this.props.about.gender=="Female")
+            gender = 'F';
+        else if(this.props.about.gender=="Male")
+            gender = 'M';
+        this.GAObject.trackJsEventGA("Profile Description-jsms","Click Online Now",gender);
         this.setState({showPromoLayer:true,lastClicked:true});
     }
     hideChatOnAppLayer(e){
@@ -51,17 +57,19 @@ export default class BasicInfo extends React.Component {
         let lastActive=(<div></div>);
         if(this.props.onlineInfo){
             if(this.props.onlineInfo==2)
-                lastActive = (<span className="f11 color13" id="vpro_last_active" >{this.props.about.last_active}</span>);
-            else lastActive= (<span><span className="f10 color13" style={{width:'10px',height:'10px',background: '#65EF79',borderRadius: '50%',marginLeft: '0px',marginRight: '0px',color: '#65EF79'}}>ab</span>&nbsp;<span onClick ={this.showChatOnAppLayer.bind(this)} className="f11 color13" id="vpro_last_active" >Online Now</span></span>);
+                lastActive = (<div className="fr posrel"><div className="f11 color13" id="vpro_last_active" style={{paddingTop: 5}}>{this.props.about.last_active}</div></div>);
+            else lastActive= (<div className="fr posrel" style={{marginLeft:'16px'}}><div style={{width: 10, height: 10, position: 'absolute', backgroundColor: 'green', borderRadius: '50%', top: 7, left: '-13px'}} /><div className="f11 color13" id="vpro_last_active" style={{paddingTop: 5}} onClick ={this.showChatOnAppLayer.bind(this)}>Online Now</div></div>);
         }
-        let layerHtml = this.state.showPromoLayer ? <ChatLayer hideChatOnAppLayer={this.hideChatOnAppLayer.bind(this)}></ChatLayer> : <div></div>;
+        let layerHtml = this.state.showPromoLayer ? <ChatLayer profileGender={this.props.about.gender} hideChatOnAppLayer={this.hideChatOnAppLayer.bind(this)}></ChatLayer> : <div></div>;
         return (
             <div className="pad5 bg4 fontlig color3 clearfix f14">
                 {layerHtml}
                 <div className="hgt10"></div>
                 <div className="fl">
-                    <span className="f18" id="vpro_username" >{this.props.about.username}</span>&nbsp;&nbsp;
+                    <div className="clearfix">
+                    <div className="fl f18" id="vpro_username" >{this.props.about.username}</div>&nbsp;&nbsp;
                                 {lastActive}
+                </div>
                 </div>
                 <div className="fr color2 f14 pt5 fontrobbold" id="vpro_subscription">{this.props.about.subscription_text}</div>
                 <div className="clr hgt10"></div>
@@ -121,15 +129,20 @@ class ChatLayer extends React.Component{
     }
     
     trackDownloadAppWithGA(){
-        this.GAObject.trackJsEventGA("jsms","appD","1");
+        let gender = 1;
+        if(this.props.profileGender=="Female")
+            gender = 'F';
+        else if(this.props.profileGender=="Male")
+            gender = 'M';
+        this.GAObject.trackJsEventGA("Profile Description-jsms","Click Download",gender);
         window.location.href = "/static/appredirect";
     }
     render()
     {
         return (<div id="chatOnAppLayer" className="backoverlayL" onClick={(e) => this.props.hideChatOnAppLayer(e)}>
 <div id="chatSubLayer" className="otpcenter cssLayerFix bg4 fontlig posabs" style={{...this.state.style1,left:'50%',top:'50%',width:'90%'}}>
-<p className="color3 txtc pt20 txtl f16 padl30" align="left">Real time CHAT with online members<br /> on Jeevansathi App</p>
-<p className="color4 txtc pt20 pb30 f14 txtl padl30 pt10" styletext-align="left">Other Benefits:<ul style={{listStylePosition:'inside'}}><li className="mt2">Get acceptances from online users</li><li className="mt2">Smoother,faster and richer experience</li><li className="mt2">100% Ad free experience guaranteed</li><li className="mt2">Real Time notifications on interests,<br />acceptances and recommendations</li></ul></p>
+<p className="color3 txtc pt20 txtl f16 padl30">Real time CHAT with online members<br /> on Jeevansathi App</p>
+<p className="color4 txtc pt20 pb30 f14 txtl padl30 pt10">Other Benefits:<ul style={{listStylePosition:'inside'}}><li className="mt2">Get acceptances from online users</li><li className="mt2">Smoother,faster and richer experience</li><li className="mt2">100% Ad free experience guaranteed</li><li className="mt2">Real Time notifications on interests,<br />acceptances and recommendations</li></ul></p>
 <div style={{lineHeight:'60px',borderTop:'1px solid #dbdbdb'}} className="txtc">
 <div id="js-downApp" className="f19"><div onClick={this.trackDownloadAppWithGA.bind(this)} style={{color:'#d03e43'}}>Download App</div></div>
 </div>

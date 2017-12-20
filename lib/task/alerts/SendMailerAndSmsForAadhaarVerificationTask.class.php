@@ -41,7 +41,7 @@ EOF;
         
         foreach($profileToSendMailer as $profileId=>$arr){
             
-            $email_sender = new EmailSender(MailerGroup::AADHAAR_VERIFICATION,1886);
+            $email_sender = new EmailSender(MailerGroup::AADHAAR_VERIFICATION,1888);
             $emailTpl = $email_sender->setProfileId($profileId);
             $smartyObj = $emailTpl->getSmarty();
             $username = $arr['USERNAME'];

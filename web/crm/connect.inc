@@ -352,7 +352,8 @@ function checkemail($email)     // returns 1 if email id not valid
                                                                                                                              
 	return $flag;
 }
-
+if(!function_exists('my_format_date'))
+{
 function my_format_date($day,$month,$year)
 {
 	if($month=="01" || $month=="1")
@@ -384,6 +385,7 @@ function my_format_date($day,$month,$year)
 		$day= "0" . $day;
 		
 	return $month . " " . $day . ", " . $year;
+}
 }
 
 function create_dd($selected,$cname,$minormax=0,$labelselect="")

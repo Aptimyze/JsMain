@@ -123,7 +123,7 @@ class EmailSender{
               }
             }
             if (is_array($this->_emailTplArray)) {
-              $message = $this->_emailTplArray[$profileid]->getMessage();
+               $message = $this->_emailTplArray[$profileid]->getMessage();
               $subject = $this->_emailTplArray[$profileid]->getProcessedSubject();
               $from = $this->_emailTplArray[$profileid]->getSenderEMailId();
               $replyToAddress = ($this->_emailTplArray[$profileid]->getReplyToEnabled() === "Y") ? 
@@ -283,7 +283,7 @@ class EmailSender{
       $from = $this->email_tpl->getSenderEMailId();
 
       $message = $this->email_tpl->getMessage();
-      	$subject = $this->email_tpl->getProcessedSubject();
+      $subject = $this->email_tpl->getProcessedSubject();
 
 	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID(),$this->mail_id);
 	$canSend = $canSendObj->canSendIt();  

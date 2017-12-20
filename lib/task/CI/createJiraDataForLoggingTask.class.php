@@ -35,7 +35,7 @@ EOF;
       ); //token used is of username: vidushi@naukri.com
 
     $jiraHeaderArr = array(
-      'Authorization:Basic dmlkdXNoaUBuYXVrcmkuY29tOnZpZHVzaGkxMjM=',
+      'Authorization:Basic c3VuZW5kcmEuZ3VwdGFAamVldmFuc2F0aGkuY29tOnN1bmVuZHJhQDc3Nw==',
       'Content-Type:application/json'
       );
 

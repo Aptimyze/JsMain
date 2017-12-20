@@ -72,7 +72,7 @@ class ApiEditSubmitV1Action extends sfActions
 		unset($this->editFieldNameArr['YEAR']);
                 //print_r($this->editFieldNameArr);die;
         
-                        if(!MobileCommon::isApp())
+                        if(!MobileCommon::isAndroidApp())
                         {
                                 if(!empty($_FILES)){
                                         foreach($_FILES as $f1){

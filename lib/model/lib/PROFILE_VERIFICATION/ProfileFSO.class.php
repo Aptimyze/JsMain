@@ -115,6 +115,7 @@ class ProfileFSO
         if(false === ProfileCacheFunctions::isCommandLineScript("set")){
                 $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         }
+        $objProCacheLib->__destruct();
         return $result;
          
     }

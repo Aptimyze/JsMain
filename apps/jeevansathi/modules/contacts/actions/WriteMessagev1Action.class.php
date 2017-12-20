@@ -80,6 +80,14 @@ class WriteMessagev1Action extends sfAction
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
 						$nextPaginationCall=false;
 					}
+					//parser
+				foreach($messageDetailsArr as $key => $msgArr) {
+		          if($msgArr["SENDER"] == $this->loginProfile->getPROFILEID()) {
+		            $messageDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->loginProfile, $msgArr['MESSAGE']);
+		          } else {
+		            $messageDetailsArr[$key]['MESSAGE'] = $this->getPersonalizedMessageOnly($this->Profile, $msgArr['MESSAGE']);
+		          }
+		        }
 					$count = $messageLogObj->markMessageSeen($this->loginProfile->getPROFILEID(),$profileid);
 					
 					if($count>0 )
@@ -215,5 +223,44 @@ class WriteMessagev1Action extends sfAction
 		return $finalContactDetailArr;
 		
 	}
+
+	/* This function is used to check if message is personalized or not*/
+    private function getPersonalizedMessageOnly($profileObj,$message)
+    {
+			
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_FREE);
+			
+			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
+			if(!in_array($messageCmp,$presetMessage))
+			{
+				if(strpos($message,"||")!==false || strpos($message,"--")!==false)
+				{
+					$messageArr=explode("||",$message);
+					$eoiMsgCount = count($messageArr);
+					$i=0;
+					
+					for($j=0;$j<$eoiMsgCount;$j++)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						if($i==0)
+							$eoiMessages=$splitmessage[0];
+						else
+							$eoiMessages.="\n".$splitmessage[0];
+						$i++;							
+					}
+					if($eoiMessages)
+						$message=$eoiMessages;
+					else
+						$message="";
+				}
+				//$message= nl2br($message);
+				$message =addslashes(htmlspecialchars_decode($message));
+			}
+			else
+				$message = null;
+		
+			return $message;
+		}
 }
 

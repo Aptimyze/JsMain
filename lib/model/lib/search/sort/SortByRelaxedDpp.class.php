@@ -102,10 +102,12 @@ class SortByRelaxedDpp extends SortByTrendsScore {
                 }
                 unset($memObject);
                 //strict dpp sort
-                $this->setStrictDppSortString();
-                $dppSortString[$counter] = $this->dppSortString;
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
+                if($this->loggedInProfileObj->getPROFILEID()%101>50){
+                        $this->setStrictDppSortString();
+                        $dppSortString[$counter] = $this->dppSortString;
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
 
                 unset($this->jpartnerData);
                 //reverse dpp sort

@@ -571,17 +571,34 @@ class Jpartner
 		{
 			$this->profileid=$profileid;
 			$this->myDb=$myDb;
-		}	
-		$sql="SELECT SQL_CACHE $parameter FROM $this->table WHERE PROFILEID=$profileid $WhereCondition";
-		$result = $mysqlObj->executeQuery($sql,$myDb) ;
-		$myrow =$mysqlObj->fetchAssoc($result);
-
-		if($myrow)
+		}
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__);
+                    if (false !== $result) {
+                        $fetchedArr = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $fetchedArr)) {
+                       $fetchedArr = null;
+                    }
+                }
+                else{
+                    $sql="SELECT SQL_CACHE * FROM $this->table WHERE PROFILEID=$profileid";
+                    $result = $mysqlObj->executeQuery($sql,$myDb) ;
+                    $fetchedArr =$mysqlObj->fetchAssoc($result);
+                    if(!$fetchedArr) { 
+                        $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
+                        $notFilledCase = 1;
+                    }
+                    ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
+                }
+                $myrow = newjs_JPARTNER::getArrayWithRequiredFieldAndConditions($fetchedArr,$parameter,$WhereCondition);
+		if($myrow && !$notFilledCase)
 		{
 			foreach ($myrow as $key => $value)
 			{
 				$this->$key=$value;
-				$flag=1;
+                                    $flag=1;
 			}
 		}
 		if($flag)
@@ -633,6 +650,7 @@ class Jpartner
 			}
 			$sql="UPDATE $this->table SET $specialcase WHERE PROFILEID=$this->PROFILEID";
 			$mysqlObj->executeQuery($sql,$myDb);
+                        ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		}
 		else
 		{
@@ -679,7 +697,11 @@ class Jpartner
 				}
 				else
 					$this->partnerProfileUpdated=0;
-			}	
+			}
+                        if(!$this->isPartnerProfileExist($myDb,$mysqlObj))
+                            ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
+                        else
+                            ProfileCacheLib::getInstance()->updateCache($this->getArrayToSetInCache(), ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, __CLASS__);
 		}
 		$db=connect_db();
 	}
@@ -693,6 +715,7 @@ class Jpartner
 	{
 		$sql="DELETE FROM $this->table WHERE PROFILEID=$this->PROFILEID";
 		$mysqlObj->executeQuery($sql,$myDb);
+                ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		$db=connect_db();
 		$sql="REPLACE INTO newjs.SWAP_JPARTNER (PROFILEID) VALUES ('$this->PROFILEID')";
 		$mysqlObj->executeQuery($sql,$db) ;
@@ -714,9 +737,21 @@ class Jpartner
 	        if(!$COMPANY)
         	        $COMPANY='JS';
 
-		$sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
-		$result = $mysqlObj->executeQuery($sql_p,$myDb) ;
-		$myrow =$mysqlObj->fetchAssoc($result);
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__);
+                    if (false !== $result) {
+                        $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $myrow)) {
+                       $myrow = null;
+                    }
+                }
+                else{
+                    $sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
+                    $result = $mysqlObj->executeQuery($sql_p,$myDb) ;
+                    $myrow =$mysqlObj->fetchAssoc($result);
+                }
 		{
 			$gender=$myrow['GENDER'];
 			$children=$myrow['CHILDREN'];
@@ -887,5 +922,13 @@ class Jpartner
 			 $mysqlObj->executeQuery($sql,$db) ;
 		}
 	}
+        
+        function getArrayToSetInCache(){
+            $arrToSet = $this->getJpartnerArray();
+            $arrToSet['PROFILEID'] = $this->PROFILEID;
+            $arrToSet['DPP'] = $this->DPP;
+            $arrToSet['DATE'] = $this->DATE;
+            return $arrToSet;
+        }
 }
 ?>

@@ -933,7 +933,6 @@ const mapDispatchToProps = (dispatch) => {
             commonApiCall(presenceUrl,'','','GET').then((res)=>{
                 
                 let status = res.data ? (res.data.length ? 1 : 2) : 2;    
-                //let status = 1;
                 dispatch({type:'SET_ONLINE_CALL',payload:{pc:pChecksum, online:status}});
             });
         }
