@@ -12,7 +12,7 @@ const NameAllModulesPlugin = require('name-all-modules-plugin');
 if(process.env.NODE_ENV === 'production')
  {
    DIST_DIR = path.resolve(__dirname,"dist");
-   fileNameConfig = "[name].bundle.js";
+   fileNameConfig = "[name].[chunkhash].bundle.js";
    publicPathConfig = staticServer.STATIC_SERVER+'/spa/dist/';
  }
  else {
@@ -44,7 +44,7 @@ plugins: [
       inject: 'body',
   }),
   new ExtractTextPlugin({
-    filename: '[name].style.css',
+    filename: process.env.NODE_ENV === 'production' ? '[name].[chunkhash].style.css' : '[name].style.css',
     allChunks: true
   }),
   new webpack.LoaderOptionsPlugin({
