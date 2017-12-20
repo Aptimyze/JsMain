@@ -366,9 +366,12 @@ class phoneActions extends sfActions
 	$this->loginProfile->getDetail($loginProfileid,"PROFILEID","*");
   if($this->loginProfile->getACTIVATED()=='N')
 		$this->fromReg = 1;
-
-
-	// to check if the current profile's primary number is duplicate or not
+  $pVerified  = phoneVerification::hidePhoneVerLayer($this->loginProfile);
+  if($pVerified=='Y'){
+    header("Location:".JsConstants::$siteUrl);
+    die;
+}
+// to check if the current profile's primary number is duplicate or not
 	if (JsCommon::showDuplicateNumberConsent($loginProfileid))
 		$this->showDuplicateConsentMsg = 'Y' ;
 	else
