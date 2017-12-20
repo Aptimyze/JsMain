@@ -26,12 +26,13 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 
 
 // get non encrypted aadhar data
-$sql = "SELECT PROFILEID,AADHAR_NO from PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE AADAHAR IS NULL limit 1000";
+$sql = "SELECT PROFILEID,AADHAR_NO from PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE AADHAR IS NULL limit 1000";
 $result = $mysqlObjS->executeQuery($sql,$connSlave) or $mysqlObjS->logError($sql);
 $profiles = array();
-while($row = $mysqlObjS->fetchAssoc($horoscopeResult)){
+while($row = $mysqlObjS->fetchAssoc($result)){
         $profiles[$row['PROFILEID']] = $row['AADHAR_NO'];
 }
+
 if($profiles){
            foreach($profiles as $profileId=>$aadharId){
 			   $aadhar="";
@@ -39,9 +40,12 @@ if($profiles){
 			   $aadhar= EncryptionAESCipher::encrypt(aadharVerificationEnums::AADHARENCRYPTIONKEY,$aadharId);
 			   $updateSql = "UPDATE PROFILE_VERIFICATION.AADHAR_VERIFICATION SET AADHAR ='".$aadhar."' WHERE PROFILEID = '".$profileId."' AND AADHAR IS NULL";
 			   $mysqlObjM->executeQuery($updateSql,$connMaster) or $mysqlObjM->logError($updateSql);
-			   $aadharVerification->resetAadharDetails($profileId);
+			   $fields = aadharVerificationEnums::$fieldsToCheck;
+			   $objProCacheLib = ProfileCacheLib::getInstance();
+			   $objProCacheLib->removeFieldsFromCache($profileId,__CLASS__,$fields);
+			   $objProCacheLib->__destruct();
 			   unset($aadharVerification);
-		
+				
             }
 }
 unset($mysqlObjM);

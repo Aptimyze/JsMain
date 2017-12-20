@@ -93,7 +93,7 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
         $sql = "SELECT PROFILEID,AADHAR_NO,AADHAR,VERIFY_STATUS FROM PROFILE_VERIFICATION.AADHAR_VERIFICATION WHERE VERIFY_STATUS = :VERIFY AND ";
         $sql.="(AADHAR=:AADHAR OR AADHAR_NO=:AADHAR_NO)";
         $res = $this->db->prepare($sql);
-        $res->bindParam(":AADHAR", $aadharId, PDO::PARAM_STR);
+        $res->bindParam(":AADHAR", $aadhar, PDO::PARAM_STR);
 		$res->bindParam(":AADHAR_NO", $aadharId, PDO::PARAM_INT);
         $res->bindParam(":VERIFY", $verifyValue, PDO::PARAM_STR);
         $res->execute();

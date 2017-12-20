@@ -49,6 +49,10 @@ class EncryptionAESCipher
 		if($ivFlag){
 			$iv = self::getIV();
 		}
+		else{
+			$data = hash ('sha512' , $data,false );
+			$data = substr($data,0,self::CIPHER_KEY_LEN);
+		}
 		$key=hash ('sha512' , $key,false );
 		$key=substr($key,0,self::CIPHER_KEY_LEN);
 		$encodedEncryptedData = base64_encode(openssl_encrypt($data, self::OPENSSL_CIPHER_NAME,self::fixKey($key), OPENSSL_RAW_DATA, $iv));

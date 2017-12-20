@@ -134,43 +134,52 @@ class aadharVerification
         $aadharDetails = null;        
         if ($objProCacheLib->isCached('PROFILEID', $profileId,$fields , __CLASS__,"1"))
         {
+			
         	$result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $fields, __CLASS__);
+        	
         	if (false !== $result)
         	{
         		$bServedFromCache = true;
         		$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+        		$aadharDetails[$profileId]["REQUEST_ID"] = $result['REQUEST_ID'];
+				$aadharDetails[$profileId]["VERIFY_STATUS"] = $result['VERIFY_STATUS'];
+				$aadharDetails[$profileId]["AADHAR_NO"] = "Provided";
+        	
         	}
-        	$aadharDetails[$profileId]["AADHAR_NO"] = $result['AADHAR_NO'];
-        	$aadharDetails[$profileId]["REQUEST_ID"] = $result['REQUEST_ID'];
-        	$aadharDetails[$profileId]["VERIFY_STATUS"] = $result['VERIFY_STATUS'];
+        	
+        	
         } 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumeCount(__CLASS__);            
-            //return $aadharDetails;
-        }             
+            $this->logCacheConsumeCount(__CLASS__);  
+                 
+            return $aadharDetails;
+        }  
+            
         //get details using mysql
-        if(!is_array($aadharDetails) || c){
+        if(!is_array($aadharDetails)){
 			$aadharDetails = self::$aadharObj->getAadharDetails($profileId);
 		
 		//add details to cache
 			$aadharArr = array();
-			foreach($aadharDetails as $key=>$value)
-			{
-				$aadharArr['PROFILEID'] = $key;
-				if($value['AADHAR']){
-					$aadharArr['AADHAR_NO'] = $value['AADHAR'];
+			if(is_array($aadharDetails)){
+				$aadharDetails[$profileId]["AADHAR_NO"]="Provided";
+				foreach($aadharDetails as $key=>$value)
+				{
+					$aadharArr['PROFILEID'] = $key;
+					/*if($value['AADHAR']){
+						$aadharArr['AADHAR_NO'] = $value['AADHAR'];
+					}
+					else
+						$aadharArr['AADHAR_NO'] = EncryptionAESCipher::encrypt(aadharVerificationEnums::AADHARENCRYPTIONKEY,$value['AADHAR_NO']);
+					*/
+		        	$aadharArr['REQUEST_ID'] = $value['REQUEST_ID'];
+		        	$aadharArr['VERIFY_STATUS'] = $value['VERIFY_STATUS'];
+		
+		        	$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
 				}
-				else
-					$aadharArr['AADHAR_NO'] = EncryptionAESCipher::encrypt(aadharVerificationEnums::AADHARENCRYPTIONKEY,$value['AADHAR_NO']);
-	        	$aadharArr['REQUEST_ID'] = $value['REQUEST_ID'];
-	        	$aadharArr['VERIFY_STATUS'] = $value['VERIFY_STATUS'];
-	
-	        	$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
 			}
 		}
-		if(is_array($aadharDetails) && !is_numeric($aadharDetails[$profileId]["AADHAR_NO"])){
-			$aadharDetails[$profileId]["AADHAR_NO"] = EncryptionAESCipher::decrypt(aadharVerificationEnums::AADHARENCRYPTIONKEY,$aadharDetails[$profileId]["AADHAR_NO"]);
-		}        
+		    
 		return $aadharDetails;
 	}
 
@@ -204,6 +213,7 @@ class aadharVerification
     public function preVerification($aadharId,$profileId)
     {
 		$aadharEncrypted = EncryptionAESCipher::encrypt(aadharVerificationEnums::AADHARENCRYPTIONKEY,$aadharId);
+		
         $resultArr = self::$aadharObj->checkIfAadharVerified($aadharId,aadharVerificationEnums::VERIFIED,$aadharEncrypted);        
         if(is_array($resultArr) && !empty($resultArr))
         {

@@ -48,7 +48,7 @@ class aadharVerificationV1Action extends sfActions
 		} 
 		else
 		{	
-			if($this->profileId % 101 <= aadharVerificationEnums::TRAFFICTOAUTHBRIDGE)
+			if($this->profileId % 101 < aadharVerificationEnums::TRAFFICTOAUTHBRIDGE)
 			{
 				$response = $aadharVerificationObj->callAadharVerificationAuthBridgeApi($aadharId,$nameOfUser,$this->profileId,$this->username);
 			}
