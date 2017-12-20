@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build",
-    "build": "webpack -d && cp dist/index.html src/index.html  && webpack-dev-server --port 8080 --content-base src --hot --inline --watch",
+    "build": "NODE_ENV='devS' webpack -d && cp dist/index.html src/index.html  && NODE_ENV='devS' webpack-dev-server --port 8080 --content-base src --hot --inline --watch",
     "build:prod": " rm -rf dist && NODE_ENV='production'   webpack -p --progress  && cp dist/index.html src/index.html ",
     "build:dev": " rm -rf dist && NODE_ENV='dev'   webpack -p --progress  && cp dist/index.html src/index.html "
   },
