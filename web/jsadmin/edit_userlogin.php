@@ -197,7 +197,7 @@ if (authenticated($cid))
                         if($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1)
                         {
                                 $url = PictureFunctions::getCloudOrApplicationCompleteUrl($PHOTO_URL);
-                                if($url != "http://ser7.jeevansathi.com")
+                                if($url != "http://ser7.jeevansathi.com" && $url != "https://ser7.jeevansathi.com")
                                         $smarty->assign('PHOTO_URL',$url);
                         }
 
@@ -230,7 +230,8 @@ if (authenticated($cid))
 
 	                $imageServerLogObj = new ImageServerLog();
 
-		        if($PHOTO_URL == "http://ser7.jeevansathi.com")
+		        if($PHOTO_URL == "http://ser7.jeevansathi.com" || 
+                                $PHOTO_URL == "https://ser7.jeevansathi.com")
                 		$PHOTO_URL = '';
 
             		$jsadminPswrdsObj->startTransaction();
@@ -250,7 +251,8 @@ if (authenticated($cid))
 				mysql_query_decide($sql_log) or die("$sql_log".mysql_error_js());
 			mysql_query_decide($sql) or die("$sql".mysql_error_js());
 
-		        if($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1)
+		        if( ($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1)
+                                    && ($PHOTO_URL != '') )
 				$imageServerLogObj->insertBulk("FIELD_SALES",$RESID,"PHOTO_URL","N");
            		 
 			$jsadminPswrdsObj->commitTransaction();
