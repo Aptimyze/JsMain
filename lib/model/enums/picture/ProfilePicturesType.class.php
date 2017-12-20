@@ -27,7 +27,8 @@ class ProfilePicturesTypeEnum
                                             "PROCESS"=>2,
                                             "APPROVE"=>2,
                                             "DELETE"=>3,
-                                            "EDIT"=>4);
+                                            "EDIT"=>4,
+		                                    "CROPPEDFACE"=>0);
       
         // SCREEN BIT defined by (Key of pictureSizes array + 2)
 	public static $SCREEN_BIT_POSITION = array("FACE","MainPicUrl");

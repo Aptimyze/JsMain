@@ -165,13 +165,15 @@ class Consumer
           break;
         case 'GCM':   
           $handlerObj->sendGCM($type,$body);  
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case 'BUFFER_INSTANT_NOTIFICATIONS':
           $handlerObj->sendInstantNotification($type,$body);
           ProfileCacheLib::getInstance()->__destruct();
             break;
         case 'DUPLICATE_LOG':
-            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
+          $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case MQ::DELAYED_MAIL_PROCESS:
           $handlerObj->sendMail($type,$body,true);

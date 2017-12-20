@@ -201,6 +201,20 @@ EOF;
 					$arrData['PROFILE_TYPE'] = $this->getProfileType($this->m_objProfile->getHAVEPHOTO());
 					$szType = $this->m_objPicFunction->getImageFormatType($arrData['MainPicUrl']);
 					//////////////////////////////////////////////////////////////
+					///
+					/// Check if profile photo has proper face
+
+					if($arrData['ProfilePic450Url'] && $arrData["ORDERING"] == 0) {
+						$googleVisionObj = new GoogleVisionApi();
+						$faceFound = $googleVisionObj->checkFaceCordinates($arrData['ProfilePic450Url'], $arrData["PICFORMAT"], $arrData['PICTUREID'], $arrData['PROFILEID']);
+						if(!$faceFound)
+						{
+							$objPicService = new PictureService($this->m_objProfile);
+							$arrUpdate[$arrData['PICTUREID']]["MainPicUrl"] = $arrData['MainPicUrl'];
+							$objPicService->setPicProgressBit("CROPPEDFACE",$arrUpdate);
+						}
+					}
+
 					//Move Main Pic To Orginial Pic Directory
 					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
 					//If Required, Resize Main Pic and Store into same MainPicUrl

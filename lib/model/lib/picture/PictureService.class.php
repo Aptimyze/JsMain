@@ -1203,7 +1203,11 @@ class PictureService
                         $pictureObj = new PICTURE_FOR_SCREEN_NEW();
                         $currentBit = $pictureObj->getScreenBit($picId);
                         $ordering = $currentBit["ORDERING"];
-                        $currentBit = str_split($currentBit["SCREEN_BIT"]);
+                        if($task != "CROPPEDFACE")
+                            $bit = ($currentBit["SCREEN_BIT"]);
+                        else
+                        	$bit = "0000000";
+                        $currentBit = str_split($bit);
                         $photoTypes = array_flip(array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES));
                         $photoTypes["MainPicUrl"] = "-1";
 
@@ -1244,7 +1248,6 @@ class PictureService
                         
                         if ($pictureUrl && is_array($pictureUrl))
                                 $finalUpdateArr["urls"] = $pictureUrl;
-                        
                         $pictureObj->updateScreenBit($finalUpdateArr);
                         unset($finalUpdateArr);
                         unset($pictureUrl);

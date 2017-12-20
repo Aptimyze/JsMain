@@ -20,9 +20,9 @@ $maDb = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$mast
 $myDb = mysql_connect(MysqlDbConstants::$slave111_sel['HOST'],MysqlDbConstants::$slave111_sel['USER'],MysqlDbConstants::$slave111_sel['PASS']) or die("Unable to connect to js server".$start);
 $shDb2 = mysql_connect(MysqlDbConstants::$shard2Slave112['HOST'],MysqlDbConstants::$shard2Slave112['USER'],MysqlDbConstants::$shard2Slave112['PASS']) or die("Unable to connect to js server".$start);
 
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$shDb2);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$maDb);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$myDb);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$shDb2);
 
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
