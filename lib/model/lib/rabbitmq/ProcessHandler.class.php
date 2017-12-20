@@ -69,6 +69,7 @@ class ProcessHandler
                                 $receiverObj->getDetail($value, "PROFILEID");
    
                                 ContactMailer::sendAutoReminderMailer($receiverObj,$senderObj);
+                                ProfileCacheLib::getInstance()->__destruct();
                                //   $this->sendAutoReminder($value,$senderid);
                                   }    
                               
