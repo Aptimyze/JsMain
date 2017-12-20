@@ -1085,5 +1085,20 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
+    
+    public function getExpireCount($profileid){
+        try{
+            $sql = "SELECT COUNT(*) as count from billing.SERVICE_STATUS where PROFILEID = :PROFILEID and ACTIVE='E' AND SERVEFOR LIKE '%F%'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            if($row = $prep->fetch(PDO::FETCH_ASSOC))
+                return $row["count"];
+                else
+                    return 0;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 
