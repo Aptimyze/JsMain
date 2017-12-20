@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build",
-    "build": "webpack -d && cp dist/index.html src/index.html  && webpack-dev-server --port 8080 --content-base src --hot --inline --watch",
+    "build": "NODE_ENV='devS' webpack -d && cp dist/index.html src/index.html  && NODE_ENV='devS' webpack-dev-server --port 8080 --content-base src --hot --inline --watch",
     "build:prod": " rm -rf dist && NODE_ENV='production'   webpack -p --progress  && cp dist/index.html src/index.html ",
     "build:dev": " rm -rf dist && NODE_ENV='dev'   webpack -p --progress  && cp dist/index.html src/index.html "
   },
@@ -33,6 +33,7 @@
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^2.1.2",
     "html-webpack-plugin": "^2.30.1",
+    "name-all-modules-plugin": "^1.0.1",
     "prop-types": "^15.5.10",
     "react": "^15.2.1",
     "react-dom": "^15.5.4",
@@ -49,9 +50,9 @@
     "redux-promise-middleware": "^4.3.0",
     "redux-thunk": "^2.2.0",
     "render": "^0.1.4",
-    "style-loader": "^0.19.0",
+    "style-loader": "^0.19.1",
     "thunk": "0.0.1",
-    "universal-cookie": "^2.1.0",
+    "universal-cookie": "^2.1.2",
     "webpack": "^2.7.0",
     "webpack-combine-loaders": "^2.0.3",
     "webpack-dev-server": "^2.4.5"
