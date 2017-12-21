@@ -2798,8 +2798,8 @@ class crmMisActions extends sfActions
         if($this->noData)
             $this->noData = "No data exists for the selected date range";
         else{
-            $servicingObj = new billing_EXCLUSIVE_SERVICING();
-            $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
+            $servicingObj = new billing_EXCLUSIVE_SERVICING("newjs_slave");
+            $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
             $agentWiseData = $servicingObj->getAgentWiseInfoForRBInterestsMIS($this->startDT,$this->endDT);
             $this->agentWiseDetails = array();
             $this->agentWiseData = array();
@@ -2848,8 +2848,8 @@ class crmMisActions extends sfActions
         $days = $noOfDays > $endDay ? $endDay : $noOfDays;
         $this->daysArray = range(1,$days);
         $clients = explode(",",$request->getParameter('clients'));
-        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
-        $purchases = new BILLING_PURCHASES();
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+        $purchases = new BILLING_PURCHASES("newjs_slave");
         $userNames = $purchases->getUserName($clients);
         $clientDetails = $clientMemberMappingObj->getRBInterestsForClients($clients,$this->startDT,$this->endDT);
         $this->clientWiseDetails = array();
@@ -2904,13 +2904,13 @@ class crmMisActions extends sfActions
             $pid = $this->clientID;
         }
         $partnerObj = new SearchCommonFunctions();
-        $profileObj = LoggedInProfile::getInstance('',$pid);
+        $profileObj = Operator::getInstance('',$pid);
         $profileObj->getDetail('','','*');
         //dpp call without filters
         $matchesObj = $partnerObj->getMyDppMatches('',$profileObj,'','','','',true,'','','','',true);
         $this->dppCount = $matchesObj->getTotalResults();
 
-        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING();
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
         $clientInfo = $clientMemberMappingObj->getClientInfo($pid,$this->startDT,$this->endDT);
         $this->sent = ($clientInfo["Y"]?$clientInfo["Y"]:0) + ($clientInfo["P"]?$clientInfo["P"]:0);
         $this->skipped = $clientInfo["S"]?$clientInfo["S"]:0;
