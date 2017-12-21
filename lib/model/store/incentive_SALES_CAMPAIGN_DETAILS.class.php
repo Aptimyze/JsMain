@@ -64,4 +64,30 @@ class incentive_SALES_CAMPAIGN_PROFILE_DETAILS extends TABLE {
                 return $output;
 
         }
+     public function getCountSentFreeMailPreviousDate($date){
+        try {
+            $sql="SELECT count(*) as count FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where CAMPAIGN='IB_Service' and MAIL_SENT='Y'  and DATE >= :DATE";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":DATE",$date,PDO::PARAM_STR);
+            $res->execute();
+            $result = $res->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }      
+        return $result;
+     }
+     
+     public function getCountSentPaidMailPreviousDate($date){
+         try {
+             $sql="SELECT count(*) as count FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where CAMPAIGN='IB_PaidService' and MAIL_SENT='Y'  and DATE >= :DATE";
+             $res = $this->db->prepare($sql);
+             $res->bindValue(":DATE",$date,PDO::PARAM_STR);
+             $res->execute();
+             $result = $res->fetch(PDO::FETCH_ASSOC);
+             
+         } catch (PDOException $e) {
+             throw new jsException($e);
+         }
+         return $result;
+     }
 }

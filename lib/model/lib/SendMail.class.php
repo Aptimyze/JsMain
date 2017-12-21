@@ -141,7 +141,7 @@ class SendMail
                 	$mail->Body=$msg;
                 	if(!$mail->Send())
                 	{
-                        	//echo "Mailer Error: " . $mail->ErrorInfo;
+                        	echo "Mailer Error: " . $mail->ErrorInfo;
                 	}
                 	else
                 	{
