@@ -69,6 +69,8 @@ class apieditdppv1Action extends sfAction
 					$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
 					JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"].'_time');
+					$profileMemcacheObj = new ProfileMemcacheService($this->m_objLoginProfile);
+					$profileMemcacheObj->unsetKey('JUST_JOINED_MATCHES');
 					
 					//this was added in order to ensure that the details are fetched in case the user in an exlusive member and in the already running condition when getData=dpp
 					if($request->getParameter("getData")=="dpp" || strpos($this->subscription,'X' )!==false){ 
