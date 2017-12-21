@@ -55,6 +55,7 @@ EOF;
             $smsViewer = new InstantSMS("AADHAAR_VERIFICATION",$profileId);
             $smsViewer->send();
             $mailerLogObj->insertProfile($profileId);
+            ProfileCacheLib::getInstance()->__destruct();
         }
         
         $mailerLogObj->truncateTable();
