@@ -265,7 +265,7 @@ class GoogleVisionApi
 	}
 
 
-	public function getFace($picturePath, $imageFormatType,$pictureid,$profileid){
+	public function getFace($picturePath, $imageFormatType){
 
 		//COPY into temp to avoid original image corruption
 
@@ -328,6 +328,7 @@ class GoogleVisionApi
 
 	public function checkFaceCordinates($picturePath, $imageFormatType,$pictureid,$profileid)
 	{
+		$picturePath = PictureFunctions::getCloudOrApplicationCompleteUrl($picturePath,true);
 		$cordinates = $this->getFace($picturePath, $imageFormatType);
 		$imageData = getimagesize($picturePath);
 		$x = $imageData[0];
