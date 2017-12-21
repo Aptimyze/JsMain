@@ -26,18 +26,18 @@ EOF;
             sfContext::createInstance($this->configuration);
         }
         
-       $date="2017-10-03 00:00:00";
+      // $date="2017-10-03 00:00:00";
        $prev_date = date('Y-m-d', strtotime($date .' -1 day'));
        $prev_date = $prev_date." 00:00:00";
-       echo $prev_date;
+       //echo $prev_date;
        
        $incentiveSaleCampaignDetaiObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS();
-       $freeServiceCount=$incentiveSaleCampaignDetaiObj -> getCountSentFreeMailPreviousDate($date)['count'];
-       $paidServiceCount=$incentiveSaleCampaignDetaiObj -> getCountSentPaidMailPreviousDate($date)['count'];
+       $freeServiceCount=$incentiveSaleCampaignDetaiObj -> getCountSentFreeMailPreviousDate($prev_date)['count'];
+       $paidServiceCount=$incentiveSaleCampaignDetaiObj -> getCountSentPaidMailPreviousDate($prev_date)['count'];
        
        echo $freeServiceCount;
        echo $paidServiceCount;
-       die;
+   
       // $to ="anant.gupta@naukri.com,anurag.tripathi@jeevansathi.com";
       $to = "rbnsingh19@gmail.com,ayush.chauhan@jeevansathi.com";
       $from = "JeevansathiCrm@jeevansathi.com";
