@@ -43,10 +43,19 @@ EOF;
 		$mmObj = new MembershipMailer();
 		$profilesArr =$mmObj->getJsExclusiveProfiles();
                 //JSC-2649:Going to remove dummy profiles from complete profiles array
-                $profilesArr = $this->returnFilteredProfilesAfterDummyExclusion($profilesArr);
+               $profilesArr = $this->returnFilteredProfilesAfterDummyExclusion($profilesArr);
+        $todayDate =date("d");
 		if(count($profilesArr)>0){
 			$jprofileObj = new JPROFILE('newjs_slave');
 			$subsArr = $jprofileObj->getAllSubscriptionsArr($profilesArr);
+		if ($todayDate == 4){
+    		    $message="Thank You for choosing Jeevansathi Exclusive. Do let us know if you are happy with our services. Your feedback is important to us. Click goo.gl/3TrskH";
+    		    foreach ($profilesArr as $key => $profileid){
+    		        $phone = $subsArr[$profileid]['PHONE_MOB'];
+    		        CommonUtility::sendInstantSms($message, $phone, $profileid);
+    		    }
+		}
+		else if($todayDate == 2){
 			foreach($profilesArr as $key=>$profileid){
 				if(strpos($subsArr[$profileid]['ISD'], "91") !== false){
 					$currency = "RS";
@@ -59,13 +68,16 @@ EOF;
 				unset($dataArr);
 				$count++;
 			}
+		  }	
 		}
 		unset($mmObj);
+		if($todayDate == 2){
                 $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com,anurag.tripathi@jeevansathi.com";
 		$latest_date	=date("Y-m-d");
                 $subject        ="Exclusive Feerback Monthly Mailer for ".date("jS F Y", strtotime($latest_date));
                 $fromEmail      ="From:JeevansathiCrm@jeevansathi.com";
                 $msg            ="Total mails sent : $count";
                 mail($to,$subject,$msg,$fromEmail);
+		}
 	}
 }
