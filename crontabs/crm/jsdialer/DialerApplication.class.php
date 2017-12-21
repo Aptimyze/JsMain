@@ -3,7 +3,7 @@ include_once('DialerLog.class.php');
 class DialerApplication {
 
     // Constructor
-    public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
+    public function __construct($db_js='', $db_js_111='', $db_dialer='',$db_master=''){
                 $this->db_js            =$db_js;
                 $this->db_js_111        =$db_js_111;
                 $this->db_dialer        =$db_dialer;
@@ -79,6 +79,7 @@ class DialerApplication {
     }
     public function updateIneligibleFlagInJS($profileid,$campaignName, $renewalCampArr, $outboundCampArr,$autoCampArr)
     {
+	$tableName ='';
 	if(in_array($campaignName ,$renewalCampArr))
 		$tableName='RENEWAL_IN_DIALER';
 	elseif(in_array($campaignName, $outboundCampArr))
@@ -86,8 +87,10 @@ class DialerApplication {
 	elseif(in_array($campaignName, $autoCampArr))
 		$tableName='IN_DIALER_NEW';
 
-        $sql= "update incentive.$tableName SET ELIGIBLE='N' where PROFILEID='$profileid'";
-        mysql_query($sql,$this->db_master) or die($sql.mysql_error($this->db_master));
+	if($tableName){
+	        $sql= "update incentive.$tableName SET ELIGIBLE='N' where PROFILEID='$profileid'";
+	        mysql_query($sql,$this->db_master) or die($sql.mysql_error($this->db_master));
+	}
     }
 
 }

@@ -57,6 +57,10 @@ class ProfileCacheLib
      */
     public static function getInstance()
     {
+	if(self::$instance!=null && php_sapi_name() === ProfileCacheConstants::COMMAND_LINE && count(self::$instance->arrRecords)>100)
+	{
+		self::$instance->__destruct();
+	}
         if (null === self::$instance) {
             $className =  __CLASS__;
             self::$instance = new $className;

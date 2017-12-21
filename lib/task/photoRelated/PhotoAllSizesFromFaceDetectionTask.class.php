@@ -105,7 +105,7 @@ EOF;
 					{
 						foreach(ProfilePicturesTypeEnum::$PICTURE_SIZES as $k =>$v)
 						{
-							if($value[$k]=="" && $k!="MainPicUrl")
+							if($k!="MainPicUrl")
 							{
 								$picUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$value["PROFILEID"],$imageT,'nonScreened');
 							

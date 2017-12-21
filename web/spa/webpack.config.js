@@ -17,7 +17,7 @@ if(process.env.NODE_ENV === 'production')
  }
  else {
    DIST_DIR = path.resolve(__dirname,"dist");
-   fileNameConfig = "[name].[chunkhash].bundle.js";
+   fileNameConfig = process.env.NODE_ENV !== 'devS' ?  "[name].[chunkhash].bundle.js" : "[name].bundle.js";
    publicPathConfig = '/spa/dist/';
 
 }
@@ -44,7 +44,7 @@ plugins: [
       inject: 'body',
   }),
   new ExtractTextPlugin({
-    filename: '[name].style.css',
+    filename: process.env.NODE_ENV !== 'devS' ? '[name].[chunkhash].style.css' : '[name].style.css',
     allChunks: true
   }),
   new webpack.LoaderOptionsPlugin({
