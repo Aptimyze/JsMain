@@ -268,7 +268,7 @@ $css_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $css_arr[]=array("web/spa/dist/app"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/api/actions/LoginV1Action"   => "1");
 $css_arr[]=array("web/spa/dist/0"   => "1");
-$css_arr[]=array("apps/operations/modules/crmInterface/actions/actions"   => "1");
+$css_arr[]=array("apps/operations/modules/crmInterface/actions/actions"    => "2");
 return $css_arr;
 }
 /* JavaScript File */
@@ -759,7 +759,7 @@ $js_arr[]=array("apps/jeevansathi/modules/myjs/actions/actions"   => "1");
 $js_arr[]=array("web/spa/dist/app.76a26e0382665aef40dc.bundle"   => "1");
 $js_arr[]=array("crontabs/crm/jsdialer/rcbUpdateCampaign"   => "1");
 $js_arr[]=array("web/spa/dist/0.35cc7b43ec3d197ea091.bundle"   => "1");
-$js_arr[]=array("apps/operations/modules/crmInterface/actions/actions"   => "1");
+$js_arr[]=array("apps/operations/modules/crmInterface/actions/actions"    => "2");
 return $js_arr;
 }
 function getJavascript(){
