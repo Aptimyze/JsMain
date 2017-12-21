@@ -25,6 +25,7 @@
 			"EMAIL_INVALID_DOMAIN":"Provide a valid email.",
 			"EMAIL_EXIST":"An account with this Email already exists",
 			"PASSWORD_REQUIRED":"Provide a password",
+			"PASSWORD_NUMERIC":"Your password cannot be only numeric",
 			"PASSWORD_INVALID":"Provide a valid password.",
 			"PASSWORD_COMMON":"The password you have chosen is not secure",
 			"MOBILE_REQUIRED":"Provide a mobile number",
@@ -1225,7 +1226,7 @@
 	});
 	
 	app.factory ('Validate',function($window,Gui,Constants,UserDecision){
-		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","12345678","123456789","1234567890");
+		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","vibhor1234","omsairam","jaimatadi","abcd1234","Parvezkk","priyanka","Jeevansathi@123","pytw2560","waheguru","jeevansathi123","js123456","Jeevansathi.com","India@123","P@ssw0rd","ABHIshek","pass@123","jeevan123","welcome@123","Mayank2463","Welcome123","abc123","password123","qwertyuiop","india123","Password@123","nehaavyan123","abcd@1234","pd592001","shaadi@123","YASU4333","Krishna","Jeevan@123","Radhika02","anik.singh","JABALPUR123","qwerty","sairam","SINGH4345","rahul123","sachin","rahul@123","iloveyou","ganesh","saibaba","jeevansaathi","harekrishna","hariom","himanshu","shaadi123","pooja123","singh123","qwerty123","kareenakhan23","sonu1234","sunita","deepak","abcdefgh","sanjay","mummypapa","chaman111","Qwerty@123","priyanka123","Kaushal69sc@gmail.com","goodluck","rajkumar","rajusohel","pankaj");
 		var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 		var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 	        var isd_regex = /^[+]?[0-9]+$/;
@@ -1404,7 +1405,11 @@
 			}
 			if(password && password.length<8)
 				passError =Constants.getErrorMsg('PASSWORD_INVALID');
-
+                        if(!passError)
+                        {
+                                if(!isNaN(parseFloat(password)) && isFinite(password))
+                                        passError =Constants.getErrorMsg('PASSWORD_NUMERIC');
+                        }
 			if(!passError){
 				var passCommon =factory.checkCommonPassword(password);
 				var userPassMatch =factory.checkPasswordUserName(password,email);
