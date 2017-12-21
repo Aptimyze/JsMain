@@ -66,8 +66,11 @@ class BrowserNotificationEnums
       
     public static $appLoginCondition = 7;
     
+    
+    public static $defaultIconKeyword = 'D';
     public static $publishedNotificationLog = "/web/uploads/NotificationLogs/PublishedNotifications.txt";
     public static $transferredNotificationlog = "/web/uploads/NotificationLogs/TransferredNotifications.txt";
+    public static $defaultNotificationLogo = "/images/JSLogo.png";
     public static $addNotificationLog = false;  //add published and transferred msg keys in logs
     public static $notificationChannelType = array("BROWSER_NOTIFICATION","FSOAPP_NOTIFICATION");
     public static $instantNotifications = array("AGENT_ONLINE_PROFILE","AGENT_FP_PROFILE", "PROFILE_VISITOR","EOI","MESSAGE_RECEIVED","EOI_REMINDER");

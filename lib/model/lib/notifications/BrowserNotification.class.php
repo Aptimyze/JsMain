@@ -128,7 +128,7 @@ class BrowserNotification{
                     $paramsArr["NOTIFICATION_TYPE"] = $processObj->getmethod();
                     $paramsArr["MESSAGE"] = $val["NOTIFICATION_MESSAGE"];
                     $paramsArr["TITLE"] = $val["TITLE"];
-                    $paramsArr["ICON"] = $val["ICON"];
+                    $paramsArr["ICON"] = $this->getImageIcon($val["ICON"]);
                     $paramsArr["TAG"] = $val["TAG"];
                     $paramsArr["PROFILE_CHECKSUM"] = $val["OTHER_PROFILE_CHECKSUM"];
                     $paramsArr["LANDING_ID"] = $this->mapNotificationLandingID($val['LANDING_ID'],$processObj->getchannel(),$val["NOTIFICATION_KEY"],$val["OTHER_PROFILE_CHECKSUM"]);
@@ -149,6 +149,19 @@ class BrowserNotification{
                     $res = $browserNotificationStoreObj->insertNotification($paramsArr); 
                 }
         }
+    }
+    
+    
+    /**
+     * This method will test if the image present in browser notification is 
+     * valid or default. If the value comes out to be default, the fall back will 
+     * be set to the default image.
+     * @param type $imageIcon - contains either url for image or default tag 'd' 
+     */
+    public function getImageIcon($imageIcon) {
+        return ( $imageIcon == BrowserNotificationEnums::$defaultIconKeyword ) ?  
+                    JsConstants::$siteUrl.BrowserNotificationEnums::$defaultNotificationLogo 
+                  : $imageIcon;
     }
 
     /**
