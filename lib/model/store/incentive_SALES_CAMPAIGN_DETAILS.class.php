@@ -64,30 +64,21 @@ class incentive_SALES_CAMPAIGN_PROFILE_DETAILS extends TABLE {
                 return $output;
 
         }
-     public function getCountSentFreeMailPreviousDate($date){
-        try {
-            $sql="SELECT count(*) as count FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where CAMPAIGN='IB_Service' and MAIL_SENT='Y'  and DATE >= :DATE";
-            $res = $this->db->prepare($sql);
-            $res->bindValue(":DATE",$date,PDO::PARAM_STR);
-            $res->execute();
-            $result = $res->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }      
-        return $result;
-     }
-     
-     public function getCountSentPaidMailPreviousDate($date){
+     public function getCountSentMailPreviousDate($startDate,$endDate){
          try {
-             $sql="SELECT count(*) as count FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where CAMPAIGN='IB_PaidService' and MAIL_SENT='Y'  and DATE >= :DATE";
+             $sql="SELECT count(*) as count, campaign FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where MAIL_SENT='Y' AND DATE >= :START_DATE AND DATE <= :END_DATE GROUP BY CAMPAIGN";
              $res = $this->db->prepare($sql);
-             $res->bindValue(":DATE",$date,PDO::PARAM_STR);
+             $res->bindValue(":START_DATE",$startDate,PDO::PARAM_STR);
+             $res->bindValue(":END_DATE",$endDate,PDO::PARAM_STR);
              $res->execute();
-             $result = $res->fetch(PDO::FETCH_ASSOC);
-             
+             while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                 $campaign = $row['campaign'];
+                 $count = $row['count'];
+                 $resArr[$campaign] = $count;
+             }
          } catch (PDOException $e) {
              throw new jsException($e);
          }
-         return $result;
+         return $resArr;
      }
 }
