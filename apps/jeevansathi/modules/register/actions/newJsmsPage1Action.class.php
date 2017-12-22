@@ -33,6 +33,7 @@ class newJsmsPage1Action extends sfAction
                 $campaignData['keyword'] = $trackParams['keyword'];
                 $campaignData['adgroupid'] = $trackParams['adgroupid'];
                 $campaignData['utm_medium'] = $trackParams['utm_medium'];
+                $campaignData['gclid'] = $trackParams['gclid'];
                 
 		if($reg_params['city_res']=='0' && $reg_params['country_res']==51)
 		{
