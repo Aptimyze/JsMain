@@ -741,7 +741,7 @@ $js_arr[]=array("jsms/settings/privacySettings_js"  => "2");
 $js_arr[]=array("jspc/static/postWeddingServices_js"    => "2");
 $js_arr[]=array("photoScreening_js"   => "2");
 $js_arr[]=array("apps/jeevansathi/templates/_jsms3DotLayer"   => "1");
-$js_arr[]=array("main_sw_register"      => "6");
+$js_arr[]=array("main_sw_register"        => "8");
 $js_arr[]=array("lib/model/enums/MessageQueues"    => "2");
 $js_arr[]=array("apps/jeevansathi/modules/static/templates/_newMobileSiteHamburger"    => "2");
 $js_arr[]=array("web/spa/dist/0.250ec2ac5c0c3a9a1d72.bundle"   => "1");

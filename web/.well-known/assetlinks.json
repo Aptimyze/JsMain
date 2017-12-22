@@ -1,0 +1,26 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.jeevansathi.android",
+      "sha256_cert_fingerprints": [
+        "40:F6:3F:AF:0D:DD:F2:47:7C:23:4D:49:2D:6A:8B:28:1C:76:44:87:70:97:FB:B6:DF:1B:83:CE:E9:5E:A5:24"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.jeevansathi.android",
+      "sha256_cert_fingerprints": [
+        "25:B4:B5:A4:A3:F7:BA:6E:3C:BB:19:07:46:C3:08:CE:CC:5E:75:B2:7E:B5:B8:61:5E:D0:1C:FB:B4:FF:64:22"
+      ]
+    }
+  }
+]

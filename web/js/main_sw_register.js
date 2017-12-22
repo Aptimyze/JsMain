@@ -11,7 +11,7 @@ if('serviceWorker' in navigator)
   };
   firebase.initializeApp(config);
   const messaging = firebase.messaging();
-  var url = ssl_siteUrl+"/js/sw_fcm.js"; 
+  var url = "https://www.jeevansathi.com/js/sw_fcm.js"; 
 
   if(Notification.permission === 'default' || Notification.permission === 'granted')
   {
