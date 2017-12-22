@@ -18,6 +18,8 @@ class jsValidatorPassword extends sfValidatorBase
   	$commonoWords = array("jeevansathi","matrimony","password","marriage","12345678","123456789","1234567890"); 
      
     $clean = (string)$value;
+    if(is_numeric($value))
+      throw new sfValidatorError($this, 'err_pass_only_numeric', array('value' => $value));
     if(in_array(strtolower($value),$commonoWords))
     {
       throw new sfValidatorError($this, 'err_pass_common', array('value' => $value));

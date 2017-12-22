@@ -412,7 +412,7 @@ var passwordStrength =  function(ratingMessages)
 	var score = 0;
 	if(pass.length==0)
 		updatePasswordBar(5,ratingMessages);
-	else if(pass.length < 8 || !checkCommonPassword(pass) || !checkPasswordUserName(pass))
+	else if(pass.length < 8 || !checkCommonPassword(pass) || !checkPasswordUserName(pass) || $.isNumeric(pass))
 	{
 		updatePasswordBar(0,ratingMessages);
 		return;

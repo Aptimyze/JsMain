@@ -9,6 +9,7 @@ var arrErors = {
 	"PASSWORD_REQUIRED":"Please provide a password",
 	"PASSWORD_INVALID":"Password should be at least 8 characters long",
 	"PASSWORD_COMMON":"Password you have chosen is not secure",
+	"PASSWORD_ONLY_NUMERIC":"Your password cannot be only numeric",
 	"PINCODE_ERROR_1":"Please provide a pin code that belongs to <City>",
 	"PINCODE_REQUIRED":"Please provide a pin code of your residence",
 	"EMAIL_REQUIRED":"Please provide an email",
@@ -288,6 +289,9 @@ var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage"
 //length check error for password
 	if(password && password.length<8)
 		passError =arrErors['PASSWORD_INVALID'];
+//only numeric check error for password
+	if(!passError && $.isNumeric(password))
+		passError =arrErors['PASSWORD_ONLY_NUMERIC'];
 	if(!passError){
 		var passCommon =this.checkCommonPassword(password);//check if the password is common like jeevansathi etc
 		var userPassMatch =this.checkPasswordUserName(password,email);// check if the password is same as username
