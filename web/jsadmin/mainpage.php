@@ -632,7 +632,7 @@ if (isset($data)) //successful login
                     $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/showLIVETags\">LIVE Tags</a>";
          }
          // link for adding / deleting buzzwords for screening
-         if (in_array('P', $priv) || in_array('MG', $priv) || in_array('ARB', $priv)) {
+         if (in_array('P', $priv) || in_array('MG', $priv)) {
              $linkarr[]="<a href=\"$SITE_URL/jsadmin/addRemoveBuzzwords.php?cid=$cid\">Add / Remove Buzzwords</a>";
          }
          if (in_array('P', $priv) || in_array('MG', $priv) || in_array('ARB', $priv)) {
