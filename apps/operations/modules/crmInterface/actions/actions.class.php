@@ -1469,19 +1469,35 @@ class crmInterfaceActions extends sfActions
             $remarks = $request->getParameter("remarks");
             $profileObj = NEWJS_JPROFILE::getInstance("crm_slave");
             if($username != null || !empty($username)){
+                
+                
                 $profileId = $profileObj->getProfileIdFromUsername($username);
+                
+                
                 $incentive = new incentive_LOGGING_CLIENT_INFO();
                 if($profileId!=null && !empty($profileId)){
                     $result = $incentive->insertIntoLoggingClientInfo($profileId, $remarks,$loggedInAgentname,date("Y-m-d H:i:s"));
+                    
+                    
                     $flag=1;
                     if($result == true){
+                        
                         $mainAdmin = new incentive_MAIN_ADMIN("crm_slave");
                         $crmId = $mainAdmin->getAllotedExecForProfile($profileId);
                         $jsadmin = new jsadmin_PSWRDS("crm_slave");
+                        
+                        
                         $to = $jsadmin->getEmail($crmId);
-                        $subject = "Respond Request";
-                        $msgBody="ProfileID = ".$username."<br>"."AgentName = ".$loggedInAgentname."<br>"."Remarks = ".$remarks;
-                        SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                        $headIdArr=$jsadmin->getHeadId($crmId);
+                        $headId=$headIdArr["HEAD_ID"];
+                        
+                        if($headId)
+                            $cc=$jsadmin->get($headId,"RESID","EMAIL")["EMAIL"];
+                            
+                            $subject = "Respond Request";
+                            $msgBody="ProfileID = ".$username."<br>"."AgentName = ".$loggedInAgentname."<br>"."Remarks = ".$remarks;
+                            SendMail::send_email($to, $msgBody, $subject, $from, $cc, "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                            
                     }
                 }else{
                     $flag=2;
@@ -1501,5 +1517,7 @@ class crmInterfaceActions extends sfActions
         }
         
     }
+
+
 }
 

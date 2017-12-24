@@ -153,6 +153,7 @@ EOF;
         $emailSender->send('','',$ccEmail);
 
         $status = $emailSender->getEmailDeliveryStatus();
+        ProfileCacheLib::getInstance()->__destruct();
         return $status;
 
     }

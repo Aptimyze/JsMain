@@ -13,17 +13,35 @@ class test_PHOTO_BENCHMARK extends TABLE {
 		parent::__construct($dbname);
 	}
 
-	public function insert($faceDetected, $pid, $origPath,$imageT,$profileid){
+	public function insert($faceDetected, $pid, $origPath,$imageT,$profileid,$faceFound=""){
 		try{
 
-			$sql = "INSERT IGNORE INTO test.PHOTO_BENCHMARK (`PROFILEID`,`PICTUREID`,`OrigPic`,`TIMESTAMP`,`FACEDETECTED`,`PICFORMAT`) 
-														VALUES(:PROFILEID,:PICTIREID,:ORIGPIC,now(),:FACEDETECTED,:PICFORMAT)";
+			$sql = "INSERT IGNORE INTO test.PHOTO_CROP_API_LOG (`PROFILEID`,`PICTUREID`,`OrigPic`,`TIMESTAMP`,`FACEDETECTED`,`PICFORMAT`,`FACEFOUND`) 
+														VALUES(:PROFILEID,:PICTIREID,:ORIGPIC,now(),:FACEDETECTED,:PICFORMAT,:FACEFOUND)";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
 			$res->bindValue(":PICTIREID", $pid, PDO::PARAM_INT);
 			$res->bindValue(":ORIGPIC", $origPath, PDO::PARAM_STR);
 			$res->bindValue(":FACEDETECTED", $faceDetected, PDO::PARAM_STR);
 			$res->bindValue(":PICFORMAT", $imageT, PDO::PARAM_STR);
+			$res->bindValue(":FACEFOUND",$faceFound,PDO::PARAM_INT);
+			$res->execute();
+		} catch (Exception $ex) {
+			throw new jsException($ex);
+		}
+	}
+	public function insertCropped($faceDetected, $pid, $origPath,$imageT,$profileid,$faceFound=""){
+		try{
+
+			$sql = "INSERT IGNORE INTO test.CROPPED_PHOTO (`PROFILEID`,`PICTUREID`,`OrigPic`,`TIMESTAMP`,`FACEDETECTED`,`PICFORMAT`,`FACEFOUND`) 
+														VALUES(:PROFILEID,:PICTIREID,:ORIGPIC,now(),:FACEDETECTED,:PICFORMAT,:FACEFOUND)";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+			$res->bindValue(":PICTIREID", $pid, PDO::PARAM_INT);
+			$res->bindValue(":ORIGPIC", $origPath, PDO::PARAM_STR);
+			$res->bindValue(":FACEDETECTED", $faceDetected, PDO::PARAM_STR);
+			$res->bindValue(":PICFORMAT", $imageT, PDO::PARAM_STR);
+			$res->bindValue(":FACEFOUND",$faceFound,PDO::PARAM_INT);
 			$res->execute();
 		} catch (Exception $ex) {
 			throw new jsException($ex);
@@ -66,6 +84,19 @@ class test_PHOTO_BENCHMARK extends TABLE {
 			$sql = "UPDATE test.PHOTO_BENCHMARK set opencvEdit = true where PICTUREID =:PICTUREID";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PICTUREID",$pid,PDO::PARAM_INT);
+			$res->execute();
+		}
+		catch (Exception $ex) {
+			throw new jsException($ex);
+		}
+	}
+	public function updateUserEdit($pid,$status)
+	{
+		try{
+			$sql = "UPDATE test.PHOTO_CROP_API_LOG set userEdit = :STATUS where PICTUREID =:PICTUREID";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":PICTUREID",$pid,PDO::PARAM_INT);
+			$res->bindValue(":STATUS",$status,PDO::PARAM_STR);
 			$res->execute();
 		}
 		catch (Exception $ex) {

@@ -87,10 +87,9 @@ if(authenticated($cid))
                 $date = new DateTime();
                 $timeStamp = $date->getTimestamp();
                 $destination = sfConfig::get("sf_upload_dir")."/FieldSales/ExecPic/".$USERNAME."_".$timeStamp.".jpg";
-       		move_uploaded_file($_FILES['UPLOAD_PHOTO']['tmp_name'], $destination);  // copying photo to application server
+                move_uploaded_file($_FILES['UPLOAD_PHOTO']['tmp_name'], $destination);  // copying photo to application server
 		
 		$PHOTO_URL = IMAGE_SERVER_ENUM::$appPicUrl."/uploads/FieldSales/ExecPic/$USERNAME"."_"."$timeStamp.jpg";
-               
 		$smarty->assign('check_upload_photo_success','1');
             }
         }
@@ -129,7 +128,7 @@ if(authenticated($cid))
 				$empty = 0;
 				$smarty->assign('check_phone_value',1);
 			}
-			else if(!in_array($PHONE[0], array('7','8','9')))
+			else if(!in_array($PHONE[0], array('6','7','8','9')))
 			{
 				$empty = 0; 
 				$smarty->assign('check_phone_initiate',1);
@@ -206,7 +205,6 @@ if(authenticated($cid))
                         }
 //                      drop down created
 
-
                         $smarty->assign('options',$options);
 			$smarty->assign('center',$center);
 			$smarty->assign('sublocation',$sublocation);
@@ -220,7 +218,7 @@ if(authenticated($cid))
 			if($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1)
 			{
 				$url = PictureFunctions::getCloudOrApplicationCompleteUrl($PHOTO_URL);
-				if($url != "http://ser7.jeevansathi.com")
+				if($url != "http://ser7.jeevansathi.com" && $url != "https://ser7.jeevansathi.com")
 		                	$smarty->assign('PHOTO_URL',$url);
 			}
 
@@ -259,7 +257,7 @@ if(authenticated($cid))
 			$PASSWORD = md5($PASSWORD);
 
                
-	    if($PHOTO_URL == "http://ser7.jeevansathi.com")
+	    if($PHOTO_URL == "http://ser7.jeevansathi.com" || $PHOTO_URL == "https://ser7.jeevansathi.com")
 		$PHOTO_URL = '';					
 
             $imageServerLogObj = new ImageServerLog;
@@ -270,7 +268,7 @@ if(authenticated($cid))
         
 	    $RESID = $jsadminPswrdsObj->getId($USERNAME);
 	 
-	    if($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1)
+	    if( ($_FILES['UPLOAD_PHOTO']['name']!='' || $PHOTO_UPLOADED==1 ) && ($PHOTO_URL != '') )
 		    $imageServerLogObj->insertBulk("FIELD_SALES",$RESID,"PHOTO_URL","N");
          
 	    $jsadminPswrdsObj->commitTransaction();

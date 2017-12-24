@@ -8,6 +8,9 @@
 include_once(JsConstants::$cronDocRoot . '/amq/vendor/autoload.php');
 use Vision as vs;
 
+/**
+ * Class GoogleVisionApi
+ */
 class GoogleVisionApi
 {
 
@@ -18,63 +21,10 @@ class GoogleVisionApi
 	 * @return Face co-ordinates
 	 */
 	public function getPictureCoordinates($picturePath, $imageFormatType,$pictureid,$profileid){
-		PictureFunctions::setHeaders();
-
-		//COPY into temp to avoid original image corruption
-
-		if(!file_exists($picturePath))
-		{
-			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error");
-			//die;
-		}
-		$newImgArr=explode(".",$picturePath);
-		if(count($newImgArr)==2){
-			$newImgArr[0]=$newImgArr[0]."tempORIG";
-			$newPicturePath=$newImgArr[0].".".$newImgArr[1];
-			copy($picturePath, $newPicturePath);
-			$picturePath=$newPicturePath;
-			$this->rotateImageFile($picturePath,$imageFormatType);
-		}
-		else{
-			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error2");
-			//die;
-		}
-
-		$img = file_get_contents($picturePath);
-		$imgData = base64_encode($img);
-
-		$data = '{
-				    "requests": [
-				    {
-				      "image": {
-				        "content": "' . $imgData . '"
-				      },
-				      "features": [
-				        {
-				          "type": "FACE_DETECTION"
-				        }
-				      ]
-				    }
-				  ]
-				}';
-		//$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
-		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCSQBtJte7cqF6WdKJfkt5QysEw4s-aW9E";
-
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = curl_exec($ch);
-		curl_close($ch);
-
-		$result = json_decode($result, true);
-		$response = $result["responses"][0];
-		$cord = null;
-		$faceDetected = false;
-		if (!empty($response["faceAnnotations"])) {
-			$otherData = $response["faceAnnotations"][0];
-			$cordinates = $otherData["boundingPoly"]["vertices"];
+		$faceFound = 0;
+		$cordinates = $this->getFace($picturePath,$imageFormatType);
+		if (is_array($cordinates)) {
+			$faceFound = 1;
 			$x = $cordinates[0]["x"]?$cordinates[0]["x"]:0;
 			$y = $cordinates[0]["y"]?$cordinates[0]["y"]:0;
 			$h = $cordinates[2]["y"] - $y;
@@ -83,7 +33,7 @@ class GoogleVisionApi
 			$faceDetected = true;
 		}
 		$photoBenchmarkObj = new test_PHOTO_BENCHMARK();
-		$photoBenchmarkObj->insert($faceDetected, $pictureid, $picturePath, $imageFormatType, $profileid);
+		$photoBenchmarkObj->insert($faceDetected, $pictureid, $picturePath, $imageFormatType, $profileid,$faceFound);
 		return $cord;
 	}
 
@@ -117,7 +67,14 @@ class GoogleVisionApi
 			imagejpeg($img, $filename);
 	}
 
-	public function getPictureDetails($picturePath, $iPicId, $iProfileId,$imageFormatType,$ordering){
+	/**
+	 * @param $picturePath
+	 * @param $iPicId
+	 * @param $iProfileId
+	 * @param $imageFormatType
+	 * @param $ordering
+	 */
+	public function getPictureDetails($picturePath, $iPicId, $iProfileId, $imageFormatType, $ordering){
 		PictureFunctions::setHeaders();
 
 		//COPY into temp to avoid original image corruption
@@ -236,10 +193,166 @@ class GoogleVisionApi
 				$arrData["ethnicity"] = $facePlusFaces[$index]["attributes"]["ethnicity"]["value"];
                 
                 $arrData['PICTUREID'] = $iPicId;
+                $arrPicData["FACES"][] = $arrData;
 
                 $storeObjFaceResp->insertRecord($arrData);
 			}
 		}
+		return $process = $this->checkScreeningPossibility($arrPicData);
+	}
+
+
+	public function getPossibleValue($value="UNKNOWN")
+	{
+		switch($value)
+		{
+			case "VERY_LIKELY":
+			case "LIKELY":
+			case "POSSIBLE":
+				return 1;
+			case "UNLIKELY":
+			case "VERY_UNLIKELY":
+				return 0;
+			default :
+				return 0;
+		}
+	}
+
+
+	public function checkScreeningPossibility($data)
+	{
+		$maxAngle = 30;
+		$maxBlur = 40;
+		$minFaceQuality = 40;
+		$approval = array("ADULT"=>0,
+			"SPOOF"=>0,
+			"VIOLENCE"=>0,
+			"BLUR"=>0,
+			"ANGLE"=>0,
+			"FACEQUALITY"=>0,
+			"FACE"=>0);
+
+
+		$approval["ADULT"] = $this->getPossibleValue($data["ADULT"]);
+		$approval["SPOOF"] = $this->getPossibleValue($data["SPOOF"]);
+		$approval["VIOLENCE"] = $this->getPossibleValue($data["VIOLENCE"]);
+		$approval["FACE"] = $data["FACE_COUNT"]?0:1;
+		if($data["FACE_COUNT"]>0)
+		{
+			foreach ($data["FACES"] as $FACE) {
+				$approval["FACEQUALITY"] = $FACE["facequality"]>$minFaceQuality?0:1;
+				if($approval["BLUR"]!=1) {
+					$blur = $this->getPossibleValue($FACE["BLUR"]);
+					$blurplus = 0;
+					if ($FACE["gaussianblur"]) {
+						if ($FACE["gaussianblur"] > $maxBlur || $FACE["motionblur"] > $maxBlur || $FACE["blurness"] > $maxBlur) {
+							$blurplus = 1;
+						} else {
+							$blurplus = 0;
+						}
+					}
+					$approval["BLUR"] = ($blur || $blurplus)?1:0;
+				}
+				if($approval["ANGLE"]!=1) {
+					if ($data["MAINPIC"] == 1)
+						$approval["ANGLE"] == abs($FACE["PAN_ANGLE"]) > $maxAngle || abs($FACE["ROLL_ANGLE"]) > $maxAngle || abs($FACE["TILT_ANGLE"]) > $maxAngle;
+				}
+			}
+
+		}
+		return ($approval);
+
+	}
+
+
+	public function getFace($picturePath, $imageFormatType){
+
+		//COPY into temp to avoid original image corruption
+
+		if(!file_exists($picturePath))
+		{
+			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error");
+			//die;
+		}
+		$newImgArr=explode(".",$picturePath);
+		if(count($newImgArr)==2){
+			$newImgArr[0]=$newImgArr[0]."tempORIG";
+			$newPicturePath=$newImgArr[0].".".$newImgArr[1];
+			copy($picturePath, $newPicturePath);
+			$picturePath=$newPicturePath;
+			$this->rotateImageFile($picturePath,$imageFormatType);
+		}
+		else{
+			SendMail::send_email("lavesh.rawat@gmail.com,pankaj139@gmail.com,reshu.rajput@jeevansathi.com",$picturePath,"Face detection error2");
+			//die;
+		}
+
+		$img = file_get_contents($picturePath);
+		$imgData = base64_encode($img);
+
+		$data = '{
+				    "requests": [
+				    {
+				      "image": {
+				        "content": "' . $imgData . '"
+				      },
+				      "features": [
+				        {
+				          "type": "FACE_DETECTION"
+				        }
+				      ]
+				    }
+				  ]
+				}';
+		//$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAY-YyNRX7_SqF8e88wIMz7RKySLpfX2Eg";
+		$url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCSQBtJte7cqF6WdKJfkt5QysEw4s-aW9E";
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		$result = json_decode($result, true);
+		$response = $result["responses"][0];
+		$cordinates = null;
+		if (!empty($response["faceAnnotations"])) {
+			$otherData = $response["faceAnnotations"][0];
+			$cordinates = $otherData["boundingPoly"]["vertices"];
+
+		}
+		return $cordinates;
+	}
+
+	public function checkFaceCordinates($picturePath, $imageFormatType,$pictureid,$profileid)
+	{
+		$picturePath = PictureFunctions::getCloudOrApplicationCompleteUrl($picturePath,true);
+		$cordinates = $this->getFace($picturePath, $imageFormatType);
+		$imageData = getimagesize($picturePath);
+		$x = $imageData[0];
+		$y = $imageData[1];
+		$maxDiff = 10;
+		$faceDetected = false;
+		$faceFound = 0;
+		if(is_array($cordinates))
+		{
+			$faceDetected = true;
+			if($cordinates[0]["x"]>$maxDiff && $cordinates[0]["y"] > $maxDiff
+				&&$cordinates[1]["x"] <$x-$maxDiff && $cordinates[1]["y"] > $maxDiff
+				&& $cordinates[2]["x"]>$maxDiff &&$cordinates[2]["y"]<$y-$maxDiff
+				&&$cordinates[3]["x"]<$x-$maxDiff &&$cordinates[3]["y"]<$y-$maxDiff)
+			{
+				$faceFound = 1;
+			}
+
+
+		}
+		$photoBenchmarkObj = new test_PHOTO_BENCHMARK();
+		$photoBenchmarkObj->insertCropped($faceDetected, $pictureid, $picturePath, $imageFormatType, $profileid,$faceFound,"Cropped");
+		return $faceFound;
+
 	}
 
 }

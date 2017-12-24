@@ -156,22 +156,28 @@ class Consumer
       switch($process)
       {
         case 'MAIL':
-          $handlerObj->sendMail($type,$body);  
+          $handlerObj->sendMail($type,$body);
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case 'SMS':   
-          $handlerObj->sendSMS($type,$body);  
+          $handlerObj->sendSMS($type,$body);
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case 'GCM':   
           $handlerObj->sendGCM($type,$body);  
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case 'BUFFER_INSTANT_NOTIFICATIONS':
           $handlerObj->sendInstantNotification($type,$body);
+          ProfileCacheLib::getInstance()->__destruct();
             break;
         case 'DUPLICATE_LOG':
-            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
+          $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
+          ProfileCacheLib::getInstance()->__destruct();
           break;
         case MQ::DELAYED_MAIL_PROCESS:
-          $handlerObj->sendMail($type,$body,true);  
+          $handlerObj->sendMail($type,$body,true);
+          ProfileCacheLib::getInstance()->__destruct();
           break;
       }
       

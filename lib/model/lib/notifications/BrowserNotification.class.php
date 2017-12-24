@@ -128,7 +128,7 @@ class BrowserNotification{
                     $paramsArr["NOTIFICATION_TYPE"] = $processObj->getmethod();
                     $paramsArr["MESSAGE"] = $val["NOTIFICATION_MESSAGE"];
                     $paramsArr["TITLE"] = $val["TITLE"];
-                    $paramsArr["ICON"] = $val["ICON"];
+                    $paramsArr["ICON"] = $this->getImageIcon($val["ICON"]);
                     $paramsArr["TAG"] = $val["TAG"];
                     $paramsArr["PROFILE_CHECKSUM"] = $val["OTHER_PROFILE_CHECKSUM"];
                     $paramsArr["LANDING_ID"] = $this->mapNotificationLandingID($val['LANDING_ID'],$processObj->getchannel(),$val["NOTIFICATION_KEY"],$val["OTHER_PROFILE_CHECKSUM"]);
@@ -149,6 +149,19 @@ class BrowserNotification{
                     $res = $browserNotificationStoreObj->insertNotification($paramsArr); 
                 }
         }
+    }
+    
+    
+    /**
+     * This method will test if the image present in browser notification is 
+     * valid or default. If the value comes out to be default, the fall back will 
+     * be set to the default image.
+     * @param type $imageIcon - contains either url for image or default tag 'd' 
+     */
+    public function getImageIcon($imageIcon) {
+        return ( $imageIcon == BrowserNotificationEnums::$defaultIconKeyword ) ?  
+                    JsConstants::$siteUrl.BrowserNotificationEnums::$defaultNotificationLogo 
+                  : $imageIcon;
     }
 
     /**
@@ -637,10 +650,10 @@ class BrowserNotification{
                     if(BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel] && !in_array($notificationKey, BrowserNotificationEnums::$notificationWithoutLoginFilter))
                     {        
                         $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_local111");
-                        $date15DaysBack = date("Y-m-d", strtotime("$todayDate -14 days"))." 00:00:00";
+                        $lookBackDate = date("Y-m-d", strtotime("$todayDate -".BrowserNotificationEnums::$appLoginCondition." days"))." 00:00:00";
                         $profileStr = implode(",", $channelWiseProfiles);
                         $channelStr = BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel];
-                        $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $date15DaysBack, $channelStr);
+                        $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $lookBackDate, $channelStr);
                         //print_r($loginDataForProfiles);
                         $browserProfilesData = $this->filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles);
                         
@@ -658,33 +671,57 @@ class BrowserNotification{
         return $allChannelFilteredProfiles;
     }
     
+    
+    /**
+    * This method contains the business logic to elimate those profiles
+    * that have already logged from either IOS or Android and the notification
+    * need not be sent to the browser if the user have already logged in
+    * from the last n number of days
+    * 
+    * @param type $channel
+    * @param type $channelStr
+    * @param type $loginDataForProfiles
+    * @param type $browserProfilesData
+    * @param type $channelWiseProfiles
+    * @return type
+    */
     public function filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles)
     {
-        if(is_array($channelWiseProfiles) && $channelWiseProfiles)
+        if(is_array($channelWiseProfiles) && $channelWiseProfiles) {
+            
             foreach($channelWiseProfiles as $key => $val)
             {
-                if(strpos($channelStr, 'M')!=false || strpos($channelStr, 'N')!=false)
-                {
-                    if($loginDataForProfiles[$val]["A"] || $loginDataForProfiles[$val]["I"] || !($loginDataForProfiles[$val]["M"]  || $loginDataForProfiles[$val]["N"]))
-                    {
-                        unset($browserProfilesData[$channel][$val]);
-                    }
-                }
-                else if(strpos($channelStr, 'I')!=false || strpos($channelStr, 'A')!=false)
-                {
-                    if($loginDataForProfiles[$val]["A"] || $loginDataForProfiles[$val]["I"])
-                    {
-                        unset($browserProfilesData[$channel][$val]);
-                    }
-                }
-                else if(strpos($channelStr, 'D')!=false)
+                 // if the notification is for desktop
+                if(strpos($channelStr, 'D')!=false)
                 {
                     if(!$loginDataForProfiles[$val]["D"])
                     {
                         unset($browserProfilesData[$channel][$val]);
                     }
                 }
+                
+                // if notification is for mobile covers the else case as there
+                // are two channels only. Four checks for all the four channels 
+                // currently existing as of now.
+                
+                else if(strpos($channelStr, 'M')!=false || strpos($channelStr, 'N')!=false || 
+                        strpos($channelStr, 'I')!=false || strpos($channelStr, 'A')!=false) {
+                    
+                    // if last login is from mobile as well as either ios or android 
+                    // and notification column exists to send notification to 
+                    // the user, then unset it.
+                    
+                    if( ( array_key_exists("M", $loginDataForProfiles[$val]) || array_key_exists("N", $loginDataForProfiles[$val]) )
+                            && ( array_key_exists("I", $loginDataForProfiles[$val]) || array_key_exists("A", $loginDataForProfiles[$val]) )) { 
+                        
+                            if(array_key_exists($val, $browserProfilesData["M"])) {
+                                unset($browserProfilesData["M"][$val]);
+                            }
+                    }
+                }
+                
             }
+        }
         return $browserProfilesData;
     }
     

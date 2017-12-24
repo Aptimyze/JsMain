@@ -37,11 +37,24 @@ EOF;
     $incentive = new incentive_LAST_HANDLED_DATE();
     $purchase = new BILLING_PURCHASES();
     $aprofileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+    $exclusiveMemberObj = new billing_EXCLUSIVE_MEMBERS();
     $maxDate = $incentive->getHandledDate(18);
     $profileArray = array();
+    $exclusiveMemberArray = array();
     $profileArray = $purchase->getExclusiveProfile($maxDate);
     foreach ($profileArray as $key => $value){
+        
         $aprofileInfo->insertIntoAPProfileInfo($key,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
+        //Start JSC-3375
+        $exclusiveMemberArray["PROFILEID"] = $value["PROFILEID"];
+        $exclusiveMemberArray["ASSIGNED_DT"]="0000-00-00";
+        $exclusiveMemberArray["ASSIGNED_TO"]=NULL;
+        $exclusiveMemberArray["ASSIGNED"]='N';
+        $exclusiveMemberArray["BILLING_DT"]=$value["ENTRY_DT"];
+        $exclusiveMemberArray["BILL_ID"]=$value["BILLID"];
+        $exclusiveMemberObj->addExclusiveMember($exclusiveMemberArray);
+        unset($exclusiveMemberArray);
+        //end
         $maxDate = $value;
     }
     $incentive->setHandledDate(18,$maxDate);

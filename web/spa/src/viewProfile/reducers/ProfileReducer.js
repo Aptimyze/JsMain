@@ -15,7 +15,8 @@ const ProfileReducer = (state={
 	gunaScore: [],
 	pageInfo: [],
 	fetchedProfilechecksum: false,
-	buttonDetails: []
+	buttonDetails: [],
+        onlineCalls:{}
 },action) => {
 	switch(action.type)
 	{
@@ -66,6 +67,16 @@ const ProfileReducer = (state={
 		state = {
 			...state,
 			buttonDetails:tmpButtonDetails
+		}
+		break;
+		case "SET_ONLINE_CALL":
+		state = {
+			...state,
+			onlineCalls:{
+                                    ...state.onlineCalls,
+                                    [action.payload.pc]:action.payload.online
+                                }
+                        
 		}
 		break;
 

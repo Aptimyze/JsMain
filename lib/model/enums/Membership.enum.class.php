@@ -896,8 +896,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "gtKFFx";
-    public static $PayUTestRsSalt = "eCwWELxi";
+    public static $PayUTestRsMerchantId = "vAt8pr";
+    public static $PayUTestRsSalt = "OhbWVfB0";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';
@@ -960,6 +960,7 @@ class SelectGatewayRedirect{
 
 class FreshChat{
     public static $token = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
+    public static $widgetUrl = "https://wchat.freshchat.com/js/widget.js";
 }
 
 ?>

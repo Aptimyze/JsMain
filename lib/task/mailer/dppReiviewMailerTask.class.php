@@ -58,6 +58,7 @@ EOF;
                 foreach($profilesArr as $key=>$value){
                     $value = $value[PROFILEID];
                     dppReviewMailerFunctions::sendDppReviewMail($value,$instanceId);
+                    ProfileCacheLib::getInstance()->__destruct();
                 }
                 
                 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring DPP_REVIEW_MAILER");

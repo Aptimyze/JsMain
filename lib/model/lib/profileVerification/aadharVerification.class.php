@@ -141,13 +141,16 @@ class aadharVerification
         	{
         		$bServedFromCache = true;
         		$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-        		$aadharDetails[$profileId]["REQUEST_ID"] = $result['REQUEST_ID'];
-				$aadharDetails[$profileId]["VERIFY_STATUS"] = $result['VERIFY_STATUS'];
-				$aadharDetails[$profileId]["AADHAR_NO"] = "Provided";
+        		if($result['REQUEST_ID']!=''){
+	        		$aadharDetails[$profileId]["REQUEST_ID"] = $result['REQUEST_ID'];
+					$aadharDetails[$profileId]["VERIFY_STATUS"] = $result['VERIFY_STATUS'];
+					$aadharDetails[$profileId]["AADHAR_NO"] = "Provided";
+				}
+				else
+					$aadharDetails='';
         	
         	}
-        	
-        	
+
         } 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);  
@@ -156,6 +159,7 @@ class aadharVerification
         }  
             
         //get details using mysql
+
         if(!is_array($aadharDetails)){
 			$aadharDetails = self::$aadharObj->getAadharDetails($profileId);
 		
@@ -174,11 +178,17 @@ class aadharVerification
 					*/
 		        	$aadharArr['REQUEST_ID'] = $value['REQUEST_ID'];
 		        	$aadharArr['VERIFY_STATUS'] = $value['VERIFY_STATUS'];
-		
-		        	$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
 				}
-			}
+			  }else{
+                        $aadharArr['REQUEST_ID'] = "";
+                        $aadharArr['VERIFY_STATUS'] = "";
+                        $aadharArr['PROFILEID'] = $profileId;
+                }
+		        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                       $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileId, $aadharArr, __CLASS__);		
+				}
 		}
+		
 		    
 		return $aadharDetails;
 	}
@@ -221,6 +231,11 @@ class aadharVerification
         }
         else
             return 0;
+    }
+    
+    public function getProfilesForAadhaarVerificationMailer($entry_date,$login_date,$sendEvery){
+        $profilesToReturn = self::$aadharObj->getProfilesWhoHaveUnverifiedAadhaar($entry_date,$login_date,$sendEvery);
+        return $profilesToReturn;
     }
 
 }

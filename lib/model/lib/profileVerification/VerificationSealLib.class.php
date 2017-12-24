@@ -66,7 +66,7 @@ class VerificationSealLib {
                 $sealArr = PROFILE_VERIFICATION_DOCUMENTS_ENUM::$VERIFICATION_SEAL_ARRAY;
                 $docArr = PROFILE_VERIFICATION_DOCUMENTS_ENUM::$ATTRIBUTE_DOCUMENT;
 
-                $sealInitiate = array_fill(0, (ceil(count($sealArr) / 2)), "N");
+                $sealInitiate = array_fill(0, count($sealArr), "N");
                 if ($this->getFsoStatus() == 0) {
                         $makeSeal[0] = "0";
                 } else {
@@ -80,7 +80,15 @@ class VerificationSealLib {
                         }
                 }
                 $sealFinalArr = array_replace($sealInitiate, $makeSeal);
+                $aadhaarObj = new aadharVerification();
+                $proID = $this->pID[0];
+                $aadhaarDetails = $aadhaarObj->getAadharDetails($proID);
+                if($aadhaarDetails[$proID]['AADHAR_NO'] && $aadhaarDetails[$proID]['VERIFY_STATUS'] == 'Y')
+                    $sealFinalArr[] = 'A';
+                else
+                    $sealFinalArr[] = 'N';
                 $finalVerificationSeal = implode(",", $sealFinalArr);
+                
                 $sealUpdateObj = new newjs_SWAP();
 		if(is_array($this->pID) && count($this->pID)==1)
                 {

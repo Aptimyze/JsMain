@@ -1894,6 +1894,10 @@ class MembershipHandler
             ob_end_clean();
         }
         $data = json_decode($output, true);
+        if(MobileCommon::isApp()=="I" && $data["userType"] == memUserType::UPGRADE_ELIGIBLE){
+            $data["hamburger_message"]["bottom"] = "My Membership";
+            $data["hamburger_message"]["top"] = null;
+        }
         return $data;
     }
 
@@ -2850,7 +2854,7 @@ class MembershipHandler
                 }
             }
             JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
-            return $discount?$discount:$otherDiscount;
+            return $discount;
         }
     }
     
@@ -2859,9 +2863,6 @@ class MembershipHandler
             $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
             if($discountArr){
                 $discount = $discountArr[$communityId];
-                if(!($discount && $discount >= 0)){
-                    $discount = $discountArr[0];
-                }
             }
             else{
                 $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();

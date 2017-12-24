@@ -110,6 +110,7 @@ class SearchParamters
         protected $CITY_RES_SELECTED;
         protected $CITY_INDIA_SELECTED;
         protected $FSO_VERIFIED;
+        protected $AADHAAR_VERIFIED;
         protected $INCOME_SORTBY;
         protected $NATIVE_STATE;
         protected $NATIVE_CITY;
@@ -737,6 +738,14 @@ class SearchParamters
 			$this->FSO_VERIFIED = $FSO_VERIFIED;
 	}
 	public function getFSO_VERIFIED() { return $this->FSO_VERIFIED; }
+        
+        public function setAADHAAR_VERIFIED($AADHAAR_VERIFIED) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("AADHAAR_VERIFIED",$AADHAAR_VERIFIED);
+                if($validInput)
+			$this->AADHAAR_VERIFIED = $AADHAAR_VERIFIED;
+	}
+	public function getAADHAAR_VERIFIED() { return $this->AADHAAR_VERIFIED; }
 
 	/*
 	* The logic for this function : all values which are less than choosen value should also need to be considered.

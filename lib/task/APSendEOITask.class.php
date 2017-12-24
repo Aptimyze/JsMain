@@ -10,7 +10,7 @@ ini_set('memory_limit','512M');
 class APSendEOITask extends sfBaseTask
 {
 	private $errorMsg;
-        private $minEois = 10;
+        private $minEois = 8;
         private $clusterForMutualMatches = array(0=>'LAST_ACTIVITY');
         private $removeFilteredProfiles = true;
         private $maxEoiReceiver = 5;

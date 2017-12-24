@@ -897,5 +897,20 @@ class jsadmin_PSWRDS extends TABLE
         
         return $res->fetch(PDO::FETCH_ASSOC);
     }
+    
+    public function getHeadId($agentId){
+        
+        try {
+            $sql = "SELECT HEAD_ID FROM jsadmin.PSWRDS WHERE USERNAME = :AGENT_ID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":AGENT_ID", $agentId, PDO::PARAM_STR);
+            $res->execute();
+            
+            return $res->fetch(PDO::FETCH_ASSOC);
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+        
+    }
 }
 ?>

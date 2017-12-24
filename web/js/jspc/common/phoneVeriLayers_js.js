@@ -229,7 +229,7 @@ jQuery.myObj.ajax(ajaxConfig);
 function checkValidPhone(mobileISD,mobileNumber)
 	{
 
-	var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+	var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
 	var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 	var isdCodes = ["0", "91","+91"];
 

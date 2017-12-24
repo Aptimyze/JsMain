@@ -103,4 +103,20 @@ class PROFILE_VERIFICATION_AADHAR_VERIFICATION extends TABLE
         }        
         return $output;
     }
+    
+    
+    public function getProfilesWhoHaveUnverifiedAadhaar($entry_date,$login_date,$sendEvery)
+    {
+        $sql = "SELECT J.PROFILEID,J.USERNAME FROM newjs.JPROFILE J LEFT JOIN PROFILE_VERIFICATION.AADHAR_VERIFICATION A ON J.PROFILEID = A.PROFILEID LEFT JOIN PROFILE_VERIFICATION.AADHAAR_VERIFICATION_MAILER_LOG L ON J.PROFILEID = L.PROFILEID WHERE ((A.PROFILEID IS NULL OR A.VERIFY_STATUS != 'Y') AND L.PROFILEID IS NULL) AND LAST_LOGIN_DT>:LOGIN_DATE AND DATEDIFF(J.ENTRY_DT,:ENTRY_DATE)%:SEND_EVERY=0 AND ACTIVATED='Y' AND activatedKey=1";
+        $res = $this->db->prepare($sql);
+        $res->bindParam(":ENTRY_DATE", $entry_date, PDO::PARAM_STR);
+        $res->bindParam(":LOGIN_DATE", $login_date, PDO::PARAM_STR);
+        $res->bindParam(":SEND_EVERY", $sendEvery, PDO::PARAM_INT);
+        $res->execute();
+        while($row=$res->fetch(PDO::FETCH_ASSOC))
+        {
+            $output[$row['PROFILEID']] = $row;            
+        }        
+        return $output;
+    }
 }
