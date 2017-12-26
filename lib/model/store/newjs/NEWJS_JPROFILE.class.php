@@ -1924,7 +1924,20 @@ SQL;
                 throw new jsException($e);
             }
         }
-
+        
+        public function getMtongue($profileID){
+            try{
+                $sql = "SELECT MTONGUE from newjs.JPROFILE where PROFILEID = :PROFILEID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+                $prep->execute();
+                if($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    return $row["MTONGUE"];
+                }
+            }catch(Exception $e){
+                throw new jsException($e);
+            }
+        }
 }
 
 ?>
