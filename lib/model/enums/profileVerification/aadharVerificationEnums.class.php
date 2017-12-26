@@ -7,13 +7,21 @@ class aadharVerificationEnums
 	const TYPE = "aadhaar_verification";
 	const GROUPID = "20f46a37-e9d3-4d02-82f5-fce23abbf12d";
 	const TASKID = "438d9786-2762-43f8-961f-4bd499d783d7";
-	public static $fieldsToCheck ="AADHAR_NO,REQUEST_ID,VERIFY_STATUS";
+	public static $fieldsToCheck ="REQUEST_ID,VERIFY_STATUS";
 	const URLTOHIT = "https://api.idfy.com/v2/tasks";
 	public static $aadharHeaderArr = array(
     	'apikey:786c16d4-9b01-42bd-a64d-b8d046abb52b',
     	'Content-Type:application/json',
 		);
-
+		
+	public static $aadharHeaderArrAuthbridge = array(
+    	'username:Test1@jeevansathi.com',
+    	'Content-Type:Application/json',
+		);
+	const URLTOHITAUTHBRIDGE = "https://www.truthscreen.com/api/v2.2/idsearch";
+	const AADHARDOCTYPEAUTHBRIDGE=22;
+	const TOKENAUTHBRIDGE = "Auth@123";
+	const TRAFFICTOAUTHBRIDGE=0;
 	const NOTVERIFIED = "N";
 	const AADHARLENGTH = 12;
 	const IMPROPERFORMAT = "Aadhaar Id is not in proper format";
@@ -26,4 +34,6 @@ class aadharVerificationEnums
 	CONST VERIFIED = "Y";
 	CONST ALREADYVERIFIED = "This Aadhaar number is already verified for another profile on Jeevansathi.";
 	CONST ALREADYVERIFIEDBYSAME = "Your Aadhaar is already verified.";
+	const AADHARENCRYPTIONKEY = "300688";
+	const TIMEOUT = 500;
 }

@@ -91,14 +91,15 @@ class BILLING_PURCHASES extends TABLE
 
     public function getExclusiveProfile($date){
         try{
-            $sql = "SELECT PROFILEID,ENTRY_DT FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
+            //$sql = "SELECT PROFILEID,ENTRY_DT FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
+            $sql = "SELECT PROFILEID,ENTRY_DT,BILLID FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DT", $date, PDO::PARAM_INT);
             
             $prep->execute();
             $profiles = array();
             while($result = $prep->fetch(PDO::FETCH_ASSOC)){
-                $profiles[$result["PROFILEID"]] = $result["ENTRY_DT"];
+                $profiles[$result["PROFILEID"]] = $result;
             }
             return $profiles;
         }catch(PDOException $e){
