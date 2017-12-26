@@ -8,6 +8,9 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         private $profileId;
         private $loggedInProfileObj;
         public $timeout = 5000;
+        private $partnerFieldsRequired = array("LINCOME","HINCOME","LAGE","HAGE","LHEIGHT","HHEIGHT","MANGLIK","BTYPE","CASTE","CITYRES","COUNTRYRES","ELEVEL_NEW","MSTATUS","MTONGUE","OCC","RELIGION");
+        private $partnerFieldsRequiredwithPrefix = array("MANGLIK","BTYPE","CASTE","CITYRES","COUNTRYRES","ELEVEL_NEW","MSTATUS","MTONGUE","OCC","RELIGION");
+        private $partnerKeyPrefix = "PARTNER_";
 
         public function __construct($loggedInProfileObj, $limit, $logicLevel) {
                 $this->profileId = $loggedInProfileObj->getPROFILEID();
@@ -62,12 +65,34 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
                 $this->postParams['pg_data']["caste" . $suffix] = (integer) $this->loggedInProfileObj->getCASTE();
                 $this->postParams['pg_data']["posted_by" . $suffix] = (integer) $this->loggedInProfileObj->getRELATION();
                 $this->postParams['pg_data']["occupation" . $suffix] = (integer) $this->loggedInProfileObj->getOCCUPATION();
-                $this->postParams['pg_data']["ref_countries" . $suffix] = (integer) $this->loggedInProfileObj->getCOUNTRY_RES();
-                $this->postParams['pg_data']["ref_mstatus" . $suffix] = $this->loggedInProfileObj->getMSTATUS();
-                $this->postParams['pg_data']["ref_manglik" . $suffix] = $this->loggedInProfileObj->getMANGLIK() == "" ? "N" : $this->loggedInProfileObj->getMANGLIK();
-                $this->postParams['pg_data']["religion" . $suffix] = (integer) $this->loggedInProfileObj->getRELIGION();
+                $this->postParams['pg_data']["country_res" . $suffix] = (integer) $this->loggedInProfileObj->getCOUNTRY_RES();
+                $this->postParams['pg_data']["mstatus" . $suffix] = $this->loggedInProfileObj->getMSTATUS();
+                $this->postParams['pg_data']["manglik" . $suffix] = $this->loggedInProfileObj->getMANGLIK() == "" ? "N" : $this->loggedInProfileObj->getMANGLIK();
+                //$this->postParams['pg_data']["religion" . $suffix] = (integer) $this->loggedInProfileObj->getRELIGION();
                 $dppData = $this->getDppData();
-                $this->postParams['dpp_pg']["manglik"] = $dppData[0]["MANGLIK"];
+                foreach($this->partnerFieldsRequired as $fieldRequired){
+                        $ky = $fieldRequired;
+                        if(in_array($fieldRequired,$this->partnerFieldsRequiredwithPrefix)){
+                              $ky = $this->partnerKeyPrefix.$ky; 
+                        }
+                        $this->postParams['dpp_pg'][$ky] = $dppData[0][$fieldRequired];
+                        if($ky == "PARTNER_COUNTRYRES"){
+                                $this->postParams['dpp_pg'][$ky] = $dppData[0]["COUNTRY_RES"];
+                        }elseif($ky == "PARTNER_CITYRES"){
+                                $this->postParams['dpp_pg'][$ky] = $dppData[0]["CITY_RES"];
+                        }
+                        
+                }
+                $filterObj = new ProfileFilter();
+                $flData = $filterObj->fetchEntry($this->profileId);
+                unset($flData["FILTERID"]);unset($flData["PROFILEID"]);unset($flData["COUNT"]);unset($flData["HARDSOFT"]);
+                if($flData){
+                        foreach($flData as $filterField=>$value){
+                                $this->postParams['dpp_pg_hard'][$filterField] = $value;
+                        }
+                }else{
+                        $this->postParams['dpp_pg_hard'] = "";
+                }
         }
 
         private function sendCommunityPostRequest() {
@@ -91,18 +116,10 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy {
         }
 
         private function getDppData() {
-                $memObject = JsMemcache::getInstance();
-                // Get jpartner data
-                $jpartnerData = $memObject->get('SEARCH_JPARTNER_' . $this->profileId);
-                if (empty($jpartnerData)) {
-                        $dbName = JsDbSharding::getShardNo($this->profileId);
-                        $JPARTNERobj = new newjs_JPARTNER($dbName);
-                        $fields = SearchConfig::$dppSearchParamters . ",MAPPED_TO_DPP";
-                        $jpartnerData = $JPARTNERobj->get(array("PROFILEID" => $this->profileId), $fields);
-                } else {
-                        $jpartnerData = unserialize($jpartnerData);
-                }
-                unset($memObject);
+                $dbName = JsDbSharding::getShardNo($this->profileId);
+                $JPARTNERobj = new newjs_JPARTNER($dbName);
+                $fields = SearchConfig::$dppSearchParamters . ",MAPPED_TO_DPP,PARTNER_BTYPE AS BTYPE,PARTNER_OCC as OCC,PARTNER_ELEVEL_NEW as ELEVEL_NEW";
+                $jpartnerData = $JPARTNERobj->get(array("PROFILEID" => $this->profileId), $fields);
                 unset($JPARTNERobj);
                 return $jpartnerData;
         }
