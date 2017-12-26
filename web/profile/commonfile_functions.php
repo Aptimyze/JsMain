@@ -269,6 +269,7 @@ $css_arr[]=array("web/spa/dist/app"   => "1");
 $css_arr[]=array("apps/jeevansathi/modules/api/actions/LoginV1Action"   => "1");
 $css_arr[]=array("web/spa/dist/0"   => "1");
 $css_arr[]=array("apps/operations/modules/crmInterface/actions/actions"     => "3");
+$css_arr[]=array("apps/jeevansathi/modules/profile/actions/aadharVerificationV1Action"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
