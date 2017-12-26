@@ -14,7 +14,7 @@ class MatchAlertCalculationTask extends sfBaseTask
         private $limitCommunityRec = 10;
         private $limitLastSearchRec = 10;
 	const clusterRecordLimit = 10;
-        const _communityModelToggle=0;
+        const _communityModelToggle=1;
         const limitNtWhenCommunity = 10;
   	const limitNtNoCommunity = 16;
         
