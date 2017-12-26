@@ -2808,24 +2808,16 @@ class crmMisActions extends sfActions
                 $this->agentWiseData[$agent] = implode(",",$clientArr);
             }
 
+            $this->agentWiseDetails["TOTAL"] = null;
             foreach ($this->agentWiseDetails as $agent=>$dayWiseData){
                 foreach ($dayWiseData as $day=>$count){
                     if($agent != "TOTAL"){
-                        if(!$this->agentWiseDetails["TOTAL"][$day]){
-                            $this->agentWiseDetails["TOTAL"][$day]["Y"] = $count["Y"];
-                            $this->agentWiseDetails["TOTAL"][$day]["N"] = $count["N"];
-                            $this->agentWiseDetails["TOTAL"][$day]["P"] = $count["P"];
-                            $this->agentWiseDetails["TOTAL"][$day]["E"] = $count["E"];
-                            $this->agentWiseDetails["TOTAL"][$day]["S"] = $count["S"];
-                            $this->agentWiseDetails["TOTAL"][$day]["D"] = $count["D"];
-                        } else{
-                            $this->agentWiseDetails["TOTAL"][$day]["Y"] += $count["Y"];
-                            $this->agentWiseDetails["TOTAL"][$day]["N"] += $count["N"];
-                            $this->agentWiseDetails["TOTAL"][$day]["P"] += $count["P"];
-                            $this->agentWiseDetails["TOTAL"][$day]["E"] += $count["E"];
-                            $this->agentWiseDetails["TOTAL"][$day]["S"] += $count["S"];
-                            $this->agentWiseDetails["TOTAL"][$day]["D"] += $count["D"];
-                        }
+                        $this->agentWiseDetails["TOTAL"][$day]["Y"] += $count["Y"];
+                        $this->agentWiseDetails["TOTAL"][$day]["N"] += $count["N"];
+                        $this->agentWiseDetails["TOTAL"][$day]["P"] += $count["P"];
+                        $this->agentWiseDetails["TOTAL"][$day]["E"] += $count["E"];
+                        $this->agentWiseDetails["TOTAL"][$day]["S"] += $count["S"];
+                        $this->agentWiseDetails["TOTAL"][$day]["D"] += $count["D"];
                     }
                     $this->agentWiseDetails[$agent]["TOTAL"]["Y"] += $count["Y"];
                     $this->agentWiseDetails[$agent]["TOTAL"]["N"] += $count["N"];
@@ -2863,24 +2855,16 @@ class crmMisActions extends sfActions
             }
         }
 
+        $this->clientWiseDetails["TOTAL"] = null;
         foreach ($this->clientWiseDetails as $client=>$dayWiseData){
             foreach ($dayWiseData as $day=>$count){
                 if($client != "TOTAL"){
-                    if(!$this->clientWiseDetails["TOTAL"][$day]){
-                        $this->clientWiseDetails["TOTAL"][$day]["Y"] = $count["Y"];
-                        $this->clientWiseDetails["TOTAL"][$day]["N"] = $count["N"];
-                        $this->clientWiseDetails["TOTAL"][$day]["P"] = $count["P"];
-                        $this->clientWiseDetails["TOTAL"][$day]["E"] = $count["E"];
-                        $this->clientWiseDetails["TOTAL"][$day]["S"] = $count["S"];
-                        $this->clientWiseDetails["TOTAL"][$day]["D"] = $count["D"];
-                    } else{
-                        $this->clientWiseDetails["TOTAL"][$day]["Y"] += $count["Y"];
-                        $this->clientWiseDetails["TOTAL"][$day]["N"] += $count["N"];
-                        $this->clientWiseDetails["TOTAL"][$day]["P"] += $count["P"];
-                        $this->clientWiseDetails["TOTAL"][$day]["E"] += $count["E"];
-                        $this->clientWiseDetails["TOTAL"][$day]["S"] += $count["S"];
-                        $this->clientWiseDetails["TOTAL"][$day]["D"] += $count["D"];
-                    }
+                    $this->clientWiseDetails["TOTAL"][$day]["Y"] += $count["Y"];
+                    $this->clientWiseDetails["TOTAL"][$day]["N"] += $count["N"];
+                    $this->clientWiseDetails["TOTAL"][$day]["P"] += $count["P"];
+                    $this->clientWiseDetails["TOTAL"][$day]["E"] += $count["E"];
+                    $this->clientWiseDetails["TOTAL"][$day]["S"] += $count["S"];
+                    $this->clientWiseDetails["TOTAL"][$day]["D"] += $count["D"];
                 }
                 $this->clientWiseDetails[$client]["TOTAL"]["Y"] += $count["Y"];
                 $this->clientWiseDetails[$client]["TOTAL"]["N"] += $count["N"];
