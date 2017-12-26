@@ -2900,9 +2900,6 @@ class crmMisActions extends sfActions
         $this->endDT = $request->getParameter('endDT');
         $this->clientID = $request->getParameter('clientID');
         $pid = $request->getParameter('pid');
-        if (JsConstants::$whichMachine != "prod"){
-            $pid = $this->clientID;
-        }
         $partnerObj = new SearchCommonFunctions();
         $profileObj = Operator::getInstance('',$pid);
         $profileObj->getDetail('','','*');
