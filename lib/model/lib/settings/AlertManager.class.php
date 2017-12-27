@@ -143,8 +143,9 @@ class AlertManager
                 $jprofileAlertObj = new JprofileAlertsCache();
                 $jprofileAlertLogObj = new newjs_JPROFILE_ALERTS_LOG();
                 $visitAlertOptObj = new visitoralert_VISITOR_ALERT_OPTION('shard1_master');
+                $jprofileAlertLoggingObj = new newjs_JPROFILE_ALERT_LOGGING();
                 $today = date("Y-m-d");
-                
+                $currentTime = date("y-m-d h:i:s");
                 if ($this->updateParam == 'promo_sms') {
                     if ($this->objVars['promo_sms'] == 'S') {
                         $new_sms_value = "Y";
@@ -165,143 +166,180 @@ class AlertManager
                     $jprofileObj->edit(array(
                         "UDATE" => $today,
                         "PROMO_MAILS" => $this->objVars['promo_mails']
-                    ) , $this->profileid, "PROFILEID");
+                    ) , $this->profileid,"PROFILEID");
+                    $preVal=($this->objVars['promo_mails']=='U')?'S':'U';
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'PROMO_MAILS',$preVal, $this->objVars['promo_mails'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'match_alert') {
+                    $perviousValue=$jprofileObj->get($this->profileid, "PROFILEID","PERSONAL_MATCHES")["PERSONAL_MATCHES"];
                     $jprofileObj->edit(array(
                         "UDATE" => $today,
                         "PERSONAL_MATCHES" => $this->objVars['match_alert']
-                    ) , $this->profileid, "PROFILEID");
+                    ) , $this->profileid,"PROFILEID");
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'MATCH_ALERT',$perviousValue, $this->objVars['match_alert'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'mem_call') {
+                    $previousValue=($this->objVars['mem_call']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'MEMB_CALLS', $this->objVars['mem_call']);
                     $jprofileAlertLogObj->update($this->profileid, 'MEMB_CALLS', $this->objVars['mem_call'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'MEMB_CALLS',$previousValue, $this->objVars['mem_call'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'offer_call') {
+                    $previousValue=($this->objVars['offer_call']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'OFFER_CALLS', $this->objVars['offer_call']);
                     $jprofileAlertLogObj->update($this->profileid, 'OFFER_CALLS', $this->objVars['offer_call'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'OFFER_CALLS',$previousValue, $this->objVars['offer_call'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'service1') {
+                    $previousValue=($this->objVars['service1']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERV_CALLS_SITE', $this->objVars['service1']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERV_CALLS_SITE', $this->objVars['service1'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERV_CALLS_SITE',$previousValue, $this->objVars['service1'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'service2') {
+                    $previousValue=($this->objVars['service2']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERV_CALLS_PROF', $this->objVars['service2']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERV_CALLS_PROF', $this->objVars['service2'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERV_CALLS_PROF',$previousValue, $this->objVars['service2'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'mem_mail') {
+                    $previousValue=($this->objVars['mem_mail']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'MEMB_MAILS', $this->objVars['mem_mail']);
                     $jprofileAlertLogObj->update($this->profileid, 'MEMB_MAILS', $this->objVars['mem_mail'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'MEMB_MAILS',$previousValue, $this->objVars['mem_mail'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'contact_alert') {
+                    $previousValue=($this->objVars['contact_alert']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'CONTACT_ALERT_MAILS', $this->objVars['contact_alert']);
                     $jprofileAlertLogObj->update($this->profileid, 'CONTACT_ALERT_MAILS', $this->objVars['contact_alert'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'CONTACT_ALERT_MAILS',$previousValue, $this->objVars['contact_alert'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'kundli_alert') {
+                    $previousValue=($this->objVars['kundli_alert']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'KUNDLI_ALERT_MAILS', $this->objVars['kundli_alert']);
                     $jprofileAlertLogObj->update($this->profileid, 'KUNDLI_ALERT_MAILS', $this->objVars['kundli_alert'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'KUNDLI_ALERT_MAILS',$previousValue, $this->objVars['kundli_alert'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'photo_req') {
+                    $previousValue=($this->objVars['photo_req']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'PHOTO_REQUEST_MAILS', $this->objVars['photo_req']);
                     $jprofileAlertLogObj->update($this->profileid, 'PHOTO_REQUEST_MAILS', $this->objVars['photo_req'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'PHOTO_REQUEST_MAILS',$previousValue, $this->objVars['photo_req'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'new_matches_mail') {
+                    $previousValue=($this->objVars['new_matches_mail']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'NEW_MATCHES_MAILS', $this->objVars['new_matches_mail']);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'NEW_MATCHES_MAILS',$previousValue, $this->objVars['new_matches_mail'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'serv_mail') {
+                    $previousValue=($this->objVars['serv_mail']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERVICE_MAILS', $this->objVars['serv_mail']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERVICE_MAILS', $this->objVars['serv_mail'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERVICE_MAILS',$previousValue, $this->objVars['serv_mail'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'serv_sms') {
+                    $previousValue=($this->objVars['serv_sms']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERVICE_SMS', $this->objVars['serv_sms']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERVICE_SMS', $this->objVars['serv_sms'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERVICE_SMS',$previousValue, $this->objVars['serv_sms'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'serv_mms') {
+                    $previousValue=($this->objVars['serv_sms']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERVICE_MMS', $this->objVars['serv_mms']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERVICE_MMS', $this->objVars['serv_mms'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERVICE_MMS',$previousValue, $this->objVars['serv_sms'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'serv_ussd') {
+                    $previousValue=($this->objVars['serv_ussd']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'SERVICE_USSD', $this->objVars['serv_ussd']);
                     $jprofileAlertLogObj->update($this->profileid, 'SERVICE_USSD', $this->objVars['serv_ussd'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'SERVICE_USSD',$previousValue, $this->objVars['serv_ussd'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'promo_ussd') {
+                    $previousValue=($this->objVars['promo_ussd']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'PROMO_USSD', $this->objVars['promo_ussd']);
                     $jprofileAlertLogObj->update($this->profileid, 'PROMO_USSD', $this->objVars['promo_ussd'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'PROMO_USSD',$previousValue, $this->objVars['promo_ussd'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'promo_mms') {
+                    $previousValue=($this->objVars['promo_mms']=='U')?'S':'U';
                     $jprofileAlertObj->update($this->profileid, 'PROMO_MMS', $this->objVars['promo_mms']);
-                    $jprofileAlertLogObj->update($this->profileid, 'PROMO_MMS', $this->objVars['promo_mms'], $today);
+                    $jprofileAlertLogObj->update($this->profileid, 'PROMO_PROMO_MMSMMS', $this->objVars['promo_mms'], $today);
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'PROMO_USSD',$previousValue, $this->objVars['promo_mms'],$currentTime);
                     return array(
                         'error' => NULL
                     );
                 }
                 
                 if ($this->updateParam == 'vis_alert') {
+                    $previousValue = $visitAlertOptObj->getResult($this->profileid);
                     $visitAlertOptObj->updateAlertOption($this->profileid, $this->objVars['vis_alert']);
+                    
+                    $jprofileAlertLoggingObj->insert($this->profileid, 'VISITOR_ALERT',$previousValue, $this->objVars['vis_alert'],$currentTime);
                     return array(
                         'error' => NULL
                     );
