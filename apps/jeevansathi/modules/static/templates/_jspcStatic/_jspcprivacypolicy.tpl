@@ -47,7 +47,7 @@
 </p>
 
 <p class="pt20"><span class="fontreg">Security practices and procedures</span><br>
-We fully comply with all Indian Laws applicable, including without limitation, Rule 8 under Section 43A of the Information Technology Act, 2000. We have ensured that reasonable security practices and procedures are in place as required under Rule 8 under Section 43A of the Information Technology Act, 2000. We believe that cooperation with law is best achieved by co-operating with the law. We have always co-operated with all law enforcement inquires. We may disclose all or part of your personal details in response to a lawful request from the law enforcement authorities or in a case of bonafide requirement to prevent an imminent breach of the law.
+We fully comply with all Indian Laws applicable, including without limitation, Rule 8 under Section 43A of the Information Technology Act, 2000. We have ensured that reasonable security practices and procedures are in place as required under Rule 8 under Section 43A of the Information Technology Act, 2000. We have always co-operated with all law enforcement inquires. We may disclose all or part of your personal details in response to a lawful request from the law enforcement authorities or in a case of bonafide requirement to prevent an imminent breach of the law.
 </p>
 
 <p class="pt20"><span class="fontreg">Amendment</span><br>
