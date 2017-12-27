@@ -44,7 +44,7 @@ EOF;
     if($activeNum == 0)
     {
       $message="Node server for crm notifications is not running,hence restarting it again...";
-     CRMAlertManager::sendMailAlert($message,"AgentNotifications");  
+      //CRMAlertManager::sendMailAlert($message,"AgentNotifications");  
       //restart node server again
       passthru("/usr/local/node-v0.10.25/bin/node /var/www/html/nodeServer/crmAgentNotifyServer.js > /dev/null &");     
     }

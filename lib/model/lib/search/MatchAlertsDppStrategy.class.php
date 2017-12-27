@@ -33,8 +33,6 @@ class MatchAlertsDppStrategy extends PartnerProfile {
                         $dppCount = SearchCommonFunctions::getMyDppMatches("",$this->loggedInProfileObj,"","","","",1);
                         $dppCnt = isset($dppCount["CNT"])?$dppCount["CNT"]:0;
                         $memObject->set('MA_DPPCOUNT_'.$this->loggedInProfileObj->getPROFILEID(),$dppCnt,MatchAlertsConfig::$dppCountCacheTime);
-                }else{
-                        $dppCnt = 0;
                 }
                 unset($memObject);
                 if($dppCnt>MatchAlertsConfig::$DPP_HAVEPHOTO_CHECK_COUNTER){
