@@ -19,7 +19,7 @@
 		mysql_query("set session wait_timeout=10000",$myDb_Master);
 		mysql_query("set session wait_timeout=10000",$myDb_Slave);
 		$updateDateFields = ProfileEnums::$updateSortDtForFields;
-		$sql=   "SELECT PROFILEID, DTOFBIRTH, AGE, FLOOR( DATEDIFF(	NOW( ) , DTOFBIRTH ) / 365.25 ) AS ACTUAL_AGE FROM JPROFILE WHERE FLOOR( DATEDIFF( 	NOW( ) , DTOFBIRTH ) / 365.25) <> AGE";
+		$sql=   "SELECT PROFILEID, DTOFBIRTH, AGE,LAST_LOGIN_DT, FLOOR( DATEDIFF(	NOW( ) , DTOFBIRTH ) / 365.25 ) AS ACTUAL_AGE FROM JPROFILE WHERE FLOOR( DATEDIFF( 	NOW( ) , DTOFBIRTH ) / 365.25) <> AGE";
 		$arrResultSet = mysql_query($sql,$myDb_Slave);
 		$objUpdate = JProfileUpdateLib::getInstance();
                 $searchObj = new NEWJS_SEARCH_SORT_DT();
@@ -27,9 +27,11 @@
 		{
 			//echo "ACTUAL_AGE : ".$row['ACTUAL_AGE']." : AGE : ".$row['AGE'] ;
 			$result = $objUpdate->editJPROFILE(array('AGE'=>$row['ACTUAL_AGE']),$row['PROFILEID'],'PROFILEID');
-                        $finalTime = strtotime("now")+($updateDateFields["AGE"]*60*60);
-                        $sortDate = date("Y-m-d H:i:s",$finalTime);
-                        $searchObj->updateSortDate($row['PROFILEID'],$sortDate);
+                        if($row['LAST_LOGIN_DT'] && $row['LAST_LOGIN_DT'] != "0000-00-00 00:00:00" && $row['LAST_LOGIN_DT'] != "0000-00-00"){
+                                $finalTime = strtotime($row['LAST_LOGIN_DT'])+($updateDateFields["AGE"]*60*60);
+                                $sortDate = date("Y-m-d H:i:s",$finalTime);
+                                $searchObj->updateSortDate($row['PROFILEID'],$sortDate);
+                        }
 //			$sql="update JPROFILE set AGE=".$row['ACTUAL_AGE'] ." where PROFILEID=" . $row['PROFILEID'];
 			//echo "\n $sql \n";
 //			mysql_query($sql,$myDb_Master) or logError($sql);

@@ -204,11 +204,14 @@ class FieldForm extends sfForm
 		  }
 	  }
         if($updateDate != 0){
-                $searchObj = new NEWJS_SEARCH_SORT_DT();
-                $finalTime = strtotime("now")+($updateDate*60*60);
-                $sortDate = date("Y-m-d H:i:s",$finalTime);
-                $searchObj->updateSortDate($this->loggedInObj->getPROFILEID(),$sortDate);
-                unset($searchObj);
+                $lastLoggedIn = $this->loggedInObj->getLAST_LOGIN_DT();
+                if($lastLoggedIn && $lastLoggedIn != "0000-00-00 00:00:00" && $lastLoggedIn != "0000-00-00"){
+                        $searchObj = new NEWJS_SEARCH_SORT_DT();
+                        $finalTime = strtotime($lastLoggedIn)+($updateDate*60*60);
+                        $sortDate = date("Y-m-d H:i:s",$finalTime);
+                        $searchObj->updateSortDate($this->loggedInObj->getPROFILEID(),$sortDate);
+                        unset($searchObj);
+                }
         }
         if(count($criticalInfoFieldArr)){
                 $request=sfContext::getInstance()->getRequest();
