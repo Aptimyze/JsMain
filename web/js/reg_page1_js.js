@@ -135,6 +135,7 @@ $(document).ready(function () {
 		  commonWords : true,
 		  checkWithUserName :true,
 		  minlength:8,
+		  onlyNumeric:true,
 		  messages:
 		  {
 			required: $("#password_required").html(),
