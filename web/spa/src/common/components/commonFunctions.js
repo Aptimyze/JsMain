@@ -81,15 +81,15 @@ export const translateSite = (translateURL) => {
 }
 
 export const mtoungueURL = () => {
-    let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink",langText:"Hindi Version"};
-    if(localStorage.getItem("self_MTONGUE") === 20 && false){
+    let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink",langText:"In Hindi"};
+    if(localStorage.getItem("self_MTONGUE") == 20 && getCookie("AUTHCHECKSUM") && false){
         obj.translateURL = CONSTANTS.MARATHI_SITE;
         obj.linkId = "marathiLink";
-        obj.langText = "Marathi Version";
+        obj.langText = "In Marathi";
     }
     let url = window.location.href;
     url = url.split(".")[0];
-    if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+    if(url.indexOf('hindi') != -1 || url.indexOf('marathi') != -1){
         obj.langText = "In English";
         obj.translateURL = CONSTANTS.SITE_URL;
         if(!getCookie("AUTHCHECKSUM")){
