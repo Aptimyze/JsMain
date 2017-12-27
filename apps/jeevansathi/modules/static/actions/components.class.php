@@ -133,6 +133,8 @@ class staticComponents extends sfComponents{
         else
             $this->getProfileObj();
         $this->translateURL = JsConstants::$hindiTranslateURL;
+        $this->langText = "In Hindi";
+        $this->langID = "hindiLink";
         if($this->loggedIn)
         {
             $this->loginProfile=LoggedInProfile::getInstance();
@@ -140,7 +142,11 @@ class staticComponents extends sfComponents{
             $justJoinedMemcacheCount=$this->profileMemcacheObj->get('JUST_JOINED_MATCHES');
             $this->justJoinedCount=$justJoinedMemcacheCount;
             $this->mtongue = $this->loginProfile->getMTONGUE();
-
+            if($this->mtongue == 20 && false){
+                $this->translateURL = JsConstants::$marathiTranslateURL;
+                $this->langText = "In Marathi";
+                $this->langID = "marathiLink";
+            }
             $this->profilePic = $this->loginProfile->getHAVEPHOTO();
             if (empty($this->profilePic))
                 $this->profilePic="N";
@@ -174,6 +180,16 @@ class staticComponents extends sfComponents{
             ob_end_clean();
             $savedSearchCountData = json_decode($output,true);
             $this->savedSearchCount = $savedSearchCountData['saveDetails']['count'];
+        }
+
+        $url = $_SERVER['REQUEST_URI'];
+        $url = explode(".",$url)[0];
+        if(strpos($url,"hindi") !== false || strpos($url,"marathi") !== false){
+            $this->translateURL = JsConstants::$siteUrl;
+            $this->langText = "In English";
+            if(!$_COOKIE['AUTHCHECKSUM']){
+                $this->translateURL = JsConstants::$siteUrl."/P/logout.php";
+            }
         }
     }
 
