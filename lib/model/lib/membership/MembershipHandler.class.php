@@ -2484,6 +2484,23 @@ class MembershipHandler
         // print_r(array('profileid' => $profileid, 'currency' => $currency, 'last_main_transaction_services' => implode(",", $prevServPur), 'previous_discount_amount' => $prevDiscAmt, 'previous_final_amount' => $prevTotAmt, 'previous_discount_perc' => $prevDisc, 'rd_algo_calculated_discount_prec' => $discount_calc, 'rohan_algo_calculated_discount_prec' => $discount));
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
+        //Adding extra caluclation for handling discount
+        //Start JSC-3618
+        $billServiceStatus     = new BILLING_SERVICE_STATUS('newjs_slave');
+        $firstExpiry = 5;
+        $laterExpiry = 10;
+        $value=2;
+        $count = $billServiceStatus->getExpireCount($profileid);
+        if($count == $value){
+            $discount = $discount-$firstExpiry;
+        }else if($count>$value){
+            $discount = $discount-$laterExpiry;
+        }
+        if($discount<0){
+            $discount=0;
+        }else if($discount>80)
+            $discount=80;
+        //end JSC-3618
         return $discount;
     }
     

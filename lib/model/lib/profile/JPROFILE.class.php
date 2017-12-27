@@ -830,5 +830,9 @@ class JPROFILE
     {
         return $this->getJprofileObj()->getRegistrationMisCampaignsData($fromDate, $toDate, $groupType);
     }
+    
+    public function getMtongue($profileid){
+        return $this->getJprofileObj()->getMtongue($profileid);
+    }
 }
 ?>

@@ -6,7 +6,7 @@
 class MatchAlertCommunityTask extends sfBaseTask {
 
         private $limit = 5000;
-        private $limitCommunityRec = 16;
+        private $limitCommunityRec = 20;
 
         protected function configure() {
                 $this->addArguments(array(
