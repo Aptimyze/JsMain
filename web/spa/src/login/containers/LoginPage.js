@@ -396,13 +396,27 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
-        let newHref = CONSTANTS.HINDI_SITE, langText = "हिंदी में";
+        let newHref = CONSTANTS.HINDI_SITE, langText = "In Hindi";
         let url = window.location.href;
+        let langLinkOnLogin;
         url = url.split(".")[0];
-        if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+        if(url.indexOf('hindi') != -1 || url.indexOf('marathi') != -1){
             newHref = CONSTANTS.SITE_URL + "/P/logout.php";
             langText = "In English";
+            langLinkOnLogin = <div className="txtc pad2">
+                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+            </div>
+        } else{
+            let marathiHref = CONSTANTS.MARATHI_SITE, marathiText = "In Marathi";
+            langLinkOnLogin = <div className="txtc pad2">
+                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+                <a className="pad2" href="#">&nbsp;&nbsp;/&nbsp;&nbsp;</a>
+                <a id="marathiLinkOnLogin" href={marathiHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Marathi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{marathiText}</a>
+            </div>
         }
+        langLinkOnLogin = <div className="txtc pad2">
+            <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+        </div>
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>                
@@ -430,10 +444,7 @@ class LoginPage extends React.Component {
                                             {captchDiv}
                                             {buttonView}
                                             {appDownloadView}
-
-                                            <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
-                                            </div>
+                                            {langLinkOnLogin}
                                         </div>
                                     </div>
                                 </div>
