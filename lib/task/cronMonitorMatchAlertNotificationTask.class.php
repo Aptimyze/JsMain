@@ -45,7 +45,7 @@ EOF;
     $curTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 30 minutes'));
     $stTime 	= date('Y-m-d H:i:s', strtotime('+10 hour 20 minutes'));
     $hr 	= date('H', strtotime('+10 hour 30 minutes'));
-    $hrArr 	= array('01','02','03','04','05','06','07','08','09');	
+    $hrArr 	= array('01','02','03','04','05','06','07','08','09','10');	
 
     $notificationLogObj = new MOBILE_API_NOTIFICATION_LOG();
     $count = $notificationLogObj->getDataForDuration("MATCHALERT",$stTime,$curTime);
