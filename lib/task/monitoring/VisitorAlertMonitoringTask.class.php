@@ -41,7 +41,7 @@ EOF;
                         
                         if($cntval === false){
                             $visitorAlertRecord = new visitorAlert_RECORD('shard1_master');
-                            $prevDate = date('Y-m-d H:i:s',  strtotime('-1 day'));
+                            $prevDate = date('Y-m-d',  strtotime('-1 day'));
                             $prevDateRecord = $visitorAlertRecord->getVisitorAlertRecord($prevDate);
                             
                             if(!$prevDateRecord){

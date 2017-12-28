@@ -32,7 +32,7 @@
 			try {
 				$sql="SELECT * FROM visitoralert.VISITOR_ALERT_RECORD WHERE SENT_DATE = :DATE";
 				$prep = $this->db->prepare($sql);
-				$prep->bindValue(":DATE",$total,PDO::PARAM_STR);
+				$prep->bindValue(":DATE",$date,PDO::PARAM_STR);
 				$prep->execute();
                                 if($prep->fetch(PDO::FETCH_ASSOC))
                                     return true;
