@@ -107,5 +107,104 @@ class billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING extends TABLE
 		}
 		
 	}
+
+	public function getRBInterestsForAgent($clientArr,$startDT,$endDT){
+	    try{
+            $sql = "SELECT SCREENED_STATUS, ENTRY_DT FROM billing.EXCLUSIVE_CLIENT_MEMBER_MAPPING WHERE ENTRY_DT >= :START_DT AND ENTRY_DT <= :END_DT AND CLIENT_ID IN (";
+            $COUNT = 1;
+            foreach ($clientArr as $key=>$value){
+                $valueToInsert .= ":KEY".$COUNT.",";
+                $bind[":KEY".$COUNT] = $value;
+                $COUNT++;
+            }
+            $sql .= rtrim($valueToInsert,',').")";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DT", $startDT, PDO::PARAM_STR);
+            $res->bindValue(":END_DT", $endDT, PDO::PARAM_STR);
+            foreach ($bind as $key=>$value){
+                $res->bindValue($key, $value, PDO::PARAM_INT);
+            }
+            $res->execute();
+            $output = array();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $day = date("d",strtotime($result["ENTRY_DT"]));
+                $day = ltrim($day,"0");
+                if(!$output[$day]){
+                    $output[$day]["Y"] = 0;
+                    $output[$day]["N"] = 0;
+                    $output[$day]["P"] = 0;
+                    $output[$day]["E"] = 0;
+                    $output[$day]["S"] = 0;
+                    $output[$day]["D"] = 0;
+                }
+
+                $output[$day][$result["SCREENED_STATUS"]]++;
+
+            }
+            return $output;
+        } catch(Exception $e){
+	        throw new jsException($e);
+        }
+    }
+
+    public function getRBInterestsForClients($clientArr,$startDT,$endDT){
+        try{
+            $sql = "SELECT CLIENT_ID, SCREENED_STATUS, ENTRY_DT FROM billing.EXCLUSIVE_CLIENT_MEMBER_MAPPING WHERE ENTRY_DT >= :START_DT AND ENTRY_DT <= :END_DT AND CLIENT_ID IN (";
+            $COUNT = 1;
+            foreach ($clientArr as $key=>$value){
+                $valueToInsert .= ":KEY".$COUNT.",";
+                $bind[":KEY".$COUNT] = $value;
+                $COUNT++;
+            }
+            $sql .= rtrim($valueToInsert,',').")";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DT", $startDT, PDO::PARAM_STR);
+            $res->bindValue(":END_DT", $endDT, PDO::PARAM_STR);
+            foreach ($bind as $key=>$value){
+                $res->bindValue($key, $value, PDO::PARAM_INT);
+            }
+            $res->execute();
+            $output = array();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $day = date("d",strtotime($result["ENTRY_DT"]));
+                $day = ltrim($day,"0");
+                if(!$output[$result["CLIENT_ID"]][$day]){
+                    $output[$result["CLIENT_ID"]][$day]["Y"] = 0;
+                    $output[$result["CLIENT_ID"]][$day]["N"] = 0;
+                    $output[$result["CLIENT_ID"]][$day]["P"] = 0;
+                    $output[$result["CLIENT_ID"]][$day]["E"] = 0;
+                    $output[$result["CLIENT_ID"]][$day]["S"] = 0;
+                    $output[$result["CLIENT_ID"]][$day]["D"] = 0;
+                }
+
+                $output[$result["CLIENT_ID"]][$day][$result["SCREENED_STATUS"]]++;
+            }
+            return $output;
+        } catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+
+    public function getClientInfo($clientID,$startDT,$endDT){
+        try{
+            $sql = "SELECT SCREENED_STATUS FROM billing.EXCLUSIVE_CLIENT_MEMBER_MAPPING WHERE ENTRY_DT >= :START_DT AND ENTRY_DT <= :END_DT AND CLIENT_ID = :CLIENT_ID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DT", $startDT, PDO::PARAM_STR);
+            $res->bindValue(":END_DT", $endDT, PDO::PARAM_STR);
+            $res->bindValue(":CLIENT_ID", $clientID, PDO::PARAM_INT);
+            $res->execute();
+            $output = array();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                if($output[$result["SCREENED_STATUS"]]){
+                    $output[$result["SCREENED_STATUS"]]++;
+                } else{
+                    $output[$result["SCREENED_STATUS"]] = 1;
+                }
+            }
+            return $output;
+        } catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
 }
 ?>
