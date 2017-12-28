@@ -106,6 +106,6 @@ class RegistrationEnums {
   public static $otherText = "Other";
   public static $marathiValue = "'20'";
   
-  public static $campaignParamList = array('utm_campaign'=>'CAMPAIGN', 'campaignid'=>'CAMPAIGN','utm_term' =>'ADNAME','keyword'=>'KEYWORD','adgroupid'=>'ADGROUP','utm_medium'=>'MEDIUM');
+  public static $campaignParamList = array('utm_campaign'=>'CAMPAIGN', 'campaignid'=>'CAMPAIGN','utm_term' =>'ADNAME','keyword'=>'KEYWORD','adgroupid'=>'ADGROUP','utm_medium'=>'MEDIUM','gclid'=>'GCLID');
 }
 ?>

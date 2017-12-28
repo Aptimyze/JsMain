@@ -548,7 +548,21 @@ class billing_EXCLUSIVE_SERVICING extends TABLE {
         }
     }
     
-    
+    public function getAgentWiseInfoForRBInterestsMIS($startDT,$endDT){
+        try{
+            $sql = "SELECT AGENT_USERNAME, CLIENT_ID FROM billing.EXCLUSIVE_SERVICING WHERE ENTRY_DT >= :START_DT AND ENTRY_DT <= :END_DT";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":START_DT", $startDT, PDO::PARAM_STR);
+            $res->bindValue(":END_DT", $endDT, PDO::PARAM_STR);
+            $res->execute();
+            while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+                $output[$result["AGENT_USERNAME"]][] = $result["CLIENT_ID"];
+            }
+            return $output;
+        } catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
     
 }
 ?>

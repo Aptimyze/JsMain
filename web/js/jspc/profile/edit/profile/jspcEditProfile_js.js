@@ -2406,11 +2406,11 @@ EditApp = function(){
      */
     bindPhoneCommonEvents = function(fieldObject){
             
-      var regExIndian=/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([789]{1})([0-9]{9})$/;
+      var regExIndian=/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([1-9]{1})([0-9]{9})$/;
       var regExIndianLandline=/^[0-9]\d{2,4}[-. ]?\d{6,8}$/;
       var regExInternational=/^\+(?:[0-9][-. ]? ?){6,15}[0-9]$/;
       
-      var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
+      var phonePatternIndia = /^([1-9]{1}[0-9]{9})$/;
       var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
       
       var isd_regex = /^[+]?[0-9]+$/;
