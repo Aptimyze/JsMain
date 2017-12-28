@@ -54,7 +54,9 @@ class newjs_JPARTNER
                             $myrow[0] = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $paramArr['PROFILEID']);
                         }   
                         //Also Set in cache
-                        ProfileCacheLib::getInstance()->updateCache($myrow[0], ProfileCacheConstants::CACHE_CRITERIA, $paramArr['PROFILEID'], $this->cacheClassJpartner);
+                        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
+                            ProfileCacheLib::getInstance()->updateCache($myrow[0], ProfileCacheConstants::CACHE_CRITERIA, $paramArr['PROFILEID'], $this->cacheClassJpartner);
+                        }
                         
                         //This function filters only those keys which are asked for
                         $myrow[0] = self::getArrayWithRequiredFieldAndConditions($myrow[0],$fields);

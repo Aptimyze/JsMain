@@ -590,7 +590,8 @@ class Jpartner
                         $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
                         $notFilledCase = 1;
                     }
-                    ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
+                    if(false === ProfileCacheFunctions::isCommandLineScript("set"))
+                        ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
                 }
                 $myrow = newjs_JPARTNER::getArrayWithRequiredFieldAndConditions($fetchedArr,$parameter,$WhereCondition);
 		if($myrow && !$notFilledCase)
