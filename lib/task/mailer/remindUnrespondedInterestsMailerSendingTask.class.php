@@ -126,6 +126,7 @@ EOF;
 		$tpl->setSubject($subject);
         $emailSender->send();
         $status = $emailSender->getEmailDeliveryStatus();
+        ProfileCacheLib::getInstance()->__destruct();
         return $status;
     }
 }

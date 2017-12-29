@@ -78,11 +78,15 @@ public function phoneUpdateProcess($message)
 
 			$profileid=$this->profileObject->getPROFILEID();
 			$profileObject=$this->profileObject;
-			
+
 			sfContext::getInstance()->getRequest()->setParameter('phoneVerification',1);
-			if($this->isVerified() == 'Y') return true;
+			if($this->isVerified() == 'Y')
+ 				{
+				JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
+				return true;
+				}
 			switch ($this->phoneType)
-			{		
+			{
 
 				case 'M':
 				$paramArr=array('MOB_STATUS'=>'Y','PHONE_FLAG'=>'');
@@ -100,7 +104,7 @@ public function phoneUpdateProcess($message)
 				$contactObj->update($profileid,$paramArr);
 				break;
 			}
-
+			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
 			$this->profileObject->getDetail($profileid,'PROFILEID','*');
 			$verifiedLogObj= new PHONE_VERIFIED_LOG();
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
@@ -189,15 +193,14 @@ public function phoneUpdateProcess($message)
 				$otpLogObj->insertEntry($id,$this->getPhone(),$this->getIsd(),$channel);
             }
 
-			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",'Y');
-		
-			
-			return true;	
+
+
+			return true;
 	}
 
 
 public function sendSMSAfterVerification() {
-			
+
 			$sms=new InstantSMS("PHONE_VERIFY",$this->profileObject->getPROFILEID());
 			$sms->send();
 }
@@ -205,7 +208,7 @@ public function sendSMSAfterVerification() {
 
 
 public function sendMailerAfterVerification($noOfTimesVerified) {
-			
+
 			$activated =$this->profileObject->getACTIVATED();
 			$profileid=$this->profileObject->getPROFILEID();
 
@@ -213,7 +216,7 @@ public function sendMailerAfterVerification($noOfTimesVerified) {
                         {
 			CommonFunction::sendWelcomeMailer($profileid);
                         }
-                        
+
 }
 
 

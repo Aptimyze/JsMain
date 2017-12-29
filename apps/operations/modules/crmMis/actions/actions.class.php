@@ -29,7 +29,7 @@ class crmMisActions extends sfActions
 		$privilegeArr		=@explode("+", $privilegeStr);
 
 		$misHandlerObj          =new misGenerationhandler();
-		$mainPageDetails	=$misHandlerObj->fetchMainPageDetails($this->public);			
+		$mainPageDetails	=$misHandlerObj->fetchMainPageDetails($this->public);
 		$this->linkDetailsArr	=$misHandlerObj->fetchMainPageLinkDetails($privilegeArr, $mainPageDetails, $this->cid, $agentName);	
 		$this->setTemplate('misMainpage');	
         }
@@ -2754,5 +2754,157 @@ class crmMisActions extends sfActions
                 }
             }
         }
+    }
+
+    public function executeScreenRBInterestMISSelectDates(sfWebRequest $request) {
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+        $this->monthArr = array('04' => 'Apr', '05' => 'May', '06' => 'Jun', '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec', '01' => 'Jan', '02' => 'Feb', '03' => 'Mar');
+        for ($i = date("Y"); $i >= 2017; $i--) {
+            $yr[$i - 2015] = $i;
+        }
+        $this->yearArr = $yr;
+        unset($yr);
+        if($request->getParameter('submit')) {
+            $dateType = $request->getParameter('dateRange');
+            if($dateType == 'M'){
+                $month = $request->getParameter('dateWiseMonth');
+                $year = $request->getParameter('dateWiseYear');
+                $startDT = "$year-$month-01 00:00:00";
+                $daysInMonth = date('t',strtotime($startDT));
+                $endDT = "$year-$month-$daysInMonth 23:59:59";
+                if($year == 2017 && $month < 8){
+                    $noData = "No data exists for the selected date range";
+                }
+            } else if($dateType == 'C'){
+                $startDT = date("Y-m")."-01 00:00:00";
+                $day = date('d');
+                $endDT = date("Y-m")."-$day 23:59:59";
+            }
+            $this->redirect("/operations.php/crmMis/screenRBInterestMISAgentWiseData?cid=$this->cid&startDT=$startDT&endDT=$endDT&noData=$noData");
+        }
+    }
+
+    public function executeScreenRBInterestMISAgentWiseData(sfWebRequest $request){
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+        $this->startDT = $request->getParameter('startDT');
+        $this->endDT = $request->getParameter('endDT');
+        $noOfDays = date('t',strtotime($this->startDT));
+        $endDay = date('d',strtotime($this->endDT));
+        $days = $noOfDays > $endDay ? $endDay : $noOfDays;
+        $this->daysArray = range(1,$days);
+        $this->noData = $request->getParameter('noData');
+        if($this->noData)
+            $this->noData = "No data exists for the selected date range";
+        else{
+            $servicingObj = new billing_EXCLUSIVE_SERVICING("newjs_slave");
+            $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+            $agentWiseData = $servicingObj->getAgentWiseInfoForRBInterestsMIS($this->startDT,$this->endDT);
+            $this->agentWiseDetails = array();
+            $this->agentWiseData = array();
+            foreach ($agentWiseData as $agent=>$clientArr){
+                $this->agentWiseDetails[$agent] = $clientMemberMappingObj->getRBInterestsForAgent($clientArr,$this->startDT,$this->endDT);
+                $this->agentWiseData[$agent] = implode(",",$clientArr);
+            }
+
+            $todayRow = array();
+            foreach ($this->agentWiseDetails as $agent=>$dayWiseData){
+                foreach ($dayWiseData as $day=>$count){
+                    $todayRow[$day]["Y"] += $count["Y"];
+                    $todayRow[$day]["N"] += $count["N"];
+                    $todayRow[$day]["P"] += $count["P"];
+                    $todayRow[$day]["E"] += $count["E"];
+                    $todayRow[$day]["S"] += $count["S"];
+                    $todayRow[$day]["D"] += $count["D"];
+                }
+            }
+
+            $this->agentWiseDetails["TOTAL"] = $todayRow;
+
+            foreach ($this->agentWiseDetails as $agent=>$dayWiseData){
+                foreach ($dayWiseData as $day=>$count){
+                    $this->agentWiseDetails[$agent]["TOTAL"]["Y"] += $count["Y"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["N"] += $count["N"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["P"] += $count["P"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["E"] += $count["E"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["S"] += $count["S"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["D"] += $count["D"];
+                }
+            }
+        }
+    }
+
+    public function executeScreenRBInterestMISClientWiseData(sfWebRequest $request){
+        $this->cid = $request->getParameter('cid');
+        $this->startDT = $request->getParameter('startDT');
+        $this->name = $request->getParameter('name');
+        $this->endDT = $request->getParameter('endDT');
+        $noOfDays = date('t',strtotime($this->startDT));
+        $endDay = date('d',strtotime($this->endDT));
+        $days = $noOfDays > $endDay ? $endDay : $noOfDays;
+        $this->daysArray = range(1,$days);
+        $clients = explode(",",$request->getParameter('clients'));
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+        $purchases = new BILLING_PURCHASES("newjs_slave");
+        $userNames = $purchases->getUserName($clients);
+        $clientDetails = $clientMemberMappingObj->getRBInterestsForClients($clients,$this->startDT,$this->endDT);
+        $this->clientWiseDetails = array();
+        $this->profileIDMapping = array();
+        foreach ($clientDetails as $key=>$value){
+            $this->profileIDMapping[$userNames[$key]] = $key;
+            if(is_array($userNames) && $userNames[$key]){
+                $this->clientWiseDetails[$userNames[$key]] = $value;
+            } else{
+                $this->clientWiseDetails[$key] = $value;
+            }
+        }
+
+        $todayRow = array();
+        foreach ($this->clientWiseDetails as $agent=>$dayWiseData){
+            foreach ($dayWiseData as $day=>$count){
+                $todayRow[$day]["Y"] += $count["Y"];
+                $todayRow[$day]["N"] += $count["N"];
+                $todayRow[$day]["P"] += $count["P"];
+                $todayRow[$day]["E"] += $count["E"];
+                $todayRow[$day]["S"] += $count["S"];
+                $todayRow[$day]["D"] += $count["D"];
+            }
+        }
+        $this->clientWiseDetails["TOTAL"] = $todayRow;
+
+        foreach ($this->clientWiseDetails as $agent=>$dayWiseData){
+            foreach ($dayWiseData as $day=>$count){
+                $this->clientWiseDetails[$agent]["TOTAL"]["Y"] += $count["Y"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["N"] += $count["N"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["P"] += $count["P"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["E"] += $count["E"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["S"] += $count["S"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["D"] += $count["D"];
+            }
+        }
+    }
+
+    public function executeScreenRBInterestMISClientInfo(sfWebRequest $request)
+    {
+        $this->cid = $request->getParameter('cid');
+        $this->startDT = $request->getParameter('startDT');
+        $this->name = $request->getParameter('name');
+        $this->endDT = $request->getParameter('endDT');
+        $this->clientID = $request->getParameter('clientID');
+        $pid = $request->getParameter('pid');
+        $partnerObj = new SearchCommonFunctions();
+        $profileObj = Operator::getInstance('',$pid);
+        $profileObj->getDetail('','','*');
+        //dpp call without filters
+        $matchesObj = $partnerObj->getMyDppMatches('',$profileObj,'','','','',true,'','','','',true);
+        $this->dppCount = $matchesObj->getTotalResults();
+
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+        $clientInfo = $clientMemberMappingObj->getClientInfo($pid,$this->startDT,$this->endDT);
+        $this->sent = ($clientInfo["Y"]?$clientInfo["Y"]:0) + ($clientInfo["P"]?$clientInfo["P"]:0);
+        $this->skipped = $clientInfo["S"]?$clientInfo["S"]:0;
+        $this->discarded = $clientInfo["D"]?$clientInfo["D"]:0;
+        $this->notSent = ($clientInfo["N"]?$clientInfo["N"]:0) + ($clientInfo["E"]?$clientInfo["E"]:0);
     }
 }

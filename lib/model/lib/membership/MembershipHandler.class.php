@@ -1894,6 +1894,10 @@ class MembershipHandler
             ob_end_clean();
         }
         $data = json_decode($output, true);
+        if(MobileCommon::isApp()=="I" && $data["userType"] == memUserType::UPGRADE_ELIGIBLE){
+            $data["hamburger_message"]["bottom"] = "My Membership";
+            $data["hamburger_message"]["top"] = null;
+        }
         return $data;
     }
 
@@ -2480,6 +2484,23 @@ class MembershipHandler
         // print_r(array('profileid' => $profileid, 'currency' => $currency, 'last_main_transaction_services' => implode(",", $prevServPur), 'previous_discount_amount' => $prevDiscAmt, 'previous_final_amount' => $prevTotAmt, 'previous_discount_perc' => $prevDisc, 'rd_algo_calculated_discount_prec' => $discount_calc, 'rohan_algo_calculated_discount_prec' => $discount));
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
+        //Adding extra caluclation for handling discount
+        //Start JSC-3618
+        $billServiceStatus     = new BILLING_SERVICE_STATUS('newjs_slave');
+        $firstExpiry = 5;
+        $laterExpiry = 10;
+        $value=2;
+        $count = $billServiceStatus->getExpireCount($profileid);
+        if($count == $value){
+            $discount = $discount-$firstExpiry;
+        }else if($count>$value){
+            $discount = $discount-$laterExpiry;
+        }
+        if($discount<0){
+            $discount=0;
+        }else if($discount>80)
+            $discount=80;
+        //end JSC-3618
         return $discount;
     }
     
@@ -2850,7 +2871,7 @@ class MembershipHandler
                 }
             }
             JsMemcache::getInstance()->setHashObject(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY,$redisVal,  VariableParams::COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME);
-            return $discount?$discount:$otherDiscount;
+            return $discount;
         }
     }
     
@@ -2859,9 +2880,6 @@ class MembershipHandler
             $discountArr = JsMemcache::getInstance()->getHashAllValue(VariableParams::COMMUNITY_WELCOME_DISCOUNT_KEY);
             if($discountArr){
                 $discount = $discountArr[$communityId];
-                if(!($discount && $discount >= 0)){
-                    $discount = $discountArr[0];
-                }
             }
             else{
                 $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();

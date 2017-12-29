@@ -64,4 +64,21 @@ class incentive_SALES_CAMPAIGN_PROFILE_DETAILS extends TABLE {
                 return $output;
 
         }
+     public function getCountSentMailPreviousDate($startDate,$endDate){
+         try {
+             $sql="SELECT count(*) as count, campaign FROM incentive.SALES_CAMPAIGN_PROFILE_DETAILS where MAIL_SENT='Y' AND DATE >= :START_DATE AND DATE <= :END_DATE GROUP BY CAMPAIGN";
+             $res = $this->db->prepare($sql);
+             $res->bindValue(":START_DATE",$startDate,PDO::PARAM_STR);
+             $res->bindValue(":END_DATE",$endDate,PDO::PARAM_STR);
+             $res->execute();
+             while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                 $campaign = $row['campaign'];
+                 $count = $row['count'];
+                 $resArr[$campaign] = $count;
+             }
+         } catch (PDOException $e) {
+             throw new jsException($e);
+         }
+         return $resArr;
+     }
 }

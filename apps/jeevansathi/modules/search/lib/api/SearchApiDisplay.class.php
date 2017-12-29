@@ -225,12 +225,24 @@ class SearchApiDisplay
 			$offsetVal=1;
 			$this->viewedGender = $this->searchResultsData[0]['GENDER']; //check!!!!!
 			$decoratedMappingSearchDisplay = SearchConfig::decoratedMappingSearchDisplay();
+			$dbJprofile= new JPROFILE();
+			$arr=array("PROFILEID"=>$this->profileIdStr);
+			$data=$dbJprofile->getArray($arr,'','',"LAST_LOGIN_DT,PROFILEID");
+			$loginData= array();
+			if(is_array($data)){
+				foreach($data as $key=>$v){
+					$loginData[$v["PROFILEID"]] = $v["LAST_LOGIN_DT"];
+				}
+			}
+			
+			
 			foreach($this->profileids as $key=>$pid)
 			{
 				if(!($key == 0 && $this->searchResultsData[$key]['FEATURED']=='Y'))
 					$this->finalResultsArray[$pid]['OFFSET']=$offsetVal++;
 
 				$this->profileObjArr[$key]=Profile::getInstance("",$pid);
+				$this->searchResultsData[$key]['LAST_LOGIN_DT'] = $loginData[$pid]?$loginData[$pid]:$this->searchResultsData[$key]['LAST_LOGIN_DT'];
 				$this->profileObjArr[$key]->setHAVEPHOTO($this->searchResultsData[$key]['HAVEPHOTO']);
 				$this->profileObjArr[$key]->setGENDER($this->searchResultsData[$key]['GENDER']);
 				$this->profileObjArr[$key]->setPHOTOSCREEN($this->searchResultsData[$key]['PHOTOSCREEN']);
@@ -364,7 +376,7 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
-					
+				
 				$this->finalResultsArray[$pid]['availforchat']= false;
 				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
 				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
@@ -444,15 +456,18 @@ class SearchApiDisplay
 				else
 					$this->finalResultsArray[$pid]['BOLDLISTING']='N';
 
-				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']); 
-				$this->finalResultsArray[$pid]['VERIFICATION_SEAL']=$this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL']);
-                                if($this->finalResultsArray[$pid]['VERIFICATION_SEAL'])
+				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']);
+                                $documentsAndAadhaar = $this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL'],$withAadhaar = 1);
+                                
+                                if($documentsAndAadhaar['documents'])
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
                                 
+                                $this->finalResultsArray[$pid]['VERIFICATION_SEAL'] = $documentsAndAadhaar['documents'];
+                                
                 //aadhar verification part
-                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getFinalVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$pid);
+                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getAadhaarAndVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$documentsAndAadhaar);
 
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
@@ -499,6 +514,7 @@ class SearchApiDisplay
 							
 			}
 		}
+		
 		
 	}
 
@@ -817,6 +833,7 @@ class SearchApiDisplay
 	**/
 	public function getUserLoginStatus($gtalkStatus,$jsChatStatus,$lastLoginDate)
 	{
+		
                 if($jsChatStatus == 1)
                         return 'Online now';
                 elseif($gtalkStatus == 1)
@@ -834,7 +851,11 @@ class SearchApiDisplay
 	**/
 	function getLastLogin($lastLoginDate)
 	{
-		$lastLogin = explode("T",$lastLoginDate);
+		if(strpos($lastLoginDate,"T"))
+			$lastLogin = explode("T",$lastLoginDate);
+		else
+			$lastLogin = explode(" ",$lastLoginDate);
+		
 		//$lastLoginDate = $lastLogin[0];
                 // input date format is (date T time Z), After exploding strinf at 'T' and removinf 'Z' from the string date time os passed.
 		$timeText = CommonUtility::convertDateToDay($lastLogin[0].' '.rtrim($lastLogin[1],'Z'));
@@ -847,7 +868,7 @@ class SearchApiDisplay
 	* This function is used to get seal info i.e. decode VERIFICATION SEAL
 	* @param - $verificationSeal Verification Seal of user as per API requirement
 	*/
-	public function getSealInfo($verificationSeal='0')
+	public function getSealInfo($verificationSeal='0',$withAadhaar=0)
 	{ 
 			if($verificationSeal == '0')
 				return 0;
@@ -875,14 +896,43 @@ class SearchApiDisplay
 											break;
 											
 									}
+                                                                        if($withAadhaar && $value == 'A')
+                                                                           $hasAadhaar = 1;
 							}
 						}
 				}
-				if(!is_array($displaySeal))
+                                if($withAadhaar){
+                                    if($hasAadhaar){
+                                        if(is_array($displaySeal))
+                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        else
+                                            $returnArr['documents'] = 1;
+
+                                        $returnArr['Aadhaar'] = "A";
+                                    }
+                                    else{
+                                        if(is_array($displaySeal))
+                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
+                                        else
+                                            $returnArr['documents'] = 1;
+                                    }
+                                    return $returnArr;
+                                }
+                                
+                                if(!is_array($displaySeal)){
+                                        if($withAadhaar){
+                                            $returnArr['documents'] = 1;
+                                            return $returnArr;
+                                        }
 					return 1;
-				
+                                }
+                                
 				return array_values(array_unique($displaySeal));
 			}
+                        if($withAadhaar && in_array('A', $verificationSeal)){
+                                    $returnArr['Aadhaar'] = "A";
+                                    return $returnArr;
+                        }
 			return 0;
 							
 		
@@ -938,5 +988,15 @@ class SearchApiDisplay
                 return 2;
         else
                 return $verificationStatus;
+    }
+    
+    private function getAadhaarAndVerificationStatus($verificationStatus,$seal){
+        if($verificationStatus && $seal['Aadhaar'] == 'A')
+            return 3;
+        else if(in_array('A', $seal))
+            return 2;
+        else if($verificationStatus)
+            return 1;
+        return 0;
     }
 }

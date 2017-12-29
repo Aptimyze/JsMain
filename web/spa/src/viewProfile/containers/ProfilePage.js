@@ -78,11 +78,17 @@ class ProfilePage extends React.Component {
           this.state.ucbrowser = true;
         }
         this.GAObject = new GA();
+        this.onlineCallTrack={};
     }
 
     componentDidUpdate(prevprops) {
-      //  console.log('componentDidUpdate');
-      this.bindPage();
+      
+      if(this.state.dataLoaded && !this.props.onlineCalls[this.state.profilechecksum] && !this.onlineCallTrack[this.state.profilechecksum] )
+      {
+            this.onlineCallTrack[this.state.profilechecksum] = 1;  
+            this.props.updateOnlineInfo(this.state.profilechecksum);
+        }
+            this.bindPage();
        jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);
 
 
@@ -695,8 +701,8 @@ swipeNextProfile(nextOrPrev){
                          Header = this.props.AboutInfo.username;
                     }
                 }
-
-                AboutView = <div id="showAbout"><AboutTab show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
+                 
+                AboutView = <div id="showAbout"><AboutTab onlineInfo={this.props.onlineCalls[this.state.profilechecksum]} show_gunascore={this.props.show_gunascore} profilechecksum={this.state.profilechecksum} life={this.props.LifestyleInfo} about={this.props.AboutInfo} astroSent={this.props.astroSent} checkUC={this.state.ucbrowser}></AboutTab></div>;
 
                 FamilyView = <FamilyTab username={this.props.AboutInfo.username} family={this.props.FamilyInfo} checkUC={this.state.ucbrowser}></FamilyTab>;
 
@@ -883,7 +889,9 @@ const mapStateToProps = (state) => {
        buttonDetails: state.ProfileReducer.buttonDetails,
        contactAction: state.contactEngineReducer,
        historyObject : state.historyReducer.historyObject,
-       calData : state.ProfileReducer.calObject
+       calData : state.ProfileReducer.calObject,
+       onlineCalls : state.ProfileReducer.onlineCalls,
+       
     }
 }
 
@@ -919,7 +927,15 @@ const mapDispatchToProps = (dispatch) => {
         jsb9TrackRedirection : (time,url) => {
             jsb9Fun.recordRedirection(dispatch,time,url)
         },
-        setCALShown : ()=> {dispatch({type: 'SET_CAL_SHOWN',payload:{}});}
+        setCALShown : ()=> {dispatch({type: 'SET_CAL_SHOWN',payload:{}});},
+        updateOnlineInfo : (pChecksum)=> {
+            let presenceUrl = `https://presence.jeevansathi.com/jspresence/v1/presence?pfids=${pChecksum}&idType=checksum`;
+            commonApiCall(presenceUrl,'','','GET').then((res)=>{
+                
+                let status = res.data ? (res.data.length ? 1 : 2) : 2;    
+                dispatch({type:'SET_ONLINE_CALL',payload:{pc:pChecksum, online:status}});
+            });
+        }
 
       }
 }

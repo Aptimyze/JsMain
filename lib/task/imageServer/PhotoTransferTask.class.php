@@ -145,48 +145,81 @@ EOF;
 	{
 		if($url)
 		{
+			$realUrl = $url;
 			$url = PictureFunctions::getCloudOrApplicationCompleteUrl($url);
 			$isaObj = new ImageServerApi;
-			
-			$serverOutput = $isaObj->generateUploadRequest($id,$url,$type,$contentType);
-			if($serverOutput && is_array($serverOutput))
-			{
-				if($serverOutput["urlFile"])
+			if(strstr($url,"mediacdn.jeevansathi.com") || strstr($url,"jeevansathi.s3.amazonaws.com")){
+				if(is_array($type) && array_key_exists("archive",$type) && !array_key_exists("optimise",$type) && strstr($url,"jeevansathi.s3.amazonaws.com"))
 				{
-					$server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;// make a function call
-					$serverUrl = $server."/".$serverOutput["urlFile"];
-				}	
-			}
-			else
-			{
-				if($serverOutput == "ERR_FILE_EXISTS")
-                                {
-					$serverOutput1 = $isaObj->generateUrlRequestFromPid($id);
-					if($serverOutput1 && is_array($serverOutput1))
-                        		{
-						if($serverOutput1["urlFile"])
-						{
-                                		        $server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
-                                        		$serverUrl = $server."/".$serverOutput1["urlFile"];
-        	                        	}
-	
-                        		}
+					$serverOutput = $isaObj->generateDeleteRequestFromPid($id);
+					if($serverOutput && is_array($serverOutput) && $serverOutput["urlFile"])
+					{
+						if($serverOutput["deleted"]=="Y")
+							$serverUrl =IMAGE_SERVER_ENUM::$cloudArchiveUrl."/".$serverOutput["urlFile"];
+					}
+					elseif($serverOutput!="ERR_UNUSED_PID")
+					{
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+					}
 					else
 					{
-						$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput." AND ".$serverOutput1;
+							$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$deleted);
 					}
-                                }
-				elseif($serverOutput == "ERR_URL_BLANK")
-				{
-					$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
-					$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+					unset($isaObj);
+				
 				}
-                                else
-                                {
-					$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
-                                }
+				else
+					return $realUrl;
+			}else{
+				
+				$serverOutput = $isaObj->generateUploadRequest($id,$url,$type,$contentType);
+				if($serverOutput && is_array($serverOutput))
+				{
+					if($serverOutput["urlFile"])
+					{
+						$server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;// make a function call
+						$serverUrl = $server."/".$serverOutput["urlFile"];
+						if(strpos($serverOutput["urlFile"],$id)==FALSE){
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR Diff Id and URl= ".$serverOutput["urlFile"];
+						}	
+					}
+					
+				}
+				else
+				{
+					if($serverOutput == "ERR_FILE_EXISTS")
+	                                {
+						$serverOutput1 = $isaObj->generateUrlRequestFromPid($id);
+						if($serverOutput1 && is_array($serverOutput1))
+	                        		{
+							if($serverOutput1["urlFile"])
+							{
+	                                		        $server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
+	                                        		$serverUrl = $server."/".$serverOutput1["urlFile"];
+	                                        		if(strpos($serverOutput1["urlFile"],$id)==FALSE){
+														$this->errorArray[] = "AUTOID = ".$id." & ERROR Diff Id and URl in ERR_FILE_EXISTS= ".$serverOutput1["urlFile"];
+													}
+	        	                        	}
+		
+	                        		}
+						else
+						{
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput." AND ".$serverOutput1;
+						}
+	                                }
+						elseif($serverOutput == "ERR_URL_BLANK")
+						{
+							$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+						}
+		                                else
+		                                {
+							$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+		                                }
+				}
+				unset($isaObj);
+				
 			}
-			unset($isaObj);
 		}
 		else
 		{

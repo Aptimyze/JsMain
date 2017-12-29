@@ -1891,9 +1891,9 @@ SQL;
                 try {
                         if ($source != "" && $source != NULL) {
                                 $source_names = '"'.implode('","', array_map('addSlashes',$source)).'"';
-                                $sql = "SELECT  DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND s.GROUPNAME IN ($source_names)";
+                                $sql = "SELECT  DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL,ct.GCLID FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND s.GROUPNAME IN ($source_names)";
                         } else {
-                                $sql = "SELECT DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE";
+                                $sql = "SELECT DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL,ct.GCLID FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE";
                         }
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":FROMDATE", $fromDate." 00:00:00", PDO::PARAM_STR);
@@ -1924,7 +1924,20 @@ SQL;
                 throw new jsException($e);
             }
         }
-
+        
+        public function getMtongue($profileID){
+            try{
+                $sql = "SELECT MTONGUE from newjs.JPROFILE where PROFILEID = :PROFILEID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+                $prep->execute();
+                if($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    return $row["MTONGUE"];
+                }
+            }catch(Exception $e){
+                throw new jsException($e);
+            }
+        }
 }
 
 ?>

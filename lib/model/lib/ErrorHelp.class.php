@@ -15,7 +15,7 @@ class ErrorHelp{
 		
 		public static $ERR_PHONE_RES = array(1=>array('id'=>"err_phone_invalid",'msg'=>"Provide a valid landline number."),2 => array('id'=>"err_phone_isd",'msg'=>"Please provide country code by selecting country."),3=>array('id'=>"err_landline_revoke","msg"=>"This Phone is banned due to terms of use violation"));
 		
-		public static $ERR_PASSWORD = array(1=>array('id'=>"err_pass_invalid",'msg'=>"Total length of the password needs to be 8 characters or more."),2 => array('id'=>"err_pass_common",'msg'=>"You cannot use this password because it is guessable. Please choose a tougher password to make your partner search safe."),3=>array('id'=>"err_pass_email",'msg'=>"Your password should not be guessable from your email id. Please choose a tougher password to make your partner search safe."));
+		public static $ERR_PASSWORD = array(1=>array('id'=>"err_pass_invalid",'msg'=>"Total length of the password needs to be 8 characters or more."),2 => array('id'=>"err_pass_common",'msg'=>"You cannot use this password because it is guessable. Please choose a tougher password to make your partner search safe."),3=>array('id'=>"err_pass_email",'msg'=>"Your password should not be guessable from your email id. Please choose a tougher password to make your partner search safe."),4=>array('id'=>"err_pass_only_numeric",'msg'=>"Your password cannot be only numeric."));
 		//public static $ERR_GENDER=array(1=>array('id'=>"gender_required",'msg'=>"<div class=\"err_msg\">Please choose a gender.</div>"));
 		//public static $ERR_HEIGHT='<div class="err_msg">Please select a height.</div>';
 		public static $ERR_DOB=array(1=>array('id'=>"err_gender",'msg'=>'Please choose a gender.'));

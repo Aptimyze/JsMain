@@ -1,29 +1,6 @@
 
 <!--start:top header hamburger-->
-~assign var=langText value= "Hindi Version"`
-~assign var=langID value= "hindiLink"`
-~assign var=translateURL value= JsConstants::$hindiTranslateURL`
-
 ~if $loggedIn`
-    ~if $mtongue eq 20 && false`
-        ~assign var=langText value= "Marathi Version"`
-        ~assign var=langID value= "marathiLink"`
-        ~assign var=translateURL value= JsConstants::$marathiTranslateURL`
-    ~/if`
-    <script>
-        var ctrlHam= document.getElementById("~$langID`");
-        if(typeof ctrlHam !== undefined && ctrlHam !== null){
-            let url = window.location.href;
-            url = url.split(".")[0];
-            if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
-                ~assign var=langText value= "In English"`
-                ~assign var=translateURL value= "~JsConstants::$siteUrl`"`
-                if(!readCookie("AUTHCHECKSUM")){
-                    ~assign var=translateURL value= "~$translateURL`/P/logout.php"`
-                }
-            }
-        }
-    </script>
     ~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
     <div id="hamburger" style="width:85%" class="white posfix fullheight">
 
@@ -269,17 +246,6 @@
     <!--end:edit profile-->
 
 ~else`
-    <script>
-        var ctrlHam= document.getElementById("~$langID`");
-        if(typeof ctrlHam !== undefined && ctrlHam !== null){
-            let url = window.location.href;
-            url = url.split(".")[0];
-            if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
-                ~assign var=langText value= "In English"`
-                ~assign var=translateURL value= "http://www.jeevansathi.com"`
-            }
-        }
-    </script>
     <div id="hamburger" class="white posfix wid90p fullheight">
         <div id="outerHamDiv">
             <div id="mainHamDiv">

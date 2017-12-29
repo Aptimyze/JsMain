@@ -744,12 +744,18 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-	    $serviceId =$serviceId."%";
-	    $expiryDate =date("Y-m-d");  	
-            $sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
+            
+            $serviceId =$serviceId."%";
+            $expiryDate =date("Y-m-d");
+            $expiryDate= date("Y-m-d", strtotime("$expiryDate - 15 days"));
+            $activatedDate=date("Y-m-d");
+            $activatedDate = date("Y-m-d", strtotime("$activatedDate- 15 days"));
+            //$sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
+            $sql = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS where (SERVICEID LIKE :SERVICEID AND ( (ACTIVATED_ON <:ACTIVATED_ON AND ACTIVE='Y')OR(EXPIRY_DT>:EXPIRY_DT AND ACTIVE='E')))" ;
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":EXPIRY_DT",$expiryDate,PDO::PARAM_STR);
-	    $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);	
+           $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);
+            $prep->bindValue(":ACTIVATED_ON",$activatedDate,PDO::PARAM_STR);
             $prep->execute();
             while($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profiles[] = $res['PROFILEID'];
@@ -1081,6 +1087,21 @@ class BILLING_SERVICE_STATUS extends TABLE {
             $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
             $prep->bindValue(":ID",$id,PDO::PARAM_INT);
             $prep->execute();
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+    
+    public function getExpireCount($profileid){
+        try{
+            $sql = "SELECT COUNT(*) as count from billing.SERVICE_STATUS where PROFILEID = :PROFILEID and ACTIVE IN ('Y','E') AND SERVEFOR LIKE '%F%'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            if($row = $prep->fetch(PDO::FETCH_ASSOC))
+                return $row["count"];
+                else
+                    return 0;
         }catch(Exception $e){
             throw new jsException($e);
         }

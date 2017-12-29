@@ -3,7 +3,7 @@ var verificationFailedOnce=0,currentPhoneType='M',chatHideIntervalOb;
 var noOfAjaxRequestAllowed = 18;
 var save=0;
 var isd_regex = /^([0-9]{1,3})$/;///^[+]?[0-9]+$/;
-var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+var phonePatternIndia = /^([1-9]{1}[0-9]{9})$/;
 var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 var isdCodes = ["0", "91","+91"];
 var fromReg=0,groupname;

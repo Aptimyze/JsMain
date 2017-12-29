@@ -64,8 +64,13 @@ class BrowserNotificationEnums
     );
     public static $staticContentNotification = array();  
       
+    public static $appLoginCondition = 7;
+    
+    
+    public static $defaultIconKeyword = 'D';
     public static $publishedNotificationLog = "/web/uploads/NotificationLogs/PublishedNotifications.txt";
     public static $transferredNotificationlog = "/web/uploads/NotificationLogs/TransferredNotifications.txt";
+    public static $defaultNotificationLogo = "/images/JSLogo.png";
     public static $addNotificationLog = false;  //add published and transferred msg keys in logs
     public static $notificationChannelType = array("BROWSER_NOTIFICATION","FSOAPP_NOTIFICATION");
     public static $instantNotifications = array("AGENT_ONLINE_PROFILE","AGENT_FP_PROFILE", "PROFILE_VISITOR","EOI","MESSAGE_RECEIVED","EOI_REMINDER");
@@ -88,5 +93,9 @@ class BrowserNotificationEnums
     public static $variableMessageLimit = array("MESSAGE_RECEIVED"=>30,"EOI_REMINDER"=>35); //no of char limit in variable message in notification
 
     public static $notificationResponseTracking = array("EOI"=>JSTrackingPageType::EOI_NOTIFICATION_JSMS,"EOI_REMINDER"=>JSTrackingPageType::EOI_REMINDER_NOTIFICATION_JSMS);  //response tracking for notification whose landing page is Profile Detail page
+
+    public static $EOINotificationReminderMsg = " has sent you a reminder. Kindly respond with an 'Accept'/'Decline'.";
+    
+    
 }
 ?>

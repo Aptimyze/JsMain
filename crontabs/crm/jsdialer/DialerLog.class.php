@@ -9,6 +9,7 @@ class DialerLog
 
 	public function logError($sql,$campaignName='',$dbConnect='',$ms='',$processName='')
 	{
+		$handleError	=0;
 		$today 		=@date("Y-m-d H:m:i");
 		$todayDt	=date("Ymd");
 		$filename 	=$this->logFilePath."logerror_$todayDt.txt";
@@ -28,11 +29,16 @@ class DialerLog
 			if(!chmod($filename, 0777)){
 				$string .=" \nCannot change the mode of file ($filename)";
 			}
+			$handleError =1;
+			if(!$processName)
+				$processName ='File Handler Error';
 		}
 
 		// Error mail
-		if($processName)
+		if($processName || $handleError){
 			$this->sendMail($string,$processName);
+			die();
+		}
 	}
 	public function logOnlinePriority($profileid,$npriority,$dialStatus='',$priorityType='',$campaignName,$sourceType='',$alloted='')
 	{

@@ -78,5 +78,22 @@ class visitoralert_VISITOR_ALERT_OPTION extends TABLE
         }
         
     }
+    
+    public function getResult($profileid){
+        try {
+            $sql= "SELECT ALERT_OPTION FROM visitoralert.VISITOR_ALERT_OPTION WHERE PROFILEID = :PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
+            $prep->execute();
+            if($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $out = $row["ALERT_OPTION"];
+            }
+            return $out;
+            
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

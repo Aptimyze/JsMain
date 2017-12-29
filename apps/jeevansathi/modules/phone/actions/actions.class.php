@@ -366,9 +366,12 @@ class phoneActions extends sfActions
 	$this->loginProfile->getDetail($loginProfileid,"PROFILEID","*");
   if($this->loginProfile->getACTIVATED()=='N')
 		$this->fromReg = 1;
-
-
-	// to check if the current profile's primary number is duplicate or not
+  $pVerified  = phoneVerification::hidePhoneVerLayer($this->loginProfile);
+  if($pVerified=='Y'){
+    header("Location:".JsConstants::$siteUrl);
+    die;
+}
+// to check if the current profile's primary number is duplicate or not
 	if (JsCommon::showDuplicateNumberConsent($loginProfileid))
 		$this->showDuplicateConsentMsg = 'Y' ;
 	else
@@ -403,22 +406,27 @@ class phoneActions extends sfActions
 
 
 
-//action for pc phone verification ....... By Palash Chordia 
+//action for pc phone verification ....... By Palash Chordia
   public function executePhoneVerificationPcDisplay(sfWebRequest $request)
 		{
 							$request->setParameter("currentPageName", "Phone verficaion Jspc");
 	$this->loginData=$request->getAttribute("loginData");
 	$loginProfileid = $this->loginData[PROFILEID];
 	$this->loginProfile=LoggedInProfile::getInstance();
+  $pVerified  = phoneVerification::hidePhoneVerLayer($this->loginProfile);
+  if($pVerified=='Y'){
+    header("Location:".JsConstants::$siteUrl);
+    die;
+}
 
 	// to check if the current profile's primary number is duplicate or not
 	if (JsCommon::showDuplicateNumberConsent($loginProfileid))
 		$this->showDuplicateConsentMsg = 'Y' ;
-	else 
+	else
 		$this->showDuplicateConsentMsg = 'N' ;
 
 	//incomplete check
-	if ($this->loginProfile->getINCOMPLETE()=='Y') 
+	if ($this->loginProfile->getINCOMPLETE()=='Y')
 		sfContext::getInstance()->getController()->redirect("/register/page2?incompleteUser=1");
 
 

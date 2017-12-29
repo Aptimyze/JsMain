@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
         this.state = {
             insertError: false,
             errorMessage: "",
-            timeToHide: 3000,
+            timeToHide: 5000,
             showLoader: false,
             showPromo: false,
             showCaptchDiv: false,
@@ -83,6 +83,11 @@ class LoginPage extends React.Component {
        {
            this.addCaptchaDiv();
        }
+
+        if(localStorage.getItem('login')){
+            this.addFreshChatWidget();
+        }
+
        _this.GAObject.trackJsEventGA("jsms","new","1");
     }
 
@@ -141,6 +146,29 @@ class LoginPage extends React.Component {
         }
     }
 
+    addFreshChatWidget() {
+        var script = document.createElement("script");
+        script.src = CONSTANTS.FRESHCHAT_WIDGET_URL;
+        script.async = true;
+        script.onSuccess = this.deleteFreshChat();
+        document.body.appendChild(script);
+    }
+
+    deleteFreshChat(){
+        window.fcSettings = {
+            token: CONSTANTS.FRESHCHAT_TOKEN,
+            host: "https://wchat.freshchat.com",
+            onInit: function() {
+                window.fcWidget.on('widget:loaded', function() {
+                    window.fcWidget.user.clear();
+                    window.fcWidget.destroy();
+                    localStorage.removeItem("login");
+                    localStorage.setItem("logout",1);
+                });
+            }
+        };
+    }
+
     showError(inputString) {
         let _this = this;
         this.setState ({
@@ -156,8 +184,8 @@ class LoginPage extends React.Component {
     }
 
     doLogin() {
-        let emailVal = document.getElementById("email").value;
-        let passVal = document.getElementById("password").value;
+        let emailOrMobileVal = document.getElementById("email").value.trim();
+        let passVal = document.getElementById("password").value.trim();
         let g_recaptcha_response;
         let captcha;
         if ( document.getElementById("g-recaptcha-response") )
@@ -167,21 +195,53 @@ class LoginPage extends React.Component {
         }
 
         this.GAObject.trackJsEventGA("Login-jsms","Login",this.GAObject.getGenderForGA());
-        var validate = validateInput('email',emailVal);
-        if(emailVal.length == 0 && passVal.length == 0) {
+        // var validate = validateInput('email',emailOrMobileVal);
+        // if(emailOrMobileVal.length == 0 && passVal.length == 0) {
+        //     this.showError(ErrorConstantsMapping("LoginDetails"));
+        // } else if(email.length == 0) {
+        //     this.showError(ErrorConstantsMapping("EnterEmail"));
+        // } else if(validate.responseCode == 1) {
+        //     this.showError(validate.responseMessage);
+        //     document.getElementById("emailErr1").classList.remove("dn");
+        // } else if(passVal.length == 0) {
+	       // this.showError(ErrorConstantsMapping("EnterPass"));
+        // } else {
+        //     this.props.doLogin(this,emailOrMobileVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
+        //     this.setState ({
+        //         showLoader : true
+        //     })
+        // }
+
+
+        if(emailOrMobileVal.length == 0 && passVal.length == 0) {
             this.showError(ErrorConstantsMapping("LoginDetails"));
-        } else if(email.length == 0) {
-            this.showError(ErrorConstantsMapping("EnterEmail"));
-        } else if(validate.responseCode == 1) {
-            this.showError(validate.responseMessage);
-            document.getElementById("emailErr1").classList.remove("dn");
-        } else if(passVal.length == 0) {
-	       this.showError(ErrorConstantsMapping("EnterPass"));
-        } else {
-            this.props.doLogin(this,emailVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
-            this.setState ({
-                showLoader : true
-            })
+        }else if(emailOrMobileVal.length == 0) {
+            this.showError(ErrorConstantsMapping("EnterEmailnPass"));
+        }else{
+            //check for email
+            var validateEmail = validateInput('email',emailOrMobileVal);
+
+            //invalid email
+            if(validateEmail.responseCode == 1) {
+                //check for mobile
+                var validateMobile = validateInput('phone',emailOrMobileVal);
+                if(validateMobile == false){
+                    this.showError(ErrorConstantsMapping("ValidEmailnPass"));
+                    document.getElementById("emailErr1").classList.remove("dn");
+                    return;
+                }
+            }
+
+            if(passVal.length == 0) {
+                this.showError(ErrorConstantsMapping("EnterPass"));
+                return;
+            }
+
+            //call api
+            this.props.doLogin(this,emailOrMobileVal,passVal,g_recaptcha_response,captcha,this.addCaptchaDiv.bind(this));
+                this.setState ({
+                    showLoader : true
+                })
         }
     }
 
@@ -276,7 +336,7 @@ class LoginPage extends React.Component {
                                     <div className="icons1 uicon"></div>
                                 </div>
                                 <div className="fl clasone wid80p">
-                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig f15" name="email" placeholder="Email" />
+                                    <input  onChange={(e) => this.handleEmailChange(e)} type="email" id="email" className="color9 fullwid fontlig f15" name="email" placeholder="Email Id / Primary Mobile Number" />
                                 </div>
                                 <div id="emailErr1" className="fl wid10p txtr dn">
                                     <i className="mainsp err2_icon vertmid"></i>
@@ -336,13 +396,27 @@ class LoginPage extends React.Component {
             registeredMessageDiv = <div className="txtc pad25 f15 white fontlig">You need to be a Registered Member <br></br>to connect with this user</div>;
         }
 
-        let newHref = CONSTANTS.HINDI_SITE, langText = "हिंदी में";
+        let newHref = CONSTANTS.HINDI_SITE, langText = "In Hindi";
         let url = window.location.href;
+        let langLinkOnLogin;
         url = url.split(".")[0];
-        if(url.indexOf('hindi') !== -1 || url.indexOf('marathi') !== -1){
+        if(url.indexOf('hindi') != -1 || url.indexOf('marathi') != -1){
             newHref = CONSTANTS.SITE_URL + "/P/logout.php";
             langText = "In English";
+            langLinkOnLogin = <div className="txtc pad2">
+                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+            </div>
+        } else{
+            let marathiHref = CONSTANTS.MARATHI_SITE, marathiText = "In Marathi";
+            langLinkOnLogin = <div className="txtc pad2">
+                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+                <a className="pad2" href="#">&nbsp;&nbsp;/&nbsp;&nbsp;</a>
+                <a id="marathiLinkOnLogin" href={marathiHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Marathi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{marathiText}</a>
+            </div>
         }
+        langLinkOnLogin = <div className="txtc pad2">
+            <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
+        </div>
         return (
             <div className="scrollhid" id="LoginPage">
                 <MetaTagComponents page="LoginPage"/>                
@@ -370,10 +444,7 @@ class LoginPage extends React.Component {
                                             {captchDiv}
                                             {buttonView}
                                             {appDownloadView}
-
-                                            <div className="txtc pad2">
-                                                <a id="hindiLinkOnLogin" href={newHref} onClick={()=>this.GAObject.trackJsEventGA("Login-jsms","Hindi Site",this.GAObject.getGenderForGA())} className="f16 white fontlig">{langText}</a>
-                                            </div>
+                                            {langLinkOnLogin}
                                         </div>
                                     </div>
                                 </div>

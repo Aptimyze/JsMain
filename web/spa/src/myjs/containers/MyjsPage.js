@@ -21,7 +21,7 @@ import PromoObject from '../components/PromoObject';
 import * as jsb9Fun from '../../common/components/Jsb9CommonTracking';
 import AppPromo from "../../common/components/AppPromo";
 import ShowBrowserNotification from '../components/ShowBrowserNotification';
-
+let API_SERVER_CONSTANTS = require ('../../common/constants/apiServerConstants');
 
 require ('../style/jsmsMyjs_css.css');
 
@@ -101,8 +101,30 @@ export  class MyjsPage extends React.Component {
 		//	this.hideLoader('hide');
 		}		
 		this.GAObject.trackJsEventGA("jsms","new","1");
+
+		this.firebaseScripts();
 	}
 
+	firebaseScripts(){
+		this.addScriptTag('https://www.gstatic.com/firebasejs/3.6.1/firebase.js');
+		let _this = this;
+		setTimeout(function(){
+			_this.addScriptTag('https://www.gstatic.com/firebasejs/4.3.1/firebase-app.js')
+		},2000)
+		setTimeout(function(){
+			_this.addScriptTag('https://www.gstatic.com/firebasejs/4.3.1/firebase-messaging.js')
+		},4000)
+		setTimeout(function(){
+			_this.addScriptTag(API_SERVER_CONSTANTS.API_SERVER+'/js/main_sw_register.js')
+		},8000)
+	}
+
+	addScriptTag(url){
+		var browserNotification = document.createElement("script");
+        browserNotification.src = url;
+        browserNotification.async = true;
+        document.head.appendChild(browserNotification);
+	}
 
 	componentDidUpdate(){
 		jsb9Fun.recordDidMount(this,new Date().getTime(),this.props.Jsb9Reducer);

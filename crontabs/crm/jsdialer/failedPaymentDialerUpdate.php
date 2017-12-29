@@ -24,6 +24,7 @@ $dialerApplicationObj = new DialerApplication();
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
 $campaignName	='FP_JS';
 $action		='STOP';
+$action1	='STOP-D';
 $str		='Dial_Status=0';
 $npriority	=5;
 $last20MinTime	=date("Y-m-d H:i:s",time()-10.5*60*60-25*60);
@@ -38,12 +39,16 @@ $allDataArr	=$profilesArr['ALL_DATA'];
 //$allocatedArr	=getAllocatedProfiles($eligibleArr,$db_master);
 $allPids	=array_keys($allDataArr);
 $deletedArr	=$dialerApplicationObj->getDeletedProfiles($allPids,$db_js);
-$paidArr	=getPaidProfiles($eligibleArr,$db_master,$dateTime);
-$eligibleArrNew	=array_merge($paidArr,$deletedArr);
-$eligibleArrNew	=array_unique($eligibleArrNew);
-$eligibleArrNew =array_values($eligibleArrNew);
-// Prioritization logic
+$paidArr	=getPaidProfiles($allPids,$db_master,$dateTime);
+$paidDeletedArrNew	=array_merge($paidArr,$deletedArr);
+$paidDeletedArrNew	=array_unique($paidDeletedArrNew);
+$paidDeletedArrNew 	=array_values($paidDeletedArrNew);
+if(is_array($allPids)){
+	$remainArr =array_diff($allPids,$paidDeletedArrNew);	
+	$remainArr =array_values($remainArr);
+}
 
+// Prioritization logic
 if(count($allDataArr)>0){
 	foreach($allDataArr as $profileid=>$csvEntryDate){
 
@@ -58,21 +63,13 @@ if(count($allDataArr)>0){
 		} else{
             $priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
 		}
-		/*Old Prioritization logic
-		 * if(strtotime($csvEntryDate)>=$last20MinTime){
-			// Prioritize - with new priority
-			$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);
-		}else{
-			// De-prioritize - with old priority
-			$priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
-		}*/
 	}
 }
 
-// Stop profiles which are paid and allocated
-if(count($eligibleArrNew>0)) {
-    foreach($eligibleArrNew as $key=>$profileid){
-		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
+// Stop profiles which are paid 
+if(count($paidDeletedArrNew>0)) {
+    foreach($paidDeletedArrNew as $key=>$profileid){
+		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0,Last_disposition='Done' WHERE PROFILEID='$profileid'";
 		mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
 		//deleteProfiles($db_master,$profileid);	
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
@@ -86,17 +83,18 @@ if(count($eligibleArrNew>0)) {
 	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime' AND Last_disposition IS NOT NULL AND Last_disposition!='$scbValue'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
 
-if(is_array($inEligibleArr)){
-        foreach($inEligibleArr as $key=>$pid){
+if(is_array($remainArr)){
+        foreach($remainArr as $key=>$pid){
 		$getLatDispositionArr 	=checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
 		$getLatDisposition	=$getLatDispositionArr['Last_disposition'];
 		$easyCode 		=$getLatDispositionArr['easycode'];
             	if($getLatDisposition==$scbValue){
 		  $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=3 WHERE PROFILEID='$pid' AND Dial_Status!='3' AND easycode='$easyCode'";
-		  mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+		  mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,'1',$campaignName);
 		}	
 		else{
-			$pidArr[] =$pid;
+			if(in_array($pid,$inEligibleArr))
+				$pidArr[] =$pid;
 		}
 	}
   if(is_array($pidArr)){
@@ -104,7 +102,7 @@ if(is_array($inEligibleArr)){
 	if($profileStr)
 		deleteProfiles($db_master,$profileStr);
 	foreach($pidArr as $key=>$profileid){
-		addLog($profileid,$campaignName,$str,$action,$db_js_111);
+		addLog($profileid,$campaignName,$str,$action1,$db_js_111);
 	}
   }
 }
@@ -121,9 +119,10 @@ function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$diale
 {
 	$lastDisp =array();
 	$squery1 = "SELECT top 1 Last_disposition,easycode FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' order by Login_Timestamp DESC";
-	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,'1',$campaignName);
 	if($srow1 = mssql_fetch_array($sresult1)){
 		$val =$srow1['Last_disposition'];
+		$val =trim($val);
 		if($val==$scbValue)
 			$lastDisp =$srow1;
 	}

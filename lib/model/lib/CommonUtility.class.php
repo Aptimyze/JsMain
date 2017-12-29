@@ -677,16 +677,14 @@ class CommonUtility
         /*
           Comment below two lines and uncomment commented line. For date time change.
         */
-        $createDate = new DateTime($date);
-        $date = $createDate->format('Y-m-d');
-        // $tz = new DateTimeZone("Asia/Calcutta");
+        $tz = new DateTimeZone("Asia/Calcutta");
         $todayDate = new DateTime("now");
-        //$todayDate->setTimezone($tz);
+        $todayDate->setTimezone($tz);
         $actionDate = new DateTime($date);
-        //$actionDate->setTimezone($tz);
+        $actionDate->setTimezone($tz);
         $diff = $actionDate->diff($todayDate);
         $daydiff = $diff->days;
-        if($daydiff < 1)
+        if($daydiff < 1 && intval($actionDate->format('d'))== intval($todayDate->format('d')))
         {
             $lastOnlineStr = 'today';
             //$lastOnlineStr .= ' '.$actionDate->format('h:i A');
@@ -777,7 +775,8 @@ class CommonUtility
             $user = new memUser($profileid);
             $user->setMemStatus();
             $userType = $user->getUserType();
-            if($userType == 2 || $userType == 6)
+            $freeAndRenewalEligibleTypes = [memUserType::FREE,memUserType::PAID_WITHIN_RENEW,memUserType::EXPIRED_WITHIN_LIMIT,memUserType::EXPIRED_BEYOND_LIMIT];
+            if(in_array($userType,$freeAndRenewalEligibleTypes))
                 return 1;
             else
                 return 0;
@@ -802,6 +801,32 @@ class CommonUtility
             }
         }
     }*/
+
+    /*checkFreshChatPanelCondition
+    * check whether to show chat panel or not acc to module
+    * @inputs: $module, $action, $profileID
+    * @return: $showFreshChat
+    */
+    public static function checkFreshChatPanelCondition($module, $action, $profileid){
+        $freshChatAvailModuleArr = ["membership","register"];
+        $freshChatAvailActioneArr = ["phoneVerificationPcDisplay"];
+        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        $showFreshChat = false;
+        if($profileid){
+            $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
+            if($phoneNotVerified != 'Y'){
+                $phoneNotVerified = true;
+            } else{
+                $phoneNotVerified = false;
+            }
+        } else{
+            $phoneNotVerified = false;
+        }
+        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
+            $showFreshChat = true;
+        }
+        return $showFreshChat;
+    }
 
     public static function getFreshDeskDetails($profileid=''){
         if(!empty($profileid) && is_numeric($profileid) && $profileid != ''){

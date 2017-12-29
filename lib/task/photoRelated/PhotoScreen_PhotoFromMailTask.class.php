@@ -60,7 +60,7 @@ EOF;
 					//If invalid username provided
 					if (!$profileObj || $profileObj->getPROFILEID() == NULL || $profileObj->getPROFILEID() == '')
 					{ 
-						SendMail::send_email("reshu.rajput@jeevansathi.com","ProfileId not found for mailId:".$value["ID"],"Photos from mail no profile","reshu.rajput@jeevansathi.com");
+						//SendMail::send_email("reshu.rajput@jeevansathi.com","ProfileId not found for mailId:".$value["ID"],"Photos from mail no profile","reshu.rajput@jeevansathi.com");
 					}
 					else
 					{

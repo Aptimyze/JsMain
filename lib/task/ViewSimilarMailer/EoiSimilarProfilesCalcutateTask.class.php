@@ -36,7 +36,7 @@ EOF;
 
         $profilesToSendMailObj = new viewSimilar_VSP_MAILER_PROFILES_TO_BE_SENT();
         $profileArr = $profilesToSendMailObj->getProfilesToSendMail($totalScripts, $currentScript);
-
+        $profileArr[924] = array('INTERESTS_SENT'=>22,'TYPE'=>2);
         $vspLibObj = new ViewSimilarProfilesMailer();
         foreach ($profileArr as $key => $val) {
             $noOfEois = $val['INTERESTS_SENT'];
@@ -49,6 +49,7 @@ EOF;
                 $MailerTableObj->insertProfiles($key,$calculatedProfiles,$noOfEois,$typeOfEois);
             }
             $profilesToSendMailObj->updateIsCalculated($key);
+            ProfileCacheLib::getInstance()->__destruct();
         }
     }
 

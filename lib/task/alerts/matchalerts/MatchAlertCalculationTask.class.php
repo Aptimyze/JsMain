@@ -14,7 +14,7 @@ class MatchAlertCalculationTask extends sfBaseTask
         private $limitCommunityRec = 10;
         private $limitLastSearchRec = 10;
 	const clusterRecordLimit = 10;
-        const _communityModelToggle=0;
+        const _communityModelToggle=1;
         const limitNtWhenCommunity = 10;
   	const limitNtNoCommunity = 16;
         
@@ -90,17 +90,21 @@ EOF;
                                         $matchLogic = $v["MATCH_LOGIC"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
-                                                if($loggedInProfileObj->getPROFILEID()%99<=49){
+                                                if(1){
                                                         if($matchLogic == "O"){
                                                                 $strictDppObj = new StrictDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
                                                                 $totalResults = $strictDppObj->getMatches();
                                                         }else{
-                                                               $strictDppObj = new RelaxedDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
-                                                                $totalResults = $strictDppObj->getMatches();
-                                                                if($totalResults["CNT"] == 0 && $profileid%9==1){
-                                                                        $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT,MailerConfigVariables::$lastSearch);
-                                                                        $totalResults = $lastSearchObj->getMatches();
-                                                                        $totalResults["LOGIC_LEVEL"] = MailerConfigVariables::$lastSearch;
+                                                                if($fromReg!=1 && $this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
+                                                                        $matchalerts_MATCHALERTS_TO_BE_SENT->updateCommunity($profileid,"E");
+                                                                }else{
+                                                                        $strictDppObj = new RelaxedDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
+                                                                        $totalResults = $strictDppObj->getMatches();
+                                                                        if($totalResults["CNT"] == 0 && $profileid%9==1){
+                                                                                $lastSearchObj = new LastSearchBasedMatchAlertsStrategy($loggedInProfileObj,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT,MailerConfigVariables::$lastSearch);
+                                                                                $totalResults = $lastSearchObj->getMatches();
+                                                                                $totalResults["LOGIC_LEVEL"] = MailerConfigVariables::$lastSearch;
+                                                                        }
                                                                 }
                                                         }
                                                         if($totalResults["CNT"] == 0){
