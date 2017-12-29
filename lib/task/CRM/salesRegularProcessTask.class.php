@@ -71,7 +71,7 @@ EOF;
 		$latestProfilesCnt 	=$csvHandler->getTemporaryProfilesCount($max_dt);
 		$csvHandler->updateSalesLog2($totalCnt, $latestProfilesCnt, $max_dt, $filter);
 
-		mail("rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com","Revamp CSVs for calling executed successfully","","From:JeevansathiCrm@jeevansathi.com");	
+		mail("rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com,kumar.sonal@jeevansathi.com,shashank.ghanekar@jeevansathi.com,bharat.vaswani@jeevansathi.com","Revamp CSVs for calling executed successfully","","From:JeevansathiCrm@jeevansathi.com");	
 
 	        $incSRLObj 	=new incentive_SALES_REGULAR_LOG();
 	        $latest_date 	=$incSRLObj->getLatestDate();

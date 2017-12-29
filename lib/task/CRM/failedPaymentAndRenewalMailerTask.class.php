@@ -28,7 +28,7 @@ EOF;
                 $prev_date = date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $latest_date) ) ));
                //for failed payment mailer, get previous day complete data
 	        $data 		=$incSRLObj->getAllDataForGivenDate($prev_date, $process);
-	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
+	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,princy.gulati@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
 	        $subject 	="Failed Payment in Dialer LOG for ".date("jS F Y", strtotime($prev_date));
 	        $csvObj 	=new csvGenerationHandler();
@@ -38,7 +38,7 @@ EOF;
                 $process        ='renewalProcessInDialer';
                 $latest_date 	=$incSRLObj->getLatestDate($process);
 	        $data 		=$incSRLObj->getAllDataForGivenDate($latest_date, $process);
-	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,smarth.katyal@jeevansathi.com";
+	        $to 		="rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,princy.gulati@jeevansathi.com";
 	        $from 		="JeevansathiCrm@jeevansathi.com";
 	        $subject 	="Renewal Process in Dialer LOG for ".date("jS F Y", strtotime($latest_date));
 	        $csvObj 	=new csvGenerationHandler();
