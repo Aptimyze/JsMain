@@ -40,12 +40,11 @@ EOF;
     $exclusiveMemberObj = new billing_EXCLUSIVE_MEMBERS();
     $serviceStatus = new BILLING_SERVICE_STATUS();
     $maxDate = $incentive->getHandledDate(18);
-     //$maxDate = "0000-00-00 00:00:00";   
     if($maxDate != "0000-00-00 00:00:00" && $maxDate!=null){
         $profileArray = array();
         $exclusiveMemberArray = array();
         $profileArray = $purchase->getExclusiveProfile($maxDate);
-    //Handle case for Active case
+    	//Handle case for Active case
         foreach ($profileArray as $key => $value){
             $profileId = $key;
             $serviceIdArray = $serviceStatus->getActiveJsExclusiveServiceID($profileId);
@@ -54,7 +53,7 @@ EOF;
         }
         foreach ($profileArray as $key => $value){
             $aprofileInfo->insertIntoAPProfileInfo($key,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
-        //Start JSC-3375
+            //Start JSC-3375
             $exclusiveMemberArray["PROFILEID"] = $value["PROFILEID"];
             $exclusiveMemberArray["ASSIGNED_DT"]="0000-00-00";
             $exclusiveMemberArray["ASSIGNED_TO"]=NULL;
@@ -63,8 +62,8 @@ EOF;
             $exclusiveMemberArray["BILL_ID"]=$value["BILLID"];
             $exclusiveMemberObj->addExclusiveMember($exclusiveMemberArray);
             unset($exclusiveMemberArray);
-        //end
-            $maxDate = $value;
+            //end
+            $maxDate = $value['ENTRY_DT'];
         }
         if($maxDate != "0000-00-00 00:00:00" && $maxDate!=null)
             $incentive->setHandledDate(18,$maxDate);
