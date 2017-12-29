@@ -77,14 +77,13 @@ export const translateSite = (translateURL) => {
         setCookie("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
         setCookie("jeevansathi_marathi_site_new","N",100,".jeevansathi.com");
     }
-    window.location.href = translateURL;
 }
 
 export const mtoungueURL = () => {
     let obj ={translateURL:CONSTANTS.HINDI_SITE,linkId:"hindiLink",langText:"In Hindi"};
     if(localStorage.getItem("self_MTONGUE") == 20 && getCookie("AUTHCHECKSUM") && false){
         obj.translateURL = CONSTANTS.MARATHI_SITE;
-        obj.linkId = "marathiLink";
+        obj.linkId = "hindiLink";
         obj.langText = "In Marathi";
     }
     let url = window.location.href;
