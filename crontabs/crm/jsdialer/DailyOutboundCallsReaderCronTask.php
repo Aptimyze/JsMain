@@ -63,6 +63,6 @@ while ($singleRowData = mssql_fetch_array($result)) {
 	mysql_query($sql,$db_slave111) or die($sql.mysql_error($db_slave111));
 	$count++;
 }
-echo ""[.$count."]";
+echo "[".$count."]";
 
 ?>
