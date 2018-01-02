@@ -135,7 +135,7 @@ class ExclusiveFunctions{
 				$assistedEoiObj->deleteEntry($params["clientId"],$params["discardArr"]);
 				unset($assistedEoiObj);
 				foreach ($params["discardArr"] as $key => $value) {
-					$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"N"));
+					$exMappingObj->addClientMemberEntry(array("CLIENT_ID"=>$params["clientId"],"MEMBER_ID"=>$value,"SCREENED_STATUS"=>"D"));
 				}
 			}
 			unset($exMappingObj);

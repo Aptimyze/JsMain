@@ -1964,7 +1964,7 @@ class MembershipHandler
             $profileObj      = LoggedInProfile::getInstance();
             $activatedStatus = $profileObj->getACTIVATED();
         }
-        if ($userType != 5 && (($source=="hamburger" && $activatedStatus != 'D') || $activatedStatus == 'Y')){
+        if ($userType != 5 && (($source=="hamburger" && $activatedStatus != 'D') || $activatedStatus != 'D')){
             return 1;
         } else {
             return 0;
