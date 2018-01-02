@@ -3,10 +3,10 @@ $unImpFieldCheck = 1;
 $counterCheck = 4;
 $changeUnimportantFieldOn = 8;
 $sleepTime = 300;
-$redis = new Redis();
-$redis->pconnect(JsConstants::$ifSingleRedis['host'],JsConstants::$ifSingleRedis['port'],306,1);
 $counter = 0;
 while (1) {
+		$redis = new Redis();
+		$redis->pconnect(JsConstants::$ifSingleRedis['host'],JsConstants::$ifSingleRedis['port'],306,1);
         $unImpField = $redis->get("hideUnimportantFeatureAtPeakLoad");
         if($unImpField === false){
                 $unImpField = JsConstants::$hideUnimportantFeatureAtPeakLoad;
@@ -30,6 +30,7 @@ while (1) {
                 sendJJSMS($unImpField);
                 sendSlackmessage("FlagCount set to $unImpField since ".($counter*5)." Seconds"); 
         }
+        unset($redis);
         sleep($sleepTime); //sleep for 5 minutes
 }
 
