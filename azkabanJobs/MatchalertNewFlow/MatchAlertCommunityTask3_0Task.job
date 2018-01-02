@@ -1,0 +1,5 @@
+type=command
+dependencies=MatchAlertCommunityModelTask
+command=${php5} ${docRoot}/symfony  alert:MatchAlertCommunity 3 0
+retries=3
+retry.backoff=60000
