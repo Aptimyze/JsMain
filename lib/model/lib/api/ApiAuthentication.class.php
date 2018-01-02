@@ -652,11 +652,11 @@ Abstract class ApiAuthentication
 			@setcookie($this->cookieRemPass,"",0,"/",$this->domain);
 
 		//For 1 week only to delete cookie on www.jeevansathi.com
-//		@setcookie($this->AUTHCHECKSUM,"",0,"/","");
-//        @setcookie($this->HMT,"",0,"/","");
-//        @setcookie($this->AUTH,"",0,"/","");
-//        @setcookie($this->cookieRemName,"",0,"/","");
-//        @setcookie($this->cookieRemPass,"",0,"/","");
+		@setcookie($this->AUTHCHECKSUM,"",0,"/",".jeevansathi.com");
+       @setcookie($this->HMT,"",0,"/",".jeevansathi.com");
+       @setcookie($this->AUTH,"",0,"/",".jeevansathi.com");
+       @setcookie($this->cookieRemName,"",0,"/",".jeevansathi.com");
+       @setcookie($this->cookieRemPass,"",0,"/",".jeevansathi.com");
 	}
 		
 	/*
