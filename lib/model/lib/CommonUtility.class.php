@@ -808,21 +808,27 @@ class CommonUtility
     * @return: $showFreshChat
     */
     public static function checkFreshChatPanelCondition($module, $action, $profileid){
-        $freshChatAvailModuleArr = ["membership","register"];
-        $freshChatAvailActioneArr = ["phoneVerificationPcDisplay"];
-        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
-        $showFreshChat = false;
-        if($profileid){
-            $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
-            if($phoneNotVerified != 'Y'){
-                $phoneNotVerified = true;
+        if(MobileCommon::isNewMobileSite()){
+            $freshChatAvailModuleArr = ["membership"];
+            $freshChatAvailActionArr = array();
+            $phoneNotVerified = false;
+        } else{
+            $freshChatAvailModuleArr = ["membership","register"];
+            $freshChatAvailActionArr = ["phoneVerificationPcDisplay"];
+            if($profileid){
+                $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
+                if($phoneNotVerified != 'Y'){
+                    $phoneNotVerified = true;
+                } else{
+                    $phoneNotVerified = false;
+                }
             } else{
                 $phoneNotVerified = false;
             }
-        } else{
-            $phoneNotVerified = false;
         }
-        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActioneArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
+        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        $showFreshChat = false;
+        if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActionArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
             $showFreshChat = true;
         }
         return $showFreshChat;
