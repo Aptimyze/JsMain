@@ -65,7 +65,7 @@ class CampaignsRegistrationMis
 		{
 			foreach ($iterate as $val1)
 			{
-				$csvData .= $value[$val1].",";
+				$csvData .= str_replace(",","",$value[$val1]).",";
 			}
 			$csvData .="\n";
 		}
