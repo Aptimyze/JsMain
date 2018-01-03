@@ -278,8 +278,8 @@ class GoogleVisionApi
 		if(count($newImgArr)==2){
 			$newImgArr[0]=$newImgArr[0]."tempORIG";
 			$newPicturePath=$newImgArr[0].".".$newImgArr[1];
-			copy($picturePath, $newPicturePath);
-			$picturePath=$newPicturePath;
+			//copy($picturePath, $newPicturePath);
+			//$picturePath=$newPicturePath;
 			$this->rotateImageFile($picturePath,$imageFormatType);
 		}
 		else{

@@ -186,7 +186,7 @@ class registerMisActions extends sfActions {
     $name = $request->getAttribute('name');
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) {
-      ini_set('memory_limit','512M');
+      ini_set('memory_limit','1024M');
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
