@@ -24,7 +24,7 @@ EOF;
 
         protected function execute($arguments = array(), $options = array()) {
             
-                $thresholdVal = 100000;
+                $thresholdVal = 50000;
                 if(!sfContext::hasInstance())
                     sfContext::createInstance ($this->configuration);
                 $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
