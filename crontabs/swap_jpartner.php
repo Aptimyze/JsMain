@@ -262,8 +262,8 @@ function mysql_error1($db)
 	$msg=$sql_update .":".$sql.":".$sql_total_points;
         echo mysql_error($db);
         if(JsConstants::$whichMachine == 'prod'){
-                mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
-                mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
         }elseif(JsConstants::$whichMachine == 'test'){
                 mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",$msg);
                 mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",mysql_error($db));

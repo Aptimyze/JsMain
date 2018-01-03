@@ -445,9 +445,9 @@ mysql_query($sql_new,$db) or die("16 ".mysql_error1($db));
 $sql = "SELECT count(*) AS C FROM SWAP";
 $res = mysql_query($sql,$db) or die("count ".mysql_error1($db));
 $row = mysql_fetch_array($res);
-if($row["C"]>60000)
+if($row["C"]>100000)
 {
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com","More than 60000 records in SWAP","More than 60000 records in SWAP -> swap_jprofile.php");	
+	mail("lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,bhavanakadwal@jeevansathi.com","More than 100000 records in SWAP","More than 100000 records in SWAP -> swap_jprofile.php");	
 }
 
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
@@ -523,8 +523,8 @@ function mysql_error1($db)
 	global $sql_update,$sql,$sql_total_points;
 	$msg=$sql_update .":".$sql.":".$sql_total_points;
         if(JsConstants::$whichMachine == 'prod'){
-                mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
-                mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
         }elseif(JsConstants::$whichMachine == 'test'){
                 mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",$msg);
                 mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",mysql_error($db));
