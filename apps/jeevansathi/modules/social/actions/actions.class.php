@@ -1518,7 +1518,7 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
                 $profilesUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
                 $pictureServiceObj =new PictureService($profileObj);
                 if(is_array($profilesUpdate))
-                        $output = $pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
+                        $output = 1;
                 else
                         $output = -1;
                 unset($pictureServiceObj);

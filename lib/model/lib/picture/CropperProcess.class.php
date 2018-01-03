@@ -76,6 +76,9 @@ class CropperProcess
 			}
 		if($ops)
 			return $filesGlobArr;
+		if(is_array($profilesUpdate)){
+ 			$pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
+		}
 		return $profilesUpdate;
 		}
 		else

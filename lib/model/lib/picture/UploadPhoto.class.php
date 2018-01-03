@@ -88,8 +88,8 @@ class UploadPhoto extends PictureService
 			}
 			else
 			{
-				$orientataion = sfContext::getInstance()->getRequest()->getParameter('Orientation');
-                if($this->uploadSource=="mobileUpload" || $orientataion)
+				//$orientataion = sfContext::getInstance()->getRequest()->getParameter('Orientation');
+                //if($this->uploadSource=="mobileUpload" || $orientataion)
                    $this->mobileUploadOrientation($v);
 				
 
@@ -143,7 +143,7 @@ class UploadPhoto extends PictureService
 
 			PictureFunctions::rotateImage($image["tmp_name"],$angle,$image["type"]);
 		}
-		elseif(array_key_exists($orientation,PictureStaticVariablesEnum::$orientationToAngle)){
+		elseif($orientation && array_key_exists($orientation,PictureStaticVariablesEnum::$orientationToAngle)){
             PictureFunctions::rotateImage($image["tmp_name"],PictureStaticVariablesEnum::$orientationToAngle[$orientation],$image["type"]);
 
         }
