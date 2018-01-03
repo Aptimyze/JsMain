@@ -18,6 +18,23 @@ class processCropperV1Action extends sfActions
                 $profileObj->getDetail("","","HAVEPHOTO");
 
                 $cropBoxDimensionsArr = $request->getParameter("cropBoxDimensionsArr");
+		foreach($cropBoxDimensionsArr as $k=>$v)
+		{
+			if(!is_numeric($v))
+			{
+				$inputError = true;
+				break;
+			}
+		}
+		if($inputError)
+		{
+			$respObj = ApiResponseHandler::getInstance();
+			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$respObj->setResponseBody($profileInfo);  //response to be decided and failure case:LATER
+			$respObj->generateResponse();
+			unset($profilesUpdate);
+			die;
+		}
                 $imgPreviewTypeArr = $request->getParameter('imgPreviewTypeArr');
 
 		$pictureServiceObj=new PictureService($profileObj);
