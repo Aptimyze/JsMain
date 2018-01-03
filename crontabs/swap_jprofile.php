@@ -445,9 +445,9 @@ mysql_query($sql_new,$db) or die("16 ".mysql_error1($db));
 $sql = "SELECT count(*) AS C FROM SWAP";
 $res = mysql_query($sql,$db) or die("count ".mysql_error1($db));
 $row = mysql_fetch_array($res);
-if($row["C"]>30000)
+if($row["C"]>100000)
 {
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com","More than 30000 records in SWAP","More than 30000 records in SWAP -> swap_jprofile.php");	
+	mail("lavesh.rawat@jeevansathi.com,reshu.rajput@jeevansathi.com,bhavanakadwal@jeevansathi.com","More than 100000 records in SWAP","More than 100000 records in SWAP -> swap_jprofile.php");	
 }
 
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
@@ -522,21 +522,28 @@ function mysql_error1($db)
 {
 	global $sql_update,$sql,$sql_total_points;
 	$msg=$sql_update .":".$sql.":".$sql_total_points;
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+        if(JsConstants::$whichMachine == 'prod'){
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
+                mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com,reshu.rajput@jeevansathi.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+        }elseif(JsConstants::$whichMachine == 'test'){
+                mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",$msg);
+                mail("anish.singh@jeevansathi.com,vidushi@naukri.com,sunendra.gupta@jeevansathi.com","Jeevansathi Error in swapping",mysql_error($db));
+        }
         $date = date("Y-m-d h");
         $message        = "Mysql Error Count have reached swap jpartner $date within 5 minutes";
         $from           = "JSSRVR";
         $profileid      = "144111";
-        $mobile         = "9773889617";
-        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $mobile);
-        $mobile         = "9818424749";
-        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $mobile);
-        $mobile         = "9873639543";
-	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
-    CommonUtility::logTechAlertSms($message, $mobile);
+        if(JsConstants::$whichMachine == 'prod'){
+                $mobile         = "9773889617";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
+                $mobile         = "9818424749";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
+                $mobile         = "9873639543";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                CommonUtility::logTechAlertSms($message, $mobile);
+        }
 }
 
 function DayDiff($StartDate, $StopDate)
