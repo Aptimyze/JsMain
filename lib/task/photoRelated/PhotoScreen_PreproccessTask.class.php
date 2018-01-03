@@ -204,7 +204,7 @@ EOF;
 					///
 					/// Check if profile photo has proper face
 
-					if($arrData['ProfilePic450Url'] && $arrData["ORDERING"] == 0) {
+					/*if($arrData['ProfilePic450Url'] && $arrData["ORDERING"] == 0) {
 						$googleVisionObj = new GoogleVisionApi();
 						$faceFound = $googleVisionObj->checkFaceCordinates($arrData['ProfilePic450Url'], $arrData["PICFORMAT"], $arrData['PICTUREID'], $arrData['PROFILEID']);
 						if(!$faceFound)
@@ -214,6 +214,7 @@ EOF;
 							$objPicService->setPicProgressBit("CROPPEDFACE",$arrUpdate);
 						}
 					}
+					*/
 
 					//Move Main Pic To Orginial Pic Directory
 					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
