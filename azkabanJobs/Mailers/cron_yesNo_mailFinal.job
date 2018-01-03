@@ -1,5 +1,5 @@
 type=command
 dependencies=cron_yesno_sending0,cron_yesno_sending1,cron_yesno_sending2,cron_yesno_sending3,cron_yesno_sending4
-command=echo YesNoMail successfully sent
+command=${php5} ${docRoot}/symfony mailer:dailyMailerMonitoring YESNO_MAILER
 retries=3
 retry.backoff=10000
