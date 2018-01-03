@@ -582,7 +582,13 @@ public function microtime_float()
                   
                   /* this if block is just for testing purpose*/
                   if( empty($v['CITY_RES']) && $notificationKey == "ACCEPTANCE") {
-                       SendMail::send_email("tushar.gandhi@jeevansathi.com,manoj.rana@naukri.com","notification array $v","Notification failed");
+                       SendMail::send_email("tushar.gandhi@jeevansathi.com,manoj.rana@naukri.com","notification array "
+                               . " \n City".$v['CITY_RES'] .
+                               " \n Profile ID ".$v['PROFILEID'].
+                               " \n Gender ".$v['GENDER'].
+                               " \n Age ".$v['AGE'].
+                               " \n Caste ".$v['CASTE']
+                               ,"Notification failed");
                   }
 	  }
 	  unset($profiledetails);
