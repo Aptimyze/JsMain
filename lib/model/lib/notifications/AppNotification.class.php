@@ -184,7 +184,7 @@ public function microtime_float()
           case "CHAT_MSG":
           case "CHAT_EOI_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
-			$poolObj = new NotificationDataPool();
+                       $poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
 			// print_r($dataAccumulated);
 			unset($poolObj);

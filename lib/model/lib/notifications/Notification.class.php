@@ -16,9 +16,10 @@ abstract class Notification
   public function __construct()
   {
 	  include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
-	  $this->casteDetail = $CASTE_DROP;
-	  $this->cityDetail = $CITY_INDIA_DROP;
-	  $this->countryDetail = $COUNTRY_DROP;
+          
+	  $this->casteDetail = FieldMap::getFieldLabel("caste", 0, 1);
+	  $this->cityDetail = FieldMap::getFieldLabel("city_india", 0, 1);
+	  $this->countryDetail = FieldMap::getFieldLabel("country", 0, 1);
   }
   public function getNotifications() { return $this->notifications;}
   public function setNotifications($notifications) { $this->notifications= $notifications;}
