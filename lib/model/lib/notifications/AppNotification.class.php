@@ -183,7 +183,7 @@ public function microtime_float()
 		  case "MESSAGE_RECEIVED":
           case "CHAT_MSG":
           case "CHAT_EOI_MSG":
-			$details = $this->getProfilesData($appProfiles,$className="JPROFILE", $notificationKey);
+			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
                        $poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
 			// print_r($dataAccumulated);
@@ -567,7 +567,7 @@ public function microtime_float()
 		  return $completeNotificationInfo;
 	  }
   }
-  public function getProfilesData($profiles,$className="JPROFILE", $notificationKey="")
+  public function getProfilesData($profiles,$className="JPROFILE")
   {
 	  if(is_array($profiles))
 	  {
@@ -579,17 +579,6 @@ public function microtime_float()
 	  {
 		  foreach($profiledetails as $k=>$v)
 			  $details[$v['PROFILEID']] = $v;
-                  
-                  /* this if block is just for testing purpose*/
-                  if( empty($v['CITY_RES']) && $notificationKey == "ACCEPTANCE") {
-                       SendMail::send_email("tushar.gandhi@jeevansathi.com,manoj.rana@naukri.com","notification array "
-                               . " \n City".$v['CITY_RES'] .
-                               " \n Profile ID ".$v['PROFILEID'].
-                               " \n Gender ".$v['GENDER'].
-                               " \n Age ".$v['AGE'].
-                               " \n Caste ".$v['CASTE']
-                               ,"Notification failed");
-                  }
 	  }
 	  unset($profiledetails);
 	  return $details;	
