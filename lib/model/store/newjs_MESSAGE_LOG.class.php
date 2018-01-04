@@ -385,7 +385,7 @@ SQL;
 			{
 				$sql = $sql." GROUP BY ".$group;				
 			}
-			$sql = $sql." ORDER BY DATE DESC ";
+			//$sql = $sql." ORDER BY DATE DESC ";
 			$res=$this->db->prepare($sql);
 			foreach($bindArr as $k=>$v)
 				$res->bindValue($k,$v);
