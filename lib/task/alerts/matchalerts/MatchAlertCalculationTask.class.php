@@ -95,7 +95,7 @@ EOF;
                                                                 $strictDppObj = new StrictDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
                                                                 $totalResults = $strictDppObj->getMatches();
                                                         }else{
-                                                                if($fromReg!=1 && $this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
+                                                                if($fromReg!=1 && $trends!=1 && $this->checkForCommunityModel($loggedInProfileObj,$matchLogic)){
                                                                         $matchalerts_MATCHALERTS_TO_BE_SENT->updateCommunity($profileid,"E");
                                                                 }else{
                                                                         $strictDppObj = new RelaxedDppBasedMatchAlertsStrategy($loggedInProfileObj, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT, $trends);
