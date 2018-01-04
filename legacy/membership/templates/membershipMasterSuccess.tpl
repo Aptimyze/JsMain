@@ -1222,14 +1222,6 @@
         $('#jsExcCall').click(function () {
             $("form#requestCallback").submit();
         });
-        var username = "~$userDetails.USERNAME`";
-        var email = "~$userDetails.EMAIL`";
-        setInterval(function(){
-            autoPopulateFreshdeskDetails(username,email);
-        },100);
-        setTimeout(function(){
-            autoPopupFreshdesk(username,email);
-        }, 10000);
     });
 </script>
 ~include_partial('global/footer')`

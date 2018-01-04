@@ -11,7 +11,7 @@ class PICTURECheck extends TABLE
 		try
 		{	
 			$szTimeStamp = date("Y-m-d");
-			$sql="INSERT INTO PICTURE.PictureUploadCheck(PROFILEID,ENTRY_DT,ALBUM_PAGE) VALUES(:ID,:date,1)";
+			$sql="INSERT IGNORE INTO PICTURE.PictureUploadCheck(PROFILEID,ENTRY_DT,ALBUM_PAGE) VALUES(:ID,:date,1)";
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->bindValue(":ID",$PROFILEID,PDO::PARAM_INT);
 			//$pdoStatement->bindValue(":errortype",$type ,PDO::PARAM_STR);

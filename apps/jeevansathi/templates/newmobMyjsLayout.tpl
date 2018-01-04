@@ -46,7 +46,6 @@
     
 </div>
 </div>
-	~include_partial('global/freshDesk')`
   </body>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 	~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`

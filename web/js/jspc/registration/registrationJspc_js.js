@@ -2217,7 +2217,7 @@ function passwordStrength (passVal) {
     $("#strength-span").width("0%");
     //$("#strength-span").css("background","#f5f5f5");
   }
-  else if ((getCharNo > 0 && getCharNo < 8) || !regField[passwordK].validator.checkCommonPassword(passVal) || !regField[passwordK].validator.checkPasswordUserName(passVal, regField[passwordK].validator.getValue("email"))) {
+  else if ((getCharNo > 0 && getCharNo < 8) || !regField[passwordK].validator.checkCommonPassword(passVal) || !regField[passwordK].validator.checkPasswordUserName(passVal, regField[passwordK].validator.getValue("email")) || $.isNumeric(passVal)) {
     $("#strength-span").width("33%");
     $("#strength-span").css("background", "#a03");
   }

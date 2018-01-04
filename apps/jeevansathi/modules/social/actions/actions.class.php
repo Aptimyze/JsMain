@@ -1760,12 +1760,17 @@ $this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosB
         $pictureServiceObj=new PictureService($profileObj);
         $pictureidArr=$pictureServiceObj->saveAlbum($photoUrl,"import",$profileObj->getPROFILEID(),$importSite);
 
-	if(is_array($pictureidArr))
-		$uploaded = true;
-	else
-		$uploaded=false;
-	$pictureid = $pictureidArr['PIC_ID'];
-	if(($setProfilePic=$request->getParameter("setProfilePhoto"))=="Y")
+        if(is_array($pictureidArr) && array_key_exists("PIC_ID",$pictureidArr) && $pictureidArr['PIC_ID']!='')
+        {
+                $uploaded = true;
+                $pictureid = $pictureidArr['PIC_ID'];
+        }
+        else
+        {
+                $uploaded=false;
+        }
+
+	if($pictureid && ($setProfilePic=$request->getParameter("setProfilePhoto"))=="Y")
 	{
                 $whereArr["PICTUREID"] = $pictureid;
                 $whereArr["PROFILEID"] = $profileObj->getPROFILEID();

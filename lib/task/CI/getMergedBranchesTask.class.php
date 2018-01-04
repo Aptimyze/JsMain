@@ -42,7 +42,7 @@ EOF;
     $urlToHit = "http://gitlabweb.infoedge.com/api/v3/projects/Jeevansathi%2FJsMain/merge_requests?per_page=200&state=merged";
 
     $headerArr = array(
-    	'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',				
+    	'PRIVATE-TOKEN:xBgqNzVkJ7YQ5YBEy8HJ',				
 		); //Token used is of the username : vidushi@naukri.com
 
     $SanityMergedFileName = "/var/www/CI_Files/QASanityMergedBranches.txt";

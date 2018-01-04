@@ -79,7 +79,7 @@ EOF;
   }
 
   $headerArr = array(
-    'PRIVATE-TOKEN:YY7g4CeG_tf17jZ4THEi',       
+    'PRIVATE-TOKEN:xBgqNzVkJ7YQ5YBEy8HJ',       
   ); //token used is of username: vidushi@naukri.com
 
   $paramArr = array("tag_name"=>$tagName,"ref"=>"CIRelease","release_description"=>$releaseDescription); //ref should be CIRelease
