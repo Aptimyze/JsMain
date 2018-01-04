@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/symfony cron:PhotoArchive 11 5 18 PICTURE
