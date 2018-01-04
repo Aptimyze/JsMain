@@ -1,5 +1,5 @@
 type=command
 dependencies=cron_remindUnresponded_mailer_SendTask_1,cron_remindUnresponded_mailer_SendTask_2,cron_remindUnresponded_mailer_SendTask_3
-command=echo Remind Unresponded mailer successfully sent
+command=${php5} ${docRoot}/symfony mailer:dailyMailerMonitoring REMINDER_MAILER
 retries=3
 retry.backoff=10000

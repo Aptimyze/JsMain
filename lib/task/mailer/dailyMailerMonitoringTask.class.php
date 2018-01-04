@@ -83,6 +83,7 @@ EOF;
 			$countArr = $ynObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
+            echo "YesNoMail successfully sent";
 		}
 
 		//Filtered mailer
@@ -233,6 +234,7 @@ EOF;
                         $countArr = $mailVerOb->getMailCountForRange();
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
+                        echo "Remind Unresponded mailer successfully sent";
                 }           
         //Expiring interest mailer
         if($mailer_key[0]=='ExpiringInterest_MAILER')
@@ -241,6 +243,7 @@ EOF;
             $countArr = $eiObj->getMailCountForRange();
             $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
             unset($countArr);
+            echo "ExpiringMail successfully sent";
         }
 	}
   }
