@@ -826,7 +826,11 @@ class CommonUtility
                 $phoneNotVerified = false;
             }
         }
-        $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        if($profileid){
+            $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
+        } else{
+            $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"],["homepage","index"]];
+        }
         $showFreshChat = false;
         if(in_array($module, $freshChatAvailModuleArr) || in_array($action, $freshChatAvailActionArr) || in_array([$module,$action],$freshChatAvailModuleActionArr) || $phoneNotVerified){
             $showFreshChat = true;
