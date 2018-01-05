@@ -1405,15 +1405,15 @@ class csvGenerationHandler
                                              } 
                                              else {
                                                     // logic - if profileid % 11 == 1, do not call
-                                                    if($profileid % 11 == 1) {
+                                                    /*if($profileid % 11 == 1) {
                                                         $dialerDialStatus = 0;
                                                     }
-                                                    else {
+                                                    else {*/
                                                         // verify if the call is really eligible for calling
                                                         if($dialerDialStatus == 1) {
                                                             $dialerEligible = 'Y';
                                                         }
-                                                    }
+                                                    //}
                                              }
                                         }
 					$leadId         =$campaignName.$leadIdSuffix;	
