@@ -182,12 +182,10 @@ class Dialer
                                 $campaignName   =$inDialerPool[$profileid]['CAMPAIGN_NAME'];
 				if($analyticScore>=$scoreRange2 && $analyticScore<=$scoreRange3){
                                         if($campaignName == 'delhi' || $campaignName == 'noida') {
-                                            if($profileid % 11 != 1) {
+                                            /*if($profileid % 11 != 1) {*/
                                                 $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
-                                            }else 
-                                            {
-                                                $this->updateIndialerProfileLog($profileid,$username,'N','','','O');
-                                            }
+                                            /*}else 
+                                                $this->updateIndialerProfileLog($profileid,$username,'N','','','O');*/
                                         }
                                         else {
                                             $this->updateIndialerProfileLog($profileid,$username,'Y','','','O');
