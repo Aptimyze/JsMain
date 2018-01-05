@@ -72,6 +72,7 @@
                         <li><a href="/profile/registration_pg1.php?source=js_footer">Register free</a></li>-->
                         <li><a href="/search/AdvancedSearch">Advanced search</a></li>
                         <li><a href="/successStory/story">Success stories</a></li>
+                        <li><a href="/blog/">Matrimonial Blog</a></li>
                         <li><a href="/profile/site_map.php">Sitemap</a></li>
                     </ul>
                 </div>
