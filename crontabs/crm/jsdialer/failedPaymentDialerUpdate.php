@@ -56,12 +56,12 @@ if(count($allDataArr)>0){
 		if(!$dialerData)
 			continue;
 
-		if(strtotime($csvEntryDate >= $last20MinTime)){
-            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,5);
+		if(strtotime($csvEntryDate) >= $last20MinTime){
+	            	$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,5);
 		} else if ($dialerApplicationObj->checkProfileInProcess($profileid,false)){
-            $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,4);
+            		$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,4);
 		} else{
-            $priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
+            		$priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
 		}
 	}
 }
