@@ -79,7 +79,7 @@ class incentive_MONTHLY_INCENTIVE_ELIGIBILITY extends TABLE
 		{
 			$allotstr = implode("','", $allotstr);
 			$allotstr = "'".$allotstr."'";
-			$sql="SELECT SUM((AMOUNT-APPLE_COMMISSION)*((100-SPLIT_SHARE)/100)) AS AMOUNT, DAYOFMONTH(ENTRY_DT) as dd, ALLOTED_TO, UCASE(CENTER) AS CENTER FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND ALLOTED_TO IN ($allotstr) GROUP BY ALLOTED_TO,DAYOFMONTH(ENTRY_DT)";
+			$sql="SELECT SUM((AMOUNT)*((100-SPLIT_SHARE)/100)) AS AMOUNT, DAYOFMONTH(ENTRY_DT) as dd, ALLOTED_TO, UCASE(CENTER) AS CENTER FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND ALLOTED_TO IN ($allotstr) GROUP BY ALLOTED_TO,DAYOFMONTH(ENTRY_DT)";
 			$prep = $this->db->prepare($sql);
 			$prep->execute();
 			while($row=$prep->fetch(PDO::FETCH_ASSOC))
@@ -87,7 +87,7 @@ class incentive_MONTHLY_INCENTIVE_ELIGIBILITY extends TABLE
 				$res[$row['ALLOTED_TO']]['CENTER'] = $row['CENTER'];
 				$res[$row['ALLOTED_TO']]['AMOUNT'][$row['dd']] += $row['AMOUNT'];
 			}
-			$sql="SELECT SUM((AMOUNT-APPLE_COMMISSION)*(SPLIT_SHARE/100)) AS AMOUNT, DAYOFMONTH(ENTRY_DT) as dd, SPLIT_AGENT, UCASE(CENTER) AS CENTER FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND SPLIT_SHARE!=0 AND SPLIT_AGENT IN ($allotstr) GROUP BY SPLIT_AGENT,DAYOFMONTH(ENTRY_DT)";
+			$sql="SELECT SUM((AMOUNT)*(SPLIT_SHARE/100)) AS AMOUNT, DAYOFMONTH(ENTRY_DT) as dd, SPLIT_AGENT, UCASE(CENTER) AS CENTER FROM incentive.MONTHLY_INCENTIVE_ELIGIBILITY WHERE ENTRY_DT >='$st_date' AND ENTRY_DT<='$end_date' AND SPLIT_SHARE!=0 AND SPLIT_AGENT IN ($allotstr) GROUP BY SPLIT_AGENT,DAYOFMONTH(ENTRY_DT)";
 			$prep = $this->db->prepare($sql);
 			$prep->execute();
 			while($row=$prep->fetch(PDO::FETCH_ASSOC))
@@ -303,7 +303,7 @@ class incentive_MONTHLY_INCENTIVE_ELIGIBILITY extends TABLE
         {
                 try
                 {
-                        $sql = "SELECT SUM((AMOUNT-APPLE_COMMISSION)*((100-SPLIT_SHARE)/100)) AS AMT, COUNT(DISTINCT `BILLID`) AS CNT, DAYOFMONTH(`ENTRY_DT`) AS DD, ALLOTED_TO FROM incentive.`MONTHLY_INCENTIVE_ELIGIBILITY` WHERE `ENTRY_DT`>=:START_DT AND `ENTRY_DT`<=:END_DT GROUP BY ALLOTED_TO, DD";
+                        $sql = "SELECT SUM((AMOUNT)*((100-SPLIT_SHARE)/100)) AS AMT, COUNT(DISTINCT `BILLID`) AS CNT, DAYOFMONTH(`ENTRY_DT`) AS DD, ALLOTED_TO FROM incentive.`MONTHLY_INCENTIVE_ELIGIBILITY` WHERE `ENTRY_DT`>=:START_DT AND `ENTRY_DT`<=:END_DT GROUP BY ALLOTED_TO, DD";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
                         $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);
@@ -314,7 +314,7 @@ class incentive_MONTHLY_INCENTIVE_ELIGIBILITY extends TABLE
                                 $res[$row['ALLOTED_TO']]['TOTAL'] += $row['CNT'];
                                 $res[$row['ALLOTED_TO']]['AMT'] += $row['AMT'];
                         }
-                        $sql = "SELECT SUM((AMOUNT-APPLE_COMMISSION)*(SPLIT_SHARE/100)) AS AMT, COUNT(DISTINCT `BILLID`) AS CNT, DAYOFMONTH(`ENTRY_DT`) AS DD, SPLIT_AGENT FROM incentive.`MONTHLY_INCENTIVE_ELIGIBILITY` WHERE `ENTRY_DT`>=:START_DT AND `ENTRY_DT`<=:END_DT AND SPLIT_SHARE!=0 GROUP BY SPLIT_AGENT, DD";
+                        $sql = "SELECT SUM((AMOUNT)*(SPLIT_SHARE/100)) AS AMT, COUNT(DISTINCT `BILLID`) AS CNT, DAYOFMONTH(`ENTRY_DT`) AS DD, SPLIT_AGENT FROM incentive.`MONTHLY_INCENTIVE_ELIGIBILITY` WHERE `ENTRY_DT`>=:START_DT AND `ENTRY_DT`<=:END_DT AND SPLIT_SHARE!=0 GROUP BY SPLIT_AGENT, DD";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
                         $prep->bindValue(":END_DT", $end_dt, PDO::PARAM_STR);

@@ -1,23 +1,83 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td class='RACount'></td></tr>";
+	var cid='~$cid`';
+	var fetchAbusePageUrl = "/operations.php/profileVerification/fetchAbuseInvalidData/?userName="
+	var showStatsPageUrl = "/operations.php/commoninterface/ShowProfileStats?cid="+cid+"&profileid=";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td><a class='RAreportee' target='_blank'></a></td><td class='RAreporteeEmail'></td><td><a class='RAreporter' target='_blank'></a></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td><a class='RACount' target='_blank'></a></td><td class='Attachment'><input class='attach_id' id='-1' type='button' disabled value='Download'></td><td><input class='RAReviewStatus' type='checkbox' onclick='toggleReviewStatus.call(this)'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
-		tempHtml.find('.RAreportee').text(rowJson.reportee_id);
+		tempHtml.find('.RAReviewStatus').attr({
+			"id" : rowJson.id,
+		});
+		if(rowJson.review_status === 'Y')
+			tempHtml.find('.RAReviewStatus').attr("checked", "checked");
+		tempHtml.find('.RAreportee').text(rowJson.reportee_id).attr('href', showStatsPageUrl+rowJson.reportee);
 		tempHtml.find('.RAreporteeEmail').text(rowJson.reportee_email);
-		tempHtml.find('.RAreporter').text(rowJson.reporter_id);
+		tempHtml.find('.RAreporter').text(rowJson.reporter_id).attr('href', showStatsPageUrl+rowJson.reporter);
 		tempHtml.find('.RAreporterEmail').text(rowJson.reporter_email);
 		tempHtml.find('.RAcategory').text(rowJson.reason);
 		tempHtml.find('.RAOther').text(rowJson.comments);
 		tempHtml.find('.RADate').text(rowJson.timestamp);
-		tempHtml.find('.RACount').text(rowJson.count);
+		tempHtml.find('.RACount').text(rowJson.count).attr('href', fetchAbusePageUrl+rowJson.reportee_id);
+		tempHtml.attr('title', rowJson.reportee_id);
+                if(rowJson.attachment_id != -1) {
+                    tempHtml.find('.attach_id').prop('disabled',false).attr('id',rowJson.attachment_id);
+                }
 		return tempHtml;
 
 	}
+		function toggleReviewStatus(){
+			var Url = "/operations.php/feedback/updateReviewStatus";
+			var El = $(this);
+			
+			var review_status = El.prop("checked") ? 'Y':'N';
 
+			var Data = {
+				"status"	: review_status,
+				"id"		: El.attr("id"),
+				"cid"		: cid
+			};
 
+			$.get(Url, Data, function(data){
+				if(data.status == "success"){
+					console.log("updated at backend");
+				}else{
+					console.log("some error");
+				}
+			}, 'json');
+		}
+        function downloadAttachment()
+        {
+            var id = $(this).attr('id');
+            if(id == -1) {
+                return;
+            }
+            $.ajax({
+                'url':'/operations.php/feedback/GetAbuseAttachments',
+                'data':{'attachment_id':id},
+                'method':'POST',
+                success:function(response)
+                { 
+                     var link = document.createElement('a');
+
+                    
+                    link.style.display = 'none';
+
+                    document.body.appendChild(link);
+                    
+                    var size = response.length;
+                    for ( var i=0 ; i<size ; i++ ) {
+                        link.setAttribute('download', response[i].split("/").pop());
+                        link.setAttribute('href', response[i]);
+                        link.click();
+                    }
+                    document.body.removeChild(link);
+                }
+            })
+        }
+        
 	function parseDate(str) 
 	{
     var mdy = str.split('-');
@@ -99,7 +159,7 @@
 							htmlString=getRowHtml(jObject[i]);
 							mainDiv.find('tr:last').after(htmlString);
 						}
-
+                                            $('.attach_id').on('click',downloadAttachment);
 					} 
 					
 					
@@ -170,7 +230,8 @@
 <td>OTHER REASON</td>
 <td>DATE</td>
 <td>COUNT</td>
-
+<td>Attachment</td>
+<td>Review</td>
 </tr>
 
 </table>

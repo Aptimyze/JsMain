@@ -10,3 +10,9 @@ all:
 
   notificationOpenedTrackingV1:
     enable_login:  off
+
+  deliveryTrackingV1:
+    enable_login: off
+    
+  updateTrackingV1:
+      enable_login: off

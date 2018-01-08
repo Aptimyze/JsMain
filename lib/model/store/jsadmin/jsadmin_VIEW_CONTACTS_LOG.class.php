@@ -543,6 +543,24 @@ RETURNS TOTAL NO of viewers of the given profile
 			}
 
 	}
+    
+    public function getViewContactsLogForLegal($profileid){
+        if(!$profileid){
+            throw new jsException("","Profile id is not specified in function getViewContactsLogForLegal of JSADMIN_VIEW_CONTACTS_LOG.class.php");
+        }
+        try{
+            $sql = "SELECT VIEWER,VIEWED,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE from jsadmin.VIEW_CONTACTS_LOG WHERE VIEWER = :PROFILEID OR VIEWED = :PROFILEID UNION SELECT VIEWER,VIEWED,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE from jsadmin.DELETED_VIEW_CONTACTS_LOG WHERE VIEWER = :PROFILEID OR VIEWED = :PROFILEID UNION SELECT VIEWER,VIEWED,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE from jsadmin.DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET WHERE VIEWER = :PROFILEID OR VIEWED = :PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                $result[]=$row;
+            }
+            return $result;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 
 
 }

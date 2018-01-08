@@ -84,6 +84,12 @@ class MembershipMailer {
 			break;
 		case 'JS_EXCLUSIVE_FEEDBACK':
 			$currency =$dataArr['currency'];
+                        $username = $dataArr['username'];
+                        
+                        if(!empty($username)) {
+                            $smartyObj->assign('username', $username);
+                        }
+                        
 		        if(!empty($currency)){
         			$smartyObj->assign('currency',$currency);
         		}
@@ -421,7 +427,8 @@ class MembershipMailer {
         if($profileDetails["CC_EMAIL"]){
             $ccList = $profileDetails["CC_EMAIL"]; //mail copy sent to this email
         }
-        $email_sender->send('','',$ccList);
+        $status = $email_sender->send('','',$ccList);
+        return $status;
     }   		
     function getContactsViewedList($profileid,$startDate,$endDate){
 	
@@ -574,12 +581,15 @@ class MembershipMailer {
 		$services = explode(",",$services);
 		$servMain = NULL;
 		$vasNames = array();
-		
+		$astroFlag=0;
 		foreach($services as $keyMain=>$valMain){
 			$tempId = $memHandlerObj->retrieveCorrectMemID($valMain);
 			$benefitMsg = VariableParams::$newApiPageOneBenefits;
         	$benefitArr = VariableParams::$newApiPageOneBenefitsVisibility;
-			$vasArr = VariableParams::$newApiVasNamesAndDescription;			
+			$vasArr = VariableParams::$newApiVasNamesAndDescription;
+			if($tempId=="A"){
+			    $astroFlag=1;
+			}
 			if ($tempId == "X") {
 				$servMain = $tempId;
             	$benefits = VariableParams::$newApiPageOneBenefitsJSX;
@@ -617,9 +627,8 @@ class MembershipMailer {
         
         if(!empty($servMain)){
         	$subject = "Congratulations! We welcome you as an " . $memHandlerObj->getUserServiceName($servMain) . " member on Jeevansathi";
-        } else {
-        	$subject = implode(', ', $vasNames) . " activated on your account";
         }
+       
         
         $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
@@ -638,6 +647,17 @@ class MembershipMailer {
         
         $email_sender->send();
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
+        if($astroFlag){
+            $mailerSubject= " Congratulations on purchasing Astro compatibility. Important information you need to know";
+
+            $mailer = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY, 1839);
+            $mailerTpl = $mailer->setProfileId($profileid);
+             $obj = $mailerTpl->getSmarty();
+             $mailerTpl->setSubject($mailerSubject);
+             $obj->assign("mailerLinks",$mailerLinks);
+             $obj->assign("profileid",$profileid);
+             $mailer->send();
+        }
         return $deliveryStatus;
 
     }

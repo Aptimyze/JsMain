@@ -20,8 +20,12 @@ class UpdateModuleTableFactory
                         $obj = new ProfileDocumentVerificationService;
 		elseif($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("VERIFICATION_DOCUMENTS_BYUSER"))
                         $obj = new ProfileDocumentVerificationByUserService;
+		elseif($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("CRITICAL_INFO_DIVORCED_DOC"))
+                        $obj = new CriticalInfoChangeDocUploadService;
     if($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("PICTURE_DELETED"))
 			$obj = new DeletedPictures;
+    if($module == IMAGE_SERVER_MODULE_NAME_ENUM::getEnum("ABUSE_ATTACHMENTS"))
+        $obj = new FEEDBACK_ABUSE_ATTACHMENTS;
 		return $obj;
 	}
 }

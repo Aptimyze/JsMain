@@ -110,6 +110,7 @@ class SearchParamters
         protected $CITY_RES_SELECTED;
         protected $CITY_INDIA_SELECTED;
         protected $FSO_VERIFIED;
+        protected $AADHAAR_VERIFIED;
         protected $INCOME_SORTBY;
         protected $NATIVE_STATE;
         protected $NATIVE_CITY;
@@ -117,6 +118,11 @@ class SearchParamters
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
         protected $IS_VSP; // check for VSP Search
+        protected $KNOWN_COLLEGE;
+        protected $KNOWN_COLLEGE_IGNORE;
+        protected $CURRENT_CLUSTER; // current selected cluster label
+        protected $SEARCH_FAILED;
+        protected $HAS_TRENDS;
         
         public function __construct()
 	{
@@ -124,13 +130,18 @@ class SearchParamters
 		$this->rangeParams = SearchConfig::$searchRangeParameters;
 	}
 
-	public function setter($arrayValuePair)
+	public function setter($arrayValuePair,$nomapping=0)
 	{
 		foreach($arrayValuePair as $k=>$v)
 		{
                         $functionName = 'set'.$k;
-			if(method_exists($this,$functionName))
-                                $this->{"set" . $k}($v);
+			if(method_exists($this,$functionName)){
+                                if($k == "CITY_RES"){
+                                        $this->{"set" . $k}($v,'',$nomapping);
+                                }else{
+                                        $this->{"set" . $k}($v);
+                                }
+                        }
 		}
 	}
 
@@ -356,6 +367,7 @@ class SearchParamters
 	public function getCOUNTRY_RES() { return $this->COUNTRY_RES; }
 	public function setCITY_RES($CITY_RES,$fromCityForStateFunction = '',$noMapping="") 
 	{ 
+                $CITY_RES = $this->replaceCityResOTvalues($CITY_RES);
 		$validInput = SearchInputValidation::validateInput("CITY_RES",$CITY_RES);
                 if($validInput)
 			$this->CITY_RES = $CITY_RES; 
@@ -363,7 +375,9 @@ class SearchParamters
 		{
                 	if($this->getSTATE() && $this->CITY_RES && !$fromCityForStateFunction)
 		 	       $this->setCityForState();
-		}
+		}elseif($noMapping == 2){
+                                $this->setStateForCityCluster();
+                }
 	}
 	public function getCITY_RES() { return $this->CITY_RES; }
 	public function setCITY_RES_SELECTED($CITY_RES) 
@@ -424,7 +438,7 @@ class SearchParamters
 	}
 	public function getSORT_LOGIC() { return $this->SORT_LOGIC; }
 	public function setINCOME($INCOME) 
-	{ 
+	{
 		$validInput = SearchInputValidation::validateInput("INCOME",$INCOME);
                 if($validInput)
 			$this->INCOME = $INCOME; 
@@ -724,6 +738,14 @@ class SearchParamters
 			$this->FSO_VERIFIED = $FSO_VERIFIED;
 	}
 	public function getFSO_VERIFIED() { return $this->FSO_VERIFIED; }
+        
+        public function setAADHAAR_VERIFIED($AADHAAR_VERIFIED) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("AADHAAR_VERIFIED",$AADHAAR_VERIFIED);
+                if($validInput)
+			$this->AADHAAR_VERIFIED = $AADHAAR_VERIFIED;
+	}
+	public function getAADHAAR_VERIFIED() { return $this->AADHAAR_VERIFIED; }
 
 	/*
 	* The logic for this function : all values which are less than choosen value should also need to be considered.
@@ -853,6 +875,20 @@ class SearchParamters
 			$this->MARRIED_WORKING = $MARRIED_WORKING; 
 	}
 	public function getMARRIED_WORKING() { return $this->MARRIED_WORKING; }
+        public function setKNOWN_COLLEGE($KNOWN_COLLEGE) 
+	{
+		$validInput = SearchInputValidation::validateInput("KNOWN_COLLEGE",$KNOWN_COLLEGE);
+                if($validInput)
+			$this->KNOWN_COLLEGE = $KNOWN_COLLEGE; 
+	}
+	public function getKNOWN_COLLEGE() { return $this->KNOWN_COLLEGE; }
+        public function setKNOWN_COLLEGE_IGNORE($KNOWN_COLLEGE_IGNORE) 
+	{
+		$validInput = SearchInputValidation::validateInput("KNOWN_COLLEGE_IGNORE",$KNOWN_COLLEGE_IGNORE);
+                if($validInput)
+			$this->KNOWN_COLLEGE_IGNORE = $KNOWN_COLLEGE_IGNORE; 
+	}
+	public function getKNOWN_COLLEGE_IGNORE() { return $this->KNOWN_COLLEGE_IGNORE; }
 	public function setGOING_ABROAD($GOING_ABROAD) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("GOING_ABROAD",$GOING_ABROAD);
@@ -1034,6 +1070,21 @@ class SearchParamters
 		}
 		$this->LLAST_LOGIN_DT = $x;
 	}
+        public function getLPAID_ON(){return $this->LPAID_ON;}
+        
+        public function setLPAID_ON($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->LPAID_ON = $x;
+	}
         public function getLLAST_LOGIN_DT(){return $this->LLAST_LOGIN_DT;}
         public function setHLAST_LOGIN_DT($x)
 	{
@@ -1047,6 +1098,21 @@ class SearchParamters
 				$x = str_replace(" ","T",$x)."Z";
 		}
 		$this->HLAST_LOGIN_DT = $x;
+	}
+        
+        public function getHPAID_ON(){return $this->HPAID_ON;}
+        public function setHPAID_ON($x)
+	{
+		if(!$x)
+			;
+		elseif(substr($x,0,10)=='0000-00-00')
+			$x ='';
+		else
+		{
+			if($x!="0000-00-00" && !strpos($x,"Z"))
+				$x = str_replace(" ","T",$x)."Z";
+		}
+		$this->HPAID_ON = $x;
 	}
         public function getHLAST_LOGIN_DT(){return $this->HLAST_LOGIN_DT;}
 
@@ -1147,7 +1213,23 @@ class SearchParamters
         public function getDisplayCity(){return $this->displayCity;}
         public function getDisplayState(){return $this->displayState;}
 	/* Getter and Setter public functions*/
-        
+        public function setStateForCityCluster(){
+                $city_arr = explode(",",$this->getCITY_RES());
+                $state_arr = explode(",",$this->getSTATE());
+                if($city_arr)
+                {
+                    foreach ($city_arr as $k=>$cityVal){
+                        if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
+                            $state_from_city =  $this->cityStateConversion($cityVal);
+                                $state_arr = array_merge($state_arr,$state_from_city);
+                            $state_arr = array_unique($state_arr);
+                        }
+                    }
+
+                }
+                if(is_array($state_arr))
+                    $this->setSTATE(implode(",",$state_arr),1);
+        }
         public function setCityForState(){
             
             $city_arr = explode(",",$this->getCITY_RES());
@@ -1158,6 +1240,7 @@ class SearchParamters
 		if(!$this->displayState)
 			$this->displayState = $this->getSTATE();
             
+            $stateCityArray = array();
             if($state_arr){
                 foreach ($state_arr as $k=>$stateVal){
                     if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
@@ -1169,6 +1252,15 @@ class SearchParamters
                     }
 
                 }
+                if($stateCityArray){
+                        foreach($stateCityArray as $key=>$cityArr){
+                                if(array_intersect($city_arr,$cityArr)){
+                                        unset($stateCityArray[$key]);
+                                }else{
+                                        $city_arr = array_merge($city_arr,$cityArr);
+                                }
+                        }
+                }
             }
             
 
@@ -1177,8 +1269,10 @@ class SearchParamters
                 foreach ($city_arr as $k=>$cityVal){
                     if(FieldMap::getFieldLabel("city_india","",1)[$cityVal]){
                         $state_from_city =  $this->cityStateConversion($cityVal);
-                            $state_arr = array_merge($state_arr,$state_from_city);
-                        $state_arr = array_unique($state_arr);
+                        if(is_array($state_arr) && is_array($state_from_city)){
+                                $state_arr = array_merge($state_arr,$state_from_city);
+                                $state_arr = array_unique($state_arr);
+                        }
                     }
                 }
 
@@ -1190,12 +1284,12 @@ class SearchParamters
                     $this->setSTATE($state_arr,1);
             if(is_array($city_arr))
             {
-                    $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
+                   // $this->setCITY_INDIA(implode(",",array_unique($city_arr)));
                     $this->setCITY_RES(implode(",",array_unique($city_arr)),1);
             }
             else
             {
-                    $this->setCITY_INDIA($city_arr);
+                    //$this->setCITY_INDIA($city_arr);
                     $this->setCITY_RES($city_arr,1);
             }
         }
@@ -1228,4 +1322,19 @@ class SearchParamters
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
         public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
         public function getIS_VSP() { return $this->IS_VSP; }
+        public function setIS_APCron($IS_APCron=0) {$this->IS_APCron = $IS_APCron;}
+        public function getIS_APCron() { return $this->IS_APCron; }
+        public function setCURRENT_CLUSTER($CURRENT_CLUSTER="") {$this->CURRENT_CLUSTER = $CURRENT_CLUSTER;}
+        public function getCURRENT_CLUSTER() { return $this->CURRENT_CLUSTER; }
+        public function setSEARCH_FAILED($SEARCH_FAILED="") {$this->SEARCH_FAILED = $SEARCH_FAILED;}
+        public function getSEARCH_FAILED() { return $this->SEARCH_FAILED; }
+        public function setHAS_TRENDS($HAS_TRENDS="0") {$this->HAS_TRENDS = $HAS_TRENDS;}
+        public function getHAS_TRENDS() { return $this->HAS_TRENDS; }
+        public function replaceCityResOTvalues($CITY_RES){
+                $ncr = FieldMap::getFieldLabel("delhiNcrCities",1,1);
+                if(count(array_intersect($ncr,explode(",",$CITY_RES))) == sizeOf($ncr)){
+                     $CITY_RES .= ",DE000";
+                }
+                return $CITY_RES;
+        }
 }

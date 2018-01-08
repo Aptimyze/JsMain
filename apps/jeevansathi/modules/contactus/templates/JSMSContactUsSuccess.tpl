@@ -3,7 +3,7 @@
     <div class="bg1 txtc pad15 topheadM">
         <div class="posrel">
             <div class="f20 white fontthin" id="test">Contact Us</div>
-            <a href="/profile/mainmenu.php"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+            <a href="~$referer`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
         </div>
     </div>
     <!--end:top--> 
@@ -52,7 +52,7 @@
         
     </div>
 </div>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript">
     function setPrevNextEvents(sly){
         $($('ul .active')).find(".prev").click(function(){

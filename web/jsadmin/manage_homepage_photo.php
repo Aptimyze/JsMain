@@ -1,7 +1,5 @@
 <?php
 include("connect.inc");
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com","web/jsadmin/manage_homepage_photo.php in USE",$msg);
 if(authenticated($cid))
 {
 

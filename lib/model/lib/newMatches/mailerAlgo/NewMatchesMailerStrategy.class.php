@@ -43,7 +43,7 @@ class NewMatchesMailerStrategy extends NewMatchesStrategy {
          * This function gets the search criteria for trends and dpp based new matches
          * @return type array of user profile Ids
          */
-        public function getMatches() {
+        public function getMatches($dailyCron=0) {
                               
                 $SearchServiceObj = new SearchService;
 		$SearchUtilityObj =  new SearchUtility;
@@ -70,7 +70,7 @@ class NewMatchesMailerStrategy extends NewMatchesStrategy {
                 $this->setLogicLevelArray($pids);
                 */
                 if (count($this->profileSet)){
-                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $this->profileSet, $this->logicUsed, $this->limit,$totalRecords);
+                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $this->profileSet, $this->logicUsed, $this->limit,$totalRecords,$dailyCron);
                 }else{
                         $this->insertZeroRecordEntries($this->loggedInProfileObj->getPROFILEID());
                 }

@@ -18,7 +18,9 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$this->COUNT_BIND_TYPE = "INT";
 			$this->MSG_ID_BIND_TYPE = "INT";
             $this->PHOTO_URL_BIND_TYPE = "STR";
+            $this->IOS_PHOTO_URL_BIND_TYPE = "STR";
             $this->PROFILE_CHECKSUM_BIND_TYPE = "STR";
+            $this->REG_ID_BIND_TYPE = "STR";
 			$this->tableName = "MOBILE_API.SCHEDULED_APP_NOTIFICATIONS";
         }
 	public function truncate()
@@ -31,12 +33,12 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 	{
 		if(!is_array($insertData))
 			return;
-		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`,`PHOTO_URL`,`PROFILE_CHECKSUM`) VALUES ";
+		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.SCHEDULED_APP_NOTIFICATIONS (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE`,`LANDING_SCREEN`,`OS_TYPE`,`COLLAPSE_STATUS`,`TTL`,SCHEDULED_DATE,SENT,`TITLE`,`COUNT`,`PRIORITY`,`MSG_ID`,`PHOTO_URL`,`PROFILE_CHECKSUM`,`REG_ID`,`IOS_PHOTO_URL`) VALUES ";
 		foreach($insertData as $k=>$v)
 		{
 			if($sqlPart!='')
 				$sqlPart.=",";
-			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.",:PHOTO_URL".$k.",:PROFILE_CHECKSUM".$k.")";
+			$sqlPart.= "(:PROFILEID".$k.",:NOTIFICATION_KEY".$k.",:MESSAGE".$k.",:LANDING_SCREEN".$k.",:OS_TYPE".$k.",:COLLAPSE_STATUS".$k.",:TTL".$k.",now(),:SENT".$k.",:TITLE".$k.",:COUNT".$k.",:PRIORITY".$k.",:MSG_ID".$k.",:PHOTO_URL".$k.",:PROFILE_CHECKSUM".$k.",:REG_ID".$k.",:IOS_PHOTO_URL".$k.")";
 		}
 		$sqlInsert.=$sqlPart;
 		$resInsert = $this->db->prepare($sqlInsert);
@@ -54,9 +56,12 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
 			$resInsert->bindValue(":MSG_ID".$k,$v['MSG_ID'],constant('PDO::PARAM_'.$this->{'MSG_ID_BIND_TYPE'}));
 			$resInsert->bindValue(":PRIORITY".$k,$v['PRIORITY'],constant('PDO::PARAM_'.$this->{'PRIORITY_BIND_TYPE'}));
 			$resInsert->bindValue(":SENT".$k,$v['SENT'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
-            $resInsert->bindValue(":PHOTO_URL".$k,$v['PHOTO_URL'],constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
+            $resInsert->bindValue(":PHOTO_URL".$k,$v['PHOTO_URL'],constant('PDO::PARAM_'.$this->{'PHOTO_URL_BIND_TYPE'}));
+            $resInsert->bindValue(":IOS_PHOTO_URL".$k,$v['IOS_PHOTO_URL'],constant('PDO::PARAM_'.$this->{'IOS_PHOTO_URL_BIND_TYPE'}));
             $resInsert->bindValue(":PROFILE_CHECKSUM".$k,$v['PROFILE_CHECKSUM'],constant('PDO::PARAM_'.$this->{'PROFILE_CHECKSUM_BIND_TYPE'}));
+            $resInsert->bindValue(":REG_ID".$k,$v['REG_ID'],constant('PDO::PARAM_'.$this->{'REG_ID_BIND_TYPE'}));
 		}
+		
 		//$resInsert->bindValue(":SENT","N",constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->execute();
 		if(is_array($insertData) && (count($insertData)==1))
@@ -252,6 +257,20 @@ class MOBILE_API_SCHEDULED_APP_NOTIFICATIONS extends TABLE{
                 {
                         throw new jsException($e);
                 }
+        }
+        
+        public function getTodaysNotifications(){
+            try{
+                $sql = "SELECT count(*) count,NOTIFICATION_KEY from MOBILE_API.SCHEDULED_APP_NOTIFICATIONS GROUP BY NOTIFICATION_KEY";
+                $res = $this->db->prepare($sql);
+                $res->execute();
+                while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                    $data[$row["NOTIFICATION_KEY"]] = $row["count"];
+                }
+                return $data;
+            } catch (Exception $ex) {
+
+            }
         }
         
 }

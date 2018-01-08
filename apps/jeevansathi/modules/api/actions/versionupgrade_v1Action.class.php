@@ -17,16 +17,13 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-            "dpp suggestion cal",
-            "multi select search form",
-            "online chat"
-            
+			" Upload screenshots while reporting abuse
+			 Critical bug fixes and enhancements "            
         );
 	public function execute($request)
 	{	
 		$responseData = array();
 		//$loginData = $request->getAttribute("loginData");
-		
 		$apiObj=ApiResponseHandler::getInstance();
 		$this->apiWebHandler = ApiRequestHandler::getInstance($request);
 		$this->defaultArray=$this->apiWebHandler->forceUpgradeCheck($request);
@@ -35,6 +32,7 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["RATE_US_AUTO"]="true";
 		$this->defaultArray["RATE_US_MANUAL"]="true";
 		$this->defaultArray["RATE_US_BEHAVIORAL"]="true";
+		$this->defaultArray["RATE_US_BEHAVIORAL_CAP"]=4;
 		$this->defaultArray["updateInfo"]['updateInfoFlag']="true";
 		$this->defaultArray["updateInfo"]['playStoreVersion']=  ApiRequestHandler::$ANDROID_PLAYSTORE_APP_VERSION;
 		$this->defaultArray["updateInfo"]['optionalUpgradeVersion']=  ApiRequestHandler::$ANDROID_OPTIONAL_UPGRADE_VERSION;

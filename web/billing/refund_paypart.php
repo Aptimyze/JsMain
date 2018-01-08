@@ -5,6 +5,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/billing/comfunc_sums.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
+
 $ip=FetchClientIP();
 if(strstr($ip, ","))
 {
@@ -222,7 +223,8 @@ if(authenticated($cid))
 					$row=mysql_fetch_array($res);
                                         if($row['ACTIVATED']=='D')
                                         {
-                                                $path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+                                                //$path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/retrieveprofile_bg.php $profileid > /dev/null &";
+						$path = $_SERVER['DOCUMENT_ROOT']."/profile/retrieveprofile_bg.php $profileid > /dev/null &";
                                                 $cmd = JsConstants::$php5path." -q ".$path;
                                                 passthru($cmd);
                                                                                                                              
@@ -243,8 +245,9 @@ if(authenticated($cid))
 				        mysql_query_decide($sql) or logError_sums($sql,1);
 
 				}
-				$sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
+                                $sql_ss = "UPDATE billing.PURCHASE_DETAIL SET STATUS = 'DONE' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
+                                
 				$sql_ss = "UPDATE billing.SERVICE_STATUS SET ACTIVE = 'Y' WHERE BILLID='$billid'";
 				mysql_query_decide($sql_ss) or logError_sums($sql_ss,1);
 
@@ -302,7 +305,7 @@ if(authenticated($cid))
             //**START - Entry for negative transactions
             if($val=="refund"){
                 $memHandlerObject = new MembershipHandler();
-                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())),'REFUND');
                 unset($memHandlerObject);
             }
             //**END - Entry for negative transactions

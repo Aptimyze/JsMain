@@ -58,11 +58,12 @@ EOF;
                 foreach($profilesArr as $key=>$value){
                     $value = $value[PROFILEID];
                     dppReviewMailerFunctions::sendDppReviewMail($value,$instanceId);
+                    ProfileCacheLib::getInstance()->__destruct();
                 }
                 
                 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring DPP_REVIEW_MAILER");
                 passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring DPP_REVIEW_MAILER#INSERT");
-                $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG('newjs_masterDDL');
+                $dppMailerLogObj = new PROFILE_DPP_REVIEW_MAILER_LOG('newjs_master');
                 $dppMailerLogObj->truncateTable();
 	}
 }

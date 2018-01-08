@@ -86,30 +86,33 @@ class Reminder extends ContactEvent {
     else {
       $this->contactHandler->getContactObj()->setFILTERED(Contacts::NOTFILTERED_BLANK);
     }
+    
     $this->contactHandler->getContactObj()->setCOUNT($this->contactHandler->getContactObj()->getCOUNT()+1);
     $this->contactHandler->getContactObj()->updateContact();
     $this->contactHandler->setElement("STATUS","I");
     $this->handleMessage();
-
-    //send eoi reminder notification with default reminder message
+    $sendMailNot = $this->contactHandler->getElements('MAIL_AND_NOT') == 'N' ? false : true;
+    
     $filteredState =$this->contactHandler->getContactObj()->getFILTERED();	
-    if($filteredState!='Y')
+
+    if($filteredState!='Y' && $filteredState!='J' && $sendMailNot)
     {	
       $receiverId = $this->contactHandler->getViewed()->getPROFILEID();
       $senderId = $this->contactHandler->getViewer()->getPROFILEID();
-      $reminderMsg = $this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE);
 
-	    $instantNotificationObj =new InstantAppNotification("EOI_REMINDER");
-	    $instantNotificationObj->sendReminderInstantAppNotification($this->contactHandler->getViewer()->getUSERNAME(),$receiverId,$senderId,$reminderMsg); 
-	    unset($instantNotificationObj);
+      $notificationMsg = $this->getNotificationMessage($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
+
+      // send the notification to app  
+      $instantNotificationObj =new InstantAppNotification("EOI_REMINDER");
+      $instantNotificationObj->sendNotification($receiverId,$senderId,$notificationMsg); 
+      unset($instantNotificationObj);
+      
       try
       {
         //send instant JSPC/JSMS notification
-        if(strlen($reminderMsg)>BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"])
-          $notificationMsg = substr($reminderMsg,0,BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"])."....";
-        else
-          $notificationMsg = $reminderMsg;
+        
         $notificationData = array("notificationKey"=>"EOI_REMINDER","selfUserId" => $receiverId,"otherUserId" => $senderId,"message"=>$notificationMsg);
+        
         $producerObj = new Producer(); 
         if($producerObj->getRabbitMQServerConnected())
         {
@@ -123,15 +126,46 @@ class Reminder extends ContactEvent {
       }
     } 
 
-    $viewedEntryDate = $this->contactHandler->getViewed()->getENTRY_DT();
-    $now = date("Y-m-d");
-    $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
-
+//    $viewedEntryDate = $this->contactHandler->getViewed()->getENTRY_DT();
+//    $now = date("Y-m-d");
+//    $dateDiff = abs(date("U", JSstrToTime($now)) - date("U", JSstrToTime($viewedEntryDate))) / 86400;
  // Instant mailer
+    if($sendMailNot)
       $this->sendMail();
     
   }
+  
+  /**
+   * This method is used to test if the string received is present or not. 
+   * If not, a fallback is set as a hardcoded string which will be sent 
+   * to the user
+   * 
+   * @param type String $message - Contains the notification message which needs to be validated
+   * @return type String - Final message that will be sent to the user
+   */
+  
+  private function getNotificationMessage($message) {
+      
+        // if the reminder message is present, set the limit to the message
+        return ($message)? $this->getLimitedNotificationMessage($message) 
+        // otherwise, a fallback is defined in case the reminder message is missing, this fallback is hardcoded  
+                : $this->contactHandler->getViewer()->getUSERNAME().BrowserNotificationEnums::$EOINotificationReminderMsg;
+  }
 
+  /**
+   * This method is used to set the limit to the string received as input.
+   * The limit is present in the Enum file of Browser Notification Enum file.
+   * @param type String $message - Input String where limit is set to the message
+   * @return type String $message - Limited string which will be sent as notification message to the user
+   */
+  
+  private function getLimitedNotificationMessage($message) {
+      
+        if(strlen($message)>BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"]) {
+                return substr($message,0,BrowserNotificationEnums::$variableMessageLimit["EOI_REMINDER"])."....";
+        }
+        return $message;
+  }
   /**
    * 
    * function setPostComponent
@@ -151,14 +185,25 @@ class Reminder extends ContactEvent {
       $this->setPostDrafts($this->component->drafts);
     }
   }
-
+  
+  /**
+   * 
+   */
   public function sendMail(){   
     $viewed = $this->contactHandler->getViewed();
     $viewer = $this->contactHandler->getViewer();
+    
     $viewedSubscriptionStatus = $viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-
     $this->_setReminderMailerDraft(stripslashes(htmlspecialchars($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE), ENT_QUOTES)));
-    ContactMailer::InstantReminderMailer($viewed->getPROFILEID(), $viewer->getPROFILEID(), $this->_getReminderMailerDraft(), $viewedSubscriptionStatus);
+    
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+    {
+      $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'REMINDERCONTACT','body'=>array('senderid'=>$viewer->getPROFILEID(),'receiverid'=>$viewed->getPROFILEID(),'message'=>$this->_getReminderMailerDraft(), 'viewedSubscriptionStatus'=> $viewedSubscriptionStatus) ), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($sendMailData);
+    } else {
+      ContactMailer::InstantReminderMailer($viewed->getPROFILEID(), $viewer->getPROFILEID(), $this->_getReminderMailerDraft(), $viewedSubscriptionStatus);
+    }    
   }
 
   private function _setReminderMailerDraft($draft) {

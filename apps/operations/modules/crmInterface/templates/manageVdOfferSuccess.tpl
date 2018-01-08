@@ -25,7 +25,7 @@
 	<div width="100%" style="background-color:lightblue;text-align:left;padding:20px;font-size:12px;font-weight:bold;">
         ~if $CRMTECorDA`        
         <div>
-                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/startVdOffer?name=~$name`&cid=~$cid`">Start Variable Discount Offer</a>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/startVdOffer?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer</a>
                 </div>
 		<br>
                 <div>
@@ -34,6 +34,10 @@
 		 <br>
                 <div>
                         ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/scheduleVdMailer?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer Mailer </a>
+                </div>
+		<br>
+		<div>
+                        ~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/scheduleVdNotification?name=~$name`&cid=~$cid`">Schedule Variable Discount Offer Notifications</a>
                 </div>
 		<br>
 		<div>
@@ -46,6 +50,10 @@
 		<br>
 		<div>
 			~$num++`.&nbsp;&nbsp;<a href="/operations.php/commoninterface/uploadVD?name=~$name`&cid=~$cid`">Upload Mini VD Data</a>
+		</div>
+        <br>
+        <div>
+			~$num++`.&nbsp;&nbsp;<a href="/operations.php/crmInterface/welcomeDiscount?name=~$name`&cid=~$cid`">Update Welcome Discount</a>
 		</div>
         <br>
         ~/if`

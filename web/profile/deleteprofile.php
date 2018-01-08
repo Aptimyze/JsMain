@@ -1,5 +1,13 @@
 <?php
+  
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
+if(MobileCommon::isNewMobileSite()) {
+  header("Location: http://www.jeevansathi.com/static/settings");
+} else {
+  header("Location: http://www.jeevansathi.com/settings/jspcSettings?hideDelete=1");
+}
+die();
 	//to zip the file before sending it
 	$zipIt = 0;
 	if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
@@ -10,8 +18,6 @@
 
 	include("connect.inc");
 	$db=connect_db();
-$msg = print_r($_SERVER,true);
-mail("kunal.test02@gmail.com"," web/profile/deleteprofile.php in USE",$msg);
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 	if($from_search_error)
 		$smarty->assign("from_search_error",1);

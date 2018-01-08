@@ -42,7 +42,7 @@ This Email contains links which let you to directly login to your account. So fo
   <tr>
     <td width="20"></td>
    <td>
-<var>{{USERNAME:profileid=~$otherProfile`}}</var> has accepted your expression of interest. </td>
+<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var> has accepted your expression of interest. </td>
     <td width="20"></td>
   </tr>
 </table>
@@ -58,14 +58,14 @@ This Email contains links which let you to directly login to your account. So fo
     <td> <table style="max-width:280px; min-width:240px" border="0" cellspacing="0" cellpadding="0" align="left">
     <tr>
     <td></td>
-    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{USERNAME:profileid=~$otherProfile`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
+    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{NAME_OTHER_PROFILE:profileid=~$otherProfileId`,receiver_id=~$profileid`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
     </tr>
   <tr>
     <td width="20"></td>
     <td width="280">
     <table width="110" border="0" cellspacing="0" cellpadding="0" align="left">
   <tr>
-    <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0"  align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
+    <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0"  align="left" width="110" vspace="0" hspace="0" height="110" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=contactMailer(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
   
     
   </tr>
@@ -121,27 +121,30 @@ This Email contains links which let you to directly login to your account. So fo
 </table></td>
   </tr>
   <tr>
-    <td><table cellspacing="0" cellpadding="0" border="0" style="max-width:330px;">
+    <td><table cellspacing="1" cellpadding="1" border="0" style="max-width:330px;">
                       <tr>
-                       <td width="22"></td>
-                        <td width="166">
+                       <td width="15"></td>
+                        <td style="margin-right:10px">
                           <table cellspacing="0"  cellpadding="0" border="0" align="left" style="font-family:Arial, Verdana; max-width:150px; font-size:14px;">
                   <tr>
                  
-                    <td bgcolor="#ad160d" align="center" width="150"  height="27"><a style="text-decoration:none; font-size:12px; font-family:Arial, Helvetica, sans-serif;   color:#ffffff; width:100%; " target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"> <strong>View Contact Details</strong></a></td>
+                    <td bgcolor="#ad160d" align="center"   height="27" style="padding:0 10px"><a style="text-decoration:none; font-size:12px; font-family:Arial, Helvetica, sans-serif;   color:#ffffff; width:100%; oadd " target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"> <strong>View Contacts</strong></a></td>
                   </tr>
                 </table>
                         </td>
                         <td width="1"></td>
-                         <td bgcolor="#ad160d" align="center" width="150"  height="27"><a style="text-decoration:none; font-size:12px; font-family:Arial, Helvetica, sans-serif;   color:#ffffff; width:100%; height:27px " target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"> <strong>Send Message</strong></a></td>
+                         <td bgcolor="#ad160d" align="center"  height="27" style="padding:0 10px"><a style="text-decoration:none; font-size:12px; font-family:Arial, Helvetica, sans-serif;   color:#ffffff; width:100%; height:27px " target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"> <strong>Send Message</strong></a></td>
 
                          <td width="1"></td>
-                         <td bgcolor="#ad160d" align="center" width="150"  height="27"><a style="text-decoration:none; font-size:12px; font-family:Arial, Helvetica, sans-serif;   color:#ffffff; width:100%; height:27px " target="_blank" href="(LINK)VIEW_SIMILAR:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"> <strong>View Similar Profile</strong></a></td>
+                        
 
                       </tr>
                     </table></td>
   </tr>
- 
+ <tr>
+    <td bgcolor="" align="left" width="" height="27" colspan="5" style="
+    padding-left: 5%; padding-top:2%"><a style="text-decoration:none;font-size:12px;font-family:Arial, Helvetica, sans-serif;/* color:#ffffff; */width:100%;height:27px;" target="_blank" href="http://cirelease.jeevansathi.com/e/54/2/17dcf976249c95e5ed1ddd284a875600%7Ci%7C56a276adbe9f419f9341650e9f21c489i9937643______1510833012______/56a276adbe9f419f9341650e9f21c489i9937643?profilechecksum=d0ca0949b6e0a222a0bb879eaf609059i144111"> <strong>View Similar Profiles</strong></a></td>
+</tr>
 </table>
   </td>
   </tr>

@@ -80,33 +80,41 @@ EOF;
             curl_setopt($tuCurl, CURLOPT_FILE, $fp);
             curl_setopt($tuCurl, CURLOPT_TIMEOUT, 120);
             curl_setopt($tuCurl, CURLOPT_CONNECTTIMEOUT, 0);
+
+            $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+            curl_setopt($tuCurl, CURLOPT_HEADER, $header);
+            curl_setopt($tuCurl, CURLOPT_USERAGENT,"JsInternal");    
+
             $tuData = curl_exec($tuCurl);
+          
+            // remove header from curl Response 
+            $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
+            $tuData = substr($tuData, $header_size);
+
             curl_close($tuCurl);
 			/**
 			 * send mail alert in case of problem in fetching mis data
 			 */
-            if ($tuData !== true) {
-                CRMAlertManager::sendMailAlert("Issue in cronSendCrmHandledRevenueCSVTask while fetching mis data", "AgentNotifications");
-            } else {
+           
+            
                 /**
                  * send csv as mail
                  */
-                $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com,anoop.singhal@naukri.com,pawan.tripathi@naukri.com";
-                $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-                // $to = "avneet.bindra@jeevansathi.com";
+                $to = "shyam@naukri.com,jitesh.bhugra@naukri.com,rohan.mathur@jeevansathi.com,anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,Amit.Malhotra@jeevansathi.com,anoop.singhal@naukri.com,pawan.tripathi@naukri.com,shilpi.sharma@naukri.com";
+                $cc = "manoj.rana@naukri.com,vibhor.garg@jeevansathi.com";
+                //$to = "ankita.g@jeevansathi.com";
                 $message = "Please find attached excel sheet containing requested data";
                 $subject = "Crm Handled Revenue MIS Report";
                 $csvAttachment = file_get_contents($file_path);
+                //print_r($csvAttachment);
                 /**
                  * print_r($csvAttachment);
                  */
                 $fileName = "crmHandledRevenue_" . $month . "_" . $year . "_" . $fortnight . ".csv";
-                SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', '');
-                /**
-                 * SendMail::send_email($to,$message,$subject,"","","",$csvAttachment,"",$fileName);
-                 */
+              
+                SendMail::send_email($to, $message, $subject, "info@jeevansathi.com", $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', "Jeevansathi Info");
                 unset($csvAttachment);
-            }
+            
         } else {
             echo "Invalid fortnight value provided";
             die;

@@ -39,7 +39,10 @@ class postEOIv1Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE","");
+					if($request->getParameter('chatMessage'))
+                        $this->contactHandlerObj->setElement("MESSAGE",$request->getParameter('chatMessage'));
+                    else
+						$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));
@@ -57,6 +60,7 @@ class postEOIv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
+			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -95,31 +99,34 @@ class postEOIv1Action extends sfAction
 		
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		
-		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
-		$onlyUnderScreenError = 0; // No errors
-		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
+		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
 		{
-			$onlyUnderScreenError = 1;
+			$androidText = true;
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["cansend"] = true;
+			$responseButtonArray["sent"] = true;
 		}
-		// print_r($onlyUnderScreenError);die;
-		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
-		{
-			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		else if ($this->getParameter($request,"coming_from") == "search")
+		{   
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
+			$responseButtonArray["buttons"][] = $buttonObj->getCancelInterestButton('search');
+			$responseButtonArray["buttons"][] = $buttonObj->getContactDetailsButton();
+		}
+		else
+		{	
+		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		}
 		if($this->contactEngineObj->messageId)
 		{
- 
-			
-
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+        	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
-                                if($request->getParameter('API_APP_VERSION')>=80)
-					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+                                if($request->getParameter('API_APP_VERSION')>=80 && $this->getParameter($request,"page_source") != "chat")
+					$responseArray['errmsglabel'] = "Interest sent. Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
 		                        $responseArray["headerthumbnailurl"] = $thumbNail;
                         		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
                         		$responseArray["selfthumbnailurl"] = $ownthumbNail;
@@ -132,7 +139,12 @@ class postEOIv1Action extends sfAction
 			else
 			{
 				$redirection = "false";
-			}	
+			}
+			if(is_array($this->contactEngineObj->contactHandler->getContactLimitWarning()))
+			{
+				$responseArray["limitWarning"] = $this->contactEngineObj->contactHandler->getContactLimitWarning();
+				$responseArray["limitWarning"]["contactedUser"] = $request->getParameter("profilechecksum");
+			}
 		}
 		else
 		{
@@ -201,16 +213,13 @@ class postEOIv1Action extends sfAction
 							$strdate = date( 'F j, Y');
 							break;
 						case "WEEK":
-							$dayNR = date('N');         //monday = 1, tuesday = 2, etc.
-						    $satDiff = 6-$dayNR;        //for monday we need to add 5 days -> 6 - 1
-						    $sunDiff = $satDiff+1;      //sunday is one day more
-						    $strdate = date('F j,Y', JsStrtotime(" +".$sunDiff." days"));
+						    $strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 						    break;
 						case "MONTH":
-							$strdate = date('F t,Y');
+							$strdate = date('F j,Y', strtotime(CommonFunction::getLimitEndingDate($errorArr["LIMIT"])));
 							break;
 					}
-					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for this '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
+					$responseArray["errmsglabel"]= 'You have exceeded the limit of the number interests you can send for the '.strtolower($errorArr["LIMIT"]).' ending '.$strdate.'.';
 					if(!$this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
 					{
 						$responseArray["errmsglabel"]= $responseArray["errmsglabel"].$membershipText;
@@ -225,7 +234,8 @@ class postEOIv1Action extends sfAction
 						$memHandlerObj = new MembershipHandler();
 						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 						$MembershipMessage = $data2['hamburger_message']['top']; 
-						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
+                        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
+						$responseArray["footerbutton"]["label"]  = "Upgrade";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -251,7 +261,7 @@ class postEOIv1Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
-				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
+				$responseArray["errmsglabel"] = "Your interest is saved & will be sent after screening (may take upto 24 hours)";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile Under Screening";
 			}

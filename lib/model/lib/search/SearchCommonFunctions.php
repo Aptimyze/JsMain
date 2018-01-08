@@ -177,9 +177,14 @@ class SearchCommonFunctions
 
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults()==viewSimilarConfig::$suggAlgoNoOfResults_Mobile)
 			return $SearchParametersObj->getNoOfResults();
-
-                if(MobileCommon::isApp()=='A')
-                    return SearchConfig::$profilesPerPageOnApp;
+                
+                if(MobileCommon::isApp()=='A' && (!$SearchParametersObj ||  !$SearchParametersObj->getIS_VSP())){
+					if(sfContext::getInstance()->getRequest()->getParameter('androidMyjsNew')==1)
+						return SearchConfig::$profilesOnMyjsOnApp;
+					else
+						return SearchConfig::$profilesPerPageOnApp;
+                    
+                }
                 if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
                     return SearchConfig::$profilesPerPageOnWapSite;
 		if($SearchParametersObj && $SearchParametersObj->getNoOfResults())
@@ -191,7 +196,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='',$source='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -209,11 +214,13 @@ class SearchCommonFunctions
                 if($twoWayMatches)
                     $SearchParamtersObj->getSearchCriteria();
                 else
-                    $SearchParamtersObj->getDppCriteria();
+                    $SearchParamtersObj->getDppCriteria('',$source);
                 if($verifiedProfilesDate){
                     $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
                     $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');
                 }
+                if($source == "AP")
+                    $SearchParamtersObj->setIS_APCron(1);
 		if($paramArr && is_array($paramArr))
 		{
 			foreach($paramArr as $k=>$v)
@@ -251,27 +258,65 @@ class SearchCommonFunctions
                     $arr['ClusterCount'] = $responseObj->getClustersResults();
 		return $arr;
 	}
-
+        /**
+         * set country india if city india present
+         * @param type $cities
+         * @param type $countryRes
+         * @return int
+         */
+         public static function setCountryIfcityPresent($cities,$countryRes){
+                $countryStr = '';
+		if($cities && !$countryRes && $cities!='DONT_MATTER')
+		{
+			$cityArr = explode(",",$cities);
+			foreach($cityArr as $k=>$v)
+			{
+				if(CommonUtility::isIndia($v))
+					$india=1;
+				else
+					$nonIndia=1;
+			}
+			if($india && !$nonIndia)
+			{
+				$countryStr = 51;
+			}
+		}
+                if($countryStr == ""){
+                        $countryStr = $countryRes;
+                }
+                return $countryStr;
+         }
         /**
         * This section will give count for justJoinedMatches and top10 results
 		* @return array containing count and ids info.
         */
-        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly")
+        public static function getJustJoinedMatches($loggedInProfileObj='',$searchCriteria="CountOnly",$havePhotoCriteria="")
         {
                 $searchEngine = 'solr';
 				$noAwaitingContacts=1;
+				
 				$sort = SearchSortTypesEnums::justJoinedSortFlag;
                 if(!$loggedInProfileObj)
                         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('JustJoinedMatches',$loggedInProfileObj);
                 $SearchParamtersObj->getSearchCriteria($searchCriteria);
+                if($havePhotoCriteria!="")
+                {
+                	$SearchParamtersObj->setHAVEPHOTO("Y");
+                }
+                $countryStr = self::setCountryIfcityPresent($SearchParamtersObj->getCITY_INDIA(),$SearchParamtersObj->getCOUNTRY_RES());
+                if($countryStr != ''){
+                        $SearchParamtersObj->setCOUNTRY_RES($countryStr);
+                }
                 $SearchServiceObj = new SearchService($searchEngine);
                 $SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
                 $SearchUtilityObj =  new SearchUtility;
                 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
+
+                $resultsArr = $responseObj->getResultsArr();
                 $arr['PIDS'] = $responseObj->getsearchResultsPidArr();
-                $arr['CNT']  = $responseObj->getTotalResults();
+                $arr['CNT']  = $responseObj->getTotalResults();                            
                 return $arr;
         }
 
@@ -356,5 +401,49 @@ class SearchCommonFunctions
 		//$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
 		return $arr;
 	}
+        public static function getOccupationMappingData($occupationArray = array()){
+                $mappingOccupationData = array();
+                if(!empty($occupationArray)){
+                        $mappedArr = FieldMap::getFieldLabel("occupation_grouping_mapping_to_occupation",1,1);
+                        $map = array();
+                        foreach($mappedArr as $key=>$mappedOcc){
+                                $map[$key] = explode(",", $mappedOcc);
+                        }
+                        foreach($occupationArray as $occupation){
+                                foreach($map as $k=>$occupations){
+                                        if(in_array($occupation, $occupations)){
+                                                $mappingOccupationData = array_merge($mappingOccupationData,$occupations);
+                                        }
+                                }
+                        }
+                }
+                $mappingOccupationData = array_unique($mappingOccupationData);
+                return $mappingOccupationData;
+        }
+        public static function getCasteMappingData($casteArray = array()){
+                $mappingCasteData = array();
+                if(!empty($casteArray)){
+                        $mappedArr = FieldMap::getFieldLabel("caste_group_array",1,1);
+                        $map = array();
+                        foreach($mappedArr as $key=>$mappedCaste){
+                                $map[$key] = explode(",", $mappedCaste);
+                        }
+                        foreach($casteArray as $caste){
+                                foreach($map as $k=>$castes){
+                                        if(in_array($caste, $castes)){
+                                                $mappingCasteData = array_merge($mappingCasteData,$castes);
+                                        }
+                                }
+                        }
+                }
+                $mappingCasteData = array_unique($mappingCasteData);
+                return $mappingCasteData;
+        }
+        public static function setCityForOtherCondition($cityChk){
+                if(stristr($cityChk, "OT")){
+                        $cityChk = substr($cityChk, 0,2)."000";
+                }
+                return $cityChk;
+        }
 }
 ?>

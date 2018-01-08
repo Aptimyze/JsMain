@@ -66,6 +66,29 @@
 <div id="cancelOverLayer" class="overlay_1_e page transition top_1 dn">
   ~include_partial("profile/mobedit/cancelOverlay")`
 </div>
+
+<div id="confirmOverLayer" class="overlay_1_e page transition top_1 dn">
+  <div id="PromptSectionName" class="dp">
+	<div style="position:relative" >
+    <div class="txtc pad-all10">
+    <i id="nonEditablePic" class="mainsp phn1 dn"></i>
+        <div id="TEXT1_ID" class="f14 color3 pt7 fontlig text1Confirm">TEXT1</div>
+        <div id="TEXT2_ID" class="f14 color3 pt4 fontlig pb20 text2Confirm">TEXT2</div>
+    </div>
+    <div style="border-top:1px solid #dbdbdb">
+    	<div class="fullwid">
+        	<div id="TAB1_ID" class="fl txtc pad2 wid49p brdr2">
+            	<div id="Action1" class="fontthin f17 color2">TAB1_NAME</div>
+            </div>
+            <div id="TAB2_ID" class="fl txtc pad2 wid49p">
+		<div id="Action2" class="fontthin f17 color2">TAB2_NAME</div>           	
+            </div>
+            <div class="clr"></div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
 <input type="hidden" id="listShow" value="~$checkalbum`">
 	<div id="overLayer" class="page transition right_1 dn">
 ~include_partial("profile/mobedit/overlay")`
@@ -82,6 +105,26 @@
         <div id="OverlayID" name="overlayOption">{{overlayoptions}}</div>
     </div>
 </div>
+    
+    
+<div id="fileOverlay" class="pad8 dn">
+    <div overlaydiv="1" class="fl wid91p">
+            <div class="fullwid clearfix">
+                    <div class="fl" style="width:65%">
+                        <form  id="submitForm" action="" method="post" enctype="multipart/form-data">
+                                <input type="file" class="dn" name="default_key" onchange="dcallback_fn" id="file_key" labelKey="default_label_key" style="width:0px;height:0px;position:absolute;" MstatusChange/>
+                        </form>
+                        <div id="default_key" class="f16 fontthin upload-btn-jsms" onClick="triggerFileClick();" value ="json_value" data=1>json_label_val</div>
+                    </div>
+                    <div class="fl" style="width:34%">
+                        <div id="default_label_key" class="f17 fontthin textTru" value ="json_value" data=1 >jpg/pdf only</div>  
+                    </div>
+            </div>
+        
+    </div>
+</div>
+    
+    
 <div id="textAreaOverlay" class="dn" >
 <textarea id="json_key" class="fullwid f17 fontthin color3o minhgt300" placeholder="json_label_placeholder" name="json_key" onKeyUp="keyfunctionShow"  >json_label_val</textarea>
 </div>
@@ -159,7 +202,7 @@
 <div class="fl wwrap fontlig f14 color3">
 <div class="fl wwrap fontlig color3">
 <div class="f13 wid76p dispibl">Also send me matches outside my Desired Partner Profile
-<!-- <div class="f12 color4 pt10">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div> -->
+ <div class="f12 color4 pt10">We will send you more matches based on the interests and acceptances you send</div>
 </div>
     <div id="toggleButton" class="fr dispibl filter-onoff-new ~if $toggleMatchalerts eq 'dpp'` filter-off ~else` filter-on ~/if`" onclick="toggleDppMatchalerts();"></div>
 </div>
@@ -182,9 +225,7 @@
 <div class="hamburger dn fullwid" id="ehamburger">
 ~include_partial("profile/mobedit/hamb")`
 </div>
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
-</div>
 <div class="hamoverlay ltransform fullwid" id="hamoverlay"></div>
 <div id="SAVE_DONE" class="fullwid dn" style="position:absolute;bottom:0px;">
   	<a  class="bg7 white lh30 fullwid dispbl txtc lh50">Done</a>

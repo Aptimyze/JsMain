@@ -14,8 +14,12 @@ $domain=".jeevansathi.com";
 include_once(JsConstants::$docRoot."/commonFiles/mysql_multiple_connections.php");
 
 include (JsConstants::$smartyDir);
+global $screeningRep;
 
-$db = connect_db();
+if(!$screeningRep)
+    $db = connect_db();
+else
+    $db = connect_rep();
 
 function connect_db()
 {
@@ -23,13 +27,13 @@ function connect_db()
 	mysql_select_db_js("jsadmin",$db);         // connection string
 	return $db;
 }
-
+/*
 function connect_ddl()
 {
         $db = db_set_active("masterDDL",MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die("Can't connect to Database".mysql_error());
         mysql_select_db_js("jsadmin",$db);         // connection string
         return $db;
-}
+}*/
 
 function connect_rep()
 {

@@ -14,6 +14,7 @@ class QuickSearchBand extends SearchParamters
         const manglik_blank = '';
         const occupation_blank = '';
         const education_blank = '';
+        private $skipFields = array("GENDER","AGE","INCOME","HEIGHT","RELIGION","CASTE","CASTE_GROUP","MATCHALERTS_DATE_CLUSTER","HAVEPHOTO","MTONGUE","CITY_RES","COUNTRY_RES","STATE","MSTATUS");
 
 	public function __construct($loggedInProfileObj="")
         {
@@ -31,7 +32,10 @@ class QuickSearchBand extends SearchParamters
 		$json = $request->getParameter('json');
 		$jsonArr = json_decode($json,true);
 		$searchParamsSetter['SEARCH_TYPE'] = self::getSearchType($request->getParameter('MOBILE_SEARCH'));
-
+                
+                if(MobileCommon::isApp()=='I' && $request->getParameter('recent_activity') && $request->getParameter('recent_activity') == 1){
+                    $searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::RECENT_ACTIVITY_IOS;  
+                }
 
                 /** 
                 * If profile is logged in , then gender is of opposite gender
@@ -52,19 +56,52 @@ class QuickSearchBand extends SearchParamters
 		$searchParamsSetter['LHEIGHT'] = $jsonArr["LHEIGHT"];
 		$searchParamsSetter['HHEIGHT'] = $jsonArr["HHEIGHT"];
 
+                $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
+                $applyClusters = array_diff($solr_clusters,$this->skipFields);
+                
+                foreach($applyClusters as $clusterFields){
+                        if($jsonArr[$clusterFields] != ""){
+                                if($clusterFields == "KNOWN_COLLEGE"){
+                                        if($cluster == "Any")
+                                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
+                                        else
+                                                $searchParamsSetter['KNOWN_COLLEGE'] = $jsonArr[$clusterFields];
+                                }else{
+                                        $searchParamsSetter[$clusterFields] = $jsonArr[$clusterFields];
+                                }
+                        }
+                }
+                
+                 if(isset($jsonArr['EDU_LEVEL_NEW']) && $jsonArr['EDU_LEVEL_NEW'] != "")
+                        $searchParamsSetter['EDU_LEVEL_NEW'] = $jsonArr['EDU_LEVEL_NEW'];
 
 		if(isset($jsonArr["LINCOME"]) && isset($jsonArr["HINCOME"]))
                 {
-                        $rArr["minIR"] = $jsonArr["LINCOME"];
-                        $rArr["maxIR"] = $jsonArr["HINCOME"];
+                        $rArr["minIR"] = 0;
+                        $rArr["maxIR"] = 19;
+                        if($jsonArr["LINCOME"] != ""){
+                                $rArr["minIR"] = $jsonArr["LINCOME"];
+                        }
+                        if($jsonArr["HINCOME"] != ''){
+                                $rArr["maxIR"] = $jsonArr["HINCOME"];
+                        }
                 
                         $dArr = '';
                         $incomeType = "R";
                         $typeOfI='';
+                        /*if($formArr["partner_country_arr"]==51 && $jsonArr["LINCOME"] && $jsonArr["LINCOME"]!='0' && $jsonArr["LINCOME_DOL"]=='0'){
+                                        $jsonArr["LINCOME_DOL"] = 12;
+                        }*/
                         if(isset($jsonArr["LINCOME_DOL"]) && isset($jsonArr["HINCOME_DOL"]))
                         {
-                                $dArr["minID"] = $jsonArr["LINCOME_DOL"];
-                                $dArr["maxID"] = $jsonArr["HINCOME_DOL"];
+                                $dArr["minID"] = 0;
+                                $dArr["maxID"] = 19;
+                                if($jsonArr["LINCOME_DOL"] != ''){
+                                        $dArr["minID"] = $jsonArr["LINCOME_DOL"];
+                                }
+                                if($jsonArr["HINCOME_DOL"] != ''){
+                                        $dArr["maxID"] = $jsonArr["HINCOME_DOL"];
+                                }
                                 $incomeType = "B";
                                 $typeOfI=1;
                         }       
@@ -147,7 +184,7 @@ class QuickSearchBand extends SearchParamters
 			if($tempCity)
 			{
 				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
-				$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+				//$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
                                 $tempCountry[] = 51;
 				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}

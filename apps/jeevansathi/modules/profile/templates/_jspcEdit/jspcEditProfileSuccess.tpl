@@ -8,7 +8,23 @@
 <input id='hiddenIsd2' type='hidden' value=''>
 <input id='hiddenLandline' type='hidden' value='' phonetype='L'>
 <input id='hiddenIsd3' type='hidden' value=''>
-
+ <!--start:layer for confirmation-->
+    <div id="" class="pos_fix layersZ setshare prfbg6 disp-none confirmationBox" style="width:700px;">
+    	<div class="crit_p2 txtc">
+        	<div class="f17 fontreg pt50">Are you sure you want to submit? </div>
+                        <div class="pt15 fontlig f15 opa80 mauto crit_wid1 msg1 disp-none">
+                                <b>Please note:</b> We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts. You will not be able to edit any of these basic details any further after you click ‘Confirm’.       
+                        </div>  
+                        <div class="pt15 fontlig f15 opa80 mauto crit_wid1 msg2 disp-none">
+                        <b>Please note:</b> We will intimate your accepted members, interests received and interests sent that there is a change in these basic details. You will not be able to edit any of your basic details any further after you click ‘Confirm’.       
+                        </div>  
+        	<div class="clearfix crit_wid2 mauto pt19">
+        		<button class="bg_pink crit_cm1 btn-popup-cnfrm fontreg cursp">Confirm</button>
+            	<button class="crit_grey1 crit_cm1 btn-popup-cancel fontreg cursp">Cancel</button>
+        	</div>
+         </div> 
+    </div>    
+    <!--end:layer for confirmation-->
 <div class="pos-rel fullwid"> 
   <!--start:top part-->
   <div id="CPImage" class="prf-cover1" style="height:387px;">
@@ -131,7 +147,33 @@
           <div class="fl prfwid3">      
             <div class="bg-white fullwid">       
               <!--start:content section-->
-              <div class="f15 fontlig color11">        
+              <div class="f15 fontlig color11">  
+                      <!-- Section Critical Info -->
+                      <div class="prfbr3">
+                  <div class="prfp5 noMultiSelect" id="section-critical">
+                    <div class="clearfix"> <i class="fl critical-field"></i>
+                      <div class="fl colr5 pl8 f17 pt2" >Critical Fields <span class="f14 color11 opa60">- Can be edited only once in lifetime</span></div>
+                        <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections ~if ($editApiResponse.cannot_edit_section.C) neq "Critical"` disp-none ~/if`" data-section-id="critical">Edit</a> </div>
+                    </div>
+                    <div class="pl30 prflist1 fontlig js-criticalView">
+                      <ul class="clearfix fontreg">
+                        <li>
+                          <p class="color12 pt15 fontlig">Age</p>
+                          <p class="pt2 fontlig"><span id="ageView">~$arrOutDisplay.about.age`</span> <span id="dtofbirthView">~$arrOutDisplay.Critical.dtofbirth`</span></p>
+                        </li>
+                        <li>
+                          <p class="color12 pt15 fontlig">Marital Status <span class="~if $editApiResponse.Critical.MSTATUS.screenBit neq 1` disp-none ~/if` js-undSecMsg mstatusUndScnMsg"> <span class="disp_ib color5 f13" > Awaiting proof validation</span></span></p>
+                          <p class="pt2 fontlig" >
+                            <span id="m_statusView">~$arrOutDisplay.about.m_status`</span>
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                    <!--start:Edit Critical Details-->
+                    <div class="pl30 ceditform" id="criticalEditForm"><!---Edit Form--></div>
+                    <!--end:Edit Critical Details-->
+                  </div>
+                </div>
                 <!--start:Basic Details-->
                 <div class="prfbr3">
                   <div class="prfp5 noMultiSelect" id="section-basic">
@@ -153,22 +195,30 @@
                         <span class="~if ($editApiResponse.Details.NAME.value|count_characters) eq 0 || $editApiResponse.Details.NAME.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 
                           <span class="disp_ib color5 f13" > Under Screening</span></span>
                       </p>  
+                      <p class="f17 pt10 fontlig" id="aadhaarLabelParent"><span class="edpcolr2" >Aadhaar No.</span> - 
+                        ~if isset($arrOutDisplay.about.aadhar) and $arrOutDisplay.about.aadhar neq $notFilledInText and $editApiResponse.Details.AADHAAR.verifyStatus eq 'Y'`
+                          <span class="color11" id='aadhaarView'>
+                            ~$arrOutDisplay.about.aadhar`
+                          </span>
+                          ~else`
+                          <span class="color5" id='aadhaarView'>
+                            ~$notFilledInText`
+                          </span>
+                        ~/if`
+                        ~if $editApiResponse.Details.AADHAAR.value neq '' and $editApiResponse.Details.AADHAAR.verifyStatus eq 'Y'`
+                          <span class= "js-undSecMsg"><span class="edpcolr2 f13" > Verified</span></span>
+                        ~else`
+                          <span class= "js-undSecMsg disp-none"><span class="edpcolr2 f13" > Verified</span></span>
+                        ~/if`
+                      </p>  
                       <ul class="clearfix fontreg">
                         <li>
-                          <p class="color12 pt15 fontlig">Age, Height</p>
-                          <p class="pt2 fontlig">~$arrOutDisplay.about.age` (~$arrOutDisplay.about.formatted_dob`), <span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Highest Education</p>
-                          <p class="pt2 fontlig" id='educationView'>~$arrOutDisplay.about.education`</p>
+                          <p class="color12 pt15 fontlig">Height</p>
+                          <p class="pt2 fontlig"><span id='heightView'>~$arrOutDisplay.about.height`</span> </p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Religion</p>
                           <p class="pt2 fontlig" id='religionView'>~$arrOutDisplay.about.religion`</p>
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Occupation</p>
-                          <p class="pt2 fontlig" id='occupationView'>~$arrOutDisplay.about.occupation`</p>
                         </li>
                         <li>
                           <p class="color12 pt15 fontlig">Mother Tongue</p>
@@ -183,7 +233,7 @@
                           <p class="color12 pt15 fontlig" id='caste_sect_labelView'>~$arrOutDisplay.about.caste_sect_label`</p>
                           <p class="pt2 fontlig" >
                             <span id="edit_casteView">~$arrOutDisplay.about.edit_caste`</span>
-                            <span id="edit_sectView" ~if $arrOutDisplay.about.edit_sect eq $notFilledInText`                                class="color5"   ~/if`  > ~$arrOutDisplay.about.edit_sect`</span>
+                            <span id="edit_sectView" ~if $arrOutDisplay.about.edit_sect eq $notFilledInText` class="color5"   ~/if`> ~$arrOutDisplay.about.edit_sect`</span>
                           </p>
                         </li>
                         ~/if`
@@ -194,15 +244,13 @@
                           ~else`
                           <p class="pt2 color5 fontlig" id='posted_byView'>~$notFilledInText`</p>
                           ~/if`
-                        </li>
-                        <li>
-                          <p class="color12 pt15 fontlig">Marital Status</p>
-                          <p class="pt2 fontlig" >
-                            <span id="m_statusView">~$arrOutDisplay.about.m_status`</span>
-                          </p>
+                          
                         </li>
                         ~if $editApiResponse.Details.MSTATUS.value neq N`
-                        <li>
+                        <li id="li-havechild">
+                        ~else`
+                        <li id="li-havechild" class="disp-none">
+                        ~/if`
                           <p class="color12 pt15 fontlig">Have Children?</p>
                           <p class="pt2 fontlig" >
                             <span id="have_childView" 
@@ -214,7 +262,14 @@
                             </span>
                           </p>
                         </li>
-                        ~/if`
+                        ~if $editApiResponse.Details.RELIGION.value eq 2`
+                        <li id="jamaatlistitem">
+                          <p class="color12 pt15 fontlig">Jamaat</p>
+                          <p class="pt2 fontlig" >
+                            <span id="jamaatView">~$arrOutDisplay.about.jamaat`</span>
+                          </p>
+                       </li>
+                       ~/if`
                       </ul>
                     </div>
                     <!--start:Edit Basic Details-->
@@ -277,7 +332,7 @@
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
                     <p class="fl color5 f17 pt3 pl5">Contact Details</p>
                   </li>
-                  <li class="pt4 "> <a class="color5 fontlig f15 js-editBtn cursp" data-section-id="contact" >Edit</a> </li>
+                  <li class="pt4 "> <a class="color5 fontlig f15 js-editBtn cursp editableSections" data-section-id="contact" >Edit</a> </li>
                 </ul>
               </div>
               <div class="prfp12 f14 js-contactView">
@@ -494,7 +549,7 @@
                         <!--end:div-->
                         <!--start:div-->
                         <div id="createHoroDiv" class="edpwid19 mauto disp-none">
-                            <iframe class="brdr-0 fullwid hgt275" src="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
+                            <iframe class="brdr-0 fullwid hgt275" src="https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?js_UniqueID=~$js_UniqueID`&js_year=~$BIRTH_YR`&js_month=~$BIRTH_MON`&js_day=~$BIRTH_DAY`"></iframe>
                         </div>            
                         <!--end:div--> 
                     </div>
@@ -627,5 +682,10 @@
    var $profileScore = null;
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
+  var caste = "~$editApiResponse.Details.CASTE.value`";
+if(caste!=152)
+	$("#jamaatlistitem").hide();
+else
+	$("#jamaatlistitem").show();
 </script>
 

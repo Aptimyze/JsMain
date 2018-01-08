@@ -15,7 +15,7 @@
 <meta name="format-detection" content="telephone=no">
 <div class="fullwid">
 	<!--start:header-->
-	<div class="bg1">
+	<div class="bg1" id="vasHeader">
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="fontthin f19">~$data.title`</div>
@@ -25,7 +25,7 @@
 		</div>
 	</div>
 	<!--end:header-->
-	<div class="rv2_bg1">
+	<div class="rv2_bg1" id="vasTupple">
 		<div class="rv2_pad5" style="padding-bottom:50px;">
 			~if $data.topBlockMessage`
 			<!--start:expire info-->
@@ -90,7 +90,7 @@
 			~if $data.backgroundText`
 			<!--start:offer div-->
 			<div class="pt10">
-				<div id="backgroundText" class="posrel txtc fontlig f16 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.backgroundText`</div>
+				<div id="backgroundText" class="posrel txtc fontlig f16 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.backgroundText`</div>
 			</div>
 			<!--end:offer div-->
 			~/if`
@@ -123,7 +123,7 @@
 							<!--end:features list -->
 							<!--start:duration-->
 							<div id="~$v.vas_key`" class="vas_durations">
-								<div id="~$v.vas_key`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">~$v.selectDurationText`</div>
+								<div id="~$v.vas_key`_selectDurationText" class="rv2_pad7 f18 fontmed ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">~$v.selectDurationText`</div>
 								<!--start:option-->
 								<div class="disptbl rv2_brdr2 rv2_brrad1 fullwid fontlig">
 									~foreach from=$v.vas_options key=vk item=vd name=vasDurLoop`
@@ -171,7 +171,7 @@
 			<!--start:help-->
 			<div class="pt40 pb30 cursp">
 				<div class="rv2_pad4">
-					<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_brrad1">
+					<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_brrad1">
 						~$data.bottomHelp.title`
 					</div>
 				</div>
@@ -182,15 +182,22 @@
 	</div>
 	<!--start:continue button-->
 	<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> ~$data.continueText` </div>
+	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> ~$data.continueText` </div>
 	</div>
 	<!--end:continue button-->
 </div>
 <script type="text/javascript">
+    var appVersion = "~$data.appVersion`";
+    var androidAppVersionForMaterial = "~VariableParams::$androidAppVersionForMaterial`";
+    var isMaterialApp = appVersion > androidAppVersionForMaterial;
 	var AndroidPromotion = 0;
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
 		eraseCookie('couponID');
+        var windowHt = $(window).height();
+        var headerHt = $("#vasHeader").height();
+        var vasCardHt = windowHt - headerHt;
+        $("#vasTupple").height(vasCardHt);
 		$("#continueBtn").show();
 		var preSelectedESathiVas = "~$data.preSelectedESathiVas`";
 		if(checkEmptyOrNull(preSelectedESathiVas)){
@@ -199,43 +206,43 @@
 		var preSelectedEValuePlusVas = "~$data.preSelectedEValuePlusVas`";
 		
 		if(readCookie('selectedVas') && checkEmptyOrNull(readCookie('selectedVas'))){
-			updateSelectedVas("jsmsVasPage");
+			updateSelectedVas("jsmsVasPage",isMaterialApp);
 		}
 		$(".vasClick").click(function(e){
-			var that = this;
+		    var that = this;
 			$(this).parent().find('.vasClick').each(function(){
-				if(checkEmptyOrNull(readCookie('device'))){
+			    if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
 					if($(this).hasClass(readCookie('device')+'_vassel') && this!=that){
 						$(this).removeClass(readCookie('device')+'_vassel');
 					}
 				} else {
-					if($(this).hasClass('vassel') && this!=that){
+				    if($(this).hasClass('vassel') && this!=that){
 						$(this).removeClass('vassel');
 					}
 				}
 			});
-			if(checkEmptyOrNull(readCookie('device'))){
-				if($(that).hasClass(readCookie('device')+'_vassel')){
+			if(checkEmptyOrNull(readCookie('device')) && appVersion <= androidAppVersionForMaterial){
+                if($(that).hasClass(readCookie('device')+'_vassel')){
 					$(that).removeClass(readCookie('device')+'_vassel');
 				} else {
 					$(that).addClass(readCookie('device')+'_vassel');
 				}
 			} else {
-				if($(that).hasClass('vassel')){
+                if($(that).hasClass('vassel')){
 					$(that).removeClass('vassel');
 				} else {
 					$(that).addClass('vassel');
 				}
 			}
-			trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
-			if(checkEmptyOrNull(readCookie('selectedVas'))){
-				$("#nextButton").text('Cart');
+			trackVasCookie($(that).attr("vasKey"), $(that).attr("id"),isMaterialApp);
+            if(checkEmptyOrNull(readCookie('selectedVas'))){
+			    $("#nextButton").text('Cart');
 			} else {
 				$("#nextButton").text('Skip');
 			}
 		});
 		$("#continueBtn, #nextButton").click(function(){
-			callRedirectManager();
+			callRedirectManager(appVersion);
 		});
 		if(readCookie('backState') == "changePlan"){
 			$("#pageBack").hide();	
@@ -245,18 +252,13 @@
 				eraseCookie('backState');
 				paramStr = "/membership/jsms?displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					paramStr += '&device=' + readCookie('device');
+					paramStr += '&device=' + readCookie('device') +"&API_APP_VERSION="+appVersion;
 				}
 				window.location.href = paramStr;
 			} else {
 				window.history.back();
 			}
 		});
-		var username = "~$data.userDetails.USERNAME`";
-		var email = "~$data.userDetails.EMAIL`";
-		setTimeout(function(){
-			autoPopupFreshdesk(username,email);
-		}, 90000);
 	});
 </script>
 ~/if`

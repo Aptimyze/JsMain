@@ -2,7 +2,7 @@
  /*
 	This is auto-generated class by running lib/utils/MailerArrayCreater.php
 	This class should not be updated manually.
-	Created on 2015-10-09
+	Created on 2017-12-14
 	unit test of this class is test/unit/mailer/MailerArrayTest.php
  */
 	class MailerArray{
@@ -14,7 +14,7 @@
 '5'=>array('APP_SCREEN_ID'=>'a5','LINK_NAME'=>'shortlist','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '6'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'similarProfiles','URL'=>'profile/simprofile_search.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '7'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'clickOnPhoto','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'8'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'ACCEPT','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=accept','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'8'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'ACCEPT','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=accept&performAction=accept','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '9'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'DECLINE','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=decline&search_decline=1','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '10'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'Phone_Email_View Contact Details','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '11'=>array('APP_SCREEN_ID'=>'a2','LINK_NAME'=>'HOME_PAGE','URL'=>'P/mainmenu.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
@@ -51,11 +51,11 @@
 '42'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'PROFILE_HOBBIES','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Interests','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '43'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'GOOGLE_PLAY_APP','URL'=>'https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source=organic&ut','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'','OUTER_LINK'=>'Y'),
 '44'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'NEW_MATCHES','URL'=>'search/justjoined','OTHER_GET_PARAMS'=>'noRelaxation=1&type=NME','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'45'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MEMBERSHIP_DETAIL','URL'=>'profile/mem_comparison.php','OTHER_GET_PARAMS'=>'from_source=memMailer	','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'45'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MEMBERSHIP_DETAIL','URL'=>'profile/mem_comparison.php','OTHER_GET_PARAMS'=>'from_source=memMailer','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '46'=>array('APP_SCREEN_ID'=>'a11','LINK_NAME'=>'ALLCENTRESLOCATIONS_N','URL'=>'profile/contact.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'N','OUTER_LINK'=>'N'),
 '47'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'MY_OCCUPATION','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=EduOcc&editSec=Occ','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '48'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'MY_EDUCATION','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=EduOcc&editSec=Edu','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'49'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'I_TUNES_APP','URL'=>'https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=% {idfa}&cs=organic&cm=mailer&cn=JSIA','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'','OUTER_LINK'=>'Y'),
+'49'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'I_TUNES_APP','URL'=>'https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'','OUTER_LINK'=>'Y'),
 '50'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'PROFILE_SHARE_LINK','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'N','OUTER_LINK'=>'N'),
 '51'=>array('APP_SCREEN_ID'=>'a15','LINK_NAME'=>'EOI_FILTER','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=filtered_eoi&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '53'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'INTEREST','URL'=>'inbox/1/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
@@ -66,7 +66,6 @@
 '58'=>array('APP_SCREEN_ID'=>'a2','LINK_NAME'=>'HOME_PAGE_MYJS','URL'=>'myjs/jspcPerform','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '59'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'REQUEST_HOROSCOPE','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=AstroData','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '60'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'HOROSCOPE_REQUEST_PAGE','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=horoscope&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-
 '61'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SHORTLISTED','URL'=>'search/shortlisted','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SAVED_SEARCH','URL'=>'search/perform','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
@@ -78,6 +77,9 @@
 '69'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EOI_EXPIRING','URL'=>'/inbox/23/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '70'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'REQUEST_USER_TO_DELETE','URL'=>'/settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '71'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_PROMOTION','URL'=>'/P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=contact&fieldName=ALT_EMAIL','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'72'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PAID_MEMBERS_MAILER','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'73'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PHOTO_UPLOAD_BY_PROFILE_VIEWED','URL'=>'','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'74'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_PROFILE_LINK','URL'=>'/profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&section=kundli','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -136,7 +138,6 @@ private static $linkNameArray=array(
 'CONTACTVIEWERS'=>'55',
 'HIDE_DELETE'=>'56',
 'SUCCESS_STORY'=>'57',
-
 'HOME_PAGE_MYJS'=>'58',
 'REQUEST_HOROSCOPE'=>'59',
 'HOROSCOPE_REQUEST_PAGE'=>'60',
@@ -148,9 +149,12 @@ private static $linkNameArray=array(
 'KUNDLI_ALERTS'=>'66',
 'SENT_INTEREST'=>'67',
 'ALTERNATE_EMAIL_VER_SUCCESS'=>'68',
-'EOI_EXPIRING' => '69',
-'ALTERNATE_EMAIL_PROMOTION' => '71',
-'REQUEST_USER_TO_DELETE' => '70',
+'EOI_EXPIRING'=>'69',
+'REQUEST_USER_TO_DELETE'=>'70',
+'ALTERNATE_EMAIL_PROMOTION'=>'71',
+'PAID_MEMBERS_MAILER'=>'72',
+'PHOTO_UPLOAD_BY_PROFILE_VIEWED'=>'73',
+'KUNDLI_PROFILE_LINK'=>'74',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -226,7 +230,6 @@ private static $variableArray=array(
 'KYC_PAGE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'20','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 'LIVING_WITH_PARENTS'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'10','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 'MATCH_ALERT'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'match alert url in my contacts page'),
-'CONTACTVIEWERS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'contact viewers link'),
 'MAX_NO_OF_PHOTOS'=>array('VARIABLE_PROCESSING_CLASS'=>'4','MAX_LENGTH'=>'2','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Maximum number of photos uploaded'),
 'MAX_PHOTO_SIZE'=>array('VARIABLE_PROCESSING_CLASS'=>'4','MAX_LENGTH'=>'2','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Maximum Size of Photo Allowed'),
 'MBROTHER'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'10','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
@@ -269,7 +272,6 @@ private static $variableArray=array(
 'RELIGION'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'15','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion'),
 'RELIGION_CASTE_OR_SECT_LABEL'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Labels for template [Religion & Caste] or [Religion & Sect ]'),
 'RELIGION_CASTE_VALUE_TEMPLATE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'50','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion, Small Caste format or simply Full Caste'),
-'RELIGION_CASTE_VALUE_TEMPLATE_2'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion, Small Caste format or simply Full Caste'),
 'RES_STATUS'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'15','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Residential Status'),
 'SCHOOL_NAME'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'School Name'),
 'shortlist'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
@@ -289,14 +291,12 @@ private static $variableArray=array(
 'WEIGHT'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'8','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Weight'),
 'YOURINFO'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'about me section'),
 'INTEREST'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Interest recieved section'),
-'VIEW_SIMILAR'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'view similar mailer link '),
-'HIDE_DELETE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'hide delete link '),
-'SUCCESS_STORY'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'success story link '),
+'VIEW_SIMILAR'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'view similar mailer link'),
+'HIDE_DELETE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'hide delete link'),
+'SUCCESS_STORY'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'success story link'),
 'HOME_PAGE_MYJS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'URL of home page'),
-
 'REQUEST_HOROSCOPE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'100','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'upload horoscope link'),
 'HOROSCOPE_REQUEST_PAGE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'100','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'horoscope page link'),
-
 'SHORTLISTED'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 'BASIC_DETAILS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'about basic details layer on my profile page'),
 'EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Email Verification'),
@@ -305,6 +305,147 @@ private static $variableArray=array(
 'EOI_EXPIRING'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'1000','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Interest expiring response link'),
 'ALTERNATE_EMAIL_PROMOTION'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Alternate email promotional email.'),
 'REQUEST_USER_TO_DELETE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'1000','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Request User to delete profile link'),
+'CONTACTVIEWERS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'contact viewers link'),
+'RELIGION_CASTE_VALUE_TEMPLATE_2'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'20','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Religion, Small Caste format or simply Full Caste'),
+'NAME_OTHER_PROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'6','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'actual Name of the user of profile'),
+'KUNDLI_PROFILE_LINK'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'30','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
+);
+private static $subjectArray=array(
+'1703'=>array('MAIL_ID'=>'1703','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1706'=>array('MAIL_ID'=>'1706','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1707'=>array('MAIL_ID'=>'1707','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1708'=>array('MAIL_ID'=>'1708','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1710'=>array('MAIL_ID'=>'1710','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1716'=>array('MAIL_ID'=>'1716','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1717'=>array('MAIL_ID'=>'1717','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1718'=>array('MAIL_ID'=>'1718','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-'),
+'1720'=>array('MAIL_ID'=>'1720','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-'),
+'1723'=>array('MAIL_ID'=>'1723','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Last Day to get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-'),
+'1704'=>array('MAIL_ID'=>'1704','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'See phone/email of members you like'),
+'1705'=>array('MAIL_ID'=>'1705','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'See phone/email of members you like'),
+'1749'=>array('MAIL_ID'=>'1749','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'How to see phone/email of members? Details inside.'),
+'1712'=>array('MAIL_ID'=>'1712','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift'),
+'1713'=>array('MAIL_ID'=>'1713','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Upload Photo to get Trial Pack of Rs. <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift'),
+'1714'=>array('MAIL_ID'=>'1714','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. '),
+'1715'=>array('MAIL_ID'=>'1715','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/- as a gift. '),
+'1709'=>array('MAIL_ID'=>'1709','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com. See details of Trial Pack inside'),
+'1739'=>array('MAIL_ID'=>'1739','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Trial pack ends today, but there\'s lot more!'),
+'1725'=>array('MAIL_ID'=>'1725','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Photo uploaded successfully. Verify Phone to get Trial Pack of Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>'),
+'1740'=>array('MAIL_ID'=>'1740','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Photo uploaded successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated'),
+'1741'=>array('MAIL_ID'=>'1741','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your photos are live on Jeevansathi.com'),
+'1743'=>array('MAIL_ID'=>'1743','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We could not make your photo live because of the mentioned reason'),
+'1744'=>array('MAIL_ID'=>'1744','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your photos are live on Jeevansathi.com'),
+'1746'=>array('MAIL_ID'=>'1746','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1747'=>array('MAIL_ID'=>'1747','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1750'=>array('MAIL_ID'=>'1750','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1751'=>array('MAIL_ID'=>'1751','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1752'=>array('MAIL_ID'=>'1752','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1753'=>array('MAIL_ID'=>'1753','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$PHOTO_REQUESTED_BY_PROFILEID`}}</var> wants to see your picture. Upload Photo'),
+'1754'=>array('MAIL_ID'=>'1754','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Expressed Interest in you'),
+'1756'=>array('MAIL_ID'=>'1756','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a reminder.'),
+'1742'=>array('MAIL_ID'=>'1742','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Accepted your interest'),
+'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var>  declined your interest'),
+'1748'=>array('MAIL_ID'=>'1748','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var>  declined your interest'),
+'1784'=>array('MAIL_ID'=>'1784','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'More Value. Less price. Contact the Profiles you like'),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'P','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you.'),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'N','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Add a photo to make your profile better '),
+'1755'=>array('MAIL_ID'=>'1755','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Phone is Verified. Upload Photo and get Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var>/-'),
+'1757'=>array('MAIL_ID'=>'1757','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Phone verified successfully. Your Trial Pack worth Rs <var>{{FTO_WORTH:profileid=~$profileid`}}</var> is Activated'),
+'1759'=>array('MAIL_ID'=>'1759','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a personal message'),
+'1761'=>array('MAIL_ID'=>'1761','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'A Jeevansathi member has shown interest in you by viewing your contact details'),
+'1760'=>array('MAIL_ID'=>'1760','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Enrich your profile, get more response on Jeevansathi!'),
+'1701'=>array('MAIL_ID'=>'1701','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Photo upload Test ~$profileid` and something ~$profileid`'),
+'1762'=>array('MAIL_ID'=>'1762','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'See Phone/Email of members. Just take Trial Pack. No payment required'),
+'1763'=>array('MAIL_ID'=>'1763','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'One small step can get you 7 times more Response!'),
+'1764'=>array('MAIL_ID'=>'1764','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Member <var>{{USERNAME:profileid=~$profileid1`}}</var> may be interested in you as <var>{{HE_SHE:profileid=~$profileid`}}</var> saw your profile'),
+'1765'=>array('MAIL_ID'=>'1765','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi'),
+'1766'=>array('MAIL_ID'=>'1766','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi'),
+'1767'=>array('MAIL_ID'=>'1767','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>' ~$count` Members Expressed interest in you'),
+'1768'=>array('MAIL_ID'=>'1768','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your success story needs a photo!'),
+'1769'=>array('MAIL_ID'=>'1769','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Congratulations from Jeevansathi !'),
+'1774'=>array('MAIL_ID'=>'1774','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Complete your profile & contact profiles you like for free'),
+'1771'=>array('MAIL_ID'=>'1771','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Thank you for registering with jeevansathi.com'),
+'1773'=>array('MAIL_ID'=>'1773','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com'),
+'1775'=>array('MAIL_ID'=>'1775','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Verify your number immediately to activate your profile'),
+'1776'=>array('MAIL_ID'=>'1776','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Relationship Executive will meet you soon'),
+'1778'=>array('MAIL_ID'=>'1778','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Jeevansathi.com Password information'),
+'1779'=>array('MAIL_ID'=>'1779','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com'),
+'1779'=>array('MAIL_ID'=>'1779','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi.com'),
+'1780'=>array('MAIL_ID'=>'1780','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Profile is active now!'),
+'1782'=>array('MAIL_ID'=>'1782','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get Started with Jeevansathi.com'),
+'1783'=>array('MAIL_ID'=>'1783','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'The changes made by you in your profile are active now'),
+'1785'=>array('MAIL_ID'=>'1785','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Contact the Profiles you like. Know our Membership plans'),
+'1788'=>array('MAIL_ID'=>'1788','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Important Information for you'),
+'1788'=>array('MAIL_ID'=>'1788','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Important Information for you'),
+'1786'=>array('MAIL_ID'=>'1786','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Introducing JS EXCLUSIVE | Your Partner Search made more personalized'),
+'1791'=>array('MAIL_ID'=>'1791','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Here is some information regarding your account visibility'),
+'1791'=>array('MAIL_ID'=>'1791','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>' ~$user_name`, Your profile is not visible to others.'),
+'1790'=>array('MAIL_ID'=>'1790','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Update regarding your request to call ~$pog_id` as a part of your intro call service.'),
+'1791'=>array('MAIL_ID'=>'1791','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>' ~$user_name`, Your profile is not visible to others.'),
+'1792'=>array('MAIL_ID'=>'1792','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your membership expires today'),
+'1793'=>array('MAIL_ID'=>'1793','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your membership expires in ten days'),
+'1795'=>array('MAIL_ID'=>'1795','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more from your Jeevansathi paid membership!'),
+'1795'=>array('MAIL_ID'=>'1795','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more from your Jeevansathi paid membership!'),
+'1794'=>array('MAIL_ID'=>'1794','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get 5 times more responses. Add important details about yourself and your family..'),
+'1797'=>array('MAIL_ID'=>'1797','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Jeevansathi Exclusive Service Feedback'),
+'1796'=>array('MAIL_ID'=>'1796','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Respond to members who are waiting for your response. '),
+'1798'=>array('MAIL_ID'=>'1798','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'New profile allocation'),
+'1800'=>array('MAIL_ID'=>'1800','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Special offer: Try Jeevansathi 1 month paid membership'),
+'1801'=>array('MAIL_ID'=>'1801','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Search Safe: 6 tips to have a secure experience on Jeevansathi'),
+'1802'=>array('MAIL_ID'=>'1802','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Did you see the interests received in your filtered folder?'),
+'1802'=>array('MAIL_ID'=>'1802','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Did you see the interests received in your filtered folder?'),
+'1804'=>array('MAIL_ID'=>'1804','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Congratulations! You are selected for a special discount by Jeevansathi.com'),
+'1803'=>array('MAIL_ID'=>'1803','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Details about your "We Talk for You" service'),
+'1805'=>array('MAIL_ID'=>'1805','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Feedback request from Jeevansathi.com'),
+'1807'=>array('MAIL_ID'=>'1807','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>' Details about your Response Booster service'),
+'1808'=>array('MAIL_ID'=>'1808','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Welcome to Jeevansathi Exclusive Membership!'),
+'1823'=>array('MAIL_ID'=>'1823','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Login at least once a week to continue to receive relevant interests
+'),
+'1820'=>array('MAIL_ID'=>'1820','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Request for visit has been submitted'),
+'1822'=>array('MAIL_ID'=>'1822','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Login at least once a week to continue to receive relevant interests
+'),
+'1819'=>array('MAIL_ID'=>'1819','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We will soon make your profile inactive, login to continue to receive recommendations'),
+'1824'=>array('MAIL_ID'=>'1824','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Login at least once a week to continue to receive relevant interests
+'),
+'1825'=>array('MAIL_ID'=>'1825','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Login at least once a week to continue to receive relevant interests
+'),
+'1826'=>array('MAIL_ID'=>'1826','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Login at least once a week to continue to receive relevant interests
+'),
+'1827'=>array('MAIL_ID'=>'1827','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We will soon make your profile inactive, login to continue to receive recommendations
+'),
+'1828'=>array('MAIL_ID'=>'1828','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We will soon make your profile inactive, login to continue to receive recommendations
+'),
+'1829'=>array('MAIL_ID'=>'1829','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We will soon make your profile inactive, login to continue to receive recommendations
+'),
+'1821'=>array('MAIL_ID'=>'1821','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Hi ~$username` , Please review your desired partner profile'),
+'1833'=>array('MAIL_ID'=>'1833','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'<var>{{USERNAME:profileid=~$otherProfile`}}</var> wants to see your horoscope. Create horoscope'),
+'1835'=>array('MAIL_ID'=>'1835','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$membershipName`'),
+'1836'=>array('MAIL_ID'=>'1836','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Contact details viewed by you in your last membership'),
+'1837'=>array('MAIL_ID'=>'1837','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'I have shortlisted some profiles for you, please go through them | ~$CURR_MAIL_DATE`'),
+'1839'=>array('MAIL_ID'=>'1839','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> '),
+'1841'=>array('MAIL_ID'=>'1841','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your profile on Jeevansathi.com has been marked incomplete'),
+'1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
+'1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
+'1842'=>array('MAIL_ID'=>'1842','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile deleted because of terms of use violation'),
+'1758'=>array('MAIL_ID'=>'1758','SUBJECT_TYPE'=>'A','SUBJECT_CODE'=>'<var>{{NAME_OTHER_PROFILE:profileid=~$otherProfile`,receiver_id=~$profileid`}}</var> has Cancelled interest in you. Please make your photo visible'),
+'1844'=>array('MAIL_ID'=>'1844','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Because, We decide as a family !'),
+'1848'=>array('MAIL_ID'=>'1848','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Sample Astro compatibility report'),
+'1806'=>array('MAIL_ID'=>'1806','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Feedback request from Jeevansathi.com'),
+'1850'=>array('MAIL_ID'=>'1850','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Astro compatibility report with member <var>{{USERNAME:profileid=~$otherProfile`}}</var> could not be generated'),
+'1851'=>array('MAIL_ID'=>'1851','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$namePG` has changed his ~$fieldList`'),
+'1853'=>array('MAIL_ID'=>'1853','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you could not be made'),
+'1852'=>array('MAIL_ID'=>'1852','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Changes to Basic Details requested by you have been made'),
+'1854'=>array('MAIL_ID'=>'1854','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'~$upgradeMembershipSubject`'),
+'1879'=>array('MAIL_ID'=>'1879','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'We were unable to reach you.Kindly authenticate your contact details'),
+'1859'=>array('MAIL_ID'=>'1859','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Submit your success story and get a free gift!'),
+'1884'=>array('MAIL_ID'=>'1884','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Profile ~$deletedUserName` has been deleted after you reported abuse'),
+'1885'=>array('MAIL_ID'=>'1885','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Weekly Followup status Mail ~$date`'),
+'1886'=>array('MAIL_ID'=>'1886','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Congratulations ! Now here is a chance to help others.'),
+'1887'=>array('MAIL_ID'=>'1887','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Jeevansathi profile deleted as per request'),
+'1888'=>array('MAIL_ID'=>'1888','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
+'1889'=>array('MAIL_ID'=>'1889','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Your Jeevansathi.com password information'),
+'1890'=>array('MAIL_ID'=>'1890','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Here is the promised coupon code'),
+'1891'=>array('MAIL_ID'=>'1891','SUBJECT_TYPE'=>'D','SUBJECT_CODE'=>'Get more Secure on Jeevansathi with linking of Aadhaar number.'),
 );
 public static function getLink($Id){
 
@@ -318,5 +459,24 @@ public static function getVariable($Name){
 
 public static function getLinkArray(){
         return MailerArray::$linkNameArray;}
+
+public static function getMailerSubject($Id){
+
+		$i = 0;
+
+		foreach (MailerArray::$subjectArray as $key => $value) {
+				
+		if($key == $Id)
+		{	
+		$subjectCodeArr[$i]['SUBJECT_TYPE']=$value['SUBJECT_TYPE'];
+		$subjectCodeArr[$i]['SUBJECT_CODE']=$value['SUBJECT_CODE'];
+		$i++;
+		}
+
+
+		}
+		return $subjectCodeArr;	
+
+		}	
 
 }

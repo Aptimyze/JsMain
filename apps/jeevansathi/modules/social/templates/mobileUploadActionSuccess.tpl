@@ -11,7 +11,7 @@
 		~if $pageName eq 'profile'`
 		<a href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1" onclick="" class="pull-right btn pre-next-btn" style="width:auto">Go back</a>
 		~elseif $pageName eq 'photoRequest'`
-		<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=photo&filter=R" onclick="" class="pull-right btn pre-next-btn" style="width:auto">Go back</a>
+		<a href="~sfConfig::get('app_site_url')`/inbox/9/1" onclick="" class="pull-right btn pre-next-btn" style="width:auto">Go back</a>
 		~/if`
 		</div>
 	</section>

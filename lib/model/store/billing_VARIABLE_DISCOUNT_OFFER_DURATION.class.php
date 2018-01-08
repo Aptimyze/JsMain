@@ -6,6 +6,19 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION extends TABLE
     {
         parent::__construct($dbname);
     }
+
+    public function deleteVariableDiscount($pid)
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="DELETE FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION WHERE PROFILEID=:PROFILEID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+            $res->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
     
     public function getDiscountDetailsForProfile($profileid)
     {
@@ -127,11 +140,11 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION extends TABLE
             if(is_array($params["SERVICE"]) && $params["SERVICE"])
             {
                 if(count($params["SERVICE"])==1)
-                    $valuesStr = $valuesStr."(:PROFILEID0,:SERVICE0,:DISC20,:DISC30,:DISC60,:DISC120,:DISCL0)";
+                    $valuesStr = $valuesStr."(:PROFILEID0,:SERVICE0,:DISC10,:DISC20,:DISC30,:DISC60,:DISC120,:DISCL0)";
                 else
                 {
                     foreach ($params["SERVICE"] as $key => $service) {
-                        $valuesStr = $valuesStr."(:PROFILEID".$key.",:SERVICE".$key.",:DISC2".$key.",:DISC3".$key.",:DISC6".$key.",:DISC12".$key.",:DISCL".$key."),"; 
+                        $valuesStr = $valuesStr."(:PROFILEID".$key.",:SERVICE".$key.",:DISC1".$key.",:DISC2".$key.",:DISC3".$key.",:DISC6".$key.",:DISC12".$key.",:DISCL".$key."),"; 
                     }
                     $valuesStr = substr($valuesStr, 0,-1);
                 }
@@ -141,6 +154,7 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION extends TABLE
                 foreach ($params["SERVICE"] as $key => $service) {
                     $res->bindValue(":PROFILEID".$key, $params["PROFILEID"], PDO::PARAM_INT);
                     $res->bindValue(":SERVICE".$key,$service, PDO::PARAM_STR);
+		    $res->bindValue(":DISC1".$key, $params["DISC1"], PDO::PARAM_INT);	
 		    $res->bindValue(":DISC2".$key, $params["DISC2"], PDO::PARAM_INT);	
                     $res->bindValue(":DISC3".$key, $params["DISC3"], PDO::PARAM_INT);
                     $res->bindValue(":DISC6".$key, $params["DISC6"], PDO::PARAM_INT);

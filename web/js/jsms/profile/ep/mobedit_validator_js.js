@@ -10,7 +10,7 @@ var isdCodes = ["0", "91","+91"];
 var mesIdTrue = 0;
 var email = '';
 var isd_regex = /^([0-9]{1,3})$/;///^[+]?[0-9]+$/;
-var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+var phonePatternIndia = /^([1-9]{1}[0-9]{9})$/;
 var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 var smallCase_regex = /^[a-z]+$/;
 var upperCase_regex = /^[A-Z]+$/;
@@ -154,6 +154,14 @@ function StateCityRequired(json){
 		return true;
 	return false;	
 }
+function jamaatRequired(json){
+	if(json[1].value=="152" && json[2].value=='')
+	{
+		jsonError[jsonError.length]="Provide a valid jamaat";
+		return false;
+	}
+	return true;
+}
 // mobile or landline number should be there
 jQuery.validator.addMethod("landlineOrMobileNumber", function(value,element) {
 	if(($('#PHONE_MOB').val()=="" && $('#PHONE_RES').val()==""))
@@ -175,6 +183,34 @@ jQuery.validator.addMethod("AltMobileNumber", function(value,element) {
 	else
 		return true;
 	});
+var proofError = {"docRequired":"Please attach Divorced Decree","invalidDoc":"Invalid file format"};
+var NumberErrorNo = '';
+jQuery.validator.addMethod("MstatusChange", function(value,element) {
+	var MSTATUS = $('#MSTATUS').attr("value");
+        if(MSTATUS == "D" && storeJson["MSTATUS"] != "D"){
+                var MSTATUS_PROOF = $('#file_keyMSTATUS_PROOF')[0];
+                if(typeof MSTATUS_PROOF.files == 'undefined' || typeof MSTATUS_PROOF.files[0] == 'undefined' || MSTATUS_PROOF.files[0] == null){
+                        NumberErrorNo =  "docRequired";
+                        return false;
+                }
+                var file = MSTATUS_PROOF.files[0];
+                
+                var nameArr = file.name.split(".");
+                var fileExt = nameArr[nameArr.length-1];
+                if (file && fileExt == "jpg" || fileExt == "JPG" || fileExt == "jpeg" || fileExt == "JPEG" || fileExt == "PDF" || fileExt == "pdf") {
+                } else {
+                        NumberErrorNo =  "invalidDoc";
+                        return false;
+                }
+                if(file.size > 5242880) {
+                        NumberErrorNo =  "invalidDoc";
+                        return false;
+                }
+                return true;
+        }else{
+                return true;
+        }
+},function(){return proofError[NumberErrorNo];});
 
 //check ISd
 jQuery.validator.addMethod("isdCode", function(value,element) {
@@ -379,6 +415,16 @@ function validator(tabKey){
 				  } 
 		}); 
 	}
+	else if(tabKey=="critical")
+	{
+		$("#file_keyMSTATUS_PROOF").rules("add",{
+				  MstatusChange : true,
+				  messages:
+				  {
+                                  
+				  } 
+		}); 
+	}
 	else if(tabKey=="BasicDetails")
 	{
 		$("#NAME").rules("add", {
@@ -469,4 +515,3 @@ function trim(inputString) {
    }
    return retValue;
 }
-

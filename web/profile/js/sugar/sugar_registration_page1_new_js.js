@@ -213,12 +213,15 @@ var registration={
 //				show_hide_partner(this);
 //				populate_partner_religion(this);
 				populate_caste_from_religion(this);
+                                showHideJamaat();
+                                showHideCasteMuslim();
 			}
 		},
 
 	'#caste' : function(element){
 			element.onchange = function(){
 				get_caste_using_caste_mapping(this);
+                                showHideJamaat();
 //				show_hide_partner(this);
 			}
 		},
@@ -737,9 +740,9 @@ function populate_caste_from_religion(obj)
 			*/
 
 			if(dID("mtongue").value)
-				caste_dropdown_array.push("<select class=\"sel1 fl\" size=\"1\" name=\"caste\" id=\"caste\" style=\"width:204px;\" onchange=\"get_caste_using_caste_mapping(this); show_hide_partner(this);\" onfocus=\"change_div_class(this);\" onblur=\"validate(this);\">");
+				caste_dropdown_array.push("<select class=\"sel1 fl\" size=\"1\" name=\"caste\" id=\"caste\" style=\"width:204px;\" onchange=\"get_caste_using_caste_mapping(this); show_hide_partner(this); showHideJamaat();\" onfocus=\"change_div_class(this);\" onblur=\"validate(this);\">");
 				else
-				caste_dropdown_array.push("<select class=\"sel1 fl\" size=\"1\" name=\"caste\" id=\"caste\" style=\"width:204px;\" onchange=\"check_mtongue()\" onfocus=\"change_div_class(this);\" onblur=\"validate(this);\">");
+				caste_dropdown_array.push("<select class=\"sel1 fl\" size=\"1\" name=\"caste\" id=\"caste\" style=\"width:204px;\" onchange=\"check_mtongue(); showHideJamaat()\" onfocus=\"change_div_class(this);\" onblur=\"validate(this);\">");
 			for(var i=-1;i<i1;i++)
 			{
 				if(i==-1)
@@ -1864,4 +1867,23 @@ function CheckPincode()
 		document.getElementById("pincode_submit_err").style.display="none";
 	}
 	return err_msg;
+}
+function showHideJamaat(){
+     religionSelected = document.getElementById("religion").value.split("|X|")[0];
+     casteSelected = document.getElementById("caste").value.split("|X|")[0];
+     if(religionSelected == '2' && casteSelected == '152')
+         document.getElementById("jamaatDiv").style.display = "inline";
+     else{
+         document.getElementById("jamaatDiv").style.display = "none";
+         document.getElementById("jamaat").value = '';
+     }
+ }
+function showHideCasteMuslim(){
+    religionSelected = document.getElementById("religion").value.split("|X|")[0];
+    if(religionSelected == '2')
+        document.getElementById("CasteMuslimDiv").style.display = "inline";
+    else{
+        document.getElementById("CasteMuslimDiv").style.display = "none";
+        document.getElementById("casteMuslim").value = '';
+    }
 }

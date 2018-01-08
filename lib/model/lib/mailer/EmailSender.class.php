@@ -24,7 +24,7 @@ class EmailSender{
   {
     $this->mail_group=$mail_group;
     $this->custom_criteria=$custom_criteria;
-    $this->mail_id=$mail_id;
+    $this->mail_id=$mail_id;    
     $this->no_mail_id=true;
     $this->_pool = new Cache(LRUObjectCache::getInstance());
     $this->_profileArray = null;
@@ -123,7 +123,7 @@ class EmailSender{
               }
             }
             if (is_array($this->_emailTplArray)) {
-              $message = $this->_emailTplArray[$profileid]->getMessage();
+               $message = $this->_emailTplArray[$profileid]->getMessage();
               $subject = $this->_emailTplArray[$profileid]->getProcessedSubject();
               $from = $this->_emailTplArray[$profileid]->getSenderEMailId();
               $replyToAddress = ($this->_emailTplArray[$profileid]->getReplyToEnabled() === "Y") ? 
@@ -245,7 +245,7 @@ class EmailSender{
     }
   } // end of _bulkSetTemplates
 
-  public function send($to="", $partialList='',$ccList=''){
+  public function send($to="", $partialList='',$ccList='',$bccList=''){
 
     $replyToEnabled = null;
     $replyToAddress = null;
@@ -283,11 +283,10 @@ class EmailSender{
       $from = $this->email_tpl->getSenderEMailId();
 
       $message = $this->email_tpl->getMessage();
-      	$subject = $this->email_tpl->getProcessedSubject();
+      $subject = $this->email_tpl->getProcessedSubject();
 
-	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID());
-	$canSend = $canSendObj->canSendIt();
-
+	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID(),$this->mail_id);
+	$canSend = $canSendObj->canSendIt();  
 	$this->deliveryStatus = $canSendObj->getDeliveryStatus();
 	  if(empty($this->emailAttachment)){
       	$this->emailAttachment= '';
@@ -298,7 +297,7 @@ class EmailSender{
       if(empty($this->emailAttachmentType)){
       	$this->emailAttachmentType= '';
       }
-      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from,$ccList, '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
+      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from,$ccList, $bccList, $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
         return true;
       }
       else {

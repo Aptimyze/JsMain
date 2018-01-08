@@ -445,7 +445,7 @@ public function insertRequest($param)
 
 		try
 		{
-			$sql = "INSERT INTO newjs.HOROSCOPE_REQUEST(PROFILEID,PROFILEID_REQUEST_BY,DATE,CNT) VALUES (:PROFILEID,:PROFILEID_REQUEST_BY,:DATE,:CNT)";
+			$sql = "INSERT IGNORE INTO newjs.HOROSCOPE_REQUEST(PROFILEID,PROFILEID_REQUEST_BY,DATE,CNT) VALUES (:PROFILEID,:PROFILEID_REQUEST_BY,:DATE,:CNT)";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID",$param["PROFILEID"],PDO::PARAM_INT);
 			$res->bindValue(":PROFILEID_REQUEST_BY",$param["PROFILEID_REQUEST_BY"],PDO::PARAM_INT);
@@ -499,5 +499,14 @@ $sql="UPDATE newjs.HOROSCOPE_REQUEST SET SEEN='Y' WHERE PROFILEID_REQUEST_BY=:PR
                         return array();
 		}
    }
+   public function updateHoroscopeRequestCount($profileid,$reuestedBy) {
+
+                $sql = "UPDATE HOROSCOPE_REQUEST SET CNT=CNT+1 WHERE PROFILEID=:PROFILEID and PROFILEID_REQUEST_BY=:PROFILEID_REQUEST_BY";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                $res->bindValue(":PROFILEID_REQUEST_BY", $reuestedBy, PDO::PARAM_INT);
+                $res->execute();
+        }
+
 }
 ?>

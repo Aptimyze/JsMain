@@ -20,7 +20,7 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {
         sfContext::createInstance($this->configuration);
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', -1);
         $currentMonth = date("n", time());
         $currentYear = date("Y", time());
 

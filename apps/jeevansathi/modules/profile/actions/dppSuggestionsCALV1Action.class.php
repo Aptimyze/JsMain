@@ -11,6 +11,10 @@
 
 class dppSuggestionsCALV1Action extends sfActions 
 {
+	const MAILBODY = "Dpp Suggestions CAL VALUE NUll";
+	const RECEIVER = "sanyam1204@gmail.com";    
+    const SENDER = "info@jeevansathi.com";
+    const SUBJECT = "dpp suggestion CAL null value";
 	/**
 	* Executes index action
 	*
@@ -33,6 +37,7 @@ class dppSuggestionsCALV1Action extends sfActions
 			
 		//getDppDataArr is used to format the data in the required format.
 		$dppDataArr = $this->getDppDataArr($decodedData);		
+		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loginProfile->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -50,7 +55,7 @@ class dppSuggestionsCALV1Action extends sfActions
 					foreach($val as $key1=>$val1)
 					{									
 						$type = $val["type"];				
-						if($key1 == "data")
+						if($key1 == "data" && $val1[0] != "DM")
 						{	
 							$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
 						}					
@@ -59,16 +64,36 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 
-		
 		if(MobileCommon::isApp())
 		{
-			$finalArr = $this->getFormattedArrForApp($finalArr);						
+			$finalArr = $this->getFormattedArrForApp($finalArr);									
 		}
 		else
 		{
 			$finalArr = $this->getFormattedArrForMobileSite($finalArr);
 		}
 		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;				
+                if(MobileCommon::isApp()=="A")
+                {
+			$haveData = false;
+			foreach($finalArr['dppData'] as $k=>$v)
+			{
+				if(array_key_exists("data",$v))
+				{
+					$haveData = true;
+					break;
+				}
+			}
+			if($haveData == false)
+				unset($finalArr);
+                        $finalArr1['dppSuggObject']=$finalArr;
+                        unset($finalArr);
+                        $finalArr = $finalArr1;
+                        unset($finalArr1);
+                        $finalArr['BUTTON1_URL_ANDROID']="/common/criticalActionLayerTracking?button=B1";
+                        $finalArr['BUTTON2_URL_ANDROID']="/common/criticalActionLayerTracking?&button=B2";
+
+                }
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -85,7 +110,7 @@ class dppSuggestionsCALV1Action extends sfActions
 	}
 
 	public function getFormattedArrForApp($finalArr)
-	{
+	{		
 		$i=0;
 		foreach($finalArr as $key => $value)
 		{
@@ -95,9 +120,27 @@ class dppSuggestionsCALV1Action extends sfActions
 				{
 					foreach($v1 as $k2=>$v2)
 					{
-						$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
-						$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
-						$i++;
+						if(MobileCommon::isApp()=="A")
+						{
+							if($v2 != null && $v2 != "")
+							{
+								$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
+								$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
+								$i++;
+							}
+							// else
+							// {
+							// 	$mailBody = self::MAILBODY."on: ".$value["type"]." with key: ".$k2."\n ".print_r($_SERVER,true);
+							// 	SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);								
+							// }
+						}
+						else
+						{
+							$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
+							$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
+							$i++;
+						}
+											
 					}
 					
 					$i=0;

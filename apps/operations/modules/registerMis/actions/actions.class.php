@@ -35,6 +35,7 @@ class registerMisActions extends sfActions {
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
     {
+      ini_set('memory_limit','512M');
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("COMMUNITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
@@ -185,11 +186,11 @@ class registerMisActions extends sfActions {
     $name = $request->getAttribute('name');
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) {
-      ini_set('memory_limit','512M');
+      ini_set('memory_limit','1024M');
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
-      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities']);
+      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities'],'source_countries'=>$formArr['source_countries']);
       if ($formArr["range_format"] == "Y") {      //If year is selected
         $start_date = $formArr['yearValue'] . "-04-01";
         $end_date = ($formArr['yearValue']+1) . "-03-31";
@@ -287,16 +288,25 @@ class registerMisActions extends sfActions {
                 foreach($params["source_cities"] as $selCity){
                         $cities_arr[] = FieldMap::getFieldLabel("city_india",$selCity);
                 }
-                $this->selectedCities = implode(",",$cities_arr);
+                $this->selectedCities = implode(",",$cities_arr); // variable having lables of selected cities
+                $this->selectedLabel = "Cities";
+        }elseif(!empty($params["source_countries"])){
+                $cities_arr=array();
+                foreach($params["source_countries"] as $selCity){
+                        $cities_arr[] = FieldMap::getFieldLabel("country",$selCity);
+                }
+                $this->selectedCities = implode(",",$cities_arr); // variable having lables of selected countries
+                $this->selectedLabel = "Countries";
         }
         if ($formArr['report_format'] == 'CSV') {
-          $this->createCSVFormatOutput($sourceGroups, $registrationData['source_dates'], $this->columnDates, $this->displayDate, $this->range_format,$this->selectedCities);
+          $this->createCSVFormatOutput($sourceGroups, $registrationData['source_dates'], $this->columnDates, $this->displayDate, $this->range_format,$this->selectedCities,$this->selectedLabel);
         }
         $this->sgroupData = $sourceGroups;
         $this->dates_count = $registrationData['source_dates'];
         $this->setTemplate('qualityRegistrationResultScreen');
       }else{
         $this->source_cities = $this->setSourceCities();
+        $this->source_countries = $this->getSourceCountries();
         $this->startMonthDate = "01";
         $this->todayDate = date("d");
         $this->todayMonth = date("m");
@@ -313,6 +323,7 @@ class registerMisActions extends sfActions {
       }
     } else {// for selection screen
       $this->source_cities = $this->setSourceCities();
+      $this->source_countries = $this->getSourceCountries();
       $this->startMonthDate = "01";
       $this->todayDate = date("d");
       $this->todayMonth = date("m");
@@ -346,6 +357,10 @@ class registerMisActions extends sfActions {
       }
       return array_merge($topCites,$source_cities);
  }
+ public function getSourceCountries(){
+      $countries = FieldMap::getFieldLabel("country","",1);
+      return $countries;
+ }
   // Create CSV for Mis
   /**
    * This function generates csv file
@@ -355,7 +370,7 @@ class registerMisActions extends sfActions {
    * @param string $displayMsg message to be diaplayed on the top i.ee either date range or year value
    * @param string $range_format selected range format year 'Y' or month 'm'
    */
-  public function createCSVFormatOutput($sgroupData, $dates_count, $columnDates, $displayMsg,$range_format,$selectedCities) {
+  public function createCSVFormatOutput($sgroupData, $dates_count, $columnDates, $displayMsg,$range_format,$selectedCities,$selectedLabel) {
     $csvData = 'Quality Registration MIS' . "\n";
     if($selectedCities != ""){
               $selectedCities = str_replace(",", ' | ', $selectedCities);
@@ -363,7 +378,7 @@ class registerMisActions extends sfActions {
     if($range_format == 'Y'){
       $csvData .= 'For the Year of '.$displayMsg . "\n";
       if($selectedCities != ""){
-              $csvData .= 'Cities:,'.$selectedCities . "\n";
+              $csvData .= $selectedLabel.':,'.$selectedCities . "\n";
       }
       $csvData .= 'Day,';
       foreach($columnDates as $Date){
@@ -377,7 +392,7 @@ class registerMisActions extends sfActions {
     }else{
       $csvData .= $displayMsg . "\n";
       if($selectedCities != ""){
-              $csvData .= 'Cities:,'.$selectedCities . "\n";
+              $csvData .= $selectedLabel.':,'.$selectedCities . "\n";
       }
       $csvData .= 'Day,';
       $csvData .= implode(',', $columnDates);
@@ -495,12 +510,12 @@ class registerMisActions extends sfActions {
           {
             $row = "";
             if ($data_city['screened_CC'] != 0)
-              $row = $date.",".$city.",".$source.",CC,".$data_city['screened_CC'].",".($data_city['M26MVCC'] + $data_city['F22MVCC'])."\n";
+              $row .= $date.",".$city.",".$source.",CC,".$data_city['screened_CC'].",".($data_city['M26MVCC'] + $data_city['F22MVCC'])."\n";
             if ($data_city['screened_SIC'] != 0)
-              $row = $date.",".$city.",".$source.",SIC,".$data_city['screened_SIC'].",0"."\n";
+              $row .= $date.",".$city.",".$source.",SIC,".$data_city['screened_SIC'].",0"."\n";
 
             if ($data_city['OTHERS_COMMUNITY'] != 0)
-              $row = $date.",".$city.",".$source.",Others,".$data_city['OTHERS_COMMUNITY'].",0"."\n";
+              $row .= $date.",".$city.",".$source.",Others,".$data_city['OTHERS_COMMUNITY'].",0"."\n";
             
             $csvData = $csvData.$row ;
           }
@@ -527,11 +542,11 @@ class registerMisActions extends sfActions {
     }
     return $aDays;
   }
-  public function verifyDates($start_date,$end_date){
+  public function verifyDates($start_date,$end_date,$dateCheck = 100){
     if($start_date>$end_date)
             $this->errorMsg = "Invalid Date Selected";
-    elseif(ceil((strtotime($end_date)-strtotime($start_date))/(24*60*60))>=100)
-            $this->errorMsg = "More than 100 days selected in range";
+    elseif(ceil((strtotime($end_date)-strtotime($start_date))/(24*60*60))>=$dateCheck)
+            $this->errorMsg = "More than $dateCheck days selected in range";
   }
 
   //This action calls the LocationAgeRegistrationSuccess.tpl
@@ -682,4 +697,101 @@ class registerMisActions extends sfActions {
 	}
     }
   }
+  
+  
+   public function executeProductMetric(sfWebRequest $request) 
+  {
+        $this->setTemplate('productMetric');
+  
+  }
+  //This action calls the LocationAgeRegistrationSuccess.tpl
+        public function executeCampaignsRegistration(sfWebRequest $request) {
+                $formArr = $request->getParameterHolder()->getAll();
+                $this->cid = $formArr['cid'];
+                if ($formArr['submit']) {       
+                        $formArr["date1_dateLists_month_list"] ++;
+                        $formArr["date2_dateLists_month_list"] ++;
+
+                        if (strlen($formArr["date1_dateLists_day_list"]) == 1)
+                                $formArr["date1_dateLists_day_list"] = "0" . $formArr["date1_dateLists_day_list"];
+                        if (strlen($formArr["date2_dateLists_day_list"]) == 1)
+                                $formArr["date2_dateLists_day_list"] = "0" . $formArr["date2_dateLists_day_list"];
+                        if (strlen($formArr["date1_dateLists_month_list"]) == 1)
+                                $formArr["date1_dateLists_month_list"] = "0" . $formArr["date1_dateLists_month_list"];
+                        if (strlen($formArr["date2_dateLists_month_list"]) == 1)
+                                $formArr["date2_dateLists_month_list"] = "0" . $formArr["date2_dateLists_month_list"];
+
+                        $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+                        $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+                        $this->verifyDates($start_date, $end_date,31);
+                        if($this->errorMsg != ""){
+                                $this->startMonthDate = "01";
+                                $this->todayDate = date("d");
+                                $this->todayMonth = date("m");
+                                $this->todayYear = date("Y");
+                                $this->rangeYear = date("Y");
+                                $this->dateArr = GetDateArrays::getDayArray();
+                                $this->yearArr = array();
+                                $sourceObj = new MIS_SOURCE('newjs_slave');
+                                $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+                                $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+                                foreach (array_keys($dateArr) as $key => $value) {
+                                        $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+                                }   
+                        }else{
+                                $params = array('source_names' => $formArr['source_names'], 'start_date' => $start_date, 'end_date' => $end_date);
+                                $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+
+                                $memcacheObj = JsMemcache::getInstance();
+                                if($params['source_names'] == ""){
+                                        $source_names = "all";
+                                }else{
+                                        asort($params['source_names']);
+                                        $source_names = implode("_",$params['source_names']);
+                                }
+                                $this->memcacheKey = $start_date . "_" . $end_date . "_" . $source_names;
+
+                                $memKeySet = $memcacheObj->get($this->memcacheKey);
+                                $params['memKeySet'] = $this->memcacheKey;
+                                if ($memKeySet == 'C') {
+                                        $this->computing = true;
+                                        $this->setTemplate('computingRegistrationMis');
+                                } elseif (is_array($memKeySet)) {
+                                        $this->groupData = $memKeySet;
+                                        $this->computing = false;
+                                        $registrationMisObj = new CampaignsRegistrationMis();
+                                        $csvData = $registrationMisObj->createCSVFromatData($params, $this->groupData, $this->displayDate);
+                                        header("Content-Type: application/vnd.csv");
+                                        header("Content-Disposition: attachment; filename=Campaigns_RegistrationMIS.csv");
+                                        header("Pragma: no-cache");
+                                        header("Expires: 0");
+                                        echo($csvData);
+                                                die;
+                                } elseif ($memKeySet == '') {
+                                        $this->computing = true;
+                                        $memcacheObj->set($this->memcacheKey, "C");
+                                        $memcacheObj->set("MIS_CAMPAIGN_PARAMS_KEY", $params);
+                                        $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronCampaignsRegistrationMis  > /dev/null &";
+                                        $command = JsConstants::$php5path . " " . $filePath;
+                                        passthru($command);
+                                        $this->setTemplate('computingRegistrationMis');
+                                }
+                        }
+                } else {
+                        $this->startMonthDate = "01";
+                        $this->todayDate = date("d");
+                        $this->todayMonth = date("m");
+                        $this->todayYear = date("Y");
+                        $this->rangeYear = date("Y");
+                        $this->dateArr = GetDateArrays::getDayArray();
+                        $this->yearArr = array();
+                        $sourceObj = new MIS_SOURCE('newjs_slave');
+                        $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+                        $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+                        foreach (array_keys($dateArr) as $key => $value) {
+                                $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+                        }
+                }
+        }
+
 }

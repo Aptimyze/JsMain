@@ -136,7 +136,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 			return $output;
 		}
                 
-                public function getMessageListing($condition,$skipArray)
+                public function getMessageListing($condition,$skipArray='',$inArray='')
 		{
 			try{
 				if(!$condition["WHERE"]["IN"]["PROFILE"])
@@ -145,7 +145,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					if(count($skipArray)<1000 && count($skipArray)>0)
+					if(is_array($skipArray) && count($skipArray)<1000 && count($skipArray)>0)
 						$skipSql=1;
 					else
 						$skipSql=0;
@@ -164,7 +164,41 @@ class NEWJS_CHAT_LOG extends TABLE{
 						$sender = " AND SENDER ".$str." ";
 						$receiver = "AND RECEIVER ".$str." ";
 					}
-					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (RECEIVER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='A' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (SENDER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='A' ORDER BY DATE DESC";
+					if(is_array($inArray) && count($inArray)<1000 && count($inArray)>0)
+						$inSql = 1;
+					else
+						$inSql = 0;
+					if($inSql)
+					{
+						
+                        $str =  "  IN (";
+						$count = 0;
+						foreach($inArray as $key1=>$value1)
+						{
+								$str = $str.":VALUE".$count.",";
+								$bindInArr["VALUE".$count] = $value1;
+								$count++;
+						}
+						$str = substr($str, 0, -1);
+						$str = $str.")";
+						if(is_array($inArray))
+						{
+							$sender1 = " AND SENDER ".$str." ";
+							$receiver1 = "AND RECEIVER ".$str." ";
+						}
+					}
+					
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (RECEIVER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `RECEIVER` =:PROFILEID";
+					if($sender)
+						$sql.= $sender;
+					if($sender1)
+						$sql.=$sender1;
+					$sql.=" AND  `TYPE` ='A' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (SENDER) JOIN CHATS ON ( CHAT_LOG.CHATID = CHATS.ID ) WHERE  `SENDER` =:PROFILEID ";
+					if($receiver)
+						$sql.=$receiver;
+					if($receiver1)
+						$sql.=$receiver1;
+					$sql.=" AND  `TYPE` ='A' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
@@ -174,12 +208,26 @@ class NEWJS_CHAT_LOG extends TABLE{
 							$res->bindValue($k,$v,PDO::PARAM_INT);
 						}
 					}
+					if($inSql){
+						foreach($bindInArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
 					$res->execute();
-					if(!$skipSql)
+					if(is_array($skipArray) && !$skipSql)
 					{
 						while($row = $res->fetch(PDO::FETCH_ASSOC))
 						{
 							if(!in_array($row["PROFILEID"],$skipArray))
+								$output[$row["PROFILEID"]][] = $row;
+						}
+					}
+					else if(!$inSql && is_array($inArray) && count($inArray)>0)
+					{
+						 while($row = $res->fetch(PDO::FETCH_ASSOC))
+						{
+							if(in_array($row["PROFILEID"],$inArray))
 								$output[$row["PROFILEID"]][] = $row;
 						}
 					}
@@ -228,11 +276,14 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$sql = "UPDATE newjs.CHAT_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'A' ";
+					$sql = "UPDATE newjs.CHAT_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'A' AND SEEN='N'";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					//$prep->bindValue(":ID",$id,PDO::PARAM_INT);
+
 					$prep->execute();
+
 					$count = $prep->rowCount();
 				}
 			}
@@ -242,5 +293,196 @@ class NEWJS_CHAT_LOG extends TABLE{
 			}
 			return $count;
 		}
+    
+    /**
+     * 
+     * @param type $iProfileID
+     * @return type
+     * @throws jsException
+     */
+    public function getAllChatForHousKeeping($iProfileID, $timeOfDeletion=null)
+    {
+      try{
+        if(!$iProfileID)
+				{
+					throw new jsException("","Profile id is not specified in function getAllChatForHousKeeping of NEWJS_CHAT_LOG.class.php");
+				}
+        
+        $sql = "SELECT CHATID FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        if($timeOfDeletion) {
+          $sql.= " AND DATE <= :TIME_OF_DEL";
+        }
+        $prep=$this->db->prepare($sql);
+        $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        
+        if($timeOfDeletion) {
+          $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+        }
+        
+        $prep->execute();
+        while($row = $prep->fetch(PDO::FETCH_ASSOC))
+        {
+          $output[] = $row['CHATID'];
+        }
+        return $output;
+      } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
+    
+    /**
+     * 
+     * @param type $iProfileID
+     * @return type
+     * @throws jsException
+     */
+    public function deleteAllChatForUser($iProfileID, $timeOfDeletion=null)
+    {
+      try{
+        if(!$iProfileID)
+				{
+					throw new jsException("","Profile id is not specified in function deleteAllChatForUser of NEWJS_CHAT_LOG.class.php");
+				}
+        
+        $sql = "DELETE FROM newjs.CHAT_LOG WHERE SENDER = :PID OR RECEIVER = :PID";
+        if($timeOfDeletion) {
+          $sql.= " AND DATE <= :TIME_OF_DEL";
+        }
+        $prep=$this->db->prepare($sql);
+        
+        $prep->bindValue(":PID",$iProfileID,PDO::PARAM_INT);
+        
+        if($timeOfDeletion) {
+          $prep->bindValue(":TIME_OF_DEL",$timeOfDeletion,PDO::PARAM_STR);
+        }
+        
+        $prep->execute();
+        
+        } catch (Exception $ex) {
+        throw new jsException($e);
+      }
+    }
+    
+  /**
+   * 
+   * @param type $iProfileID
+   */
+  public function insertRecordsIntoChatLogFromRetreieve($iProfileID,$listOfActiveProfiles)
+  {
+    try {
+      if (!$iProfileID || !$listOfActiveProfiles) {
+        throw new jsException("", "PROFILEID OR LISTOFACTIVEPROFILE IS BLANK IN selectActiveDeletedData() of NEWJS_CHAT_LOG.class.php");
+      }
+      
+      $sql = "INSERT IGNORE INTO newjs.CHAT_LOG SELECT * FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET WHERE (SENDER = :PID AND RECEIVER IN ({$listOfActiveProfiles}) ) OR (RECEIVER = :PID AND SENDER IN ({$listOfActiveProfiles}) )";
+      $prep = $this->db->prepare($sql);
+      $prep->bindValue(":PID", $iProfileID, PDO::PARAM_INT);
+      $prep->execute();
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
+  
+  /**
+   * 
+   * @param type $iProfileId
+   * @throws jsException
+   */
+  public function getChatLogForLegal($iProfileId) {
+    if(is_null($iProfileId) || 0 === strlen($iProfileId)) {
+      throw new jsException("", "Null profileid is passed in getChatLogForLegal of NEWJS_CHAT_LOG class");
+    }
+    
+    try {
+      $archiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+      $archivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
+
+      $archiveTableSql = " UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,IP as IP, MESSAGE FROM newjs.{$archivePrefix}DELETED_CHAT_LOG{$archiveSuffix} AS ADC JOIN newjs.{$archivePrefix}DELETED_CHATS{$archiveSuffix} AS AM ON ( AM.ID = ADC.CHATID ) WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+
+      $sql =  <<<SQL
+      SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE, IP, MESSAGE
+      FROM newjs.CHAT_LOG AS C
+      JOIN CHATS AS M 
+      ON ( M.ID = C.CHATID )
+      WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  
+      UNION 
+      SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,IP as IP, MESSAGE
+      FROM newjs.DELETED_CHAT_LOG_ELIGIBLE_FOR_RET AS DCR
+      JOIN DELETED_CHATS_ELIGIBLE_FOR_RET AS DM
+      ON ( DM.ID = DCR.CHATID )    
+      WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID 
+      {$archiveTableSql} 
+      ORDER by DATE ASC
+SQL;
+      
+      $prep = $this->db->prepare($sql);
+      $prep->bindValue(":PROFILEID", $iProfileId, PDO::PARAM_INT);
+      $prep->execute();
+      return $prep->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $ex) {
+      throw new jsException($ex);
+    }
+  }
+
+  public function getChatLogCount($receiver,$skippedProfile='',$considerProfile='')
+		{
+			try{
+				if(!$receiver)
+					throw new jsException("","No receiver is specified in funcion getChatLogCount OF newjs_CHAT_LOG.class.php");
+				$sql = "SELECT";
+				if($select)
+					$sql = $sql." ".$select;
+				else
+					$sql = $sql." m1.SENDER ,m1.SEEN";
+				if($group)
+					$sql = $sql.",".$group;
+				$sql = $sql." FROM CHAT_LOG m1 LEFT JOIN CHAT_LOG m2 ON ( m1.RECEIVER = m2.RECEIVER AND m1.ID < m2.ID AND m1.SENDER = m2.SENDER ) WHERE m1.RECEIVER =:RECEIVER AND m2.ID IS NULL ";
+				$count = 1;
+			if($skippedProfile)
+			{
+				$sql = $sql." AND SENDER NOT IN (";
+				foreach($skippedProfile as $key1=>$value1)
+				{
+					$str = $str.":VALUE".$count.",";
+					$bindArr["VALUE".$count] = $value1;
+					$count++;
+				}
+				$str = substr($str, 0, -1);
+				$str = $str.")";
+				$sql = $sql.$str;
+			}
+			if($considerProfile)
+			{
+				$sql.=" AND m1.SENDER IN (";
+				foreach($considerProfile as $key1=>$value1)
+                                {
+                                        $str = $str.":VALUE".$count.",";
+                                        $bindArr["VALUE".$count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                $str = $str.")";
+                                $sql = $sql.$str;
+			}
+			$sql = $sql." GROUP BY m1.SENDER,m1.SEEN";
+
+			$res=$this->db->prepare($sql);
+			$res->bindValue("RECEIVER",$receiver,PDO::PARAM_INT);
+			foreach($bindArr as $k=>$v)
+				$res->bindValue($k,$v);
+			$res->execute();
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+			
+		}
+
 }
 	?>

@@ -17,6 +17,8 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
         public function __construct($SearchParamtersObj, $loggedInProfileObj = '') {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::setPaidDateSorting();
+                //parent::isJsBoostSorting($loggedInProfileObj);
         }
 
         /**
@@ -26,15 +28,28 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
         public function getSortString() {
                 $counter = 0;
                 
+                /*if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }*/
+                
                 $sortString[$counter] = "LAST_LOGIN_SCORE";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
+                
                 $sortString[$counter] = "product(LAST_LOGIN_SCORE,".parent::getReverseDppSort().")";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
 
-                $sortString[$counter] = "LAST_LOGIN_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                //Paid members sorting
+//                $sortString[$counter] = parent::getPaidDateSorting();
+//                $sortAscOrDesc[$counter] = $this->sortByDesc;
+//                $counter++;
+                
+                $sortString[$counter] = "SORT_DT";
+                //$sortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
                 
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);

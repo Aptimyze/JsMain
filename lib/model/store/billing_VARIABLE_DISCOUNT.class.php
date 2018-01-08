@@ -61,7 +61,7 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
 	@param - profileid
 	@return - array having details or blank
 	*/
-	public function getDiscountDetails($profileid)
+	public function getDiscountDetails($profileid,$type='')
 	{
 		if(!$profileid)
 			throw new jsException("","PROFILEID IS BLANK IN getDiscountDetails() OF billing_VARIABLE_DISCOUNT.class.php");
@@ -70,10 +70,16 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
 		{
 			$dt = date("Y-m-d");
 			$sql = "SELECT DISCOUNT,EDATE FROM billing.VARIABLE_DISCOUNT WHERE PROFILEID = :PROFILEID AND SDATE<=:DATE AND EDATE>=:DATE";
+            if(!empty($type)){
+                $sql .= " AND TYPE=:TYPE";
+            }
 			$res = $this->db->prepare($sql);
-                        $res->bindValue(":DATE", $dt, PDO::PARAM_STR);
-                        $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-                        $res->execute();
+            $res->bindValue(":DATE", $dt, PDO::PARAM_STR);
+            $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            if(!empty($type)){
+                $res->bindValue(":TYPE", $type, PDO::PARAM_STR);
+            }
+            $res->execute();
 			$row = $res->fetch(PDO::FETCH_ASSOC);
 		}
 		catch(Exception $e)
@@ -195,26 +201,43 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
                 }
         }
 
-	public function addVDProfile($profileid,$discount,$sDate,$eDate,$entryDt,$sentMail="",$sendSMS="",$sendAlert=false)
+	public function addVDProfile($profileid,$discount,$sDate,$eDate,$entryDt,$sentMail="",$sendSMS="",$sendAlert=false,$type="")
 	{
+
                 try
                 {
-                        if($sentMail && $sendSMS)
-                            $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT)";
-                        else
-                            $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT) ";
+                        if($sentMail && $sendSMS){
+                            if(!empty($type)){
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT,:TYPE)";
+                            }
+                            else{
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,SENT_MAIL,SENT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:SENT_MAIL,:SENT)";
+                            }
+                        }
+                        else{
+                            if(!empty($type)){
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT,TYPE) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT,:TYPE)";
+                            }
+                            else{
+                                $sql = "INSERT IGNORE INTO billing.VARIABLE_DISCOUNT (PROFILEID,DISCOUNT,SDATE,EDATE,ENTRY_DT) VALUES(:PROFILEID,:DISCOUNT,:SDATE,:EDATE,:ENTRY_DT)";
+                            }
+                        }
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                         $res->bindValue(":DISCOUNT", $discount, PDO::PARAM_INT);
                         $res->bindValue(":SDATE", $sDate, PDO::PARAM_STR);
                         $res->bindValue(":EDATE", $eDate, PDO::PARAM_STR);
                         $res->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
+                        if(!empty($type))
+                            $res->bindValue(":TYPE", $type, PDO::PARAM_STR);
+                        
                         if($sentMail && $sendSMS)
                         {
                             $res->bindValue(":SENT", $sendSMS, PDO::PARAM_STR); 
                             $res->bindValue(":SENT_MAIL", $sentMail, PDO::PARAM_STR); 
                         }
                         $res->execute();
+
                 }
                 catch(Exception $e)
                 {
@@ -286,6 +309,19 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
             $sql ="DELETE FROM billing.VARIABLE_DISCOUNT WHERE EDATE<:EDATE";
             $res = $this->db->prepare($sql);
             $res->bindValue(":EDATE", $todayDate, PDO::PARAM_STR);
+            $res->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
+
+    public function deleteVariableDiscount($pid)
+    {
+        try{
+            $todayDate = date("Y-m-d");
+            $sql ="DELETE FROM billing.VARIABLE_DISCOUNT WHERE PROFILEID=:PROFILEID";
+            $res = $this->db->prepare($sql);
+            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
             $res->execute();
         } catch (Exception $ex) {
             throw new jsException($ex);

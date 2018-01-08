@@ -16,9 +16,10 @@ abstract class Notification
   public function __construct()
   {
 	  include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
-	  $this->casteDetail = $CASTE_DROP;
-	  $this->cityDetail = $CITY_INDIA_DROP;
-	  $this->countryDetail = $COUNTRY_DROP;
+          
+	  $this->casteDetail = FieldMap::getFieldLabel("caste", 0, 1);
+	  $this->cityDetail = FieldMap::getFieldLabel("city_india", 0, 1);
+	  $this->countryDetail = FieldMap::getFieldLabel("country", 0, 1);
   }
   public function getNotifications() { return $this->notifications;}
   public function setNotifications($notifications) { $this->notifications= $notifications;}
@@ -114,6 +115,8 @@ abstract class Notification
               return $details["MESSAGE_RECEIVED"];
           case "MESSAGE":
 	      return $details["SELF"]["MESSAGE"];	
+        case "TITLE":
+        return $details["SELF"]["TITLE"]; 
 	  case "EDATE":
 		return $details["SELF"]['EDATE'];
 	  case "UPTO":
@@ -161,6 +164,8 @@ abstract class Notification
 		else
 			$CITY_RES= $this->countryDetail[$details['OTHER'][0]["COUNTRY_RES"]];
 		return strlen($CITY_RES)<=$maxlength ? $CITY_RES : substr($CITY_RES,0,$maxlength-2)."..";
+      case "MEM_NAME":
+          return $details["MEM_NAME"];
 	  }
   }
   public function getDate($days)

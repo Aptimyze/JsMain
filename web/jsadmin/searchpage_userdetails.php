@@ -34,6 +34,9 @@ if(authenticated($cid))
                 if($pid){
                 	$sql ="SELECT PROFILEID, USERNAME, EMAIL, MOD_DT, SUBSCRIPTION, INCOMPLETE, ACTIVATED ,SOURCE, VERIFY_EMAIL,CASTE from newjs.JPROFILE where PROFILEID='$pid'";
                         $res=mysql_query_decide($sql) or die("$sql".mysql_error_js());
+                } else {
+                    $msg = "Search for : " . $username. "\n\n";
+                    die("Username not found in database");
                 }
 	}	
 	// Ends
@@ -50,7 +53,7 @@ if(authenticated($cid))
 	$profileid = $row['PROFILEID'];
 	$activ = $row['ACTIVATED'];
 	$myCaste = $row['CASTE'];
-
+  
 	//Getting connection on sharded server.
 	//$myDbname=getProfileDatabaseConnectionName($profileid,'slave',$mysql);
 	//$myDb=$mysql->connect($myDbname);
@@ -95,8 +98,18 @@ if(authenticated($cid))
 		}
 	}
 	
-	if($activ=="D")	{		
-		$dbMessageLog=new NEWJS_DELETED_MESSAGE_LOG($profileShard);
+	if($activ=="D")	{
+    $sql_ser = "SELECT HOUSKEEPING_DONE FROM newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$pid' ORDER BY DATE DESC LIMIT 1 ";
+    $res_ser = mysql_query_decide($sql_ser) or die("Unable to select from SERVICES".mysql_error_js());
+    $myrow=mysql_fetch_array($res_ser);
+    $houseKeepingDone =$myrow['HOUSKEEPING_DONE'];
+    
+    if($houseKeepingDone == 'Y') {
+      $dbMessageLog=new NEWJS_DELETED_MESSAGE_LOG($profileShard);
+    } else {
+      $dbMessageLog=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET($profileShard);
+    }
+		
 		//$fromtable = "DELETED_MESSAGE_LOG";
 	}
 	else{

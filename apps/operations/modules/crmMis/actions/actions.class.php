@@ -29,7 +29,7 @@ class crmMisActions extends sfActions
 		$privilegeArr		=@explode("+", $privilegeStr);
 
 		$misHandlerObj          =new misGenerationhandler();
-		$mainPageDetails	=$misHandlerObj->fetchMainPageDetails($this->public);			
+		$mainPageDetails	=$misHandlerObj->fetchMainPageDetails($this->public);
 		$this->linkDetailsArr	=$misHandlerObj->fetchMainPageLinkDetails($privilegeArr, $mainPageDetails, $this->cid, $agentName);	
 		$this->setTemplate('misMainpage');	
         }
@@ -1808,6 +1808,7 @@ class crmMisActions extends sfActions
 
 	public function executeCityWiseFreshAndRenewalMis(sfWebRequest $request)
 	{
+		ini_set('memory_limit',-1);
 		$formArr = $request->getParameterHolder()->getAll();
 		$this->cid = $formArr['cid'];
 		$this->yearArr = array();
@@ -2502,7 +2503,8 @@ class crmMisActions extends sfActions
                 //print_r($agents);die;
                 //var_dump($start_date);
                 //var_dump($end_date);
-
+                $misGenerationhandlerObj = new misGenerationhandler();
+                $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 if (!empty($agents)) {
                 	//fetch dialer allocated profiles
                 	$dailyAllotObj = new CRM_DAILY_ALLOT("newjs_slave");
@@ -2554,7 +2556,7 @@ class crmMisActions extends sfActions
                     	foreach ($profileid as $kk=>$billidArr1) {
                         	$this->misData[$agent]['paid'] += count($billidArr1);
                         	if (!empty($billidArr1)) {
-                            	$this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1);
+                            	$this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1,$net_off_tax_ratio);
                         	}
                         }
                     }
@@ -2647,24 +2649,30 @@ class crmMisActions extends sfActions
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
                 $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
+                $misGenerationhandlerObj = new misGenerationhandler();
+                $net_off_tax_ratio = $misGenerationhandlerObj->net_off_tax_calculation("",$end_date,1);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
-                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
-                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
-                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
-                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
-                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
-                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
-                	if (!empty($allBillids)){
-                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
-                	} else {
-                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
-                	}
-                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
+                	$purchaseDetails = $billPurObj->getBillDetails($pd['BILLID'],"DISCOUNT_PERCENT,STATUS");
+                	if(is_array($purchaseDetails) && (empty($purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']) || $purchaseDetails[$pd['BILLID']]['DISCOUNT_PERCENT']<100) && $purchaseDetails[$pd['BILLID']]['STATUS'] == "DONE"){
+	                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
+	                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+	                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
+	                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
+	                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
+	                	if (!empty($allBillids)){
+	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids,$net_off_tax_ratio);
+	                	} else {
+	                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
+	                	}
+	                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
+	                }
+	                unset($purchaseDetails);
                 }
                 // Set data for view 
                 $this->misData = array();
@@ -2686,9 +2694,13 @@ class crmMisActions extends sfActions
                 	}
                 	$this->misData[date("j/M/y", $i)]['trsc'] = 0;
                 	$this->misData[date("j/M/y", $i)]['convPerc'] = 0;
+                	$this->misData[date("j/M/y", $i)]['tsrcUptoE10'] = 0;
+                	$this->misData[date("j/M/y", $i)]['convPercUptoE10'] = 0;
                 }
                 foreach ($this->misData as $key=>$val) {
+                	$this->misData[$key]['tsrcUptoE10'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'];
                 	$this->misData[$key]['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
+                	$this->misData[$key]['convPercUptoE10'] = round($this->misData[$key]['tsrcUptoE10']/$val['expiry'], 2)*100;
                 	$this->misData[$key]['convPerc'] = round($this->misData[$key]['tsrc']/$val['expiry'], 2)*100;
                 	$this->misData[$key]['totalRev'] = $val['totalRev'];
                 }
@@ -2700,9 +2712,11 @@ class crmMisActions extends sfActions
                 	$this->totData['renewEE10'] += $val['renewEE10'];
                 	$this->totData['renewE10'] += $val['renewE10'];
                 	$this->totData['tsrc'] += $val['tsrc'];
+                	$this->totData['tsrcUptoE10'] += $val['tsrcUptoE10'];
                 	$this->totData['totalRev'] += $val['totalRev'];
                 }
                 $this->totData['convPerc'] = round($this->totData['tsrc']/$this->totData['expiry'], 2)*100;
+                $this->totData['convPercUptoE10'] = round($this->totData['tsrcUptoE10']/$this->totData['expiry'], 2)*100;
                 
                 if($formArr["report_format"]=="XLS")
                 {   
@@ -2711,7 +2725,7 @@ class crmMisActions extends sfActions
                     } else {
                             $string .= $start_date."_to_".$end_date;
                     }
-                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
+                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrcUptoE10'=>'Total subscriptions renewed as of current date Upto E-10','convPercUptoE10'=>'Conversion % Upto E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
                     if($this->misData && is_array($this->misData))
 					{
 						$headerString = "Metric\t";
@@ -2740,5 +2754,157 @@ class crmMisActions extends sfActions
                 }
             }
         }
+    }
+
+    public function executeScreenRBInterestMISSelectDates(sfWebRequest $request) {
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+        $this->monthArr = array('04' => 'Apr', '05' => 'May', '06' => 'Jun', '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec', '01' => 'Jan', '02' => 'Feb', '03' => 'Mar');
+        for ($i = date("Y"); $i >= 2017; $i--) {
+            $yr[$i - 2015] = $i;
+        }
+        $this->yearArr = $yr;
+        unset($yr);
+        if($request->getParameter('submit')) {
+            $dateType = $request->getParameter('dateRange');
+            if($dateType == 'M'){
+                $month = $request->getParameter('dateWiseMonth');
+                $year = $request->getParameter('dateWiseYear');
+                $startDT = "$year-$month-01 00:00:00";
+                $daysInMonth = date('t',strtotime($startDT));
+                $endDT = "$year-$month-$daysInMonth 23:59:59";
+                if($year == 2017 && $month < 8){
+                    $noData = "No data exists for the selected date range";
+                }
+            } else if($dateType == 'C'){
+                $startDT = date("Y-m")."-01 00:00:00";
+                $day = date('d');
+                $endDT = date("Y-m")."-$day 23:59:59";
+            }
+            $this->redirect("/operations.php/crmMis/screenRBInterestMISAgentWiseData?cid=$this->cid&startDT=$startDT&endDT=$endDT&noData=$noData");
+        }
+    }
+
+    public function executeScreenRBInterestMISAgentWiseData(sfWebRequest $request){
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+        $this->startDT = $request->getParameter('startDT');
+        $this->endDT = $request->getParameter('endDT');
+        $noOfDays = date('t',strtotime($this->startDT));
+        $endDay = date('d',strtotime($this->endDT));
+        $days = $noOfDays > $endDay ? $endDay : $noOfDays;
+        $this->daysArray = range(1,$days);
+        $this->noData = $request->getParameter('noData');
+        if($this->noData)
+            $this->noData = "No data exists for the selected date range";
+        else{
+            $servicingObj = new billing_EXCLUSIVE_SERVICING("newjs_slave");
+            $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+            $agentWiseData = $servicingObj->getAgentWiseInfoForRBInterestsMIS($this->startDT,$this->endDT);
+            $this->agentWiseDetails = array();
+            $this->agentWiseData = array();
+            foreach ($agentWiseData as $agent=>$clientArr){
+                $this->agentWiseDetails[$agent] = $clientMemberMappingObj->getRBInterestsForAgent($clientArr,$this->startDT,$this->endDT);
+                $this->agentWiseData[$agent] = implode(",",$clientArr);
+            }
+
+            $todayRow = array();
+            foreach ($this->agentWiseDetails as $agent=>$dayWiseData){
+                foreach ($dayWiseData as $day=>$count){
+                    $todayRow[$day]["Y"] += $count["Y"];
+                    $todayRow[$day]["N"] += $count["N"];
+                    $todayRow[$day]["P"] += $count["P"];
+                    $todayRow[$day]["E"] += $count["E"];
+                    $todayRow[$day]["S"] += $count["S"];
+                    $todayRow[$day]["D"] += $count["D"];
+                }
+            }
+
+            $this->agentWiseDetails["TOTAL"] = $todayRow;
+
+            foreach ($this->agentWiseDetails as $agent=>$dayWiseData){
+                foreach ($dayWiseData as $day=>$count){
+                    $this->agentWiseDetails[$agent]["TOTAL"]["Y"] += $count["Y"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["N"] += $count["N"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["P"] += $count["P"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["E"] += $count["E"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["S"] += $count["S"];
+                    $this->agentWiseDetails[$agent]["TOTAL"]["D"] += $count["D"];
+                }
+            }
+        }
+    }
+
+    public function executeScreenRBInterestMISClientWiseData(sfWebRequest $request){
+        $this->cid = $request->getParameter('cid');
+        $this->startDT = $request->getParameter('startDT');
+        $this->name = $request->getParameter('name');
+        $this->endDT = $request->getParameter('endDT');
+        $noOfDays = date('t',strtotime($this->startDT));
+        $endDay = date('d',strtotime($this->endDT));
+        $days = $noOfDays > $endDay ? $endDay : $noOfDays;
+        $this->daysArray = range(1,$days);
+        $clients = explode(",",$request->getParameter('clients'));
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+        $purchases = new BILLING_PURCHASES("newjs_slave");
+        $userNames = $purchases->getUserName($clients);
+        $clientDetails = $clientMemberMappingObj->getRBInterestsForClients($clients,$this->startDT,$this->endDT);
+        $this->clientWiseDetails = array();
+        $this->profileIDMapping = array();
+        foreach ($clientDetails as $key=>$value){
+            $this->profileIDMapping[$userNames[$key]] = $key;
+            if(is_array($userNames) && $userNames[$key]){
+                $this->clientWiseDetails[$userNames[$key]] = $value;
+            } else{
+                $this->clientWiseDetails[$key] = $value;
+            }
+        }
+
+        $todayRow = array();
+        foreach ($this->clientWiseDetails as $agent=>$dayWiseData){
+            foreach ($dayWiseData as $day=>$count){
+                $todayRow[$day]["Y"] += $count["Y"];
+                $todayRow[$day]["N"] += $count["N"];
+                $todayRow[$day]["P"] += $count["P"];
+                $todayRow[$day]["E"] += $count["E"];
+                $todayRow[$day]["S"] += $count["S"];
+                $todayRow[$day]["D"] += $count["D"];
+            }
+        }
+        $this->clientWiseDetails["TOTAL"] = $todayRow;
+
+        foreach ($this->clientWiseDetails as $agent=>$dayWiseData){
+            foreach ($dayWiseData as $day=>$count){
+                $this->clientWiseDetails[$agent]["TOTAL"]["Y"] += $count["Y"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["N"] += $count["N"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["P"] += $count["P"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["E"] += $count["E"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["S"] += $count["S"];
+                $this->clientWiseDetails[$agent]["TOTAL"]["D"] += $count["D"];
+            }
+        }
+    }
+
+    public function executeScreenRBInterestMISClientInfo(sfWebRequest $request)
+    {
+        $this->cid = $request->getParameter('cid');
+        $this->startDT = $request->getParameter('startDT');
+        $this->name = $request->getParameter('name');
+        $this->endDT = $request->getParameter('endDT');
+        $this->clientID = $request->getParameter('clientID');
+        $pid = $request->getParameter('pid');
+        $partnerObj = new SearchCommonFunctions();
+        $profileObj = Operator::getInstance('',$pid);
+        $profileObj->getDetail('','','*');
+        //dpp call without filters
+        $matchesObj = $partnerObj->getMyDppMatches('',$profileObj,'','','','',true,'','','','',true);
+        $this->dppCount = $matchesObj->getTotalResults();
+
+        $clientMemberMappingObj = new billing_EXCLUSIVE_CLIENT_MEMBER_MAPPING("newjs_slave");
+        $clientInfo = $clientMemberMappingObj->getClientInfo($pid,$this->startDT,$this->endDT);
+        $this->sent = ($clientInfo["Y"]?$clientInfo["Y"]:0) + ($clientInfo["P"]?$clientInfo["P"]:0);
+        $this->skipped = $clientInfo["S"]?$clientInfo["S"]:0;
+        $this->discarded = $clientInfo["D"]?$clientInfo["D"]:0;
+        $this->notSent = ($clientInfo["N"]?$clientInfo["N"]:0) + ($clientInfo["E"]?$clientInfo["E"]:0);
     }
 }

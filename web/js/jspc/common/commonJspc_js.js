@@ -1,4 +1,138 @@
+function GAMapper(GAEvent, extraParams)
+{
+    return;
+    try {
+        var PageName = currentPageName || "other page";
+        if(LoginLayerByUserActions)
+        var userStatus = "Unregistered";
+        if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
+            userStatus = loggedInJspcGender;
+        }
+        var GAMapping = {
+            // verify otp layer
+            "GA_VOL_MISS_CALL"              :["E", "Enter Code Screen", "Miss Call"],
+            "GA_VOL_SUBMIT"                 :["E", "Enter Code Screen", "Submit"],
+            "GA_VOL_RESEND"                 :["E", "Enter Code Screen", "Resend Code"],
+            "GA_VOL_SUBMIT_ERROR"           :["E", "Enter Code Screen", "Wrong OTP"],
+            "GA_VOL_SUBMIT_SUCCESS"         :["E", "Enter Code Screen", "Correct OTP"],
+            "GA_VOL_SUCCESS_OK"             :["E", "Phone verification response", "Verify Okay"],
+            
+            "GA_LL_LOGIN_SUCCESS"           :["E", "login layer", "Login Success"],
+            "GA_LL_LOGIN_FAILURE"           :["E", "login layer", "Login Failure"],
+
+            
+            "GA_CE"                         :["E", PageName || "", (extraParams['action'] || "")],
+
+            "GA_CE_MYJSJUSTJOINED"          :["E", 'myjs justjoined', 'Express Interest'],
+            "GA_CE_MYJSLASTSEARCH"          :["E", "myjs lastsearch", "Express Interest"],
+            "GA_CE_MYJSVERIFIEDMATCHES"     :["E", "myjs verifiedmatches", "Express Interest"],
+            "GA_CE_MYJSDAILYMATCHES"        :["E", "myjs dailymatches", "Express Interest"],
+
+
+            "GA_SEARCH_LOGGEDOUT_PROFILE"   :["E", "Login Layer by user action", "profile"],
+            "GA_SEARCH_LOGGEDOUT_ALBUM"     :["E", "Login Layer by user action", "album"],
+            "GA_SEARCH_LOGGEDOUT_EOI"       :["E", "Login Layer by user action", extraParams['type'] || ''],
+
+
+
+            "GA_LL_LOGIN"                   :["E", "login layer", "Login"],
+            "GA_TOPBAR_LOGIN"               :["E", "login", "login"],
+            "GA_LL_REGISTER"                :["E", "login layer", "Register"],
+            "GA_TOPBAR_REGISTER"            :["E", "login", "Register"],
+            "GA_TOPBAR_FORGOT"              :["E", "login", "Forgot Password"],
+            "GA_LL_FORGOT"                  :["E", "login layer", "Forgot Password"],
+            "GA_FORGOTL_SENDLINK"           :["E", "Forgot Password", "Send link to reset"],
+
+            
+
+            // "GA_LL_LOGIN_BUTTON" : ["login layer", "login", loggedInJspcGender || 'Unregistered']
+            "GAV_VOL_SHOW"          :["V", "Verify otp layer"],
+            // 
+            "GAV_LL_SHOW"           :["V", "Login Layer"+(extraParams['action'] || "")],
+
+            "GA_CAL_NO"             :["E", "CAL NO", extraParams['layerId'] +" "+ extraParams['button']],
+            "GA_CAL_YES"            :["E", "CAL YES", extraParams['layerId'] +" "+ extraParams['button']],
+            /* click on album on profile description page when logged in */
+            "GA_PROFILE_ALBUM"      :["E", PageName || "", "album"],
+
+        }
+        if(GAMapping[GAEvent]){
+            if(GAMapping[GAEvent][0] == "E"){
+                trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
+            }else if(GAMapping[GAEvent][0] == "V"){
+                _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
+            }
+        }
+    }
+    catch(err) {
+        return;
+    }
+}
+
 var currentlyDisplayedLayer = '';
+
+//this variable has been added for idfy
+var idfyStr = '<div class="overlayDiv"><div class="overlayMid disp_ib">'+
+        '<div class="txtc padnew20">'+
+        '<div class="fontreg f18 color11 disp_ib vertSup">Welcome to verification powered by</div><i class="idfyIconBig vBot"></i></div>'+
+        '<div class="f13 color2 fontreg lh21 pad1530">'+
+        '<div><b>Please Note:</b> You are leaving the networks of the website <b>Jeevansathi.com</b> to a third party website <b>Idfy.com</b>, (regulated by its own privacy policy), a website not affiliated to Info Edge (India) Limited. The verification of prospects is not being carried out by Jeevansathi.com or any of its agents/associates.<br></div>'+
+        '<div>Here’s how it works:</div>'+
+        '<table class="txtList mt15">'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>Who is verifying the information? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>Jeevansathi has partnered with IDfy to help verify the profiles. IDfy is India’s leading background verification service provider.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>How is the information being verified?</td>'+ 
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>You will need to have some details of the person handy. Please click the verification link, fill in these details and proceed to checkout. The verification report would be available  in 3-5 days.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>What will you check? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>We can check if the person has a criminal background (Court Record Check). We can also check if he/she works in the place he/she claims to work (Employment Check Lite).</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>What details of the person do you need to verify?</td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>You’ll need the following:</div>'+
+        '<ul>'+
+        '<li>Court Record Check - Full Name, Father’s Name, Date of Birth, and his/her Address.</li>'+
+        '<li>Employment Lite - Name of the organization, Office/branch location, Designation (optional) and Department of the person (optional).</li>'+
+        '</ul>'+
+        '</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>Do you need consent from the other person?</td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>These checks do not need any consent and as such the other person will not be contacted. All you need to ensure if that you have his/her details handy.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Q.</td>'+
+        '<td>How do I pay? </td>'+
+        '</tr><tr>'+
+        '<td>A.</td>'+
+        '<td>It’s really simple, you can pay by Debit or Credit card. It is as simple as buying a product online.</td>'+
+        '</tr>'+
+        '</table>'+
+        
+        '</div>'+
+        '<a href="http://jeevansathi.idfy.com" target="blank"><div class="lh40 txtc colrw bg_pink cursp"><span class="f17 fontlig ml30">Proceed with Verification</span><span class="vTop pl28 f11 fontlig">Powered By</span><i class="idfyIcon"></i></div></a>'+
+        '</div>'+
+        '</div>'+
+        '<div id="closeBtn" class="disp_ib vTop cursp closeBtnNew"><i class="sprite2 closeSprite"></i></div>';
 // JavaScript Document
 //this function is for achieving inheritence in javascript
 var inheritsFrom = function (child, parent) {
@@ -20,7 +154,7 @@ $(document).keydown(function (e) {
 $(document).ready(function (e) {
     top.document.title = document.title;
     $("#liveChatLinkFooter,#liveChatLinkHeader").click(function () {
-        $("#lc_chat_header").click();
+        window.fcWidget.open();
     });
     $(".contentHeader").each(function () {
         $(this).mCustomScrollbar();
@@ -60,6 +194,18 @@ $(document).ready(function (e) {
 				window.location.href = url;
         
     });
+
+    //adding idfy code
+    $(".idfyDiv, .idfyDiv2").each(function(){
+        $(this).off("click").on("click",function(){
+            $("#commonOverlay").removeClass("disp-none");   
+            $("#commonOverlay").html(idfyStr);            
+            $("#closeBtn").off("click").on("click",function(){
+                $("#commonOverlay").addClass("disp-none");
+            }); 
+        }); 
+    });
+    
 });
 
 function closeOverlayOnClick() {
@@ -376,77 +522,80 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
+    // console.log(data);
     if (data) { 
+        var maxCount = 100;
+        var maxWrapStr = "99+";
         if (parseInt(data.TOTAL_NEW)) {
             $("#totalBellCountParent").css('display', 'table');
-            if (data.TOTAL_NEW < 10) {
+            if (data.TOTAL_NEW < maxCount) {
                 $("#totalBellCount").text(data.TOTAL_NEW);
             } else {
-                $("#totalBellCount").text("9+");
+                $("#totalBellCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.NEW_MATCHES)) {
             $("#justJoinedCountParent").css('display', 'block');
-            if (data.NEW_MATCHES < 10) {
+            if (data.NEW_MATCHES < maxCount) {
                 $("#justJoinedCount").text(data.NEW_MATCHES);
             } else {
-                $("#justJoinedCount").text("9+");
+                $("#justJoinedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.MESSAGE_NEW)) {
             $("#messagesCountParent").css('display', 'block');
-            if (data.MESSAGE_NEW < 10) {
+            if (data.MESSAGE_NEW < maxCount) {
                 $("#messagesCount").text(data.MESSAGE_NEW);
             } else {
-                $("#messagesCount").text("9+");
+                $("#messagesCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.PHOTO_REQUEST_NEW)) {
             $("#photoRequestsCountParent").css('display', 'block');
-            if (parseInt(data.PHOTO_REQUEST_NEW) < 10) {
+            if (parseInt(data.PHOTO_REQUEST_NEW) < maxCount) {
                 $("#photoRequestsCount").text(parseInt(data.PHOTO_REQUEST_NEW));
             } else {
-                $("#photoRequestsCount").text("9+");
+                $("#photoRequestsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.AWAITING_RESPONSE_NEW)) {
             $("#interestsReceivedCountParent").css('display', 'block');
-            if (data.AWAITING_RESPONSE_NEW < 10) {
+            if (data.AWAITING_RESPONSE_NEW < maxCount) {
                 $("#interestsReceivedCount").text(data.AWAITING_RESPONSE_NEW);
             } else {
-                $("#interestsReceivedCount").text("9+");
+                $("#interestsReceivedCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.ACC_ME_NEW)) {
             $("#membersAcceptedMeCountParent").css('display', 'block');
-            if (data.ACC_ME_NEW < 10) {
+            if (data.ACC_ME_NEW < maxCount) {
                 $("#membersAcceptedMeCount").text(data.ACC_ME_NEW);
             } else {
-                $("#membersAcceptedMeCount").text("9+");
+                $("#membersAcceptedMeCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DAILY_MATCHES_NEW)) {
             $("#membersDailyMatchesCountParent").css('display', 'block');
-            if (data.DAILY_MATCHES_NEW < 10) {
+            if (data.DAILY_MATCHES_NEW < maxCount) {
                 $("#membersDailyMatchesCount").text(data.DAILY_MATCHES_NEW);
             } else {
-                $("#membersDailyMatchesCount").text("9+");
+                $("#membersDailyMatchesCount").text(maxWrapStr);
             }
         }
 	if (parseInt(data.FILTERED_NEW)) {
             $("#membersFilteredInterestCountParent").css('display', 'block');
-            if (data.FILTERED_NEW < 10) {
+            if (data.FILTERED_NEW < maxCount) {
                 $("#FilteredInterstsCount").text(data.FILTERED_NEW);
             } else {
-                $("#FilteredInterstsCount").text("9+");
+                $("#FilteredInterstsCount").text(maxWrapStr);
             }
         }
         if (parseInt(data.DEC_ME_NEW)) {
             $("#membersDeclinedMeCountParent").css('display', 'block');
-            if (data.DEC_ME_NEW < 10) {
+            if (data.DEC_ME_NEW < maxCount) {
                 $("#DeclinedMeCount").text(data.DEC_ME_NEW);
             } else {
-                $("#DeclinedMeCount").text("9+");
+                $("#DeclinedMeCount").text(maxWrapStr);
             }
         } 
     }
@@ -583,6 +732,7 @@ function showLayerCommon(layerId) {
             })
         });
     });
+
 }
 
 function closeCurrentLayerCommon(extraFunction) {
@@ -768,4 +918,76 @@ function inviewCheck()
             return $.inviewport(a, {threshold : 0});
         }
     });
+}
+
+function showTimerForLightningMemberShipPlan(source,type) {
+    if(source == "jsmsMyjs" || source == "jspcMyjs"){
+        var cT = new Date(current);
+        var eT = new Date(membershipPlanExpiry);
+        lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
+    }
+    if(!lightningDealExpiryInSec) 
+        return;
+    var currentTime=new Date(); 
+    var expiryDate=new Date();
+    expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
+    if(expiryDate<currentTime) return;
+    var timeDiffInSeconds=(expiryDate-currentTime)/1000;
+    if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
+    var temp=timeDiffInSeconds;
+    var timerSeconds=temp%60;
+    temp=Math.floor(temp/60);
+    var timerMinutes=temp%60;
+    temp=Math.floor(temp/60);
+    var timerHrs=temp;
+    memTimerExtraDays=Math.floor(timerHrs/24);
+    memTimerTime=new Date();
+    memTimerTime.setHours(timerHrs);
+    memTimerTime.setMinutes(timerMinutes);
+    memTimerTime.setSeconds(timerSeconds);
+    src = source;
+    memTimer=setInterval('updateMemTimerLightning()',1000);
+}
+
+
+function formatTimeLightning(i) {
+    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+function updateMemTimerLightning(){
+  var h = memTimerTime.getHours();
+  var s = memTimerTime.getSeconds();
+  var m = memTimerTime.getMinutes();
+  if (!m && !s && !h) {
+    if(!memTimerExtraDays) clearInterval(memTimer);
+    else memTimerExtraDays--;
+  }
+  
+    memTimerTime.setSeconds(s-1);
+    h=h+memTimerExtraDays*24;
+    
+    m = formatTimeLightning(m);
+    s = formatTimeLightning(s);
+    h = formatTimeLightning(h);
+    
+    if(src == "jsmsLanding"){
+        $("#jsmsLandingM").html(m);
+        $("#jsmsLandingS").html(s);
+    }
+    else if (src == "jsmsMyjs"){
+        $("#myjsM").html(m);
+        $("#mysjsS").html(s);
+    }
+    else if( src == "jspcLanding"){
+        $("#jspcLandingM").html(m);
+        $("#jspcLandingS").html(s);
+        $("#jspcLandingMRenew").html(m);
+        $("#jspcLandingSRenew").html(s);
+    }
+    else if( src == "jspcMyjs"){
+        $("#jspcMyjsM").html(m);
+        $("#jspcMyjsS").html(s);
+    }
 }

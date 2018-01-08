@@ -24,7 +24,7 @@ class ChannelBasedRegistrationMonitoringTask extends sfBaseTask
    * Const variable 
    * EMAIL_LIST : List of email ids
    */
-  const EMAIL_LIST = "sanyam1204@gmail.com,kunal.test02@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com";
+  const EMAIL_LIST = "sanyam1204@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com";
   
   protected function configure()
   {
@@ -120,7 +120,7 @@ EOF;
     $xmlData1="";
     //Send Email and SMS
     SendMail::send_email(self::EMAIL_LIST, $mailBody,"Complete Registration Number Reduced by more than 30%");
-    $arrMob = array('8800470788','9711818214','8826380350','9953457479');
+    $arrMob = array('8800470788','9711818214','9953457479');
     include_once(JsConstants::$docRoot."/classes/SmsVendorFactory.class.php");
     $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
     $profileid = "144111";

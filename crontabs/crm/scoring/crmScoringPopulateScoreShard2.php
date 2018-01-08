@@ -4,6 +4,7 @@ include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking
+$date =date("Y-m-d");
 $msg="\nPopulate Score # Start Time=".date("Y-m-d H:i:s");
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Scoring Algorithm Score Computation Shard-2";
@@ -19,9 +20,9 @@ $maDb = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$mast
 $myDb = mysql_connect(MysqlDbConstants::$slave111_sel['HOST'],MysqlDbConstants::$slave111_sel['USER'],MysqlDbConstants::$slave111_sel['PASS']) or die("Unable to connect to js server".$start);
 $shDb2 = mysql_connect(MysqlDbConstants::$shard2Slave112['HOST'],MysqlDbConstants::$shard2Slave112['USER'],MysqlDbConstants::$shard2Slave112['PASS']) or die("Unable to connect to js server".$start);
 
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
-mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$shDb2);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$maDb);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$myDb);
+mysql_query('set session wait_timeout=1000000,interactive_timeout=100000,net_read_timeout=100000',$shDb2);
 
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
@@ -74,17 +75,17 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid."#".$newmodelJson;
-                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
-                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
+                                                /*$hit_log1 =$profileid."#".$newmodelJson;
+                                                $fileName1 ="score_hit_log_for_nullResponse_".$date.".txt";
+                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");*/
                                         }
                                         else{
                                                 $score1 =round($score1,0);
                                         }
 					// temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
-                                        $fileName ="score_hit_log".$date.".txt";
-                                        passthru("echo '$hit_log' >>/tmp/$fileName");
+                                        /*$hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
+                                        $fileName ="score_hit_log_".$date.".txt";
+                                        passthru("echo '$hit_log' >>/tmp/$fileName");*/
                                 }
                                 if(isset($score))
                                 {
@@ -132,7 +133,17 @@ function sendPostData ($url, $post) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+
+        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        curl_setopt($ch, CURLOPT_HEADER, $header);
+        curl_setopt($ch, CURLOPT_USERAGENT,"JsInternal");    
+
 	$result = curl_exec($ch);
+
+        // remove header from curl Response 
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $result = substr($result, $header_size);
+
 	curl_close($ch);
 	return $result;
 }

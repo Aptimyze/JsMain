@@ -11,25 +11,33 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
-
-	if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll/repeatAlarm"))
-	{
-		$notifCheck =NotificationFunctions::notificationCheck();
-        	if($notifCheck){echo $notifCheck;die;}
-	}
-
+//		print(MobileCommon::isApp());print('---'.MobileCommon::isNewMobileSite());print('-D--'.MobileCommon::isDesktop());die;
 	$context = $this->getContext();
-		$request = $context->getRequest();
+	$request = $context->getRequest();
+	if(!$request->getParameter("startScriptTime"))
+			$request->setParameter("startScriptTime",microtime(true));
+        // Notification filter
+	$requestUri =$_SERVER["REQUEST_URI"];
+        if(strstr($requestUri,"api/v1/notification/poll/repeatAlarm"))
+                $repeatAlarm =true;
+        elseif(strstr($requestUri,"api/v1/notification/poll"))
+                $pollReq =true;
+        if($pollReq || $repeatAlarm){
+                $notifCheck =NotificationFunctions::notificationCheck($request,$pollReq);
+                if($pollReq && $notifCheck){
+                        echo $notifCheck;die;
+                }
+                elseif($repeatAlarm && $notifCheck){
+                        echo $notifCheck;die;
+                }
+        }
 
-		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
-		if($request->getcookie('JS_MOBILE')=='Y'){
-            $redirectUrl = CommonUtility::translateSiteLanguage($request);
-            if($redirectUrl != ""){
-            	$context->getController()->redirect($redirectUrl, array('request' => $request));
-            }
-		}
-		// End hindi switch code !
-		
+		/*SPA & Hindi Site*/
+		include_once("SPA.class.php");
+		$spaObj = new SPA();
+		$spaObj->spaRedirect($request);
+		/*End*/
+
 		if ($matchPointCID = $request->getParameter("matchPointCID")) {
 			$flag = 1; //to check if user is logged in
 			$TOUT = sfConfig::get("app_tout");
@@ -39,9 +47,9 @@ class AuthFilter extends sfFilter {
 				$userDetails = $conn->findUser($userno);*/
 				$backendLibObj = new backendActionsLib(array("jsadmin_CONNECT"=>"newjs_master"),crmCommonConfig::$useCrmMemcache);
 				$userDetails = $backendLibObj->fetchSessionDetailsBySessionID($userno);
-				if ($userDetails) 
+				if ($userDetails)
 				{
-					if (time() - $userDetails["TIME"] < $TOUT) 
+					if (time() - $userDetails["TIME"] < $TOUT)
 					{
 						//$conn->updateUserTime($userno);
 						$backendLibObj->updateAgentSessionTime($userno);
@@ -54,7 +62,7 @@ class AuthFilter extends sfFilter {
 				echo "<html><body><META HTTP-EQUIV=\"refresh\" CONTENT=\"0;URL=" . sfConfig::get("app_site_url") . "/jsadmin\"></body></html>";
 				throw new sfStopException();
 			}
-		} 
+		}
 		elseif($request->getParameter('module')=="mailer" && $request->getParameter('action')=="openRate")
 		{}
 		elseif($request->getParameter('module')=="common" && $request->getParameter('action')=="resetPassword")
@@ -64,13 +72,13 @@ class AuthFilter extends sfFilter {
 			$protect_obj->logout();
 		}
 		else {
-			
+
 			global $protect_obj;
 			if(($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" )|| ($request->getParameter('module')=="myjs" && $request->getParameter('action')=="jspcPerform" ) || $request->getParameter("blockOldConnection500")){
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll"))
+				if(strstr($_SERVER["REQUEST_URI"],"/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"/search/gunaScore")  || strstr($requestUri,"common/resetStaticKey") || strstr($requestUri,"/register/staticTablesData") || HandlingCommonReqDatabaseId::isMasterMasterDone() || strstr($requestUri,"/api/hamburgerDetails") || strstr($requestUri,"/common/engagementcount") || strstr($requestUri,'/api/versionupgrade'))
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -79,34 +87,44 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute("protect_obj",$protect_obj);
 				if(strpos($_SERVER['REQUEST_URI'],"search")!==false)
 					$request->setParameter('searchRepConn', 1);
-					
+
 			if ($this->isFirstCall() && !$request->getAttribute('FirstCall')) {
 				$request->setAttribute('FirstCall', 1);
-				
+
 				// Code to execute after the action execution, before the rendering
+				//Stopping from going to oldMobileSite
+				if(MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !$request->getParameter('redirectFromOldSite') && !MobileCommon::isApp() && !MobileCommon::isDesktop() && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
+					$context->getController()->forward("static", "oldMobileSite");
+					die;
+				}
+
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
 				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
-				
+
 				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
 					if($request->getParameter("allowLoginfromBackend"))
-						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");
 					else
 						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
-		
+
+                                if(MobileCommon::isNewMobileSite())
+                                    $request->setParameter('showAndBeyond', CommonFunction::showAndBeyondPixel($data[PROFILEID]));
 				$request->setAttribute('loginData', $data);
 				if ($data[PROFILEID]) $login = true;
 				else $login = false;
 				$request->setAttribute('login', $login);
 				$request->setAttribute('profileid', $data[PROFILEID]);
+				$request->setAttribute('gender', $data[GENDER]);
+
 				$ipAddress = CommonFunction::getIP();
 
 				///////// check for currency and ip address
@@ -122,7 +140,7 @@ class AuthFilter extends sfFilter {
 		        			$currency = 'DOL';
 		        		}
 		        	}
-		        	
+
 		        } else {
 		        	//$countryIpAddressObj = new jsadmin_ip_country_live();
 	        		//$getCountry = $countryIpAddressObj->getUserCountry($ipAddress);
@@ -135,14 +153,13 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('currency', $currency);
 				///////// check for currency and ip address ends here
 
-
 				//App promotion need to be off for Login Profiles already have app installed
-				$AppLoggedInUser=$this->LoggedInAppPromo($data[PROFILEID]);
+				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
-				
-					
-				
+
+
+
 				if($request->getParameter('module')!="e")
 				{
 		            if($request->getParameter('module')!="api" && $request->getParameter('module')!="static"  && ($request->getParameter('module')!="register" || $request->getParameter('action')=="page5") && $request->getParameter('action')!="alertManager" && $data['PROFILEID'])
@@ -151,7 +168,7 @@ class AuthFilter extends sfFilter {
 					            	if ($data['PROFILEID'])
 							{
 								$memObject=JsMemcache::getInstance();
-								$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']); 
+								$showConsentMsg=$memObject->get('showConsentMsg_'.$data['PROFILEID']);
 								if(!$showConsentMsg) {
 									$showConsentMsg = JsCommon::showConsentMessage($data['PROFILEID']) ? 'Y' : 'N';
 									$memObject->set('showConsentMsg_'.$data['PROFILEID'],$showConsentMsg);
@@ -161,9 +178,23 @@ class AuthFilter extends sfFilter {
 							}
 
 
-		            	
 
-						if($data[INCOMPLETE]=='Y' )
+
+                                                $phoneVerified = JsMemcache::getInstance()->get($data['PROFILEID']."_PHONE_VERIFIED");
+							
+                                                if(!$phoneVerified)
+                                                {
+                                                        $phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
+                                                        JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
+                                                }
+                                                
+                                                if($phoneVerified == 'Y' && $data[HAVEPHOTO] == 'Y' && $data[ACTIVATED] == 'N'){
+                                                    CommonFunction::markProfileCompleteAndActivated();
+                                                    $data[INCOMPLETE] = 'N';
+                                                    $data[ACTIVATED] = 'Y';
+                                                }
+                                                
+						if($data[INCOMPLETE]=='Y')
 						{
 							$request->setParameter("incompleteUser",1);
 							if(MobileCommon::isNewMobileSite()){
@@ -175,26 +206,15 @@ class AuthFilter extends sfFilter {
                                                                 die;
                                                         }
 						}
-							
-						
+
+
 						if($request->getParameter('module')!="phone" && $request->getParameter('module')!="common")
-						{							
-							$phoneVerified = JsMemcache::getInstance()->get($data['PROFILEID']."_PHONE_VERIFIED");
-							
-							if(!$phoneVerified)
-							{
-								include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
-								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
-							}
-
-
-
+						{           
 							if($phoneVerified!="Y")
 							{
-								
+
 								if(!MobileCommon::isNewMobileSite() && MobileCommon::isMobile())
-								{ 
+								{
 									include_once(JsConstants::$docRoot.'/jsmb/phoneVerify.php');
 									die;
 								}
@@ -210,7 +230,6 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 							}
-							
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
 								$context->getController()->forward("phone","consentMessage",0);
@@ -220,52 +239,21 @@ class AuthFilter extends sfFilter {
 						}
 					}
 				}
-					
-					
+
+
 				if ($_COOKIE['SULEKHACO'] == "yes") $request->setAttribute("SULEKHACO", 1);
 				$mob_cookie_arr = explode(",", $_COOKIE['JS_MOBILE']);
 				$MOB_COOKIE = $mob_cookie_arr[0];
 				if ($MOB_COOKIE == 'Y') $request->setAttribute('MOB_YES', 1);
 				//$request->setAttribute('loginData', $data);
-				//$request->setAttribute('protect_obj', $protect_obj);				
-				$bmsObj = new BMSHandler();
-				$zedo = $bmsObj->setBMSVariable($data,1,$request);
-				$request->setAttribute("zedo",$zedo);
-				
-				//Kundli Block 
-				if($login)
-				{
-					$key = $data["PROFILEID"]."_KUNDLI_LINK";
-					if(JsMemcache::getInstance()->get($key))
-                                        {
-                                                $kundli_link = JsMemcache::getInstance()->get($key);
-                                        }
-					else
-					{
-						$naObj = ProfileAstro::getInstance();
-                                                if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
-						{
-							if(JsConstants::$alertServerEnable) {
-                                                        $kakcc = new KUNDLI_ALERT_KUNDLI_CONTACT_CENTER("newjs_slave");
-                                                        if($kakcc->ifKundliMatchesExist($data["PROFILEID"]))
-								$kundli_link = 2;
-							else
-								$kundli_link = 3;
-                                                        unset($kakcc);
-							}
-							else
-								$kundli_link = 3;
-						}
-                                                else
-                                                       	$kundli_link = 1;
-                                                unset($naObj);
-						JsMemcache::getInstance()->set($key,$kundli_link,1800);
-					}
+				//$request->setAttribute('protect_obj', $protect_obj);
+				if(MobileCommon::isDesktop()){
+					$bmsObj = new BMSHandler();
+					$zedo = $bmsObj->setBMSVariable($data,1,$request);
+					$request->setAttribute("zedo",$zedo);
 				}
-				else
-					$kundli_link = 3;
 
-				$request->setAttribute('kundli_link', $kundli_link);
+				//Kundli Block
 				//OLD Variables block
 				//Paid memeber or free member for header link name changes
 				if($data[SUBSCRIPTION]!=""){
@@ -273,23 +261,22 @@ class AuthFilter extends sfFilter {
 				}
 				else
 					$request->setAttribute('subscriptionHeader',"1");
-				
+
 				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);
 				$request->setAttribute('activated', $data[ACTIVATED]);
-				$request->setAttribute('gender', $data[GENDER]);
 				if($data[PROFILEID])
 				$request->setAttribute('AJAX_CALL_MEMCACHE',Header::checkMemcacheUpdated($data["PROFILEID"]));
 				if ($request->getParameter("ID_CHECKED")) $request->setParameter("ID_CHECKED", urlencode($request->getParameter("ID_CHECKED")));
 				if ($request->getParameter("after_login_call")) $request->setParameter("after_login_call", stripslashes($request->getParameter("after_login_call")));
-				
+
 				//MODULE ENABLE LOGIN FUNCTIONALITY
 				$enable_login=sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login');
 				if(!$enable_login)
 					$enable_login=sfConfig::get('mod_' . strtolower($request->getParameter('module')) . '_' . strtolower($request->getParameter('action')) . '_enable_login');
-					
+
 				if(!$enable_login)
 					$enable_login=sfConfig::get('mod_' . $request->getParameter('module') . '_default'. '_enable_login');
 				if ($enable_login !== 'off') {
@@ -301,58 +288,57 @@ class AuthFilter extends sfFilter {
 					die;
 					}
 				}
-            
-            
+
 
                		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
 
-            
+
                $headers = getallheaders();
-            
-	            
+
+
 	            if (false === isset($headers[LoggingEnums::RAJX])) {
 	            	$out = LoggingManager::getInstance()->getUniqueId();
-	            	$request->setAttribute(LoggingEnums::RIFT,$out); 
+	            	$request->setAttribute(LoggingEnums::RIFT,$out);
 
 	            }
 	            else
-	            {   	            	
+	            {
 	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
 	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
 
-	            	
+
 	            }
-	          	                        
+
 			}
 			else
 			{
 				if($request->getAttribute('mobileAppApi')==1)
 				{
-					if (!$request->getAttribute('FirstMobileApiCall')) 
+					if (!$request->getAttribute('FirstMobileApiCall'))
 					{
 						if($request->getAttribute('loginData')=='')
 						{
 							$this->apiWebHandler = ApiRequestHandler::getInstance($request);
 							$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
 							$enable_login=sfConfig::get('mod_' . ($forwardingArray["moduleName"]) . '_' . ($forwardingArray["actionName"]) . '_enable_login');
-							if ($enable_login !== 'off') 
+							if ($enable_login !== 'off')
 							{
 								$respObj = ApiResponseHandler::getInstance();
 								$respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
-								$respObj->generateResponse();		
-								die;					
+								$respObj->generateResponse();
+								die;
 							}
 						}
 						$request->setAttribute('FirstMobileApiCall', 1);
 					}
 				}
-			
+
 			}
 		}
 		if($data[PROFILEID])
 		{
-			if(!strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(!strstr($requestUri,"api/v1/notification") && !strstr($requestUri,"api/v3/notification")){
 				$profileObj= LoggedInProfile::getInstance();
 				if($profileObj->getPROFILEID()!='')
 				{
@@ -361,6 +347,7 @@ class AuthFilter extends sfFilter {
 				}
 			}
 		}
+
 		//code to fetch the revision number to clear local storage
 		$revisionObj= new LatestRevision();
 		$r_n_u_m = $revisionObj->getLatestRevision();
@@ -368,16 +355,39 @@ class AuthFilter extends sfFilter {
 		unset($revisionObj);
 		$filterChain->execute();
 	}
-	
-	public function LoggedInAppPromo($profileid){
+
+	public function LoggedInAppPromo($data){
+		$profileid=$data[PROFILEID];
+		$lastLoginDt=$data['LAST_LOGIN_DT'];
+		if($lastLoginDt)
+		{
+			$ContactTime = strtotime($lastLoginDt);
+      		$time = time();
+      		$daysDiff  = floor(($time - $ContactTime)/(3600*24));
+      		if($daysDiff>6)
+      			$lastDayFlag=true;
+      		else
+      			$lastDayFlag=false;
+      	}
+      	else
+      		$lastDayFlag=false;
+
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null)
+			$appPromo=JsMemcache::getInstance()->get($profileid."_appPromo");
+			if($appPromo===null || $appPromo===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
 				if($appProfileIdFlag){
-					JsMemcache::getInstance()->set($profileid."_appPromo",0);
-					return 0;
+
+					if(!$lastDayFlag){
+						JsMemcache::getInstance()->set($profileid."_appPromo",0);
+						return 0;
+					}
+					else{
+						JsMemcache::getInstance()->set($profileid."_appPromo",1);
+						return 1;
+					}
 				}
 				else{
 					JsMemcache::getInstance()->set($profileid."_appPromo",1);
@@ -386,7 +396,7 @@ class AuthFilter extends sfFilter {
 			}
 			else
 			{
-				return JsMemcache::getInstance()->get($profileid."_appPromo");
+				return $appPromo;
 			}
 		}
 		else

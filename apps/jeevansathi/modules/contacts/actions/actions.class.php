@@ -767,7 +767,7 @@ class contactsActions extends sfActions
 		{
 			$dbName = JsDbSharding::getShardNo($this->loginProfile->getPROFILEID(),'');
 			$dbObj = new newjs_CONTACTS($dbName);
-			$b90=mktime(0,0,0,date("m"),date("d")-90,date("Y"));
+			$b90=mktime(0,0,0,date("m"),date("d")-CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT,date("Y"));
 				$back_90_days=date("Y-m-d",$b90);
 			
 			$respondArr = $dbObj->getRespondedCount($this->loginProfile->getPROFILEID(),"TIME > '$back_90_days 00:00:00'");
@@ -775,7 +775,7 @@ class contactsActions extends sfActions
 				{
 						foreach ($respondArr as $key=>$val)
 						{
-							if($val['TYPE']=='I' && $val['FILTERED']!='Y')
+							if($val['TYPE']=='I' && $val['FILTERED']!='Y' && $val['FILTERED']!='J')
 							{
 								$countAwaiting += $val['COUNT'];
 							}

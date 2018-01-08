@@ -30,7 +30,7 @@ Class ButtonResponseApi
 	public function getButtonArray($params)
 	{
 		if($this->loginProfile->getPROFILEID())
-		{
+		{  
 			$gender         = $this->contactHandlerObj->getViewed()->getGENDER();
 			$hisher         = $gender == "F" ? "her" : "his";
 			$himher         = $gender == "F" ? "her" : "him";
@@ -76,24 +76,10 @@ Class ButtonResponseApi
 							break;
 						case ContactHandler::ACCEPT:
 							//echo "ACCEPT";
-							if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 								$button[]                 = self::getSendMessageButton();
 								$button[]                 = self::getContactDetailsButton();
 								$button[]                 = self::getCancelInterestButton();
 								$responseArray["buttons"] = $button;
-							} else {
-								if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
-								{
-									$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
-									$responseArray["infobtnvalue"]  = "";
-									$responseArray["infobtnaction"] = "MEMBERSHIP";
-								}
-								else{
-									$responseArray["infobtnlabel"]  = "Call us to Buy paid membership to Write messages or view contact details";
-									$responseArray["infobtnvalue"]  = "18004196299";
-									$responseArray["infobtnaction"] = "CALL";		
-								}
-							}
 							break;
 						case ContactHandler::DECLINE:
 							//echo "DECLINE";
@@ -124,24 +110,11 @@ Class ButtonResponseApi
 							break;
 						case ContactHandler::ACCEPT:
 							//echo "ACCEPT";
-							if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+
 								$button[]                 = self::getSendMessageButton();
 								$button[]                 = self::getContactDetailsButton();
 								$button[]                 = self::getDeclineButton($this->page);
 								$responseArray["buttons"] = $button;
-							} else {
-								if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
-								{
-									$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
-									$responseArray["infobtnvalue"]  = "";
-									$responseArray["infobtnaction"] = "MEMBERSHIP";
-								}
-								else{
-									$responseArray["infobtnlabel"]  = "Call us to Buy paid membership to Write messages or view contact details";
-									$responseArray["infobtnvalue"]  = "18004196299";
-									$responseArray["infobtnaction"] = "CALL";		
-								}
-							}
 							break;
 						case ContactHandler::DECLINE:
 							//echo "DECLINE";
@@ -165,6 +138,8 @@ Class ButtonResponseApi
 		}
 		
 		$finalResponse = self::buttonDetailsMerge($responseArray);
+                if($this->contactObj)
+                    $finalResponse["contactType"] = $this->contactObj->getTYPE();
 		return $finalResponse;
 	}
 	public function getLogoutButtonArray()
@@ -221,6 +196,11 @@ Class ButtonResponseApi
 		$button["action"] = "ACCEPT";
 		if (isset($page["responseTracking"]) && $str == "Accept")
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
+		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+ 		{
+			$button["params"] = "&responseTracking=".$rtype;
+ 		}
+		
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -229,10 +209,14 @@ Class ButtonResponseApi
 		$button["iconid"] = IdToAppImagesMapping::ENABLE_CONTACT;
 		$button["label"]  = "Send Interest";
 		$button["action"] = "INITIATE";
+		$button["enable"] = true;
 		if (isset($page["stype"]))
 			$button["params"] = "&stype=" . $page["stype"];
 		if (isset($page["page_source"]))
 			$button["params"] = "&page_source=" . $page["page_source"];
+		if(isset($page["comingFromPage"]))
+			$button["params"] = $button["params"]."&coming_from=" .$page["comingFromPage"];
+
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -243,6 +227,10 @@ Class ButtonResponseApi
 		$button["action"] = "DECLINE";
 		if (isset($page["responseTracking"]))
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
+                if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+                {
+                        $button["params"] = "&responseTracking=".$rtype;
+                }
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -271,11 +259,15 @@ Class ButtonResponseApi
             }
             return (self::buttonMerge($button,$enable));
     }
-	public static function getCancelInterestButton()
+	public static function getCancelInterestButton($showNewButtons = '')
 	{
 		$button["iconid"] = IdToAppImagesMapping::CANCEL_INTEREST;
 		$button["label"]  = "Cancel Interest";
 		$button["action"] = "CANCEL_INTEREST";
+		if($showNewButtons == 'search')
+		{
+			 $button["params"]  = "&coming_from=search";
+		}
 		$button           = self::buttonMerge($button);
 		return $button;
 	}
@@ -300,12 +292,24 @@ Class ButtonResponseApi
 		$button = self::buttonMerge($button);
 		return $button;
 	}
-	public function getInitiatedButton()
+	public function getInitiatedButton($androidText = false,$privilageArray="")
 	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
-		{
+		{	
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
-			$button["label"]  = "Interest Sent";
+ 			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
+			$button["value"] = "INITIATE";
+			$responseArray["canChat"] = false;
+			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
+			{
+				$responseArray["infobtnlabel"]  = "BECOME A PAID MEMBER";
+				$responseArray["infobtnvalue"]  = "";
+				$responseArray["infobtnaction"] = "MEMBERSHIP";
+				$responseArray["infomsglabel"] = "Only paid members can start the chat";
+			}
+			else{
+				$responseArray["canChat"] = true;
+			}
 		}
 		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
@@ -379,42 +383,29 @@ Class ButtonResponseApi
 					break;
 
 				case ContactHandler::ACCEPT:
-					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 						$button[]                      = $this->getSendMessageButton();
 						$button[]                      = self::getContactDetailsButton();
 						$button[]                 	   = self::getCancelInterestButton();
 						$responseArray["buttons"]      = $button;
 						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
 						$responseArray["infomsgiconid"] = '023';
-					} else {
-						if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
-						{
-							$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
-							$responseArray["infobtnvalue"]  = "";
-							$responseArray["infobtnaction"] = "MEMBERSHIP";
-						}
-						else{
-							$responseArray["infobtnlabel"]  = "Call us to Buy paid membership to Write messages or view contact details";
-							$responseArray["infobtnvalue"]  = "18004196299";
-							$responseArray["infobtnaction"] = "CALL";		
-						}
-						$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
-						$responseArray["infomsgiconid"] = '023';
-					}
 					break;
 			}
 		} else {
 			//echo "receiver";
 			switch ($this->contactObj->getTYPE()) {
 				case ContactHandler::ACCEPT:
-					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
-						$button[]                      = $this->getSendMessageButton();
-						$button[]                      = self::getContactDetailsButton();
-						$button[]                 	   = self::getDeclineButton($this->page);
+                                        if($actionType == "CHATACCEPT")
+                                        {
+
+                                        if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+                                                $button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","91");
+                                                $responseArray["canchat"]       = "false";
 						$responseArray["buttons"]      = $button;
-						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
-						$responseArray["infomsgiconid"] = '023';
+
 					} else {
+							$button[]                       = self::getCustomButton("Interest accepted","ACCEPT","","","","91");
+							$responseArray["canchat"]       = "false";
 						if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
 						{
 							$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
@@ -426,21 +417,38 @@ Class ButtonResponseApi
 							$responseArray["infobtnvalue"]  = "18004196299";
 							$responseArray["infobtnaction"] = "CALL";		
 						}
-						$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+
+                                            }
+                                        }
+                                    else {
+						$button[]                      = $this->getSendMessageButton();
+						$button[]                      = self::getContactDetailsButton();
+						$button[]                 	   = self::getDeclineButton($this->page);
+						$responseArray["buttons"]      = $button;
+						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
 						$responseArray["infomsgiconid"] = '023';
-					}
-					break;
+                                        }				
+                                break;
 				case ContactHandler::DECLINE:
 					//echo "DECLINE";
-					$button[]                      = $this->getAcceptButton("Accept Again");
-					$responseArray["buttons"]      = $button;
-					$responseArray["infobtnlabel"] = "You declined interest on " . $date;
+					if($actionType == "CHATDECLINE") {
+						$button[] = self::getCustomButton("Interest declined", "DECLINE", "", "", "", "");
+						$responseArray["infomsglabel"] = "Interest declined, you can't chat with this member any more";
+						$responseArray["buttons"] = $button;
+					}
+					else {
+						$button[] = $this->getAcceptButton("Accept Again");
+						$responseArray["buttons"] = $button;
+						$responseArray["infobtnlabel"] = "You declined interest on " . $date;
+					}
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
 					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 					$responseArray["buttons"] = $button;
 					break;
+
+
 			}
 		}
 		$finalResponse = self::buttonDetailsMerge($responseArray);

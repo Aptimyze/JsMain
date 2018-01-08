@@ -54,15 +54,15 @@ EOF;
 			}
 			$totalScriptVar = $arguments["totalScript"];
 			$currentScriptVar = $arguments["currentScript"];
-			if($currentScriptVar%$totalScriptVar==1)
-			{
-                if($instanceID)
-				{
-					/** code for daily count monitoring**/
-                       passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring REMINDER_MAILER");
-                    /**code ends*/
-				}
-            }
+//			if($currentScriptVar%$totalScriptVar==1)
+//			{
+//                if($instanceID)
+//				{
+//					/** code for daily count monitoring**/
+//                       passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring REMINDER_MAILER");
+//                    /**code ends*/
+//				}
+//            }
 			
 		}
 		
@@ -126,6 +126,7 @@ EOF;
 		$tpl->setSubject($subject);
         $emailSender->send();
         $status = $emailSender->getEmailDeliveryStatus();
+        ProfileCacheLib::getInstance()->__destruct();
         return $status;
     }
 }

@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='')
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='',$alias ='',$attach='',$fileName='',$overwriteSenderEmail='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -54,7 +54,14 @@ class MailerService
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
+			if (!empty($alias) && is_string($alias)) {
+				$senderDetails["ALIAS"] = $alias;
+			}
+			if (!empty($overwriteSenderEmail) && is_string($overwriteSenderEmail)) {
+				$senderDetails["SENDER"] = $overwriteSenderEmail;
+			}
+            $bccList = $this->getBccMailList($mailerName);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,$bccList,$attach,'',$fileName,'','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -89,10 +96,10 @@ class MailerService
 	* @param limit : limit of receivers to send mail at a cron execution
 	* @return recievers : array of receivers
 	*/
-	public function getNewMatchesMailerReceivers($totalScript="",$script="",$limit='')
+	public function getNewMatchesMailerReceivers($totalScript="",$script="",$limit='',$dailyCron=0)
 	{
         	$newMatchesObj = new new_matches_emails_MAILER();
-		$recievers = $newMatchesObj->getMailerProfiles("",$totalScript,$script,$limit);
+		$recievers = $newMatchesObj->getMailerProfiles("",$totalScript,$script,$limit,"",$dailyCron);
 		return $recievers;
 	}
 
@@ -106,6 +113,19 @@ class MailerService
 	{
 		$visitorAlertMailerObj = new visitorAlert_MAILER();
 		$recievers = $visitorAlertMailerObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;	
+	}
+        
+        /* This function is used to get receivers to send mail 
+	* @param totalScript : total scripts executing for mailer cron
+	* @param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getMailerReceiversViewSimilarProfilesMailer($totalScript="",$script="",$limit='')
+	{
+		$vspMailerObj = new viewSimilar_MAILER();
+		$recievers = $vspMailerObj->getMailerProfiles($totalScript,$script,$limit);
 		return $recievers;	
 	}
 	 /* This function is used check whether to show Android Icon to Receiver or not
@@ -143,12 +163,12 @@ class MailerService
         *@param sno : serial number of mail
         *@param flag : sent status of the mail
         */
-        public function updateSentForNewMatchesUsers($sno,$flag)
+        public function updateSentForNewMatchesUsers($sno,$flag,$dailyCron=0)
         {
                 if(!$sno || !$flag)
                         throw  new jsException("No sno/flag in updateSentForNewMatchesUsers() in RegularMatchAlerts.class.php");
                 $matchalertMailerObj = new new_matches_emails_MAILER();
-                $matchalertMailerObj->updateSentForUsers($sno,$flag);
+                $matchalertMailerObj->updateSentForUsers($sno,$flag,$dailyCron);
 
         }
         /* This funxtion is used update the sent flag(Y for sent and F for fail) for each visitor alert mail receiver
@@ -163,6 +183,19 @@ class MailerService
                 $matchalertMailerObj->updateSentForUsers($sno,$flag);
 
 	}
+        
+        /* This funxtion is used update the sent flag(Y for sent and F for fail) for each visitor alert mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForSimilarProfilesMailUsers($sno,$flag)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForUsers()");
+		$vspMailerObj = new viewSimilar_MAILER();
+                $vspMailerObj->updateSentForUsers($sno,$flag);
+
+	}
 
 	
 	/*This function is used to get details of the receiver
@@ -173,7 +206,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT,SCREENING"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();
@@ -792,6 +825,10 @@ return $edu;
 			if($widgetArray["sortPhotoFlag"])
 				$users = $this->sortUsersListByPhoto($users);
                         
+                        
+			if($widgetArray["sortSubscriptionFlag"])
+				$users = $this->sortUsersListBySubscription($users,SearchConfig::$jsBoostSubscription);
+                        
 			//if($widgetArray["logicLevelFlag"] && 0)
 				//$users = $this->setUsersLogicalLevel($users,$operatorProfileObj,$mailerName);
 			
@@ -917,6 +954,120 @@ return $edu;
                 $kundliMailerObj->updateKundliMatchesUsersFlag($sno,$flag,$pid);
 
 	}
+        /**
+         * This function sort profile on the basis of subscription
+         * @param type $userList
+         * @param type $subscription
+         * @return type
+         * @throws jsException
+         */
+        public function sortUsersListBySubscription($userList, $subscription)
+	{
+		if(!is_array($userList))
+			throw  new jsException("No userList in sortUsersListBySubscription() function in RegularMatchAlerts.class.php");
+                
+		foreach($userList as $k=>$v)
+		{
+                        $subsCount = count(array_intersect($subscription,explode(",",$v->getSUBSCRIPTION())));
+			if($subsCount>0 && $v->getHAVEPHOTO()== $this->photoPresent)
+                        {
+                                if($v->getPHOTO_DISPLAY()!= PhotoProfilePrivacy::photoVisibleIfContactAccepted)
+					$sortArr[$v->getPROFILEID()] = 1;
+				else
+					$sortArr[$v->getPROFILEID()] = 2;
+			}
+			elseif($subsCount>0){
+				$sortArr[$v->getPROFILEID()] = 3;
+			}elseif($v->getHAVEPHOTO()== $this->photoUnderScreening)
+			{
+				$sortArr[$v->getPROFILEID()] = 4;
+			}else
+			{
+				$sortArr[$v->getPROFILEID()] = 5;
+			}
+		}
+		asort($sortArr);
+		$i=0;
+		foreach($sortArr as $k=>$v)
+		{
+			foreach($userList as $kk=>$vv)
+			{
+				if($vv->getPROFILEID()==$k)
+				{
+					$matchesDataFinal[$i]=$vv;
+					$i++;
+				}
+			}
+		}
+		unset($userList);
+		return $matchesDataFinal;
+	}
 
+	/* This function is used to get receivers for sending paid members mail
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getpaidMembersMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+		$recievers = $paidMembersMailerObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This function is used update the sent flag(Y for sent and F for fail) for each paidMember mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*@param profileId : profileId of the user
+	*/
+	public function updateSentForPaidMembersMailerReceivers($sno,$flag,$profileId)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForPaidMembersMailerReceivers() in savedSearchesMailerTask.class.php");
+		$paidMembersMailerObj = new search_PAID_MEMBERS_MAILER("newjs_masterRep");
+                $paidMembersMailerObj->updatePaidMembersReceiverFlag($sno,$flag,$profileId);
+    }
+
+    /* This function is used to get add photo mailer receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getaddPhotoMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$addPhotoMailerObj = new PICTURE_ADD_PHOTO_MAILER();
+		$recievers = $addPhotoMailerObj->getaddPhotoMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each addPhoto mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForaddPhotoUsers($sno,$flag,$pid)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForaddPhotoUsers() in addPhotoMailerTask.class.php");
+		$addPhotoMailerObj = new PICTURE_ADD_PHOTO_MAILER();
+                $addPhotoMailerObj->updateAddPhotoUsersFlag($sno,$flag,$pid);
+
+	}
+    
+    /*
+     * This function is used to get bcc mail id
+     * @param $mailerName: name of the mailer
+     */
+    public function getBccMailList($mailerName){
+        switch($mailerName){
+            case "EXCLUSIVE_MATCH_MAIL":
+                $bccList = "sandhya.singh@jeevansathi.com,anjali.singh@jeevansathi.com";
+                break;
+            default:
+                $bccList = "";
+        }
+        return $bccList;
+    }
 }
 ?>

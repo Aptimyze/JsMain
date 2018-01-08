@@ -363,7 +363,7 @@ class commonActions extends sfActions
             if ($shortlist == "true") {
                 $bookmarkObj->removeBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", -1);
-                if (MobileCommon::getChannel() == "P") {
+                if (MobileCommon::getChannel() == "P" || MobileCommon::isNewMobileSite()) {
                     $array['button'] = ButtonResponse::getShortListButton('', array('isBookmarked' => 0));
                 } else {
                     $array["button"] = ButtonResponse::getShortListButton('', '', 0);
@@ -372,8 +372,8 @@ class commonActions extends sfActions
                 $responseSet                         = ButtonResponse::buttonDetailsMerge($array);
                 $finalresponseArray["actiondetails"] = null;
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
-                $this->contactObj                    = new Contacts($this->loginProfile, $this->Profile);
-                
+                //$this->contactObj                    = new Contacts($this->loginProfile, $this->Profile);
+
                 //commented as shortlist list is through webservice not openfire
                 /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     //Entry in Chat Roster
@@ -392,7 +392,7 @@ class commonActions extends sfActions
             } else {
                 $bookmarkObj->addBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", 1);
-                if (MobileCommon::getChannel() == "P") {
+                if (MobileCommon::getChannel() == "P" || MobileCommon::isNewMobileSite()) {
                     $array['button'] = ButtonResponse::getShortListButton('', array('isBookmarked' => 1));
                 } else {
                     $array["button"] = ButtonResponse::getShortListButton('', '', 1);
@@ -402,7 +402,7 @@ class commonActions extends sfActions
                 $finalresponseArray["actiondetails"] = null;
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 //Entry in Chat Roster
-                $this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+                //$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
                 //commented as shortlist rosters are now via webservice not openfire
                 /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     try {
@@ -500,12 +500,12 @@ class commonActions extends sfActions
             $startTime      = $arrRequest['startTime'];
             $endTime        = $arrRequest['endTime'];
 	        $reqTime	    = date('g:i A',strtotime($startTime));
-	
+
             if (in_array($query, $arrValidQuery)) {
                 if ($query == "P") {
                 //Send Email
                     $to = "services@jeevansathi.com";
-                    
+
                     $from = "info@jeevansathi.com"; //To Do Aliase Jeevansathi Support  Reply-to $email
 
                     $subject = "$email" . $userName . "has requested a callback for assistance with his/her account";
@@ -640,14 +640,14 @@ class commonActions extends sfActions
             return;
         }     else if($request->getParameter("button") && ($request->getParameter("layerR") || $request->getParameter("layerId"))) {
         $button=$request->getParameter("button");
-    	$layerToShow=$request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId"); 
-        
+    	$layerToShow=$request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId");
+        $memObj = JsMemcache::getInstance();
         if($layerToShow==9 && $button=='B1'){
-            
-            
+
+
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
-            
+
             if($namePrivacy=='Y' || $namePrivacy=='N')
             {
                     $loggedInProfile=LoggedInProfile::getInstance();
@@ -663,46 +663,61 @@ class commonActions extends sfActions
                     {
                             $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screening);
                     }
-                    
+
                     else
                     {
                              $jprofileFieldArr['SCREENING'] = Flag::removeFlag($FLAGID="name", $screening);
                     }
                     if(array_key_exists("SCREENING",$jprofileFieldArr) && $jprofileFieldArr['SCREENING']!=$screening)
                     {
-                        
+
                         JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
                     }
 		  }
-                    
+
                                if(!empty($nameData))
                                {
                                         $nameArr=array('NAME'=>$newName,'DISPLAY'=>$namePrivacy);
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
-                    
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+
             }
-            
+
         }
-        
+
+        if($layerToShow==18)
+        {
+            $occupText = $request->getParameter("occupText");
+            if($occupText)
+            {
+                (new MIS_CAL_OCCUPATION_TRACK())->insert($loginData['PROFILEID'],$occupText);
+            }
+
+        }
+
         if($layerToShow==15)
         {
             $namePrivacy = $button=='B1' ? 'Y' : 'N';
-            
-            
+
+
             $nameArr=array('DISPLAY'=>$namePrivacy);
-            $name_pdo = new incentive_NAME_OF_USER();
-            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
-            
-        }        
-                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+            //lib has been used in case of direct call to store. Lib ensures that caching functionality is also implemented.
+            $name_pdo = new NameOfUser();
+            $name_pdo->updateName($loginData['PROFILEID'],$nameArr);
+
+        }
+        if($layerToShow==19)
+        {
+            $memObj->set($loginData['PROFILEID'].'_NO_LI_CAL',1,10800);
+        }
+                if($memObj->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
                 {
  		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
-                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                   $memObj->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
                 }
-                
+
         }
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
@@ -716,6 +731,15 @@ class commonActions extends sfActions
     {
 
         $calObject=$request->getAttribute('calObject');
+        
+        if($request->getAttribute('fromDetailedAction'))
+        {
+            $this->fromDetailedAction=1;
+            if($request->getAttribute('redirectViewProfileUrl'))
+                $this->redirectViewProfileUrl=$request->getAttribute('redirectViewProfileUrl');
+            else
+                $this->redirectViewProfileUrl='';
+        }
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
         $this->dppSuggestions = json_encode($calObject['dppSuggObject']);
@@ -727,11 +751,31 @@ class commonActions extends sfActions
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
         }
-                
+
+        if($calObject['LAYERID']== 14)
+       {
+        $profileObject = LoggedInProfile::getInstance('newjs_master');
+                            $contactNumOb=new ProfileContact();
+                            $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+        $this->altEmailUser = $numArray['0']['ALT_EMAIL'];
+       }
+
 		if($calObject['LAYERID']==1)
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
+        $this->isIphone = strpos($_SERVER[HTTP_USER_AGENT],'iPhone')===FALSE ? 0 : 1;
+        $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+        if($calObject['LAYERID']==19)
+        {
+        $this->discountPercentage = $request->getParameter('DISCOUNT_PERCENTAGE');
+        $this->discountSubtitle  = $request->getParameter('DISCOUNT_SUBTITLE');
+        $this->startDate  = $request->getParameter('START_DATE');
+        $this->oldPrice = $request->getParameter('OLD_PRICE');
+        $this->newPrice = $request->getParameter('NEW_PRICE');
+        $this->time = floor($request->getParameter('LIGHTNING_CAL_TIME')/60);
+        $this->symbol = $request->getParameter('SYMBOL');
+        }
         $this->setTemplate('CALJSMS');
 
     }
@@ -800,11 +844,11 @@ class commonActions extends sfActions
 
 
     public function executeSendOtpSMS(sfWebRequest $request)
-  {  
+  {
 
     $phoneType=$request->getParameter('phoneType');
     $respObj = ApiResponseHandler::getInstance();
-    
+
     if($phoneType!='A' && $phoneType!='M' && $phoneType!='L')
     {
     $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
@@ -813,7 +857,7 @@ class commonActions extends sfActions
     }
 
     $loggedInProfileObj=LoggedInProfile::getInstance();
-   
+
     if(!$loggedInProfileObj->getPROFILEID())
     {
         $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
@@ -829,12 +873,12 @@ class commonActions extends sfActions
      if($this->isd == 91)
      $this->contactHelp = CommonConstants::HELP_NUMBER_INR;
      else
-     $this->contactHelp =  CommonConstants::HELP_NUMBER_NRI;    
+     $this->contactHelp =  CommonConstants::HELP_NUMBER_NRI;
     $this->phoneType =$verificationObj->getPhoneType();
     if($response['trialsOver']=='Y')
         $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;
     $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
-    
+
 
         if($request->getParameter('PCLayer')=='Y'){
             $this->response=$response;
@@ -842,11 +886,11 @@ class commonActions extends sfActions
                 $this->smsResend='N';
             else $this->smsResend='Y';
 
-            if($response['trialsOver']=='Y') 
+            if($response['trialsOver']=='Y')
                 $this->setTemplate('desktopCommonOTPFailed');
-            else 
+            else
                 $this->setTemplate('desktopCommonOTP');
-        
+
         }
 
         else {
@@ -858,8 +902,8 @@ class commonActions extends sfActions
         }
   }
 
-public function executeMatchOtp(sfWebRequest $request) 
-    {    
+public function executeMatchOtp(sfWebRequest $request)
+    {
         $context = $this->getContext();
         $respObj = ApiResponseHandler::getInstance();
     $phoneType=$request->getParameter('phoneType');
@@ -879,12 +923,12 @@ public function executeMatchOtp(sfWebRequest $request)
         $respObj->generateResponse();
         die;
     }
-    
+
     $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
-    
+
     switch ($verificationObj->matchOtp($enteredOtp))
     {
-        case 'Y':   
+        case 'Y':
         $response['matched']='true';
         $response['trialsOver']='N';
         break;
@@ -904,14 +948,14 @@ public function executeMatchOtp(sfWebRequest $request)
         default:
         $response['matched']='false';
         $response['trialsOver']='N';
-        break;      
+        break;
     }
         $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
         $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->setResponseBody($response);
         $respObj->generateResponse();
         die;
-        
+
     }
 
 
@@ -919,7 +963,7 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
   {
 
             $this->setTemplate('desktopCommonOTPFailed');
-        
+
  }
 
 
@@ -935,5 +979,83 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
     die;
 
 
+        }
+    public function executeCheckPasswordV1(sfWebRequest $request)
+    {
+        $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+        $password =  rawurldecode( json_decode($request->getParameter('data') , true)['pswrd'] );
+        if(PasswordHashFunctions::validatePassword($password, $loggedInProfileObj->getPassword()))
+        {
+            $response = array('success' => 1);
+        }
+        else
+        {
+            $response = array('success' => 0);
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
+
+    public function executeLogOtherUrlV1(sfWebRequest $request)
+    {
+        $data = json_decode($request->getParameter('data'), true);
+        if(isset($data['url']))
+        {
+            $url = $data['url'];
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(
+                LoggingEnums::PHISHING_URL => $url,
+                LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
+    public function executeUploadDocumentProof(sfWebRequest $request)
+    {
+            $this->done = false;
+            $this->msg = "";
+                if ($request->getParameter("submitForm")) {
+                        $editFieldNameArr["MSTATUS"] = $_POST["MSTATUS"];
+                        $editFieldNameArr["MSTATUS_PROOF"] = $_FILES["MSTATUS_PROOF"];
+                        $request->setParameter("editFieldArr",$editFieldNameArr);
+                        $request->setParameter("docOnly",true);
+                        $request->setParameter("internally",true);
+                        $_SERVER["HTTP_X_REQUESTED_BY"] = true;
+                        ob_start();
+                        sfContext::getInstance()->getController()->getPresentationFor('profile','ApiEditSubmitV1');
+                        $returnDocumentUpload = ob_get_contents();
+                        ob_end_clean();
+                        $a = json_decode($returnDocumentUpload,true);
+                        if($a["responseStatusCode"] != 0){
+                                $this->msg = $a["error"];
+                                $this->done = false;
+                        }else{
+                                $this->msg = "Document Uploaded successfully";
+                                $this->done = true;
+                        }
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }else{
+                        if (MobileCommon::isMobile()) {
+                                $this->setTemplate("uploadDoc");
+                        }
+                }
+    }
+        public function executeResetStaticKey($request)
+        {               
+                $memObject = JsMemcache::getInstance();
+                $memObject->remove('STATIC_TABLES_CACHED_ON');
+                $memObject->remove('STATIC_TABLES_CACHED_DATA');
+                
+                $respObj = ApiResponseHandler::getInstance();
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();   
+                die();
         }
 }

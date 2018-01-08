@@ -23,10 +23,11 @@ class profileDisplay{
 			}
 			$infoType = substr($infoType, 0, -1);
                         if($infoType=="VISITORS"){
-                            if($stype=='5' || $stype=='IV' || $stype=='AV' || $stype=='WV')
-                                $infoTypenav['matchedOrAll']= 'A';
-                            elseif($stype=='M5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
+                            if($stype=='MV5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
                                 $infoTypenav['matchedOrAll']= 'M';
+                            else
+                                $infoTypenav['matchedOrAll']= 'A';
+                            $key = $key."_".$infoTypenav['matchedOrAll'];
                         }
 			$pageNo = ceil($offset/$config[$infoType]["COUNT"]);
 			$infoTypenav["PAGE"] = $infoType;
@@ -44,7 +45,7 @@ class profileDisplay{
 			$data = unserialize(JsMemcache::getInstance()->get($key));
 		}
 		if(count($data) <$offset)
-			return null;
+                    return null;
 		$i=1;
 		foreach($data as $key=>$keyData)
 		{
@@ -61,23 +62,49 @@ class profileDisplay{
 	*	listing type denotes the list type and offset denotes the current profile number.
 	*/
 
-	public function getNextPreviousProfileForMyjs($iListingType,$iOffset)
+	public static function getNextPreviousProfileForMyjs($iListingType,$iOffset)
 	{	
-
 
 		$profileObj= LoggedInProfile::getInstance();
 		$pid = $profileObj->getPROFILEID();
-
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
+		 return(JsCommon::createChecksumForProfile($profileIdToReturn));
+	}
 
+	public static function getNextProfileIdForMyjs($iListingType,$iOffset)
+	{	
+		$maxProfileReqdToHitNext = 6;	
+		$profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
 		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
 	
-		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
-
-
-		return JsCommon::createChecksumForProfile($profileIdToReturn);
+			if($cachedResultsPoolArray[$iOffset] == NULL)
+			{  
+			$request=sfContext::getInstance()->getRequest();	
+			$request->setParameter('matchalerts',1);
+			ob_start();
+        	$request->setParameter("useSfViewNone",1);
+        	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');
+        	$output = (array)(json_decode(ob_get_contents(),true));
+        	ob_end_clean();
+        	$iterate = $iOffset;
+        	if(is_array($output) && array_key_exists("profiles",$output)){
+        	foreach ($output['profiles'] as $key => $value) {
+        		array_push($cachedResultsPoolArray, $value['profileid']);
+        	}
+        	}
+        	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
+			}	
 		
+
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset];
+		 return($profileIdToReturn);		
 	}
+
+
 
 
 

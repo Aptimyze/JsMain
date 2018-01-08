@@ -47,7 +47,8 @@ $this->addOptions(array(
                         
                         //$profiles = array('658'=>658);
 			// send Instant Notification
-			foreach($profiles as $key=>$pid){
+			if(is_array($profiles)){
+			  foreach($profiles as $key=>$pid){
                                 $profileObj1 = Profile::getInstance('', $key);
                                 $profileObj2 = Profile::getInstance('', $profileid);
                                 $contactsObj = new Contacts($profileObj1,$profileObj2);
@@ -55,11 +56,12 @@ $this->addOptions(array(
                                 
                                 $type = $contactsObj->getTYPE();
                                 if($type != 'C' && $type != 'D' && $type != 'E'){
-                                    if(!$ignore->ifIgnored($profileid,$key) && !$ignore->ifIgnored($key,$profileid)){
+                                    if(!$ignore->ifIgnored($profileid,$key,"byMe") && !$ignore->ifIgnored($key,$profileid,"byMe")){
                                         $instantNotifObj->sendNotification($key,$profileid);
                                         requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
                                     }
                                 }
+			  }
 			}
 			unset($profiles);
 		}

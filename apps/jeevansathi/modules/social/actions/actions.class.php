@@ -177,6 +177,7 @@ class socialActions extends sfActions
 			}
 			$currentPicKeywords = implode(", ",$current_Pic_Keywords);	//Join keyword names separated by ,
 		}
+	PictureFunctions::setHeaders();	
 	$size = getimagesize($mainPicUrl);
 	echo $mainPicUrl."**-**".$title."**-**".$currentPicKeywords."**-**".$picId."**-**".$pic_keywords."**-**".$pics_count."**-**".$profile_pic_id."**-**".$picType."**-**".$size[0]."**-**".$size[1];
 	die;										//Kill the script as it is an AJAX Request
@@ -623,6 +624,7 @@ class socialActions extends sfActions
 	{
 		$this->fromCALphoto = 1;
 	}
+
 	$this->keywords=sfConfig::get("app_social_keywords");//array("My photo", "My family", "My friends", "My office", "My home");
 	$this->request->setAttribute('bms_sideBanner',711);
 
@@ -632,6 +634,13 @@ class socialActions extends sfActions
 	$this->havePhoto = $profileObj->getHAVEPHOTO();
 	$this->showMyjs=0;
 
+	//this was added to add tracking for upload click from mailer
+	if($request->getParameter("fromAddPhotoMailer")==1)
+	{
+		$photoUploadTrackingObj = new PICTURE_UPLOAD_PHOTO_FROM_MAILER_TRACKING("newjs_masterRep");
+		$photoUploadTrackingObj->insertTrackingRecord($profileObj->getPROFILEID(),$request->getParameter('mailType'),date("Y-m-d"));
+		unset($photoUploadTrackingObj);
+	}
 	$currentTime=time();
 	$registrationTime = strtotime($profileObj->getENTRY_DT());
 	if(($currentTime - $registrationTime)/(3600)<24)
@@ -696,6 +705,7 @@ class socialActions extends sfActions
 				$timeMainPic = time();
                                 $pictureObj = new NonScreenedPicture();
                                 $origPic = JsConstants::$docRoot."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
+                                PictureFunctions::setHeaders();
                                 copy($this->mainPicUrl,$origPic);
                                 $this->mainPicUrl = JsConstants::$siteUrl."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
                         }
@@ -712,7 +722,7 @@ class socialActions extends sfActions
   * This function is used to display the album of a user.
   **/
   public function executeMobilePhotoAlbum(sfWebRequest $request)
-  {   
+  {
 	$profilechecksum = $request->getParameter('profilechecksum');
 	$linkarr = $request->getpathInfoArray();
 	
@@ -750,7 +760,19 @@ class socialActions extends sfActions
 
 
 	$loggedInProfileid = $request->getAttribute('profileid');
-	if(!$profilechecksum)
+	if(!$loggedInProfileid) //this was added to ensure that POG album cannot be viewed in case of Logout.
+	{
+		$request->setParameter("regMsg","Y");
+		$this->forward('static','LogoutPage');
+	}	
+	$requestedProfileid = NULL;
+
+	if($profilechecksum)
+	{
+		$authenticationJsObj = new JsAuthentication();
+		$requestedProfileid =$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
+	}
+	if($requestedProfileid==NULL || $requestedProfileid=='')
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
 		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
@@ -763,8 +785,12 @@ class socialActions extends sfActions
 	}
 	else
 	{
-		$authenticationJsObj = new JsAuthentication();
-		$requestedProfileid=$authenticationJsObj->jsDecryptProfilechecksum($profilechecksum);	
+
+		if(PictureFunctions::conditionalPhotoAccess()) //if conditional layer is to be shown
+		{
+			$this->showLayer = 1;
+			$this->setTemplate("mobile/mobilePhotoAlbum");
+		}
 		$Profile = Profile::getInstance('newjs_master',$requestedProfileid);
 		$Profile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
 		if($Profile->getPHOTO_DISPLAY()=='C')
@@ -777,11 +803,11 @@ class socialActions extends sfActions
                         else
                                 $contact_status = $contact_status_new["TYPE"];
 		}
-		$ProfileObj=$Profile;	
+		$ProfileObj=$Profile;		
+
 	}
 	$picServiceObj = new PictureService($ProfileObj);
 	$album = $picServiceObj->getAlbum($contact_status);
-        
 	if(is_array($album))
 	{
 		$this->countPics = count($album);
@@ -807,7 +833,7 @@ class socialActions extends sfActions
 //			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
 		}		
 	}
-	else if($profilechecksum)
+	else if($requestedProfileid)
 		$this->redirect(sfConfig::get("app_site_url")."/profile/viewprofile.php?profilechecksum=".$profilechecksum);
 	else
 		$this->redirect(sfConfig::get("app_site_url")."/social/MobilePhotoUpload");
@@ -819,7 +845,7 @@ class socialActions extends sfActions
 	}
 	$this->mob_img_url=$mob_img_url;
 	$this->pictureId=$pictureId;
-	if(!$profilechecksum)
+	if(!$requestedProfileid)
 	{
 		$this->goBackLink=sfConfig::get('app_site_url')."/profile/viewprofile.php?ownview=1";
 	}
@@ -1092,43 +1118,8 @@ class socialActions extends sfActions
 
 		$picObj->getAlbumList();
 		$pictureServiceObj->associateJsUser_with_importUniqueId($this->profileid,$picObj->getUserIdentity(),$this->importSite);
-
-		$this->albumIdArr             = $picObj->getAlbumIdArr();
-		$this->albumCoverImageArr     = $picObj->getCoverImageArr();
-		$this->albumNameArr           = $picObj->getAlbumNameArr();
-		$this->photosCountInAlbum     = $picObj->getPhotosCountInAlbum();
-		$this->actionFile             = $picObj->getActionFile();
-		$this->authVariable           = "&".$picObj->getAuthVariables();
-		$this->noOfAlbums =  sizeof($this->albumIdArr);
-		$this->noOfAlbums1 =  sizeof($this->albumIdArr)-1;
-
-		$sum=0;
-		foreach($this->photosCountInAlbum as $v)
-		{
-			$sum+=$v;
-		}
-		if(!is_array($this->photosCountInAlbum) || $sum==0)
-		{
-			/*
-			$this->noAlbumsError="You have no albums in your ".$this->importSite." account.";
-			*/
-		}
-		else
-			$this->photo_array = $this->albumCoverImageArr;
-		foreach($this->photo_array as $k=>$v)
-		{
-			$newArr[$k]["name"] = $this->albumNameArr[$k];
-			$newArr[$k]["count"] = $this->photosCountInAlbum[$k];
-			$newArr[$k]["url"] = $v;
-			$newArr[$k]["albumId"] = $this->albumIdArr[$k];
-			if(strstr($this->albumNameArr[$k],'Profile Picture'))
-			{
-				$newArr1[$k] = $newArr[$k];
-				$listPhotos = $this->albumIdArr[$k];
-				unset($newArr[$k]);
-			}
-		}
-		$resultArr["albums"] = array_merge($newArr1,$newArr);
+		$this->final = $picObj->final;
+		$resultArr["data"] = $this->final;
 	}
 	if($listPhotos || $request->getParameter('listPhotos'))
 	{
@@ -1173,15 +1164,9 @@ class socialActions extends sfActions
 	$this->limit=sfConfig::get("app_max_no_of_photos") - $this->importLimit;  //no of photos that can be uploaded/imported by the user
 	$picObj=ImportPhotoFactory::getPhotoAgent($request->getParameter('importSite'));
 	$picObj->getAlbumList();
-	echo '<script type="text/javascript">
-function CloseMySelf(sender) {
-    window.opener.afterValidateFbAuth();
-    window.close();
-    return false;
-}
-CloseMySelf(this);</script>';
-	//echo '<script type="text/javascript">window.close();</script>';
-	die;
+	$this->picData =json_encode($picObj->final);
+	$this->importPhotosBarHeightPerShift = PictureStaticVariablesEnum::$importPhotosBarHeightPerShift;
+$this->importPhotosBarCountPerShift = PictureStaticVariablesEnum::$importPhotosBarCountPerShift;
   }
 
 
@@ -1533,13 +1518,14 @@ CloseMySelf(this);</script>';
                 $profilesUpdate = $cropperProcessObj->process($cropImageSource,$cropBoxDimensionsArr,$imgPreviewTypeArr);
                 $pictureServiceObj =new PictureService($profileObj);
                 if(is_array($profilesUpdate))
-                        $output = $pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
+                        $output = 1;
                 else
                         $output = -1;
                 unset($pictureServiceObj);
             // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
                 $memCacheObject->remove($profileid . "_THUMBNAIL_PHOTO");
+                $memCacheObject->remove($profileid . "_HamburgerPicUrl");
 
 		$respObj = ApiResponseHandler::getInstance();
 		if($output == 1)
@@ -1664,7 +1650,8 @@ CloseMySelf(this);</script>';
 					$this->photohave = "Y";
 				if($profileObj->getSUBSCRIPTION()=="" || $profileObj->getSUBSCRIPTION()=="D")
 					$this->photosubs = "Y";
-
+				if($receiverProfileId)
+				{
 				$receiverObj = Profile::getInstance("newjs_master",$receiverProfileId);
 				$receiverObj->getDetail("","","USERNAME,GENDER,PRIVACY");
 
@@ -1673,6 +1660,11 @@ CloseMySelf(this);</script>';
                                 
 				$psObj = new PictureService($receiverObj);
 				$output = $psObj->performPhotoRequest();
+				}
+				else
+				{
+					$output = "InvalidReceiver";
+				}
 				if($output == "Success")
 				{	$output = "true";
                                         if($receiverObj->getGENDER()=="F")
@@ -1680,6 +1672,11 @@ CloseMySelf(this);</script>';
                                         else
                                                 $heSheCall = "he";
 					$successMessage = "Your photo request has been sent to ".$this->USERNAME.". We will inform you when $heSheCall uploads photo.";
+				}
+				if($output == "InvalidReceiver")
+				{
+					$output = "I";
+					$successMessage = "Receiver provided is invalid";
 				}
 				elseif($output == "SameGender")
 				{
@@ -1763,12 +1760,17 @@ CloseMySelf(this);</script>';
         $pictureServiceObj=new PictureService($profileObj);
         $pictureidArr=$pictureServiceObj->saveAlbum($photoUrl,"import",$profileObj->getPROFILEID(),$importSite);
 
-	if(is_array($pictureidArr))
-		$uploaded = true;
-	else
-		$uploaded=false;
-	$pictureid = $pictureidArr['PIC_ID'];
-	if(($setProfilePic=$request->getParameter("setProfilePhoto"))=="Y")
+        if(is_array($pictureidArr) && array_key_exists("PIC_ID",$pictureidArr) && $pictureidArr['PIC_ID']!='')
+        {
+                $uploaded = true;
+                $pictureid = $pictureidArr['PIC_ID'];
+        }
+        else
+        {
+                $uploaded=false;
+        }
+
+	if($pictureid && ($setProfilePic=$request->getParameter("setProfilePhoto"))=="Y")
 	{
                 $whereArr["PICTUREID"] = $pictureid;
                 $whereArr["PROFILEID"] = $profileObj->getPROFILEID();

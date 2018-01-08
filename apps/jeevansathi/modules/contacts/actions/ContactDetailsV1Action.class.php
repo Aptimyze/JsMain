@@ -66,26 +66,33 @@ class ContactDetailsV1Action extends sfAction
 		$himher        = ($gender == 'M') ? "him" : "her";
 		$hisher        = ($gender == 'M') ? "his" : "her";
 		$pictureServiceObj=new PictureService($this->Profile);
-		$profilePicObj = $pictureServiceObj->getProfilePic();
+		
+        $profilePicObj = $pictureServiceObj->getProfilePic();
 		if($profilePicObj)
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
 			$thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$this->Profile->getGENDER());
 		$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl',1);
-		$priArr = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
-		$memHandlerObj = new MembershipHandler();
+		
+        $priArr = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
+		
+        $memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top']; 
+
+        $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
+        $dataPlan = $data2["startingPlan"];
 		if ($priArr[0]["CONTACT_DETAIL"]["VISIBILITY"] == "Y" && !$this->contactEngineObj->errorHandlerObj->getErrorMessage()) {
 			$responseArray                       = $this->getContactDetailsInArray($this->contactEngineObj);
 			$source=CommonFunction::getViewContactDetailFlag($this->contactEngineObj->contactHandler);
+            
 			if($this->contactEngineObj->contactHandler->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="FREE")
 			{
 				if($this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_STOP)
 				{
 					unset($responseArray);
 					$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -95,14 +102,50 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["contact4"]["value"]      = "*******@*****.com";
 					$responseArray["contact4"]["label"]      = "Email";
 					$responseArray["contact4"]["action"]     = null;
+					$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
+					$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
+					$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
+					$responseArray["membershipmsg"]["subheading1"] = "View Contact details";
+					$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
+					$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
+
+					$responseArray["footerbutton"]["newlabel"]  = "Upgrade";
+					if($dataPlan)
+					{
+						$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+						if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+						{
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+						else
+						{
+							$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+							$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+						}
+					}
+
+					if($MembershipMessage)
+					{
+						$responseArray["offer"]["membershipOfferMsg1"] = "EXCLUSIVE OFFER FOR YOU!";
+						$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
+					}
+					else if($dataPlan)
+					{
+						// in case of no offer
+						$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
+					}
 					VCDTracking::insertTracking($this->contactHandlerObj);
+                    
+                    //Generate Event
+                    $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 				}
 				else
 				{
 					if(MobileCommon::isApp()=="A" && $this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_PCS)
 					{
 						unset($responseArray);					
-						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "21";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -112,24 +155,24 @@ class ContactDetailsV1Action extends sfAction
 					else
 					{
 
-						$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+						$responseArray["footerbutton"]["label"]  = "Upgrade";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
-						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made contact details visible. Upgrade to eValue to make your phone/email visible to all matching profiles";
+						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." plan and has made contact details visible. Upgrade to ".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()." to make your phone/email visible to all matching profiles";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
 					}
 				}
 			}
 			elseif ($this->contactObj->getTYPE() != "A") {
-				if ($this->Profile->getPROFILE_STATE()->getPaymentStates()->getEVALUE()) {
+				if ($this->Profile->getPROFILE_STATE()->getPaymentStates()->getEVALUE() || $this->Profile->getPROFILE_STATE()->getPaymentStates()->getJSEXCLUSIVE()) {
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
 					if ($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID()) {
-						$responseArray["contactdetailmsg"] = "There would be no deduction in number of contacts you can view as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>eValue</b> Member.";
+						$responseArray["contactdetailmsg"] = "There would be no deduction in number of contacts you can view as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()."</b> Member.";
 					} else {
-						$responseArray["contactdetailmsg"] = "You can View Contact Details as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>eValue</b> Member.";
+						$responseArray["contactdetailmsg"] = "You can View Contact Details as " . $this->contactEngineObj->getComponent()->genderPronoun . " is an <b>".$this->contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatusText()."</b> Member.";
 					}
 				}
 			}
@@ -273,7 +316,7 @@ class ContactDetailsV1Action extends sfAction
 						
 				}
 				 elseif ($errorArr["UNDERSCREENING"] == 2) {
-					$responseArray["errMsgLabel"]  = "Your profile is being screened by our screening team. You can see contact details only after your profile is screened.";
+					$responseArray["errMsgLabel"]  = "Your profile is under screening. You can view contact details after it is screened.";
 					$responseArray["errMsgIconId"] = "16";
 					$responseArray["headerLabel"]  = "Profile is Underscreening";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -288,7 +331,7 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["contactdetailmsg"]       = "Only paid members can view contact details of other members. You can still send an interest for free.";
 					if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 					{
-						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
+						$responseArray["footerbutton"]["label"]  = "Upgrade";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -340,7 +383,7 @@ class ContactDetailsV1Action extends sfAction
                     	$responseArray['errmsglabel'].= "<br><br>This member has choosen to hide phone number. Only email is available but no phone number";
                     }
                     
-                    $responseArray["footerbutton"]["label"]  = "View Contact Details";
+                    $responseArray["footerbutton"]["label"]  = "View Contact";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
 					$responseArray["footerbutton"]["action"] = "CONTACTDETAIL";
@@ -351,7 +394,7 @@ class ContactDetailsV1Action extends sfAction
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
 				if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 				{
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["label"]  = "Upgrade";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -370,7 +413,43 @@ class ContactDetailsV1Action extends sfAction
 				$responseArray["contact4"]["action"]     = null;
 				$responseArray["headerThumbnailURL"]     = $thumbNail;
 				$responseArray["headerLabel"]            = $this->contactHandlerObj->getViewed()->getUSERNAME();
+				$responseArray["newerrmsglabel"] = "As a Free Member you cannot see contact details of other users";
+				$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
+				$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
+				$responseArray["membershipmsg"]["subheading1"] = "View Contact details";
+				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages";
+				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details";
+
+				$responseArray["footerbutton"]["newlabel"]  = "Upgrade";
+				if($dataPlan)
+				{
+					$responseArray["membershipOfferCurrency"] = $dataPlan["membershipDisplayCurrency"];
+					if($dataPlan["origStartingPrice"] == $dataPlan["discountedStartingPrice"])
+					{
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+					else
+					{
+						$responseArray["strikedPrice"] = $dataPlan["origStartingPrice"];
+						$responseArray["discountedPrice"] = $dataPlan["discountedStartingPrice"];
+					}
+				}
+
+				if($MembershipMessage)
+				{
+					$responseArray["offer"]["membershipOfferMsg1"] = "EXCLUSIVE OFFER FOR YOU!";
+					$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
+				}
+				else if($dataPlan)
+				{
+					// in case of no offer
+					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ ".$responseArray["membershipOfferCurrency"]." ".$responseArray["discountedPrice"];
+				}
 				VCDTracking::insertTracking($this->contactHandlerObj);
+                
+                //Generate Event
+                $iPgID = $this->contactHandlerObj->getViewer()->getPROFILEID();
+                GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::VIEW_CONTACT, $iPgID);
 			}
 		}
 		if (is_array($responseArray["contact1"]))
@@ -427,6 +506,12 @@ class ContactDetailsV1Action extends sfAction
 				$responseArray["contact4"]["label"]  = "Email";
 				$responseArray["contact4"]["action"] = "MAIL";
 				$responseArray["contact4"]["iconid"] = IdToAppImagesMapping::MAILICON;
+			}
+			if (strstr($value["LABEL"], "Relationship manager")) {
+				$responseArray["contact5"]["value"]  = $value["VALUE"];
+				$responseArray["contact5"]["label"]  = $value['LABEL'];
+				$responseArray["contact5"]["action"] = "CALL";
+				$responseArray["contact5"]["iconid"] = IdToAppImagesMapping::PHONEICON;
 			}
 		}
 		return $responseArray;

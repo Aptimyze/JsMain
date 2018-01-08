@@ -52,17 +52,47 @@ class BrowserNotification{
             {
                 $notificationDay = $this->getTopIndexElement($currentNotificationSetting, "FREQUENCY");
                 //Check if notification day is Daily('D') or ('Mon' to 'Sun')
-                $today = date('D',strtotime(date('Y-m-d')));
+	        $todayDate =date("Y-m-d");
+	        $today =date("D", strtotime("$todayDate +1 days"));
+                //$today = date('D',strtotime(date('Y-m-d')));
                 $pos = strpos($notificationDay, $today);
                 if($notificationDay == 'D' || $pos!==false )
                 {
-                    $browserProfilesData = $this->getChannelWiseRegId($processObj);
+                    $browserProfilesData0 = $this->getChannelWiseRegId($processObj);
+                    //print_r($browserProfilesData0);
+                    //$browserProfilesData = $this->filterProfiles($browserProfilesData,$processObj);
                     //print_r($browserProfilesData);
-                    $browserProfilesData = $this->filterProfiles($browserProfilesData,$processObj);
-                    //print_r($browserProfilesData);
-                    $notificationData = $this->getNotificationData($browserProfilesData, $processObj);
-                    //print_r($notificationData);
-                    $this->insert($notificationData,$processObj);
+
+                    /* New Code Start */
+                    $chunkSize = 1000;
+                    foreach($browserProfilesData0 as $key0=>$val0){
+                        $browserProfilesData =$val0;
+                 
+                        foreach($browserProfilesData as $key=>$val){
+                                $browserProfilesData1[][$key] =$val;
+                        }
+                        //print_r($browserProfilesData1);die;
+                        $chunkPoolArr = array_chunk($browserProfilesData1, $chunkSize);
+                        unset($browserProfilesData1);
+                        //print_r($chunkPoolArr);die;
+                        foreach($chunkPoolArr as $key=>$browserProfilesData2){
+                                foreach($browserProfilesData2 as $key1=>$val1){
+                                        foreach($val1 as $key2=>$val2){
+                                                $browserProfilesData3[$key0][$key2]=$val2;
+                                        }
+                                }
+                                //echo "\n======\n";print_r($browserProfilesData3);die;
+                                $browserProfilesData4 = $this->filterProfiles($browserProfilesData3,$processObj);
+                                unset($browserProfilesData3);
+                                $notificationData = $this->getNotificationData($browserProfilesData4, $processObj);
+                                unset($browserProfilesData4);
+                                $this->insert($notificationData,$processObj);
+                                unset($notificationData);
+                        }
+                    }
+                    /* Ends */
+                    /*$notificationData = $this->getNotificationData($browserProfilesData, $processObj);
+                    $this->insert($notificationData,$processObj);*/
                 }
             }
         }
@@ -74,10 +104,12 @@ class BrowserNotification{
      * @return : registration id array
      */
     public function getChannelWiseRegId($processObj){
+	$todayDate =date("Y-m-d");
+	$entryDate =date("Y-m-d", strtotime("$todayDate -30 days"))." 00:00:00";
         $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_masterRep");
         $channel = $processObj->getchannel();
         if($channel){
-            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel);
+            $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel, $entryDate);
         }
         return $regIdArr;
     }
@@ -96,7 +128,7 @@ class BrowserNotification{
                     $paramsArr["NOTIFICATION_TYPE"] = $processObj->getmethod();
                     $paramsArr["MESSAGE"] = $val["NOTIFICATION_MESSAGE"];
                     $paramsArr["TITLE"] = $val["TITLE"];
-                    $paramsArr["ICON"] = $val["ICON"];
+                    $paramsArr["ICON"] = $this->getImageIcon($val["ICON"]);
                     $paramsArr["TAG"] = $val["TAG"];
                     $paramsArr["PROFILE_CHECKSUM"] = $val["OTHER_PROFILE_CHECKSUM"];
                     $paramsArr["LANDING_ID"] = $this->mapNotificationLandingID($val['LANDING_ID'],$processObj->getchannel(),$val["NOTIFICATION_KEY"],$val["OTHER_PROFILE_CHECKSUM"]);
@@ -117,6 +149,19 @@ class BrowserNotification{
                     $res = $browserNotificationStoreObj->insertNotification($paramsArr); 
                 }
         }
+    }
+    
+    
+    /**
+     * This method will test if the image present in browser notification is 
+     * valid or default. If the value comes out to be default, the fall back will 
+     * be set to the default image.
+     * @param type $imageIcon - contains either url for image or default tag 'd' 
+     */
+    public function getImageIcon($imageIcon) {
+        return ( $imageIcon == BrowserNotificationEnums::$defaultIconKeyword ) ?  
+                    JsConstants::$siteUrl.BrowserNotificationEnums::$defaultNotificationLogo 
+                  : $imageIcon;
     }
 
     /**
@@ -182,9 +227,12 @@ class BrowserNotification{
         {
             case "JUST_JOIN":
     			$applicableProfiles=array();
+		echo "DONE0: Filter Profiles done ";
     			$applicableProfiles = $this->getProfileApplicableForNotification($browserProfilesArr,$notificationKey);
+		echo "DONE1: getProfileApplicableForNotification ";
                 $poolObj = new NotificationDataPool();
                 $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+		echo "DONE2: getJustJoinData ";
                 unset($poolObj);
 			 break;
 
@@ -222,14 +270,10 @@ class BrowserNotification{
             
             break;
            
-        case "MEM_EXPIRE_A5":
-        case "MEM_EXPIRE_A10":
-        case "MEM_EXPIRE_A15":
-        case "MEM_EXPIRE_B1":	 
-        case "MEM_EXPIRE_B5":
+        case "MEM_EXPIRE":
             $applicableProfiles=array();
             $poolObj = new NotificationDataPool();
-            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $notificationKey, $processObj->getchannel());
+            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $processObj->getchannel());
             $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
             unset($applicableProfiles);
             break;
@@ -293,9 +337,10 @@ class BrowserNotification{
         $currentNotificationSetting = $this->allNotificationsTemplate[$notificationKey];
         $timeCriteria = $currentNotificationSetting['TIME_CRITERIA'];
         unset($notifications);
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_local111");
         $varArray['PROFILEID']=implode(",",array_filter($profiles));
         unset($profiles);
+	$fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';
         if($timeCriteria!='')
         {
             $timeCriteriaArr = explode("|",$timeCriteria);
@@ -310,7 +355,7 @@ class BrowserNotification{
                 $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
             }
         }
-        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields="*",$lessThan);
+        $profiles = $smsTempTableObj->getArray($varArray,'',$greaterThan,$fields,$lessThan);
         if(is_array($profiles))
         {
             foreach($profiles as $k=>$v)
@@ -334,7 +379,7 @@ class BrowserNotification{
     }
     
     public function getAllNotificationsTemplate(){
-        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_masterRep");
+        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_slave");
         $notificationArr = $notificationsTempObj->getAll();
         foreach($notificationArr as $notificationName => $value){
             foreach($value as $key => $val){
@@ -605,10 +650,10 @@ class BrowserNotification{
                     if(BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel] && !in_array($notificationKey, BrowserNotificationEnums::$notificationWithoutLoginFilter))
                     {        
                         $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_local111");
-                        $date15DaysBack = date("Y-m-d", strtotime("$todayDate -14 days"))." 00:00:00";
+                        $lookBackDate = date("Y-m-d", strtotime("$todayDate -".BrowserNotificationEnums::$appLoginCondition." days"))." 00:00:00";
                         $profileStr = implode(",", $channelWiseProfiles);
                         $channelStr = BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel];
-                        $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $date15DaysBack, $channelStr);
+                        $loginDataForProfiles = $loginTrackingObj->getLastLoginDataForDate($profileStr, $lookBackDate, $channelStr);
                         //print_r($loginDataForProfiles);
                         $browserProfilesData = $this->filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles);
                         
@@ -626,33 +671,57 @@ class BrowserNotification{
         return $allChannelFilteredProfiles;
     }
     
+    
+    /**
+    * This method contains the business logic to elimate those profiles
+    * that have already logged from either IOS or Android and the notification
+    * need not be sent to the browser if the user have already logged in
+    * from the last n number of days
+    * 
+    * @param type $channel
+    * @param type $channelStr
+    * @param type $loginDataForProfiles
+    * @param type $browserProfilesData
+    * @param type $channelWiseProfiles
+    * @return type
+    */
     public function filterChannelWiseLoginDataPool($channel,$channelStr,$loginDataForProfiles,$browserProfilesData,$channelWiseProfiles)
     {
-        if(is_array($channelWiseProfiles) && $channelWiseProfiles)
+        if(is_array($channelWiseProfiles) && $channelWiseProfiles) {
+            
             foreach($channelWiseProfiles as $key => $val)
             {
-                if(strpos($channelStr, 'M')!=false || strpos($channelStr, 'N')!=false)
-                {
-                    if($loginDataForProfiles[$val]["A"] || $loginDataForProfiles[$val]["I"] || !($loginDataForProfiles[$val]["M"]  || $loginDataForProfiles[$val]["N"]))
-                    {
-                        unset($browserProfilesData[$channel][$val]);
-                    }
-                }
-                else if(strpos($channelStr, 'I')!=false || strpos($channelStr, 'A')!=false)
-                {
-                    if($loginDataForProfiles[$val]["A"] || $loginDataForProfiles[$val]["I"])
-                    {
-                        unset($browserProfilesData[$channel][$val]);
-                    }
-                }
-                else if(strpos($channelStr, 'D')!=false)
+                 // if the notification is for desktop
+                if(strpos($channelStr, 'D')!=false)
                 {
                     if(!$loginDataForProfiles[$val]["D"])
                     {
                         unset($browserProfilesData[$channel][$val]);
                     }
                 }
+                
+                // if notification is for mobile covers the else case as there
+                // are two channels only. Four checks for all the four channels 
+                // currently existing as of now.
+                
+                else if(strpos($channelStr, 'M')!=false || strpos($channelStr, 'N')!=false || 
+                        strpos($channelStr, 'I')!=false || strpos($channelStr, 'A')!=false) {
+                    
+                    // if last login is from mobile as well as either ios or android 
+                    // and notification column exists to send notification to 
+                    // the user, then unset it.
+                    
+                    if( ( array_key_exists("M", $loginDataForProfiles[$val]) || array_key_exists("N", $loginDataForProfiles[$val]) )
+                            && ( array_key_exists("I", $loginDataForProfiles[$val]) || array_key_exists("A", $loginDataForProfiles[$val]) )) { 
+                        
+                            if(array_key_exists($val, $browserProfilesData["M"])) {
+                                unset($browserProfilesData["M"][$val]);
+                            }
+                    }
+                }
+                
             }
+        }
         return $browserProfilesData;
     }
     

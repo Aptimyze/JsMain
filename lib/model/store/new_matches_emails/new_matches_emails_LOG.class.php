@@ -45,12 +45,15 @@ class new_matches_emails_LOG extends TABLE
                 }
 
         }
-        public function insertFromLog_Temp()
+        public function insertFromLog_Temp($dailyCron=0)
         {
                 try
                 {
-                      
-                        $sql="INSERT INTO new_matches_emails.LOG SELECT * FROM new_matches_emails.LOG_TEMP";
+                        if($dailyCron == 1){
+                                $sql="INSERT INTO new_matches_emails.LOG SELECT * FROM new_matches_emails.LOG_TEMP_DAILY";
+                        }else{
+                                $sql="INSERT INTO new_matches_emails.LOG SELECT * FROM new_matches_emails.LOG_TEMP";
+                        }
                         $res = $this->db->prepare($sql);
                         $res->execute();
                 }

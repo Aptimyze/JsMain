@@ -1,11 +1,11 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104",/*"9810300513",*/"9868673709");
+$mobileNumberArr = array("9910244159","9873639543","8989931104",/*"9810300513",*/"9868673709");
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 /*$mqQueuesArr = array("profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat");
 $msgLimitPerQueue = 5000;
 $queuesWithExtraLimit = array("roster-created-dpp"=>10000);*/
-$status = sendPresenceRequest();
+/*$status = sendPresenceRequest();
 if($status!='200')
 {
         $status = sendPresenceRequest();
@@ -13,18 +13,26 @@ if($status!='200')
         {
                 foreach($mobileNumberArr as $k=>$v)
                 {
-                        sms($v);
+                       // sms($v);
                 }
         }
-}
-$serverUrlArray = array("http://10.10.18.67:8290","http://10.10.18.75:8290");
+}*/
+$serverUrlArray = array("http://10.10.18.75:8590","http://10.10.18.72:8590","http://10.10.18.104:8590");
 foreach($serverUrlArray as $k=>$v){
         $status = sendPresenceRequest($v);
         if($status!='200'){
                 $status = sendPresenceRequest($v);
+               
                 if($status!=200)
                 {
-                        mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
+					$status = sendPresenceRequest($v);
+					 if($status!='200'){						
+                        mail ("reshu.rajput@jeevansathi.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
+						foreach($mobileNumberArr as $n=>$no)
+						{
+							sms($no);
+						}
+					}
                 }
         }       
 }
@@ -55,7 +63,7 @@ foreach($serverUrlArray as $k=>$v){
         if($overflowQueueArr && count($overflowQueueArr)>0){
                 $queueStr = implode(",", $overflowQueueArr);
                 //var_dump($queueStr);die;
-                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
+                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
         }
 }
 function checkRabbitmqQueueMsgCount($serverid){
@@ -72,12 +80,12 @@ function checkRabbitmqQueueMsgCount($serverid){
 
 function sendPresenceRequest($url)
 {
-        $url = JsConstants::$presenceServiceUrl."/profile/v1/presence?pfids=9061321";
-        $res = CommonUtility::sendCurlPostRequest($url,'',10);
+        $url = $url."/jspresence/v1/presence?pfids=9061321";
+        $res = CommonUtility::sendCurlGetRequest($url,'',10);
         $res = (array) json_decode($res);
-        $res = (array) $res["header"];
-        $status = $res["status"];
-        //return '200';
+		$res =  $res["header"];
+        $status = $res->status;
+       
         return $status;
 }
 function sms($mobile)
@@ -87,4 +95,5 @@ function sms($mobile)
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 }

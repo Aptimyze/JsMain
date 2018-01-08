@@ -45,7 +45,7 @@ if(authenticated($cid))
                 if(count($proid)>0)
 		{
 			$pid="'".implode($proid,"','")."'";*/
-			$sql="SELECT PROFILEID,SCREENING,ACTIVATED,PREACTIVATED,INCOMPLETE,USERNAME from newjs.JPROFILE where PROFILEID=$Profileid";
+			$sql="SELECT PROFILEID,SCREENING,ACTIVATED,PREACTIVATED,INCOMPLETE,USERNAME,YOURINFO from newjs.JPROFILE where PROFILEID=$Profileid";
 			$result=mysql_query_decide($sql) or die("$sql".mysql_error_js());
 			while($myrow=mysql_fetch_array($result))
 			{
@@ -103,6 +103,10 @@ if(authenticated($cid))
 					//added by sriram to prevent the query on CONTACTS table being run several times on page reload.
 					if($myrow['ACTIVATED']=='D')
 					{
+                                                if($myrow['PREACTIVATED'] == 'Y' && strlen($myrow['YOURINFO'])<100){
+                                                    $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+                                                    $activated_without_yourInfoObj->insert($myrow['PROFILEID']);
+                                                }
 						$producerObj=new Producer();
                        	if($producerObj->getRabbitMQServerConnected())
                        	{

@@ -20,7 +20,7 @@ abstract class NewMatchesStrategy
 	public function getAgeHeightCasteRelaxation(){return $this->ageHeightCasteRelaxation;}
 	public function getEducationOccupationCityRelaxation(){return $this->educationOccupationCityRelaxation;}
         
-        public function logRecords($receiverId,$profileIds,$logicLevel,$limit, $totalCount){
+        public function logRecords($receiverId,$profileIds,$logicLevel,$limit, $totalCount,$dailyCron=0){
                 $profileIds = array_slice($profileIds,0,$limit);
 
                 if($totalCount>$limit)
@@ -29,11 +29,11 @@ abstract class NewMatchesStrategy
                         $is_more_link_required = "N";
                 
                 $newMatchesMailerObj = new new_matches_emails_MAILER();
-                $newMatchesMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel,$is_more_link_required,$this->relaxCriteria);
+                $newMatchesMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel,$is_more_link_required,$this->relaxCriteria,$dailyCron);
                 unset($newMatchesMailerObj);
 
                 $matchalertLogObj = new new_matches_emails_LOG_TEMP();
-                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $this->logicLevel);
+                $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $this->logicLevel,$dailyCron);
                 unset($matchalertLogObj);
         }
         public function canPerformRelaxation($dppSwitch){

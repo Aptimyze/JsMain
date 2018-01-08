@@ -33,6 +33,7 @@ EOF;
         ini_set('memory_limit','-1');
         ini_set('error_reporting',1);
         ini_set("mysql.connect_timeout",-1);
+	ini_set("mysql.wait_timeout",-1);
         
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
@@ -52,20 +53,7 @@ EOF;
         if($otherUserId)
             $otherUserId = explode(",", $otherUserId);
         $processObj = new BrowserNotificationProcess();
-        if($notificationType == "INSTANT")
-        {
-            if(in_array($notificationKey, BrowserNotificationEnums::$instantNotifications))
-            {
-                $processObj->setDetails(array("method"=>$notificationType,"notificationKey"=>$notificationKey,"selfUserId"=>$selfUserId,"otherUserId"=>$otherUserId, "message" => $message));
-                $browserNotificationObj = new BrowserNotification($notificationType,$processObj);
-                $browserNotificationObj->addNotification($processObj);
-            }
-            else
-            {
-                die("Invalid instant notification key provided in browserNotificationTask");
-            }
-        }
-        else if($notificationType == "SCHEDULED"){
+        if($notificationType == "SCHEDULED"){
             //empty notification log files at start of schedule process 
             exec('echo "" > '.JsConstants::$cronDocRoot.BrowserNotificationEnums::$publishedNotificationLog);
             exec('echo "" > '.JsConstants::$cronDocRoot.BrowserNotificationEnums::$transferredNotificationlog);
@@ -76,7 +64,7 @@ EOF;
             
             //echo "before JUST_JOIN \n";
             $processObj->setnotificationKey("JUST_JOIN");
-			$browserNotificationObj->addNotification($processObj);
+	    $browserNotificationObj->addNotification($processObj);
             echo "After JUST_JOIN \n";
         }
         else

@@ -52,7 +52,7 @@ EOF;
 		$totalScripts = $arguments["totalScripts"]; // total no of scripts
 	        $currentScript = $arguments["currentScript"]; // current script number
 	        
-	    if(CommonUtility::hideFeaturesForUptime())
+	   if(CommonUtility::hideFeaturesForUptime())
 			successfullDie();
 
 
@@ -60,7 +60,8 @@ EOF;
 		if($currentScript!=11)		
 			successfullDie("");
 */
-
+		
+		PictureFunctions::setHeaders();
 		$this->UpdateForCorruptPrevent();
 		$pictureObj = new NonScreenedPicture();
 		$faceDetectionObj = new PhotoFaceDetection();
@@ -75,8 +76,8 @@ EOF;
 					if(strstr($value["MobileAppPicUrl"],"mainPic"))
 						$value["MobileAppPicUrl"] = '';
 
-					if(strstr($value["OriginalPicUrl"],"mediacdn.jeevansathi.com"))
-                                                $value["OriginalPicUrl"] = str_replace("mediacdn.jeevansathi.com/","jeevansathi.s3.amazonaws.com/",$value["OriginalPicUrl"]);
+					if(strstr($value["OriginalPicUrl"],"mediacdn.jeevansathi.com") && strpos($value["OriginalPicUrl"],"O-")==FALSE)
+                                              $value["OriginalPicUrl"] = str_replace("mediacdn.jeevansathi.com/","jeevansathi.s3.amazonaws.com/",$value["OriginalPicUrl"]);
 					$profileObj = Operator::getInstance("", $value["PROFILEID"]);
 					$profileObj->getDetail("","","HAVEPHOTO");
 					$value['PROFILE_TYPE'] = $this->getProfileType($profileObj->getHAVEPHOTO());
@@ -90,16 +91,21 @@ EOF;
 					$imageT = PictureFunctions::getImageFormatType($value["OriginalPicUrl"]);	
 					if($copy)
 					{
+						
 						$origPic =$pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR["OriginalPicUrl"],$pid,$value["PROFILEID"],$imageT,'nonScreened');
 						copy($value["OriginalPicUrl"],$origPic);
+						if(!file_exists($origPic))
+							SendMail::send_email("reshu.rajput@jeevansathi.com",$origPic." real value ".$value["OriginalPicUrl"],"Face detection error in copy ");
+			
 					}
-					$outputGot = $faceDetectionObj->getPictureCoordinates($origPic);
+					$googleVisionObj = new GoogleVisionApi();
+					$outputGot = $googleVisionObj->getPictureCoordinates($origPic,$imageT,$pid,$value["PROFILEID"]);
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					if(preg_match($coordRegex,$outputGot))
 					{
 						foreach(ProfilePicturesTypeEnum::$PICTURE_SIZES as $k =>$v)
 						{
-							if($value[$k]=="" && $k!="MainPicUrl")
+							if($k!="MainPicUrl")
 							{
 								$picUrl = $pictureObj->getSaveUrlPicture(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR[$k],$pid,$value["PROFILEID"],$imageT,'nonScreened');
 							

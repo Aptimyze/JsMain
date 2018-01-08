@@ -277,7 +277,7 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
         try {
             if (is_array($pid))
@@ -291,12 +291,23 @@ class NEWJS_JPROFILE extends TABLE
                 $sql = $sql . " = " . $str;
             if (is_array($extraWhereClause)) {
                 foreach ($extraWhereClause as $key => $val) {
-                    if ($key == 'SUBSCRIPTION')
-                        $sql .= " AND $key LIKE :$key";
-                    else
+                    if ($key == 'SUBSCRIPTION'){
+                        if(empty($val)){
+                            $sql .= " AND ($key LIKE '' OR $key IS NULL)";
+                        }
+                        else{
+                            $sql .= " AND $key LIKE :$key";
+                            $extraBind[$key] = $val;
+                        }
+                    }
+                    else{
                         $sql .= " AND $key=:$key";
-                    $extraBind[$key] = $val;
+                        $extraBind[$key] = $val;
+                    }
                 }
+            }
+            if($orderby != ""){
+                $sql .= " ORDER BY $orderby";
             }
 
             $prep = $this->db->prepare($sql);
@@ -895,7 +906,7 @@ class NEWJS_JPROFILE extends TABLE
             $this->setConnection("newjs_master");
         try {
 
-            $sql = "update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:PROFILEID";
+            $sql = "update newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID=:PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             //$prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
@@ -982,7 +993,7 @@ class NEWJS_JPROFILE extends TABLE
     public function getProfileQualityRegistationData($registerDate)
     {
         try {
-            $sql = "SELECT jp.`PROFILEID` , jp.`GENDER` , jp.`MTONGUE` , jp.`ENTRY_DT` , jp.`SOURCE` , jp.`AGE` ,case when (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y') THEN 'Y' ELSE jpc.ALT_MOB_STATUS END as MV, jp.CITY_RES AS SOURCECITY FROM `JPROFILE` as jp LEFT JOIN JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid	 WHERE (jp.`ENTRY_DT` >= :REG_DATE AND jp.`ENTRY_DT` < CURDATE()) AND jp.`ACTIVATED` = 'Y'";
+            $sql = "SELECT jp.`PROFILEID` , jp.`GENDER` , jp.`MTONGUE` , jp.`ENTRY_DT` , jp.`SOURCE` , jp.`AGE` ,case when (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y') THEN 'Y' ELSE jpc.ALT_MOB_STATUS END as MV, jp.CITY_RES AS SOURCECITY,jp.COUNTRY_RES as SOURCE_COUNTRY FROM `JPROFILE` as jp LEFT JOIN JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid	 WHERE (jp.`ENTRY_DT` >= :REG_DATE AND jp.`ENTRY_DT` < CURDATE()) AND jp.`ACTIVATED` = 'Y'";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":REG_DATE", $registerDate, PDO::PARAM_STR);
             $prep->execute();
@@ -1042,6 +1053,30 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
+    public function getEntryDtJprofile($profileArray){
+        try{
+            $sql = "SELECT PROFILEID,ENTRY_DT  FROM newjs.JPROFILE WHERE PROFILEID IN (";
+            $COUNT=1;
+            foreach($profileArray as $key => $value){
+                $valueToSearch[] = ":KEY".$COUNT;
+                $bind["KEY".$COUNT]["VALUE"] = $value;
+                $COUNT++;
+            }
+            $values = implode(",",$valueToSearch).");";
+            $sql .= $values;
+            $prep = $this->db->prepare($sql);
+            foreach($bind as $key=>$val) {
+                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_STR);
+            }
+            $prep->execute();
+            while($result  = $prep->fetch(PDO::FETCH_ASSOC)){
+                $res[$result["PROFILEID"]] = $result["ENTRY_DT"];
+            }
+            return $res;
+        }catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
     /*
      * this function return array of profileids who have registered within given dates
      * @param - date after which users have registered
@@ -1397,7 +1432,8 @@ class NEWJS_JPROFILE extends TABLE
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
-            $this->logSelectCount();
+            //$this->logSelectCount();
+     	    JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);
@@ -1724,6 +1760,184 @@ SQL;
             throw new jsException($e);
         }
     }
+
+    public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
+    {
+        try{
+            $sql =  <<<SQL
+        
+            SELECT P.PROFILEID
+            FROM  newjs.`JPROFILE` P
+            LEFT JOIN newjs.`NEW_DELETED_PROFILE_LOG` D
+            ON P.PROFILEID=D.PROFILEID
+            WHERE  
+            P.ACTIVATED = 'D'
+            AND P.activatedKey = 0
+            AND P.MOD_DT > :GT_DATE
+            AND D.PROFILEID IS NULL
+SQL;
+        
+            if($ltDate) {
+                $sql .= " AND P.MOD_DT < :LT_DATE";  
+            }
+
+            if($limit) {
+                $sql .= " LIMIT :LIMIT";      
+            }
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":GT_DATE", $gtDate, PDO::PARAM_STR);
+            
+            if($ltDate) {
+                $prep->bindValue(":LT_DATE", $ltDate, PDO::PARAM_STR);
+            }
+
+            if($limit) {
+                $prep->bindValue(":LIMIT", $limit, PDO::PARAM_INT);   
+            }
+
+            $prep->execute();
+            return $prep->fetchAll(PDO::FETCH_ASSOC);
+        }catch(Exception $ex) {
+            throw new jsException($e);   
+        }
+    }
+   public function getDetailsForPhone($phoneArray, $fields)
+    {
+        try {
+                $i=0;
+                foreach($phoneArray as $key=>$val){
+                        $arr[] =":PHONE".$i;
+                        $i++;
+                }
+                $fields.=", ACTIVATED";
+                $phoneStr =implode(",", $arr);
+                $sql = "SELECT SQL_CACHE $fields FROM newjs.JPROFILE WHERE PHONE_MOB IN($phoneStr) OR PHONE_WITH_STD IN($phoneStr)";
+                $prep = $this->db->prepare($sql);
+                $i=0; 
+                foreach($phoneArray as $key=>$val){
+                        $prep->bindValue(":PHONE$i", $val, PDO::PARAM_STR);
+                        $i++;
+                }
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {          
+                    if($row['ACTIVATED'] != 'D')
+                            $dataArr[] =$row;
+                }
+                return $dataArr;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        } 
+    }
+    
+    public function getLastLoggedInData($conditionNew,$limitStr = "0,2000")
+    {
+        try {
+                $result = NULL;
+                $sqlSelectDetail = "SELECT jp.PROFILEID FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew." ORDER BY jp.LAST_LOGIN_DT DESC LIMIT $limitStr";
+                $resSelectDetail = $this->db->prepare($sqlSelectDetail);
+                $resSelectDetail->execute();
+                while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
+                {
+                        $result[]= $row["PROFILEID"];
+                }
+                return $result;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+        return NULL;
+    }
+
+    public function getProfileForNoPhotoMailer($dateConditionArr)
+    {
+        try
+        {            
+            $sql = "SELECT PROFILEID,IF(DATEDIFF(NOW( ) , ENTRY_DT) IN (".noPhotoMailerEnum::NOPHOTODATES."),1,2) as TYPE FROM newjs.JPROFILE WHERE HAVEPHOTO NOT IN (".noPhotoMailerEnum::havePhotoCondition.") AND ACTIVATED = ".noPhotoMailerEnum::ACTIVATED." AND activatedKey = ".noPhotoMailerEnum::activatedKey." AND (";
+            $count=1;
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dateTime = $val." ".noPhotoMailerEnum::TIME;
+                $sqlAppend .= " (ENTRY_DT BETWEEN  :VAL".$count." AND :DATETIME".$count.") OR";
+                $count++;
+            }
+            $sqlAppend = rtrim($sqlAppend," OR");
+            $sql .=$sqlAppend.")";
+
+            $prep = $this->db->prepare($sql);
+            $i=1; 
+            foreach($dateConditionArr as $key=>$val)
+            {
+                $dt = $val." ".noPhotoMailerEnum::TIME;
+                $prep->bindValue(":VAL$i", $val, PDO::PARAM_STR);
+                $prep->bindValue(":DATETIME$i", $dt, PDO::PARAM_STR);
+                $i++;
+            }                       
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {                          
+                    $dataArr[] =$row;
+            }
+            return $dataArr;
+            
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }        
+    }
+    //This function gets data for campaigns data
+        public function getRegistrationMisCampaignsData($fromDate, $toDate, $source) {
+                try {
+                        if ($source != "" && $source != NULL) {
+                                $source_names = '"'.implode('","', array_map('addSlashes',$source)).'"';
+                                $sql = "SELECT  DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL,ct.GCLID FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID AND (rt.PAGE_TYPE = 'Page1' || rt.PAGE_TYPE = 'page1') WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE AND s.GROUPNAME IN ($source_names)";
+                        } else {
+                                $sql = "SELECT DISTINCT(jp.PROFILEID),jp.ENTRY_DT,jp.MTONGUE,jp.COUNTRY_RES,jp.RELIGION,jp.CASTE,jp.OCCUPATION,jp.EDU_LEVEL_NEW,jp.INCOME,jp.RELATION, jp.GENDER, jp.AGE, jp.CITY_RES, jp.CASTE, jp.SOURCE, jp.INCOMPLETE,s.GROUPNAME, ct.CAMPAIGN, ct.ADNAME, ct.KEYWORD, ct.ADGROUP, ct.MEDIUM,ct.PHOTO_UPLOADED, ct.ACTIVATED_STATUS, ct.IS_PAID, ct.IS_QUALITY,IF (DATEDIFF(VERIFY_ACTIVATED_DT, jp.ENTRY_DT) < '3', 'Y','N') AS VERIFIED_ONTIME,rt.CHANNEL,ct.GCLID FROM `JPROFILE` jp LEFT JOIN MIS.CAMPAIGN_KEYWORD_TRACKING ct ON ct.PROFILEID = jp.PROFILEID LEFT JOIN MIS.SOURCE s ON s.SourceID = jp.SOURCE LEFT JOIN MIS.REG_TRACK_CHANNEL rt ON rt.PROFILEID = jp.PROFILEID AND (rt.PAGE_TYPE = 'Page1' || rt.PAGE_TYPE = 'page1') WHERE ct.PROFILEID IS NOT NULL AND jp.ENTRY_DT BETWEEN :FROMDATE AND :TODATE";
+                        }
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":FROMDATE", $fromDate." 00:00:00", PDO::PARAM_STR);
+                        $prep->bindValue(":TODATE", $toDate." 23:59:59", PDO::PARAM_STR);
+                        $prep->execute();
+                        while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                                $detailArr[] = $result;
+                        }
+                        return $detailArr;
+                } catch (Exception $e) {
+                        throw new jsException($e);
+                }
+        }
+        public function getProfileCampaingnRegistationData($registerDate)
+        {
+            try {
+                $sql = "SELECT jp.`PROFILEID` , jp.`ACTIVATED`,jp.`HAVEPHOTO` FROM `JPROFILE` as jp WHERE (jp.`ENTRY_DT` >= :REG_DATE AND jp.`ENTRY_DT` < CURDATE())";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":REG_DATE", $registerDate, PDO::PARAM_STR);
+                $prep->execute();
+                $profilesArr = array();
+                while ($res = $prep->fetch(PDO::FETCH_ASSOC)) {
+                    $profilesArr[$res["PROFILEID"]] = $res;
+                }
+                return $profilesArr;
+            } catch (PDOException $e) {
+                /*** echo the sql statement and error message ***/
+                throw new jsException($e);
+            }
+        }
+        
+        public function getMtongue($profileID){
+            try{
+                $sql = "SELECT MTONGUE from newjs.JPROFILE where PROFILEID = :PROFILEID";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+                $prep->execute();
+                if($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    return $row["MTONGUE"];
+                }
+            }catch(Exception $e){
+                throw new jsException($e);
+            }
+        }
 }
 
 ?>

@@ -25,6 +25,16 @@ class newJsmsPage1Action extends sfAction
 		$tieup_source           = $trackParams['tieup_source'];
 		$this->domain		= $trackParams['domain'];
 		$newsource		= $trackParams['newsource'];
+                
+                $campaignData['utm_campaign'] = $trackParams['utm_campaign'];
+                if(!$trackParams['utm_campaign'])
+                    $campaignData['campaignid'] = $trackParams['campaignid'];
+                $campaignData['utm_term'] = $trackParams['utm_term'];
+                $campaignData['keyword'] = $trackParams['keyword'];
+                $campaignData['adgroupid'] = $trackParams['adgroupid'];
+                $campaignData['utm_medium'] = $trackParams['utm_medium'];
+                $campaignData['gclid'] = $trackParams['gclid'];
+                
 		if($reg_params['city_res']=='0' && $reg_params['country_res']==51)
 		{
 			$reg_params['city_res']=$reg_params['state_res']."OT";
@@ -85,6 +95,11 @@ class newJsmsPage1Action extends sfAction
 	  
 			$values_that_are_not_in_form = array('INCOMPLETE' => 'Y', 'ACTIVATED' => 'N', 'SCREENING' => 0, 'SERVICE_MESSAGES' =>'S', 'ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today, 'SORT_DT' => $now, 'IPADD' => $this->ip, 'PROMO_MAILS' =>'S', 'CRM_TEAM' => "$crm_team", 'PERSONAL_MATCHES' =>'A', 'GET_SMS' =>'Y', 'SEC_SOURCE' => "$this->secondary_source", 'KEYWORDS' => $keywords,'AGE'=>$age,'SHOWPHONE_MOB'=>'Y','SHOWPHONE_RES'=>'Y');
 			$id = $this->form->updateData('', $values_that_are_not_in_form);
+                        
+                        //print_r($campaignData);die;
+                        if($campaignData)
+                            RegistrationFunctions::putCampaignVars($id,$campaignData);
+                        
 			$this->loginProfile = LoggedInProfile::getInstance();
 			$this->loginProfile->getDetail($id, "PROFILEID");
 
@@ -107,7 +122,7 @@ class newJsmsPage1Action extends sfAction
 			RegistrationMisc::updateAlertData($id,$alertArr,'M');
 			
 			$jpartnerFields=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","CITY_RES","AGE","RELIGION","OCCUPATION","HEIGHT","INCOME","EDU_LEVEL_NEW");
-			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields);
+			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields,$reg_params["casteNoBar"]);
 			RegistrationMisc::contactArchiveUpdate($this->loginProfile,$this->ip);
 			RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
                         $partnerField = new PartnerField();

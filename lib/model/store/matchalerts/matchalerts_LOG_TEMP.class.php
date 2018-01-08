@@ -37,8 +37,10 @@ class matchalerts_LOG_TEMP extends TABLE
 		}
                return $COUNT;
         }
-        public function insertLogRecords($receiverId, $userIds, $LogicLevel){
-          $date=MailerConfigVariables::getNoOfDays();
+        public function insertLogRecords($receiverId, $userIds, $LogicLevel,$date = ""){
+          if($date == ""){
+                $date=MailerConfigVariables::getNoOfDays();
+           }
           
           $sql_log="INSERT INTO matchalerts.LOG_TEMP (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
           $userCounter = 1;
@@ -179,6 +181,27 @@ GROUP BY LOGICLEVEL, RecCount";
       }
 
       return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+  public function getDatesRowsForTracking()
+  {
+    try
+    {
+      $sql = "SELECT count( * ) , DATE FROM matchalerts.`LOG_TEMP` WHERE RECEIVER NOT IN ( SELECT PROFILEID FROM matchalerts.`MATCHALERTS_TO_BE_SENT` WHERE FROM_REG =1) GROUP BY DATE";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      $resultArr = array();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr[] = $row;          
+      }              
+      return $resultArr; 
+
     }
     catch (PDOException $e)
     {

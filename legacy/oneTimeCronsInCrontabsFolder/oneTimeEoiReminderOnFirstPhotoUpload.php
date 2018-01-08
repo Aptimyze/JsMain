@@ -68,7 +68,7 @@ echo $sql_receivers."\n";
 		}
 	}
 }
-$to='tanu.gupta@jeevansathi.com';
+$to='nitesh.s@jeevansathi.com';
 $subject = "Total $i: One time Reminder mailer send success mail";
 $msg='Cron executed successfully<br/><br/>Warm Regards';
 send_email($to,$msg,$subject,"",$cc);

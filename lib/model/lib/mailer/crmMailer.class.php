@@ -1,19 +1,34 @@
 <?php 
 class crmMailer {
     
-    public function sendEmailForFeedback($mailid, $profileid, $instanceID, $campaign=NULL, $phoneMob=NULL)
+    private function addArgumentToLink($surveyLink, $key, $value=NULL) {
+        if($value == NULL) {
+            return $surveyLink;
+        }
+        
+        /*
+        if(strpos($surveyLink, '?') !== FALSE) {
+            return $surveyLink."&".$key."=".$value;
+        }
+        */
+        return $surveyLink."?".$key."=".$value;
+    }
+    
+    public function sendEmailForFeedback($mailid, $profileid, $instanceID, $campaign=NULL, $phoneMob=NULL, $username=NULL)
     {
         $email_sender = new EmailSender(MailerGroup::CRM_MAILER, $mailid);
         $emailTpl = $email_sender->setProfileId($profileid);
         $smartyObj = $emailTpl->getSmarty();
 		$smartyObj->assign("instanceID",$instanceID);
 		if(isset($campaign)){
-			if($campaign == "IB_Sales"){
+		    if($campaign == "IB_Sales"||$campaign =="IB_PaidService"){
 				$surveyLink = "https://www.surveymonkey.com/r/B6NGKY8";
-			}
+                        }
 			if($campaign == "IB_Service"){
 				$surveyLink = "https://www.surveymonkey.com/r/BZ8GXK7";
 			}
+                
+                        $surveyLink = $this->addArgumentToLink($surveyLink, "USERNAME", $username);
 		}
 		$smartyObj->assign("SURVEY_LINK",$surveyLink);
         $email_sender->send();
@@ -22,9 +37,9 @@ class crmMailer {
 	        $SMS_MESSAGE = "Rate your experience with Jeevansathi customer service. Take this short survey: ".$surveyLink;
 	        include_once(JsConstants::$docRoot."/classes/SmsVendorFactory.class.php");
 	    	$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
-			foreach($alertArr as $key=>$val){
-				$xmlData1 = $xmlData1 . $smsVendorObj->generateXml($profileid,$phoneMob,$SMS_MESSAGE);
-			}
+
+            $xmlData1 = $smsVendorObj->generateXml($profileid,$phoneMob,$SMS_MESSAGE);
+
 			if($xmlData1){
 				$smsVendorObj->send($xmlData1,"transaction");
 			}
@@ -35,7 +50,7 @@ class crmMailer {
     }
     public function getProfileForFeedbackMailer()
     {
-        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS('newjs_slave');
+        $salesCampaignObj = new incentive_SALES_CAMPAIGN_PROFILE_DETAILS();
         $profiles = $salesCampaignObj->getProfiles();
         return $profiles;
     }

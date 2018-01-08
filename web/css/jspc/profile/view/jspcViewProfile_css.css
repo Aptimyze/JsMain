@@ -419,7 +419,7 @@ pre {
             display: block;
         }
                 .verIcon {
-    background-image: url(http://static.jeevansathi.com/images/jspc/searchImg/verified.png);
+    background-image: url(https://static.jeevansathi.com/images/jspc/searchImg/verified.png);
     height: 30px;
     width: 30px;
     vertical-align: bottom;
@@ -428,7 +428,7 @@ pre {
             position: absolute;
             top: 6px;
                 left: 160px;
-            width: 125px;
+            width: 148px;
             padding: 14px;
             background-color: white;
             -webkit-box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
@@ -456,7 +456,7 @@ pre {
             position: absolute;
             top: -22px;
                 left: 33px;
-            width: 125px;
+            width: 170px;
             padding: 14px;
             background-color: white;
             -webkit-box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
@@ -548,3 +548,45 @@ pre {
 .sendcross{background-position: -43px -223px; width: 18px;height: 14px;}
 .crosspos{top:25px; right:22px}
         
+.docattactlist ul{margin:0;padding:0}
+.docattactlist ul li{padding:5px;background-color:#dddddd; font-size:12px;padding:10px; position:relative;margin-top:6px}
+.attc_close {
+  
+  width: 15px;
+  height: 15px;
+  opacity: 1;
+}
+.attc_close:before, .attc_close:after {
+  position: absolute;
+  left: 0px;
+  content: ' ';
+  height: 15px;
+  width: 2px;
+  background-color: #696969;
+}
+.attc_close:before {
+  transform: rotate(45deg);
+}
+.attc_close:after {
+  transform: rotate(-45deg);
+}
+.abu_bck{background:url(IMG_URL/images/jspc/viewProfileImg/Abu_arrow.png) no-repeat; width:18px; height:18px}
+.attach{background:url(IMG_URL/images/jspc/viewProfileImg/att_layer.png) no-repeat; width:22px; height:12px}
+.verIcNo{   background-color: #DF6D8A;
+            color: #fff;
+            font-size: 9px;
+            width: 16px;
+            height: 12px;
+            border-radius: 50%;
+            text-align: center;
+            /* vertical-align: middle; */
+            /* display: table-cell; */
+            padding-top: 2px;
+            padding-bottom: 2px;
+            display: table;
+            top:-10px;
+            left:19px;
+            }
+.verIcInnNo{display: table-cell;
+            vertical-align: middle;
+            text-align: center;}

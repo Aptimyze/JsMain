@@ -97,7 +97,9 @@ class Accept extends ContactEvent
     {
         $sender = $this->contactHandler->getViewer();
         $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'ACCEPTCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
+        $channel =  MobileCommon::getChannel();
+        $date = date('Y-m-d H:i:s');
+        $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'ACCEPTCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'whichChannel'=>$channel,'currentTime'=>$date,'type'=>'ACC') ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         if (CommonFunction::isPaid($sender->getSUBSCRIPTION()))
         {
@@ -128,9 +130,19 @@ class Accept extends ContactEvent
       catch(Exception $e)
       {
       throw new jsException($e);
-    }
+      }
     
     }
+    
+    //Outbound Event
+    $iPgID = $this->contactHandler->getViewer()->getPROFILEID();
+    $iPogID =$this->contactHandler->getViewed()->getPROFILEID();
+    
+    //Pg accpets interest
+    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::ACCEPT_INTEREST, $iPgID, $iPogID);
+    
+    //Pog Interest has been interested
+    GenerateOutboundEvent::getInstance()->generate(OutBoundEventEnums::INTEREST_ACCEPTED, $iPogID, $iPgID);
   }	
 
   /**
@@ -177,17 +189,17 @@ class Accept extends ContactEvent
         $profileMemcacheServiceViewedObj->update("ACC_ME",1);
         $profileMemcacheServiceViewedObj->update("ACC_ME_NEW",1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
-        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
-        {
-          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
-        }
-        if ($filtered!='Y'){
+        if ($filtered != 'Y' || $filtered != 'J'){
           if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
           {
             $profileMemcacheServiceViewerObj->update("INTEREST_ARCHIVED",-1);
           }
           else
           {
+            if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+            {
+              $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+            }
             $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
             $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
             if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
@@ -221,6 +233,8 @@ class Accept extends ContactEvent
       }
       $profileMemcacheServiceViewerObj->updateMemcache();
       $profileMemcacheServiceViewedObj->updateMemcache();
+       InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewer()->getPROFILEID(),"",1);
+    InboxUtility::cachedInboxApi('del',sfContext::getInstance()->getRequest(),$this->contactHandler->getViewed()->getPROFILEID(),"",1);
     }
     catch (Exception $e) {
       throw new jsException($e);

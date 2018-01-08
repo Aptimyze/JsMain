@@ -48,6 +48,7 @@ class Jpartner
 	private $HINCOME_DOL;
     private $STATE;
     private $CITY_INDIA;
+    private $OCCUPATION_GROUPING;
 
         public function __construct($table='')
         {
@@ -417,6 +418,14 @@ class Jpartner
         {
                 $this->STATE=$state;
         }
+        public function getOCCUPATION_GROUPING()
+        {
+            return $this->OCCUPATION_GROUPING;
+        }
+        public function setOCCUPATION_GROUPING($occGrouping)
+        {
+            $this->OCCUPATION_GROUPING = $occGrouping;
+        }
 		public function getJpartnerArray()
 		{
 			$paramArray["GENDER"]=$this->GENDER;
@@ -447,7 +456,7 @@ class Jpartner
 			$paramArray["LHEIGHT"]=$this->LHEIGHT;
 			$paramArray["HHEIGHT"]=$this->HHEIGHT;
 			$paramArray["PARTNER_CITYRES"]=$this->PARTNER_CITYRES;
-                        $paramArray["CITY_INDIA"]=$this->CITY_INDIA;
+                       // $paramArray["CITY_INDIA"]=$this->CITY_INDIA;
 			$paramArray["PARTNER_COUNTRYRES"]=$this->PARTNER_COUNTRYRES;
 			$paramArray["PARTNER_MSTATUS"]=$this->PARTNER_MSTATUS;
 			$paramArray["LINCOME"]=$this->LINCOME;
@@ -455,7 +464,8 @@ class Jpartner
 			$paramArray["LINCOME_DOL"]=$this->LINCOME_DOL;
 			$paramArray["HINCOME_DOL"]=$this->HINCOME_DOL;
             $paramArray["STATE"]=$this->STATE;
-			return $paramArray;
+			$paramArray["OCCUPATION_GROUPING"]=$this->OCCUPATION_GROUPING;
+            return $paramArray;
 		}
 		public function setJpartnerUsingArray($paramArray)
 		{
@@ -561,17 +571,35 @@ class Jpartner
 		{
 			$this->profileid=$profileid;
 			$this->myDb=$myDb;
-		}	
-		$sql="SELECT SQL_CACHE $parameter FROM $this->table WHERE PROFILEID=$profileid $WhereCondition";
-		$result = $mysqlObj->executeQuery($sql,$myDb) ;
-		$myrow =$mysqlObj->fetchAssoc($result);
-
-		if($myrow)
+		}
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $parameter, __CLASS__);
+                    if (false !== $result) {
+                        $fetchedArr = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $fetchedArr)) {
+                       $fetchedArr = null;
+                    }
+                }
+                else{
+                    $sql="SELECT SQL_CACHE * FROM $this->table WHERE PROFILEID=$profileid";
+                    $result = $mysqlObj->executeQuery($sql,$myDb) ;
+                    $fetchedArr =$mysqlObj->fetchAssoc($result);
+                    if(!$fetchedArr) { 
+                        $fetchedArr = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
+                        $notFilledCase = 1;
+                    }
+                    if(false === ProfileCacheFunctions::isCommandLineScript("set"))
+                        ProfileCacheLib::getInstance()->updateCache($fetchedArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
+                }
+                $myrow = newjs_JPARTNER::getArrayWithRequiredFieldAndConditions($fetchedArr,$parameter,$WhereCondition);
+		if($myrow && !$notFilledCase)
 		{
 			foreach ($myrow as $key => $value)
 			{
 				$this->$key=$value;
-				$flag=1;
+                                    $flag=1;
 			}
 		}
 		if($flag)
@@ -623,6 +651,7 @@ class Jpartner
 			}
 			$sql="UPDATE $this->table SET $specialcase WHERE PROFILEID=$this->PROFILEID";
 			$mysqlObj->executeQuery($sql,$myDb);
+                        ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		}
 		else
 		{
@@ -642,8 +671,7 @@ class Jpartner
 					$http_msg=print_r($_SERVER,true);
 					mail("lavesh.rawat@jeevansathi.com,neha.verma@jeevansathi.com,nehaverma.dce@gmail.com,lavesh.rawat@gmail.com","Gender Same in Jpartner from Insert","$this->PROFILEID,DPP :$this->DPP:$http_msg");
 				}
-
-				$sql="INSERT INTO $this->table (PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,NHANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,STATE,CITY_INDIA) VALUES('$this->PROFILEID','$this->GENDER','$this->CHILDREN','$this->LAGE' ,'$this->HAGE' , '$this->LHEIGHT' , '$this->HHEIGHT' , \"$this->HANDICAPPED\" , \"$this->NHANDICAPPED\", '$this->DPP' , \"$this->CASTE_MTONGUE\" ,\"$this->PARTNER_BTYPE\" ,\"$this->PARTNER_CASTE\" ,\"$this->PARTNER_CITYRES\" ,\"$this->PARTNER_COUNTRYRES\" , \"$this->PARTNER_DIET\",\"$this->PARTNER_DRINK\" ,\"$this->PARTNER_ELEVEL_NEW\" , \"$this->PARTNER_INCOME\" , \"$this->PARTNER_MANGLIK\",\"$this->PARTNER_MSTATUS\" ,\"$this->PARTNER_MTONGUE\" , \"$this->PARTNER_NRI_COSMO\",\"$this->PARTNER_OCC\" ,\"$this->PARTNER_RELATION\",\"$this->PARTNER_RES_STATUS\",\"$this->PARTNER_SMOKE\",\"$this->PARTNER_COMP\",\"$this->PARTNER_RELIGION\",\"$this->PARTNER_NAKSHATRA\",now(),\"$this->LINCOME\",\"$this->HINCOME\",\"$this->LINCOME_DOL\",\"$this->HINCOME_DOL\",\"$this->STATE\",\"$this->CITY_INDIA\")";	
+				$sql="INSERT INTO $this->table (PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,NHANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL,STATE,OCCUPATION_GROUPING) VALUES('$this->PROFILEID','$this->GENDER','$this->CHILDREN','$this->LAGE' ,'$this->HAGE' , '$this->LHEIGHT' , '$this->HHEIGHT' , \"$this->HANDICAPPED\" , \"$this->NHANDICAPPED\", '$this->DPP' , \"$this->CASTE_MTONGUE\" ,\"$this->PARTNER_BTYPE\" ,\"$this->PARTNER_CASTE\" ,\"$this->PARTNER_CITYRES\" ,\"$this->PARTNER_COUNTRYRES\" , \"$this->PARTNER_DIET\",\"$this->PARTNER_DRINK\" ,\"$this->PARTNER_ELEVEL_NEW\" , \"$this->PARTNER_INCOME\" , \"$this->PARTNER_MANGLIK\",\"$this->PARTNER_MSTATUS\" ,\"$this->PARTNER_MTONGUE\" , \"$this->PARTNER_NRI_COSMO\",\"$this->PARTNER_OCC\" ,\"$this->PARTNER_RELATION\",\"$this->PARTNER_RES_STATUS\",\"$this->PARTNER_SMOKE\",\"$this->PARTNER_COMP\",\"$this->PARTNER_RELIGION\",\"$this->PARTNER_NAKSHATRA\",now(),\"$this->LINCOME\",\"$this->HINCOME\",\"$this->LINCOME_DOL\",\"$this->HINCOME_DOL\",\"$this->STATE\",\"$this->OCCUPATION_GROUPING\")";	
 				$mysqlObj->executeQuery($sql,$myDb);
 				$this->partnerProfileUpdated=1;
 			}
@@ -658,9 +686,9 @@ class Jpartner
 				{
 					$http_msg=print_r($_SERVER,true);
 					mail("lavesh.rawat@jeevansathi.com,neha.verma@jeevansathi.com,nehaverma.dce@gmail.com,lavesh.rawat@gmail.com","Gender Same in Jpartner from Update","$this->PROFILEID,DPP :$this->DPP:$http_msg");
-				}
-				$sql="UPDATE $this->table SET GENDER='$this->GENDER' , CHILDREN=\"$this->CHILDREN\" , LAGE='$this->LAGE' , HAGE='$this->HAGE' , LHEIGHT='$this->LHEIGHT' , HHEIGHT='$this->HHEIGHT' , HANDICAPPED=\"$this->HANDICAPPED\" , NHANDICAPPED=\"$this->NHANDICAPPED\", DPP='$this->DPP' , CASTE_MTONGUE=\"$this->CASTE_MTONGUE\" , PARTNER_BTYPE=\"$this->PARTNER_BTYPE\" , PARTNER_CASTE=\"$this->PARTNER_CASTE\" , PARTNER_CITYRES=\"$this->PARTNER_CITYRES\" , PARTNER_COUNTRYRES=\"$this->PARTNER_COUNTRYRES\" , PARTNER_DIET=\"$this->PARTNER_DIET\" , PARTNER_DRINK=\"$this->PARTNER_DRINK\" ,PARTNER_ELEVEL_NEW=\"$this->PARTNER_ELEVEL_NEW\" , PARTNER_INCOME=\"$this->PARTNER_INCOME\" , PARTNER_MANGLIK=\"$this->PARTNER_MANGLIK\" , PARTNER_MSTATUS=\"$this->PARTNER_MSTATUS\" , PARTNER_MTONGUE=\"$this->PARTNER_MTONGUE\" , PARTNER_NRI_COSMO=\"$this->PARTNER_NRI_COSMO\", PARTNER_OCC=\"$this->PARTNER_OCC\" , PARTNER_RELATION=\"$this->PARTNER_RELATION\",PARTNER_RES_STATUS=\"$this->PARTNER_RES_STATUS\",PARTNER_SMOKE=\"$this->PARTNER_SMOKE\",PARTNER_COMP=\"$this->PARTNER_COMP\", PARTNER_RELIGION=\"$this->PARTNER_RELIGION\", PARTNER_NAKSHATRA=\"$this->PARTNER_NAKSHATRA\",LINCOME='$this->LINCOME',HINCOME='$this->HINCOME',LINCOME_DOL='$this->LINCOME_DOL',HINCOME_dOL='$this->HINCOME_DOL' , STATE=\"$this->STATE\", CITY_INDIA=\"$this->CITY_INDIA\" WHERE PROFILEID=$this->PROFILEID";
-				$mysqlObj->executeQuery($sql,$myDb);
+				}                
+				$sql="UPDATE $this->table SET GENDER='$this->GENDER' , CHILDREN=\"$this->CHILDREN\" , LAGE='$this->LAGE' , HAGE='$this->HAGE' , LHEIGHT='$this->LHEIGHT' , HHEIGHT='$this->HHEIGHT' , HANDICAPPED=\"$this->HANDICAPPED\" , NHANDICAPPED=\"$this->NHANDICAPPED\", DPP='$this->DPP' , CASTE_MTONGUE=\"$this->CASTE_MTONGUE\" , PARTNER_BTYPE=\"$this->PARTNER_BTYPE\" , PARTNER_CASTE=\"$this->PARTNER_CASTE\" , PARTNER_CITYRES=\"$this->PARTNER_CITYRES\" , PARTNER_COUNTRYRES=\"$this->PARTNER_COUNTRYRES\" , PARTNER_DIET=\"$this->PARTNER_DIET\" , PARTNER_DRINK=\"$this->PARTNER_DRINK\" ,PARTNER_ELEVEL_NEW=\"$this->PARTNER_ELEVEL_NEW\" , PARTNER_INCOME=\"$this->PARTNER_INCOME\" , PARTNER_MANGLIK=\"$this->PARTNER_MANGLIK\" , PARTNER_MSTATUS=\"$this->PARTNER_MSTATUS\" , PARTNER_MTONGUE=\"$this->PARTNER_MTONGUE\" , PARTNER_NRI_COSMO=\"$this->PARTNER_NRI_COSMO\", PARTNER_OCC=\"$this->PARTNER_OCC\" , PARTNER_RELATION=\"$this->PARTNER_RELATION\",PARTNER_RES_STATUS=\"$this->PARTNER_RES_STATUS\",PARTNER_SMOKE=\"$this->PARTNER_SMOKE\",PARTNER_COMP=\"$this->PARTNER_COMP\", PARTNER_RELIGION=\"$this->PARTNER_RELIGION\", PARTNER_NAKSHATRA=\"$this->PARTNER_NAKSHATRA\",LINCOME='$this->LINCOME',HINCOME='$this->HINCOME',LINCOME_DOL='$this->LINCOME_DOL',HINCOME_dOL='$this->HINCOME_DOL' , STATE=\"$this->STATE\", OCCUPATION_GROUPING=\"$this->OCCUPATION_GROUPING\" WHERE PROFILEID=$this->PROFILEID";
+                $mysqlObj->executeQuery($sql,$myDb);
 	
 				if($mysqlObj->affectedRows())
 				{
@@ -670,7 +698,11 @@ class Jpartner
 				}
 				else
 					$this->partnerProfileUpdated=0;
-			}	
+			}
+                        if(!$this->isPartnerProfileExist($myDb,$mysqlObj))
+                            ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
+                        else
+                            ProfileCacheLib::getInstance()->updateCache($this->getArrayToSetInCache(), ProfileCacheConstants::CACHE_CRITERIA, $this->PROFILEID, __CLASS__);
 		}
 		$db=connect_db();
 	}
@@ -684,6 +716,7 @@ class Jpartner
 	{
 		$sql="DELETE FROM $this->table WHERE PROFILEID=$this->PROFILEID";
 		$mysqlObj->executeQuery($sql,$myDb);
+                ProfileCacheLib::getInstance()->removeFieldsFromCache($this->PROFILEID,__CLASS__,"*");
 		$db=connect_db();
 		$sql="REPLACE INTO newjs.SWAP_JPARTNER (PROFILEID) VALUES ('$this->PROFILEID')";
 		$mysqlObj->executeQuery($sql,$db) ;
@@ -705,9 +738,21 @@ class Jpartner
 	        if(!$COMPANY)
         	        $COMPANY='JS';
 
-		$sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
-		$result = $mysqlObj->executeQuery($sql_p,$myDb) ;
-		$myrow =$mysqlObj->fetchAssoc($result);
+                if(ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__)){
+                    $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, "*", __CLASS__);
+                    if (false !== $result) {
+                        $myrow = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    }
+                    
+                    if(in_array(ProfileCacheConstants::NOT_FILLED, $myrow)) {
+                       $myrow = null;
+                    }
+                }
+                else{
+                    $sql_p = "SELECT * FROM $this->table WHERE PROFILEID='$profileid'";
+                    $result = $mysqlObj->executeQuery($sql_p,$myDb) ;
+                    $myrow =$mysqlObj->fetchAssoc($result);
+                }
 		{
 			$gender=$myrow['GENDER'];
 			$children=$myrow['CHILDREN'];
@@ -742,7 +787,8 @@ class Jpartner
 			$partner_lincome_dol = $myrow['LINCOME_DOL'];
 			$partner_hincome_dol = $myrow['HINCOME_DOL'];
             $partner_state = $myrow['STATE'];
-            $city_india = $myrow['CITY_INDIA'];
+           // $city_india = $myrow['CITY_INDIA'];
+            $occupation_grouping = $myrow['OCCUPATION_GROUPING']; // CHECK
 
 		}
 		if($gender!=$this->GENDER)
@@ -861,11 +907,14 @@ class Jpartner
         {
             $comments.="<br><b>"." STATE : "."</b><br>"."Changed From "."<b>".$partner_state."</b><br>"." To "."<b>".$this->STATE."</b>";
         }
-        if($city_india !=$this->CITY_INDIA)
+       /* if($city_india !=$this->CITY_INDIA)
         {
             $comments.="<br><b>"." STATE : "."</b><br>"."Changed From "."<b>".$partner_state."</b><br>"." To "."<b>".$this->STATE."</b>";
+        }*/
+        if($occupation_grouping !=$this->OCCUPATION_GROUPING)
+        {
+            $comments.="<br><b>"." OCCUPATION_GROUPING : "."</b><br>"."Changed From "."<b>".$occupation_grouping."</b><br>"." To "."<b>".$this->OCCUPATION_GROUPING."</b>";
         }
-
 		$crmuser = getname($cid);
 
 		if ($comments!="")
@@ -874,5 +923,13 @@ class Jpartner
 			 $mysqlObj->executeQuery($sql,$db) ;
 		}
 	}
+        
+        function getArrayToSetInCache(){
+            $arrToSet = $this->getJpartnerArray();
+            $arrToSet['PROFILEID'] = $this->PROFILEID;
+            $arrToSet['DPP'] = $this->DPP;
+            $arrToSet['DATE'] = $this->DATE;
+            return $arrToSet;
+        }
 }
 ?>

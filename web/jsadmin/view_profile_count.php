@@ -23,15 +23,20 @@ if(authenticated($cid))
 	$user=getname($cid);
 	if($val=="new")
 	{
-		$sql_s="SELECT COUNT(*) as cnt FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE='N' AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')";
+		$sql_s="SELECT COUNT(*) as cnt FROM (SELECT J.PROFILEID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE='N' AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND activatedKey=1 UNION SELECT J.PROFILEID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID = A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND J.INCOMPLETE = 'N' AND J.SCREENING<1099511627775 and activatedKey=1) AS TEMP";
 	}
 	elseif($val=="edit")
 	{
-		$sql_s="SELECT count(*) as cnt FROM newjs.JPROFILE USE INDEX(SCREENING) LEFT JOIN jsadmin.MAIN_ADMIN ON jsadmin.MAIN_ADMIN.PROFILEID = newjs.JPROFILE.PROFILEID WHERE (jsadmin.MAIN_ADMIN.PROFILEID IS NULL) AND ( ACTIVATED = 'Y' AND SCREENING < '1099511627775' ) ";
+		$sql_s="SELECT count(*) as cnt FROM newjs.JPROFILE J USE INDEX(SCREENING) LEFT JOIN jsadmin.MAIN_ADMIN ON jsadmin.MAIN_ADMIN.PROFILEID = J.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID = A.PROFILEID WHERE (jsadmin.MAIN_ADMIN.PROFILEID IS NULL) AND ( ACTIVATED = 'Y' AND A.PROFILEID IS NULL AND activatedKey=1 AND SCREENING < '1099511627775' ) ";
 	}
+        
 	$res_s=mysql_query_decide($sql_s) or die("$sql_s".mysql_error_js());
+        //$res_awy = mysql_query_decide($sql_awy) or die("$sql_awy".mysql_error_js());
+        
 	$row_s=mysql_fetch_array($res_s);
-	$cnt=$row_s['cnt'];
+        //$row_awy=mysql_fetch_array($res_awy);
+
+        $cnt=$row_s['cnt'];
 	if(mysql_num_rows($res_s)<1)
 	{
 		$cnt=0;

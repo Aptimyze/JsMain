@@ -109,13 +109,17 @@ function uncheck_all()
 		<td align=center>Gateway</td>
 		<td align=center>Approved By</td>
 		<td align=center>Discount Type</td>
-		
+		<td align=center>SGST</td>
+		<td align=center>IGST</td>
+		<td align=center>CGST</td>
+		<td align=center>CITY_RES</td>
+		<td align=center>STATE_RES</td>
 	</tr>
 	~if $arr neq ''`
 	<form name="collection_form" method="post" action="collection_status.php?cid=~$cid`" onSubmit="return check();">
 	~section name=sec loop=$arr`
-	 ~if $arr[sec].new_tab eq 'Y'`<tr class=formhead colspan='19'></tr><tr class=formhead colspan='19'></tr><tr class=formhead colspan='15'>
-        <td align=center colspan='19'>~$arr[sec].last_sort`</td></tr>~/if`
+	 ~if $arr[sec].new_tab eq 'Y'`<tr class=formhead colspan='24'></tr><tr class=formhead colspan='24'></tr><tr class=formhead colspan='15'>
+        <td align=center colspan='24'>~$arr[sec].last_sort`</td></tr>~/if`
 	<tr class=fieldsnew>
 		<td class="fieldsnew" align="center">~if $arr[sec].receiptid neq "" && $arr[sec].collection_status eq 'Pending'`<input type="checkbox" name="mark_coll[]" value="~$arr[sec].receiptid`" > ~/if`</td>
 		<td align=center>~$arr[sec].entry_dt`</td>
@@ -136,16 +140,21 @@ function uncheck_all()
 		<td align=center>~$arr[sec].gateway`</td>
 		<td align=center>~$arr[sec].approved_by`</td>
 		<td align=center>~$arr[sec].discount_type`</td>
+		<td align=center>~$arr[sec].SGST`</td>
+		<td align=center>~$arr[sec].IGST`</td>
+		<td align=center>~$arr[sec].CGST`</td>
+		<td align=center>~$arr[sec].CITY_RES`</td>
+		<td align=center>~$arr[sec].STATE_RES`</td>
 	<tr>
 	~if $arr[sec].tot_sort_amt_rs neq '' || $arr[sec].tot_sort_amt_dol neq ''`
-	<tr class=formhead colspan='19'>
-        <td align=center colspan='19'>Total(Rs)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_rs` &nbsp;&nbsp; &nbsp;&nbsp;Total(Dol)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_dol`</td></tr>~/if`
+	<tr class=formhead colspan='24'>
+        <td align=center colspan='24'>Total(Rs)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_rs` &nbsp;&nbsp; &nbsp;&nbsp;Total(Dol)&nbsp;&nbsp;~$arr[sec].tot_sort_amt_dol`</td></tr>~/if`
 	~/section`
-
-	<tr><td colspan="19">&nbsp;</td></tr>
-<tr><td colspan="19">&nbsp;</td></tr>
+    <input type="hidden" name="newTab" value="~$newTab`">
+	<tr><td colspan="24">&nbsp;</td></tr>
+<tr><td colspan="24">&nbsp;</td></tr>
 <tr>
-~if $collection_status eq "Pending" || $collection_status eq "All"`<td colspan="19" align="center"><input type=submit name="preview_received" value="Received"></td>~/if`
+~if $collection_status eq "Pending" || $collection_status eq "All"`<td colspan="24" align="center"><input type=submit name="preview_received" value="Received"></td>~/if`
                                                                                                  
 </tr>
 <tr><td colspan="15">&nbsp;</td></tr><tr><td colspan="15">&nbsp;</td></tr>

@@ -27,25 +27,31 @@ EOF;
 		/** code for daily count monitoring**/
 	        $cronDocRoot = JsConstants::$cronDocRoot;
                 $php5 = JsConstants::$php5path;
-                passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER#INSERT");
+                //passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER#INSERT");
                 /**code ends*/
 		$countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
                 $instanceID = $countObj->getID('SALES_FEEDBACK_MAILER');
 		$crmMailerObj 	= new crmMailer();
 		$profilesArr 	= $crmMailerObj->getProfileForFeedbackMailer();
-		$jprofileObj = new JPROFILE('newjs_slave');
-		if(is_array($profilesArr))
-			$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
-		if(count($profilesArr)>0){
+		$jprofileObj = new JPROFILE('crm_slave');
+		if(is_array($profilesArr)) {
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                }
+		if(count($profilesArr)>0){ 
 			foreach($profilesArr as $profileid=>$campaign){
-				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB']);
+                    $profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+                }
+		if(count($profilesArr)>0){ 
+			foreach($profilesArr as $profileid=>$campaign){
+				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB'],$profileDet[$profileid]['USERNAME']);
 				$crmMailerObj->updateMailerSentStatus($profileid,$deliveryStatus);
 			}
 			/** code for daily count monitoring**/
-                        passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER");
+                        //passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring SALES_FEEDBACK_MAILER");
                         /**code ends*/
 		}
 		unset($crmMailerObj);
 		unset($profilesArr);
 	}
+}
 }

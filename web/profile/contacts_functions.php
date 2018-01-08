@@ -154,10 +154,19 @@ function getResultSet($parameters="",$sendersIn="",$sendersNotIn="",$receiversIn
 			$sql_where[]="SEEN IN($seenIn)";
 		if($seenNotIn)
 			$sql_where[]="SEEN NOT IN($seenNotIn)";
-		if($filteredIn)
+
+		if($filteredIn){
+			if($filteredIn == "'Y'"){
+			$sql_where[]="FILTERED IN('Y', 'J')";
+			}else
 			$sql_where[]="FILTERED IN($filteredIn)";
-		if($filteredNotIn)
+		}
+		if($filteredNotIn){
+			if($filteredNotIn == "'Y'"){
+			$sql_where[]="FILTERED NOT IN('Y', 'J')";
+			}else
 			$sql_where[]="FILTERED NOT IN($filteredNotIn)";
+		}
 		if($timeClause)
 			$sql_where[]=$timeClause;	
 		if($sql_where)
@@ -514,6 +523,7 @@ function updateContactsSeen($sender_profileid, $receiver_profileid, $who, $conta
 		}
 		$profileid = $receiver_profileid;
                 $mypid = $sender_profileid;
+        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/alterContactFunctions.txt",var_export($_SERVER,true)."\n",FILE_APPEND);
                 include_once("alter_seen_table.php");
 }
 

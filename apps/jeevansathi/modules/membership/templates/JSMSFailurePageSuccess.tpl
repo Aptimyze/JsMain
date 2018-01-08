@@ -62,8 +62,8 @@
 
 <!--start:main body--> 
 <!--start:continue button-->
-<div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` f16 fontlig cursp posfix btmo" style="overflow: hidden;">
-  <a href="~sfConfig::get('app_site_url')`/profile/mainmenu.php" style="display: block;" class="white f15 fontreg pinkRipple rv2_pad9">~$data.proceed_text`</a>
+<div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` f16 fontlig cursp posfix btmo" style="overflow: hidden;">~sfConfig::get('app_site_url')`
+  <a href="~sfConfig::get('app_site_url')`/profile/mainmenu.php" style="display: block;" class="white f15 fontreg pinkRipple rv2_pad9" id="goHomeid">~$data.proceed_text`</a>
 </div>  
 <!--end:continue button-->
 </div>
@@ -73,6 +73,8 @@
     var winHeight = $(window).height();
     $(".bg4").css('height',winHeight);
     var newHref = "~sfConfig::get('app_site_url')`/membership/jsms?displayPage=3";
+    var upgradeMem = "~$data.checkMemUpgrade`";
+    
     if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
       newHref += "&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
     }
@@ -85,19 +87,25 @@
     if(checkEmptyOrNull(readCookie('device'))){
       newHref += "&device="+readCookie('device'); 
     }
+    if(checkEmptyOrNull(upgradeMem)){
+      newHref += "&upgradeMem="+upgradeMem;
+    }
     $("#redirectToCart").click(function(e){
-      e.preventDefault();
-      createCookie('backState','failurePage');
-      window.location.href = newHref;
+        if(checkEmptyOrNull(readCookie('backendLink'))){
+            e.preventDefault();
+            createCookie('backState','failurePage');
+            window.location.href = readCookie('backendLink');
+        }else{
+            e.preventDefault();
+            createCookie('backState','failurePage');
+            window.location.href = newHref;
+        }
+      
     });
-    var username = "~$data.userDetails.USERNAME`";
-    var email = "~$data.userDetails.EMAIL`";
-    setInterval(function(){
-      autoPopulateFreshdeskDetails(username,email);
-    },100);
-    setTimeout(function(){
-      autoPopupFreshdesk(username,email);
-    }, 90000);
+    if("~$data.device eq 'Android_app'`"){
+        var host = window.location.hostname;
+        $("#goHomeid").attr('href','http://'+host+'/profile/mainmenu.php');
+    }
   });
 </script>
 ~/if`

@@ -11,6 +11,10 @@ header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 header('Pragma: no-cache');
 include ("time1.php");
+
+global $screeningRep;
+$screeningRep = false;
+
 include ("connect.inc");
 include(JsConstants::$docRoot."/commonFiles/flag.php");
 include(JsConstants::$docRoot."/commonFiles/comfunc.inc");
@@ -27,7 +31,7 @@ use MessageQueues as MQ;
 $protect_obj = new protect;
 global $screen_time;
 global $FLAGS_VAL;
-$dbObj = new newjs_OBSCENE_WORDS();
+$dbObj = new jsadmin_OPS_OBSCENE_WORDS();
 global $obscene;
 $obscene = $dbObj->getObsceneWord();
 
@@ -37,22 +41,22 @@ if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
 	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREEN_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
+		if ($memcacheObj->get($key)) {
 			exit("Please refresh after 5 seconds.");
-		} else $memcacheObj->setDataToMem(5, $key, 5);
+		} else $memcacheObj->set( $key, 5,2);
 		unset($memcacheObj);
 	}
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		include_once ("../classes/Memcache.class.php");
-		$memcacheObj = new UserMemcache;
+		include_once ("../../lib/model/lib/JsMemcache.class.php");
+		$memcacheObj = new JsMemcache;
 		$key = "PROF_SCREENED_USER_" . $user;
-		if ($memcacheObj->getDataFromMem($key)) {
-			$memcacheObj->setDataToMem(2, $key, 2);
+		if ($memcacheObj->get($key)) {
+			$memcacheObj->set( $key, 2,2);
 			exit("Please dont click on submit button again and again.");
-		} else $memcacheObj->setDataToMem(2, $key, 2);
+		} else $memcacheObj->set($key, 2,2);
 		unset($memcacheObj);
 	}
 	
@@ -63,7 +67,7 @@ if (authenticated($cid)) {
 //        }
             
 	if ($Submit || $Submit1) {
-		
+		unsetMemcache5Sec($user);
 		$check = screening_recheck($pid);
 		if ($check == 1) {
 			$Submit = 0;
@@ -72,6 +76,7 @@ if (authenticated($cid)) {
 		} else delete_temp_screening($pid);
 	}
 	if ($Submit) {
+		
 		
 		$PROFILECHECKSUM = md5($pid) . "i" . $pid;
 			$echecksum = $protect_obj->js_encrypt($PROFILECHECKSUM,$to);
@@ -102,7 +107,15 @@ if (authenticated($cid)) {
 		$service_mes = $myrow['SERVICE_MESSAGES'];
 		$source = $myrow['SOURCE'];
 		$std = $myrow['STD'];
-		if ($activated == 'U' || ($activated == 'Y' && !areAllBitsSet($screening_val)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
+                $sqlAct = "SELECT PROFILEID FROM jsadmin.ACTIVATED_WITHOUT_YOURINFO WHERE PROFILEID='$pid'";
+		$resAct = mysql_query_decide($sqlAct) or die("$sqlAct" . mysql_error_js());
+		$rowAct = mysql_fetch_assoc($resAct);
+                if($rowAct['PROFILEID'])
+                    $activatedWithoutYourInfo = 1;
+                else
+                    $activatedWithoutYourInfo = 0;
+                
+		if ($activated == 'U' || ($activated == 'Y' && (!areAllBitsSet($screening_val) || $activatedWithoutYourInfo)) || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N' || $preactivated == 'Y'))) {
 			if ($name != "" || $name_hob != "" || $name_contact != "" || $name_edu != "") {
 				if ($name != "") {
 					$NAME = explode(",", $name);
@@ -214,7 +227,10 @@ if (authenticated($cid)) {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
 								if ($_POST[$NAME[$i]] == "") {
-									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+									$bl_msg = "<b>Please Note : </b>We have removed the content that you had put in 'About me' section of your profile as it was inappropriate.";
+                                                                        if(!$activatedWithoutYourInfo)
+                                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
@@ -226,13 +242,22 @@ if (authenticated($cid)) {
 							}
 							else
 							{
-							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate. So, your profile <b>has been marked incomplete.</b> Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
+							$bl_msg = "<b>Please Note : </b>We have modified the content that you had put in the 'About me' section of your profile as it was inappropriate.";
+                                                        if(!$activatedWithoutYourInfo)
+                                                            $bl_msg .= " So, your profile <b>has been marked incomplete.</b>";
+                                                        $bl_msg .= " Add relevant/valid/clear information in this field to complete your profile. Better description will also get you better results.
 								<br><br>Please";
 									$bl_msg.= "<a href = \"http://www.jeevansathi.com/profile/viewprofile.php?echecksum=$echecksum&checksum=$PROFILECHECKSUM&ownview=1&CMGFRMMMMJS=Y&EditWhatNew=incompletProfile\"> click here </a>";
 									$bl_msg.= " to edit your profile <br>";
 							
-							} 
-							$INCOMPLETE="Y";
+							}
+                                                        if(!$activatedWithoutYourInfo)
+                                                            $INCOMPLETE="Y";
+                                                        else{
+                                                            if(strlen($_POST[$NAME[$i]])<50)
+                                                                $arrProfileUpdateParams[$NAME[$i]] = "";
+                                                            $completeWithoutYourInfo = "Y";
+                                                        }
 							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
                 			$instantNotificationObj->sendNotification($pid);
 						}
@@ -338,8 +363,15 @@ if (authenticated($cid)) {
 				}
 //				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
 //				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-        
-        $objUpdate = JProfileUpdateLib::getInstance();
+        //if($activatedWithoutYourInfo){
+            $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+            $activated_without_yourInfoObj->delete($pid);
+        //}
+        global $screeningRep;
+        if($screeningRep)
+            $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+        else
+            $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
 				if ($str_edu) {         
@@ -390,7 +422,7 @@ if (authenticated($cid)) {
 				if ($INCOMPLETE != "")
 				{
 					//$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
-          $arrProfileUpdateParams['SCREENING'] = 0;
+          //$arrProfileUpdateParams['SCREENING'] = 0;
           $arrProfileUpdateParams['PREACTIVATED'] = $activated;
           $arrProfileUpdateParams['ACTIVATED'] = 'N';
           $arrProfileUpdateParams['INCOMPLETE'] = 'Y';
@@ -512,7 +544,12 @@ if (authenticated($cid)) {
 				foreach($log_val as $item)
 					$log_val1[]=addslashes(stripslashes($item));
 				$log_values = implode("','", $log_val1);
-				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values','$user',now(),'M','$count_screen')";
+                                if($val == "new")
+                                    $screenNewEdit = 2;
+                                
+                                else
+                                    $screenNewEdit = 3;
+				$sql_mod = "INSERT into jsadmin.SCREENING_LOG(REF_ID,PROFILEID,$log_name,SCREENING,SCREENED_BY,SCREENED_TIME,ENTRY_TYPE,FIELDS_SCREENED) VALUES ('$ref_id',$pid,'$log_values',$screenNewEdit,'$user',now(),'M','$count_screen')";
 				mysql_query_decide($sql_mod) or die(mysql_error_js()."at line 367");
 				//added by sriram.
 				if ($do_gender_related_changes) {
@@ -581,6 +618,16 @@ $screeningValMainAdmin = 0;
 						$sms->send();
 						$sms=new InstantSMS("MTONGUE_CONFIRM",$pid);
 						$sms->send();
+						try
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+							}
+						}
+						catch(Exception $e) {}
 					//	$parameters = array("KEY" => "SI_APPROVE", "PROFILEID" => $pid, "DATA" => $pid);
 					//	sendSingleInstantSms($parameters);
 					}
@@ -592,7 +639,7 @@ $screeningValMainAdmin = 0;
 					$smarty->assign("from_screening", 1);
 				}
 			} else {
-				$msg = "User $username is already screened<br><br>";
+				$msg = "User $username is already screened 1<br><br>";
 				$find_sql = "SELECT SUBMITED_TIME,ALLOTED_TO FROM jsadmin.MAIN_ADMIN_LOG where PROFILEID='$pid' AND SCREENING_TYPE='O' ORDER BY SUBMITED_TIME DESC LIMIT 0,1";
 				$find_result = mysql_query_decide($find_sql);
 				$find_row = mysql_fetch_assoc($find_result);
@@ -602,7 +649,9 @@ $screeningValMainAdmin = 0;
 				mysql_query_decide($ins_sql) or die(mysql_error_js());
 			}
 		} else {
-			$msg = "User $username is already screened<br><br>";
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/screen.txt","activated:".$activated."preactivated".$preactivated."screening_val:".$screening_val."activatedWithoutYourInfo:".$activatedWithoutYourInfo."\n\n",FILE_APPEND);
+
+			$msg = "User $username is already screened 2<br><br>";
 			$find_sql = "SELECT SUBMITED_TIME,ALLOTED_TO FROM jsadmin.MAIN_ADMIN_LOG where PROFILEID='$pid' AND SCREENING_TYPE='O' ORDER BY SUBMITED_TIME DESC LIMIT 0,1";
 			$find_result = mysql_query_decide($find_sql);
 			$find_row = mysql_fetch_assoc($find_result);
@@ -633,16 +682,21 @@ $screeningValMainAdmin = 0;
 		$smarty->assign('password', $r2['PASSWORD']);
 		$smarty->assign('email', $r2['EMAIL']);
 		//Mail only when incomplete checkbox is not checked
-		if ($service_mes == 'S') if ($INCOMPLETE != "") {
+		if ($service_mes == 'S') if ($INCOMPLETE != "" || $completeWithoutYourInfo=="Y") {
 			if ($why_inc != "Please provide reason why this profile is incomplete" && $why_inc != "") {
 				$inc_reason = htmlspecialchars($why_inc, ENT_QUOTES);
 				$sql = "replace into jsadmin.INCOMPLETE(PROFILEID,REASON) values ('$pid','$inc_reason')";
 				mysql_query_decide($sql) or die(mysql_error_js());
 			}
 			$from = "info@jeevansathi.com";
-			
+                        
 			$smarty->assign("bl_msg", $bl_msg);
-			$subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        if(!$activatedWithoutYourInfo){
+                            $subject = "Your profile on Jeevansathi.com has been marked incomplete";
+                        }
+                        else{
+                            $subject = "'About me' mentioned in your Profile has been edited/removed as it was inappropriate";
+                        }
 			$smarty->assign("CHECKSUM", $PROFILECHECKSUM);
 			$smarty->assign("echecksum", $echecksum);
 			$smarty->assign("myprofilechecksum", $PROFILECHECKSUM);
@@ -700,8 +754,11 @@ $screeningValMainAdmin = 0;
 				{	$email_sender=new EmailSender(MailerGroup::PHONE_VERIFICATION,1775);
 					$emailTpl=$email_sender->setProfileId($pid);
 					$profileObj=$emailTpl->getSenderProfile();
+                                        $profileState=JsCommon::getProfileState($profileObj);
 				}
-					$profileState=JsCommon::getProfileState($profileObj);
+                                else{
+                                    $profileState="F";
+                                }
 				
 			if($profileState=="F" || $profileState=="P")
 			 {
@@ -733,14 +790,22 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-						$producerObj=new Producer();
-						if($producerObj->getRabbitMQServerConnected())
+                                            if(!$activatedWithoutYourInfo){
+                                                try
 						{
-							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
-							$producerObj->sendMessage($sendMailData);
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$sendMailData = array('process' => MQ::SCREENING_MAILER, 'data' => array('type' => 'WELCOME_MAILER','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+								$producerObj->sendMessage($sendMailData);
+							}
+                                                        else{
+                                                            CommonFunction::sendWelcomeMailer($pid);
+                                                        }
 						}
-						CommonFunction::sendWelcomeMailer($pid);
-					}
+						catch(Exception $e) {}
+                                            }
+                                        }
 						//send_email($to, $MESSAGE);
 				}
 				else
@@ -765,7 +830,7 @@ $screeningValMainAdmin = 0;
 			}
 		}
 		}
-        
+                
         $cScoreObject = ProfileCompletionFactory::getInstance(null,null,$pid);
         $cScoreObject->updateProfileCompletionScore();
 		$smarty->assign("name", $user);
@@ -814,10 +879,18 @@ $screeningValMainAdmin = 0;
 			$time = time();
 			$now = date('Y-m-d H:i:s', $time);
 			$flag = $j = 0;
+
+//Get A Lock
+$lockingObj = new LockingService;
+$key = $lockingObj->semgetLock(5678);
+//Get A Lock
+
 			if(!$profileid){
 			if ($email_profileid == "") {
 				if ($val == "new") $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL=0 AND SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
 				else $sql = "SELECT PROFILEID, ALLOTED_TO, ALLOT_TIME FROM jsadmin.MAIN_ADMIN WHERE SCREENING_TYPE='O' AND SCREENING_VAL>0 AND  SKIP_FLAG = 'N' AND (ALLOTED_TO='$user' OR ALLOT_TIME < DATE_SUB('$now', INTERVAL 30 MINUTE)) ORDER BY RECEIVE_TIME ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$res = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($row = mysql_fetch_array($res)) {
 					do {
@@ -837,14 +910,19 @@ $screeningValMainAdmin = 0;
 								}
 								$stop = 1;
 								break;
-							} else $stop = 0;
+							} else {
+							$stop = 0;
+							$profileid = '';
+							}
 						}
 					}
 					while ($row = mysql_fetch_array($res));
 				}
 			} if (!$stop && $email_profileid == "") {
-				if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC";
-				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND jp.ACTIVATED='Y' AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
+				if ($val == "new") $sql = "SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') UNION SELECT J.PROFILEID, J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS != '' AND SCREENING<1099511627775 and SUBSCRIPTION<>'' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC;";
+				else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (jp.ACTIVATED='Y' AND A.PROFILEID IS NULL)  AND jp.INCOMPLETE <> 'Y' AND jp.SUBSCRIPTION<>'' AND jp.SCREENING<1099511627775 and jp.activatedKey=1 and jp.MOD_DT < date_sub(now(), interval 10 minute) ORDER BY jp.MOD_DT ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 				if ($myrow = mysql_fetch_array($result)) {
 					do {
@@ -854,23 +932,38 @@ $screeningValMainAdmin = 0;
 						$username = $myrow['USERNAME'];
 						$subscribe = $myrow['SUBSCRIPTION'];
 						$screening_val = $myrow['SCREENING'];
+						$activated_1 = $myrow['ACTIVATED'];
+						if ($val == "new") {
+							$screening_val = "0";
+						}
 						$sql_i = "INSERT IGNORE INTO jsadmin.MAIN_ADMIN (PROFILEID, USERNAME, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, ALLOTED_TO, SCREENING_TYPE, SUBSCRIPTION_TYPE, SCREENING_VAL) values('$profileid','" . addslashes($username) . "','$receivetime','$submittime','" . date("Y-m-d H:i") . "', '$user','O', '$subscribe','$screening_val')";
 						mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 						if (mysql_affected_rows_js()) {
 							if ($val == "new") {
 //								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                                                            $activatedWithoutYourInfoCase = $myrow['PROID'];
+            if(!$activatedWithoutYourInfoCase || $activated_1=='N'){
                 markProfileUnderScreening($profileid);
+                $smarty->assign("activatedWithoutYourInfo", 0);
+            }
+            else
+                  $smarty->assign("activatedWithoutYourInfo", 1);
 							}
 							$stop = 1;
 							break;
-						} else $stop = 0;
+						} else {
+						$stop = 0;
+						$profileid = '';
+						}
 					}
 					while ($myrow = mysql_fetch_array($result));
 				}
 				if (!$stop) {
-					if ($val == "new") $sql = "SELECT J.PROFILEID, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') ORDER BY ENTRY_DT ASC";
-					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID WHERE mad.PROFILEID IS NULL AND ACTIVATED='Y' AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
+					if ($val == "new") $sql = "SELECT J.PROFILEID, J.ACTIVATED,USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,'' AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID WHERE ACTIVATED='N' AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 UNION SELECT J.PROFILEID,J.ACTIVATED, USERNAME, ENTRY_DT, MOD_DT, SUBSCRIPTION, SCREENING,A.PROFILEID AS PROID FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_CONTACT C ON J.PROFILEID=C.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON J.PROFILEID=A.PROFILEID WHERE A.PROFILEID IS NOT NULL AND INCOMPLETE = 'N' AND MSTATUS !='' and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y') AND J.SCREENING<1099511627775 ORDER BY ENTRY_DT ASC";
+					else $sql = "SELECT jp.PROFILEID, jp.USERNAME, jp.ENTRY_DT, jp.MOD_DT, jp.SUBSCRIPTION, jp.SCREENING FROM newjs.JPROFILE jp LEFT JOIN jsadmin.MAIN_ADMIN mad ON jp.PROFILEID=mad.PROFILEID LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A ON jp.PROFILEID=A.PROFILEID WHERE mad.PROFILEID IS NULL AND (ACTIVATED='Y' AND A.PROFILEID IS NULL) AND INCOMPLETE <> 'Y' AND SCREENING<1099511627775 and activatedKey=1 and MOD_DT < date_sub(now(), interval 10 minute) ORDER BY MOD_DT ASC";
+echo "<!--";echo $sql;echo "-->";
+$ankit[] = $sql;
 					$result = mysql_query_decide($sql) or die(mysql_error_js());
 					if ($myrow = mysql_fetch_array($result)) {
 						do {
@@ -880,23 +973,43 @@ $screeningValMainAdmin = 0;
 							$username = $myrow['USERNAME'];
 							$subscribe = $myrow['SUBSCRIPTION'];
 							$screening_val = $myrow['SCREENING'];
+							$activated_1 = $myrow['ACTIVATED'];
+							if ($val == "new") {
+								$screening_val = "0";
+							}
 							$sql_i = "INSERT IGNORE INTO jsadmin.MAIN_ADMIN (PROFILEID, USERNAME, RECEIVE_TIME, SUBMIT_TIME, ALLOT_TIME, ALLOTED_TO, SCREENING_TYPE, SUBSCRIPTION_TYPE, SCREENING_VAL) values('$profileid','" . addslashes($username) . "','$receivetime','$submittime','" . date("Y-m-d H:i") . "', '$user','O', '$subscribe','$screening_val')";
 							mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
 								if ($val == "new") {
 //									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
 //									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                                                                    $activatedWithoutYourInfoCase = $myrow['PROID'];
+            if(!$activatedWithoutYourInfoCase || $activated_1=='N'){
                   markProfileUnderScreening($profileid);
+                  $smarty->assign("activatedWithoutYourInfo", 0);
+            }
+            else
+                  $smarty->assign("activatedWithoutYourInfo", 1);
 								}
 								$stop = 1;
 								break;
-							} else $stop = 0;
+							} else{ 
+								$profileid='';
+								$stop = 0;
+							}
 						}
 						while ($myrow = mysql_fetch_array($result));
 					}
 				}
 			} if ($email_profileid != "") $profileid = $email_profileid;
 			}
+//Release Lock         
+if($ankit){ 
+$ankit11 = implode("-----------",$ankit);
+file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/screen1.txt",$profileid."--".$ankit11."\n\n",FILE_APPEND);
+}
+$lockingObj->semreleaseLock(5678);
+//Release Lock
 			
 			if (!$profileid) {
 				$msg.= "<br><p align=\"center\"><a href=\"screen_new.php?user=$user&cid=$cid&val=$val\">";
@@ -913,6 +1026,25 @@ $screeningValMainAdmin = 0;
 			$sql = "SELECT USERNAME, SCREENING,AGE,COUNTRY_RES,CITY_RES,MANGLIK,MTONGUE,RELIGION,CASTE,SUBCASTE,COUNTRY_BIRTH,CITY_BIRTH,GOTHRA,NAKSHATRA,MESSENGER_ID,YOURINFO,FAMILYINFO,SPOUSE,CONTACT,EDUCATION,EDU_LEVEL_NEW,PHONE_RES,PHONE_MOB,EMAIL,JOB_INFO,FATHER_INFO,SIBLING_INFO,PARENTS_CONTACT,ANCESTRAL_ORIGIN,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,RELATION,SOURCE,SUBSCRIPTION,GENDER,MSTATUS,DTOFBIRTH,PHOTO_DISPLAY,PHONE_FLAG,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,GOTHRA_MATERNAL,INCOME from newjs.JPROFILE where activatedKey=1 and PROFILEID=$profileid";
 			$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 			$myrow = mysql_fetch_array($result);
+
+			//----------------jugad--------------------
+			if($myrow["USERNAME"]==""){
+				$sql = "DELETE FROM jsadmin.MAIN_ADMIN WHERE PROFILEID=$profileid AND SCREENING_TYPE='O'";
+				$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
+
+				$oldUrl = curPageURL();
+$lavesh  = $_GET["lavesh"];
+if($lavesh)
+	$lavesh+=1;
+else
+	$lavesh=1;
+$oldUrl.="&lavesh=$lavesh";
+				//$memcacheObj->setDataToMem(5,$key,0);
+				unsetMemcache5Sec($user);
+				header("Location:".$oldUrl);die;
+			}
+			//----------------jugad--------------------
+
 			//**********************query added by Aman for screening Recheck on 15-05-2007*******************************************//
 			//Added by Vibhor
 			$sql_name = "SELECT NAME from incentive.NAME_OF_USER where PROFILEID=$profileid";
@@ -1168,6 +1300,15 @@ $screeningValMainAdmin = 0;
 				        $item[] = "PHOTO_DISPLAY";
 				        }*/
 			/********End of - Code Added by sriram on May 22 2007********/
+			
+			$nameOfUserForObscene = $nameOfUserObj->getNameData($profileid);
+			$nameOfUserForObsceneArray = $nameOfUserObj->getValidNames();
+			
+			if(is_array($nameOfUserForObscene)){
+				$nameOfUserForObsceneArray= array_merge($nameOfUserForObsceneArray,explode(" ",$nameOfUserForObscene[$profileid]["NAME"]));
+			}
+			
+			
 			if (!$uname_set) {
 				$item[] = "USERNAME";
 				$smarty->assign("SHOWUSERNAME", "Y");
@@ -1214,8 +1355,15 @@ $screeningValMainAdmin = 0;
 				$item[] = "YOURINFO";
 				$smarty->assign("SHOWYOURINFO", "Y");
 				$smarty->assign("YOURINFOvalue", strip_tags($myrow['YOURINFO']));
+				
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 				$obsceneWord=getObsceneWords($myrow['YOURINFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_INFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
+				$smarty->assign("OBSCENE_WORDS_YOURINFO",$obsceneWord);
+				
 				if($val=="edit")
 				{
 					$sql = "SELECT YOUR_INFO_OLD from newjs.YOUR_INFO_OLD where PROFILEID=$profileid";
@@ -1233,14 +1381,25 @@ $screeningValMainAdmin = 0;
 				$item[] = "FAMILYINFO";
 				$smarty->assign("SHOWFAMILYINFO", "Y");
 				$smarty->assign("FAMILYINFOvalue", strip_tags($myrow['FAMILYINFO']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 					$obsceneWord=getObsceneWords($myrow['FAMILYINFO'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_FAMILYINFO",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_FAMILY", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$spouse_set) {
 				$item[] = "SPOUSE";
 				$smarty->assign("SHOWSPOUSE", "Y");
 				$smarty->assign("SPOUSEvalue", strip_tags($myrow['SPOUSE']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
+				
 				$obsceneWord=getObsceneWords($myrow['SPOUSE'],$obscene);
+				
+				$smarty->assign("OBSCENE_WORDS_SPOUSE",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_SPOUSE", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
 			}
@@ -1256,7 +1415,11 @@ $screeningValMainAdmin = 0;
 				$item[] = "EDUCATION";
 				$smarty->assign("SHOWEDUCATION", "Y");
 				$smarty->assign("EDUCATIONvalue", strip_tags($myrow['EDUCATION']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
 				$obsceneWord=getObsceneWords($myrow['EDUCATION'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_EDUCATION",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_EDUCATION", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
 			}
@@ -1284,7 +1447,11 @@ $screeningValMainAdmin = 0;
 				$item[] = "JOB_INFO";
 				$smarty->assign("SHOWJOBINFO", "Y");
 				$smarty->assign("JOB_INFOvalue", strip_tags($myrow['JOB_INFO']));
+				if(is_array($nameOfUserForObsceneArray)){
+					$obscene= array_merge($obscene,$nameOfUserForObsceneArray);
+				}
 				$obsceneWord=getObsceneWords($myrow['JOB_INFO'],$obscene);
+				$smarty->assign("OBSCENE_WORDS_JOB_INFO",$obsceneWord);
 				$smarty->assign("OBSCENE_MESSAGE_JOBINFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$fatherinfo_set) {
@@ -1375,6 +1542,7 @@ $screeningValMainAdmin = 0;
 			$smarty->assign("mstatus_err", $mstatus_err);
 			$smarty->assign("date_err", $date_err);
 			$smarty->assign("info_err", $info_err);
+			
 			$smarty->display("screen_new.htm");
 		}
 	}
@@ -1486,14 +1654,18 @@ function getAge($newDob) {
 }
 	function getObsceneWords($message,$obscene)
 	{
-
 		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
 		$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $message);
 		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
-
+		$string_replaced_special_characters = trim(preg_replace('/\s+/', ' ', $string_replaced_special_characters));
 		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
-   		$result = array_intersect($messageArr, $obscene);
-   		$resultstr=implode(',',array_values($result));
+		$messageFinal= implode(",",$messageArr);
+		$messageFinal= strtolower($messageFinal);
+		$messageArr= explode(",",$messageFinal);
+		$obscene=explode(",",strtolower(implode(",",$obscene)));
+		$result = array_map('trim',array_filter(array_intersect($messageArr, $obscene)));
+        $resultstr=implode(',',array_values($result));
+        $resultstr= trim($resultstr,",");
    		return $resultstr;
 	}
   
@@ -1503,7 +1675,11 @@ function getAge($newDob) {
    */
   function markProfileUnderScreening($iProfileID)
 	  {
-    $objUpdate = JProfileUpdateLib::getInstance();
+    global $screeningRep;
+    if($screeningRep)
+        $objUpdate = JProfileUpdateLib::getInstance("newjs_masterRep");
+    else
+        $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
     $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");
     if(false === $result) {
@@ -1512,10 +1688,24 @@ function getAge($newDob) {
   }
 function unsetMemcache5Sec($user)
 {
-                include_once ("../classes/Memcache.class.php");
-                $memcacheObj = new UserMemcache;
+                include_once ("../../lib/model/lib/JsMemcache.class.php");
+                $memcacheObj = new JsMemcache;
                 $key = "PROF_SCREEN_USER_" . $user;
-		$memcacheObj->setDataToMem(0, $key, 0);
+		$memcacheObj->remove($key);
                 unset($memcacheObj);
+}
+function curPageURL() {
+            $pageURL = 'http';
+            if(isset($_SERVER["HTTPS"]))
+            if ($_SERVER["HTTPS"] == "on") {
+                $pageURL .= "s";
+            }
+            $pageURL .= "://";
+            if ($_SERVER["SERVER_PORT"] != "80") {
+                $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+            } else {
+                $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+            }
+            return $pageURL;
 }
 ?>

@@ -37,16 +37,21 @@ function disableEnablePlugin($flag){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
+	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+	curl_setopt($ch, CURLOPT_HEADER, $header);
     $store = curl_exec($ch);
-
-    $POST = "presenceenabled=".$flag."&presenceapi=http%3A%2F%2F10.10.18.67%3A8290%2Fprofile%2Fv1%2Fpresence&save=Save+settings";
+	
+    $POST = "presenceenabled=".$flag."&presenceapi=http%3A%2F%2Fpresence.js.jsb9.net%3A8590%2Fjspresence%2Fv1%2Fpresence&save=Save+settings";
     $page_ = $domain."plugins/jspresencemanager/jspresencemanager-props-edit-form.jsp";
     curl_setopt($ch, CURLOPT_URL, $page_);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $POST);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+    curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+    $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+	curl_setopt($ch, CURLOPT_HEADER, $header);
     //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
     $data = curl_exec($ch);
     curl_close($ch);

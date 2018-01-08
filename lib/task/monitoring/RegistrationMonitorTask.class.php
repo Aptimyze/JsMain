@@ -25,7 +25,7 @@ class RegistrationMonitorTask extends sfBaseTask
    * Const variable 
    * EMAIL_LIST : List of email ids
    */
-  const EMAIL_LIST = "kunal.test02@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com";
+  const EMAIL_LIST = "ankitshukla125@gmail.com,eshajain88@gmail.com";
   
   protected function configure()
   {
@@ -128,13 +128,14 @@ EOF;
     SendMail::send_email(self::EMAIL_LIST, $mailBody,"Complete Registration Number Reduced by more than 30%");
     
 //    include(JsConstants::$docRoot . "/commonFiles/sms_inc.php");
-//    $arrMob = array('9711818214','8826380350','9953457479');
+//    $arrMob = array('9711818214','9953457479');
 //    $message = "Mysql Error Count have reached Registration reduced by 30% within 5 minutes";//substr($mailBody, 0,158);
 //    $from = "JSSRVR";
 //    $profileid = "144111";
 //    foreach ($arrMob as $mobile1){
 //      var_dump($mobile1." ".$message);
 //      $smsState = send_sms($message, $from, $mobile1, $profileid, '', 'Y');
+//      CommonUtility::logTechAlertSms($message, $mobile1);
 //    }
   }
   

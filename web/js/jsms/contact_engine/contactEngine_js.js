@@ -30,7 +30,7 @@ function loaderTop()
 function getDim()
 {
   var hgt = $(window).height();
-  hgt = hgt+"px";
+  hgt = (hgt+50)+"px";
   var wid = $(window).width();
   wid = wid+"px";
   var dim={hgt:hgt,wid:wid};
@@ -41,6 +41,11 @@ function hideReportAbuse(){
   var mainEle=$("#reportAbuseContainer");
 	if(mainEle.css('display')!='none'){
     $("#commonOverlayTop").show();
+    arrReportAbuseFiles = [];
+    var photoNode = document.getElementById("photoDiv");
+    while (photoNode.hasChildNodes()) {
+        photoNode.removeChild(photoNode.lastChild);
+    }
     mainEle.hide();
   return true;  
   }
@@ -50,7 +55,18 @@ function hideReportAbuse(){
 }
 
 function reportAbuse(index) {
-$("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    
+    $("#attachDiv").addClass("dn");
+    $("#attachTitle").unbind().bind('click',attachAbuseDocument);    
+    $("#attachDiv").css('max-height',Math.round(window.innerHeight/2.5) + 'px');
+    
+    if(typeof(buttonSt)!='undefined' )
+        $("#photoReportAbuse").attr("src", buttonSt.photo.url);
+    else {
+        var tempPhoto = $("#idd"+index+ " a img").attr('src');
+        $("#photoReportAbuse").attr("src", tempPhoto);
+
+            }
 $('.RAcorrectImg,#commonOverlayTop').hide();
 //$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
@@ -58,7 +74,7 @@ mainEle.show();
 
 var el=$("#reportAbuseMidDiv");
 el.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
-
+$("#reportAbuseMidDiv").removeClass("scrollhidImp")
 var div = document.createElement('div');
             // css transition properties
             var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
@@ -78,27 +94,30 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 
 selectedReportAbuse="";
 RAOtherReasons=0;
-
+mainReasonAbuse = "";
 
 $(".reportAbuseOption").unbind().bind('click',function () {
 
-if($(this).attr('id')=='js-otherReasons')
+if($(this).attr('id')=='js-otherReasons' || $(this).attr('id')!='notOpen')
 {
 el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportAbuse="";
+$("#js-otherReasonsLayer").removeClass('dispnone').val('');
+
+$("#attachDiv").removeClass("dn");
+var elem=$("#reportAbuseMidDiv");
+elem.height($(window).height()-$("#reportAbuseSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+$("#attachDiv").width(window.innerWidth-40);
+$("#reportAbuseMidDiv").addClass("scrollhidImp");
+
 }
-else 
-{
-	selectedReportAbuse=$(this).text();RAOtherReasons=0;
-}
+
+mainReasonAbuse=$(this).text();
 $('.RAcorrectImg').hide();
 $(this).find('.RAcorrectImg').show();
 });
-
-
-
 
 
 $("#reportAbuseSubmit").unbind().bind('click',function() {
@@ -107,20 +126,46 @@ var reason="";
 
 if(RAOtherReasons)
 {
-	reason=$("#js-otherReasonsLayer").val();
+	reason=$("#js-otherReasonsLayer").val().trim();
    
-	if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+	if(!reason || reason.length < 25){ShowTopDownError(["Please Enter The Comments (in atleast 25 characters)"],3000);return;}
 }
 else {
-	reason=selectedReportAbuse;
-if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+	if(!mainReasonAbuse){ShowTopDownError(["Please select the reason"],3000);return;}
+}
+var bUploadSuccessFul = false;
+if(arrReportAbuseFiles.length) {
+    setTimeout(function(){
+        $("#contactLoader,#loaderOverlay").show();
+    },0);
+    var bResult = uploadAttachment();
+    if( false == bResult )
+        return ;
+    
+    for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+        if(arrReportAbuseFiles[itr].hasOwnProperty("uploded") || 
+                arrReportAbuseFiles[itr].uploded == false || 
+                (arrReportAbuseFiles[itr].hasOwnProperty("error") && arrReportAbuseFiles[itr].error == true) ) {
+            bUploadSuccessFul = false;
+            break;
+        }
+        bUploadSuccessFul = true;
+    }
+    if(false === bUploadSuccessFul)
+        return bUploadSuccessFul;
 }
 
 var feed={};
 reason=$.trim(reason);
+mainReasonAbuse = $.trim(mainReasonAbuse);
 //feed.message:as sdf sd f
 feed.category='Abuse';
+feed.mainReason = mainReasonAbuse;
 feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+if( bUploadSuccessFul ) {
+    feed.attachment = 1;
+    feed.temp_attachment_id = arrReportAbuseFiles['tempAttachmentId'] ;
+}
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
@@ -135,7 +180,15 @@ $.ajax({
 		data: ajaxData,
 		//crossDomain: true,
 		success: function(result){  
+                                        arrReportAbuseFiles = [];
+                                        bUploadAttachmentInProgress = false;
+                                        bUploadingDone = false
+                                        
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+                                        var photoNode = document.getElementById("photoDiv");
+                                        while (photoNode.hasChildNodes()) {
+                                            photoNode.removeChild(photoNode.lastChild);
+                                        }
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
                     if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
@@ -206,17 +259,17 @@ function layerClose()
       similarProfileCheckSum = "";
     if(typeof NAVIGATOR=="undefined" || !NAVIGATOR)
       var NAVIGATOR="";
-       
+
         if(typeof getNAVIGATOR == "function" && NAVIGATOR==""){
             NAVIGATOR = getNAVIGATOR();
         }
             //if(window.location.href.search('toShowECP')!=-1)
             {
-    if(canIShowNext(similarProfileCheckSum,profilechecksum))       
-                {     
+    if(canIShowNext(similarProfileCheckSum,profilechecksum))
+                {
       //if(!ISBrowser("UC"))
-       //    enableLoader();  
-                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1";
+       //    enableLoader();
+                    window.location.href = "/search/MobSimilarProfiles?profilechecksum="+profilechecksum+"&"+NAVIGATOR+"&fromProfilePage=1"+(((typeof SPA_CE!='undefined') && (SPA_CE=='Y')) ? "&fromSPA_CE=1" : "" );
                 }
             }
   }
@@ -316,14 +369,33 @@ params["profilechecksum"] =input.val();
     }   
     
 function bindPrimeButtonClick(index)
-{      
+{
 	if(disablePrimary[index]==false)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
-          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
+      else  if(params["actionName"]=="IGNORE")
+      {
+          if(!profile_index[index] || !profile_index[index]['IGNORE']) {
+            if(!profile_index[index]) 
+              profile_index[index] = [];
+            var paramstr = $("#tracking"+index).val();
+            profile_index[index]['IGNORE'] = paramstr.split('=')[1];
+          }
+           
+
+          var paramsArr = {
+            blockArr: {
+              profilechecksum : $("#buttonInput"+index).val(),
+              action          : profile_index[index]['IGNORE']
+            }
+          };
+          disableOthers[index] = false;
+          performAction("IGNORE", paramsArr, index,true,1);
+          return false;
+      }
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
@@ -356,7 +428,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 		if(action=="REPORT_ABUSE"){
 		$('#'+action+"_"+index).bind("click",function(){
 				
-			reportAbuse();
+			reportAbuse(index);
 			
 			});
 		return;
@@ -422,6 +494,15 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 
 function performAction(action, tempParams, index,isPrime,fromButton)
 {
+
+  /* GA tracking action on contactEngine */
+  if((typeof action != "undefined")&&(typeof actionDetail[action] != "undefined")){
+    GAMapper("GA_CONTACT_ENGINE", {"actionDetail": actionDetail[action]});
+  }else{
+    /* default case when action not found */
+    GAMapper("GA_CONTACT_ENGINE");
+  }
+  
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
 		tempParams['actionName']            ="MessageHandle";
@@ -469,7 +550,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
                 tempParams["stype"]='WMM';
         if(tempParams["fromJSMS_MOD"] == 1)
         { 
-          tempParams["stype"]='MODJSMS';
+          tempParams["stype"]='WMOD';
           $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
         }
         else
@@ -488,6 +569,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
 			$("#loaderOverlay").show();
 		}
 		stopTouchEvents();
+                $(window).scrollTop('0px');
                 $("#contactLoader").show();
   }
     
@@ -520,7 +602,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       {                     
                             
                             if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
-                            else afterAction(result,action,index);
+                            else afterAction(result,action,index,isPrime);
       }
     }
   });
@@ -561,19 +643,26 @@ function afterActionMyjs(index,action,Params){
 }
 
 
-function afterAction(result,action, index){
+function afterAction(result,action, index,isPrime){
 	$("#selIndexId").val(index);
 	if($("#mainContent").length){
 		if(action!='MESSAGE')
 			scrollOff();
 	}
         $("#ce_photo").attr("src", photo[index]);
-        
-    if(window.location.hash.length===0)
-        historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
-	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
+        $("#profilePhoto").attr("src", photo[index]);
+     if(window.location.hash.length===0 && ((typeof SPA_CE=='undefined') || (SPA_CE!='Y') || (result.actiondetails && result.actiondetails.writemsgbutton) || (result.actiondetails && result.actiondetails.errmsglabel) ) )      
+       historyStoreObj.push(browserBackCommonOverlay,"#pushce");
+    var ignoreFromPrime = (action=="IGNORE" && isPrime==true) ? true : false
+    if(ignoreFromPrime)
+    {
+        result.button_after_action.buttons = result.button_after_action.buttons.others;
+        result.buttondetails.button = result.buttondetails.buttons.primary[0];
+
+    }
+    if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0 || ignoreFromPrime)
 	{
-		if(result.actiondetails.errmsglabel!=null)
+		if(typeof result.actiondetails !='undefined' && result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
       var headerLabel = result.actiondetails.headerlabel;
@@ -733,6 +822,22 @@ function bindFooterButtons(result){
 	else
 	    $("#closeLayer").show();
 }
+
+function bindFooterButtonswithId(result, id){
+  $("#"+id).html(result.actiondetails.footerbutton.newlabel).show().bind( "click", {
+    action: result.actiondetails.footerbutton.action
+  }, function( event ) {
+  historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
+    window.location=actionUrl[event.data.action];
+    return false;
+  });
+  // if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  {
+      $("#skipLayer").show();
+  }
+}
+
 
 function acceptInterest(result,action,index)
 {
@@ -1103,7 +1208,7 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer,#footerButtonNew,#skipLayer").hide();
       //$("#footerButton").hide();
       //$("#ViewContactPreLayer").hide();
       //$("#ViewContactPreLayerNoNumber").hide();
@@ -1226,6 +1331,18 @@ if(result.actiondetails.bottommsg2){
             $("#msgIcon").show();
                 }
         }
+         if(result.actiondetails.contact9){
+    $("#relationshipManageVal").hide();
+               // $("#alternateVal").hide();
+                $("#relationshipManager").show();
+                 $("#relationshipManagerVal").show();$("#relationshipManagerVal").html(result.actiondetails.contact9.value);
+        if (result.actiondetails.contact9.iconid){ 
+                   $("#relationshipManagerIcon > a").attr('href','tel:'+result.actiondetails.contact9.value.toString());
+            $("#relationshipManagerIcon").show();
+        }
+    
+    
+    }
     }
     
     
@@ -1239,7 +1356,41 @@ if(result.actiondetails.bottommsg2){
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
-    if(result.actiondetails.errmsglabel)
+    if(result.actiondetails.newerrmsglabel)
+    {
+      $("#commonOverlay").hide();
+      $("#newErrMsg").html(result.actiondetails.newerrmsglabel);
+      $("#membershipheading").html(result.actiondetails.membershipmsgheading);
+      $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
+      $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
+      $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
+      
+      if(typeof(result.actiondetails.offer) != "undefined" && result.actiondetails.offer != null)
+      {
+        $("#MembershipOfferExists").show();
+        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
+        $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
+        if(typeof(result.actiondetails.strikedprice) != "undefined" && result.actiondetails.strikedprice != null)
+        {
+          $("#oldPrice").html(result.actiondetails.strikedprice);
+          $("#oldPrice").show();
+        }
+        $("#currency").html(result.actiondetails.membershipoffercurrency);
+        $("#newPrice").html(result.actiondetails.discountedprice);
+        $("#LowestOffer").show();
+      }
+      else if(typeof(result.actiondetails.lowestoffer) != "undefined" && result.actiondetails.lowestoffer != null)
+      {
+        $("#LowestOffer").html(result.actiondetails.lowestoffer);
+        $("#LowestOffer").addClass("mt60");
+        $("#LowestOffer").show();
+      }
+
+      bindFooterButtonswithId(result,'footerButtonNew');
+      $("#membershipOverlay").show();
+
+    }
+    else if(result.actiondetails.errmsglabel)
     {
       $("#topMsg2,#landline").hide();
       //$("#landline").hide();
@@ -1422,15 +1573,15 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		}else{
 			 button+='pad5new ';
 		}
-		 button+='"><div class="posrel"><div id="primeWid_'+profileNoId+'"><a tupleNo="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl">';
+		 button+='"><div class="posrel"><div id="primeWid_'+profileNoId+'"><a tupleNo="id'+profileNoId+'" href="javascript:void(0);" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl">';
 		if(page!="viewSimilar"){
 				button+='<i class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i>';
 		}
-   
-    
+
+
 		button+='<div></div>'+
 				'<span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"/><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"/><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"/></a></div>';
-    
+
 		if(page!="viewSimilar"){
 
 				button+='<div class="posabs srp_pos2">'+
@@ -1443,8 +1594,8 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
         }
     else
     {
-     
-      button+='<div id="buttons_'+profileNoId+'"><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'" style="display: inline-block;border-right: 1px solid white;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl"><i style="height:20px" class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div></div></div><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'_1" style="display: inline-block;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'_1" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'_1" href="#" id="Prime_'+profileNoId+'_1" class="fontlig f13 whitecursp dispbl"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div></div></div>';
+
+      button+='<div id="buttons_'+profileNoId+'"><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'" style="display: inline-block;border-right: 1px solid white;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'" href="javascript:void(0);" id="Prime_'+profileNoId+'" class="fontlig f13 white cursp dispbl"><i style="height:20px" class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div></div></div><div class="wid50p bg7" id="PrimeColor_'+profileNoId+'_1" style="display: inline-block;"><div class="txtc pad5new "><div class="posrel"><div id="primeWid_'+profileNoId+'_1" style="width: 60%; border: 1px;"><a tupleno="id'+profileNoId+'_1" href="#" id="Prime_'+profileNoId+'_1" class="fontlig f13 whitecursp dispbl"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div></div></div>';
       //button+='"><div class="fullwid bg7 clearfix" id="buttons_'+profileNoId+'"><div class="wid49p dispibl txtc" id="PrimeColor_'+profileNoId+'"><div id="primeWid_'+profileNoId+'"><a class="dispbl" style="width:115px"  tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'"><i class="'+cssMap[jsmsButtons.buttons[0].iconid]+'" id="PrimeIcon_'+profileNoId+'"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'">'+primeButtonLabel[0]+'</span><input type="hidden" id="buttonInput'+profileNoId+'" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'" name="primeAction" value="'+primeButtonAction[0]+'"><input type="hidden" id="tracking'+profileNoId+'" name="contactTracking" value="'+primeButtonParams[0]+'"></a></div></div><div class="wid49p dispibl txtc ot_hgt1" id="PrimeColor_'+profileNoId+'_1" style="border-left:1px solid #fff;padding:12px 0 10px"><div id="primeWid_'+profileNoId+'"><a tupleno="id'+profileNoId+'" href="#" id="Prime_'+profileNoId+'"><i class="'+cssMap[jsmsButtons.buttons[1].iconid]+'" id="PrimeIcon_'+profileNoId+'_1"></i><div></div><span style="color:white" id="primeButton_'+profileNoId+'_1">'+primeButtonLabel[1]+'</span><input type="hidden" id="buttonInput'+profileNoId+'_1" name="otherProfileChecksum" value="'+profilechecksum+'"><input type="hidden" id="primeAction'+profileNoId+'_1" name="primeAction" value="'+primeButtonAction[1]+'"><input type="hidden" id="tracking'+profileNoId+'_1" name="contactTracking" value="'+primeButtonParams[1]+'"></a></div></div></div>';
     }
 			disablePrimary[profileNoId]=false;
@@ -1536,7 +1687,7 @@ function resetLayerButtons()
 }
   
 function browserBackCommonOverlay() {
-  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible')) {
+  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible') || $("#membershipOverlay").is(':visible')) {
     hideForHide();
     layerClose();
     return true;
@@ -1667,9 +1818,9 @@ $.ajax({
     success: function(result){
          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
          $("#js-otherInvalidReasonsLayer").val('');
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
-          ShowTopDownError([result.message],10000);
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y')) 
+                    { 
+          ShowTopDownError([result.message],5000);
           $("#commonOverlayTop").show();
                     }
 }
@@ -1680,4 +1831,244 @@ $.ajax({
 historyStoreObj.push(hideReportInvalid,"#reportInvalid");
 
 
+}
+
+var arrReportAbuseFiles = [];
+var bUploadAttachmentInProgress = false;
+var bUploadingDone = false;
+/**
+ * 
+ */
+function attachAbuseDocument(event) {
+
+    var dom = $("<input>",{id:"file", type:"file", accept : ".jpg,.bmp,.jpeg,.gif,.png", multiple:"multiple"});
+    var MAX_FILE_SIZE_IN_MB = 6;
+    
+    var onCrossClick = function() {
+        var result = [];
+        var self = $(this);
+        for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
+            if(arrReportAbuseFiles[itr].myId == self.attr('id')) {
+                
+                //If file is already uploaded then remove from server also
+                if( "undefined" != typeof arrReportAbuseFiles.tempAttachmentId && arrReportAbuseFiles[itr].uploaded ) {
+                    
+                    var formData = new FormData();                    
+                    var apiUrl = "/api/v1/faq/abuseDeleteAttachment"; 
+                    
+                    formData.append('feed[attachment_id]', arrReportAbuseFiles['tempAttachmentId'] );
+                    formData.append('feed[file_name]', arrReportAbuseFiles[itr].name );
+                    setTimeout(function(){
+                        $("#contactLoader,#loaderOverlay").show();
+                    },0);
+                    
+                    $.ajax({
+                        url     : apiUrl,
+                        method  : 'POST',
+                        data    : formData,
+                        async   : true,
+                        cache: false,
+                        processData: false,
+                        success : function ( response ) {
+                                        $("#contactLoader,#loaderOverlay").hide();
+                                        if(response.responseStatusCode == 0) {
+                                           self.parent().remove();
+                                        } else {
+                                            result.push(arrReportAbuseFiles[itr]);
+                                            ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                        }
+                                    },
+                        error   :  function ( response ) {
+                                       $("#contactLoader,#loaderOverlay").hide();
+                                       result.push(arrReportAbuseFiles[itr]);
+                                       ShowTopDownError(['Something went wrong. Please try again.'], 2000);
+                                       return ;
+                                    },
+                    });
+                }else {
+                    self.parent().remove();
+                }
+                
+                continue;
+            }
+            
+            result.push(arrReportAbuseFiles[itr]);
+        }
+        if(arrReportAbuseFiles.tempAttachmentId) {
+            result.tempAttachmentId = arrReportAbuseFiles.tempAttachmentId;
+        }
+        arrReportAbuseFiles = result;
+    }
+    
+    
+    /**
+     * 
+     */
+    var createPhotoPreview = function(fileObject) {
+        /**
+         *  <div class="photoEach txtc pad3">
+                <i class="reportIcon closeIcon crossPosition"></i>
+                <img width="80%" height="100px" src="<IMG PATH>" />
+                <div class="f12 white mt5">
+                image_name.jpg
+                </div>
+            </div>
+         */
+        var previewDom = $("<div />", {"class" : "photoEach txtc pad3"});
+        var closeIcon = $("<i />", {"class" : "reportIcon closeIcon crossPosition", "id" : fileObject.myId});
+        closeIcon.on('click',onCrossClick);
+        
+        previewDom.append(closeIcon);
+        
+        var imgDom = $("<img />", {"width" : "80%", "height" : "100px"});
+        previewDom.append(imgDom);
+        previewDom.append( $( "<div />", {"class" : "f12 white mt5"} ).html(fileObject.name) );
+        
+        var reader = new FileReader();
+        reader.onload = (function(imgDom) { return function(e) { imgDom[0].src = e.target.result; }; })(imgDom);
+        reader.readAsDataURL(fileObject);
+        
+        $("#photoDiv").append(previewDom);
+        return previewDom;
+    }
+    
+    /**
+     * 
+     */
+    var onFileChange = function(event) {
+        var existingLength = arrReportAbuseFiles.length;
+   
+        var validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+        
+        //loop on files .. do basic checks like size, type
+        $.each( this.files, function( key, file ) {
+            
+            if( ( file.size / 1048576 ).toFixed(1) > MAX_FILE_SIZE_IN_MB ) {
+                ShowTopDownError([file.name + ' You can attach a proof less than 6 MB in size'], 2000);
+                return ;
+            }
+            
+            if( validFileTypes.indexOf(file.type) == -1 ) {
+                ShowTopDownError([file.name + ' Invalid type of attachment'], 2000);
+                return ;
+            }
+            
+            if( arrReportAbuseFiles.length >= 5 ) {
+                ShowTopDownError(['You can attach maximum 5 proofs'], 2000);
+                return ;
+            }
+          
+            arrReportAbuseFiles.push(file);
+        });
+        
+        if(arrReportAbuseFiles.length == 0) {
+            ShowTopDownError(['No valid attachments'], 2000);
+            return ;
+        }
+        
+        var iterator = 1;
+        arrReportAbuseFiles.forEach( function (file) { 
+            if(file.hasOwnProperty('preview') === false) {
+                file.myId = iterator;
+                createPhotoPreview(file);
+            }
+            file.preview = true;
+            iterator++;
+        });
+    }
+    
+    dom.on('change',onFileChange);
+    dom.trigger("click");
+    
+}
+
+/**
+ * 
+ */
+
+function uploadAttachment()
+{   
+   
+    /**
+     * 
+     */
+    
+    var SendAjax = function(fileObject, temp_attachment_id) {
+        var apiUrl = "/api/v1/faq/abuseAttachment";
+        var formData = new FormData();
+        formData.append("feed[attachment_1]", fileObject);
+        
+        if( ( ( typeof temp_attachment_id == "string" && temp_attachment_id.length ) || typeof temp_attachment_id == "number" ) &&
+              isNaN( temp_attachment_id ) == false
+                ) {
+            formData.append("feed[attachment_id]", temp_attachment_id);
+        }
+        
+        return $.ajax({
+            url     : apiUrl,
+            method  : 'POST',
+            data    : formData,
+            async   : true,
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend:function(){
+                bUploadAttachmentInProgress = true;
+            },
+              complete:function(){
+                bUploadAttachmentInProgress = false;
+            },
+            success : function ( response ) {
+                            if(response.responseStatusCode == 0) {
+                               if(file.hasOwnProperty('error')) {
+                                   delete file.error;
+                               }
+                               arrReportAbuseFiles['tempAttachmentId'] = response.attachment_id;
+                               fileObject.uploaded = true;
+                            } else {
+                                fileObject.error = true
+                                ShowTopDownError( [ response.message ], 2000 );                                
+                            }
+                        },
+            error   :  function ( response ) {
+                            $("#contactLoader,#loaderOverlay").hide();
+                            fileObject.error = true;
+                            ShowTopDownError( [ "Something went wrong. Please try again" ], 2000 );
+                        },
+        });
+    }
+    
+    if(0 == arrReportAbuseFiles.length) {
+        return true;
+    }
+
+    if(bUploadAttachmentInProgress == true) {
+        setTimeout(function(){uploadAttachment()},20); return false;
+    }
+    var len = arrReportAbuseFiles.length ;
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if( file.hasOwnProperty("uploaded") == false || file.uploaded == false  ) {
+                if(( file.hasOwnProperty('error') && file.error == true )) {
+                    setTimeout(function(){
+                        $("#contactLoader,#loaderOverlay").hide();
+                    },0);
+                    return false;
+                 }
+                var tempId = (typeof arrReportAbuseFiles['tempAttachmentId'] == "undefined") ? "" : arrReportAbuseFiles['tempAttachmentId'] ;
+                SendAjax( file, tempId );
+                setTimeout(function(){uploadAttachment()},20);return false;
+            }
+    }
+    for(var itr =0 ; itr < len; itr++) {
+        file = arrReportAbuseFiles[itr];
+        if(file.hasOwnProperty("uploaded") == false || file.uploaded == false) {
+            return false;
+        }
+    }
+    if(false == bUploadingDone) {
+        bUploadingDone = true;
+        $("#reportAbuseSubmit").trigger('click');
+    }
+    return true;
 }

@@ -25,8 +25,8 @@ if(authenticated($cid))
 		
 	if($billoption == "1")
 	{
-		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://www.jeevansathi.com'){
-			$SITE_URL = 'http://crm.jeevansathi.com';
+		if(JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://www.jeevansathi.com'){
+			$SITE_URL = 'https://crm.jeevansathi.com';
 		} else {
 			$SITE_URL = JsConstants::$siteUrl;
 		}

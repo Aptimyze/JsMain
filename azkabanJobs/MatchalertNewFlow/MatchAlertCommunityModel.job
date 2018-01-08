@@ -1,0 +1,4 @@
+type=command
+dependencies=MatchAlertCommunityTask3_0Task,MatchAlertCommunityTask3_1Task,,MatchAlertCommunityTask3_2Task
+command=echo Community model cron Ended
+

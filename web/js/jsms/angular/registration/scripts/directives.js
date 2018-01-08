@@ -498,6 +498,32 @@
 			}	
 		}
 	}]);
+app.directive('regCasteNoBarField',function(Gui){
+                return {
+                        restrict : 'A',
+                        replace  : true,
+                        template : '<div class="brdr1" id={{"reg_casteNoBar"}} name={{"reg_casteNoBar"}}><div class="pad1"><div class="pad2"><div class="fl reg_wid90 casteNoBar_check"><input type="checkbox" ng-model="info.value" ng-click="optionSelected()" id="casteNoBar_check" /><label class="fontlig" for="casteNoBar_check">{{info.label}}</label></div><div class="clr"></div></div></div></div>',
+                        scope :{
+                                        info :'=data',
+                                },
+                        controller:function($scope)
+                        {       
+                                var updateData = true;
+                                if($scope.info.value == "true") {
+                                        $scope.info.value = true;
+                                }
+                                $scope.optionSelected = function() 
+                                {
+                                        setTimeout(function () {
+                                                var output={};
+                                                output["casteNoBar"] = {"label":'casteNoBar',"value":$scope.info.value};
+                                                Gui.updateGuiFields('s4',5,output);
+                    }, 50);
+                                                
+                                }
+                        }       
+                }
+        });
 
 })()
 function CalloverlayName(thisObject){

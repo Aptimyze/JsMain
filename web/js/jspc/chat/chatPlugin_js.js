@@ -40,6 +40,7 @@ JsChat.prototype = {
     _rosterDeleteChatBoxMsg:"",
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
+    _checkForDefaultCommunication:false,
     _setLastReadMsgStorage:true,
     _chatAutoLogin:false,
     _categoryTrackingParams:{},
@@ -129,6 +130,9 @@ JsChat.prototype = {
         if (arguments[1][0].checkForDefaultEoiMsg) {
             this._checkForDefaultEoiMsg = arguments[1][0].checkForDefaultEoiMsg;
         }
+        if(arguments[1][0].checkForDefaultCommunication){
+            this._checkForDefaultCommunication = arguments[1][0].checkForDefaultCommunication;
+        }
         if (arguments[1][0].setLastReadMsgStorage) {
             this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
         }
@@ -177,7 +181,7 @@ JsChat.prototype = {
         }
 
         $.each(data, function(index,elem){
-            //console.log("data",data);
+           
             if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
                 $("#"+elem["userId"]+"_"+elem["group"]).click();    
             }
@@ -264,7 +268,7 @@ JsChat.prototype = {
                 curEle.minimizedPanelHTML();
             }).promise().done(function () {
                 $(curEle._maxChatBarOut).click(function () {
-                    //console.log('aaa1');
+                    
                     curEle._maximizeChatPanel();
                 });
             });
@@ -281,7 +285,7 @@ JsChat.prototype = {
     _chatTabs: function (param,type) {
         var curElem = this;
         if($('#' + param).hasClass("active") == false) {
-            //console.log("param",param);
+            
             curElem._changeLocalStorage("tabStateChange","","",param);
             /*if(param == "tab1") {
                 curElem._changeLocalStorage("tabStateChange","","","online");
@@ -319,7 +323,7 @@ JsChat.prototype = {
             //apiParams["pid"] = jidStr.slice(0, -1);
             apiParams["photoType"] = "ProfilePic120Url";
             apiParams["initialList"] = true;
-            //console.log("request2");
+            
             requestListingPhoto(apiParams);
         }
     },
@@ -356,7 +360,6 @@ JsChat.prototype = {
     },
     //start:addChatTop function
     _addChatTop: function (param) {
-        //console.log("add chat top",this._selfName);
         var curEleRef = this,
             that = this;
         
@@ -387,9 +390,7 @@ JsChat.prototype = {
             }
         });
         $(curEleRef._logoutChat).click(function () {
-            //console.log("Site logout clicked");
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
-                //that._chatLoggerPlugin("in if");
                 var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
                 curEleRef.onLogoutPreClick(fromSiteLogout);
             }
@@ -401,16 +402,13 @@ JsChat.prototype = {
     },
     //start:set height for the listing scroll div
     _chatScrollHght: function () {
-        //this._chatLoggerPlugin('cal scroll div');
         var totalHgt = this._getHeight();
         var remHgt = parseInt(totalHgt) - 140;
-        //this._chatLoggerPlugin(remHgt);
-        //this._chatLoggerPlugin(this._scrollDivId);
         $(this._scrollDivId).css('height', remHgt);
     },
     //start:add tab
     addTab: function () {
-        //console.log("addTab");
+        
         //this script is same as old one shared eariler need to be reworked as discussed
         //this._chatLoggerPlugin('in addTab');
         var obj = this._listingTabs;
@@ -468,7 +466,6 @@ JsChat.prototype = {
         if(localStorage.getItem("tabState") == undefined) {
             curEle._changeLocalStorage("tabStateChange","","",curEle._defaultActiveTab);    
         } else { 
-            //console.log("tabstate",localStorage.getItem("tabState"));
             curEle._chatTabs(localStorage.getItem("tabState"),"noAnimate");
         }
     },
@@ -478,7 +475,6 @@ JsChat.prototype = {
         $(".js-htab").each(function (index, element) {
             dataLength = 0;
             $(this).find(".chatlist").each(function (index2, element2) {
-                //that._chatLoggerPlugin($(this).find("li").length);
 		if (!$(this).hasClass('jsNonRosterGroup'))
 	                dataLength = dataLength + $(this).find("li").length;
             });
@@ -615,7 +611,7 @@ JsChat.prototype = {
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
-                    //console.log("ankita",data[key]["rosterDetails"]["groups"]);
+                    
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
                             //tab1ListingIds.push(key);
@@ -632,7 +628,7 @@ JsChat.prototype = {
                         var getNamelbl = fullname,
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
-                            nick = data[key]["rosterDetails"]["nick"]; //ankita for image
+                            nick = data[key]["rosterDetails"]["nick"]; //for image
                         List += '<li class=\"clearfix profileIcon\"';
                         List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-addIndex=\"" + data[key]["rosterDetails"]["addIndex"] + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
                         List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" onmousedown=\"return false;\" oncontextmenu=\"return false;\" class=\"fl wid40hgt40\">";
@@ -1103,7 +1099,7 @@ JsChat.prototype = {
     },
     //bind clicking close icon
     _bindClose: function (elem) {
-        //console.log("in _bindClose ankita");
+        
         var curElem = this;
         $(elem).off("click").on("click", function () {
             curElem._scrollDown($(this).closest("chat-box"), "remove");
@@ -1380,6 +1376,9 @@ JsChat.prototype = {
                             finalStr += text[i];
                         }
                     }
+                    if(text.charCodeAt(text.length-1) != 10) {
+                        finalStr += text[text.length-1];
+                    }
                     //console.log(finalStr);
                     text = finalStr;
                     $(superParent).find("#initChatText,#sentDiv,#chatBoxErr").remove();
@@ -1442,7 +1441,6 @@ JsChat.prototype = {
                                 if (msgSendOutput["sent"] == true) {
                                     //console.log("nits",$(superParent));
                                     if ($(superParent).find("#sendInt").length != 0 || msgSendOutput['eoi_sent'] == true) {
-                                        //console.log("appending intsent msg ankita");
                                         if($(superParent).find("#sendInt").hasClass("notSendInterestDiv") == false || msgSendOutput['eoi_sent'] == true){
                                             //console.log("Append yourinterest has been sent");
                                             $(superParent).find(".chatMessage").append("<div  class='inline_txt pos-rel fr pr10' id='interestSent'>Your interest has been sent</div>");
@@ -1662,10 +1660,6 @@ JsChat.prototype = {
     _getChatBoxType: function (userId, groupID, key) {
         //this._chatLoggerPlugin("in _getChatBoxType");
         var curElem = this;
-        //var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
-        //this._chatLoggerPlugin($(".chatlist li[id='" + userId + "_" + groupID + "']").attr("id").split("_")[1]);
-        //var groupID = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("id").split("_")[1];
-        //this._chatLoggerPlugin("ankita" + groupID + "-" + curElem._groupBasedChatBox[groupID]);
         var chatBoxType;
         var oldChatBoxType = $('chat-box[user-id="' + userId + '"]').attr("data-contact");
         if (typeof key == "undefined" || key != "updateChatBoxType") {
@@ -1725,15 +1719,14 @@ JsChat.prototype = {
                     var to_checksum = $("chat-box[user-id='" + userId + "'").attr("data-checks");
                     clearTimedOut = setTimeout(function(){
                         if($("#moreHistory_"+userId).val() == "1"){
-                            //console.log("loading more history");
                             manageHistoryLoader(userId+"@"+openfireServerName,"show");
                             getChatHistory({
+                                "from":getConnectedUserJID(),
+                                "to":userId+"@"+openfireServerName,
+                                //"messageId":latestMsgId,
                                 "extraParams": {
-                                    "from": getConnectedUserJID(),
-                                    "to": userId+"@"+openfireServerName,
-                                    "to_checksum": to_checksum,
-                                    "from_checksum": self_checksum,
-                                    "messageId":latestMsgId
+                                    "pogChecksum": to_checksum,
+                                    "time":latestMsgId,
                                 }
                             }); 
                         }
@@ -1790,11 +1783,10 @@ JsChat.prototype = {
                 if(hisStatus == undefined && hisStatus != "not"){
                     //fetch msg history
                     getChatHistory({
+                        "from": getConnectedUserJID(),
+                        "to": user_jid,
                         "extraParams": {
-                            "from": getConnectedUserJID(),
-                            "to": user_jid,
-                            "to_checksum": checkSum,
-                            "from_checksum": self_checksum
+                            "pogChecksum": checkSum
                         }
                     },"first_history");
                 }
@@ -2262,9 +2254,7 @@ JsChat.prototype = {
         }
     },
     //append chat history in chat box
-    _appendChatHistory: function (selfJID, otherJID, communication,requestType,canChatMore) {
-        //console.log("self message");
-        //console.log("_appendChatHistory"+requestType);
+    _appendChatHistory: function (selfJID, otherJID, origCommunication,requestType) {
         var self_id = selfJID.split("@")[0],
             other_id = otherJID.split("@")[0],
             latestMsgId="",
@@ -2274,6 +2264,7 @@ JsChat.prototype = {
             defaultEoiRecMsg;
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) { 
+            var communication = preProcessCommunication(origCommunication);
             if(curElem._checkForDefaultEoiMsg == true){
                 //other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html(); 
                 other_username =  $('chat-box[user-id="' + other_id + '"] .js-chatBoxTopName').html();    
@@ -2281,73 +2272,77 @@ JsChat.prototype = {
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
             var now_mark_read = false,read_class="nchatic_10";
-            if(curElem._setLastReadMsgStorage == false){
+            var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+            if(curElem._setLastReadMsgStorage == false || (requestType!="first_history" && last_read_msg!=undefined)){
                 now_mark_read = true;
                 read_class = "nchatic_9";
             }
-            $.each(communication, function (key, logObj) {
-               
-                latestMsgId = logObj["ID"];
-                //console.log(logObj);
-                if (parseInt(logObj["SENDER"]) == self_id) {
-                    if(logObj["CHATID"] == "" && now_mark_read == false){
-                        logObj["CHATID"] = generateChatHistoryID("sent");
-                        now_mark_read = true;
-                        read_class = "nchatic_9";
+            if(communication !== undefined && Object.keys(communication).length>0){
+                $.each(communication, function (key, logObj) {
+                    latestMsgId = logObj["date"];
+                    //console.log(logObj);
+                    if (parseInt(logObj["sender"]) == self_id) {
+                        if(logObj["chatId"] == "" && now_mark_read == false){
+                            logObj["chatId"] = generateChatHistoryID("sent");
+                            now_mark_read = true;
+                            read_class = "nchatic_9";
 
-                    }
-                    var last_read_msg = fetchLastReadMsgFromStorage(other_id);
-                    //console.log("last_read",last_read_msg);
-                    if(last_read_msg == logObj["CHATID"] && now_mark_read == false){
-                        //console.log("set done");
-                        now_mark_read = true;
-                        read_class = "nchatic_9";
-                    }
-                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiSentMsg) == -1){
-                        //append self sent message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText" data-msgid='+logObj["CHATID"]+'>' + logObj["MESSAGE"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
-                                var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).height();
-                                    
-                                $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["CHATID"]).next().css("margin-top",len);
-                        });
-                    }
-                } else if (parseInt(logObj["SENDER"]) == other_id) {
-                    if(logObj["CHATID"] == ""){
-                        logObj["CHATID"] = generateChatHistoryID("received");
-                    }
-                    //check for default eoi message,remove after monday JSI release
-                    if(curElem._checkForDefaultEoiMsg == false || logObj["MESSAGE"].indexOf(defaultEoiRecMsg) == -1){
-                        //console.log("done"+removeFreeMemMsg);
-                        if(removeFreeMemMsg == false){
-                            //console.log("iseoi",logObj["IS_EOI"]);
-                           //console.log(typeof logObj["IS_EOI"]+"-"+logObj["IS_EOI"]);
-                            if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
-                                //console.log("remove free msg");
+                        }
+                        var last_read_msg = fetchLastReadMsgFromStorage(other_id);
+                        //console.log("last_read",last_read_msg);
+                        if(last_read_msg == logObj["chatId"] && now_mark_read == false){
+		                    //console.log("set done");
+		                    now_mark_read = true;
+		                    read_class = "nchatic_9";
+                    	}
+                        if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiSentMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted their interest")==-1)){
+                            //append self sent message
+                            logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="rightBubble"><div class="tri-right"></div><div class="tri-right2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText" data-msgid='+logObj["chatId"]+'>' + logObj["message"] + '</div><i class="nchatspr '+read_class+' fr vertM"></i></div>').promise().done(function(){
+                                    var len = $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).height();
+                                        
+                                    $('chat-box[user-id="' + other_id + '"] #text_'+other_id+'_'+logObj["chatId"]).next().css("margin-top",len);
+                            });
+                        }
+                        
+                    } else if (parseInt(logObj["sender"]) == other_id) {
+                        if(logObj["chatId"] == ""){
+                            logObj["chatId"] = generateChatHistoryID("received");
+                        }
+                        //check for default eoi message,remove after monday JSI release
+                        if((curElem._checkForDefaultEoiMsg == false || logObj["message"].indexOf(defaultEoiRecMsg) == -1) && (curElem._checkForDefaultCommunication==false || logObj["message"].indexOf("accepted your interest")==-1)){
+                            if(removeFreeMemMsg == false){
+                                //if(typeof logObj["IS_EOI"] == "undefined" || logObj["IS_EOI"] == false){
                                 removeFreeMemMsg = true;
-                                curElem._enableChatAfterPaidInitiates(other_id);
+                                if($('chat-box[user-id="' + other_id + '"]').attr("group-id")==chatConfig.Params["categoryNames"]["Acceptance"]){
+                                    curElem._enableChatAfterPaidInitiates(other_id);
+                                }
+                                else{
+                                    curElem._enableChatAfterPaidInitiates(other_id,"disable");
+                                }
                             }
+                            /*if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
+                                curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
+                            }*/
+                            //append received message
+                            logObj["message"] = logObj["message"].replace(/\&lt;br \/\&gt;/g, "<br />");
+                            $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["chatId"] + '" class="talkText received_read" data-msgid=' + logObj["chatId"] + '>' + logObj["message"] + '</div></div></div>');
                         }
-                        if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
-                            curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
-                        }
-                        //append received message
-                        logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
-                        $('chat-box[user-id="' + other_id + '"] .chatMessage').find("#chatHistory_" + other_id).prepend('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + other_id + '_' + logObj["CHATID"] + '" class="talkText received_read" data-msgid=' + logObj["CHATID"] + '>' + logObj["MESSAGE"] + '</div></div></div>');
                     }
+                });
+                if(requestType == "first_history"){
+                    curElem._scrollToBottom(other_id);
                 }
-            });
-            if(requestType == "first_history"){
-                curElem._scrollToBottom(other_id);
             }
             if(latestMsgId != ""){
-                //console.log("setting");
                 $('chat-box[user-id="' + other_id + '"]').find("#moreHistory_"+other_id).attr("data-latestMsgId",latestMsgId);
             }
-            if(typeof canChatMore != "undefined" && canChatMore == "false"){
+            var selfJID = getConnectedUserJID();
+            curElem.rosterDeleteChatBoxReponse(selfJID,other_id,"canChatMore");
+            /*if(typeof canChatMore != "undefined" && canChatMore == "false"){
                 //console.log("set as free");
                 curElem._disableChatTextArea(other_id);
-            }
+            }*/
             setTimeout(function(){
                 if(requestType == "first_history"){
                     curElem.preventSiteScroll(other_id);
@@ -2357,11 +2352,7 @@ JsChat.prototype = {
     },
     //append self sent message on opening window again
     _appendSelfMessage: function (message, userId, uniqueId, status) {
-        //console.log("appending self sent msg");
         var curElem = this;
-        /*if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-            $(".profileIcon[id^='" + userId + "']")[0].click();
-        }*/
         if ($('chat-box[user-id="' + userId + '"]').length != 0){
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').find("#text_" + userId + uniqueId).length == 0) {
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
@@ -2378,14 +2369,15 @@ JsChat.prototype = {
     },
     
     //enable chat for free member if paid initiates
-    _enableChatAfterPaidInitiates: function(userId){
+    _enableChatAfterPaidInitiates: function(userId,type){
+
         $('chat-box[user-id="' + userId + '"]').attr("data-paidInitiated","true");
         if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length != 0){
-            //console.log("removing");
             $('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).remove();
         }
-        //console.log("222");
-        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        if(typeof type == "undefined" || type != "disable"){
+            $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+        }
     },
 
     //add meesage recieved from another user
@@ -2402,7 +2394,7 @@ JsChat.prototype = {
             'CHATID': uniqueId,
             'ID': ''
         };
-        //console.log("in _appendRecievedMessage");
+        
         //append received message in chatbox
         
         if (message == chatConfig.Params[device].rejectObsceneMsg){
@@ -2413,11 +2405,9 @@ JsChat.prototype = {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
-                //console.log("msg from history1",uniqueId);
                 appendMsg = false; //as this msg already exists in history
                 var checkInterval = 0;
                 var chatBoxOpenInterval = setInterval(function(){
-                    //console.log("checking",$(".profileIcon[id^='" + userId + "']"));
                     if($(".profileIcon[id^='" + userId + "']").length == 1){
                         $(".profileIcon[id^='" + userId + "']")[0].click();
                         if(appendMsg == false){
@@ -2429,12 +2419,10 @@ JsChat.prototype = {
                                 $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
                             }
                             else if($('#extra_'+userId).length == 0){
-                                //console.log("add here....uncomment",uniqueId);
                                 //mark this msg read on sender side
                                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
                             }
                         },500);
-                        //console.log("clear interval");
                         clearInterval(chatBoxOpenInterval);
                     }
                     else{
@@ -2449,24 +2437,29 @@ JsChat.prototype = {
 
             }
 
-            if(typeof msg_type != "undefined" && msg_type == "accept"){
-                curEle._enableChatAfterPaidInitiates(userId);
+            if($('chat-box[user-id="' + userId + '"]').length != 0 && typeof msg_type != "undefined" && (msg_type == "eoi" || msg_type == "accept")){
+                var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+                if(groupId == chatConfig.Params["categoryNames"]["Acceptance"]){
+                    curEle._enableChatAfterPaidInitiates(userId);
+                }
+                else{
+                    curEle._enableChatAfterPaidInitiates(userId,"disable");
+                }
             }
-            //console.log("appendMsg",appendMsg);
+            
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
                 //adding msg in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
             else{
-                //console.log("marking as read",uniqueId);
+                
                 //mark this msg read on sender side
                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
             }
             //check for 3 messages and remove binding
             if ($('chat-box[user-id="' + userId + '"] .chatMessage').hasClass("restrictMessg2")) {
                 $('chat-box[user-id="' + userId + '"] .chatMessage').find("#restrictMessgTxt").remove();
-                //console.log("11");
                 $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             }
             //mark all unread msgs as read
@@ -2475,7 +2468,6 @@ JsChat.prototype = {
             //adding bubble for minimized tab
                 setTimeout(function(){
                     
-                //console.log("InTimeout",$('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin"));
                     if ($('chat-box[user-id="' + userId + '"] .chatBoxBar img').hasClass("downBarPicMin")) {
                         val = parseInt($('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html()) + 1;
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html(val);
@@ -2542,17 +2534,14 @@ JsChat.prototype = {
             
 
     },
-    
+    rosterDeleteChatBoxReponse: null,
     //disable chat box on roster item deletion
     _disableChatPanelsBox:function(userId){
-        //console.log("in disablechatPanelsBox");
         var curElem = this;
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
-                //console.log("disabling1",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                 setTimeout(function(){
                     if($('chat-box[user-id="' + userId + '"] .chatMessage #undoBlock').length == 0 && $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated") == "false"){
-                       //console.log("disabling2",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
                         var found = false;
                         $.each(curElem._rosterGroups,function(key,groupId){
                             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
@@ -2563,9 +2552,14 @@ JsChat.prototype = {
                                     
                                     $('chat-box[user-id="' + userId + '"] .chatMessage').html("");
                                     if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0){
-
-                                        $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
-                                        //console.log("added 1");
+                                        //$('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+userId+'" class="pt20 txtc color5">'+curElem._rosterDeleteChatBoxMsg+'</div>');
+                                        var currentT = new Date().getTime();
+                                        if((currentT - rosterMsgTime)> 500){
+                                            var selfJID = getConnectedUserJID();
+                                            curElem.rosterDeleteChatBoxReponse(selfJID,userId);
+                                            
+                                            rosterMsgTime = currentT;
+                                            }
                                         }
                                     
                                     $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
@@ -2575,7 +2569,6 @@ JsChat.prototype = {
                     }  
                 },1000);
             }
-            //console.log("setting migrated",$('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated"));
             $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","false");
         }
     },
@@ -2590,16 +2583,13 @@ JsChat.prototype = {
     _onlineUserMsgMe: function () {
         var noOfInputs = 0;
         $("chat-box .chatBoxBar .pinkBubble2").each(function (index, element) {
-            //console.log(element);
             if ($(this).find(".noOfMessg").html() != 0) {
                 noOfInputs++;
             }
         });
-        //console.log("noOfInputs",noOfInputs);
+        
        $(".extraChatList .pinkBubble").each(function (index, element) {
            var userId = $(this).parent().attr("id").split("_")[1];
-           //console.log("userManvi",userId);
-           //console.log("htmlManvi",$('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html());
            if ($(this).find(".noOfMessg").html() != 0 && $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2 span').html() == 0) {
                 noOfInputs++;
            }
@@ -2659,9 +2649,8 @@ JsChat.prototype = {
     _changeStatusOfMessg: function (messgId, userId, newStatus) {
         var curElem = this;
         if (messgId) {
-            //this._chatLoggerPlugin("Change status" + newStatus);
+            
             if (newStatus == "recieved") {
-                //console.log("marked");
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
             } else if (newStatus == "recievedRead") {
                 $("#text_" + userId + "_" + messgId).next().removeClass("nchatic_8").addClass("nchatic_10");
@@ -2709,10 +2698,10 @@ JsChat.prototype = {
         else if (($(this._listingPanelID).length == 0) && (this._loginStatus == "Y")) {
             //this._chatLoggerPlugin('case 2');
             if ($(curEle._loginPanelID).length == 0) {
-                //this._chatLoggerPlugin("ankita_1");
+                
                 //curEle._appendLoggedHTML();    
             } else {
-                //this._chatLoggerPlugin("ankita_2");
+               
                 $(curEle._loginPanelID).remove();
                 $("#blankPanelLoader").removeClass("disp-none");
                 // function () {
@@ -2760,17 +2749,14 @@ JsChat.prototype = {
         var str = '';
         var TotalBtn = '',
             widCal = '';
-        //console.log(groupButtons, "Nitish");
+        
         TotalBtn = groupButtons.length;
-        //this._chatLoggerPlugin('TotalBtn: ' + TotalBtn);
+       
         widCal = parseInt(100 / TotalBtn);
-        //this._chatLoggerPlugin('widCal: ' + widCal);
-        //this._chatLoggerPlugin("BB");
+        
         var that = this;
         $.each(groupButtons, function (k, v) {
-            //that._chatLoggerPlugin(k);
-            //that._chatLoggerPlugin(v);
-            //that._chatLoggerPlugin("KKKKKK" + v.action);
+            
             if (group == chatConfig.Params["categoryNames"]["Interest Sent"]) {
                 str += '<div class="nchatbg-grey lh50 brdr-0 txtc colrw"';
             } else {
@@ -3044,9 +3030,8 @@ JsChat.prototype = {
     //start:append Chat Logged in Panel
     _appendLoggedHTML: function () {
         if ($('#js-lsitingPanel').length == 0) {
-            //console.log("in _appendLoggedHTML");
+            
             var curEle = this;
-            //this._chatLoggerPlugin('_appendLoggedHTML');
             $(curEle._parendID).append('<div class="fullwid fontlig nchatcolor" id="js-lsitingPanel"/> ').promise().done(function () {
                 curEle._addChatTop();
                 curEle.addTab();
@@ -3057,7 +3042,7 @@ JsChat.prototype = {
     },
     
     _changeLocalStorage:function(type,userId,groupId,newState) {
-        //console.log("inside function",type,userId,groupId,newState);
+        
         var thisElem = this;
         var data = [];
         var reAdd = true;
@@ -3132,20 +3117,20 @@ JsChat.prototype = {
     },
     
     _updateChatStructure:function(type) {
-		//console.log("inside update function",type);
+		
 		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
 		if(localStorage.getItem("chatBoxData")) {
 			data = JSON.parse(localStorage.getItem("chatBoxData"));
 		}
-        //console.log("localstorage",data);
+       
         
 		if(type == "new"){
 			setTimeout(function(){ 
-               // console.log("ankita",data);
+               
 				$.each(data,function(index,elem){
-                    //console.log("here ankita",elem);
+                   
                     //console.log($("#"+elem["userId"]+"_"+elem["group"]));
 					//console.log(elem["userId"],elem["group"],$("#"+elem["userId"]+"_"+elem["group"]));
                     $("#"+elem["userId"]+"_"+elem["group"]).click();
@@ -3336,12 +3321,7 @@ JsChat.prototype = {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
             }
-            /*
-            if (curEle._loginStatus == "Y") {
-                that._chatLoggerPlugin("ankita_logged in");
-                curEle._startLoginHTML();
-            }
-            */
+            
         });
         delete that;
         //auto login to chat on site relogin if flag true and login authentication success
@@ -3373,7 +3353,7 @@ JsChat.prototype = {
     //manage chat loader
     manageChatLoader: function (type) {
         if (type == "hide") {
-            //this._chatLoggerPlugin("hiding loader_ankita");
+            
             $("#scrollDivLoader").hide();
         }
     },
@@ -3391,7 +3371,7 @@ JsChat.prototype = {
     },
     //start:this function is that init forthe chat
     start: function () {
-        //console.log(my_action,"ankita1");
+        
         var divElement = document.createElement("Div");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
         

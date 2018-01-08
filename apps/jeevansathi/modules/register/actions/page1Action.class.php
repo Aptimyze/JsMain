@@ -29,7 +29,7 @@ class page1Action extends sfAction {
 
         $sourceTracking = new SourceTracking($this->source, SourceTrackingEnum::$REG_PAGE_1_FLAG, $newsource, $tieup_source);
 		$reg_params = $request->getParameter("reg");
-		if (!$request->getParameter('submit_page1')){ 
+		if (!$request->getParameter('submit_page1')){
         		$sourceTracking->SourceTracking();
 				$this->source=$sourceTracking->getSource();
 				if($this->source=='mailer_adc'){
@@ -190,6 +190,7 @@ class page1Action extends sfAction {
 					   
 						//Update or insert data
 						$id = $this->form->updateData('', $values_that_are_not_in_form);
+                                                RegistrationFunctions::putCampaignVars($id,$request->getParameter("campaignData"));
 						//Initiate a loggedin profile object
 						$this->loginProfile = LoggedInProfile::getInstance();
 						$this->loginProfile->getDetail($id, "PROFILEID");
@@ -297,6 +298,14 @@ class page1Action extends sfAction {
         $this->subhead2 = $request->getParameter('sh2');
         $this->image = $request->getParameter('image');
         $this->page_id = $request->getParameter('p');
+        $this->sourcename = $request->getParameter('source');
+        $pageVar=RegistrationFunctions::assignGroupName($this->sourcename);
+        $this->groupname = $pageVar['GROUPNAME'];
+        
+        $campaignData = RegistrationFunctions::getCampaignVars($request);
+        if($campaignData)
+            $this->campaignData = $campaignData;
+        
         $this->setLayout(false);
         $this->setTemplate("custompageform");
       }

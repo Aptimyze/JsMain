@@ -107,7 +107,7 @@ class ViewContacts extends ContactEvent{
 		if (is_array($draftsArray)) {
 		$this->component->drafts = $this->component->cancelDrafts = $draftsArray;
 		}
-		if($this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="EVALUE" && $privArr[0]['CONTACT_DETAIL']['VISIBILITY']=='Y')
+		if(($this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="EVALUE"|| $this->contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus()=="JSEXCLUSIVE") && $privArr[0]['CONTACT_DETAIL']['VISIBILITY']=='Y')
 		{
 			$evalueTrackingObj = new EvalueTracking();
 			if(strcmp($_SERVER['REDIRECT_URL'],"/profile/viewprofile.php")==0)
@@ -207,7 +207,7 @@ class ViewContacts extends ContactEvent{
 		}
 		
 		$privArr1=ContactPrivilege::getPrivilegeArray($this->contactHandler);
-		if($privArr[0]['CONTACT_DETAIL']['VISIBILITY']!='Y' && CommonFunction::isPaid($this->contactHandler->getViewer()->getSUBSCRIPTION()) && MobileCommon::isApp()!="I" && $privArr1[0]['CALL_DIRECT']['ALLOWED']=="Y" && $privArr1[0]['CONTACT_DETAIL']['VISIBILITY'] =="P")
+		if($privArr[0]['CONTACT_DETAIL']['VISIBILITY']!='Y' && CommonFunction::isPaid($this->contactHandler->getViewer()->getSUBSCRIPTION()) &&  $privArr1[0]['CALL_DIRECT']['ALLOWED']=="Y" && $privArr1[0]['CONTACT_DETAIL']['VISIBILITY'] =="P")
 		{
 			if($this->component->contactDetailsObj->getALT_MOBILE() || $this->component->contactDetailsObj->getMOB_PHONE_NO() || $this->component->contactDetailsObj->getRES_PHONE_NO())
 			{

@@ -1,5 +1,5 @@
 type=command
-dependencies=cron_expiring_sending0,cron_expiring_sending1,cron_expiring_sending2,cron_expiring_sending3
-command=echo ExpiringMail successfully sent
+dependencies=cron_expiring_sending0,cron_expiring_sending1,cron_expiring_sending2
+command=${php5} ${docRoot}/symfony mailer:dailyMailerMonitoring ExpiringInterest_MAILER
 retries=3
 retry.backoff=10000

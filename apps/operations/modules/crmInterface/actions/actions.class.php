@@ -4,7 +4,7 @@
 // @package    jeevansathi
 // @subpackage crmInterface
 // @author     Avneet Singh Bindra
-
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/Services.class.php");
 class crmInterfaceActions extends sfActions
 {
     public function executeIndex(sfWebRequest $request)
@@ -97,20 +97,25 @@ class crmInterfaceActions extends sfActions
     // Start VD Offer
     public function executeStartVdOffer(sfWebRequest $request)
     {
+        $emailId ='manoj.rana@naukri.com';
+
         $this->cid      = $request->getParameter('cid');
         $commCrmFuncObj = new CommonCrmInterfaceFunctions();
         $curDate        = date("Y-m-d");
 
-        if ($request->getParameter('submit') == 'Start') {
+        if ($request->getParameter('submit') == 'Schedule') {
             $startDate = $request->getParameter('vdStartDate');
             $endDate   = $request->getParameter('vdEndDate');
+	    $vdExecuteDate = $request->getParameter('vdExecuteDate');	
 
             if ($startDate && $endDate && (strtotime($endDate) >= strtotime($startDate))) {
-                $commCrmFuncObj->startVdOffer($startDate, $endDate);
+                $commCrmFuncObj->startVdOffer($startDate, $endDate,$vdExecuteDate);
                 $this->startDate    = date("d M Y", strtotime($startDate));
                 $this->endDate      = date("d M Y", strtotime($endDate));
+		$this->vdExecuteDate = date("d M Y H:i:s", strtotime($vdExecuteDate));	
                 $this->vdSuccess    = true;
                 $this->disableStart = true;
+		mail($emailId,"Main VD Scheduled at- $this->vdExecuteDate", date("Y-m-d H:i:s"));
             } else {
                 $this->vdError = true;
             }
@@ -121,8 +126,34 @@ class crmInterfaceActions extends sfActions
                 $this->vdActive     = true;
                 $this->vdExpiryDate = date("d M Y", strtotime($vdExpiryDate));
             }
+	    $durationObj =new billing_VARIABLE_DISCOUNT_DURATION('newjs_masterRep');	
+	    $schDataArr =$durationObj->getVdOfferDates();	
+	    $status =$schDataArr['STATUS'];	            
+	    if($status=='Y'){
+	    	$this->vdScheduled =true;
+                $this->startDate    = date("d M Y", strtotime($schDataArr['SDATE']));
+                $this->endDate      = date("d M Y", strtotime($schDataArr['EDATE']));
+                $this->vdExecuteDate = date("d M Y H:i:s", strtotime($schDataArr['SCHEDULE_DATE']));
+	    }		
         }
         $this->vdDateDropdown = $commCrmFuncObj->getDateDropDown($curDate, 15);
+
+	// schedule date dropdown
+	$scheduleDateArr =$commCrmFuncObj->getDateDropDown($curDate, 1);
+	$time =date("Y-m-d H:i:s");
+	foreach($scheduleDateArr as $key=>$val){
+		$time1 =$val." 00:00:00";
+		$time2 =$val." 14:30:00";
+                $ktime1 =$key." 00:00:00";
+                $ktime2 =$key." 14:30:00";
+		
+		if(strtotime($time1)>=strtotime($time))
+			$dateArr[$ktime1] =$time1;
+		if(strtotime($time2)>=strtotime($time))
+			$dateArr[$ktime2] =$time2;
+	}
+	$this->scheduleDateDropdown =$dateArr;
+	// end	
     }
 
     // Schedule VD Sms
@@ -173,6 +204,53 @@ class crmInterfaceActions extends sfActions
         unset($vdSmsLogObj);
     }
 
+    // Schedule VD Notifications
+    public function executeScheduleVdNotification(sfWebRequest $request)
+    {
+        $formArr   = $request->getParameterHolder()->getAll();
+        $this->cid = $formArr['cid'];
+
+        $vdNotificationLogObj = new billing_VARIABLE_DISCOUNT_NOTIFICATION_LOG();
+        if ($vdNotificationLogObj->isStatusY()) {
+            $this->errorMsg0 = "VD Notification is already scheduled.";
+        } else {
+            if ($formArr['frequency']) {
+                $this->frequency    = $formArr['frequency'];
+                $this->frequencyArr = range(1, $this->frequency);
+
+                $this->dateArr = array();
+                for ($i = 0; $i < $this->frequency + 10; $i++) {
+                    $this->dateArr[] = date('Y-m-d', strtotime('+' . $i . ' days'));
+                }
+            }
+            if ($formArr['isDone']) {
+                $dateArr = $formArr['selectedDateArr'];
+                for ($j = 0; $j < count($dateArr); $j++) {
+                    if ($dateArr[$j] > $dateArr[$j + 1]) {
+                        if ($j != count($dateArr) - 1) {
+                            $this->errorMsg = "Oops, please provide correct date values";
+                        }
+
+                    }
+                }
+                if (count(array_unique($formArr['selectedDateArr'])) != $formArr['frequency']) {
+                    $this->errorMsg = "Oops, please provide unique date values";
+                }
+
+                if (!$this->errorMsg) {
+                    $selectedDateArr = array();
+                    foreach ($formArr['selectedDateArr'] as $k => $dd) {
+
+                        $selectedDateArr[$k] = date('Y-m-d', strtotime($dd));
+                    }
+                    $vdNotificationLogObj->insertVdNotificationSchedule($selectedDateArr, $formArr['frequency']);
+                    $this->successMsg = "Updated successfully ...";
+                }
+            }
+        }
+        unset($vdNotificationLogObj);
+    }
+
     // Schedule VD Mailer
     public function executeScheduleVdMailer(sfWebRequest $request)
     {
@@ -221,13 +299,9 @@ class crmInterfaceActions extends sfActions
                 $this->startDate       = date("d M Y", strtotime($startDate));
                 $this->endDate         = date("d M Y", strtotime($endDate));
                 $this->discountSuccess = true;
-                $memCacheObject        = JsMemcache::getInstance();
-                $membershipKeyArray    = VariableParams::$membershipKeyArray;
-                $keys_removed          = "";
-                foreach ($membershipKeyArray as $key => $keyVal) {
-                    $memCacheObject->remove($keyVal);
-                    $keys_removed .= $keyVal . ",\n";
-                }
+                $memHandlerObj = new MembershipHandler(false);
+                $memHandlerObj->flushMemcacheForMembership();
+                unset($memHandlerObj);
             } else {
                 $this->discountError = true;
             }
@@ -252,7 +326,7 @@ class crmInterfaceActions extends sfActions
         $this->durPerc                                                                                 = floor(100 / (count($this->serviceDurations) + 1));
         // Check if Discount Offer is active
         $discountOfferLogObj = new billing_DISCOUNT_OFFER_LOG();
-        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_masterDDL');
+        $billDiscOffrObj     = new billing_DISCOUNT_OFFER('newjs_master');
         $discountOfferID     = $discountOfferLogObj->checkDiscountOffer();
         if ($discountOfferID) {
             $this->successMsg = "Discount offer is Currently Active";
@@ -295,13 +369,10 @@ class crmInterfaceActions extends sfActions
             $memHandlerObject = new MembershipHandler();
             $memHandlerObject->flushMemcacheForMembership();
             $this->successMsg   = "Discount Values Successfully Applied";
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+          
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
         }
     }
 
@@ -345,13 +416,9 @@ class crmInterfaceActions extends sfActions
             }
             $this->successMsg = "Discount/Duration Values Successfully Applied";
             unset($this->errorMsg);
-            $memCacheObject     = JsMemcache::getInstance();
-            $membershipKeyArray = VariableParams::$membershipKeyArray;
-            $keys_removed       = "";
-            foreach ($membershipKeyArray as $key => $keyVal) {
-                $memCacheObject->remove($keyVal);
-                $keys_removed .= $keyVal . ",\n";
-            }
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->flushMemcacheForMembership();
+            unset($memHandlerObj);
             // get the updated values from database for display
             $this->offerArr = $commCrmFuncObj->getFestiveOfferMappingDetails();
         }
@@ -598,8 +665,8 @@ class crmInterfaceActions extends sfActions
         $this->cid               = $request->getParameter('cid');
         $this->name              = $request->getParameter('name');
         $testDiscountLookupObj   = new test_DISCOUNT_LOOKUP_UPLOAD('newjs_local111');
-        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_masterDDL');
-        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_masterDDL');
+        $discountLookupObj       = new billing_DISCOUNT_LOOKUP('newjs_master');
+        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_master');
 
         $records = $testDiscountLookupObj->getRecords();
         if ($records) {
@@ -801,67 +868,174 @@ class crmInterfaceActions extends sfActions
         }
     }
 
-    public function executeFinanceDataInterface(sfWebRequest $request)
-    {
-        $this->cid         = $request->getParameter('cid');
-        $this->name        = $request->getParameter('name');
-        $this->rangeYear   = date("Y", time());
+    public function executeFinanceDataInterface(sfWebRequest $request) {
+        
+        //Start:Common Code for Excel View and HTML View
+        $this->cid = $request->getParameter('cid');
+        $this->name = $request->getParameter('name');
+       
+        $this->rangeYear = date("Y", time());
         $this->showInitial = 1;
-        if ($request->getParameter("submit")) {
+        if ($request->getParameter("submit") || $request->getParameter('date1')) {
             $formArr = $request->getParameterHolder()->getAll();
-            $formArr["date1_dateLists_month_list"]++;
-            $formArr["date2_dateLists_month_list"]++;
-            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
-            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
-            $start_date        = date("Y-m-d", strtotime($start_date));
-            $end_date          = date("Y-m-d", strtotime($end_date));
+            $formArr["date1_dateLists_month_list"] ++;
+            $formArr["date2_dateLists_month_list"] ++;
+            $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date = date("Y-m-d", strtotime($end_date));
             $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            $diff = strtotime($end_date)-strtotime($start_date);
+            $diff = floor($diff / (60 * 60 * 24));
             if ($start_date > $end_date) {
                 $this->errorMsg = "Invalid Date Selected";
+            }else if($diff>31 && $formArr["report_format"] == "XLS"){
+                $this->errorMsg = "Date range should be less than or equal to one month";
             }
-            if (!$this->errorMsg) //If no error message then submit the page
-            {
-                $this->range_format = $formArr["range_format"];
-                $this->start_date   = $start_date . " 00:00:00";
-                $this->end_date     = $end_date . " 23:59:59";
-                $this->showInitial  = 0;
-                $this->showData     = 1;
-                $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
-                $billServObj        = new billing_SERVICES('newjs_slave');
-                $this->device       = $formArr["device"];
-                $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device);
-                $this->serviceData  = $billServObj->getFinanceDataServiceNames();
+            if(strtotime($start_date) > strtotime("2017-03-31")){
+                $table = "PAYMENT_DETAIL_NEW";
+                $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+            }
+            else{
+                $table = "PAYMENT_DETAIL";
+                $condition = "='DONE'";
+            }
+            if (!$this->errorMsg) { //If no error message then submit the page
+                $billServObj = new billing_SERVICES('newjs_slave');
+                $purchaseObj = new BILLING_PURCHASES('newjs_slave');
+                $this->serviceData = $billServObj->getFinanceDataServiceNames();
+                
+                //Code for Excel View Starts
                 if ($formArr["report_format"] == "XLS") {
-                    $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tService Name\tStart Date\tEnd Date\tCurrency\tList Price\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\tInvoice No\r\n";
-                    if ($this->rawData && is_array($this->rawData)) {
-                        foreach ($this->rawData as $k => $v) {
-                            $dataString = $dataString . $v["ENTRY_DT"] . "\t";
-                            $dataString = $dataString . $v["BILLID"] . "\t";
-                            $dataString = $dataString . $v["RECEIPTID"] . "\t";
-                            $dataString = $dataString . $v["PROFILEID"] . "\t";
-                            $dataString = $dataString . $v["USERNAME"] . "\t";
-                            $dataString = $dataString . $v["SERVICEID"] . "\t";
-                            $dataString = $dataString . $this->serviceData[$v["SERVICEID"]] . "\t";
-                            $dataString = $dataString . $v["START_DATE"] . "\t";
-                            $dataString = $dataString . $v["END_DATE"] . "\t";
-                            $dataString = $dataString . $v["CUR_TYPE"] . "\t";
-                            $dataString = $dataString . $v["PRICE"] . "\t";
-                            $dataString = $dataString . $v["AMOUNT"] . "\t";
-                            $dataString = $dataString . $v["DEFERRABLE"] . "\t";
-                            $dataString = $dataString . $v["ASSD"] . "\t";
-                            $dataString = $dataString . $v["ASED"] . "\t";
-                            $dataString = $dataString . $v["INVOICE_NO"] . "\r\n";
-                        }
+                    //print_r("hereee In excel");
+                    $this->start_date = $start_date . " 00:00:00";
+                    $this->end_date = $end_date . " 23:59:59";
+                    $this->device = $formArr["device"];
+                    //Logic To create excel sheet in CRON:
+                    $memcacheObj = JsMemcache::getInstance();
+                    $this->memcacheKey =$this->start_date . "_" . $this->end_date . "_" . $this->device;
+                    if($this->name)
+			$this->memcacheKey .="_".$this->name;
+                    $memKeySet = $memcacheObj->get($this->memcacheKey);
+                    
+                    if (strstr($memKeySet, 'Computing')) {
+                        //Cron is running for the given key
+                        $this->computing = true;
+                        $this->setTemplate('computationFinanceDataInterface');
                     }
-                    $xlData = $headerString . $dataString;
-                    $string .= $start_date . "_to_" . $end_date;
-                    header("Content-Type: application/vnd.ms-excel");
-                    header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
-                    header("Pragma: no-cache");
-                    header("Expires: 0");
-                    echo $xlData;
-                    die;
+                    else if (strstr($memKeySet, 'Finished')) {
+                        //File is ready and CRON is finished,now get the filename  and echo
+                        $xlData = $memcacheObj->get("MIS_FDI_PARAMS_KEY_".$start_date."_".$end_date."_".$this->device."_".$this->name);
+                        $file = "FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
+                        //$file ='/usr/local/scripts/config/branch3/'.$file;
+                        //if (file_exists($file)) {
+                            header('Content-Description: File Transfer');
+                            header('Content-Type: application/octet-stream');
+                            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+                            header('Expires: 0');
+                            header('Cache-Control: must-revalidate');
+                            header('Pragma: public');
+                            echo $xlData;
+                            die;
+                        //}
+                    } else if ($memKeySet == '') {
+                        //CRON is not running, initiate the cron and wait
+                        $this->computing = true;
+                        $memcacheValue['Status']='Computing'; 
+                        $memcacheValue['STARTDATE']=$this->start_date;
+                        $memcacheValue['ENDDATE']=$this->end_date;
+                        $memcacheValue['DEVICE']=$this->device;
+                        $memcacheValue['MAINKEYNAME']=$this->memcacheKey;
+                        $memcacheValue['FILENAME']="FDI_".$start_date."_".$end_date."_".$this->device."_".$this->name.".xls";
+                        
+                        $memcacheObj->set("$this->memcacheKey", 'Computing',3600);
+                        $memcacheObj->set("MIS_FDI_PARAMS_KEY"."_".$start_date."_".$end_date."_".$this->device."_".$this->name, $memcacheValue,3600);
+                        $filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask ". $start_date."_".$end_date."_".$this->device."_".$this->name."> /dev/null &";
+                        //$filePath = JsConstants::$cronDocRoot . "/symfony cron:cronFinanceDataInterfaceExcelTask &";
+                        $command = JsConstants::$php5path . " " . $filePath;
+                        //echo $command;
+                        passthru($command);
+                        $this->setTemplate('computationFinanceDataInterface');
+                    }
+
+                 return;
                 }
+               
+                $crmUtilityObj = new crmUtility();
+                $this->device = $formArr["device"];
+                //End:Common Code for Excel View and HTML View
+                
+                //Start: Code for Pagination setting in HTML View
+                $pageLimit = 100;
+                $pageIndex = $request->getParameter('pageIndex');
+
+                if (!$pageIndex) {  //Checking if this is the first time submit has been pressed
+                    if ($request->getParameter('date1')) {      //Checking if user has explicitly navigated to page number one
+                        $this->start_date = $request->getParameter('date1');    //set date and device from previous request
+                        $this->end_date = $request->getParameter('date2');
+                        $this->device = $request->getParameter('flag');
+                    } else {        //Set dates and device from the form submit request
+                        $this->start_date = $start_date . " 00:00:00";
+                        $this->end_date = $end_date . " 23:59:59";
+                        $this->device = $formArr["device"];
+                    }
+                    $pageIndex = 0;
+                    $currentPage = 1;
+                    $offset = 0;
+                    $limit = $pageLimit;
+                } else {        //When user is on next page(any page other than the first page)
+                    $currentPage = ($pageIndex / $pageLimit) + 1;
+                    $offset = ($currentPage - 1) * $pageLimit;
+                    $limit = $pageLimit;
+                    $this->start_date = $request->getParameter('date1');
+                    $this->end_date = $request->getParameter('date2');
+                    $this->device = $request->getParameter('flag');
+                }
+                // End: Code for pagination setting in HTML View Ends
+                $this->range_format = $formArr["range_format"];
+                $this->showInitial = 0;
+                $this->showData = 1;
+               
+
+                //Get total number of records
+                if(!$request->getParameter('screener')){
+                    $totalRec = $purchaseObj->fetchFinanceDataCount($this->start_date, $this->end_date, $this->device, $table, $condition);
+                }else{
+                    $totalRec = $request->getParameter('screener');
+                }
+                
+                $this->totalRec=$totalRec;
+                //Get records within offset and limit as calculated above in pagination code
+                $this->rawData = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date, $this->device, $offset, $limit, $table, $condition);
+                $taxData = $purchaseObj->getDataFromTaxBreakUp($this->start_date, $this->end_date);
+				$rows = count($this->rawData);	
+                for($i=0;$i<$rows;$i++){
+                	$billid = $this->rawData[$i]["BILLID"];
+                	$this->rawData[$i]["COUNTRY_RES"] = FieldMap::getFieldLabel("country",$taxData[$billid]["COUNTRY_RES"]);
+                	$StateCity = $taxData[$billid]["CITY_RES"];
+                	$this->rawData[$i]["CITY_RES"] = FieldMap::getFieldLabel("city",$StateCity);
+                	$StateCity = substr($StateCity, 0, 2);
+                	$this->rawData[$i]["STATE_RES"] = FieldMap::getFieldLabel("state_india",$StateCity);
+                	if(!empty($this->rawData[$i]["MEM_UPGRADE"])){
+                		$this->rawData[$i]["MEM_UPGRADE"] = "Y";
+                	}else{
+                		$this->rawData[$i]["MEM_UPGRADE"] = "N";
+                	}
+                    $this->rawData[$i]["SGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["SGST"]/118,2);
+                    $this->rawData[$i]["IGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["IGST"]/118,2);
+                    $this->rawData[$i]["CGST"]=round($this->rawData[$i]["AMOUNT"]*$taxData[$billid]["CGST"]/118,2);
+                }
+                //Start:JSC-2667: Commented as change in legacy data not required 
+                //$this->rawData      = $this->filterData($this->rawData);
+                //End:JSC-2667: Commented as change in legacy data not required 
+                
+                $linkUrl = sfConfig::get("app_site_url") . "/operations.php/crmInterface/financeDataInterface";
+                $this->pageLinkVar = $crmUtilityObj->pageLink($pageLimit, $totalRec, $currentPage, $this->cid, $linkUrl, '', $this->device, '', '', '', $this->start_date, $this->end_date,$totalRec);
+                $this->totalPages = ceil($totalRec / $pageLimit);
+                $this->currentPage = $currentPage;
+
+                //Code for HTML View ends
+
             }
         }
     }
@@ -873,7 +1047,7 @@ class crmInterfaceActions extends sfActions
         $agentAllocationDetailsObj = new AgentAllocationDetails();
         $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
         $priv                      = explode('+', $priv);
-        if (in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv) || in_array('BMI', $priv)) {
             $this->showOptions = 1;
         }
     }
@@ -941,6 +1115,7 @@ class crmInterfaceActions extends sfActions
 
     public function executeServiceActivationChangeInterface(sfWebRequest $request)
     {
+        
         $this->cid          = $request->getParameter('cid');
         $this->name         = $request->getParameter('name');
         $billingPurDetObj   = new billing_PURCHASE_DETAIL();
@@ -981,7 +1156,20 @@ class crmInterfaceActions extends sfActions
             }
             $this->jprofileDet  = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
-
+            //insert the ID in case of exclusive
+            $exclusiveId = $this->serviceid;
+            //$exclusiveId = substr($exclusiveId, 0, 1);
+            $findX = 'X';
+            $pos = strpos($exclusiveId, $findX);
+            if($pos !== false && $serviceStatus=='Y'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->replaceExclusiveProfile($this->profileid,"LIVE",date("Y-m-d H:i:s"),'Y',"default.se");
+                unset($assistedProductProfileInfo);
+            }else if($pos !== false&& $serviceStatus=='N'){
+                $assistedProductProfileInfo = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
+                $assistedProductProfileInfo->Delete($this->profileid);
+                unset($assistedProductProfileInfo);
+            }
             // Logging
             $serviceActivationLog = new billing_SERVICE_ACTIVATION_LOG();
 	    foreach($this->serStatDet as $key=>$dataArr){
@@ -994,29 +1182,74 @@ class crmInterfaceActions extends sfActions
 
     public function executeChangeActiveServicesInterface(sfWebRequest $request)
     {
+        $this->mtongueArr = FieldMap::getFieldLabel("community_small",null,"1"); 
         $this->cid        = $request->getParameter('cid');
         $this->name       = $request->getParameter('name');
+        $this->mtongueFilter = $request->getParameter('mtongueFilter');
+        $this->mappedMtongueFilter = $this->mtongueFilter;
+        $submit = $request->getParameter('submit');
+        if(empty($this->mtongueFilter)){
+            $this->mtongueFilter = "-1";
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $memHandlerObj = new MembershipHandler(false);
+            $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+            unset($memHandlerObj);
+      
+            if($count == 0){
+                $this->mappedMtongueFilter = "-1";
+            }
+        }
+        
         $billingServObj   = new billing_SERVICES();
         $memHandlerObject = new MembershipHandler();
         // LIMIT SERVICES TO SHOW IN THIS INTERFACE
-        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive', 'T' => 'Response Booster', 'R' => 'Featured Profile', 'A' => 'Astro Compatibility', 'I' => 'We Talk For You');
-        if ($request->getParameter('submit')) {
+        $this->servArr = array('P' => 'eRishta', 'C' => 'eValue', 'NCP' => 'eAdvantage', 'X' => 'JS Exclusive','A' => 'Astro Compatibility');
+        
+        if ($submit == "visiblityChange") {
             $params = $request->getParameterHolder()->getAll();
             unset($params['submit'], $params['name'], $params['cid'], $params['module'], $params['action'], $params['authFailure']);
+            $origServDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+            //echo "ankita origServDet...."."\n";
+           
             foreach ($params as $key => $val) {
-                if ($val == 'Y') {
-                    $activate[] = $key;
-                } else {
-                    $deactivate[] = $key;
+                if ($val == 'Y'/* && $origServDet[$key]['SHOW_ONLINE'] != 'Y'*/){
+                    if(empty($origServDet[$key]['SHOW_ONLINE_NEW'])){
+                        $updateShowOnlineNew[$key] = ",$this->mtongueFilter,";
+                    }
+                    else if(strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") === false){
+                        $updateShowOnlineNew[$key] = $origServDet[$key]['SHOW_ONLINE_NEW']."$this->mtongueFilter,";
+                    }
+                } 
+                else if($val == 'N' && strpos($origServDet[$key]['SHOW_ONLINE_NEW'], ",$this->mtongueFilter,") !== false) {
+                    $updateShowOnlineNew[$key] = str_replace(",".$this->mtongueFilter.",", ",", $origServDet[$key]["SHOW_ONLINE_NEW"]);
+                    if($updateShowOnlineNew[$key] == ","){
+                        $updateShowOnlineNew[$key] = "";
+                    }
                 }
             }
-            $activate   = "'" . implode("','", $activate) . "'";
-            $deactivate = "'" . implode("','", $deactivate) . "'";
-            $billingServObj->changeServiceActivations($activate, 'Y');
-            $billingServObj->changeServiceActivations($deactivate, 'N');
+            //echo "ankita updateShowOnlineNew...."."\n";
+            //print_r($updateShowOnlineNew);die;
+            $billingServObj->changeServiceActivations($updateShowOnlineNew);
             $memHandlerObject->flushMemcacheForMembership();
         }
-        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+
+        $memHandlerObj = new MembershipHandler(false);
+        $count = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongueFilter);
+        unset($memHandlerObj);
+  
+        if($count == 0){
+            $this->mappedMtongueFilter = "-1";
+        }
+        else{
+            $this->mappedMtongueFilter = $this->mtongueFilter;
+        }
+        //var_dump($this->mtongueFilter);
+        //var_dump($this->mappedMtongueFilter);        
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr),$this->mappedMtongueFilter);
+
+        //print_r($this->servDet);die;
         $newServDet    = array();
         $skipArr       = array('C1', 'C1W', 'C2W', 'P1', 'P1W', 'P2W', 'NCP1', 'T1', 'A1', 'I10', 'R1', 'X1');
         foreach ($this->servDet as $sid => $arr) {
@@ -1126,4 +1359,165 @@ class crmInterfaceActions extends sfActions
             }
         }
     }
+    public function filterData($profiles) {
+        $k=0;
+        $index = 0;
+        $constantYears = 1;
+        $serviceObj2 = new Services;
+        //Start: JSC-2667: Fix for legacy data where start and end date is incorrect\
+        foreach ($profiles as $key => $value){
+         // print_r($profiles[$index]['ASED']);
+            if (strstr($profiles[$index]['ASED'], '2099') && strstr($profiles[$index]['SERVICEID'],'L')) {
+                //print_r("In first if");
+                $invalidArray[$k]['PROFILEID'] = $profiles[$index]['PROFILEID']; /* storing all profiles where end date is invalid. */
+                $invalidArray[$k]['ENTRY_DT'] = $profiles[$index]['ENTRY_DT'];   /* for fixing end dates of next record for same profileID  */
+                $invalidArray[$k]['SERVICEID'] = $profiles[$index]['SERVICEID'];
+                $invalidArray[$k]['ASSD'] = $profiles[$index]['ASSD'];
+                $invalidArray[$k]['INDEX'] = $index;
+                $invalidArray[$k]['BILLID'] = $profiles[$index]['BILLID'];
+
+                $actual_start_date = $profiles[$index]['ASSD'];
+                $actual_end_date = date("Y-m-d", strtotime($actual_start_date) + ($constantYears * (365 * 24 * 60 * 60)));
+                $profiles[$index]['ASED'] = $actual_end_date;
+                $invalidArray[$k]['ASED']= $profiles[$index]['ASED'];
+                $k++;
+                
+            }
+            $index++;
+        }
+        $k=0;
+        $key=0;
+        foreach ($profiles as $key => $value) {
+            foreach ($invalidArray as $key2 => $value2) {
+                if($profiles[$key]['PROFILEID'] == $invalidArray[$key2]['PROFILEID'] 
+                        && !strstr($profiles[$key]['SERVICEID'],'L')
+                        && (strstr($profiles[$key]['SERVICEID'],'C')
+                        || strstr($profiles[$key]['SERVICEID'],'P')
+                        || strstr($profiles[$key]['SERVICEID'],'NCP'))) {
+                    $profiles[$key]['ASSD'] = $invalidArray[$key2]['ASED'];
+                    //get duration
+                    $duration = $serviceObj2->getDuration($profiles[$key]['SERVICEID']);
+                    
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($duration* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+                if(strstr($profiles[$key]['SERVICEID'],'L') && (strstr($profiles[$key]['ASSD'],'2099'))){
+                    $profiles[$key]['ASSD'] = $profiles[$key]['START_DATE'];
+                    $enddt = date("Y-m-d", strtotime($profiles[$key]['ASSD']) + ($constantYears* 365* 24 * 60 * 60));
+                    $profiles[$key]['ASED'] = $enddt;
+                    $invalidArray[$key2]['ASED'] = $enddt;
+                }
+            }
+        }
+        return $profiles;
+    }
+    
+    public function executeWelcomeDiscount(sfWebRequest $request){
+        $communityWelcomeDiscountObj = new billing_COMMUNITY_WELCOME_DISCOUNT();
+        if($request->getParameter('submit')){
+            $activeCat = $communityWelcomeDiscountObj->getActiveGroupByCategories();
+            $communityWelcomeDiscountObj->startTransaction();
+            $communityWelcomeDiscountObj->markAllInactive();
+            $this->error = 0;
+            foreach($activeCat as $cat => $communityArr){
+                foreach($communityArr as $key=>$communityId){
+                    unset($params);
+                    $params["COMMUNITY"]   = $communityId;
+                    $params["CATEGORY_ID"] = $cat;
+                    $params["DISCOUNT"]    = $request->getParameter($cat);
+                    $params["ENTRY_BY"]    = $request->getParameter("name");
+                    $params["ENTRY_DT"]    = date('Y-m-d H:i:s');
+                    $params["ACTIVE"]      = "Y";
+                    if(!($params["DISCOUNT"]>=0 && $params["DISCOUNT"]<=100 && is_numeric($params["DISCOUNT"]))){
+                        $this->error = 1;
+                        $this->message = "Discount should be between 0 to 100";
+                        break;
+                    }
+                    $communityWelcomeDiscountObj->insertCommunityWiseDiscount($params);
+                }
+                if($this->error == 1){
+                    $communityWelcomeDiscountObj->rollbackTransaction();
+                    break;
+                }
+            }
+            if($this->error == 0){
+                $communityWelcomeDiscountObj->commitTransaction();
+                $this->message = "Discount updated successfully";
+            }
+        }
+        $activeCommunityWiseDiscount = $communityWelcomeDiscountObj->getActiveCommunityWiseDiscount();
+        foreach($activeCommunityWiseDiscount as $catId=>$comArr){
+            foreach($comArr as $key=>$val){
+                $data[$catId]["NAME"][]= $val["COMMUNITY"]=="0"?"Others":FieldMap::getFieldLabel("community", $val["COMMUNITY"]);
+                $data[$catId]["DISCOUNT"] = $val["DISCOUNT"];
+            }
+        }
+        $this->data = $data;
+        
+        $membershipHandlerObj = new MembershipHandler();
+        $membershipHandlerObj->setRedisForCommunityWelcomeDiscount($activeCommunityWiseDiscount);
+        unset($membershipHandlerObj);
+    }
+
+    public function executeLogClientInfo(sfWebRequest $request){
+        $flag=0;
+        $responseData = array();
+        if(count($request->getParameter("name")) > 0){
+            $loggedInAgentname = $request->getParameter('name');
+            $username = $request->getParameter("username");
+            $remarks = $request->getParameter("remarks");
+            $profileObj = NEWJS_JPROFILE::getInstance("crm_slave");
+            if($username != null || !empty($username)){
+                
+                
+                $profileId = $profileObj->getProfileIdFromUsername($username);
+                
+                
+                $incentive = new incentive_LOGGING_CLIENT_INFO();
+                if($profileId!=null && !empty($profileId)){
+                    $result = $incentive->insertIntoLoggingClientInfo($profileId, $remarks,$loggedInAgentname,date("Y-m-d H:i:s"));
+                    
+                    
+                    $flag=1;
+                    if($result == true){
+                        
+                        $mainAdmin = new incentive_MAIN_ADMIN("crm_slave");
+                        $crmId = $mainAdmin->getAllotedExecForProfile($profileId);
+                        $jsadmin = new jsadmin_PSWRDS("crm_slave");
+                        
+                        
+                        $to = $jsadmin->getEmail($crmId);
+                        $headIdArr=$jsadmin->getHeadId($crmId);
+                        $headId=$headIdArr["HEAD_ID"];
+                        
+                        if($headId)
+                            $cc=$jsadmin->get($headId,"RESID","EMAIL")["EMAIL"];
+                            
+                            $subject = "Respond Request";
+                            $msgBody="ProfileID = ".$username."<br>"."AgentName = ".$loggedInAgentname."<br>"."Remarks = ".$remarks;
+                            SendMail::send_email($to, $msgBody, $subject, $from, $cc, "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                            
+                    }
+                }else{
+                    $flag=2;
+                }
+            }
+            if($flag== 1){
+                $responseData["status"] = "Y";
+                $responseData["message"] = "Thanks for submitting";
+            } else if($flag== 2){
+                $responseData["status"] = "N";
+                $responseData["message"] = "Please enter the valid UserName";
+            }
+            if($responseData["status"]){
+                echo json_encode($responseData);
+                die();
+            }
+        }
+        
+    }
+
+
 }
+

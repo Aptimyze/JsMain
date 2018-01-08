@@ -21,6 +21,17 @@ $(document).ready(function() {
         
 
 })
+function setLocalStorageUrl()
+{
+  try
+  {
+    localStorage.setItem("prevUrlListing",window.location.href);
+  }
+  catch(e)
+  {
+    console.log(e);
+  }
+}
 </script>
 
 <div>
@@ -57,7 +68,7 @@ $(document).ready(function() {
 <div class="disptbl fullwid bg4 pad5" id='noMsgDiv' ><div class="dispcell txtc vertmid" ><div><img src="~$IMG_URL`/images/jsms/commonImg/face.png"></div><div class="pt10"></div><div class="f14 fontlig">~$firstResponse.noresultmessage`</div></div></div> 
 ~else`
 ~foreach from=$firstResponse.profiles item=tupleInfo key=id`
-              <div class="~if $id is even`bg5~else`bg4~/if` pad18" >
+              <div class="~if $id is even`bg5~else`bg4~/if` pad18" onClick="setLocalStorageUrl()">
                   
                   
     <div class="fullwid">
@@ -77,7 +88,7 @@ $(document).ready(function() {
             <input type="hidden" id="buttonInput~$id`" value="~$tupleInfo.profilechecksum`">
                   <input type="hidden" id="primeAction~$id`" value="WRITE_MESSAGE">
             
-                <span id="lastMsgId_~$id`" style="~if $tupleInfo.seen eq 'N'` font-weight:bold; ~else` font-weight:300; ~/if` font-family:Roboto;">~$tupleInfo.last_message`</span>
+                <span id="lastMsgId_~$id`" style="~if $tupleInfo.seen eq 'N'` font-weight:bold; ~else` font-weight:300; ~/if` font-family:Roboto;">~$tupleInfo.last_message|nl2br`</span>
             
           
 
@@ -102,7 +113,5 @@ $(document).ready(function() {
   <!--end:listing div--> 
 
 </div>
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
-</div>
 </div>

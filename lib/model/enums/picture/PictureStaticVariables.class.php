@@ -7,17 +7,17 @@
 class PictureStaticVariablesEnum
 {       
         const MAX_PICTURE_COUNT = 20;
-	const MAX_PICTURE_SIZE = 6000000; // 6 MB
+	const MAX_PICTURE_SIZE = 10000000; // 10 MB
 	const nonScreenedPhotos = 'N';
 	const screenedPhotos = 'S';
 	const nonScreened = 0;
 	const Screened = 1;
-	const maxPhotoSize = 6291456;//6*1024*1024
+	const maxPhotoSize = 10485760;//10*1024*1024
 	const maxNumberOfPhotos = 20;
 	const profilePicOrdering = 0;
         const photoLoggingMod=1;
         const photoLoggingRem=0;
-	public static $photoFormats = array("jpeg", "gif", "jpg");
+	public static $photoFormats = array("jpeg", "gif", "jpg","png");
 	public static $orientationToAngle= array("6"=>"-90","3"=>"180","8"=>"90");
 	public static $PICTURE_ALLOWED_FORMATS = array("image/gif","image/jpg","image/jpeg");
         public static $DELETE_REASONS = array("The photo is not clear.",
@@ -76,6 +76,9 @@ class PictureStaticVariablesEnum
 		public static $defaultCoverPhotoUrl = "/images/jspc/viewProfileImg/cover1.jpg";
         public static $defaultViewProfileCoverPhotoUrl = "/images/jspc/viewProfileImg/defaultViewProfileCover.jpg?";
         public static $photoColumnArray = Array("TITLE","KEYWORD","PICTUREID","ORDERING","PROFILEID","PICFORMAT","UPDATED_TIMESTAMP");
+        public static $acceptedhavePhotoValues = array("U","Y");
+        const VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS = 1296000; //15 days in seconds
+        const VERIFY_ACT_DATE_BLANK = "0000-00-00 00:00:00";
 }
 
 ?>

@@ -27,6 +27,18 @@
     </div>
     ~/if`
     <!--end:div-->
+        <!--start:div-->
+    <div class="clearfix pad12">
+      <div class="fl wid94p"><a href="/profile/viewprofile.php?ownview=1#Dpp" class="color13">Recommendations</a></div>
+      <div class="fr pt2"><a href="/profile/viewprofile.php?ownview=1#Dpp"><i class="mainsp set_arow2"></i></a></div>
+    </div>
+    <!--end:div-->
+    <!--start:div-->
+    <div class="clearfix pad12">
+      <div class="fl wid94p"><a href="/static/privacySettings" bind-slide="1" class="color13">Privacy Settings</a></div>
+      <div class="fr pt2"><a href="/static/privacySettings"><i class="mainsp set_arow2"></i></a></div>
+    </div>
+    <!--end:div-->
     <!--start:div-->
     <div class="clearfix pad12">
       <div class="fl wid94p"><a href="/static/changePass" bind-slide="1" class="color13">Change Password</a></div>
@@ -39,6 +51,21 @@
       <div class="fl wid94p"><a href="/?desktop=Y" class="color13">Switch to Desktop Site</a></div>
       <div class="fr pt2"><a href="/?desktop=Y"><i class="mainsp set_arow2"></i></a></div>
     </div>
+    
+    ~if $loggedIn`
+      ~if $hide`
+        <div class="clearfix pad12">
+          <div class="fl wid94p"><a href="/static/hideOption" bind-slide="1" class="color13">Hide Profile</a></div>
+          <div class="fr pt2"><a href="/static/hideOption"><i class="mainsp set_arow2"></i></a></div>
+        </div>
+      ~else`
+        <div class="clearfix pad12">
+          <div class="fl wid94p"><a href="/static/unHideOption" bind-slide="1" class="color13">Unhide Profile</a></div>
+          <div class="fr pt2"><a href="/static/unHideOption"><i class="mainsp set_arow2"></i></a></div>
+        </div>
+      ~/if`
+    ~/if`
+    
     <!--end:div-->
     ~if $loggedIn`
     <!--start:div-->

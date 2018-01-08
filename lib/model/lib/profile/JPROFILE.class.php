@@ -26,6 +26,13 @@ class JPROFILE
      */
     private static $objProfileMysql = null;
 
+    /**
+     * getArray uses this flag for returning data from cache for some profile ids
+     * and rest from store.
+     * @var static
+     */
+    const ENABLE_GETFORPARTIALKEYS = true;
+
     var $activatedKey; //archiving
 
     /**
@@ -36,9 +43,9 @@ class JPROFILE
 
     public function __construct($dbname = "")
     {
-        self::$objProfileMysql = NEWJS_JPROFILE::getInstance($dbname);
+        $this->dbName = $dbname;
+        //self::$objProfileMysql = NEWJS_JPROFILE::getInstance($dbname);
     }
-
 
     /**
      * @fn getInstance
@@ -70,7 +77,7 @@ class JPROFILE
      */
     public function setActivatedKey($activatedKey)
     {
-        self::$objProfileMysql->setActivatedKey($activatedKey);
+        $this->getJprofileObj()->setActivatedKey($activatedKey);
     }
 
     /**
@@ -80,7 +87,7 @@ class JPROFILE
      */
     public function getActivatedKey()
     {
-        return self::$objProfileMysql->getActivatedKey();
+        return $this->getJprofileObj()->getActivatedKey();
     }
 
     /**
@@ -89,7 +96,7 @@ class JPROFILE
      */
     public function getFields()
     {
-        return self::$objProfileMysql->getFields();
+        return $this->getJprofileObj()->getFields();
     }
 
     /**
@@ -107,7 +114,8 @@ class JPROFILE
     {
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
-        $this->totalQueryCount();
+	// $this->totalQueryCount();
+
         if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields, __CLASS__)) {
             $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, __CLASS__, $extraWhereClause);
             //When processing extraWhereClause results could be false,
@@ -120,21 +128,22 @@ class JPROFILE
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
-            $this->logCacheConsumption();
+            //$this->logCacheConsumption();
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
 
         //Get Records from Mysql
-        $result = self::$objProfileMysql->selectRecord($value, $criteria, $fields, $extraWhereClause, $cache);
+        $result = $this->getJprofileObj()->selectRecord($value, $criteria, $fields, $extraWhereClause, $cache);
         //TODO : Request to Cache this Record, on demand
         if(is_array($result) && $criteria == "PROFILEID") {
           $result['PROFILEID'] = $value;
         }
         if ( is_array($result) && 
 	     isset($result['PROFILEID']) &&
-	     false === ProfileCacheLib::getInstance()->isCommandLineScript()
+	     false === ProfileCacheFunctions::isCommandLineScript("set")
 	) {
-            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
         }
 
         return $result;
@@ -153,7 +162,7 @@ class JPROFILE
      */
     public function edit($paramArr = array(), $value, $criteria = "PROFILEID", $extraWhereCnd = "")
     {
-        $bResult = self::$objProfileMysql->updateRecord($paramArr,$value,$criteria,$extraWhereCnd);
+        $bResult = $this->getJprofileObj()->updateRecord($paramArr,$value,$criteria,$extraWhereCnd);
 
         if(true === $bResult) {
             ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, __CLASS__, $extraWhereCnd);
@@ -180,7 +189,7 @@ class JPROFILE
      */
     public function insert($paramArr = array())
     {
-        $bResult = self::$objProfileMysql->insertRecord($paramArr);
+        $bResult = $this->getJprofileObj()->insertRecord($paramArr);
 
         if(false !== $bResult) {
             ProfileCacheLib::getInstance()->insertInCache($bResult, $paramArr);
@@ -194,7 +203,7 @@ class JPROFILE
      */
     public function fields()
     {
-        return self::$objProfileMysql->fields();
+        return $this->getJprofileObj()->fields();
     }
 
     /**
@@ -212,15 +221,99 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-      if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID']) {      
-       // $this->logProfileIDs($valueArray['PROFILEID']);
-      }
-        return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
-    }
+        if(
+            JPROFILE::ENABLE_GETFORPARTIALKEYS &&
+            is_array($valueArray) &&
+            count($valueArray) == 1 &&
+            $valueArray['PROFILEID'] &&
+            $excludeArray == "" &&
+            $greaterThanArray == "" &&
+            $lessThanArray == "" &&
+            $orderby == "" &&
+            $limit == "" &&
+            $greaterThanEqualArrayWithoutQuote == "" &&
+            $lessThanEqualArrayWithoutQuote == "" &&
+            $like == "" &&
+            $nolike == "" &&
+            $addWhereText == ""
+        )
+        {
+            $loggingArr = array();
+            $loggingArr['originalValueArr'] = $valueArray;
+            $arrPid = explode(',', $valueArray['PROFILEID']);
+            // check limit of profile ids
+            if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
+            {
+               return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+            }
+            $fields = $this->getRelevantFields($fields);
+            $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
 
+            $loggingArr['getForPartialKeysResult'] = $result;
+
+            if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
+            {
+                // case - partial data served from cache for some  profile ids
+                $tempValueArray['PROFILEID'] = $result['notCachedPids'];
+                $result = $result['cachedResult'];
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                
+                if(strlen($tempValueArray['PROFILEID']) !== 0)
+                {
+                    // get result from store for remaining pids
+                    if(ProfileCacheFunctions::isCommandLineScript("set")){
+                            $storeResult = $this->getJprofileObj()->getArray($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    }else{
+                                $storeResult = $this->getDataForNonCommandLine($tempValueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    }
+                    // merge the cache result and the store result if there exists data in cache
+                    $result = array_merge($result, $storeResult);
+                }
+                
+                if($result === "" || empty($result) || $result === null || $result === false)
+                {
+                    LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
+                }
+
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                  $this->logCacheConsumption();
+                  return $result;
+                }
+            }
+        }
+        if(ProfileCacheFunctions::isCommandLineScript("set")){
+                return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }else{
+                return $this->getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }
+    }
+    private function getDataForNonCommandLine($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText){
+        $arrPid = explode(',', $valueArray['PROFILEID']);
+        if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT || @strstr($fields,"("))
+        {
+           return $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        }
+        $fieldsArr = explode(",",$fields);
+	$defaultFieldsRequired = array("HAVE_JCONTACT", "HAVEPHOTO", "MOB_STATUS", "LANDL_STATUS", "SUBSCRIPTION", "INCOMPLETE", "ACTIVATED", "PHOTO_DISPLAY", "GENDER", "PRIVACY");
+	$fieldsArr = array_merge($fieldsArr,$defaultFieldsRequired);
+        $fieldsAll = "*";
+        $storeFullResult = $this->getJprofileObj()->getArray($valueArray, $excludeArray, $greaterThanArray, $fieldsAll, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+        ProfileCacheLib::getInstance()->cacheForMultiple("PROFILEID", $storeFullResult, __CLASS__);
+        if($fields == "*"){
+                return $storeFullResult;
+        }
+        $storeResult = array();
+        foreach($storeFullResult as $ky=>$storeData){
+                foreach($fieldsArr as $fieldName){
+	       		$storeResult[$ky][$fieldName] = $storeData[$fieldName];
+                }
+        }
+        return $storeResult;
+        
+    }
     public function getProfileIdsThatSatisfyConditions($equality_cond_arr = '', $between_cond = '')
     {
-        return self::$objProfileMysql->getProfileIdsThatSatisfyConditions($equality_cond_arr, $between_cond);
+        return $this->getJprofileObj()->getProfileIdsThatSatisfyConditions($equality_cond_arr, $between_cond);
     }
 
     /**
@@ -231,45 +324,45 @@ class JPROFILE
      */
     public function fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset)
     {
-        return self::$objProfileMysql->fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset);
+        return $this->getJprofileObj()->fetchProfilesConditionBased($lastLoginOffset, $lastRegistrationOffset);
     }
 
-    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null)
+    public function getProfileSelectedDetails($pid, $fields = "*", $extraWhereClause = null,$orderby="")
     {
-        return self::$objProfileMysql->getProfileSelectedDetails($pid, $fields, $extraWhereClause);
+        return $this->getJprofileObj()->getProfileSelectedDetails($pid, $fields, $extraWhereClause,$orderby);
     }
 
     public function checkPhone($numberArray = '', $isd = '')
     {
-        return self::$objProfileMysql->checkPhone($numberArray, $isd);
+        return $this->getJprofileObj()->checkPhone($numberArray, $isd);
     }
 
     public function Deactive($pid)
     {
-        $result = self::$objProfileMysql->Deactive($pid);
+        $result = $this->getJprofileObj()->Deactive($pid);
         ProfileCacheLib::getInstance()->removeCache($pid);
         return $result;
     }
 
     public function duplicateEmail($email)
     {
-        return self::$objProfileMysql->duplicateEmail($email);
+        return $this->getJprofileObj()->duplicateEmail($email);
     }
 
 
     public function getPassword($username)
     {
-        return self::$objProfileMysql->getPassword($username);
+        return $this->getJprofileObj()->getPassword($username);
     }
 
     public function getUsername($profileid)
     {
-        return self::$objProfileMysql->getUsername($profileid);
+        return $this->getJprofileObj()->getUsername($profileid);
     }
 
     public function getProfileSubscription($proid)
     {
-        return self::$objProfileMysql->getProfileSubscription($proid);
+        return $this->getJprofileObj()->getProfileSubscription($proid);
     }
 
     /* Update Login Date Sort Date From Api Login Authentication
@@ -295,37 +388,37 @@ class JPROFILE
 
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)
     {
-        return self::$objProfileMysql->getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd);
+        return $this->getJprofileObj()->getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd);
     }
 
     public function getAllPasswords($l1, $l2)
     {
-        return self::$objProfileMysql->getAllPasswords($l1, $l2);
+        return $this->getJprofileObj()->getAllPasswords($l1, $l2);
     }
 
     public function getCity($profileIdArr)
     {
-        return self::$objProfileMysql->getCity($profileIdArr);
+        return $this->getJprofileObj()->getCity($profileIdArr);
     }
 
     public function getMembershipMailerProfiles($condition)
     {
-        return self::$objProfileMysql->getMembershipMailerProfiles($condition);
+        return $this->getJprofileObj()->getMembershipMailerProfiles($condition);
     }
 
     public function getLoggedInProfilesForPreAlloc($logindDtStart, $loginDtEnd)
     {
-        return self::$objProfileMysql->getLoggedInProfilesForPreAlloc($logindDtStart, $loginDtEnd);
+        return $this->getJprofileObj()->getLoggedInProfilesForPreAlloc($logindDtStart, $loginDtEnd);
     }
 
     public function fetchSourceWiseProfiles($start_dt, $end_dt)
     {
-        return self::$objProfileMysql->fetchSourceWiseProfiles($start_dt, $end_dt);
+        return $this->getJprofileObj()->fetchSourceWiseProfiles($start_dt, $end_dt);
     }
 
     public function updateHaveJEducation($profiles)
     {
-        $result = self::$objProfileMysql->updateHaveJEducation($profiles);
+        $result = $this->getJprofileObj()->updateHaveJEducation($profiles);
         if ($result) {
             ProfileCacheLib::getInstance()->removeCache(explode(",",$profiles));
         }
@@ -334,17 +427,17 @@ class JPROFILE
 
     public function getProfilesForDateRange($start_dt, $end_dt, $status)
     {
-        return self::$objProfileMysql->getProfilesForDateRange($start_dt, $end_dt, $status);
+        return $this->getJprofileObj()->getProfilesForDateRange($start_dt, $end_dt, $status);
     }
 
     public function getSubscriptions($profileid, $field)
     {
-        return self::$objProfileMysql->getSubscriptions($profileid, $field);
+        return $this->getJprofileObj()->getSubscriptions($profileid, $field);
     }
 
     public function updateOfflineBillingDetails($profileid)
     {
-        $res = self::$objProfileMysql->updateOfflineBillingDetails($profileid);
+        $res = $this->getJprofileObj()->updateOfflineBillingDetails($profileid);
         ProfileCacheLib::getInstance()->removeCache($profileid);
         return $res;
     }
@@ -363,43 +456,43 @@ class JPROFILE
 
     public function SelectPrivacy($profileId)
     {
-        return self::$objProfileMysql->SelectPrivacy($profileId);
+        return $this->getJprofileObj()->SelectPrivacy($profileId);
     }
 
 
     public function SelectHide($profileid)
     {
-        return self::$objProfileMysql->SelectHide($profileid);
+        return $this->getJprofileObj()->SelectHide($profileid);
     }
 
     public function SelectActicated($profileid)
     {
-        return self::$objProfileMysql->SelectActicated($profileid);
+        return $this->getJprofileObj()->SelectActicated($profileid);
     }
 
     public function updateHide($privacy, $profileid, $dayinterval)
     {
-        $result = self::$objProfileMysql->updateHide($privacy, $profileid, $dayinterval);
+        $result = $this->getJprofileObj()->updateHide($privacy, $profileid, $dayinterval);
         ProfileCacheLib::getInstance()->removeCache($profileid);
         return $result;
     }
 
     public function updateUnHide($privacy, $profileid)
     {
-        $result = self::$objProfileMysql->updateUnHide($privacy, $profileid);
+        $result = $this->getJprofileObj()->updateUnHide($privacy, $profileid);
         ProfileCacheLib::getInstance()->removeCache($profileid);
         return $result;
     }
 
     public function SelectDeleteData($profileid)
     {
-        return self::$objProfileMysql->SelectDeleteData($profileid);
+        return $this->getJprofileObj()->SelectDeleteData($profileid);
     }
 
 
     public function updateDeleteData($profileid)
     {
-        $result = self::$objProfileMysql->updateDeleteData($profileid);
+        $result = $this->getJprofileObj()->updateDeleteData($profileid);
         ProfileCacheLib::getInstance()->removeCache($profileid);
         return $result;
 
@@ -407,12 +500,12 @@ class JPROFILE
 
     public function getEmailFromUsername($username)
     {
-        return self::$objProfileMysql->getEmailFromUsername($username);
+        return $this->getJprofileObj()->getEmailFromUsername($username);
     }
 
     public function getEmailFromProfileId($profileid)
     {
-        return self::$objProfileMysql->getEmailFromProfileId($profileid);
+        return $this->getJprofileObj()->getEmailFromProfileId($profileid);
     }
 
     /**
@@ -423,7 +516,7 @@ class JPROFILE
      */
     public function getRegisteredProfilesAfter($registerDate, $fieldsRequired = "*")
     {
-        return self::$objProfileMysql->getRegisteredProfilesAfter($registerDate, $fieldsRequired);
+        return $this->getJprofileObj()->getRegisteredProfilesAfter($registerDate, $fieldsRequired);
     }
 
     /**
@@ -434,7 +527,7 @@ class JPROFILE
      */
     public function updateIncompleteProfileStatus($profileIdArray)
     {
-        $result = self::$objProfileMysql->updateIncompleteProfileStatus($profileIdArray);
+        $result = $this->getJprofileObj()->updateIncompleteProfileStatus($profileIdArray);
         ProfileCacheLib::getInstance()->removeCache($profileIdArray);
         return $result;
     }
@@ -445,12 +538,16 @@ class JPROFILE
      */
     public function getProfileQualityRegistationData($registerDate)
     {
-        return self::$objProfileMysql->getProfileQualityRegistationData($registerDate);
+        return $this->getJprofileObj()->getProfileQualityRegistationData($registerDate);
+    }
+    public function getProfileCampaingnRegistationData($registerDate)
+    {
+        return $this->getJprofileObj()->getProfileCampaingnRegistationData($registerDate);
     }
 
     public function getAllSubscriptionsArr($profileArr)
     {
-        return self::$objProfileMysql->getAllSubscriptionsArr($profileArr);
+        return $this->getJprofileObj()->getAllSubscriptionsArr($profileArr);
     }
 
     /*
@@ -459,9 +556,14 @@ class JPROFILE
      */
     public function getProfilesWithGivenRegDates($dateArr)
     {
-        return self::$objProfileMysql->getProfilesWithGivenRegDates($dateArr);
+        return $this->getJprofileObj()->getProfilesWithGivenRegDates($dateArr);
     }
 
+    public function getEntryDtJprofile($profileArray)
+    {
+        return $this->getJprofileObj()->getEntryDtJprofile($profileArray);
+    }
+    
     /*
      * this function return array of profileids who have registered within given dates
      * @param - date after which users have registered
@@ -469,12 +571,12 @@ class JPROFILE
      */
     public function getProfilesWithinGivenActiveDate($date)
     {
-        return self::$objProfileMysql->getProfilesWithinGivenActiveDate($date);
+        return $this->getJprofileObj()->getProfilesWithinGivenActiveDate($date);
     }
 
     public function getLatestValue($field)
     {
-        return self::$objProfileMysql->getLatestValue($field);
+        return $this->getJprofileObj()->getLatestValue($field);
     }
 
     /**
@@ -487,7 +589,7 @@ class JPROFILE
      */
     public function updateProfileForArchive($iProfileID)
     {
-        $result = self::$objProfileMysql->updateProfileForArchive($iProfileID);
+        $result = $this->getJprofileObj()->updateProfileForArchive($iProfileID);
         if($result) {
             ProfileCacheLib::getInstance()->removeCache($iProfileID);
         }
@@ -504,7 +606,7 @@ class JPROFILE
      */
     public function updateProfileForBilling($paramArr = array(), $value, $criteria = "PROFILEID", $extraStr = '')
     {
-        $result = self::$objProfileMysql->updateProfileForBilling($paramArr, $value, $criteria, $extraStr);
+        $result = $this->getJprofileObj()->updateProfileForBilling($paramArr, $value, $criteria, $extraStr);
         if($result && $criteria == "PROFILEID") {
             ProfileCacheLib::getInstance()->removeCache($value);
         }
@@ -519,7 +621,7 @@ class JPROFILE
      */
     function updateProfileSeriousnessCount($profileArr)
     {
-        $result = self::$objProfileMysql->updateProfileSeriousnessCount($profileArr);
+        $result = $this->getJprofileObj()->updateProfileSeriousnessCount($profileArr);
         if ($result) {
             ProfileCacheLib::getInstance()->removeCache($profileArr);
         }
@@ -536,7 +638,7 @@ class JPROFILE
      */
     function updateForMutipleProfiles($paramArr, $profileArr)
     {
-        $result = self::$objProfileMysql->updateForMutipleProfiles($paramArr, $profileArr);
+        $result = $this->getJprofileObj()->updateForMutipleProfiles($paramArr, $profileArr);
         if ($result) {
             ProfileCacheLib::getInstance()->removeCache($profileArr);
         }
@@ -547,12 +649,12 @@ class JPROFILE
     //This function gets data for CITY_RES/MTONGUE/(AGE/GENDER) grouped by the same along with month/day as per the condition
     public function getRegistrationMisGroupedData($fromDate, $toDate, $month = '', $groupType)
     {
-        return self::$objProfileMysql->getRegistrationMisGroupedData($fromDate, $toDate, $month, $groupType);
+        return $this->getJprofileObj()->getRegistrationMisGroupedData($fromDate, $toDate, $month, $groupType);
     }
 
     public function checkUsername($username)
     {
-        return self::$objProfileMysql->checkUsername($username);
+        return $this->getJprofileObj()->checkUsername($username);
     }
 
     /**
@@ -562,7 +664,7 @@ class JPROFILE
      */
     function updateSortDate($profileId)
     {
-        $result = self::$objProfileMysql->updateSortDate($profileId);
+        $result = $this->getJprofileObj()->updateSortDate($profileId);
         if($result) {
             ProfileCacheLib::getInstance()->removeCache($profileId);
         }
@@ -594,7 +696,7 @@ class JPROFILE
      */
     public function DeactiveProfiles($profileArr)
     {
-        $result = self::$objProfileMysql->DeactiveProfiles($profileArr);
+        $result = $this->getJprofileObj()->DeactiveProfiles($profileArr);
         ProfileCacheLib::getInstance()->removeCache($profileArr);
         return $result;
     }
@@ -604,7 +706,7 @@ class JPROFILE
      */
     public function getNewScreenProfileCount()
     {
-        return self::$objProfileMysql->getNewScreenProfileCount();
+        return $this->getJprofileObj()->getNewScreenProfileCount();
     }
 
     /**
@@ -612,7 +714,7 @@ class JPROFILE
      */
     public function getEditScreenProfileCount()
     {
-        return self::$objProfileMysql->getEditScreenProfileCount();
+        return $this->getJprofileObj()->getEditScreenProfileCount();
     }
 
     /**
@@ -620,7 +722,7 @@ class JPROFILE
      */
     public function getPhotoScreenAcceptQueueCount()
     {
-        return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
+        return $this->getJprofileObj()->getPhotoScreenAcceptQueueCount();
     }
 
     /**
@@ -628,7 +730,7 @@ class JPROFILE
      */
     public function getPhotoScreenProcessQueueCount()
     {
-        return self::$objProfileMysql->getPhotoScreenAcceptQueueCount();
+        return $this->getJprofileObj()->getPhotoScreenAcceptQueueCount();
     }
 
     /**
@@ -636,7 +738,7 @@ class JPROFILE
      */
     public function getEmailLike($email)
     {
-        return self::$objProfileMysql->getEmailLike($email);
+        return $this->getJprofileObj()->getEmailLike($email);
     }
 
     /**
@@ -644,7 +746,7 @@ class JPROFILE
      */
     public function updateEmail($email, $newEmail)
     {
-        return self::$objProfileMysql->updateEmail($email,$newEmail);
+        return $this->getJprofileObj()->updateEmail($email,$newEmail);
     }
     /**
      * This function executes a select query on join of jprofile and incentives.name_of_user
@@ -652,30 +754,30 @@ class JPROFILE
      */
     public function getDataForLegal($nameArr,$age,$addressArr,$email)
     {
-        return self::$objProfileMysql->getDataForLegal($nameArr, $age, $addressArr, $email);
+        return $this->getJprofileObj()->getDataForLegal($nameArr, $age, $addressArr, $email);
     }
     
     public function getActiveProfiles($totalScript=1,$currentScript=0,$lastLoginWithIn='6 months',$limitProfiles=0){
-        return self::$objProfileMysql->getActiveProfiles($totalScript,$currentScript,$lastLoginWithIn,$limitProfiles);
+        return $this->getJprofileObj()->getActiveProfiles($totalScript,$currentScript,$lastLoginWithIn,$limitProfiles);
     }
 
     private function logCacheConsumption()
     {return;
-        $key = 'cacheConsumeCount'.date('Y-m-d');
+       /* $key = 'cacheConsumeCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
 
     }
 
     private function totalQueryCount()
     {return;
-        $key = 'totalQueryCount'.date('Y-m-d');
+      /*  $key = 'totalQueryCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
         $key .= '::'.date('H');
-        JsMemcache::getInstance()->incrCount($key);
+        JsMemcache::getInstance()->incrCount($key);*/
     }
     
     /**
@@ -695,8 +797,42 @@ class JPROFILE
     //This function is used to fetch the latest entry date in JPROFILE so as to check in MIS whether there is a lag in slave.
     public function getLatestEntryDate()
     {
-        return self::$objProfileMysql->getLatestEntryDate();
+        return $this->getJprofileObj()->getLatestEntryDate();
+    }
+
+    public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
+    {
+        return $this->getJprofileObj()->getZombieProfiles($gtDate,$limit,$ltDate);
+    }
+
+    private function logCacheConsumeCount($funName)
+    {return;
+      /*  $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+       // JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
+	*/
+    }
+
+    //This function is used to find details of users who do not have a photo and whose date condition satifies the condition given in the array
+    public function getProfileForNoPhotoMailer($dateConditionArr) 
+    {
+        return $this->getJprofileObj()->getProfileForNoPhotoMailer($dateConditionArr);
+    }
+
+    public function getJprofileObj()
+    {
+        if(!self::$objProfileMysql)
+             self::$objProfileMysql = NEWJS_JPROFILE::getInstance($this->dbName);
+        return self::$objProfileMysql;
+    }
+    public function getRegistrationMisCampaignsData($fromDate, $toDate, $groupType)
+    {
+        return $this->getJprofileObj()->getRegistrationMisCampaignsData($fromDate, $toDate, $groupType);
+    }
+    
+    public function getMtongue($profileid){
+        return $this->getJprofileObj()->getMtongue($profileid);
     }
 }
-
 ?>

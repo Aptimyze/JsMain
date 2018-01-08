@@ -1,8 +1,9 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" ~if $index % 2 eq 1` style="max-width:320px; border-left:1px solid #eae9e9;" ~else` style="max-width:320px;" ~/if`>
 <tr>
     <td></td>
-    <td height="28" style="padding-left:5px;"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" target="_blank" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~$user->getUSERNAME()`</a></td>
-    <td height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""`Guna Match ~$user->getGUNA()`/36 ~/if`</td>
+    <td height="28" style="padding-left:5px;" colspan="2"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;">~if $user->getNAME_OF_USER()` ~$user->getNAME_OF_USER()` ~else` ~$user->getUSERNAME()` ~/if` </a>
+            ~if $user->getSUBSCRIPTION_TEXT() neq ""` <span height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;"> | </span>~/if`<span style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#c4161c"> ~if $user->getSUBSCRIPTION_TEXT() neq ""` ~$user->getSUBSCRIPTION_TEXT()` ~/if`</span>
+            <span height="28" style="font-family:Arial, Helvetica, sans-serif; font-size:12px;text-decoration:none;">~if $user->getGUNA() neq ""` | Guna Match ~$user->getGUNA()`/36 ~/if`</span></td>
 </tr>
 <tr>
     <td width="22">
@@ -10,9 +11,9 @@
     </td>
     <td width="110" height="140" valign="top">
        
-        <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" style="text-decoration:none; color:#0f529d;" target="_blank">
+        <a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" style="text-decoration:none; color:#0f529d;" target="_blank">
        
-        <img src="~$user->getSearchPicUrl()`" align="left" width="100" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
+        <img src="~if $user->getProfilePic450Url()!=''`~$user->getProfilePic450Url()`~else`~$user->getSearchPicUrl()`~/if`" align="left" width="133" height="133" hspace="0" vspace="0" border="0" style="border:1px solid #e6e6e6;" /></a>
     </td>
     <td width="188" valign="top">
         <table border="0" cellspacing="2" align="left" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
@@ -45,7 +46,7 @@
     <td colspan="2">
         <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
             <tr>
-                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`" target="_blank" style="text-decoration:none; color:#ffffff;"> <strong>View Profile</strong></a></td>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="~$mailerLinks['DETAILED_PROFILE_HOME']`~$commonParameters`?profilechecksum=~$user->getPROFILECHECKSUM()`&logic_used=~$logic`&stype=~$stypeMatch`~if $fromMatchAlertMailer` &fromMatchAlertMailer=~$fromMatchAlertMailer`~/if`" target="_blank" style="text-decoration:none; color:#ffffff;"> <strong>View Profile</strong></a></td>
             </tr>
         </table>
     </td>

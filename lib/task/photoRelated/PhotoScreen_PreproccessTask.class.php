@@ -109,10 +109,9 @@ EOF;
 	public function execute($arguments = array(), $options = array())
 	{
 		
-		  if(CommonUtility::hideFeaturesForUptime())
-                        successfullDie();
-
-		$LockingService = new LockingService;
+		if(CommonUtility::hideFeaturesForUptime())
+                      successfullDie();
+        $LockingService = new LockingService;
 		ini_set('memory_limit','1024M');	
 		ini_set("gd.jpeg_ignore_warning", 1);
 		error_reporting(E_ALL & ~E_NOTICE);
@@ -201,12 +200,29 @@ EOF;
 					$this->m_objProfile->getDetail("","","HAVEPHOTO");
 					$arrData['PROFILE_TYPE'] = $this->getProfileType($this->m_objProfile->getHAVEPHOTO());
 					$szType = $this->m_objPicFunction->getImageFormatType($arrData['MainPicUrl']);
-					
 					//////////////////////////////////////////////////////////////
+					///
+					/// Check if profile photo has proper face
+
+					/*if($arrData['ProfilePic450Url'] && $arrData["ORDERING"] == 0) {
+						$googleVisionObj = new GoogleVisionApi();
+						$faceFound = $googleVisionObj->checkFaceCordinates($arrData['ProfilePic450Url'], $arrData["PICFORMAT"], $arrData['PICTUREID'], $arrData['PROFILEID']);
+						if(!$faceFound)
+						{
+							$objPicService = new PictureService($this->m_objProfile);
+							$arrUpdate[$arrData['PICTUREID']]["MainPicUrl"] = $arrData['MainPicUrl'];
+							$objPicService->setPicProgressBit("CROPPEDFACE",$arrUpdate);
+						}
+					}
+					*/
+
 					//Move Main Pic To Orginial Pic Directory
 					$this->moveOriginalPic($iPicId,$arrData['PROFILEID'],$szType,$arrData['MainPicUrl']);
 					//If Required, Resize Main Pic and Store into same MainPicUrl
 					$this->resizePic($iPicId,$arrData['PROFILEID'],$arrData['MainPicUrl']);
+					//detail image property
+					//$googleVisionObj = new GoogleVisionApi();
+					//  $googleVisionObj->getPictureDetails($arrData['MainPicUrl'], $arrData['PICTUREID'], $arrData['PROFILEID'],$arrData["PICFORMAT"],$arrData["ORDERING"]);
 					//Update Store
 					$this->updateStore($iPicId,$arrData);
 					//Track This in Master Log
@@ -243,8 +259,7 @@ EOF;
 
 		$this->szMainPicUrl_ForDb = $this->m_objNonScreenedPicture->getDisplayPicUrl(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR['MainPicUrl'],$iPicId,$iProfileId,$szType);
 		$bStatus  = $this->m_objPicFunction->moveImage($szMainPicUrls,$this->szOriginalPicUrl_ForActualStorage);
-		chmod($szMainPicUrls,0777);
-		chmod($this->szOriginalPicUrl_ForActualStorage,0777);
+		
 		if($this->m_bDebug)
 		{
 			$this->logSection("MoveOriginalPic : Old MainPicUrl : ",$szMainPicUrls);
@@ -345,7 +360,7 @@ EOF;
 		{
 			$image = imagecreatefromjpeg($szPath);
 		}
-		chmod($szPath,0777);	
+		
 		return $image;
 	}
 

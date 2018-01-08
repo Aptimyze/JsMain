@@ -14,6 +14,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 global $partitionsArray;
 global $process_user_mapping;
 
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+        successfullDie();
+
 $processUserId=$process_user_mapping["delete_profile"];
 if(!$processUserId)
         $processUserId=1;
@@ -37,6 +40,8 @@ else
 }
 
 $mainDb = connect_db();
+$gb_time_of_deletion = calculateTimeOfDeletion($mainDb);
+
 $slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 if($logError)
@@ -58,7 +63,8 @@ if($logError)
 callDeleteCronBasedOnId($profileid);
 
 /*** Logging deleted profiles to run check in the night to delete any left over contacts **/
-$sql="INSERT IGNORE INTO newjs.NEW_DELETED_PROFILE_LOG(PROFILEID,DATE) VALUES('$profileid',NOW())";
+$today = date('Y-m-d');
+$sql="INSERT IGNORE INTO newjs.NEW_DELETED_PROFILE_LOG(PROFILEID,DATE,HOUSKEEPING_DONE) VALUES('$profileid','$today','N')";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 /*** Logging deleted profiles to run check in the night to delete any left over contacts **/
 
@@ -74,15 +80,15 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
  $dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
  $dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
  $dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
- $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES("shard1_master");
- $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES("shard2_master");
- $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES("shard3_master");
+ $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard1_master");
+ $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard2_master");
+ $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard3_master");
  $dbMessageObj1=new NEWJS_MESSAGES("shard1_master");
  $dbMessageObj2=new NEWJS_MESSAGES("shard2_master");
  $dbMessageObj3=new NEWJS_MESSAGES("shard3_master");
- $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
- $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
- $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+ $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard1_master");
+ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard2_master");
+ $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard3_master");
 
 
 
@@ -122,20 +128,24 @@ if(count($myDbarr))
 		$sql="BEGIN"; 
 		mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
-		delFromTables('DELETED_HOROSCOPE_REQUEST','HOROSCOPE_REQUEST',$myDb,$profileid,"PROFILEID");
-		delFromTables('DELETED_HOROSCOPE_REQUEST','HOROSCOPE_REQUEST',$myDb,$profileid,"PROFILEID_REQUEST_BY");
+		delFromTables('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET','HOROSCOPE_REQUEST',$myDb,$profileid,"PROFILEID");
+		delFromTables('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET','HOROSCOPE_REQUEST',$myDb,$profileid,"PROFILEID_REQUEST_BY");
 
-		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID");
-		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID_REQ_BY");
+		delFromTables('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID");
+		delFromTables('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID_REQ_BY");
 
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"RECEIVER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"SENDER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
+		delFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',$myDb,$profileid,"RECEIVER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
+		delFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',$myDb,$profileid,"SENDER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
 
-		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWER");
-		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWED");
+		delFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWER");
+		delFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWED");
 
-		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"SENDER");
-		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"RECEIVER");
+		delFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',$myDb,$profileid,"SENDER");
+		delFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',$myDb,$profileid,"RECEIVER");
+    
+    //Chat Tables
+    $dbName = "shard{$i}_master";
+    deleteChatData($dbName, $profileid);
 		$i++;
 	}
 }
@@ -149,20 +159,20 @@ $sql="BEGIN";
 $dupLogObj=new DUPLICATE_PROFILE_LOG();
 $dupLogObj->startTransaction();
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
-delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKER");
-delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKEE");
+delFromTables('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET','BOOKMARKS',$mainDb,$profileid,"BOOKMARKER");
+delFromTables('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET','BOOKMARKS',$mainDb,$profileid,"BOOKMARKEE");
 
-delFromTables('DELETED_IGNORE_PROFILE','IGNORE_PROFILE',$mainDb,$profileid,"PROFILEID");
-delFromTables('DELETED_IGNORE_PROFILE','IGNORE_PROFILE',$mainDb,$profileid,"IGNORED_PROFILEID");
+delFromTables('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET','IGNORE_PROFILE',$mainDb,$profileid,"PROFILEID");
+delFromTables('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET','IGNORE_PROFILE',$mainDb,$profileid,"IGNORED_PROFILEID");
 
-delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"MATCH_ID","jsadmin");
-delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PROFILEID","jsadmin");
+delFromTables('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET','OFFLINE_MATCHES',$mainDb,$profileid,"MATCH_ID","jsadmin");
+delFromTables('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET','OFFLINE_MATCHES',$mainDb,$profileid,"PROFILEID","jsadmin");
 
-delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
-delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
+delFromTables('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
+delFromTables('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
 
-delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
-delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
+delFromTables('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
+delFromTables('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
 
 markProfilesAsNonDuplicate($profileid,$dupLogObj);
 
@@ -188,7 +198,7 @@ foreach($myDbarr as $key=>$value)
 	$sql="COMMIT";
 	mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
-	$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET SHARD$iii=1 WHERE PROFILEID='$profileid'";
+	$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET SHARD$iii=1 WHERE PROFILEID='$profileid' and DATE ='$today'";
 	mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 	$iii++;
 }
@@ -202,9 +212,18 @@ $dupLogObj->commitTransaction();
 $sql_del = "DELETE FROM newjs.CONTACTS_STATUS WHERE PROFILEID='$profileid'";
 mysql_query($sql_del,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql_del);
 
-$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET MAINDB=1 WHERE PROFILEID='$profileid'";
+//TODO Add Date Column in Where Clause too
+$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET MAINDB=1 WHERE PROFILEID='$profileid' and DATE='$today'";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
+//Delete Roster Data for this profile
+deleteChatRoster($profileid);
+removeDeleteCronArg($profileid, $mainDb);
+
+//Delete this profile from ExclusiveServicing
+deleteProfileFromExclusiveServicing($profileid);
+
+deleteFromActivatedWithoutYourInfo($profileid);
 
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
@@ -272,7 +291,7 @@ mysql_query($sql_delete,$db_211);
 $sql_delete="DELETE FROM newjs.VIEW_LOG_TRIGGER  WHERE VIEWER='$profileid'";
 mysql_query($sql_delete,$db_211);
 
-$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET 211DB=1 WHERE PROFILEID='$profileid'";
+$sql="UPDATE newjs.NEW_DELETED_PROFILE_LOG SET 211DB=1 WHERE PROFILEID='$profileid' and DATE='$today'";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 /*** 211 tables ***/
 
@@ -323,7 +342,7 @@ foreach($myDbarr as $key=>$value)
 	}
 
 
-	$sql="select TYPE, SENDER,SEEN from DELETED_PROFILE_CONTACTS where RECEIVER='$profileid'";
+	$sql="select TYPE, SENDER,SEEN from DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET where RECEIVER='$profileid'";
 	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 	while($myrow=mysql_fetch_array($result))
 	{
@@ -365,7 +384,7 @@ foreach($myDbarr as $key=>$value)
 			}
 		}
 	}
-	$sql="select PROFILEID, SEEN from DELETED_HOROSCOPE_REQUEST where PROFILEID_REQUEST_BY='$profileid'";
+	$sql="select PROFILEID, SEEN from DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET where PROFILEID_REQUEST_BY='$profileid'";
 	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 	while($myrow=mysql_fetch_array($result))
 	{
@@ -383,7 +402,7 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql="select PROFILEID, SEEN from DELETED_PHOTO_REQUEST where PROFILEID_REQ_BY='$profileid'";
+	$sql="select PROFILEID, SEEN from DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET where PROFILEID_REQ_BY='$profileid'";
 	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 	while($myrow=mysql_fetch_array($result))
 	{
@@ -454,6 +473,8 @@ if(JsConstants::$webServiceFlag == 1)
 */
 function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='',$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='')
 {
+  
+    $timeOfDel = getTimeOfDeletion();
 	if(!$databaseName)
 		$databaseName='newjs';
 
@@ -466,12 +487,12 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 		{
 			$idsArr[]=$myrow["ID"];
 		}*/
-		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel);
+		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel,$timeOfDel);
 		
 		if(is_array($idsArr))
 		{
 			//$idStr=implode(",",$idsArr);
-			$result=$dbDeletedMessagesObj->insertIntoDeletedMessages($idsArr);
+			$result=$dbDeletedMessagesObj->insertFromMessages($idsArr);
 		
 			//$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
 			//mysql_query($sql,$db) or ($skip=1);
@@ -489,20 +510,20 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 			}
 			else
 			{
-				mysql_error_with_mail(mysql_error($db)."insertIntoDeletedMessages");
+				mysql_error_with_mail(mysql_error($db)."insertIntoDeletedMessagesEligibleForRetrieve");
 				/* no need to rollback as it is defaulted*/
 			}
 
 		}
 		
-		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel);
+		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel,$timeOfDel);
 		
 		//$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
 		//mysql_query($sql,$db) or ($skip=1);
 		if ($res) {
 			
 		
-				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel);
+				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel,$timeOfDel);
 		
 				if(!$response)
 					$skip=1;
@@ -512,14 +533,33 @@ function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databa
 	}
 	else{
 		$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+        
+        $dateTimeColumn = "DATE";
+        if($selTable == "CONTACTS") {
+          $dateTimeColumn = "TIME";
+        } else if($selTable == "BOOKMARKS") {
+          $dateTimeColumn = "BKDATE";
+        } else if($selTable == "OFFLINE_MATCHES") {
+          $dateTimeColumn = "MATCH_DATE";
+        }
+        //As per $selTable Add Proper Column of Time and Condition
+        if($timeOfDel) {
+          $sql.= " AND {$dateTimeColumn} <= '{$timeOfDel}' ";
+        }
+        
 		mysql_query($sql,$db) or ($skip=1);
 		if (!$skip) {
 			if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
-				$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
-				sendCurlDeleteRequest($url);
+				//$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
+				//sendCurlDeleteRequest($url);
 
 			} 
 				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+                
+                if($timeOfDel) {
+                  $sql.= " AND {$dateTimeColumn} <= '{$timeOfDel}' ";
+                }
+                
 				mysql_query($sql, $db) or ($skip = 1);
 		}
 	}
@@ -550,12 +590,18 @@ function sendCurlDeleteRequest($url)
 	curl_setopt($ch, CURLOPT_URL,$url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
+    $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+    curl_setopt($ch, CURLOPT_HEADER, $header);
+    curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	
 	curl_setopt($ch, CURLOPT_TIMEOUT, 500);
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 	$result = curl_exec($ch);
+    
+    $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    $result = substr($result, $header_size);
 	$result = json_decode($result);
 	curl_close($ch);
 
@@ -659,4 +705,137 @@ function markProfilesAsNonDuplicate($profileid,$dupLogObj){
     
     
     
+}
+
+/**
+ * 
+ * @param type $dbName
+ * @param type $iProfileId
+ */
+function deleteChatData($dbName, $iProfileId)
+{
+  try{
+    
+    $timeOfDel = getTimeOfDeletion();
+    
+    $chatLogStoreObj = new NEWJS_CHAT_LOG($dbName);
+    $arrChatIds = $chatLogStoreObj->getAllChatForHousKeeping($iProfileId, $timeOfDel);
+
+    if(count($arrChatIds)) {
+      $deletedChatsStoreObj = new NEWJS_DELETED_CHATS_ELIGIBLE_FOR_RET($dbName);
+      //Insert chats data into Respective Table
+      $deletedChatsStoreObj->insertRecordsFromChats($arrChatIds);
+      unset($deletedChatsStoreObj);
+
+      //Remove From Chats Table
+      $chatStoreObj = new NEWJS_CHATS($dbName);
+      $chatStoreObj->removeRecords($arrChatIds);
+      unset($chatStoreObj);
+
+      //Insert Chat Log data into respective delete store
+      $deletedchatLogStoreObj = new NEWJS_DELETED_CHAT_LOG_ELIGIBLE_FOR_RET($dbName);
+      $deletedchatLogStoreObj->insertRecordsFromChatLog($iProfileId, $timeOfDel);
+      unset($deletedchatLogStoreObj);
+
+      //Remove from Chat Log
+      $chatLogStoreObj->deleteAllChatForUser($iProfileId, $timeOfDel);
+    }
+    unset($chatLogStoreObj);
+  } catch (Exception $ex) {
+    mail("nitesh.s@jeevansathi.com","Issue in deleteprofile cron, while removing chat data  {$iProfileId} on {$dbName}", print_r($ex->getTrace(),true));
+    die("Issue while deleting data for chat tables");
+  }
+}
+
+/**
+ * 
+ * @param type $profileid
+ */
+function deleteChatRoster($profileid) {
+  try{
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected()) {
+      $sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($sendMailData);
+    }
+  } catch (Exception $ex) {
+    $redisKey = "DELETE_PROFILE_BG_CHAT_ROSTER_FAILED";
+    $memObj = JsMemcache::getInstance();
+    if($memObj) {
+      $memObj->incrCount($redisKey);
+    }
+    
+    //Log This
+    LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex, array(LoggingEnums::ACTION_NAME => "CHAT_ROSTER_DATA_DELETION_PROCESS", LoggingEnums::MODULE_NAME => "deletecron", LoggingEnums::MESSAGE=>"Chat roster data not delete for profile {$profileid} in deleteprofile_bg cron"));
+    
+    //if error count reach 10 then fire mail
+    $count = 10;
+    if($memObj) {
+      $count = $memObj->getRedisKey($redisKey);
+    } 
+    
+    if($count%10 == 0) {
+      if($memObj)
+        $memObj->delete($redisKey);
+      
+      mail("nitesh.s@jeevansathi.com","Chat roster data not getting deleted", "Issues while inserting into rabbitmq queue USER_DELETE for user {$profileid}");
+    }
+  }
+}
+
+
+function deleteProfileFromExclusiveServicing($profileid){
+    $exclusiveFuncObj = new ExclusiveFunctions();
+    $exclusiveFuncObj->deleteEntryFromExclusiveServicing($profileid,'D');
+}
+
+function deleteFromActivatedWithoutYourInfo($profileid){
+    $activated_without_yourInfoObj = new JSADMIN_ACTIVATED_WITHOUT_YOURINFO();
+            $activated_without_yourInfoObj->delete($profileid);
+}
+function removeDeleteCronArg($profileid,$dbObj) {
+  $sql = "DELETE FROM PROFILE.DELETE_CRON_ARG WHERE PROFILEID = $profileid";
+  $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+}
+
+function calculateTimeOfDeletion($dbObj)
+{
+  global $argv;
+  
+  $timeOfDeletion = null;
+  if(isset($argv[2])) {
+    $timeOfDeletion = $argv[2];
+    //TODO Validate this time format also
+    //Second arguement can be archived arg also
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $timeOfDeletion);
+    $timeOfDeletion = ($date && $date->format('Y-m-d H:i:s') === $timeOfDeletion) ?$timeOfDeletion : null;
+  }
+  
+  $profileid = $argv[1];
+  if(is_null($timeOfDeletion)) {//if 
+    
+    // Get From Table
+    $sql = "SELECT ARG_DEL_TIME_STAMP FROM PROFILE.DELETE_CRON_ARG where PROFILEID = $profileid";
+    $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+	$myrow=mysql_fetch_assoc($result);
+    
+    if(is_array($myrow)) {
+      $timeOfDeletion = $myrow['ARG_DEL_TIME_STAMP'];
+    } else {
+      //$timeOfDeletion = null;
+    }   
+  } 
+  
+  if($timeOfDeletion) {
+    $sql = "INSERT IGNORE INTO PROFILE.DELETE_CRON_ARG( PROFILEID, ARG_DEL_TIME_STAMP) VALUES ($profileid, '$timeOfDeletion');";
+    $result = mysql_query($sql, $dbObj) or (mysql_error_with_mail(mysql_error($dbObj)." $sql"));
+  }
+  
+  return $timeOfDeletion;
+}
+
+function getTimeOfDeletion()
+{
+  global $gb_time_of_deletion;
+  return $gb_time_of_deletion;
 }

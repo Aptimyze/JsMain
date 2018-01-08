@@ -15,6 +15,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	private $dropdown=2;
 	private $nonEditable=3;
 	private $textArea=4;
+	private $fileArea=6;
+        private $redirect=7;
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
 		$dbHobbies = new JHOBBYCacheLib();
@@ -23,6 +25,9 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$this->underScreening="under Screening";
 		$this->setApiScreeningFields();
 	}
+        public function getApiCriticalInfo(){
+                return true;
+        }
 	/** @function
 	 * @returns key value array of Life style section of app
 	 * */
@@ -254,10 +259,9 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("EDU_LEVEL_NEW","Highest Degree",$this->profile->getDecoratedEducation(),$this->profile->getEDU_LEVEL_NEW(),$this->getApiScreeningField("EDU_LEVEL_NEW"),$this->dropdown,"","","updateEducation");
 		$isPG=FieldMap::getFieldLabel("degree_pg",$this->profile->getEDU_LEVEL_NEW())?1:0;
                 $showPg = 0;
-                if($this->profile->getEDU_LEVEL_NEW() == 21 || $this->profile->getEDU_LEVEL_NEW() == 42)
-                   $showPg = 1;
 		//highest degree should in a pg degree
-		//if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
+		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
+			$showPg=1;
 		//{
 			//if(!$isPG)
 			//$education["PG_DEGREE"]="N_B";
@@ -402,6 +406,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			//$landline_value="";
 		}
 		$contactArr[]=$this->getApiFormatArray("PHONE_RES","Landline No." ,$landline_label,$landline_value,$this->getApiScreeningField("PHONE_RES"),$this->text);
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+		$contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+    
 			
 		if($this->profile->getTIME_TO_CALL_START() && $this->profile->getTIME_TO_CALL_END())
 		{
@@ -465,12 +476,67 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @returns key value array of Basic Information section of app
 	 * */
 	public function getApiBasicInfo() {
-		
+		//Aaadhaar Verified
+                $basicArr[AADHAAR][outerSectionName]="Aadhaar No.";
+		$basicArr[AADHAAR][outerSectionKey]="Aadhaar";
+		$basicArr[AADHAAR][singleKey]=0;
+                
+                $aadhaarObj = new aadharVerification();
+                $aadhaarDetails =  $aadhaarObj->getAadharDetails($this->profile->getPROFILEID());
+                $aadhaarStatus = $aadhaarDetails[$this->profile->getPROFILEID()][VERIFY_STATUS];
+                
+                $aadhaarNo = '';
+                $aadhaarNoText= 'Verify Aadhaar';
+                if($aadhaarStatus == 'Y'){
+                    $aadhaarNo = "Your Aadhaar no. is verified.";
+                    $aadhaarNoText = $aadhaarNo;
+                }
+                
+		$basicArr[AADHAAR][OnClick][]=$this->getApiFormatArray("AADHAAR",$aadhaarNoText,$aadhaarNo,'','',$this->redirect);
 		//your info
 		$basicArr[YOURINFO][outerSectionName]="About Me";
 		$basicArr[YOURINFO][outerSectionKey]="AboutMe";
 		$basicArr[YOURINFO][singleKey]=0;
 		$basicArr[YOURINFO][OnClick][]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),"",$this->getApiScreeningField("YOURINFO"),$this->textArea);
+                
+		//mstatus
+//                $editedCritical = CriticalEditedBefore::canEdit($this->profile->getPROFILEID());
+//                $canEdit = false;
+//                $canEditType = $this->nonEditable;
+//                if($editedCritical===true){
+//                        $canEdit = true;
+//                        $canEditType = $this->dropdown;
+//                }
+                if($this->profile->getRELIGION() == 2){
+                        $key = "MSTATUS_MUSLIM_EDIT";
+                }else{
+                        $key = "MSTATUS_EDIT";
+                }
+                
+                $infoChngObj = new newjs_CRITICAL_INFO_CHANGED();
+                $data = $infoChngObj->editedCriticalInfo($this->profile->getPROFILEID(),true);
+                $screened = 0;
+                $canEdit = true;
+                $canEditType = $this->dropdown;
+                $canEditVal = 1;
+                if($data){
+                        $canEdit = false;
+                        $canEditVal = 0;
+                        $canEditType = $this->nonEditable;
+                        if($data["SCREENED_STATUS"] == "N"){
+                                $screened = 1;
+                        }
+                }
+		//date of birth
+                $basicArr[critical][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),date("d,m,Y",strtotime($this->profile->getDTOFBIRTH())),$this->getApiScreeningField("DTOFBIRTH"),$canEditType,'','',"UpdateDobSection","","","",$canEditVal);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$screened,$canEditType,"",0,"","","",array(),$canEditVal,$key);
+		$basicArr[critical][OnClick][]=$this->getApiFormatArray("MSTATUS_PROOF","" ,"Divorce Decree Proof","","",$this->fileArea,"",0,"updateProofLabel",true,"",array(),"","");
+                
+		$basicArr["critical"][outerSectionName]="Critical Fields";
+		$basicArr["critical"][outerSectionNameSubHeading]="- can be edited only once";
+		$basicArr["critical"][outerSectionKey]="critical";
+		$basicArr["critical"][singleKey]=0;
+                
 		//username
 		$nameOfUserObj = new NameOfUser;
                 $nameData = $nameOfUserObj->getNameData($this->profile->getPROFILEID());
@@ -522,15 +588,11 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//gender
 		$basicArr[basic][OnClick][]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),$this->nonEditable);
 		
-		//date of birth
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("DTOFBIRTH","Date of Birth",date("jS M Y", strtotime($this->profile->getDTOFBIRTH())),"",$this->getApiScreeningField("DTOFBIRTH"),$this->nonEditable);
 		
-		//mstatus
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("MSTATUS","Marital Status" ,$this->profile->getDecoratedMaritalStatus(),$this->profile->getMSTATUS(),$this->getApiScreeningField("MSTATUS"),$this->nonEditable);
 		
+                $basicArr[basic][OnClick][] =$this->getApiFormatArray("RELATION","Profile Managed by",$this->profile->getDecoratedRelation(),$this->profile->getRELATION(),$this->getApiScreeningField("RELATION"),$this->dropdown);
 		$relinfo = (array)$this->profile->getReligionInfo();
 		$relinfo_values = (array)$this->profile->getReligionInfo(1);
-		
 		
 		$basicArr["Ethnicity"][outerSectionName]="Ethnicity";
 		$basicArr["Ethnicity"][outerSectionKey]="Ethnicity";
@@ -543,7 +605,17 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($religion==RELIGION::HINDU || $religion==Religion::JAIN || $religion==Religion::SIKH )
 			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Caste" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
-			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown);
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("CASTE","Sect" ,$this->profile->getDecoratedCaste(),$this->profile->getCASTE(),$this->getApiScreeningField("CASTE"),$this->dropdown,'','','UpdateMuslimSectSection');
+		if($religion==Religion::MUSLIM && $this->profile->getCaste()==152)
+		{
+			$jamaatHide = false;
+		}
+		else
+			$jamaatHide = true;
+			$relinfo = (array)$this->profile->getReligionInfo();
+			$relinfo_values = (array)$this->profile->getReligionInfo(1);
+
+			$basicArr["Ethnicity"][OnClick][]  =$this->getApiFormatArray("JAMAAT","Jamaat" ,$relinfo['JAMAAT'],$relinfo_values['JAMAAT'],$this->getApiScreeningField("JAMAAT"),$this->dropdown,'','','UpdateJamaat',$jamaatHide);
                 if($religion==RELIGION::CHRISTIAN)
 		$basicArr["Ethnicity"][OnClick][] =$this->getApiFormatArray("DIOCESE","Diocese" ,$relinfo[DIOCESE],"",$this->getApiScreeningField("DIOCESE"),$this->text);
 		//SUB-CASTE
@@ -794,10 +866,23 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//Occupation
 		$szOcc = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_OCC());
 		$p_occlevel=trim($jpartnerObj->getDecoratedPARTNER_OCC());
-		if($szEdu=="DM")
+		if($szOcc=="DM")
 			$p_occlevel="Doesn't matter";
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
+		//Occupation grouping
+		$szOccGroup = $this->getDecorateDPP_Response($jpartnerObj->getOCCUPATION_GROUPING());		
+		if(($szOccGroup == "" || $szOccGroup == "DM") && $szOcc != "DM")
+		{
+			$szOccGroup = CommonFunction::getOccupationGroups($szOcc);
+			$decoratedOccGroup = CommonFunction::getOccupationGroupsLabelsFromValues($szOccGroup); 
+		}
+		else
+		{
+			$decoratedOccGroup = $jpartnerObj->getDecoratedOCCUPATION_GROUPING();
+		}		
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION_GROUPING","Occupation",trim($decoratedOccGroup),$szOccGroup,$this->getApiScreeningField("OCCUPATION_GROUPING"),$this->dropdown,'',1);				
+		//commented the occupation array because it is not needed on JSMS
+		//$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_OCCUPATION","Occupation",$p_occlevel,$szOcc,$this->getApiScreeningField("PARTNER_OCC"),$this->dropdown,'',1);
 		//Income
 		$szIncomeRs = $this->getDecorateDPP_Response($jpartnerObj->getLINCOME());
 		$szIncomeRs .= "," . $this->getDecorateDPP_Response($jpartnerObj->getHINCOME());
@@ -811,7 +896,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		
 		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_RS","Income Rs",trim($incLab[0]),$szIncomeRs,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
 		
-		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);
+		$DppBasicArr["EduAndOcc"][OnClick][] = $this->getApiFormatArray("P_INCOME_DOL","Income $",trim($incLab[1]),$szIncomeDol,$this->getApiScreeningField("PARTNER_INCOME"),$this->dropdown);			
 		return $DppBasicArr;		
 	}
 
@@ -1110,7 +1195,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="") {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="",$staticData = "") {
 	//	$arr["sectionName"]=$sectionName;
 	//	$arr["sectionValue"]=$sectionValue;
 		$arr["key"]=$key;
@@ -1126,6 +1211,11 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$arr["showSettings"]=$showSettings;
 		$arr["settingData"]=$settingData;
 		$arr["verifyStatus"]=$verifyStatus;
+                if($staticData !=""){
+                        $arr["staticData"]=$staticData;
+                }else{
+                        $arr["staticData"]="";
+                }
 		return $arr;
 
 	}
@@ -1188,6 +1278,14 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     		return 1;
     	else
     		return 0;
+    }
+    
+    public function formatAadhaarNo($aadhaarNo)
+    {
+    	for($i=0;$i<=strlen($aadhaarNo)-4;$i = $i+4){
+            $returnString .= substr($aadhaarNo,$i,4)." "; 
+        }
+        return trim($returnString);
     }
 }
 ?>

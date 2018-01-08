@@ -1339,10 +1339,14 @@ var padding = 31;
           }
           if(ele1.name == "countryReg" && target.html() != "India"){
             $("#pincode_selector").addClass("disp-none");
+            $("#residentialStatus_selector").removeClass("disp-none");
             $("#pin_value").val("");
             inputData["pincode"] = "";
             inputData["city_res"] = "";
           }
+	if(ele1.name == "countryReg" && target.html() == "India"){
+	            $("#residentialStatus_selector").addClass("disp-none");
+	}
           ele1.selected = target.text();
           ele1.selectedId = target.parent().attr('id');
           chosenValDb = target.parent().attr("data-dbVal");
@@ -1438,6 +1442,13 @@ var padding = 31;
                 inputData["state_res"] = "";
                 regField["stateReg"].selected = "";
                 $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
+
+            $("#residentialStatus_value").val("");
+            $("#residentialStatus_span-text").html("");
+                $("#stateReg").val("");
+                inputData["res_status"] = "";
+                regField["residentialStatus"].selected = "";
+                $("#residentialStatus-list_set").find(".activeopt").removeClass("activeopt");
           }
           if (ele1.name == "familyCity")
           {
@@ -1530,15 +1541,34 @@ var padding = 31;
             }
           }
           if (ele1.name == "religion") {
+		$("#caste_no_bar").attr('checked', false);
+		inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
             if (ele1.selected == "Muslim" || ele1.selected == "Christian") {
               $("#caste_label").html("Sect");
               $("#caste_error").html("Please provide a Sect");
+		$("#casteNoBarDiv").addClass("disp-none");
             }
             else {
               $("#caste_label").html("Caste");
               $("#caste_error").html("Please provide a Caste");
+		$("#casteNoBarDiv").removeClass("disp-none");
             }
             $("caste-inputBox_set").val("");
+            $("#jamaat-inputBox_set").val("");
+            $("#casteMuslim-inputBox_set").val("");
+            $("#jamaat_value").val("");
+            $("#casteMuslim_value").val("");
+            $("#jamaat-gridUl").find(".activeopt").removeClass("activeopt");
+            $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
+            inputData["jamaat"] = "";
+            inputData["castemuslim"] = "";
+            if(typeof ele1.muslimDependentObj!="undefined" && typeof ele1.muslimDependentObj.selected !="undefined")
+                ele1.muslimDependentObj.selected='';
+            if(typeof regField["caste"] !="undefined" && typeof regField["caste"].sunniDependentObj !="undefined" && typeof regField["caste"].sunniDependentObj.selected != "undefined"){
+                regField["caste"].sunniDependentObj.selected='';
+                regField["caste"].sunniDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+            }
+            
             if (ele1.selected == "Hindu" || ele1.selected == "Jain" || ele1.selected == "Sikh" || ele1.selected == "Buddhist") {
               if (ele1.selected == "Hindu") {
                 $("#subcaste_selector").removeClass("disp-none");
@@ -1562,6 +1592,40 @@ var padding = 31;
               $("#subcaste-inputBox_set").val("");
               inputData["subcaste"] = "";
             }
+            if(ele1.selected == "Muslim"){
+                if (ele1.depMusShown) {
+                        ele1.muslimDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                        $("#casteMuslim-gridDropdown_set").hide();
+                }
+                else{
+                    var arr = {elementId: $("#casteMuslim_value").attr('id'), name: $("#casteMuslim_value").attr('id').split("_")[0], columnNo: $("#casteMuslim_value").attr("data-columns")};
+
+                    r1 = new gridDropdownType($("#casteMuslim_value"), arr);
+                    regField[r1.fieldType] = r1;
+                    regField[r1.fieldType].changeFieldCss();
+                    ele1.depMusShown = 1;
+                    ele1.muslimDependentObj = regField[r1.fieldType];
+                    ele1.muslimDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                    ele1.muslimDependentObj.fieldElement.addClass("js-tBox");
+                }
+            }
+            else if(ele1.depMusShown){
+                    ele1.muslimDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+                    $("#casteMuslim-inputBox_set").val("");
+                    ele1.muslimDependentObj.fieldElement.val("");
+                    inputData["castemuslim"] = "";
+                    $("#casteMuslim-gridUl").find(".activeopt").removeClass("activeopt");
+                    ele1.muslimDependentObj.selected='';
+                    
+                    if(regField["caste"].depSunniShown){
+                        regField["caste"].sunniDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+                        $("#jamaat-inputBox_set").val("");
+                        regField["caste"].sunniDependentObj.fieldElement.val("");
+                        inputData["jamaat"] = "";
+                        $("#jamaat-gridUl").find(".activeopt").removeClass("activeopt");
+                        regField["caste"].sunniDependentObj.selected='';
+                    }
+            }
             $("#manglik_value").val("");
             $("#manglik-inputBox_set").html("");
             $("#manglik-list_set").find(".activeopt").removeClass("activeopt");
@@ -1576,6 +1640,34 @@ var padding = 31;
             regField["horoscopeMatch"].shown = 1;
             regField["horoscopeMatch"].showInput = 1;
             regField["horoscopeMatch"].chosenValue = "";
+          }
+          
+          if (ele1.name == "caste") {
+            if(ele1.selected == "Sunni"){
+                if (ele1.depSunniShown) {
+                        ele1.sunniDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                        $("jamaat-gridDropdown_set").hide();
+                }
+                else{
+                    var arr = {elementId: $("#jamaat_value").attr('id'), name: $("#jamaat_value").attr('id').split("_")[0], columnNo: $("#jamaat_value").attr("data-columns")};
+
+                    r1 = new gridDropdownType($("#jamaat_value"), arr);
+                    regField[r1.fieldType] = r1;
+                    regField[r1.fieldType].changeFieldCss();
+                    ele1.depSunniShown = 1;
+                    ele1.sunniDependentObj = regField[r1.fieldType];
+                    ele1.sunniDependentObj.fieldElement.parent().parent().parent().removeClass("disp-none");
+                    ele1.sunniDependentObj.fieldElement.addClass("js-tBox");
+                }
+            }
+            else if(ele1.depSunniShown){
+                    ele1.sunniDependentObj.fieldElement.parent().parent().parent().addClass("disp-none");
+                    $("#jamaat-inputBox_set").val("");
+                    ele1.sunniDependentObj.fieldElement.val("");
+                    inputData["jamaat"] = "";
+                    $("#jamaat-gridUl").find(".activeopt").removeClass("activeopt");
+                    ele1.sunniDependentObj.selected='';
+            }
           }
           if (ele1.name == "countryReg" && regField["countryReg"]) {
               if(regField["countryReg"].selected == "India"){
@@ -1762,7 +1854,11 @@ var padding = 31;
       this.selectedId = "";
       this.fromIndia = 0;
       this.depShown = 1;
+      this.depMusShown = 0;
+      this.depSunniShown = 0;
       this.dependentObj = "";
+      this.muslimDependentObj = "";
+      this.sunniDependentObj = "";
       this.searchAndType = this.fieldElement.attr("data-search");
       this.fromSubList = 0;
       if (this.name == "city")
@@ -1999,6 +2095,10 @@ $(document).ready(function () {
       leadid = $("#leadid").val();
       inputData["source"] = $("#reg_source").val();
 //        inputData["record_id"]=$("#reg_record_id").val();
+      if(pageId=="JSPCR2")
+      {
+        inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
+      }      
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
       if(inputData.hasOwnProperty('state_res')){
           if(inputData['city_res'] == '0' && inputData['country_res']=='51')
@@ -2012,7 +2112,7 @@ $(document).ready(function () {
         datatype: 'json',
         cache: true,
         async: true,
-        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid},
+        data: {formValues: inputData, page: pageId, hiddenValues: hiddenTypeArr, leadid: leadid, campaignData: campaignData},
         beforeSend: function (xhr) {
            showCommonLoader(); 
         },
@@ -2117,7 +2217,7 @@ function passwordStrength (passVal) {
     $("#strength-span").width("0%");
     //$("#strength-span").css("background","#f5f5f5");
   }
-  else if ((getCharNo > 0 && getCharNo < 8) || !regField[passwordK].validator.checkCommonPassword(passVal) || !regField[passwordK].validator.checkPasswordUserName(passVal, regField[passwordK].validator.getValue("email"))) {
+  else if ((getCharNo > 0 && getCharNo < 8) || !regField[passwordK].validator.checkCommonPassword(passVal) || !regField[passwordK].validator.checkPasswordUserName(passVal, regField[passwordK].validator.getValue("email")) || $.isNumeric(passVal)) {
     $("#strength-span").width("33%");
     $("#strength-span").css("background", "#a03");
   }
@@ -2222,8 +2322,10 @@ function showDegreeFields()
                             clearPgDegree();
                         }
 			$("#college").show();
-                        if($("#otherUgDegreeInput").css('display')=='none')
+                /*
+		        if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addMoreUgDegree").show();
+		*/
 			$("#pg_college").hide();
 			$("#degree_ug").hide();
 			$("#degree_pg").hide();
@@ -2241,12 +2343,16 @@ function showDegreeFields()
 			$("#addMoreUgDegree").hide();
 			$("#pg_college").show();
 			$("#degree_ug").show();
+/*
                         if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addUg").show();
+*/
 			$("#degree_pg").hide();
                         $("#addPg").hide();
+/*
                         if($("#otherPgDegreeInput").css('display')=='none')
                             $("#addMorePgDegree").show();
+*/
                         inputData['degree_pg'] = inputData['edu_level_new'];
 			return;
 		}
@@ -2258,10 +2364,12 @@ function showDegreeFields()
 			$("#pg_college").show();
 			$("#degree_ug").show();
 			$("#degree_pg").show();
+/*
                         if($("#otherUgDegreeInput").css('display')=='none')
                             $("#addUg").show();
                         if($("#otherPgDegreeInput").css('display')=='none')
                             $("#addPg").show();
+*/
 			$("#addMorePgDegree").hide();
 			return;
 		}
@@ -2307,7 +2415,6 @@ function clearPgDegree(){
     regField["pgDegree"].chosenValue = "";
     $("#pgCollege-inputBox_set").val('');
     inputData['pg_college'] = '';
-    inputData['other_pg_degree'] = '';
     $("#otherPgDegree_value").val('');
 }
 
@@ -2322,7 +2429,6 @@ function clearUgDegree(){
     regField["ugDegree"].chosenValue = "";
     
     inputData['college'] = '';
-    inputData['other_ug_degree'] = '';
     $("#ugCollege-inputBox_set").val('');
     $("#otherUgDegree_value").val('');
 }

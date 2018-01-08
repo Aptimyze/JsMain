@@ -9,18 +9,17 @@ var listingInputData = [],
     loggingEnabledPC = false,
     clearTimedOut,
     listingPhotoRequestCompleted = ",",
-    localStorageExists = isStorageExist();
+    localStorageExists = isStorageExist(),
+    rosterMsgTime= '0';
 
 /*clearNonRosterPollingInterval
 function to stop polling for non roster webservice api 
 * @inputs:type(optional)
 */
 function clearNonRosterPollingInterval(type){
-    //console.log("in clearNonRosterPollingInterval");
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                //console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
                 clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
@@ -39,10 +38,9 @@ function to reactivate poll for non roster list
 function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
-    //console.log("dppLiveForAll",dppLiveForAll);
-    //console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
+    
     nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
-    //console.log("reActivateNonRosterPolling",nonRosterGroups);
+  
     if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
@@ -57,11 +55,9 @@ function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
                 profileEligible = false;
             }
         }
-        //console.log("profileEligible",profileEligible);
+        
         if(profileEligible == true){
-            //console.log("in reActivateNonRosterPolling",source);
             $.each(nonRosterGroups,function(key,groupId){
-                    //pollForNonRosterListing(groupId);
                     clearNonRosterPollingInterval(groupId);
                     var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
                     strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
@@ -79,11 +75,12 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
+    var selfSub = getMembershipStatus();
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId]){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]){
             valid = false;
         }
     }
@@ -94,7 +91,6 @@ function checkForValidNonRosterRequest(groupId){
     else{
         valid = true;
     }
-    //console.log("checkForValidNonRosterRequest",valid,groupId,chatConfig.Params[device].nonRosterListingRefreshCap);
     return valid;
 }
 
@@ -103,13 +99,11 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    //console.log("pollForNonRosterListing",type,updateChatListImmediate);
     if(type == undefined || type == ""){
         type = "dpp";
     }
     var selfAuth = readCookie("AUTHCHECKSUM");
-    if(selfAuth != undefined && selfAuth != ""){
-        //console.log("selfAuth",selfAuth);
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
             if(showChat == "1"){
@@ -131,7 +125,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             validRe = checkForValidNonRosterRequest(type);
             //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
         }
-        //console.log("validRe",type,validRe);
+        
         if(validRe == true){
             var getInputData = "";
             if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
@@ -201,7 +195,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 };*/
             
                     if(response["header"]["status"] == 200){
-                        //console.log("fetchNonRosterListing success",response);
+                        
                         if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
                             //chatConfig.Params[device].nonRosterListingRefreshCap[type] = response["data"]["pollTime"];
                             //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
@@ -231,7 +225,7 @@ function to process the non roster data
 */
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
-    //console.log("in processNonRosterData",source); 
+     
     var newNonRoster = {},oldNonRoster = {},offlineNonRoster = {};
     if((Object.keys(strophieWrapper.NonRoster)).length>0){
         $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
@@ -261,8 +255,7 @@ function processNonRosterData(response,type,source){
     else{
         newNonRoster = {};
     }
-    //console.log("oldNonRoster",oldNonRoster);
-    //console.log("newNonRoster",newNonRoster);
+    
     isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
     if(isResponseSame == false){
         if((Object.keys(oldNonRoster)).length > 0){
@@ -542,94 +535,99 @@ function getMessagesFromLocalStorage(selfJID, other_id){
     return messages;
 }
 
+/*preProcessCommunication
+ * pre process communication history
+ * @inputs: communication
+ * @output: response
+ */
+function preProcessCommunication(communication){
+    if(Object.keys(communication).length>0)
+        return communication.reverse();
+    else
+        return {};
+}
+
 /*getChatHistory
  * fetch chat history on opening window again
- * @inputs: chatParams
+ * @inputs: apiParams,key
  * @output: response
  */
 function getChatHistory(apiParams,key) {
-    var postData = {},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
-    var bare_from_jid = apiParams["extraParams"]["from"].split("/")[0],bare_to_jid = apiParams["extraParams"]["to"].split("/")[0];
-    if (typeof apiParams["extraParams"] != "undefined") {
-        $.each(apiParams["extraParams"], function (key, value) {
-            postData[key] = value;
-        });
-        if(typeof apiParams["extraParams"]["messageId"] == "undefined"){
-            //console.log("no messageId");
-            if(chatConfig.Params[device].storeMsgInLocalStorage == true){
-                oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
-                //console.log("oldHistory");
-               
-                if(typeof oldHistory!= "undefined"){
-                    fetchFromLocalStorage = true;
-                }
-                setLocalStorage = true;
-            }
-        }
-        else{
-            fetchFromLocalStorage = false;
-        }
-    }
-    /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["extraParams"]["from"].split("@")[0], apiParams["extraParams"]["to"].split("@")[0]);
-    if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
-        manageHistoryLoader(bare_to_jid,"hide");
-        //call plugin function to append history in div
-        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], messageFromLocalStorage,key);
-    }
-    else{*/
-        //console.log("api for history");
-
-        if (typeof chatConfig.Params.chatHistoryApi["extraParams"] != "undefined") {
-            $.each(chatConfig.Params.chatHistoryApi["extraParams"], function (k, v) {
-                postData[k] = v;
-            });
-        }
-        $.myObj.ajax({
-            url: chatConfig.Params.chatHistoryApi["apiUrl"],
-            dataType: 'json',
-            type: 'POST',
-            data: JSON.stringify(postData),
-            cache: false,
-            async: true,
-            beforeSend: function (xhr) {},
-            success: function (response) {
-                if (response["responseStatusCode"] == "0") {
-                    //console.log("history");
-                    ////console.log($.parseJSON(response["Message"]));
-                    if (typeof response["Message"] != "undefined") {
-                        if(setLocalStorage == true){
-                            localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,response["Message"]);
-                        }
-                        //console.log("setting pagination-"+response["pagination"]);
-                        if(response["pagination"] == 0){
-
-                            //console.log("no more history");
-                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
-                        }
-                        else{
-                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("1");
-                        }
-                        manageHistoryLoader(bare_to_jid,"hide");
-                        //call plugin function to append history in div
-                        objJsChat._appendChatHistory(apiParams["extraParams"]["from"], apiParams["extraParams"]["to"], $.parseJSON(response["Message"]),key,response["canChat"]);
-                        //objJsChat.storeMessagesInLocalHistory(apiParams["extraParams"]["from"].split('@')[0],apiParams["extraParams"]["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
-                    }
-                    else{
-                        $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
-                        manageHistoryLoader(bare_to_jid,"hide");
-                    }
+    var selfAuth = readCookie("AUTHCHECKSUM");
+    if(selfAuth != undefined && selfAuth != "" && selfAuth != null){
+        var getRequestUrl = "",headerData={},setLocalStorage=false,fetchFromLocalStorage = false,oldHistory;
+        var bare_from_jid = apiParams["from"].split("/")[0],bare_to_jid = apiParams["to"].split("/")[0];
+        headerData["JB-Profile-Identifier"] = selfAuth;
+        if (typeof apiParams["extraParams"] != "undefined") {
+            $.each(apiParams["extraParams"], function (key, value) {
+                if(getRequestUrl == ""){
+                    getRequestUrl = listingWebServiceUrl["rosterRemoveMsg"]+"?"+key+"="+value;
                 }
                 else{
-                    manageHistoryLoader(bare_to_jid,"hide");
-                    checkForSiteLoggedOutMode(response);
+                    getRequestUrl = getRequestUrl+"&"+key+"="+value;
                 }
-            },
-            error: function (xhr) {
-                manageHistoryLoader(bare_to_jid,"hide");
-                //return "error";
+            });
+            if(typeof apiParams["messageId"] == "undefined"){
+                if(chatConfig.Params[device].storeMsgInLocalStorage == true){
+                    oldHistory = localStorage.getItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid);
+                    if(typeof oldHistory!= "undefined"){
+                        fetchFromLocalStorage = true;
+                    }
+                    setLocalStorage = true;
+                }
             }
-        });
-   // }
+            else{
+                fetchFromLocalStorage = false;
+            }
+        }
+        /*var messageFromLocalStorage = getMessagesFromLocalStorage(apiParams["from"].split("@")[0], apiParams["to"].split("@")[0]);
+        if(!(messageFromLocalStorage == undefined || messageFromLocalStorage == null || messageFromLocalStorage.length  == 0)){
+            manageHistoryLoader(bare_to_jid,"hide");
+            //call plugin function to append history in div
+            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], messageFromLocalStorage,key);
+        }
+        else{*/
+            $.myObj.ajax({
+                url:getRequestUrl,
+                type: 'GET',
+                headers:headerData,
+                cache: false,
+                async: true,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    if (response["header"]!=undefined && response["header"]["status"] == 200) {
+                        if (typeof response["data"] != "undefined") {
+                            if(setLocalStorage == true){
+                                localStorage.setItem("chatHistory_"+bare_from_jid+"_"+bare_to_jid,JSON.stringify(response["items"]));
+                            }
+                            if(response["data"]["last"] == true){
+                                $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
+                            }
+                            else{
+                                $("#moreHistory_"+bare_to_jid.split("@")[0]).val("1");
+                            }
+                            manageHistoryLoader(bare_to_jid,"hide");
+                            //call plugin function to append history in div
+                            objJsChat._appendChatHistory(apiParams["from"], apiParams["to"], response["data"]["items"],key);
+                            //objJsChat.storeMessagesInLocalHistory(apiParams["from"].split('@')[0],apiParams["to"].split('@')[0],$.parseJSON(response["Message"]),'history');
+                        }
+                        else{
+                            $("#moreHistory_"+bare_to_jid.split("@")[0]).val("0");
+                            manageHistoryLoader(bare_to_jid,"hide");
+                        }
+                    }
+                    else{
+                        manageHistoryLoader(bare_to_jid,"hide");
+                        checkForSiteLoggedOutMode(response);
+                    }
+                },
+                error: function (xhr) {
+                    manageHistoryLoader(bare_to_jid,"hide");
+                    //return "error";
+                }
+            });
+       // }
+    }
 }
 
 /*generateChatHistoryID
@@ -730,17 +728,14 @@ function getSelfName(){
         flag = false;
         selfName =  modifiedName;
     }
-    //console.log("getSelfName",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
-        ////console.log("In self Name");
         $.myObj.ajax({
             url: apiUrl,
             async: false,
             success: function (response) {
                 if (response["responseStatusCode"] == "0") {
                     selfName = response["name"];
-                    ////console.log("Success In self Name",selfName);
                     localStorage.setItem('name', JSON.stringify({
                         'selfName': selfName,
                         'user': loggedInJspcUser
@@ -754,7 +749,6 @@ function getSelfName(){
                 //return "error";
             }
         });
-        ////console.log("ReturnIn self Name");
     }
     return selfName;
 }
@@ -771,9 +765,7 @@ function checkForSiteLoggedOutMode(response){
 */
 function getMembershipStatus(){
     var membership = localStorage.getItem("self_subcription");
-    //console.log("membership",membership);
     if(!membership){
-        //console.log("not exists");
         if(self_subcription){
             localStorage.setItem("self_subcription",self_subcription);
             membership = self_subcription;
@@ -803,15 +795,15 @@ function requestListingPhoto(apiParams) {
                     manageListingPhotoReqFlag("set",elem);
                 }
                 if(apiParams["initialList"]== true || isListPhotoReqValid(elem) == true){
-                    //console.log("normal flow");
+                    
                     if(localStorage.getItem("listingPic_"+elem)) {
                         var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
                         if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
-                            //console.log("api request gone");
+                   
                             newApiParamsPid[elem] = apiParams["profiles"][elem];
                         } 
                         else{
-                            //console.log("localStorage used");
+                        
                             exsistParamPid[elem] = apiParams["profiles"][elem];
                         }
                     }
@@ -828,7 +820,7 @@ function requestListingPhoto(apiParams) {
         if(Object.keys(newApiParamsPid).length != 0) {
             newApiParams = {"profiles":newApiParamsPid,"photoType":apiParams.photoType,"type":apiParams["initialList"]};
         }
-        //console.log("requestListingPhoto",newApiParams);
+        
         if (typeof newApiParams != "undefined" && newApiParams) {
             $.myObj.ajax({
                 url: apiUrl,
@@ -846,7 +838,7 @@ function requestListingPhoto(apiParams) {
                         });
                         objJsChat._addListingPhoto(response, "api");
                         objJsChat._addListingPhoto(Object.keys(exsistParamPid), "local");
-                        //console.log("request",apiParams["initialList"]);
+                        
                     }
                     else{
                         checkForSiteLoggedOutMode(response);
@@ -904,7 +896,7 @@ function initiateChatConnection() {
         updatePresenceAfterInterval();
     },chatConfig.Params[device].listingRefreshTimeout);
     */
-    //console.log(updatePresenceIntervalId);
+  
 }
 /*getConnectedUserJID
  * get jid of connected user
@@ -964,8 +956,6 @@ function xmlToJson(xml) {
  * @param: state
  */
 function invokePluginLoginHandler(state, loader) {
-    //console.log("invoke plign handler");
-    //console.log(state);
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
         //setLogoutClickLocalStorage("unset");
@@ -1009,11 +999,8 @@ function invokePluginLoginHandler(state, loader) {
             $(objJsChat._logoutChat).click();
         }
     } else if(state == "autoChatLogin"){
-        //console.log("ankita",localStorage.getItem("logout_"+loggedInJspcUser));
         if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
-            //console.log("yes");
             if($(objJsChat._loginbtnID).length != 0){
-                //console.log("click button");
                 $(objJsChat._loginbtnID).click();
             }
         }
@@ -1091,7 +1078,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
-            //console.log("adding ankita4",newGroupId);
+           
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
         }
         if (key == "create_list") {
@@ -1188,58 +1175,71 @@ function checkAuthentication(timer,loginType) {
     var d = new Date();
     var n = d.getTime();
     //console.log("timestamp",n);
-    $.ajax({
-        url: "/api/v1/chat/chatUserAuthentication?p="+n,
-        async: false,
-        success: function (data) {
-            if (data.responseStatusCode == "0") {
-                if(typeof data.hash !== 'undefined'){
-                    auth = 'true';
-                    pass = data.hash;
-                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                        objJsChat.manageLoginLoader();
-                    }
-                    if(loginType == "first"){
-                        initiateChatConnection();
-                        objJsChat._loginStatus = 'Y';
-                        objJsChat._startLoginHTML();
-                    }
-                }
-                else{
-                    if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
-                        setTimeout(function(){
-                            checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
-                        },timer);
-                    }
-                    else{
-                        auth = 'false';
-                        invokePluginLoginHandler("failure");
+    var loggedInUserAuth = readCookie("AUTHCHECKSUM");
+        var chatParams = {
+            "authchecksum":loggedInUserAuth
+        };
+    if(loggedInUserAuth != undefined && loggedInUserAuth != ""){
+        $.ajax({
+            url: listingWebServiceUrl["chatAuth"]+"?p="+n,
+            async: false,
+            timeout: 60000,
+            cache: false,
+            type: 'POST',
+            data: chatParams,
+            success: function (authResponse) {
+                if (authResponse.data) {
+                    if(typeof authResponse.data.hash !== 'undefined'){
+                        auth = 'true';
+                        pass = authResponse.data.hash;
                         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
                             objJsChat.manageLoginLoader();
                         }
+                        if(loginType == "first"){
+                            initiateChatConnection();
+                            objJsChat._loginStatus = 'Y';
+                            objJsChat._startLoginHTML();
+                        }
                     }
+                    else{
+                        if(timer<(chatConfig.Params[device].appendRetryLimit*4)){
+                            setTimeout(function(){
+                                checkAuthentication(timer+chatConfig.Params[device].appendRetryLimit,loginType);
+                            },timer);
+                        }
+                        else{
+                            if(typeof loggedInJspcUser != "undefined" && loggedInJspcUser!=""){
+                                trackJsEventGA('jspc', 'chatLogin',loggedInJspcUser);
+                            }
+                            auth = 'false';
+                            invokePluginLoginHandler("failure");
+                            if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                                objJsChat.manageLoginLoader();
+                            }
+                        }
+                    }
+                    localStorage.removeItem("cout");
+
+                    /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
+                        format: CryptoJSAesJson
+                    }).toString(CryptoJS.enc.Utf8));
+                    */
+                } else {
+                    auth = 'false';
+                    checkForSiteLoggedOutMode(data);
+                    invokePluginLoginHandler("failure");
                 }
-                localStorage.removeItem("cout");
-                
-                /*pass = JSON.parse(CryptoJS.AES.decrypt(data.hash, "chat", {
-                    format: CryptoJSAesJson
-                }).toString(CryptoJS.enc.Utf8));
-                */
-            } else {
-                auth = 'false';
-                checkForSiteLoggedOutMode(data);
-                invokePluginLoginHandler("failure");
+            },
+            error: function (xhr) {
+                    auth = 'false';
+                    invokePluginLoginHandler("failure");
+                    if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
+                        objJsChat.manageLoginLoader();
+                    }
+                    //return "error";
             }
-        },
-        error: function (xhr) {
-                auth = 'false';
-                invokePluginLoginHandler("failure");
-                if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-                    objJsChat.manageLoginLoader();
-                }
-                //return "error";
-        }
-    });
+        });
+    }
     return auth;
 }
 
@@ -1261,6 +1261,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
+            //send Message receieved stanza
+            strophieWrapper.sendReceivedReadEvent(msgObj["to"]+"@"+openfireServerName, msgObj["from"]+"@"+openfireServerName, msgObj["msg_id"], strophieWrapper.msgStates["MESSAGE_RECEIVED"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
@@ -1456,18 +1458,14 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                 if (response["responseStatusCode"] == "0") {
                    // console.log(response);
                     if (response["actiondetails"]) {
-                        if (response["actiondetails"]["errmsglabel"]) {
-                            outputData["cansend"] = outputData["cansend"] || false;
-                            outputData["sent"] = false;
-                            outputData["errorMsg"] = response["actiondetails"]["errmsglabel"];
+                            outputData["errorMsg"] = (response["errorMsg"] == undefined ? response["actiondetails"]["errmsglabel"] : response["errorMsg"]);
+                            outputData["cansend"] = (response["cansend"] != undefined ? response["cansend"] : true);
+                            outputData["sent"] = (response["sent"] != undefined ? response["sent"] : false);
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                        } else {
-                            outputData["cansend"] = true;
-                            outputData["sent"] = true;
-                            outputData["msg_id"] = apiParams["postParams"]["chat_id"];
-                            outputData['eoi_sent'] = response['eoi_sent'];
-                            strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
-                        }
+                            outputData['eoi_sent'] = (response["eoi_sent"] != undefined ? response["eoi_sent"] : false);
+                            if(outputData["sent"] == true){
+                                strophieWrapper.sendMessage(apiParams.postParams.chatMessage,receivedJId,true,outputData["msg_id"]);
+                            }
                     } else {
                         outputData = response;
                         outputData["msg_id"] = apiParams["postParams"]["chat_id"];
@@ -1792,6 +1790,7 @@ $(document).ready(function () {
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
             rosterGroups:chatConfig.Params[device].rosterGroups,
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
+            checkForDefaultCommunication:chatConfig.Params[device].checkForDefaultCommunication,
             setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
             chatAutoLogin:chatConfig.Params[device].autoChatLogin,
             categoryTrackingParams:chatConfig.Params.categoryTrackingParams,
@@ -1980,7 +1979,7 @@ $(document).ready(function () {
                 
 		 
 		        if(response.header.status == 200) { 
-			         for(var i=0;i<response.data.items.length;i++) {
+                                for(var i=0;i<response.data.items.length;i++) {
     				    var data = response.data.items[i];
     		
     				    data.jid = data.profileid;
@@ -2003,11 +2002,63 @@ $(document).ready(function () {
     	
         	                }); 
         			}
-		        } else {
+                    //send the contact engine buttons check stanza
+                    if(chatConfig.Params[device].enableLoadTestingStanza == true){
+                        strophieWrapper.sendContactStatusRequest(username+"@"+openfireServerName,"check");
+                    }
+                } else {
 			         checkForSiteLoggedOutMode({"responseStatusCode":9});
 		        }
             }
         });
+       }
+       
+       objJsChat.rosterDeleteChatBoxReponse = function(from,to,key){
+           var headerData = {"Content-Type": "application/json"};
+           var inputParams = JSON.stringify({
+            "msg":"chatCheck",
+            "from":from,
+            "to": to,
+            "check":"1",
+            "id":generateChatHistoryID("received")
+            });
+            $.myObj.ajax({
+                url: listingWebServiceUrl["rosterRemoveMsg"],
+                dataType: 'json',
+                type: 'POST',
+                cache:false,
+                async: true,
+                timeout: 60000,
+                headers:headerData,
+                data: inputParams,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    if(response["header"]["status"] == 400 && response["data"] != undefined){
+                        var msg;
+                        if(response["data"]["buttondetails"]==undefined){
+                            msg = objJsChat._rosterDeleteChatBoxMsg;
+                        }
+                        else{
+                            msg = response["data"]["buttondetails"]["infomsglabel"];
+                            if(msg == undefined){
+                                msg = objJsChat._rosterDeleteChatBoxMsg;
+                            }
+                        }
+                        if(key==undefined || key!="canChatMore"){
+                            if($('chat-box[user-id="' + to + '"] #rosterDeleteMsg_'+ to + '').length == 0){
+                                $('chat-box[user-id="' + to + '"] .chatMessage').append('<div id="rosterDeleteMsg_'+to+'" class="pt20 txtc color5">'+msg+'</div>');
+                            }
+                        }
+                        else if(key=="canChatMore" && response["data"]["buttondetails"]["infomsglabel"]=="Only paid members can start the chat"){
+                            //console.log("disabled chat box");
+                            //$('chat-box[user-id="' + to + '"]').attr("data-paidInitiated","false");
+                            $('chat-box[user-id="' + to + '"] textarea').prop("disabled", true);   
+                        }
+                    }
+                },
+                error: function (xhr) {
+                }
+            });
        }
         objJsChat.start();
     }

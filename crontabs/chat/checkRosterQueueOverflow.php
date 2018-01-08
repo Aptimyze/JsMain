@@ -74,8 +74,8 @@
 					//restart chat consumers
 					exec("nohup sh ".$restartShellPath." > /dev/null &");
 			        //var_dump($mailMsg);die;
-			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.".........consumers restarted as well");
-			       //mail ("nsitankita@gmail.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
+			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.".........consumers restarted as well");
+			       //mail ("lavesh.rawat@gmail.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
 			}
 		}
 	function checkRabbitmqQueueMsgCount($rabbitmqConfig){
@@ -87,7 +87,17 @@
 	    curl_setopt($curl, CURLOPT_URL,$rabbitmq_url);
 	    curl_setopt($curl,CURLOPT_RETURNTRANSFER,True);
 	    curl_setopt($curl, CURLOPT_USERPWD,$rabbitmq_creds);
+
+        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+        curl_setopt($curl, CURLOPT_HEADER, $header);
+        curl_setopt($curl, CURLOPT_USERAGENT,"JsInternal");    
+
 	    $response= curl_exec($curl);
+
+            // remove header from curl Response 
+            $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+            $response = substr($response, $header_size);
+
 	    curl_close($curl);
 	    $response =json_decode($response); 
 		//print_r($response);die;

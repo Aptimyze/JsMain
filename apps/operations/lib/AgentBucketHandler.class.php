@@ -162,6 +162,16 @@ class AgentBucketHandler
 				$profilesArr[$profileid] =$profiles_arr[$profileid];
 			}
 		}
+		if(is_array($profilesArr)){
+            $jsCommonObj =new JsCommon();
+            $onlineProfiles =$jsCommonObj->getOnlineUsetList();
+			foreach ($profilesArr as $key=>$value){
+				if (in_array($key,$onlineProfiles))
+					$profilesArr[$key]["STATUS"] = "ONLINE";
+				else
+					$profilesArr[$key]["STATUS"] = "OFFLINE";
+			}
+		}
 		return $profilesArr;
 	}
 	public function allocate($processObj,$paramsArr=array())
@@ -406,19 +416,36 @@ class AgentBucketHandler
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
                 $executives=$agentAllocDetailsObj->fetchExecutives($processObj);
-                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET('newjs_masterDDL');
+                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET('newjs_master');
 		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
                 $tempAllocBucketObj->truncate();
+
+		// Added new code for Renewal
+		$utilityObj =new crmUtility();
+                $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+                $privilegeArr =$jsadminPswrdsObj->getPrivilegesForSalesTarget();
+
 		for($i=0;$i<count($executives);$i++)
                 {
                         $exe_arr = explode(":",$executives[$i]);
                         $exe = $exe_arr[0];
-                        $processObj->setUsername($exe);
+			$processObj->setUsername($exe);
+
+			// Added new code for Renewal
+                        unset($privilegeChk);
+                        unset($processNameChk);
+			$privilegeChk =$privilegeArr[$exe];
+			$processNameChk =$utilityObj->getProcessName($privilegeChk);
+			$processNameChk =trim($processNameChk);
+
                         $profiles=$agentAllocDetailsObj->fetchProfiles($processObj);
 			$profiles=$agentAllocDetailsObj->fetchHistoryOfProfiles($profiles);
 			for($h=0;$h<count($profiles);$h++)
                         {
-				if($subMethod=='LIMIT_EXCEED_RENEWAL'){
+				/*if($subMethod=='LIMIT_EXCEED_RENEWAL'){
+					$profilesForInsertion[]=$profiles[$h];
+				}*/
+				if($processNameChk =='CENTRAL_RENEW_TELE'){
 					$profilesForInsertion[]=$profiles[$h];
 				}
 				else{
@@ -436,9 +463,9 @@ class AgentBucketHandler
                 }
 		$fexecutives=$tempAllocBucketObj->fetchFinalExecutives($processObj);
 		// New limit logic
-		$utilityObj =new crmUtility();	
+		/*$utilityObj =new crmUtility();	
 		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
-		$privilegeArr =$jsadminPswrdsObj->getPrivilegesForSalesTarget();
+		$privilegeArr =$jsadminPswrdsObj->getPrivilegesForSalesTarget();*/
 		$limitArr =$processObj->getLimitArr();
 		$exceed =0;
 		// end
@@ -724,6 +751,11 @@ class AgentBucketHandler
        		$transferLogObj->updateTransferLog($val, $agentName, $agentFrom, $agentTo, $subMethod, $allocationDt);	
        	}
        	return true;
+    }
+    
+    public function deleteFromLoggingClientInfo(){
+        $incentive = new incentive_LOGGING_CLIENT_INFO();
+        $incentive->DeleteLastThirtyDaysEntires();
     }
 }
 ?>

@@ -10,7 +10,6 @@
     	public static function getPageFields($page,$returnArr='')
     	{
 		$page_obj=new PageFields($page);
-
                 foreach (RegistrationEnums::$pageFieldMap[$page] as $id=>$fieldName)
                 {
 			switch($fieldName)
@@ -1491,6 +1490,30 @@
 					$field->setTableName("JPROFILE_EDUCATION:OTHER_UG_DEGREE");
 					$page_obj->setField(126,"","",$field);
 					break;
+                                case 'CASTEMUSLIM':
+					$field=new Field(127);
+                                        $field->setName("CASTEMUSLIM");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("sect");
+                                        $field->setDependentField("");
+					$field->setLabel("");
+					$field->setBlankValue("");
+					$field->setBlankLabel("");
+					$field->setTableName("JPROFILE:SECT");
+                                        $page_obj->setField(127,"","",$field);
+				break;
+                                case 'JAMAAT':
+					$field=new Field(128);
+                                        $field->setName("JAMAAT");
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("jamaat");
+                                        $field->setDependentField("");
+					$field->setLabel("");
+					$field->setBlankValue("");
+					$field->setBlankLabel("");
+					$field->setTableName("JP_MUSLIM:JAMAAT");
+                                        $page_obj->setField(128,"","",$field);
+				break;
 			}
 		}
 

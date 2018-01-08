@@ -115,6 +115,8 @@ class IncomeMapping
         **/
 	public function getMappedValues()
 	{
+		
+		
 		if($this->incomeArr["currency"] == $this->dollarCurrency)
 		{
 			$imin = $this->incomeArr["minID"];
@@ -142,8 +144,8 @@ class IncomeMapping
 		}
 		if($this->incomeArr["currency"] == $this->dollarCurrency)
 		{
-			if($this->incomeArr["minID"]>0)
-                        	$this->removeIncomeFlag=1;
+			//if($this->incomeArr["minID"]>0)
+              //          	$this->removeIncomeFlag=1;
                 	$this->incomeArr["minIR"] = $mappedMin;
                 	$this->incomeArr["maxIR"] = $mappedMax;
 		}
@@ -163,7 +165,7 @@ class IncomeMapping
         **/
 	private function getSortbyValues()
 	{
-		if($this->incomeArr["minIR"]==0 || $this->incomeArr["maxIR"]==0 || $this->incomeArr["minID"]==0 || $this->incomeArr["maxID"]==0)
+		if($this->incomeArr["minIR"]==0 || $this->incomeArr["maxIR"]==0 || $this->incomeArr["minID"]==0 || $this->incomeArr["maxID"]==0 || ($this->incomeArr["minID"]>0 && $this->incomeArr["minIR"]==0))
 			$this->noIncomeCase = 1;
 		else
 			$this->noIncomeCase = 0;
@@ -188,6 +190,7 @@ class IncomeMapping
 	private function makeIncomeRange($sort_arr)
 	{
 		$partner_income_arr = array();
+		
 
 		if($sort_arr["currency"] == $this->bothCurrency)
 		{
@@ -230,6 +233,7 @@ class IncomeMapping
 
 		if($partner_income_arr)
 		{
+			
 			$partner_income_arr_str = "'".implode("','",$partner_income_arr)."'";
 			for($i=0;$i<count($partner_income_arr);$i++)
 			{
@@ -241,6 +245,8 @@ class IncomeMapping
 		}
 		else
 			$incomeValues[] = $this->noIncomeValue;
+			
+		
 		return $incomeValues;
 	}
 	/**
@@ -406,7 +412,7 @@ class IncomeMapping
 			$resultArr["doHIncome"]=$this->incomeArr['maxID'];
 			$resultArr["rsLIncome"]=$this->incomeArr['minIR'];
 			$resultArr["rsHIncome"]=$this->incomeArr['maxIR'];
-
+			
 			if($this->incomeArr["currency"]!='B')
 			{
 				$this->getMappedValues();
@@ -471,6 +477,37 @@ class IncomeMapping
                                 $lowerArray[] = $key;
                 }
                 return($lowerArray);
+        }
+        public function getImmediateLowerIncome($key,$currentValue){
+                $incomeSortByArr=FieldMap::getFieldLabel($key,'',1);
+                $higherArray = array();
+                foreach($incomeSortByArr as $key=>$inc){
+                        if($key == $currentValue){
+                                break;
+                        }else{
+                                 $higherArray[] = $key;
+                        }
+                }
+                if(count($higherArray)>0)
+                        return(end($higherArray));
+                
+                return "";
+        }
+        public function getImmediateHigherIncome($key,$currentValue){
+                $incomeSortByArr=FieldMap::getFieldLabel($key,'',1);
+                krsort($incomeSortByArr);
+                $higherArray = array();
+                foreach($incomeSortByArr as $key=>$inc){
+                        if($key == $currentValue){
+                                break;
+                        }else{
+                                 $higherArray[] = $key;
+                        }
+                }
+                if(count($higherArray)>0)
+                        return(end($higherArray));
+                
+                return "";
         }
         /**
          * This function removes no income index from income array if array size is greater than 1

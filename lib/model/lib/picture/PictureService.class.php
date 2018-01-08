@@ -506,7 +506,7 @@ class PictureService
       $getFromMasterR = '1';
     } 
     $pics=$PICTURE_NEW->get($whereCondition,$getFromMasterR);
-    if(is_array($pics) && $pics[0]!='')
+    if(is_array($pics) && ($pics[0]!='' || $class != 'Profile'))
     {
       foreach ($pics as $k => $v) {
         $ScreenedPicture[$k] = new ScreenedPicture;
@@ -727,10 +727,17 @@ class PictureService
 			if($havePhoto['HAVEPHOTO']==$this->neverAddedPhoto ||$havePhoto['HAVEPHOTO']==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"U","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
-			}
+                                MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                                $memCacheObject = JsMemcache::getInstance();
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_HamburgerPicUrl");
+
+                        }
 			else
 				$this->profileObj->edit(array("PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
-		}
+		
+                        
+                }
 		elseif($method=='del')
 		{
 			if($value==$this->photoUnderScreening)
@@ -741,7 +748,12 @@ class PictureService
 			elseif($value==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"N","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosScreenedFlag));
-			}
+                        }
+                        MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                        $memCacheObject = JsMemcache::getInstance();
+                        $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+                        $memCacheObject->remove($this->profileObj->getPROFILEID(). "_HamburgerPicUrl");
+                        
 		}
 		else
 		{
@@ -1191,7 +1203,11 @@ class PictureService
                         $pictureObj = new PICTURE_FOR_SCREEN_NEW();
                         $currentBit = $pictureObj->getScreenBit($picId);
                         $ordering = $currentBit["ORDERING"];
-                        $currentBit = str_split($currentBit["SCREEN_BIT"]);
+                        if($task != "CROPPEDFACE")
+                            $bit = ($currentBit["SCREEN_BIT"]);
+                        else
+                        	$bit = "0000000";
+                        $currentBit = str_split($bit);
                         $photoTypes = array_flip(array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES));
                         $photoTypes["MainPicUrl"] = "-1";
 
@@ -1224,7 +1240,7 @@ class PictureService
                         $finalUpdateArr["pictureId"] = $picId;
                         
                         if($ordering == 0 && $task=="FACE")
-                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["EDIT"], implode("", $currentBit));
+                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["RESIZE"], implode("", $currentBit));
                         elseif($ordering==0)
                                $finalUpdateArr["bit"] = implode("", $currentBit);
                         else
@@ -1232,7 +1248,6 @@ class PictureService
                         
                         if ($pictureUrl && is_array($pictureUrl))
                                 $finalUpdateArr["urls"] = $pictureUrl;
-                        
                         $pictureObj->updateScreenBit($finalUpdateArr);
                         unset($finalUpdateArr);
                         unset($pictureUrl);
@@ -1244,6 +1259,7 @@ class PictureService
 	{
 		$memCacheObject = JsMemcache::getInstance();
 		$memCacheObject->remove($this->profileObj->getPROFILEID() . "_THUMBNAIL_PHOTO");
+		$memCacheObject->remove($this->profileObj->getPROFILEID() . "_HamburgerPicUrl");
 	}
   protected function updateProfileCompletionScore($profileId){
     $cScoreObj = ProfileCompletionFactory::getInstance(null,null,$profileId);

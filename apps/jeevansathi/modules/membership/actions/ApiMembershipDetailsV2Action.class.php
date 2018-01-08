@@ -276,7 +276,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		}
 
 		list($message,$offer_msg) = $this->getMessageFromCode($this->code);
-		if($this->userObj->userType == 5 || $this->userObj->userType == 6){
+		if($this->userObj->userType == 5 || $this->userObj->userType == 6 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
 			$benefitMsg = VariableParams::$apiPageOnePerMembershipBenefits ;
 			$benefitArr = VariableParams::$apiPageOnePerMembershipBenefitsVisibility;
 			foreach($benefitArr as $key=>$value){
@@ -652,7 +652,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		}
 
 		if($this->currency == 'RS'){
-			$cart_bottom_text = "PRICE INCLUDES ".billingVariables::TAX_RATE."% SERVICE TAX";
+			$cart_bottom_text = "PRICE INCLUDES ".billingVariables::TAX_RATE."% ". billingVariables::TAX_TEXT;
 		} else {
 			$cart_bottom_text = NULL;
 		}
@@ -932,7 +932,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 			'subscription_duration'=>$sub_dur,
 			'currency'=>$this->currency,
 			'cart_items'=>$cart_items,
-			'cart_bottom_text'=>"PRICE INCLUDES ".billingVariables::TAX_RATE."% SERVICE TAX",
+			'cart_bottom_text'=>"PRICE INCLUDES ".billingVariables::TAX_RATE."% ".billingVariables::TAX_TEXT,
 			'vas_text'=>$vas_text,
 			'vas_services'=>$this->custVAS,
 			'cart_price'=>$price,

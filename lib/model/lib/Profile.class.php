@@ -147,6 +147,7 @@ class Profile{
 	private $HAVE_JEDUCATION;
 	private $ID_PROOF_NO;
 	private $ID_PROOF_TYP;
+    private $VERIFY_ACTIVATED_DT;
 	protected $nullValueMarker = "";
 	public $JPROFILE; //JPROFILE Object
 	private static $instance; //Instance of the class
@@ -156,6 +157,8 @@ class Profile{
 	private $NAME;
 	private $SERIOUSNESS_COUN;
 	private $education_other;
+        private $religionInfoArr;
+        private $religionInfoValArr = array();
 	protected $fieldsArray=array();
         /**
          * @fn __construct
@@ -935,7 +938,21 @@ class Profile{
 				}
                 return $cityLabel;
         }
-
+        
+        public function getDecoratedState(){
+            $stateLabel = "";
+            if($this->CITY_RES||$this->CITY_RES==='0'){
+                $StateCity = substr($this->CITY_RES, 0, 2);
+                $stateLabel= FieldMap::getFieldLabel("state_india",$StateCity);
+            }
+            else
+            {
+                if(!in_array("CITY_RES",$this->fieldsArray))
+                    ProfileFieldsLogging::callFieldStack(1);
+            }
+            return $stateLabel;
+        }
+        
         /**
          * getDecoratedRelation()
          *
@@ -1260,24 +1277,35 @@ class Profile{
          */
         public function getReligionInfo($valuesOnly="")
         {
-		$data = "";
-
+            if(($valuesOnly && empty($this->religionInfoValArr)) || (!$valuesOnly && empty($this->religionInfoArr))){
+                
                 //Jain profile
-                if($this->getRELIGION()==Religion::JAIN) $data = $this->getJainData($valuesOnly);
+                if($this->getRELIGION()==Religion::JAIN) $relInfoArr = $this->getJainData($valuesOnly);
 
                 //Christian profile     
-                if($this->getRELIGION()==Religion::CHRISTIAN) $data = $this->getChristianData($valuesOnly);
+                if($this->getRELIGION()==Religion::CHRISTIAN) $relInfoArr = $this->getChristianData($valuesOnly);
 
                 //Muslim profile
-                if($this->getRELIGION()==Religion::MUSLIM) $data = $this->getMuslimData($valuesOnly);
+                if($this->getRELIGION()==Religion::MUSLIM) $relInfoArr = $this->getMuslimData($valuesOnly);
 
                 //Sikh profile
-                if($this->getRELIGION()==Religion::SIKH) $data = $this->getSikhData($valuesOnly);
+                if($this->getRELIGION()==Religion::SIKH) $relInfoArr = $this->getSikhData($valuesOnly);
 
                 //Parsi profile
-                if($this->getRELIGION()==Religion::PARSI) $data = $this->getParsiData($valuesOnly);
-
-		return $data;
+                if($this->getRELIGION()==Religion::PARSI) $relInfoArr = $this->getParsiData($valuesOnly);
+                
+            
+                if($valuesOnly){
+                    $this->religionInfoValArr = $relInfoArr;
+                }
+                else
+                    $this->religionInfoArr = $relInfoArr;
+            }
+            if($valuesOnly)
+                   return $this->religionInfoValArr;
+            else
+                return $this->religionInfoArr;
+            
         }
 
         /**
@@ -1455,6 +1483,7 @@ class Profile{
 				$row[HIJAB]=$row_muslim['HIJAB']?FieldMap::getFieldLabel("hijab",$row_muslim['HIJAB']):$this->nullValueMarker;
 				$row[HIJAB_MARRIAGE]=$row_muslim['HIJAB_MARRIAGE']?FieldMap::getFieldLabel("hijab_marriage",$row_muslim['HIJAB_MARRIAGE']):$this->nullValueMarker;
 				$row[WORKING_MARRIAGE]=$row_muslim['WORKING_MARRIAGE']?FieldMap::getFieldLabel("working_marriage",$row_muslim['WORKING_MARRIAGE']):$this->nullValueMarker;
+				$row[JAMAAT]=$row_muslim['JAMAAT']?FieldMap::getFieldLabel("jamaat",$row_muslim['JAMAAT']):$this->nullValueMarker;
 				return (object)$row;
 			}
 			//return (object)array("MATHTHAB"=>$maththab,"namaz"=>$namaz,"zakat"=>$row_muslim['ZAKAT'],"fasting"=>$fasting,"quran"=>$quran,"umrah_hajj"=>$umrah_hajj,"sunnah_beard"=>$sunnah_beard,"sunnah_cap"=>$sunnah_cap, "hijab"=>$hijab,"hijab_marriage"=>$hijabMarriage,"working_marriage"=>$working_marriage,"speak_urdu"=>$speakUrdu);
@@ -1657,6 +1686,21 @@ class Profile{
 					ProfileFieldsLogging::callFieldStack(1);
 			}
 		return $this->PROFILEID; }
+
+    function setVERIFY_ACTIVATED_DT($VERIFY_ACTIVATED_DT)
+    {
+        $this->VERIFY_ACTIVATED_DT = $VERIFY_ACTIVATED_DT;
+    }
+
+    function getVERIFY_ACTIVATED_DT()
+    {
+        if(!$this->VERIFY_ACTIVATED_DT)
+        {
+            if(!in_array("VERIFY_ACTIVATED_DT",$this->fieldsArray))
+                ProfileFieldsLogging::callFieldStack(1);
+        }
+        return $this->VERIFY_ACTIVATED_DT;
+    }
 	function setUSERNAME($USERNAME) { $this->USERNAME = $USERNAME; }
 	function getUSERNAME() {
 		if(!$this->USERNAME)
@@ -2793,7 +2837,7 @@ class Profile{
 Description: returns already set profileState object if exists other wise create the object and returns it on demand
 Added by Esha
 ****************************************/
-	public function getPROFILE_STATE($compute='true') 
+	public function getPROFILE_STATE($compute=false) 
 	{
 		if(!($this->PROFILE_STATE instanceof ProfileState))
 			$this->PROFILE_STATE = new ProfileState($this);
@@ -2859,6 +2903,11 @@ Added by Esha
 	{
 		return $this->nullValueMarker;
 	}
+  public function resetReligionInfo()
+  {
+	unset($this->religionInfoArr);
+	unset($this->religionInfoValArr);
+  }
 /**************************************Ends here********************************************************/
 }
 ?>

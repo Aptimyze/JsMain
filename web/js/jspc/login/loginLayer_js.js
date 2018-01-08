@@ -1,6 +1,17 @@
 var loginAttempts=0;
+var secureSite=0;
+var LoginLayerByUserActions = false;
+if (window.location.protocol == "https:")
+	secureSite=1;
 function LoginValidation()
 {
+	/* GA tracking */
+	if(LoginLayerByUserActions){
+		GAMapper("GA_LL_LOGIN");
+	}
+	else{
+		GAMapper("GA_TOPBAR_LOGIN");
+	}
 	var email=$.trim($("#email").val());
 		var password=$("#password").val();
    
@@ -12,7 +23,7 @@ function LoginValidation()
 		{				
 			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val()+"&secureSite="+secureSite;
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
@@ -29,7 +40,6 @@ function LoginValidation()
 			}
 			else
 			{   
-        
 				if(validateCaptcha()){
 					$("#emailErr").addClass("visb").html("Invalid Format");
 					$("#EmailContainer").addClass("brderred");
@@ -154,11 +164,15 @@ function validateCaptcha()
 
 function after_login(response)
 	{
+		if(response)
+				GAMapper("GA_LL_LOGIN_SUCCESS");
 		var address_url=window.location.href;
 		if(window.location.href.indexOf("redirectUri=")>0)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
 		if(response==0)
 		if( window.top.location.pathname=="/static/logoutPage" || window.top.location.pathname=="/jsmb/login_home.php")
+			window.top.location.href = "/myjs/jspcPerform";
+		else if(window.location.href.indexOf("common/resetPassword")>0)
 			window.top.location.href = "/myjs/jspcPerform";
 		else
 			window.top.location.href = address_url;
@@ -166,6 +180,7 @@ function after_login(response)
 
 function onFrameLoginResponseReceived(message)
 {
+	var loginFlag = false;
 	if(message.origin === SSL_SITE_URL)
 	{		
 		var response="";
@@ -193,6 +208,7 @@ function onFrameLoginResponseReceived(message)
 				{ 
 				  createCaptcha("logoutPage");
 				}
+				GAMapper("GA_LL_LOGIN_FAILURE");
 		  }
       else{
   		/*	hideCommonLoader();
@@ -223,6 +239,7 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
       }
 		}
 		else if(response == 2)
@@ -240,11 +257,13 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
+  			GAMapper("GA_LL_LOGIN_FAILURE");
 		}
 		else
 		{
+			loginFlag = true;
 			after_login(response);
-		}		
+		}
 	}
 	
 		
@@ -272,8 +291,6 @@ if(window.addEventListener)
 		window.onload = onFrameLoginResponseReceived;
 	}
 
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 
 
     $(document).ready(function(){ 
@@ -294,6 +311,7 @@ function LoginBinding()
 {
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').unbind();
 	$('#loginTopNavBar, .loginLayerJspc , .loginLayerOnShareClick, .loginLayerOnReqHoroClick,#mainServLoginBtn, #jsxServLoginBtn').click(function() {
+		LoginLayerByUserActions = false;
         $.ajax({
             type: "POST",
             url: '/static/newLoginLayer',
@@ -307,13 +325,34 @@ function LoginBinding()
                 $('#commonOverlay').after(response);
                 $('#login-layer').fadeIn(300, "linear");
                 if($(this).hasClass("loginAlbumSearch")){
+                	/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
+                	/* GA tracking */
+                	GAMapper("GAV_LL_SHOW",{action:"by user action"});
+                	GAMapper("GA_SEARCH_LOGGEDOUT_ALBUM");
 					$("#loginRegistration").addClass("loginAlbumSearch");
-					$("#LoginMessage").addClass('txtc').text("Login For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
+					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the photos");
 				}
 				else if($(this).hasClass("loginProfileSearch")){
+					/* flag for user action resulting for login layer */
+                	LoginLayerByUserActions = true;
+					/* GA tracking */
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
+                	GAMapper("GA_SEARCH_LOGGEDOUT_PROFILE");
 					$("#loginRegistration").addClass("loginProfileSearch");
 					$("#LoginMessage").addClass('txtc').text("For the benefit of the privacy of all members, we require you to kindly Login or Register to view the profile");
 				}
+
+				/* GA tracking */
+				var SplitId = this.id.split('-'); 
+				if(SplitId.length == 3){
+					LoginLayerByUserActions = true;
+					GAMapper("GAV_LL_SHOW",{action:"by user action"});
+					GAMapper("GA_SEARCH_LOGGEDOUT_EOI", {"type": SplitId[0]});
+				}
+
+				if(!LoginLayerByUserActions)
+					GAMapper("GAV_LL_SHOW");
                 $('#cls-login').click(function() {
                   //alert("scc");
                     $('#login-layer').fadeOut(200, "linear", function() {
@@ -383,6 +422,15 @@ function commonLoginBinding()
                     $("#remember").val("1");
                 });
                 $("#loginRegistration").click(function() {
+
+					/* GA tracking */
+					if(LoginLayerByUserActions){
+						GAMapper("GA_LL_REGISTER");
+					}
+					else{
+						GAMapper("GA_TOPBAR_REGISTER");
+					}
+
 					if($(this).hasClass("logout"))
 						location.href="/register/page1?source=login_p";
 					else if($(this).hasClass("loginAlbumSearch"))
@@ -417,13 +465,16 @@ function customCheckboxLogin(checkboxName,flag) {
 }
 
 $(document).ready(function(){
+	logSiteUrl();
 	commonLoginBinding();
 	if(typeof(LoggedoutPage)!="undefined")
 	{ 	
 		if(LoggedoutPage){
 			customCheckboxLogin("remember",1);
-			if(fromSignout)
-				$("#LoginMessage").html("You have successfully logged out");
+			if(typeof(fromSignout)!="undefined"){
+				if(fromSignout)
+					$("#LoginMessage").html("You have successfully logged out");
+			}
 			forgotPasswordBinding(0);
 		}
 	}
@@ -451,8 +502,15 @@ $(document).ready(function(){
 
 function forgotPasswordBinding(fromLayer)
 {
-	
 	$('#forgotPasswordLoginLayer').click(function() {
+
+			/* GA tracking */
+		if(LoginLayerByUserActions){
+			GAMapper("GA_LL_FORGOT");
+		}
+		else{
+			GAMapper("GA_TOPBAR_FORGOT");
+		}
 		
 		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
@@ -529,7 +587,10 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			
+
+			/* GA tracking */
+			GAMapper("GA_FORGOTL_SENDLINK");
+
 			var email=$("#userEmail").val();
 			if(email)
 			{
@@ -596,7 +657,7 @@ function postForgotEmailLayer()
 }
 
 function createCaptcha(fromLoggedOut){
-	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
+	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
 	if($(".g-recaptcha").length !=0){
             removeCaptcha();
     }
@@ -612,4 +673,19 @@ function removeCaptcha()
 {
   $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
+}
+
+function logSiteUrl()
+{
+	var url = location.href;
+	if(url.indexOf("jeevansathi") == -1)
+	{
+		var dataObject = JSON.stringify({'url' : encodeURIComponent(url)});
+		$.ajax({
+			url : '/api/v1/common/logOtherUrl',
+			dataType: 'json',
+			data: 'data='+dataObject,
+			success: function(response) {}
+		});
+	}
 }

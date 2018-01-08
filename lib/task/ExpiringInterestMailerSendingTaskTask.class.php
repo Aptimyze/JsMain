@@ -46,15 +46,15 @@ EOF;
 		}
 		$totalScriptVar = $arguments["totalScript"];
 		$currentScriptVar = $arguments["currentScript"];
-		if($currentScriptVar%$totalScriptVar==1)
-		{
-			if($instanceID)
-			{
-				/** code for daily count monitoring**/
-				   passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring ExpiringInterest_MAILER");
-				/**code ends*/
-			}
-		}
+//		if($currentScriptVar%$totalScriptVar==1)
+//		{
+//			if($instanceID)
+//			{
+//				/** code for daily count monitoring**/
+//				   passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring ExpiringInterest_MAILER");
+//				/**code ends*/
+//			}
+//		}
 	}
 	
   private static function sendMail($viewedProfileId, $viewerProfileArray,$countArray,$instanceID)
@@ -129,6 +129,7 @@ EOF;
 
 		$emailSender->send('','',$ccEmail);
 		$status = $emailSender->getEmailDeliveryStatus();
+		ProfileCacheLib::getInstance()->__destruct();
 		return $status;
 	}
 }

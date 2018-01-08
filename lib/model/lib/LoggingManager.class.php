@@ -306,10 +306,7 @@ class LoggingManager
 			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
-		if ( $message != "")
-		{
-			$logData[LoggingEnums::MESSAGE] = $message;
-		} 
+		$logData[LoggingEnums::MESSAGE] = $message;
 
 		if($mappingName != "")
 		{
@@ -340,6 +337,36 @@ class LoggingManager
 
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
 		}
+		else
+		{
+			$logData[LoggingEnums::REFERER] = $_SERVER['HTTP_REFERER'];
+		}
+
+		if($exception instanceof Exception)
+		{
+			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
+		}
+
+		if(isset($logArray[LoggingEnums::CONSUMER_NAME]))
+		{
+			$logData[LoggingEnums::CONSUMER_NAME] = $logArray[LoggingEnums::CONSUMER_NAME];
+		}
+
+		if(isset($logArray[LoggingEnums::PHISHING_URL]))
+		{
+			$logData[LoggingEnums::PHISHING_URL] = $logArray[LoggingEnums::PHISHING_URL];	
+		}
+
+		if(isset($logArray[LoggingEnums::DEVICEID]))
+		{
+			$logData[LoggingEnums::DEVICEID] = $logArray[LoggingEnums::DEVICEID];
+		}
+
+		if(isset($logArray[LoggingEnums::DETAILS]))
+		{
+			$logData[LoggingEnums::DETAILS] = $logArray[LoggingEnums::DETAILS];
+		}
+
 		return $logData;
 	}
 
@@ -595,10 +622,13 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
-		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
-		{
-			$this->setLogged();
-		}
+		chmod($filePath, 0777);
+
+                if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+                {
+                        $this->setLogged();
+                }
+
 	}
 
 	/**
@@ -637,14 +667,15 @@ class LoggingManager
 		}
 		// set module name
 		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
+		// check Log Level
+		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName) || ($this->szLogPath != null));
+
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);
-		// check Log Level
-		$checkLogLevel = ($enLogType <= LoggingEnums::LOG_LEVEL || $enLogType <= LoggingConfig::getInstance()->getLogLevel($this->moduleName));
 		return $toLog && $checkLogLevel && LoggingEnums::MASTER_FLAG;
 	}
 
@@ -687,20 +718,17 @@ class LoggingManager
 	 */
 	private function getlogMappingName($moduleName)
 	{
-		if(in_array($moduleName, LoggingEnums::$ModuleMapping, true))
+		if(in_array($moduleName, array_keys(LoggingEnums::$ModuleMapping)))
 		{
 			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
 		}
+		else if(strpos($moduleName, '404') !== false)
+		{
+			$mappingName = LoggingEnums::$MappingNames[20];
+		}
 		else
 		{
-			if(strpos($moduleName, '404') !== false)
-			{
-				$mappingName = LoggingEnums::$MappingNames[20];
-			}
-			else
-			{
-				$mappingName = LoggingEnums::$MappingNames[21];
-			}
+			$mappingName = LoggingEnums::$MappingNames[21];
 		}
 		return $mappingName;
 	}
@@ -711,15 +739,38 @@ class LoggingManager
 		$scriptName = '';
 		if(php_sapi_name() === 'cli')
 		{
-			if(isset($_SERVER['argv'][1]))
-			{
-				$scriptName = $_SERVER['argv'][1];
-			}
-			else
-			{
-				$scriptName = $_SERVER['SCRIPT_FILENAME'];
-			}
+			$scriptName = json_encode($_SERVER['argv']) . $_SERVER['SCRIPT_FILENAME'];
 		}
 		return $scriptName;
 	}
+
+        public function writeToFileForCoolMetric($body)
+	{
+
+                if(!LoggingEnums::$COOL_METRIC[$body['type']])return;
+                $dataOutput = array();
+                $dataOutput['Date'] = date('Y-m-d H:i:s',(strtotime($body['currentTime']) + 34200));
+                $dataOutput['logType'] = $body['type'];
+                $dataOutput['channel'] = $body['whichChannel'];
+                $dataOutput['profileId'] = $body['profileId'];
+                $dataOutput = json_encode($dataOutput);
+                $currDate = Date('Y-m-d');
+                try{
+		$filePath =  $this->serverLogPath."/coolMetric/$currDate"."_".$body['type']."/".$currDate."_".$body['type'].".log";
+                if(!file_exists(dirname($filePath)))
+                    mkdir(dirname($filePath), 0777, true);                
+		$fileResource = fopen($filePath,"a");
+		fwrite($fileResource,$dataOutput."\n");
+		fclose($fileResource);
+                }
+                catch(Exception $e){
+                    
+                    return;
+                }
+	}
+
+        
+        
+        
+        
 }

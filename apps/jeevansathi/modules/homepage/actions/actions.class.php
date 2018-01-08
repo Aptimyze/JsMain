@@ -148,12 +148,12 @@ class homepageActions extends sfActions
         /*********Ends here****************
 	/***************HTTP Metas************/
 	//$this->getResponse()->addMeta('canonical', sfConfig::get('app_site_url'));
-	$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+	$this->getResponse()->addMeta('description', "Most trusted Indian matrimony site. 10Lac+ Profiles, 3-level profile check, Search by caste and community, Privacy control & Register FREE! ‘Be Found’ Now");
 	$this->getResponse()->addMeta('author', sfConfig::get('app_site_url'));
 	$this->getResponse()->addMeta('copyright', date('Y').' jeevansathi.com');
 	/***************Ends here*************/
 	$end_time=microtime(true)-$start_tm;
-	$this->TRACK_FOOT = BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif");
+	$this->TRACK_FOOT = BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif");
 	
 	
 	sfContext::getInstance()->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsHomePageUrl);

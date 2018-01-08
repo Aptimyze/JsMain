@@ -481,6 +481,11 @@ class registerActions extends sfActions
 				$this->loginProfile = LoggedInProfile::getInstance();
 				$this->loginProfile->getDetail($this->loginData[PROFILEID], "PROFILEID");
                 $this->form->updateData($this->loginData[PROFILEID],$values_that_are_not_in_form);
+                
+                //Added Community wise Welcome discount
+                $memHandlerObj = new MembershipHandler();
+                $memHandlerObj->addCommunityWelcomeDiscount($this->loginData[PROFILEID],$this->loginProfile->getMTONGUE());
+                
 				$fto_action = FTOStateUpdateReason::REGISTER;
 				$this->loginProfile->getPROFILE_STATE()->updateFTOState($this->loginProfile, $fto_action);
 				$id = $this->loginProfile->getPROFILEID();
@@ -711,6 +716,11 @@ class registerActions extends sfActions
     public function executeCustomreg(sfWebRequest $request)
     {
 		$loginData=$request->getAttribute("loginData");
+		$source  = $request->getParameter("source");
+				
+		//setting cookie
+		setcookie("source", $source, time() + 7200, "/");
+		
 		//IF User is login then redirect to site
 		if(is_numeric($loginData[PROFILEID]))
 		{
@@ -721,6 +731,11 @@ class registerActions extends sfActions
                         $this->forward('register','jsmbPage1');
 		$objCustomPage = new CustomRegPage;
 		$newHtmlContent = $objCustomPage->ProcessRequest($request);
+		$newHtmlContent = str_replace("http","https",$newHtmlContent);
+                $newHtmlContent = str_replace("httpss","https",$newHtmlContent);
+                $newHtmlContent = str_replace("ieplads","www.ieplads",$newHtmlContent);
+                $newHtmlContent = str_replace("wwwwww","www",$newHtmlContent);
+
 		//If 1 is returned then Page_id Does Not exit, then Fwd to Page1 of Register
 		if(is_numeric($newHtmlContent) && $newHtmlContent == 1)
 		{

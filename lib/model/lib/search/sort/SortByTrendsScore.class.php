@@ -10,7 +10,8 @@
 class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
 
         private $sortArray = array();
-        private $sortString = '';
+        protected $loggedInProfileObj;
+        protected $sortString = '';
         private $trendsForwardRangeCriteria = array("AGE", "HEIGHT", "INCOME");
         private $trendsForwardCriteria = array("MTONGUE", "CASTE", "EDU_LEVEL_NEW" => "EDUCATION", "OCCUPATION", "CITY_RES" => "CITY");
         private $trendsForwardCriteriaMapping = array("EDUCATION"=>"EDU_LEVEL_NEW", "CITY"=>"CITY_RES");
@@ -25,6 +26,8 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::setPaidDateSorting();
+                //parent::isJsBoostSorting($loggedInProfileObj);
         }
         /**
          * get trends data if not set
@@ -140,6 +143,11 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
 
         public function getSortString() {
                 $counter = 0;
+                /*if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }*/
                 
                 $sortString[$counter] = parent::getReverseDppSort();
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
@@ -155,10 +163,15 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                         $counter++;
                 }
                 
-                $sortString[$counter] = "LAST_LOGIN_DT";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                //Paid members sorting
+//                $sortString[$counter] = parent::getPaidDateSorting();
+//                $sortAscOrDesc[$counter] = $this->sortByDesc;
+//                $counter++;
+                
+                $sortString[$counter] = "SORT_DT";
+                //$sortString[$counter] = "LAST_LOGIN_DT";
+                $sortAscOrDesc[$counter] = $this->sortByAsc;
                 $counter++;
-    
                 $this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
                 $this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);
                 $this->SearchParamtersObj->setFL_ATTRIBUTE("*,TS:".$this->sortString);

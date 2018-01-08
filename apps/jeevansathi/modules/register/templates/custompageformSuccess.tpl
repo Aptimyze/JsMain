@@ -93,6 +93,9 @@ label {
 		<input type="hidden" name="id" value="~$ID_AFF`" >
 		<input type="hidden" name="leadid" id ="leadid" value="~$leadid`"  >
 		<input type="hidden" name="secondary_source" value="~$sf_request->getParameter('secondary_source')`" >
+                ~foreach from = $campaignData key = nm item=field`
+                    <input type="hidden" name="campaignData[~$nm`]" value="~$field`" >
+                ~/foreach`
 		~if $TIEUP_SOURCE eq 'ofl_prof'`
 			<input type="hidden" name="email_is_ok" id="email_is_ok" value="1" >
 		~else`
@@ -318,6 +321,43 @@ label {
 	        <br>
 		<div class="clr"></div>
 		<!-- Caste Ends Here -->
+                 
+                 <!-- jamaatMuslim Starts Here -->
+ 	        <li id="jamaat" style="display:~if $form['jamaat']->hasError()`inline~else`none~/if`;">
+ 				<div id="jamaat_submit_err_label" >
+ 					<span id="jamaat_section"> 
+ 						<label id="jamaat_label" class="l1">Jamaat :</label>
+ 						
+ 							~$form['jamaat']->render(['class'=>'sel_lng','tabindex'=>14])`
+ 							
+ 						 <div id="jamaat_err" style="display:~if $form['jamaat']->hasError()`inline~else`none~/if`;" for='reg_jamaat' class='error'>
+ 							<label class="l1">&nbsp;</label>
+ 							<div class="err_msg" id="jamaat_err_msg">~if $form['jamaat']->hasError()`~$form['jamaat']->getError()`~else`Please provide a jamaat.~/if`</div>
+ 						</div>
+ 					</span>
+ 				</div>
+ 	        </li>
+ 		<div class="clr"></div>
+ 		<!-- jamaatMuslim Ends Here -->
+                
+                <!-- SectMuslim Starts Here -->
+	        <li id="sectMuslim">
+				<br>
+				<div id="sectMuslim_submit_err_label" >
+					<span id="sectMuslim_section"> 
+						<label id="sectMuslim_label" class="l1">Caste :</label>
+						
+                                        ~$form['sect_muslim']->render(['class'=>'sel_lng','tabindex'=>14])`
+
+                                 <div id="sectMuslim_err" style="display:~if $form['sect_muslim']->hasError()`inline~else`none~/if`;" for='reg_sect_muslim' class='error'>
+                                        <label class="l1">&nbsp;</label>
+                                        <div class="err_msg" id="sectMuslim_err_msg">~if $form['sect_muslim']->hasError()`~$form['sect_muslim']->getError()`~else`Please provide a caste.~/if`</div>
+                                </div>
+                                        </span>
+	        </li>
+	        <br>
+		<div class="clr"></div>
+		<!-- SectMuslim Ends Here -->
 		<!-- City Starts from here -->
 				<li id="city_padding">
 					<div id="city_res_show_hide" style="width:290px;float:left">
@@ -494,14 +534,17 @@ label {
 			var google_conversion_value = 0;
 
 			</script>
-			<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
+			<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js"></script>
 			<noscript>
 				<div style="display:inline;">
-					<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1056682264/?label=6cipCLSD5gEQmOLu9wM&amp;guid=ON&amp;script=0"/>
+					<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1056682264/?label=6cipCLSD5gEQmOLu9wM&amp;guid=ON&amp;script=0"/>
 				</div>
 			</noscript>
 		<!-- Ends Here -->
 	~/if`
+~if $sourcename neq ''`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~/if`
 <script type="text/javascript">
 var crazyegg=0;
 function crazyEggUserVar(){
@@ -562,6 +605,7 @@ $(document).ready(function(){
 	$("li#gender_padding").hide();
 	onRelationShipChange();
 	$("#caste").hide();
+        $("#sectMuslim").hide();
 			
 	setTimeout(function(){
 		if($("#reg_country_res").val()==51){
@@ -653,6 +697,7 @@ function callReligion(drpDown)
 	var val = drpDown.value;
 	$("#caste").hide();
 	$("#caste_err_msg").html("Please provide a caste");
+        $("#sectMuslim").hide();
 	
 	if(val == 2 || val == 3 )
 	{
@@ -662,6 +707,9 @@ function callReligion(drpDown)
 	if(val <=4 || val==9)
 	{
 		$("#caste").show();
+                if(val == 2){
+                    $("#sectMuslim").show();
+                }
 	}
 }
 

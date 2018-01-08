@@ -7,6 +7,7 @@ Script to send notification to photo developers abt improper functioning of phot
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include_once($docRoot."/crontabs/connect.inc");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 //date_default_timezone_set('UTC');
 
 $dbS=connect_slave();
@@ -87,13 +88,14 @@ if(is_array($MAIL_PICTURE_NOT_SCREENED_IN_3_DAYS))
 
 if(isset($notScreenedMsg))
 {  
-	mail("lavesh.rawat@jeevansathi.com,akashkumardce@gmail.com,reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 5 Days ","$notScreenedMsg","Reply-To: lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
+	mail("reshu.rajput@jeevansathi.com,photos@jeevansathi.com,sandeep@naukri.com,amuda.ruby@jeevansathi.com","Pictures Not Screened in 5 Days ","$notScreenedMsg","Reply-To: sandeep@naukri.com,anu@jeevansathi.com,anant.gupta@naukri.com");
 }
 
 // Check for Image from mail ended
 
 //--------------------------3rd chk------------------------------
-$sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW WHERE UPDATED_TIMESTAMP BETWEEN '$start_dt' AND '$end_dt'";
+$sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW WHERE UPDATED_TIMESTAMP BETWEEN '$start_dt 00:00:00' AND '$end_dt 23:59:59'";
+
 //echo $sql="SELECT PICTUREID,ORDERING,MainPicUrl,ProfilePicUrl,ThumbailUrl,Thumbail96Url,SearchPicUrl FROM PICTURE_NEW LIMIT 5";//TEMP
 $res=mysql_query($sql,$dbS) or die(mysql_error());
 while($row=mysql_fetch_assoc($res))
@@ -150,7 +152,7 @@ $mail_msg.="\n\n Search PIC URLS - ";
 if($searchPicError)
 	$mail_msg.=print_r($searchPicError,true);
 //echo $mail_msg;
-mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","Picture Proper funtioning Report ","$mail_msg");
+// mail("lavesh.rawat@jeevansathi.com,lavesh.rawat@gmail.com","Picture Proper funtioning Report ","$mail_msg");
 function checkForError($pic,$picType="")
 {
 	$noError=0;
@@ -159,7 +161,10 @@ function checkForError($pic,$picType="")
 		$noError=1;
 		if($pic)
 		{
-			$size= getimagesize($pic);
+			ini_set('user_agent','JsInternal');	
+			header('Content-Type: image/jpeg');
+			$pic1 = PictureFunctions::getCloudOrApplicationCompleteUrl($pic);
+			$size= getimagesize($pic1);
 			if(is_array($size))
 			{
 				if($size[2]>0) 

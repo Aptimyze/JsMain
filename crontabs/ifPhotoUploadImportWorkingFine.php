@@ -4,6 +4,7 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include_once("connect.inc");
+include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $dbS=connect_slave();
 
 $today=date("Y-m-d");
@@ -14,9 +15,9 @@ $start_dt=date("Y-m-d",$ts);
 $start_dt1=date("Y-m-d",$ts2);
 
 //picasa,flickr
-$sourceArr = array('facebook','computer_noFlash','mobPicsGallery','appPicsCamera','appPicsGallery','iOSPicsGallery','mobileUpload');
+$sourceArr = array('facebook','computer_noFlash','mobPicsGallery','appPicsCamera','appPicsGallery','iOSPicsGallery');
 $frequency800 = array('appPicsGallery','computer_noFlash','mobPicsGallery');
-$frequency5 = array('appPicsCamera','mobileUpload');
+$frequency5 = array('appPicsCamera');
 
 foreach($sourceArr as $k=>$v)
 {
@@ -28,17 +29,17 @@ foreach($sourceArr as $k=>$v)
 	if(in_array($v,$frequency800))
 	{
 		if($row["CNT"]<800)
-			$prob[] =  $v;
+			$prob[] =  $v."--".$row['CNT']."  ";
 	}
 	elseif(in_array($v,$frequency5))
 	{
 		if($row["CNT"]<5)
-			$prob[] =  $v;
+			$prob[] =  $v."--".$row['CNT']."  ";
 	}
 	else
 	{
 		if($row["CNT"]<100)
-			$prob[] =  $v;
+			$prob[] =  $v."--".$row['CNT']."  ";
 	}
 }
 if($prob)
@@ -53,10 +54,13 @@ if($prob)
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 
         $mobile         = "9953457479";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 
         $mobile         = "9711304800";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
 }

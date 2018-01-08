@@ -46,7 +46,7 @@ EOF;
     $this->sendSmsObj= new SmsAir2Web();
     //for getting short url
     $this->smsLibObj= new SMSLib();
-    $longUrl = JsConstants::$siteUrl."/profile/contacts_made_received.php?page=eoi&filter=M";
+    $longUrl = JsConstants::$siteUrl."/inbox/6/1";
     $afterDate = date('Y-m-d', strtotime('-7 days'));
     $endDate = date('Y-m-d');
     //select sender ids between above specified dates

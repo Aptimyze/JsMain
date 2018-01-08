@@ -41,7 +41,7 @@ EOF;
         $billOrd = new BILLING_ORDERS();
         
         // Fetching All payments within last 2 hours
-        $paidProfilesArr = $billPaymentDet->getProfilesWithinDateRange($start_time, $end_time);
+        $paidProfilesArr = $billPaymentDet->getProfilesWithinDateRangeNew($start_time, $end_time);
         
         //print_r(array($start_time, $end_time, $ind_start_time, $ind_end_time));
         
@@ -148,7 +148,7 @@ EOF;
 
         $SMS_MESSAGE = rtrim($SMS_MESSAGE,", ");
                 
-        $alertArr = array('AVNEET'=>9711458230,'MANOJ'=>9999216910,'NITISH'=>8989931104,'ANKITA'=>9650879575,'VIBHOR'=>9868673709,'TUSHAR'=>9013609387,'AYUSHI'=>9711540936,'ANIKET'=>7503366474,'VIDUSHI'=>9711304800);
+        $alertArr = array('MANOJ'=>9999216910,'NITISH'=>8989931104,'VIBHOR'=>9868673709,'TUSHAR'=>9013609387,'AYUSHI'=>9711540936,'ANIKET'=>7503366474,'VIDUSHI'=>9711304800);
 
         SendMail::send_email($to, $msgBody, $subject, $from);
 

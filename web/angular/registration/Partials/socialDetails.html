@@ -4,12 +4,14 @@
     <div reg-tab  enable-back="bEnableBack" on-back="myBack" data={{tabName}}></div>
     <!--Fields-->
     <div class="scrollContent" style="height:{{fieldsHeight+'px'}}" >
-		<div ng-repeat="field in fields" > 
-		  <div reg-ham-field data='field' ng-show='field.show'></div>
-		</div>
+            <div ng-repeat="field in fields" >
+                  <div ng-if="$index != 5" reg-ham-field data='field' ng-show='field.show'></div>
+                  <div ng-if="$index == 5" reg-caste-no-bar-field data='field' ng-show='field.show'></div>
+           </div>
+
 	</div>
     <!--Next Btn-->
-    <div next-btn on-next="myNext" num-fileds='3' enable="{{bNextEnable}}"></div>
+    <div next-btn on-next="myNext" num-fileds='4' enable="{{bNextEnable}}"></div>
   </div>
   <!--HamBurgerView-->
   <div id="hamburger" class="hamburger dn">

@@ -60,6 +60,22 @@ class billing_PURCHASE_DETAIL extends TABLE
         }
     }
 
+    public function updateDetails($sid,$netAmount,$actualAmount)
+    {
+        try
+        {
+            $sql  = "UPDATE billing.PURCHASE_DETAIL SET NET_AMOUNT=:NET_AMOUNT,PRICE=:PRICE WHERE SID=:SID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SID", $sid, PDO::PARAM_INT);
+            $prep->bindValue(":PRICE", $actualAmount, PDO::PARAM_INT);
+            $prep->bindValue(":NET_AMOUNT", $netAmount, PDO::PARAM_INT);
+            $prep->execute();
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+        return $profiles;
+    }
+
     public function updateDiscountForBillid($discount, $billid, $serviceid){
         try 
         {
@@ -75,6 +91,21 @@ class billing_PURCHASE_DETAIL extends TABLE
         }
     }
 
+    public function updateEntriesForBillid($billid,$netAmount,$actualAmount){
+        try 
+        {
+            $sql = "UPDATE billing.PURCHASE_DETAIL SET PRICE=:PRICE,NET_AMOUNT=:NET_AMOUNT WHERE BILLID=:BILLID AND SERVICEID NOT LIKE '%J%'";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":PRICE",$actualAmount,PDO::PARAM_INT);
+            $prep->bindValue(":NET_AMOUNT",$netAmount,PDO::PARAM_INT);
+            $prep->execute();
+        } 
+        catch (Exception $e){
+            throw new jsException($e);
+        }
+    }
+
     public function getAllDetailsForBillidArr($billidArr) {
         try {
         	$billidStr = implode(",", $billidArr);
@@ -83,6 +114,27 @@ class billing_PURCHASE_DETAIL extends TABLE
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $output[] = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getBillingDetails($billidStr,$formatData=false) {
+        try {
+            $sql = "SELECT SID,BILLID,SERVICEID,PRICE,DISCOUNT,NET_AMOUNT,CUR_TYPE FROM billing.PURCHASE_DETAIL WHERE BILLID IN ($billidStr)";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                if($formatData == true){
+                    $output[$result["BILLID"]][substr($result['SERVICEID'],0,1)] = $result;  
+                }
+                else{
+                    $output[$result["BILLID"]][$result['SERVICEID']] = $result;
+                }
+                
             }
             return $output;
         }

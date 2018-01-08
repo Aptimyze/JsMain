@@ -86,26 +86,12 @@
             </div>
 </div>
 
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
 		~include_component('static', 'newMobileSiteHamburger')`	
-	</div>
 
 </div>
 <script>
 /** list all global Variables here */
-var isLoading = false; // isLoading is a useful flag to make sure we don't send off more than one request at a time 
-var _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`;
-var minPage = 0;
-var $div = $("#searchHeader");
-var message;
-var ToshowOrNotRelaxCriteria = 0;
-var contactCenter = 1;
+var isLoading = false, _SEARCH_RESULTS_PER_PAGE = ~$_SEARCH_RESULTS_PER_PAGE`, minPage = 0, $div = $("#searchHeader"), message, ToshowOrNotRelaxCriteria = 0, contactCenter = 1;
 var firstResponse = ~$firstResponseArray`;
-var searchSort = firstResponse.sortType;
-var searchResultsPostParams = ''; // paramters need to perform pagination of search
-var SITE_URL = "~$SITE_URL`";
-var contactTracking = '~$tracking`';
-var NAVIGATOR = "~$NAVIGATOR`";
-var stypeKey = '';
-var contactEngineChannel = "CC";
+var searchSort = firstResponse.sortType, searchResultsPostParams = '', SITE_URL = "~$SITE_URL`", contactTracking = '~$tracking`', NAVIGATOR = "~$NAVIGATOR`", stypeKey = '', contactEngineChannel = "CC";
 </script>

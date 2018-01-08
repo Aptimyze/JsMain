@@ -9,7 +9,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
 		$this->REG_ID_BIND_TYPE = "STR";
 		$this->RESPONSE_BIND_TYPE = "STR";
 		$this->STATUS_BIND_TYPE = "STR";
-        $this->SENT_TO_GCM_BIND_TYPE = "STR";
+        $this->SENT_TO_FCM_BIND_TYPE = "STR";
         $this->SENT_TO_CHANNEL_BIND_TYPE = "STR";
         $this->SENT_TO_QUEUE_BIND_TYPE = "STR";
         $this->NOTIFICATION_KEY_BIND_TYPE = "STR";
@@ -19,13 +19,14 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
         $this->ICON_BIND_TYPE = "STR";
         $this->TAG_BIND_TYPE = "STR";
         $this->ENTRY_DT_BIND_TYPE = "STR";
-        $this->REQUEST_DT_BIND_TYPE = "STR";
+        $this->RECEIVED_DATE_BIND_TYPE = "STR";
         $this->LANDING_ID_BIND_TYPE = "INT";
         $this->TTL_BIND_TYPE = "INT";
     }
     
 	public function insertNotification($paramsArr){
         try{
+	    $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));	
             if($paramsArr){
                 $sql = "INSERT INTO MOBILE_API.BROWSER_NOTIFICATION(REG_ID, NOTIFICATION_KEY, NOTIFICATION_TYPE, MESSAGE, TITLE, ICON, TAG, LANDING_ID, ENTRY_DT ,MSG_ID,SENT_TO_QUEUE,TTL) VALUES (:REG_ID, :NOTIFICATION_KEY, :NOTIFICATION_TYPE, :MESSAGE, :TITLE, :ICON, :TAG, :LANDING_ID, :ENTRY_DT, :MSG_ID, :SENT_TO_QUEUE,:TTL)";
                 $prep = $this->db->prepare($sql);
@@ -39,7 +40,7 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
                 $prep->bindValue(":ICON",$paramsArr["ICON"],PDO::PARAM_STR);
                 $prep->bindValue(":TAG",$paramsArr["TAG"],PDO::PARAM_STR);
                 $prep->bindValue(":LANDING_ID",$paramsArr["LANDING_ID"],PDO::PARAM_STR);
-                $prep->bindValue(":ENTRY_DT",date("Y-m-d H:i:s"),PDO::PARAM_STR);
+                $prep->bindValue(":ENTRY_DT",$istTime,PDO::PARAM_STR);
                 $prep->bindValue(":TTL",$paramsArr["TTL"],PDO::PARAM_INT);
                 $prep->execute();
 			}
@@ -98,9 +99,10 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
         return NULL;
     }
     
+    
     public function getNotification($regId){
         try{
-            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND SENT_TO_CHANNEL != 'Y' LIMIT 1";
+            $sql = "SELECT ID, REG_ID, TITLE, MESSAGE, ICON, TAG, LANDING_ID from MOBILE_API.BROWSER_NOTIFICATION WHERE REG_ID = :REG_ID AND SENT_TO_CHANNEL != 'Y' ORDER BY ID DESC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":REG_ID",$regId,PDO::PARAM_STR);
             $prep->execute();
@@ -110,6 +112,29 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
             return $result;
         } catch (Exception $ex) {
             throw new jsException($ex);
+        }
+    }
+    
+    /**
+     * This method takes a single row as an input of browser notification table.
+     * If the received row is not null, Received_Status and Received_Date 
+     * columns are updated to 'Y' and current time respectively.
+     * 
+     * @param type $row - Browser_Notification row as input
+     * @throws jsException
+     */
+    public function updateTrackingDetails($messageId) {
+        try {
+             $sql = "update MOBILE_API.BROWSER_NOTIFICATION "
+                . "set SENT_TO_CHANNEL=:YES, RECEIVED_DATE = now() "
+                . "where MSG_ID=:MSG_ID";
+             $prepare = $this->db->prepare($sql);
+             $prepare->bindValue(":YES", 'Y', PDO::PARAM_STR);
+             $prepare->bindValue(":MSG_ID", $messageId, PDO::PARAM_INT);
+             $prepare->execute();
+ 
+        } catch (Exception $ex) {
+            throw new jsException($e);
         }
     }
 
@@ -219,14 +244,14 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
         try
         {
             $entryDt = date("Y-m-d H:i:s",strtotime($entryDtOffest));
-            $sql = "SELECT ".$fields." FROM MOBILE_API.BROWSER_NOTIFICATION WHERE (SENT_TO_CHANNEL='Y' OR (SENT_TO_CHANNEL='N' AND SENT_TO_GCM='Y'))";
+            $sql = "SELECT ".$fields." FROM MOBILE_API.BROWSER_NOTIFICATION WHERE (SENT_TO_CHANNEL='Y' OR (SENT_TO_CHANNEL='N' AND SENT_TO_FCM='Y'))";
             if($limit && $offset=="")
                 $sql = $sql." LIMIT $limit";
             else if($limit && $offset!="")
                 $sql = $sql." LIMIT $offset,$limit";
 
             $res=$this->db->prepare($sql);
-            $res->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
+            //$res->bindValue(":ENTRY_DT",$entryDt,PDO::PARAM_STR);
             $res->execute();
             $index = 0;
             while($row = $res->fetch(PDO::FETCH_ASSOC))
@@ -269,13 +294,13 @@ class MOBILE_API_BROWSER_NOTIFICATION extends TABLE {
                 }
                 if($greaterThanDt)
                 {
-                   $sql = $sql." AND a.REQUEST_DT >= :GREATER_THAN_REQUEST_DT";
-                   $extraBindParams["GREATER_THAN_REQUEST_DT"] = $greaterThanDt;
+                   $sql = $sql." AND a.RECEIVED_DATE >= :GREATER_THAN_RECEIVED_DATE";
+                   $extraBindParams["GREATER_THAN_RECEIVED_DATE"] = $greaterThanDt;
                 }
                 if($lessThanDt)
                 {   
-                    $sql = $sql." AND a.REQUEST_DT <= :LESS_THAN_REQUEST_DT";
-                    $extraBindParams["LESS_THAN_REQUEST_DT"] = $lessThanDt;
+                    $sql = $sql." AND a.RECEIVED_DATE <= :LESS_THAN_RECEIVED_DATE";
+                    $extraBindParams["LESS_THAN_RECEIVED_DATE"] = $lessThanDt;
                 }
                 
                 $res=$this->db->prepare($sql);

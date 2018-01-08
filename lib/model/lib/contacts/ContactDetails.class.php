@@ -249,6 +249,20 @@ class ContactDetails {
    * @var string
    */
 	private $hiddenPhoneMsg="N";
+		/**
+   *
+   * This holds the whether to show hidden message to paid user
+   * @access private
+   * @var string
+   */
+	private $RM_LABEL;
+		/**
+   *
+   * This holds the whether to show hidden message to paid user
+   * @access private
+   * @var string
+   */
+	private $RM_VALUE;
 	/**
 	 * This function used to initilaize the ContactDetails Class object.
 	 * @param ContactHandler
@@ -284,6 +298,23 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function setALT_MOBILE($ALT_MOBILE){ $this->ALT_MOBILE=$ALT_MOBILE; }
+	/**
+	 * This function used to set the RM_LABEL attribute of {@link ContactDetails} Class
+	 * @param string $RM_LABEL
+	 * @return  void
+	 * @access public
+	 */	
+	public function setRM_LABEL($RM_LABEL){ $this->RM_LABEL=$RM_LABEL; }
+	
+
+	/**
+	 * This function used to set the RM_VALUE attribute of {@link ContactDetails} Class
+	 * @param string $RM_VALUE
+	 * @return  void
+	 * @access public
+	 */
+	public function setRM_VALUE($RM_VALUE){ $this->RM_VALUE=$RM_VALUE; }
+
 	/**
 	 * This function used to set the SHOW_ADDRESS attribute of {@link ContactDetails} Class
 	 * @param char $SHOW_ADDRESS
@@ -518,6 +549,18 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function getALT_MOBILE(){ return $this->ALT_MOBILE; }
+	/**
+	 * This function used to get the SHOW_ADDRESS attribute of {@link ContactDetails} Class
+	 * @return string
+	 * @access public
+	 */
+	public function getRM_LABEL(){ return $this->RM_LABEL; }
+	/**
+	 * This function used to get the SHOW_ADDRESS attribute of {@link ContactDetails} Class
+	 * @return string
+	 * @access public
+	 */
+	public function getRM_VALUE(){ return $this->RM_VALUE; }
 	/**
 	 * This function used to get the SHOW_ADDRESS attribute of {@link ContactDetails} Class
 	 * @return char
@@ -960,6 +1003,17 @@ class ContactDetails {
 			$this->setPROFILENAME($this->profileObj->getUSERNAME());
 				
 		}
+
+		if(MembershipHandler::isEligibleForRBHandling($this->profileObj->getPROFILEID()))
+		{
+			$exclusiveFunctionsObj=new ExclusiveFunctions();
+			$execDetails=$exclusiveFunctionsObj->getRMDetails($this->profileObj->getPROFILEID());
+			$rmPhone = $execDetails["PHONE"];
+			if($rmPhone){
+				$this->setRM_LABEL("Relationship manager");
+			$this->setRM_VALUE("+91-".$rmPhone);
+			}
+		}
 		/************Ends here********/
 		$this->setContactDetailArr( $this->displayContactDetailsArray());
 		//print_r($this->displayContactDetailsArray());die;
@@ -1194,6 +1248,12 @@ class ContactDetails {
 		{
 			$contactDetailsArr[$count]["LABEL"] = "Profile posted by";
 			$contactDetailsArr[$count]["VALUE"] = $this->getRELATION_NAME();
+			$count++;
+		}
+		if($this->getRM_VALUE() && $this->getRM_LABEL())
+		{
+			$contactDetailsArr[$count]["LABEL"] = $this->getRM_LABEL();
+			$contactDetailsArr[$count]["VALUE"] = $this->getRM_VALUE();
 			$count++;
 		}
 		return $contactDetailsArr;

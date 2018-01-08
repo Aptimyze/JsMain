@@ -42,7 +42,7 @@ class csvGenerationHandler
 							$salesCsvData->removeProfiles($csvEntryDate);
 			}
 			// truncate regular sales temp table
-			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP('newjs_masterDDL');
+			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP('newjs_master');
 			$saleCsvTempObj->truncate();	
 		}
 		elseif($processName=="SALES_REGISTRATION")
@@ -52,7 +52,7 @@ class csvGenerationHandler
 						$salesRegCsvData->removeProfiles($csvEntryDate);
 	
 			// truncate registration sales temp table
-			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP('newjs_masterDDL');
+			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP('newjs_master');
 			$saleCsvTempObj->truncate();
 		}
 		elseif($processName=="SUGARCRM_LTF")
@@ -67,7 +67,11 @@ class csvGenerationHandler
 			$dateTime =date("Y-m-d H:i:s",time()-12*60*60);		
 			$failedPaymentObj =new incentive_SALES_CSV_DATA_FAILED_PAYMENT();
 			$profiles =$failedPaymentObj->getObseleteProfiles();
-			$failedPaymentObj->updateDialStatus($dateTime,$profiles);		
+			$failedPaymentObj->updateDialStatus($dateTime,$profiles);
+                        
+                        // delete from sales temp table
+			$fpCsvTempObj =new incentive_PROCESS_CSV_DATA_TEMP('newjs_master');
+			$fpCsvTempObj->delete($processName);	
                 }
 		elseif($processName=="paidCampaignProcess"){
                         $dateTime =date("Y-m-d",time()-6*24*60*60);
@@ -78,6 +82,11 @@ class csvGenerationHandler
                         $dateTime =date("Y-m-d H:i:s",time()-2*24*60*60);
                         $paidCampaignObj =new incentive_SALES_CSV_DATA_RCB();
                         $paidCampaignObj->updateDialStatus($dateTime);
+                }
+                
+                elseif($processName=="renewalProcessInDialer"){
+                        $fpCsvTempObj =new incentive_PROCESS_CSV_DATA_TEMP('newjs_master');
+                        $fpCsvTempObj->delete($processName);
                 }
 	}
 	public function storeTemporaryProfiles($processObj,$profiles)
@@ -99,7 +108,22 @@ class csvGenerationHandler
 				$profileDetails =$profiles[$i];
 				$tempSalesCsvObj->insertProfile($profileDetails);
 			}
-		}	
+		}
+                elseif($processName=="failedPaymentInDialer"||$processName == "renewalProcessInDialer")
+                {
+                        $tempFPCsvObj =new incentive_PROCESS_CSV_DATA_TEMP();
+			$totalCount	 =count($profiles);
+			for($i=0; $i<$totalCount; $i++){
+				$profileArr =$profiles[$i];
+                                if($processName == "renewalProcessInDialer"){
+                                    $tempFPCsvObj->insertProfile($profileArr['PROFILEID'], $processName);
+                                }else{
+                                    $tempFPCsvObj->insertProfile($profileArr['PROFILEID'], $processName);
+                                }
+				
+			}
+                    
+                }
 	}
 		public function fetchTemporaryProfiles($processObj,$profiles)
 		{
@@ -434,6 +458,13 @@ class csvGenerationHandler
 		$currLatestCnt = $salesCsvTemp->getLatestProfilesCount($max_date);
 		return $currLatestCnt;
 	}
+        
+        public function getTemporaryFPProfilesCount($max_date,$process)
+	{
+		$fpCsvTemp =new incentive_PROCESS_CSV_DATA_TEMP();	
+		$currLatestCnt = $fpCsvTemp->getLatestProfilesCount($max_date,$process);
+		return $currLatestCnt;
+	}
 	public function preFilter($processObj, $profiles='')
 	{
 			$processName=$processObj->getProcessName();
@@ -472,7 +503,7 @@ class csvGenerationHandler
 							$salesCsvTemp->removeNegativeTreatmentProfiles();
 				unset($profiles);
 			}
-						$info = $this->updateSalesLog($filter,$max_dt, $info[0], $info[1]);
+			$info = $this->updateSalesLog($filter,$max_dt, $info[0], $info[1]);
 
 			// DO NOT CALL Filter
 			$filter ='DO_NOT_CALL';
@@ -526,16 +557,22 @@ class csvGenerationHandler
 		}
 		elseif($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess')
 		{
+                    if($processName=='failedPaymentInDialer'|| $processName == 'renewalProcessInDialer'){
+                        $fplogging = true;
+                    }
+                    
+                        if($fplogging == true){
+                            $fpCsvTemp 	=new incentive_PROCESS_CSV_DATA_TEMP();	
+                            $info 	=$this->updateFPLog('TOTAL_PROFILES', 0,$processName);
+                        }
 			$profileArr =array();
 			$dataArrPool =array();
 			$dataArrPoolNew =array();
-
 			foreach($profiles as $key=>$dataArr){
 				$profileid =$dataArr['PROFILEID'];
 				$dataArrPool[$profileid] =$dataArr;
 				$profileArr[] =$profileid;					
 			}
-
 			if($processName=='renewalProcessInDialer'){
 				$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER('newjs_masterRep');	
 	                        $profilesRenewalDialer =$renewalInDialerObj->fetchRenewalDialerProfiles();
@@ -543,14 +580,37 @@ class csvGenerationHandler
 					$profileArr =array_diff($profileArr,$profilesRenewalDialer);
 					$profileArr =array_values($profileArr);
                 	        }
+                                //Update fp temp logs
+                                if($fplogging == true){
+                                    $filter ='RENEWAL_PROCESS_IN_DIALER';
+                                    if(count($profilesRenewalDialer)>0){
+                                        $this->fpCsvProfileLog('','','N',$filter,'','','',$profilesRenewalDialer,$processName);
+                                        $fpCsvTemp->removeProfiles($profilesRenewalDialer,$processName);
+                                        unset($profilesRenewalDialer);
+                                    }
+                                    $info = $this->updateFPLog($filter,$info[0],$processName);
+                                } 
 			}
 			if($processName!='paidCampaignProcess'){
+                           
 				$obj= new incentive_DO_NOT_CALL('newjs_masterRep'); 
 				$profilesDoNotCall =$obj->getDoNotCallProfiles($profileArr);
 				if(count($profilesDoNotCall)>0){
 					$profileArr =array_diff($profileArr,$profilesDoNotCall);
 					$profileArr =array_values($profileArr);	
 				}
+                                //Update fp temp logs
+                                if($fplogging == true){
+                                    $filter ='DO_NOT_CALL';
+                                    if(count($profilesDoNotCall)>0){
+                                        $this->fpCsvProfileLog('','','N',$filter,'','','',$profilesDoNotCall,$processName);
+                                        $fpCsvTemp->removeProfiles($profilesDoNotCall,$processName);
+                                        unset($profilesDoNotCall);
+                                    }
+                                    $info = $this->updateFPLog($filter,$info[0],$processName);
+                                } 
+				if($fplogging == true)
+					$filter ='ALLOCATED';
 	                        if(count($profileArr)>0){
         	                        $obj =new incentive_MAIN_ADMIN('newjs_masterRep');
         	                        $profilesAllocated =$obj->getProfilesDetails($profileArr);
@@ -560,10 +620,20 @@ class csvGenerationHandler
         	                                }
         	                                $profileArr =array_diff($profileArr,$allocated);
         	                                $profileArr =array_values($profileArr);
-        	                                unset($allocated);
+                                                // Allocation Filter
+                                                if($fplogging == true){
+                                                    $this->fpCsvProfileLog('','','N',$filter,'','','',$profilesAllocated,$processName);
+                                                    $fpCsvTemp->removeProfiles($allocated,$processName);
+                                                    unset($allocated);
+                                                }
         	                        }
         	                }
+				if($fplogging == true){
+					$info = $this->updateFPLog($filter,$info[0],$processName);
+				}
 			}
+			if($fplogging == true)
+				$filter ='NEGATIVE_TREATMENT';
 			if(count($profileArr)>0){
 				$obj =new INCENTIVE_NEGATIVE_TREATMENT_LIST('newjs_masterRep');	
 				$profilesNegative =$obj->getNegativeListProfiles($profileArr);
@@ -571,7 +641,17 @@ class csvGenerationHandler
 					$profileArr =array_diff($profileArr,$profilesNegative);
 					$profileArr =array_values($profileArr);
 				}
+                                if($fplogging == true){
+                                    // Negative Treatment Filter
+                                    if(count($profilesNegative)>0){	
+                                        $this->fpCsvProfileLog('','','N',$filter,'','','',$profilesNegative,$processName);
+					$fpCsvTemp->removeProfiles($profilesNegative,$processName);
+                                        unset($profilesNegative);
+                                    }
+                                }
 			}
+			if($fplogging == true)
+				$info = $this->updateFPLog($filter, $info[0],$processName);
 			/*if(count($profileArr)>0){
 				$obj =new incentive_MAIN_ADMIN();
 	                        $profilesAllocated =$obj->getProfilesDetails($profileArr);
@@ -585,6 +665,8 @@ class csvGenerationHandler
 				}
 			}*/
 			if($processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer'){
+				if($fplogging == true)
+					$filter ='PRE_ALLOCATED';
 				if(count($profileArr)>0){
 					$obj =new incentive_PROFILE_ALLOCATION_TECH('newjs_masterRep');
 		                        $preAllocated =$obj->getAllotedProfiles($profileArr);
@@ -592,9 +674,20 @@ class csvGenerationHandler
 		        	                $profileArr =array_diff($profileArr,$preAllocated);
 						$profileArr =array_values($profileArr);
 					}
+                                         // Pre-Allocation Filter
+                                        if($fplogging == true && count($preAllocated)>0){
+                                            $this->fpCsvProfileLog('','','N',$filter,'','','',$preAllocated,$processName);	
+                                            $fpCsvTemp->removeProfiles($preAllocated,$processName);
+                                            
+                                        }
+                                        unset($preAllocated);
 				}
+                                if($fplogging == true)
+	                                $info = $this->updateFPLog($filter,$info[0], $processName);
 			}
 			if($processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess'){
+				if($fplogging == true)
+					$filter ='UNSUBSCRIBED';
 				if(count($profileArr)>0){
 					$obj =new JprofileAlertsCache('newjs_masterRep');
 		                        $profilesUnsubscribed =$obj->getUnsubscribedProfiles($profileArr);
@@ -602,7 +695,15 @@ class csvGenerationHandler
 		        	                $profileArr =array_diff($profileArr,$profilesUnsubscribed);
 						$profileArr =array_values($profileArr);
 					}
+                                        // Unsubscribed Filter
+                                        if($fplogging == true && count($profilesUnsubscribed)>0){
+                                            $this->fpCsvProfileLog('','','N',$filter,'','','',$profilesUnsubscribed,$processName);
+                                            $fpCsvTemp->removeProfiles($profilesUnsubscribed,$processName);
+                                        }
+                                        unset($profilesUnsubscribed);
 				}
+				if($fplogging == true)
+					$info = $this->updateFPLog($filter,$info[0],$processName);
 			}
 			if(count($profileArr)>0){
 				foreach($profileArr as $key=>$profileid)
@@ -666,7 +767,6 @@ class csvGenerationHandler
 			$negativeTreatmentObj=new incentive_NEGATIVE_TREATMENT_LIST();
 			$tempCsvObj=new incentive_TEMP_CSV_FTA_TECH();
 			$profilesCount=count($profiles);
-			//print_r($profiles);
 			for($i=0;$i<$profilesCount;$i++)
 			{	
 				//Incomplete Check
@@ -722,23 +822,23 @@ class csvGenerationHandler
 						$campaignCntArr    =$processObj->getCampaignCntArr();
 			$dataLimit         =$processObj->getLimit();
 			$max_dt 	   =$processObj->getEndDate();
-						foreach($profiles as $profileid=>$dataArr){
- 
+			foreach($profiles as $profileid=>$dataArr){
 				$username     =$dataArr['USERNAME'];
 
 				// Data Limit exceed check
-								$campaignName =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES']);
+				$campaignName =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES']);
 				if(!$campaignName){
 					if($dataArr['ENTRY_DT']==$max_dt) $filter['campaignUndefinedCnt_L']++;
 					$filter['campaignUndefinedCnt']++;
 					continue;
-				}	
-								$campaignProfilesCnt =$campaignCntArr[$campaignName];
-								if($campaignProfilesCnt>=$dataLimit){
-										if($dataArr['ENTRY_DT']==$max_dt) $filter['dataLimitExceedCnt_L']++;
-										$filter['dataLimitExceedCnt']++;
+				}
+				$campaignNameNew =$this->getCampaignName($profileid,$username,$dataArr['MTONGUE'],$dataArr['CITY_RES'],$dataArr['ISD'],$dataArr['COUNTRY_RES'],true);	
+				$campaignProfilesCnt =$campaignCntArr[$campaignName];
+				if($campaignProfilesCnt>=$dataLimit){
+					if($dataArr['ENTRY_DT']==$max_dt) $filter['dataLimitExceedCnt_L']++;
+						$filter['dataLimitExceedCnt']++;
 					$this->salesCsvProfileLog($profileid,$username,'N','DATA_LIMIT_EXCEED','Y');
-										continue;
+					continue;
 				}
 
 				// Jprofile filter 
@@ -807,16 +907,17 @@ class csvGenerationHandler
 					$this->salesCsvProfileLog($profileid,$username,'N','ANALYTIC_SCORE_ZERO',$analyticScore);
 					continue;
 				}
-
+                                
 								// filtered profile stored to check campaign limit
-								$campaignCntArr[$campaignName] +=1;
+				$campaignCntArr[$campaignName] +=1;
 				$dataArr['ALLOTED_TO'] 		=$allotedAgent;
 				$dataArr['ANALYTIC_SCORE'] 	=$analyticScore;
 				$dataArr['CAMPAIGN_NAME']	=$campaignName;	
-								$filteredProfiles[] 		=$dataArr;
-						}
-						$processObj->setCampaignCntArr($campaignCntArr);
-				}
+				$dataArr['CAMPAIGN_NAME_NEW']	=$campaignNameNew;
+				$filteredProfiles[] 		=$dataArr;
+			}
+			$processObj->setCampaignCntArr($campaignCntArr);
+		}
 		elseif($processName=="SALES_REGISTRATION")
 		{
 			$AgentDetailsObj =new AgentAllocationDetails();
@@ -836,43 +937,90 @@ class csvGenerationHandler
 				$filteredProfiles[] =$dataArr;
 			}
 		}
-		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess' || $processName=='rcbCampaignInDialer'){
+		else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess' || $processName=='rcbCampaignInDialer') {
 			$method 		=$processObj->getMethod();	
                         $AgentAllocDetailsObj   =new AgentAllocationDetails();
 			$southIndianCommunity	=crmParams::$southIndianCommunity;
-                        foreach($profiles as $profileid=>$dataArr){
+                        
+                        if($processName == 'failedPaymentInDialer' || $processName =='renewalProcessInDialer'){
+                            $fplogging=true;
+                        }
+                        foreach($profiles as $profileid=>$dataArr) {
 				if(!$profileid)
 					continue;
-
+                                
 				if ($processName == 'rcbCampaignInDialer') {
-                	$allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
-			$subscription =$dataArr['SUBSCRIPTION'];
-                	if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
-                    		continue;
-                	}
-                }
+                                    $allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
+                                    $subscription =$dataArr['SUBSCRIPTION'];
+                	
+                                    if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
+                                            continue;
+                                    }
+                                }
                 
-				if($processName!='rcbCampaignInDialer'){
-	                                if($dataArr["ACTIVATED"]!='Y')
-	                                        continue;
-	                                if($dataArr["PHONE_FLAG"]=="I")
-	                                        continue;
+				if($processName!='rcbCampaignInDialer') {
+	                                
+                                        if($dataArr["ACTIVATED"]!='Y') {
+                                            
+                                                if($fplogging==true) {
+                                                    
+                                                    $filter['notActivatedCnt']++;
+                                                    $this->fpCsvProfileLog($profileid,'','N','NOT_ACTIVATED','Y','','','',$processName);
+                                                }
+                                            continue;
+                                        }
+                                        
+	                                if($dataArr["PHONE_FLAG"]=="I") {
+                                            if($fplogging==true) {
+                                                $filter['invalidPhoneCnt']++;
+                                                $this->fpCsvProfileLog($profileid,'','N','INVALID_PHONE','Y','','','',$processName);
+                                            }   
+                                            continue;
+                                        }
 				}
-				if($method=='NEW_FAILED_PAYMENT'){
-	                                if($dataArr['GENDER']=="M" && $dataArr["AGE"]<24)
-        	                                continue;
+                                
+				if($method=='NEW_FAILED_PAYMENT') {
+	                                if($dataArr['GENDER']=="M" && $dataArr["AGE"]<24) {
+                                                if($fplogging==true) {
+                                                    $filter['maleAgeCnt']++;
+                                                    $this->fpCsvProfileLog($profileid,'','N','MALE_AGE','Y','','','',$processName);
+                                                }   
+                                            continue;
+                                        }
+                                        
+                                        // if the community is either Tamil, Telugu, Malayalam, or Kannada, 
+                                        // then this profile need not be considered in case of failedpayments
+                                        
+                                        $motherTongue = $dataArr['MTONGUE'];
+                                        
+                                        if(in_array($motherTongue, crmParams::$eliminateMotherTongues)) {
+						if($fplogging==true) {
+	                                            $filter['MOTHER_TONGUE']++;
+        	                                    $this->fpCsvProfileLog($profileid,'','N','MOTHER_TONGUE','Y','','','',$processName);
+						}
+                                            continue; // skipping the current profile
+                                        }
 				}
-				if($method=='RENEWAL'){
+                                
+				if($method=='RENEWAL') {
 					$lastLoginDt 	=$dataArr['LAST_LOGIN_DT'];
 					$checkDay 	=JSstrToTime(date("Y-m-d",time()-14*24*60*60));
-					if(JSstrToTime($lastLoginDt)<$checkDay)
-						continue;	
+					
+                                        if(JSstrToTime($lastLoginDt)<$checkDay) {
+                                            if($fplogging==true) {
+                                                $filter['lastLoginCnt']++;
+                                                $this->fpCsvProfileLog($profileid,'','N','LAST_LOGIN','Y','','','',$processName);
+                                            }
+                                            continue;	
+                                        }
 				}
-				elseif($method=='PAID_CAMPAIGN'){
+                                
+				elseif($method=='PAID_CAMPAIGN') {
 					// income >35lakh and above
 					$income =$dataArr['INCOME'];
 					$familyIncome =$dataArr['FAMILY_INCOME'];
-					if($income>=24 || $familyIncome>=24)
+					
+                                        if($income>=24 || $familyIncome>=24)
 						continue;
 
 					// South Indian languages and others
@@ -882,38 +1030,71 @@ class csvGenerationHandler
 
 					// Profile length>700
 	                                $profileLength =strlen($dataArr['YOURINFO'])+strlen($dataArr['FAMILYINFO'])+strlen($dataArr['FATHER_INFO'])+strlen($dataArr['SPOUSE'])+strlen($dataArr['SIBLING_INFO'])+strlen($dataArr['JOB_INFO']);
-					if($profileLength>700)
+					
+                                        if($profileLength>700)
 						continue;		
 				}
+                                
 				// NRI Check
 				$isdVal =$dataArr['ISD'];			
 				$isIndian =$this->isIndianNo($isdVal);
-				if(!$isIndian)	
-					continue;
+				
+                                if(!$isIndian) { 	
+                                    if($fplogging==true) {
+                                        $filter['nriCnt']++;
+                                        $this->fpCsvProfileLog($profileid,'','N','NRI','Y','','','',$processName);
+                                    }    
+                                    continue;
+                                }
 
                                 // DNC No. check filter
-				if(!$dataArr['PHONE_MOB'] && !$dataArr['PHONE_ALTERNATE'] && !$dataArr['PHONE_WITH_STD'])
-					continue;
+				if(!$dataArr['PHONE_MOB'] && !$dataArr['PHONE_ALTERNATE'] && !$dataArr['PHONE_WITH_STD']){
+                                    if($fplogging==true) {
+                                        $filter['noPhoneCnt']++;
+                                        $this->fpCsvProfileLog($profileid,'','N','NO_PHONE','Y','','','',$processName);
+                                    }    
+                                    continue;
+                                }
+					
                                 $phoneNumStack =array("PHONE1"=>"$dataArr[PHONE_MOB]","PHONE2"=>"$dataArr[PHONE_ALTERNATE]","PHONE3"=>"$dataArr[PHONE_WITH_STD]");
                                 $DNCArray =$AgentAllocDetailsObj->checkDNC($phoneNumStack);
                                 $isDNC    =$DNCArray['STATUS'];
-                                if($isDNC){
+                                
+                                if($isDNC) {
                                         // Optin-check
                                         $optinStatus =$AgentAllocDetailsObj->isOptinProfile($profileid);
-                                        if(!$optinStatus)
-                                                continue;
+                                        
+                                        if(!$optinStatus) {
+                                            if($fplogging==true) {
+                                                $filter['nonOptinProfileCnt']++;
+                                            }
+                                            
+                                            $this->fpCsvProfileLog($profileid,'','N','NON_OPTIN','Y','','','',$processName);
+                                            continue;
+                                        }
                                 }
-                                foreach($phoneNumStack as $key=>$value){
-                                        if($value && !$phone1)
+                                
+                                foreach($phoneNumStack as $key=>$value) {
+                                        
+                                    if($value && !$phone1)
                                                 $phone1 =$value;
-                                        elseif($value && !$phone2)
+                                    
+                                    elseif($value && !$phone2)
                                                 $phone2 =$value;
-                                        if($phone1 && $phone2)
+                                     
+                                    if($phone1 && $phone2)
                                                 break;
                                 }
-
-				if(!$phone1 && !$phone2)
-					continue;
+                                
+				if(!$phone1 && !$phone2) {
+                                    if($fplogging==true) {
+                                        $filter['noPhoneExistsCnt']++;
+                                    }
+                                    
+                                    $this->fpCsvProfileLog($profileid,'','N','NO_PHONE_EXISTS','Y','','','',$processName);
+                                    continue;
+                                }
+                                
                                 $dataArr['PHONE1']=$phone1;
                                 $dataArr['PHONE2']=$phone2;
 				$filteredProfiles[] =$dataArr;
@@ -1123,8 +1304,14 @@ class csvGenerationHandler
 			if($processName=="SALES_REGULAR"){
 				$salesRegularCampaignTables  =crmParams::$salesRegularCampaignTables;
 				$inDialerCampaign	=crmParams::$inDialerCampaign;
+				$inDialerCampaignNewArr =crmParams::$inDialerCampaignNewArr;
 				$salesCsvDataTempObj 	=new incentive_SALES_CSV_DATA_TEMP();
 				$inDialerObj            =new incentive_IN_DIALER();
+				$inDialerNewOutboundObj =new incentive_IN_DIALER_NEW();
+	                        $salesRegularRangeValue =crmParams::$salesRegularValueRange;
+                        	$scoreRange2    	=$salesRegularRangeValue['SCORE2'];
+				$nonAutoCampaign	=crmParams::$nonAutoCampaign;	
+
 			}
 			else if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer'){
 				$servicesObj 		=new billing_SERVICES();
@@ -1183,12 +1370,64 @@ class csvGenerationHandler
 
 				// insert in regular sales csv table
 				if($processName=="SALES_REGULAR"){
-					$campaignName   =$dataArr['CAMPAIGN_NAME'];
+                                        $campaignName           =$dataArr['CAMPAIGN_NAME'];
+                                        $campaignNameNew        =$dataArr['CAMPAIGN_NAME_NEW'];
+					
+                                        // non auto campaign ,.ie, mumbai pune nri will go here
+                                        if(in_array("$campaignName",$nonAutoCampaign)) {
+						$dialerEligible ='Y';
+                                                if($dataArr['ALLOTED_TO']=='')
+                                                        $dialerDialStatus =1;
+                                                else
+                                                        $dialerDialStatus=2;
+					}
+                                        // auto campaign - noida, delhi, delhi-auto will go here
+                                        else {
+                                            // defines the start and end of score range
+                                            $scoreRangeBase = $salesRegularRangeValue['SCORE1'];
+                                            $scoreRangeMax = $salesRegularRangeValue['SCORE2'];
+                                            
+                                            $dialerEligible = 'N';
+                                            // initially, we assume that the profile will not enter the auto table
+                                            $dialerEligibleNew ='N';
+                                            $dialerDialStatusNew =0;
+                                            
+                                            // the profile is now eligible to for calling, validating further for auto table
+                                            if($score >= $scoreRangeBase && $score < $scoreRangeMax) {
+                                             // valid for auto table, hence setting making ineligible in new table, and eligible in auto table
+
+                                                $dialerDialStatusNew = $dialerDialStatus;
+                                                if($dialerDialStatusNew==1){
+                                                        $dialerEligibleNew = 'Y';
+                                                }
+                                                $dialerEligible = 'N';
+                                                $dialerDialStatus = 0;
+                                             } 
+                                             else {
+                                                    // logic - if profileid % 11 == 1, do not call
+                                                    /*if($profileid % 11 == 1) {
+                                                        $dialerDialStatus = 0;
+                                                    }
+                                                    else {*/
+                                                        // verify if the call is really eligible for calling
+                                                        if($dialerDialStatus == 1) {
+                                                            $dialerEligible = 'Y';
+                                                        }
+                                                    //}
+                                             }
+                                        }
 					$leadId         =$campaignName.$leadIdSuffix;	
 					$leadId 	=str_replace('pune','mumbai',$leadId);
 					$tablesName 	=$salesRegularCampaignTables[$campaignName];
 	                                $salesCsvDataObj=new $tablesName;
 	                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
+					if(in_array("$campaignNameNew",$inDialerCampaignNewArr)){
+						$leadId         =$campaignNameNew.$leadIdSuffix;
+						$tablesName     =$salesRegularCampaignTables[$campaignNameNew];
+						$salesCsvDataObj=new $tablesName;	
+						$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatusNew,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
+					}
+					
 				}
 				else if($processName=="renewalProcessInDialer"){
 					$campaignType	=$this->getCampaignType($processName, $dataArr['MTONGUE']);
@@ -1205,7 +1444,8 @@ class csvGenerationHandler
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
-					$source =$campaignName;
+					//$source =$campaignName;
+					$source = $callTimeArr[$profileid]['CALLBACK_SOURCE'];
                                         //$csvDateTime =$processObj->getStartDate();
 					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
@@ -1257,7 +1497,10 @@ class csvGenerationHandler
 				if($processName=="SALES_REGULAR"){
 					$this->salesCsvProfileLog($profileid,$username,'Y','','',$campaignName,$dialerDialStatus);
 					if(in_array("$campaignName", $inDialerCampaign))		
-						$inDialerObj->insertProfile($profileid,$dialerPriority);
+						$inDialerObj->insertProfile($profileid,$dialerPriority,$campaignName,$dialerEligible);
+					if(in_array("$campaignNameNew",$inDialerCampaignNewArr)){
+						$inDialerNewOutboundObj->insertProfile($profileid,$dialerPriority,$campaignNameNew,$dialerEligibleNew);		
+					}
 				}
 				elseif($processName=="renewalProcessInDialer"){
 					$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER(); 	
@@ -1441,7 +1684,7 @@ class csvGenerationHandler
                 $fileHeaderArr  =csvFields::$csvFileHeader;
                 $fileHeader	=$fileHeaderArr[$processName];
                 if($fileHeader){
-			echo $fileHeader."\n";
+			$fileHeader."\n";
                         fwrite($fp,$fileHeader);
 		}
 
@@ -1519,6 +1762,8 @@ class csvGenerationHandler
 			$csvDataObj = new incentive_PHONE_OPS_DIALER_DATA('newjs_masterRep');
 		elseif($processName=="salesRegularNoida")
 			$csvDataObj=new incentive_SALES_CSV_DATA_NOIDA('newjs_masterRep');
+                elseif($processName=="salesRegularNoidaNew")
+                        $csvDataObj=new incentive_SALES_CSV_DATA_NOIDA_NEW('newjs_masterRep');
 		elseif($processName=="salesRegularDelhi")
 			$csvDataObj=new incentive_SALES_CSV_DATA_DELHI('newjs_masterRep');
 		elseif($processName=="salesRegularMumbai")
@@ -1654,7 +1899,7 @@ class csvGenerationHandler
 		}
 		return $campaignType;
 	}
-	public function getCampaignName($profileid,$username,$mtongue,$city,$isd,$country)
+	public function getCampaignName($profileid,$username,$mtongue,$city,$isd,$country,$campaignNewFlag='')
 	{
 		$considerCommunity 	=crmParams::$salesRegularConsiderCommunity;
 		$ignoreCommunity 	=crmParams::$salesRegularIgnoreCommunity;
@@ -1662,6 +1907,7 @@ class csvGenerationHandler
 		$delhiCity 		=crmParams::$salesRegularDelhiCity;
 		$nriCountry 		=crmParams::$salesRegularNriCountry;
 		$salesRegularCampaign	=crmParams::$salesRegularCampaign;
+		$salesRegularCommunityNewOutbound =crmParams::$salesRegularCommunityNewOutbound;
 
 		if($mtongue==1)
 			$filter ='MTONGUE';
@@ -1675,12 +1921,16 @@ class csvGenerationHandler
 							elseif(!in_array($mtongue,$ignoreCommunity) && in_array($city,$delhiCity))
 							$campaignId = 5;
 							elseif(!in_array($mtongue,$ignoreCommunity))
-								   $campaignId = 1;
-				else
-					$filter='MTONGUE';
-					}
-					elseif(in_array($country,$nriCountry))
-							$campaignId = 4;
+							$campaignId = 1;
+							else
+							$filter='MTONGUE';
+
+					                if($campaignNewFlag && in_array($mtongue,$salesRegularCommunityNewOutbound))
+                        					$campaignId =6;
+
+			}
+			elseif(in_array($country,$nriCountry))
+				$campaignId = 4;
 			else
 				$filter='COUNTRY';
 		}
@@ -1759,8 +2009,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerPriority($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer')
-		{
+		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer') {
 			 if($allotedTo=='')
 			 {
 				 if($score>=81 && $score<=100)
@@ -1775,9 +2024,7 @@ class csvGenerationHandler
 		}
 		else
 		{
-			if($processName=='rcbCampaignInDialer')
-				$priority =8;
-			elseif($processName=='upsellProcessInDialer')
+			if($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
 				$priority='6';
@@ -1811,6 +2058,27 @@ class csvGenerationHandler
 	{
 		if($processName=='upsellProcessInDialer' || $processName=='rcbCampaignInDialer')
 			$dial_status=1;
+		elseif($processName=='SALES_REGULAR'){
+			$salesRegularRangeValue =crmParams::$salesRegularValueRange;
+			$scoreRange1 	=$salesRegularRangeValue['SCORE1'];
+			$scoreRange2 	=$salesRegularRangeValue['SCORE2'];
+			$scoreRange3 	=$salesRegularRangeValue['SCORE3'];
+			$discountRange1 =$salesRegularRangeValue['DISCOUNT1'];
+			$discountRange2 =$salesRegularRangeValue['DISCOUNT2'];
+
+			if($score>=$scoreRange1 and $score<$scoreRange2){
+				$discount =$vdDiscount; 
+				if($discount>=$discountRange1 && $discount<=$discountRange2){
+					$dial_status=1;
+				}
+			}
+			elseif($score>=$scoreRange2 && $score<=$scoreRange3)
+				$dial_status=1;
+			if($allotedTo=='' && $dial_status==1)
+				$dial_status=1;
+			else
+				$dial_status = '2';			
+		}	
 		else{
 			if($allotedTo=='')
 				$dial_status = '1';
@@ -2045,6 +2313,65 @@ class csvGenerationHandler
 
 				mail($to, $subject, $message, $headers);
 		}
+                
+                public function sendEmailForRenewalProcessCSVLogging($data, $to, $from, $subject)
+		{
+				$message = '<html><body>';
+				$message .= "<a href=https://docs.google.com/spreadsheets/d/146ktGIdAIbIb9fiIDtFnbvl_J5lj6A9paLks89tnUmc/edit#gid=0><b>Click for Filters Definitions</b></a><br><br>";
+				$message .= '<table rules="all" style="border-color: #666;" cellpadding="10">';
+				$message .= "<tr style='background: #eee;'><td><strong>FILTER</strong></td><td><strong>FILTERED_PROFILES</strong></td><td><strong>COUNT</strong></td></tr>";
+				$lastCount = 0;
+				foreach($data as $k=>$v)
+				{
+					$message .= "<tr><td>$v[FILTER]</td><td>$v[FILTERED_PROFILES]</td><td>$v[COUNT]</td></tr>";
+					$lastCount = $v['COUNT'];
+				}
+				$message .= "</table>";
+				$message .= "</body></html>";
+
+				$headers = "From: ".$from."\r\n";
+				$headers .= "Reply-To: ".$to."\r\n";
+				
+				// Only send email to manoj and vibhor is count is below 300	
+				if($lastCount < 2000){
+					$headers .= "CC: manoj.rana@naukri.com,vibhor.garg@jeevansathi.com\r\n";
+				}
+
+				$headers .= "MIME-Version: 1.0\r\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+                                //SendMail::send_email($to, $message);
+				mail($to, $subject, $message, $headers);
+		}
+                
+                public function sendEmailForFailedPaymentCSVLogging($data, $to, $from, $subject)
+		{
+				$message = '<html><body>';
+				$message .= "<a href=https://docs.google.com/spreadsheets/d/146ktGIdAIbIb9fiIDtFnbvl_J5lj6A9paLks89tnUmc/edit#gid=0><b>Click for Filters Definitions</b></a><br><br>";
+				$message .= '<table rules="all" style="border-color: #666;" cellpadding="10">';
+				$message .= "<tr style='background: #eee;'><td><strong>FILTER</strong></td><td><strong>FILTERED_PROFILES</strong></td><td><strong>COUNT</strong></td></tr>";
+				$lastCount = 0;
+                                
+                                for($i=0;$i<11;$i++){
+                                    $message .= "<tr><td>".$data[$i][2]."</td><td>".$data[$i][0]."</td><td>".$data[$i][1]."</td></tr>";
+                                    $lastCount = $data[$i][3];
+                                }
+				
+				$message .= "</table>";
+				$message .= "</body></html>";
+
+				$headers = "From: ".$from."\r\n";
+				$headers .= "Reply-To: ".$to."\r\n";
+				
+				// Only send email to manoj and vibhor is count is below 300	
+				if($lastCount < 2000){
+					$headers .= "CC: manoj.rana@naukri.com,vibhor.garg@jeevansathi.com\r\n";
+				}
+
+				$headers .= "MIME-Version: 1.0\r\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+                                //SendMail::send_email($to, $message);
+				mail($to, $subject, $message, $headers);
+		}
 
 		public function updateSalesLog2($totalCnt, $latestProfilesCnt, $max_dt, $filter)
 		{
@@ -2082,6 +2409,46 @@ class csvGenerationHandler
 				$cnt_L  =$cnt_L-$filter['dataLimitExceedCnt_L'];
 				$salesRegLogObj->insertCount($dd,'DATA_LIMIT_EXCEED',$filter['dataLimitExceedCnt'],$cnt,$max_dt,$filter['dataLimitExceedCnt_L'],$cnt_L);
 		}
+                
+                public function updateFPLogs($totalCnt, $filter, $process)
+		{
+				$dd     =date('Y-m-d');
+				$fpRegLogObj =new incentive_PROCESS_REGULAR_LOG();
+
+				$cnt    =$totalCnt-$filter['notActivatedCnt'];
+				$fpRegLogObj->insertCount($dd,'NOT_ACTIVATED',$filter['notActivatedCnt'],$cnt,$process);
+
+				$cnt    =$cnt-$filter['invalidPhoneCnt'];
+				$fpRegLogObj->insertCount($dd,'INVALID_PHONE',$filter['invalidPhoneCnt'],$cnt,$process);
+
+				$cnt    =$cnt-$filter['maleAgeCnt'];
+				$fpRegLogObj->insertCount($dd,'MALE_AGE',$filter['maleAgeCnt'],$cnt,$process);
+
+				$cnt    =$cnt-$filter['nriCnt'];
+				$fpRegLogObj->insertCount($dd,'NRI',$filter['nriCnt'],$cnt,$process);
+
+				$cnt    =$cnt-$filter['nonOptinProfileCnt'];
+				$fpRegLogObj->insertCount($dd,'NON_OPTIN',$filter['nonOptinProfileCnt'],$cnt,$process);
+
+				$cnt    =$cnt-$filter['noPhoneExistsCnt'];
+				$fpRegLogObj->insertCount($dd,'NO_PHONE_EXISTS',$filter['noPhoneExistsCnt'],$cnt,$process);
+                                
+                                $cnt    =$cnt-$filter['noPhoneCnt'];
+				$fpRegLogObj->insertCount($dd,'NO_PHONE',$filter['noPhoneCnt'],$cnt,$process);
+                                //Filter only applicable in renewal process task
+                                if($process=='renewalProcessInDialer'){
+                                    $cnt    =$cnt-$filter['lastLoginCnt'];
+                                    $fpRegLogObj->insertCount($dd,'LAST_LOGIN',$filter['lastLoginCnt'],$cnt,$process);
+                                }
+                                
+                                if($process == 'failedPaymentInDialer') {
+                                    $cnt    =$cnt-$filter['MOTHER_TONGUE'];
+                                    $fpRegLogObj->insertCount($dd,'MOTHER_TONGUE',$filter['MOTHER_TONGUE'],$cnt,$process);
+                                }
+				
+		}
+                
+                
 		public function updateSalesLog($filterLabel, $max_dt, $prevTotalCnt=0, $prevLatestCnt=0)
 		{
 				$dd             =date('Y-m-d');
@@ -2098,6 +2465,22 @@ class csvGenerationHandler
 				}
 				$salesRegLogObj->insertCount($dd,$filterLabel,$netTotalCnt,$currTotalCnt,$max_dt,$netLatestCnt,$currLatestCnt);
 				return array($currTotalCnt, $currLatestCnt);
+		}
+                
+                public function updateFPLog($filterLabel, $prevTotalCnt=0, $process)
+		{
+				$dd             =date('Y-m-d');
+				$fpCsvTemp   =new incentive_PROCESS_CSV_DATA_TEMP(); 	
+				$fpRegLogObj =new incentive_PROCESS_REGULAR_LOG();
+				$currTotalCnt   =$fpCsvTemp->getAllProfilesCount($process);
+				//$currLatestCnt  =$fpCsvTemp->getLatestProfilesCount($max_dt, $process);
+				if($prevTotalCnt==0){
+						$netTotalCnt    =0;
+				}else{
+						$netTotalCnt    =$prevTotalCnt-$currTotalCnt;;
+				}
+				$fpRegLogObj->insertCount($dd,$filterLabel,$netTotalCnt,$currTotalCnt,$process);
+				return array($currTotalCnt);
 		}
 
 	// sales CSV Profile logging
@@ -2117,4 +2500,50 @@ class csvGenerationHandler
 			$salesCsvProfileLogObj->insertProfile($profileid,$username,$csvSent,$filter,$filterVal,$campaignName,$dialStatus);
 		unset($profiles);
 	}
+        
+        	// FP CSV Profile logging
+	public function fpCsvProfileLog($profileid,$username,$csvSent,$filter='',$filterVal='',$campaignName='',$dialStatus='',$profiles='', $process)
+	{
+		$fpCsvDataTempObj	=new incentive_PROCESS_CSV_DATA_TEMP();
+		$fpCsvProfileLogObj 	=new incentive_PROCESS_CSV_PROFILE_LOG();
+		if(!$profiles)
+			$profiles=array();
+
+                if($process=="renewalProcessInDialer"){
+                    if(count($profiles)>0){
+			foreach($profiles as $key=>$val){
+                            if($filter == "NEGATIVE_TREATMENT")
+				$fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else if($filter =="DO_NOT_CALL")
+                                $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else if($filter =="RENEWAL_PROCESS_IN_DIALER")
+                                $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else if($filter =="UNSUBSCRIBED")
+                                $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else{
+                                $fpCsvProfileLogObj->insertProfile($val['PROFILEID'],'',$csvSent,$filter,'Y','','',$process);
+                            }
+                        }
+		}
+		elseif($profileid)	
+			$fpCsvProfileLogObj->insertProfile($profileid,$username,$csvSent,$filter,$filterVal,$campaignName,$dialStatus, $process);
+                }
+                else{
+			if(count($profiles)>0){
+			foreach($profiles as $key=>$val){
+                            if($filter == "NEGATIVE_TREATMENT")
+				$fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else if($filter =="DO_NOT_CALL")
+                                $fpCsvProfileLogObj->insertProfile($val,'',$csvSent,$filter,'Y','','',$process);
+                            else
+                                $fpCsvProfileLogObj->insertProfile($val['PROFILEID'],'',$csvSent,$filter,'Y','','',$process);
+                        }
+			}
+			elseif($profileid){	
+				$fpCsvProfileLogObj->insertProfile($profileid,$username,$csvSent,$filter,$filterVal,$campaignName,$dialStatus, $process);
+			}
+		}	
+		unset($profiles);
+        
+        }
 }	

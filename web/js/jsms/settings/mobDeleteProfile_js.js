@@ -41,7 +41,9 @@ function ajaxPassword(checksum,pswrd)
 {
   $.ajax({                 
     url: '/profile/password_check.php?',
-    data: "checksum="+checksum+"&pswrd="+pswrd,
+    type: "POST",
+    datatype:'json',
+    data: {checksum:checksum,pswrd:escape(pswrd)},
     success: function(response) 
     {
       if(response=="true")
@@ -70,7 +72,10 @@ function ajaxDelete(specifyReason,deleteReason)
     success: function(response) 
     {
       if(response.output=="Deleted Successfully"){
-        parent.location.href= "/static/logoutPage";
+        if(deleteReason==1 || deleteReason==2 ||deleteReason==3)
+          parent.location.href= "/static/PostWeddingServices";
+        else
+          parent.location.href= "/static/logoutPage";
       }
       else 
       {

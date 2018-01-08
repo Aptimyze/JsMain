@@ -31,6 +31,8 @@ class GetAlbumV1Action extends sfActions
 			{
 				$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
                                 $loggedInProfileid = $loggedInProfile->getPROFILEID();
+                //adding flag for android and ios
+                $conditionalFlag = $request->getParameter("caccess"); //conditional access flag
 				if($request->getParameter("profileChecksum"))
 					$profileid = JsAuthentication::jsDecryptProfilechecksum($request->getParameter("profileChecksum"));
 				else
@@ -50,30 +52,46 @@ class GetAlbumV1Action extends sfActions
                 		}         
                 
 				$picServiceObj = new PictureService($viewerObj);
-				$album = $picServiceObj->getAlbum($contact_status);
+				$album = $picServiceObj->getAlbum($contact_status);				
 				if($album && is_array($album))
 				{
-					if($request->getParameter("profileChecksum"))
+					if($request->getParameter("profileChecksum")) //case (c)
 					{
-						foreach($album as $k=>$v)
-							$albumArr[] = $v->getMainPicUrl();
+						if($this->checkForConditionalAccess($loggedInProfileid,$conditionalFlag)) //if this is set to 1, show conditional access layer
+						{
+							$showLayer = 1;
+						}
+						else
+						{
+							foreach($album as $k=>$v)
+							$albumArr[] = $v->getMainPicUrl();	
+						}
 					}
 					else
 					{
-						if($request->getParameter("onlyCount"))
+						if($request->getParameter("onlyCount")) //case (b)
 						{
 							$albumArr["total_photos"] = count($album);
 							$albumArr["max_no_of_photos"] = sfConfig::get("app_max_no_of_photos");
 						}
-						else
+						else //case (a)
 						{
-                                                	foreach($album as $k=>$v)
-                                                	{
-                                                        	$albumArr[$k]["pictureid"] = $v->getPICTUREID();
-                                                        	$albumArr[$k]["url"] = $v->getMainPicUrl();
-                                                	}
+							foreach($album as $k=>$v)
+							{
+								if(MobileCommon::isApp() && $v->getOrdering()=="0" && $k==0){
+										if($v->getProfilePic235Url())
+												$profilePicUrl=$v->getProfilePic235Url();
+										else if($v->getMainPicUrl())
+												$profilePicUrl=$v->getMainPicUrl();
+										else
+												$profilePicUrl="";
+								}
+
+								$albumArr[$k]["pictureid"] = $v->getPICTUREID();
+								$albumArr[$k]["url"] = $v->getMainPicUrl();
+							}
 						}
-                                        }
+                    }
 				}
 				else
 				{
@@ -88,35 +106,43 @@ class GetAlbumV1Action extends sfActions
 					//Code for album view logging
 					if($profileid != $loggedInProfileid)
 					{
-//						$channel = MobileCommon::getChannel();
-//						$date = date("Y-m-d H:i:s");
-                                                $producerObj = new Producer();
-                                                if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfile->getGENDER()!= $viewerObj->getGENDER()){
-                                                    if($producerObj->getRabbitMQServerConnected()){
-                                                        $triggerOrNot = "inTrigger";
-                                                        $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$profileid)), 'redeliveryCount'=>0 );
-                                                        $producerObj->sendMessage($queueData);
-                                                    }
-                                                    else{    
-                                                        $vlt=new VIEW_LOG_TRIGGER();
-                                                        $vlt->updateViewTrigger($loggedInProfileid,$profileid);
-//                                                        $albumViewLoggingObj = new albumViewLogging();
-//                                                        $albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
-                                                    }
-                                                }
+					//$channel = MobileCommon::getChannel();
+					//$date = date("Y-m-d H:i:s");
+						$producerObj = new Producer();
+						if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfile->getGENDER()!= $viewerObj->getGENDER()){
+							if($producerObj->getRabbitMQServerConnected()){
+								$triggerOrNot = "inTrigger";
+								$queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$profileid)), 'redeliveryCount'=>0 );
+								$producerObj->sendMessage($queueData);
+							}
+							else{    
+								$vlt=new VIEW_LOG_TRIGGER();
+								$vlt->updateViewTrigger($loggedInProfileid,$profileid);
+					//$albumViewLoggingObj = new albumViewLogging();
+					//$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
+							}
+						}
 					}
 
 
-                    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 					if($request->getParameter("profileChecksum"))
-                                        	$respObj->setResponseBody(array("albumUrls"=>$albumArr));
+						$respObj->setResponseBody(array("albumUrls"=>$albumArr));
 					else
 					{
 						if($request->getParameter("onlyCount"))
 							$respObj->setResponseBody($albumArr);
+						elseif($profilePicUrl)
+                                                        $respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos"),"profilePicUrl"=>$profilePicUrl));
 						else
-                                        		$respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos")));
+						$respObj->setResponseBody(array("albumUrls"=>$albumArr,"max_no_of_photos"=>sfConfig::get("app_max_no_of_photos")));
+						
 					}
+				}
+				elseif($showLayer) //this is added in case conditional photo access layer is to be shown
+				{
+					$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+					$respObj->setResponseBody(array("albumUrls"=>null,"showConditionalPhotoLayer"=>$showLayer));
 				}
 				else
 				{
@@ -136,5 +162,15 @@ class GetAlbumV1Action extends sfActions
 		}
 		unset($inputValidateObj);
 		die;
+    }
+
+    public function checkForConditionalAccess($loggedInProfileid,$conditionalFlag)
+    {    	
+    	if((MobileCommon::isApp() && $conditionalFlag) || !MobileCommon::isApp())
+    	{    		
+    		return PictureFunctions::conditionalPhotoAccess();
     	}
+    	else
+    		return 0;
+    }
 }

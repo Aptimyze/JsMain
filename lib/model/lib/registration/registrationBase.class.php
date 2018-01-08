@@ -215,8 +215,8 @@ abstract class registrationBaseClass {
   /*
    * checks if the form is submitted correctly and sets Jpartner fields
    */
-  protected function postSubmit(){
-    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()]);
+  protected function postSubmit(){ 
+    RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,RegistrationEnums::$jpartnerfields[$this->getPageName()],$this->arrFormValues["casteNoBar"]);
   }
 
   protected function preDisplay(){
@@ -242,7 +242,7 @@ abstract class registrationBaseClass {
     if(!$this->fieldsArray){
       $msgReqForDebug[]=$_SERVER;
       $subject="static data not fetched in registration";
-      SendMail::send_email("kunal.test02@gmail.com,ankitshukla125@gmail.com",print_r($msgReqForDebug,true),$subject);  
+      SendMail::send_email("ankitshukla125@gmail.com",print_r($msgReqForDebug,true),$subject);  
     }
       
   }

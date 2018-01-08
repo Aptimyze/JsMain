@@ -37,10 +37,6 @@ EOF;
   {
     if (!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
-    JsMemcache::getInstance()->set("mqMemoryAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqMemoryAlarmSECOND_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmSECOND_SERVER",false);
     $instancesNum=MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT;
     for($i=1;$i<=$instancesNum;$i++)
     {

@@ -11,7 +11,7 @@ if(authenticated($cid))
 	{
 		$smarty->assign("flag","1");
 		$ssarr =array();
-		$serviceArrMap =array("0"=>"e-Rishta","1"=>"e-Value","2"=>"e-Sathi","3"=>"JS Exclusive","4"=>"JS Assisted","5"=>"Value Added Services","6"=>"e-Advantage");
+		$serviceArrMap =array("0"=>"e-Rishta","1"=>"e-Value","2"=>"e-Sathi","3"=>"JS Exclusive","4"=>"JS Assisted","5"=>"Value Added Services","6"=>"e-Advantage", "7"=>"e-Value Upgrade", "8"=>"e-Advantage Upgrade", "9"=>"JS Exclusive Upgrade");
 
 		if($type=='M'){
 			$mmarr  	=array('Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar');
@@ -49,7 +49,16 @@ if(authenticated($cid))
 			}
 			else 
 			{
-				list($serviceNameArr, $serviceWiseArr, $durationWiseArr) = getRevenueDetail($reportType, $type, $st_date." 00:00:00", $end_date." 23:59:59", $branch);
+				if($type == 'M' && $MYear >= '2017'){
+					$tableName = "PAYMENT_DETAIL_NEW";
+				}
+				else if($type == 'D' && $mm >= '04' && $yy >= '2017'){
+					$tableName = "PAYMENT_DETAIL_NEW";
+				}
+				else{
+					$tableName = "PAYMENT_DETAIL";
+				}
+				list($serviceNameArr, $serviceWiseArr, $durationWiseArr) = getRevenueDetail($reportType, $type, $st_date." 00:00:00", $end_date." 23:59:59", $branch,$tableName);
 			}
 
 			$smarty->assign("cid",$cid);
@@ -83,6 +92,7 @@ if(authenticated($cid))
 					$sql="SELECT SUM(PAID_COUNT) as cnt,SERVICE,DAY(ENTRY_DT) as mm,BRANCH FROM MIS.SERVICE_DETAILS WHERE ENTRY_DT>='$st_date' AND ENTRY_DT<='$end_date'";
 			if($branch)
 				$sql.=" AND UPPER(BRANCH)='".strtoupper($branch)."' ";
+                        $sql.=" AND SERVICE NOT LIKE '%J%' ";
 			$sql.=" GROUP BY mm, BRANCH, SERVICE ORDER BY SERVICE";
 			$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db));
 			while($row=mysql_fetch_array($res))
@@ -96,7 +106,6 @@ if(authenticated($cid))
 						$mm-=4;
 				}
 				$sid	=$row['SERVICE'];
-
 				// Code exist for old services-- Start
 				if($sid=='S1' || $sid=='S4')
 					$sid='P3';
@@ -126,6 +135,12 @@ if(authenticated($cid))
 									$ssarr['4']=$sid;
 								elseif(strstr($sid,'ES'))
 									$ssarr['2']=$sid;
+                                                                elseif(strstr($sid, 'C') && !strstr($sid,'NCP') && strstr($sid, 'UG'))
+                                                                        $ssarr['7']=$sid;
+                                                                elseif(strstr($sid, 'NCP') && strstr($sid, 'UG'))
+                                                                        $ssarr['8']=$sid;
+                                                                elseif(strstr($sid, 'X') && strstr($sid, 'UG'))
+                                                                        $ssarr['9']=$sid;
 								elseif(strstr($sid,'P') && !strstr($sid,'NCP'))
 									$ssarr['0']=$sid;
 								elseif(strstr($sid,'C') && !strstr($sid,'NCP'))
@@ -151,7 +166,13 @@ if(authenticated($cid))
 			// Report Type check
 				if($reportType=='D'){
 					for($i=0;$i<count($ssarr);$i++)
-						$ssarr[$i]=getsname($ssarr[$i]);
+                                                if(strstr($ssarr[$i],"UG")){
+                                                   $ssarr[$i] = substr($ssarr[$i], 0, -3);
+                                                   $ssarr[$i]=getsname($ssarr[$i]) . " Upgrade";
+                                                }
+						else{
+                                                   $ssarr[$i]=getsname($ssarr[$i]);
+                                                }
 					$ssarrTemp =$ssarr;
 
 				//sorting code
@@ -262,6 +283,9 @@ if(authenticated($cid))
 
 	function getsname($services_id)
 	{
+                $services_idUg = $services_id;
+                
+              
 		$services_id=str_replace(",","','",$services_id);
 		$sql="SELECT NAME from billing.SERVICES where SERVICEID in ('$services_id') ORDER BY NAME";
 		$result=mysql_query_decide($sql) or die(mysql_error_js());
@@ -275,11 +299,22 @@ if(authenticated($cid))
 		return $sname;
 	}
 
-	function getRevenueDetail($reportType, $reportPeriod, $st_date, $end_date, $branch='')
+	function getRevenueDetail($reportType, $reportPeriod, $st_date, $end_date, $branch='',$tableName='')
 	{
 		// $reportType = Detailed/Summary
 		// $reportPeriod = Month-wise/Date-wise
-
+		if(empty($tableName)){
+			$tableName = "PAYMENT_DETAIL";
+		}
+		if($tableName == "PAYMENT_DETAIL_NEW"){
+			$condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+			$appleCondition="IF(pm.TYPE='DOL',(pm.APPLE_COMMISSION+pm.AMOUNT)*pm.DOL_CONV_RATE*pd.SHARE*0.01,pm.AMOUNT*pd.SHARE*0.01)";
+		}
+		else{
+			$condition = "='DONE'";
+			$appleCondition="IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)";
+		}
+		
 		// slave connection
 		$myDb=connect_misdb();
 		mysql_query('set session wait_timeout=50000',$myDb);
@@ -290,17 +325,19 @@ if(authenticated($cid))
 			$reportPeriod = "MONTH";
 
 		if($branch!='')	
-			$sql = "SELECT pd.`SERVICEID`, SUM(IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD
-FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS =  'DONE' AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' AND pur.CENTER='$branch' GROUP BY pd.`SERVICEID` , DD";
+			$sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
+FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS $condition AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' AND pur.CENTER='$branch' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
 		else
-			$sql = "SELECT pd.`SERVICEID`, SUM(IF(pd.CUR_TYPE =  'DOL',  `NET_AMOUNT` * DOL_CONV_RATE,  `NET_AMOUNT`)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD
-FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS =  'DONE' AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' GROUP BY pd.`SERVICEID` , DD";
+			$sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE
+FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pd.BILLID AND pd.BILLID = pm.BILLID AND pm.ENTRY_DT >=  '$st_date' AND pm.ENTRY_DT <=  '$end_date' AND pm.STATUS $condition AND pur.SERVICEID NOT LIKE 'ES%' AND pur.SERVICEID NOT LIKE 'NCP%' GROUP BY pd.`SERVICEID` , DD, UPGRADE";
+                //print_r($sql);
 		$res = mysql_query_decide($sql,$myDb) or die(mysql_error_js($myDb));
-
+                //print_r("Report Type:". $reportType);
 		if($reportType == 'D')
 		{
 			while($row = mysql_fetch_array($res))
 			{
+                                //print_r($row);
 				$amt = round(net_off_tax_calculation($row['AMT'],$end_date));
 
 				if(strstr($row['SERVICEID'],'M'))
@@ -310,17 +347,43 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 				}
 				else
 				{
-					$serviceWiseArr[$row['SERVICEID']][$row['DD']] = $amt;
+                                    if($row['UPGRADE']=='MAIN'){
+                                        //print_r("INSIDE UPGRADE");
+                                        $col = $row['SERVICEID'].'-UG';
+                                        $serviceWiseArr[$col][$row['DD']] = $amt;
+					$serviceWiseArr[$col]['TOTAL'] += $amt;
+                                        $serviceNameArr[$col]=getsname($row['SERVICEID']) . " Upgrade";
+                                    }
+                                    else{
+                                        $serviceWiseArr[$row['SERVICEID']][$row['DD']] = $amt;
 					$serviceWiseArr[$row['SERVICEID']]['TOTAL'] += $amt;
+                                        $serviceNameArr[$row['SERVICEID']] = getsname($row['SERVICEID']);
+                                    }
 				}
 			}
-
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD";
+                        //print_r($serviceWiseArr);
+                        //print_r($serviceNameArr);
+                        if($branch=='')
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
+                        else
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur,billing.PURCHASE_DETAIL AS pd, billing.$tableName AS pm WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' AND pur.CENTER = '$branch' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
+                      
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
-			{
-				$sid = explode(',', $row['SERVICEID']);
-				$sid = $sid[0];
+			{  
+                $sid = explode(',', $row['SERVICEID']);
+				$sid = str_replace("C","NCP",$sid[0]);//$sid[0];
+                                if($row['UPGRADE']=='MAIN'){
+                                    $sid .= "-UG";
+                                } 
+                                if(strstr($sid,"UG")){
+                                    $sidWithUG = $sid;
+                                    $sid = substr($sid, 0, -3);
+                                    $serviceNameArr[$sidWithUG]=getsname($sid) . " Upgrade";
+                                }
+				else{
+                                    $serviceNameArr[$sid]=getsname($sid);
+                                }
 				$amt = round(net_off_tax_calculation($row['AMT'],$end_date));
 
 				if(strstr($sid,'ESJ'))
@@ -334,34 +397,61 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 					$serviceWiseArr[$sid]['TOTAL'] += $amt;
 				}
 			}
-
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD";
+                        if($branch=='')
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur,billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
+                        else
+                            $sql = "SELECT pd.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' AND pur.CENTER = '$branch' GROUP BY pd.`SERVICEID`, DD, UPGRADE";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
-			{
+			{ 
 				$sid = explode(',', $row['SERVICEID']);
-				$sid = $sid[0];
+				$sid = str_replace("C","NCP",$sid[0]);
+                
+                                if($row['UPGRADE']=='MAIN'){
+                                    $sid .= "-UG";
+                                }
+                                $amt = round(net_off_tax_calculation($row['AMT'],$end_date));
+                                if(strstr($sid,"UG")){
+                                    $sidWithUG = $sid;
+                                    $sid = substr($sid, 0, -3);
+                                    $serviceNameArr[$sidWithUG]=getsname($sid) . " Upgrade";
+                                    $serviceWiseArr[$sidWithUG][$row['DD']] += $amt;
+                                    $serviceWiseArr[$sidWithUG]['TOTAL'] += $amt;
+                                }
+				else{
+                                    $serviceNameArr[$sid]=getsname($sid);
+                                    $serviceWiseArr[$sid][$row['DD']] += $amt;
+                                    $serviceWiseArr[$sid]['TOTAL'] += $amt;
+                                }
+                                //print_r("HERE");
+                                //print_r($serviceNameArr);
+                                
 				$amt = round(net_off_tax_calculation($row['AMT'],$end_date));
 
-				$serviceWiseArr[$sid][$row['DD']] += $amt;
-				$serviceWiseArr[$sid]['TOTAL'] += $amt;
-			}
 
-			$sql = "SELECT SERVICEID, NAME FROM billing.SERVICES ORDER BY NAME";
-			$res = mysql_query_decide($sql) or die(mysql_error_js());
-			while($row = mysql_fetch_array($res))
-			{
-				$serviceNameArr[$row['SERVICEID']] = $row['NAME'];
-				if(!$serviceWiseArr[$row['SERVICEID']])
-					unset($serviceNameArr[$row['SERVICEID']]);
+                                 //print_r($serviceWiseArr);
+                                
 			}
+                        
+//			$sql = "SELECT SERVICEID, NAME FROM billing.SERVICES ORDER BY NAME";
+//			$res = mysql_query_decide($sql) or die(mysql_error_js());
+//			while($row = mysql_fetch_array($res))
+//			{
+//				$serviceNameArr[$row['SERVICEID']] = $row['NAME'];
+//				if(!$serviceWiseArr[$row['SERVICEID']]){
+//                                    $serviceNameArr[$row['SERVICEID']] = VariableParams::$membershipUpgradeServiceId[$serviceWiseArr[$row['SERVICEID']]];
+//                                    unset($serviceNameArr[$row['SERVICEID']]);
+//                                }
+//			}
+                //print_r($serviceNameArr);     
 		}
 		else
 		{
 			while($row = mysql_fetch_array($res))
 			{
 				$amt = round(net_off_tax_calculation($row['AMT'],$end_date));
-
+                                
+                                
 				if(strstr($row['SERVICEID'],'P') && !strstr($row['SERVICEID'],'NCP'))
 				{
 					$serviceWiseArr[0][$row['DD']] += $amt;
@@ -369,13 +459,26 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 				}
 				elseif(strstr($row['SERVICEID'],'C') && !strstr($row['SERVICEID'],'NCP'))
 				{
-					$serviceWiseArr[1][$row['DD']] += $amt;
+                                    if($row['UPGRADE']=='MAIN'){
+                                        $serviceWiseArr[7][$row['DD']] += $amt;
+					$serviceWiseArr[7]['TOTAL'] += $amt;
+                                    }
+                                    else{
+                                        $serviceWiseArr[1][$row['DD']] += $amt;
 					$serviceWiseArr[1]['TOTAL'] += $amt;
+                                    }
+					
 				}
 				elseif(strstr($row['SERVICEID'],'X'))
 				{
+                                    if($row['UPGRADE']=='MAIN'){
+                                        $serviceWiseArr[9][$row['DD']] += $amt;
+					$serviceWiseArr[9]['TOTAL'] += $amt;
+                                    }
+                                    else{
 					$serviceWiseArr[3][$row['DD']] += $amt;
 					$serviceWiseArr[3]['TOTAL'] += $amt;
+                                    }
 				}
 				else
 				{
@@ -383,7 +486,7 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 					$serviceWiseArr[5]['TOTAL'] += $amt;
 				}
 			}
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD";
+			$sql = "SELECT pur.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'ES%' GROUP BY pur.`SERVICEID`, DD";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
 			{
@@ -402,17 +505,22 @@ FROM billing.PURCHASES AS pur, billing.PURCHASE_DETAIL AS pd, billing.PAYMENT_DE
 				}
 			}
 			
-			$sql = "SELECT pur.`SERVICEID`, SUM( IF (pm.TYPE = 'DOL', AMOUNT * DOL_CONV_RATE, AMOUNT)) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD FROM billing.PURCHASES AS pur, billing.PAYMENT_DETAIL AS pm WHERE pur.BILLID = pm.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS = 'DONE' AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD";
+			$sql = "SELECT pur.`SERVICEID`, SUM($appleCondition) AS AMT, $reportPeriod( pm.ENTRY_DT ) AS DD, MEM_UPGRADE AS UPGRADE FROM billing.PURCHASES AS pur, billing.$tableName AS pm,billing.PURCHASE_DETAIL AS pd WHERE pur.BILLID = pm.BILLID AND pd.BILLID=pur.BILLID AND pm.ENTRY_DT >= '$st_date' AND pm.ENTRY_DT <= '$end_date' AND pm.STATUS $condition AND pur.SERVICEID LIKE 'NCP%' GROUP BY pur.`SERVICEID`, DD, UPGRADE";
 			$res = mysql_query_decide($sql) or die(mysql_error_js());
 			while($row = mysql_fetch_array($res))
 			{
 				$sid = $row['SERVICEID'];
 				$amt = round(net_off_tax_calculation($row['AMT'],$end_date));
-
-				$serviceWiseArr[6][$row['DD']] += $amt;
-				$serviceWiseArr[6]['TOTAL'] += $amt;
+                                if($row['UPGRADE']=='MAIN'){
+                                        $serviceWiseArr[8][$row['DD']] += $amt;
+					$serviceWiseArr[8]['TOTAL'] += $amt;
+                                }
+                                else{
+                                    $serviceWiseArr[6][$row['DD']] += $amt;
+                                    $serviceWiseArr[6]['TOTAL'] += $amt;
+                                }
 			}
-			$serviceNameArr = array("e-Rishta", "e-Value", "e-Sathi", "JS Exclusive", "JS Assisted", "Value Added Services","e-Advantage");
+			$serviceNameArr = array("e-Rishta", "e-Value", "e-Sathi", "JS Exclusive", "JS Assisted", "Value Added Services","e-Advantage", "e-Value Upgrade", "e-Advantage Upgrade", "JS Exclusive Upgrade");
 		}
 
 		if($serviceWiseArr && is_array($serviceWiseArr))

@@ -44,7 +44,7 @@ class desktopRegister1 extends registrationBaseClass {
     
     $this->setSlot(Jsb9Enum::jsRegPage1Url);
     
-    $this->reg_params['source'] = $this->sourceVar['source'];
+    $this->reg_params['source'] = $this->sourceVar['source'];    
     sfContext::getInstance()->getResponse()->setCanonical(sfConfig::get("app_site_url") . "/register/page1");
     
   }
@@ -61,6 +61,9 @@ class desktopRegister1 extends registrationBaseClass {
     parent::preDisplay();
     $authenticationObj = new WebAuthentication;
     $authenticationObj->removeLoginCookies();
+    $campaignData = RegistrationFunctions::getCampaignVars($this->request,$jsonFormat=1);
+    if($campaignData)
+        $this->campaignData = $campaignData;
   }
   /**
    * function called to update jprofile and insert name
@@ -106,6 +109,8 @@ class desktopRegister1 extends registrationBaseClass {
     parent::postSubmit();
 
     $this->sourceVar['source'] = RegistrationFunctions::setSourceHomeCookie($this->id);
+    
+    RegistrationFunctions::putCampaignVars($this->id,$this->request->getParameter("campaignData"));
 
     RegistrationMisc::contactArchiveUpdate($this->loginProfile, $this->pageVar['ip']);
 
@@ -247,19 +252,21 @@ class desktopRegister1 extends registrationBaseClass {
   /*
    * Method for intializting source related all params, cookies and logic
    */
-  private function initSource(){
-    
+  private function initSource(){    
+    //checking if source set in cookie
+    if($_COOKIE["source"])
+    {
+      $this->request->setParameter("source",$_COOKIE["source"]);
+    }
     //Create source tracking object to track source and set cookie
-    $this->sourceVar = RegistrationFunctions::getSourceParams($this->request);
+    $this->sourceVar = RegistrationFunctions::getSourceParams($this->request);    
     
     //If form is not submit in this request then assign source params
     if(false === $this->isSubmit()){
       
       $this->sourceVar['sourceTracking']->SourceTracking();
       $this->sourceVar['source'] = $this->sourceVar['sourceTracking']->getSource();
-      
-    }
-   
+    }   
     $this->processSource();
     
   }
@@ -268,7 +275,7 @@ class desktopRegister1 extends registrationBaseClass {
    * Function to assign templates Varibales
    */
   protected function assignTemplateVariables(){
-    parent::assignTemplateVariables();
+    parent::assignTemplateVariables();    
     $this->objController->source = $this->source;
   }
 

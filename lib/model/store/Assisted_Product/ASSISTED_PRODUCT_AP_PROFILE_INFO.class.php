@@ -34,6 +34,22 @@ class ASSISTED_PRODUCT_AP_PROFILE_INFO extends TABLE
 		return null;
 	}
         
+	
+	public function replaceExclusiveProfile($profileid,$status,$enrtyDate,$send,$se){
+	    try{
+	        $sql = "REPLACE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,STATUS,SEND,ENTRY_DT,SE) VALUES(:PROFILEID,:STATUS,:SEND,:ENTRY_DT,:SE)";
+	        $prep = $this->db->prepare($sql);
+	        $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+	        $prep->bindValue(":STATUS",$status,PDO::PARAM_INT);
+	        $prep->bindValue(":ENTRY_DT",$enrtyDate,PDO::PARAM_INT);
+	        $prep->bindValue(":SEND",$send,PDO::PARAM_INT);
+	        $prep->bindValue(":SE",$se,PDO::PARAM_INT);
+	        $prep->execute();
+	    }catch(PDOException $e){
+	        throw new jsException($e);
+	    }
+	}
+	
 	/*
 	This function fetches the profile id's which are LIVE after checking with temp table which store
          * already sent records in case of cron failure ordering them with last login date
@@ -75,6 +91,21 @@ class ASSISTED_PRODUCT_AP_PROFILE_INFO extends TABLE
 	        {
                         throw new jsException($e);
         	}
+	}
+	
+	    public function insertIntoAPProfileInfo($profieId,$status,$entryDate,$send,$se){
+	    try{
+	        $sql = "INSERT IGNORE into Assisted_Product.AP_PROFILE_INFO (PROFILEID,SE,STATUS ,SEND,ENTRY_DT) VALUES (:PROFILEID,:SE,:STATUS,:SEND,:ENTRY_DT)";
+	        $prep = $this->db->prepare($sql);
+	        $prep->bindValue(":PROFILEID",$profieId,PDO::PARAM_INT);
+	        $prep->bindValue(":SE",$se,PDO::PARAM_INT);
+	        $prep->bindValue(":STATUS",$status,PDO::PARAM_INT);
+	        $prep->bindValue(":SEND",$send,PDO::PARAM_INT);
+	        $prep->bindValue(":ENTRY_DT",$entryDate,PDO::PARAM_INT);
+	        $prep->execute();
+	    }catch(PDOException $e){
+	        throw new jsException($e);
+	    }
 	}
 }
 ?>

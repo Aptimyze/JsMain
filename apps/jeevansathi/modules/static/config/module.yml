@@ -46,11 +46,15 @@ all:
     enable_login: off
   agentinfo:
     enable_login: off
+  AadhaarInfo:
+    enable_login: off
   trackinterstitial:
     enable_login: off
   getfielddata:
     enable_login: off 
   LogoutPage:
+    enable_login: off
+  PostWeddingServices:
     enable_login: off
   searchIdExpire:
     enable_login: off
@@ -61,4 +65,20 @@ all:
   AppPromo:
     enable_login: off
   jsmsVerificationStaticPage:
+    enable_login: off
+  oldMobileSite:
+    enable_login: off
+  hideOption:
+    enable_login:  on
+  unHideOption:
+    enable_login:  on
+  unHideResult:
+    enable_login:  on
+  hideCheckPassword:
+    enable_login: on
+  hideDuration:
+    enable_login: on
+  MembershipPlanAudioV1:
+    enable_login: off
+  OutboundCallStatusV1:
     enable_login: off

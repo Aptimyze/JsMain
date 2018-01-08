@@ -92,6 +92,11 @@ class SetProfilePic extends PictureService
 				break;
 
 		}
+			MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+                        $memCacheObject = JsMemcache::getInstance();
+                        $memCacheObject->remove($this->profileid. "_THUMBNAIL_PHOTO");
+                        $memCacheObject->remove($this->profileid. "_HamburgerPicUrl");
+
 		return array(0=>true,1=>$case);
         }
         /*

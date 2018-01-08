@@ -96,18 +96,9 @@ chatConfig.Params = {
             "timeoutTime":120000 //1 min
         }
     },
-    //api config for chat history
-    chatHistoryApi: {
-        //"apiUrl": "http://scommunication.infoedge.com:8490/communication/v1/message?authChecksum=231a266bad36f4911efda3d5e12d5b3c6c3b4eceec363ff71d3db4d50d0c91e1b879a2a0043b70d02f0d4979453c85da9926e12663748231d68386069f68b91229c53bb973ddb73c4ee430402a6555c30248306a7e7728ccdf585acece1dffbbec4b6909058cc4fed93cc2de18470b7475fa079a168b43368d101503796ac32304540138556795442a444023d06d9c17e008d88e6a43e19dbf6578454943045ec2ff8dc83e9eff0477c49e50547a5fadae1bb5aa8b5fb5e629b018bd8f5d555458d166ec3f73cc5fb8949f81f7e04e6d&pogChecksum=d3d6cec19567f22a487cb51ed6521f05i9247798&pageNo=1",
-        "apiUrl":"/api/v1/chat/popChat",
-        "extraParams": {
-            "pageSource": "chat",
-            "channel": 'pc'
-        }
-    },
     pc: {
         updateRosterFromFrontend: true,
-        bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
+        bosh_service_url: 'wss://' + openfireUrl + '/ws/', //connection manager for openfire
         hide_offline_users: false, //hide offline users from list
         //tab id to tab names mapping
         listingTabs: {
@@ -340,6 +331,7 @@ chatConfig.Params = {
         moreMsgChunk: 20, //pagination count for msg history
         loginRetryTimeOut: 500,    
         appendRetryLimit: 1000,
+        checkForDefaultCommunication:true,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
@@ -351,9 +343,10 @@ chatConfig.Params = {
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000,  //time in ms(5 min)
         nameTrimmLength:14,
-        logChatTimeout:true,
+        logChatTimeout:false,
         autoDisplayLoginPanel: 30000, //time in ms
         audioChatFilesLocation:'/audio/jspc/chat/',
+        enableLoadTestingStanza:true,
         rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };

@@ -101,6 +101,8 @@ function afterOtpFailedLayer() {
 if(!$("#closeButtonOtp"))
 	$("#closeButtonOtp").prependTo('body');	
 $("#missedCallButton").bind('click',function (){
+	/* GA tracking */
+	GAMapper("GA_VOL_MISS_CALL");
 showVerifyLayer();
 });
 fillLayerDetails();
@@ -162,6 +164,7 @@ else {
 }
 
 function showVerifyLayer(){
+	
 NProgress.configure({ parent: '#forNProgress',trickle:false,minimum:0});
 NProgress.done();
 _NProgress=0;
@@ -203,6 +206,7 @@ ajaxConfig.data =
 
 ajaxConfig.dataType='json';
 ajaxConfig.type="POST";
+ajaxConfig.headers = { 'X-Requested-By': 'jeevansathi' };
 ajaxConfig.success=function(result) {
 									hideCommonLoader();
                                 	if(result.responseStatusCode=='0'){
@@ -225,7 +229,7 @@ jQuery.myObj.ajax(ajaxConfig);
 function checkValidPhone(mobileISD,mobileNumber)
 	{
 
-	var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
+	var phonePatternIndia = /^([1-9]{1}[0-9]{9})$/;
 	var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 	var isdCodes = ["0", "91","+91"];
 
@@ -271,6 +275,8 @@ jQuery.myObj.ajax(ajaxConfig);
 function afterSuccessLayer(){
 	$("#closeButtonOtp").hide();
 $("#verifSuccessOk").bind('click',function (){
+	/* GA tracking */
+	GAMapper("GA_VOL_SUCCESS_OK");
 	if(typeof(redirectUrlForPhoneModule)!='undefined')
 	window.location.href=redirectUrlForPhoneModule;
 else {closeCurrentLayerCommon(closeButtonClick);
@@ -330,7 +336,9 @@ function afterOtpLayer() {
 $("#closeButtonOtp").prependTo('body');
 $("#closeButtonOtp").show().unbind().bind('click',function(){closeCurrentLayerCommon(closeButtonClick);$(this).hide(); });
 $("#matchOtpButton").bind('click',function (){
-sendMatchOtpAjax();
+	/* GA tracking */
+	GAMapper("GA_VOL_SUBMIT");
+	sendMatchOtpAjax();
 });
 }
 
@@ -345,11 +353,14 @@ ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
 ajaxConfig.success=function(response) {
 	hideCommonLoader();
-	if(response.matched=='true')
+	if(response.matched=='true'){
 		showSuccessLayer();
+		GAMapper("GA_VOL_SUBMIT_SUCCESS");
+	}
 	else if(response.matched=='false'){
 		if(response.trialsOver=='N'){
 			shakeOTPInput();
+			GAMapper("GA_VOL_SUBMIT_ERROR");
 			currentLayer.find('#matchOtpText').css('width','83%');
 			currentLayer.find("#OTPOuterInput").removeClass('phnvbdr1').addClass('brdr-1');
 		}

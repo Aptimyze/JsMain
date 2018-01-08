@@ -28,7 +28,7 @@ EOF;
 		}
         
         include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-        $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104","ankita"=>"9650879575");
+        $mobileNumberArr = array("vibhor"=>"9868673709","manoj"=>"9999216910","nitish"=>"8989931104");
         //$mobileNumberArr = array("nitish"=>"8989931104");
         $authChecksum = $this->sendLoginRequest();
         $urlArray = array(JsConstants::$siteUrl."/api/v1/notification/poll?".$authChecksum);
@@ -74,8 +74,11 @@ EOF;
         $ch = curl_init($urlToHit);
         if($headerArr)
             curl_setopt($ch, CURLOPT_HTTPHEADER, 0);
-        else
-            curl_setopt($ch, CURLOPT_HEADER, 1);
+        else{
+            $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
+            curl_setopt($ch, CURLOPT_HEADER, $header);
+        }
+        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
         if($postParams)
             curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -86,6 +89,12 @@ EOF;
         curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $output = curl_exec($ch);
+        if(!$headerArr)
+        {
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $headerStr = substr($output, 0, $header_size);
+            $output = substr($output, $header_size);
+        }
         return $output;
     }
     
@@ -95,6 +104,7 @@ EOF;
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        CommonUtility::logTechAlertSms($message, $mobile);
         $date = date("Y-m-d h");
     }
 }

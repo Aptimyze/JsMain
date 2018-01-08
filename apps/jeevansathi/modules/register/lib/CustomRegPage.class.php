@@ -7,7 +7,7 @@ class CustomRegPage
 	private $m_szHeading 		= "REGISTER FREE";
 	private $m_szSubHeading1 	= "& meet over";
 	private $m_szSubHeading2 	= "2 Lakh profiles";
-	private $m_urlImage			= "http://ieplads.com/mailers/2013/jeevansathi/shortReg_p1/images/mainIMG1.jpg";
+	private $m_urlImage			= "https://ieplads.com/mailers/2013/jeevansathi/shortReg_p1/images/mainIMG1.jpg";
 	private $m_iPageId			= -1;
 	
 	const HEADING 		= "HEADING";
@@ -17,7 +17,10 @@ class CustomRegPage
 	const BODYSTYLE		= "padding-top :28px  !important";
 	
 	private $m_objSEM_CUSTOM_REG_STORE = null;
-	
+	private function cleanString($string)
+	{
+		return $string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+	}
 	public function __construct($request ="")
 	{
 		if($request == "")
@@ -26,27 +29,27 @@ class CustomRegPage
 		//Reterving Info
 		
 		//Heading
-		if(($heading = $request->getParameter('h')) && isset($heading))
+		if(($heading = $this->cleanString($request->getParameter('h'))) && isset($heading))
 		{
 			$this->m_szHeading = htmlspecialchars($heading,ENT_NOQUOTES);
 		}
 		//Subheading 1
-		if(($subhead1 = $request->getParameter('sh1')) && isset($subhead1))
+		if(($subhead1 = $this->cleanString($request->getParameter('sh1'))) && isset($subhead1))
 		{
 			$this->m_szSubHeading1 = htmlspecialchars($subhead1,ENT_NOQUOTES);
 		}
 		//Subheading 2
-		if(($subhead2 = $request->getParameter('sh2')) && isset($subhead2))
+		if(($subhead2 = $this->cleanString($request->getParameter('sh2'))) && isset($subhead2))
 		{
 			$this->m_szSubHeading2 = htmlspecialchars($subhead2,ENT_NOQUOTES);
 		}
 		//Image Url
-		if(($image = $request->getParameter('image')) && isset($image))
+		if(($image = $this->cleanString($request->getParameter('image'))) && isset($image))
 		{
 			$this->m_urlImage = htmlspecialchars($image,ENT_NOQUOTES);
 		}
 		//Page ID 
-		if(($page_id = $request->getParameter('p')) && isset($page_id))
+		if(($page_id = $this->cleanString($request->getParameter('p'))) && isset($page_id))
 		{
 			$this->m_iPageId = htmlspecialchars($page_id,ENT_NOQUOTES);
 		}
@@ -82,7 +85,7 @@ class CustomRegPage
 	}
 	
 	private function SetRegistration_PageParameter($request)
-	{
+	{		
 		//Heading, subheadings, and image
 		$request->setParameter("customReg",1);
 		$request->setParameter("h",$this->m_szHeading);
@@ -95,7 +98,7 @@ class CustomRegPage
 		$request->setParameter("service_email","S");
 		$request->setParameter("service_call","S");
 		$request->setParameter("service_sms","S");
-		$request->setParameter("service_email","S");	
+		$request->setParameter("service_email","S");		
 	}
 	
 	private function BakeHtml($szHtmlCode,$szFormData)
