@@ -809,11 +809,9 @@ class CommonUtility
     */
     public static function checkFreshChatPanelCondition($module, $action, $profileid){
         if(MobileCommon::isNewMobileSite()){
-            $freshChatAvailModuleArr = ["membership"];
             $freshChatAvailActionArr = array();
             $phoneNotVerified = false;
         } else{
-            $freshChatAvailModuleArr = ["membership","register"];
             $freshChatAvailActionArr = ["phoneVerificationPcDisplay"];
             if($profileid){
                 $phoneNotVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
@@ -826,6 +824,9 @@ class CommonUtility
                 $phoneNotVerified = false;
             }
         }
+
+        $freshChatAvailModuleArr = ["membership","register"];
+
         if($profileid){
             $freshChatAvailModuleActionArr = [["contactus","index"],["help","index"],["static","logoutPage"]];
         } else{
