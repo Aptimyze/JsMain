@@ -65,8 +65,6 @@ function prefillGridFields(eleId){
                 setTimeout(function(){
                     prefillGridFields("caste_value");
                     prefillTextFields("subcaste_value");
-                    prefillGridFields("casteMuslim_value");
-                    prefillGridFields("jamaat_value");
                 },0);
             }
             if((idName == "countryReg" && x == '128') || idName == "stateReg"){

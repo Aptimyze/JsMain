@@ -8,7 +8,7 @@
 <body>
 <table border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #8c8983; max-width:600px;">
   <tr>
-    <td width="600" align="center" bgcolor="#151106"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/banner.jpg" width="100%" alt="Jeevansathi.com Jeevansathi Exclusive – more personalized,
+    <td width="600" align="center" bgcolor="#151106"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/banner.jpg" width="100%" alt="Jeevansathi.com Jeevansathi Exclusive – more personalized,
 more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ffffff; font-family:Tahoma, Geneva; font-size:37px;" ></td>
   </tr>
   <tr>
@@ -54,28 +54,28 @@ more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ff
             <td></td>
             <td><table border="0" cellspacing="0" cellpadding="0" style="max-width:502px;">
               <tr>
-                <td width="24" valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
-                <td width="454" style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Work on your profile to ensure its gets noticed</td>
+                <td width="24" valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td width="454" style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Understand your profile and search requirements in detail</td>
                 <td width="24"></td>
               </tr>
               <tr>
-                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="5" border="0" align="left" /></td>
-                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Understand the qualities that you are looking for in your desired partner</td>
+                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="5" border="0" align="left" /></td>
+                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Search profiles and send them to you discreetly, through the mode of your convenience</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
-                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Sending Interests to handpicked profiles matching your criteria</td>
+                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Discuss the profiles sent with you while constantly refining the criteria listed</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
-                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Contact profiles shortlisted by you and arrange meetings</td>
+                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Further call prospects to gauge their interest levels in your profile</td>
                 <td></td>
               </tr>
               <tr>
-                <td valign="top"><img src="https://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
-                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Get benefits of JS Boost and make your number visible to free members</td>
+                <td valign="top"><img src="http://ieplads.com/mailers/2014/jeevansathi/exclusive-discount-17dec/images/dot.jpg" width="6" height="6" hspace="0" vspace="6" border="0" align="left" /></td>
+                <td style="font-size:12px; font-family:Arial, Helvetica; color:#747474;">Setup meetings between you and the prospects to discuss things further</td>
                 <td></td>
               </tr>
             </table></td>
@@ -107,10 +107,10 @@ more effective" hspace="0" vspace="0" border="0" align="center" style="color:#ff
       <tr>
         <td></td>
         ~if $currency eq 'RS'`
-        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td>
-        <!-- <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td> -->
+        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">+91 8800909042.</span></td>
+        <!-- <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1800-3010-6299.</span></td> -->
         ~else`
-        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">1-800-419-6299.</span></td>
+        <td style="font-size:13px; font-family:Arial, Helvetica; color:#403f3f;">For details/queries on JS Exclusive Service, call our Manager &#64; <span style="color:#1d1c1c">+91 8800909042.</span></td>
         ~/if`
         <td></td>
       </tr>

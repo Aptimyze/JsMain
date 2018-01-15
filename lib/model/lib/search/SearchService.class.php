@@ -20,11 +20,6 @@ class SearchService
 		$this->engineType = $engineType;
 		$this->showAllClustersOptions = $showAllClustersOptions;
 
-		//contains values of other fields.
-		$this->othersArray = array('Others','Other','other','others','Other Occupations','Security Professional');
-		//occupation values which has the same name as occupation grouping
-		$this->sameOccupationNameArray = array('Others','Defence','Pilot','Businessperson','Not working','Doctor','Farming','Sportsperson','Merchant Navy','Air Hostess','Govt. Services');
-
                 if($showAllClustersOptions)
 		{
                         //$this->clusterDisplaylimit = 10000;  //random choosen value
@@ -49,7 +44,7 @@ class SearchService
 	* @param loggedInProfileObj
 	*/
 	
-	public function performSearch($SearchParamtersObj='',$results_cluster='',$clustersToShow='',$currentPage='',$cachedSearch='',$loggedInProfileObj='',$noFilterQuery='')
+	public function performSearch($SearchParamtersObj='',$results_cluster='',$clustersToShow='',$currentPage='',$cachedSearch='',$loggedInProfileObj='')
 	{
 		$SearchResponseObj = ResponseHandleFactory::getResponseEngine($this->responseType,$this->engineType,$this->showAllClustersOptions);
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF() =='N')
@@ -57,7 +52,7 @@ class SearchService
 			return $SearchResponseObj;
 		}
 		$SearchRequestObj = RequestHandleFactory::getRequestEngine($SearchResponseObj,$SearchParamtersObj);
-		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj,$noFilterQuery);
+		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj);
 		
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES')
 		{
@@ -91,7 +86,7 @@ class SearchService
 		$fieldMapArrayLabelMapping = searchConfig::fieldMapArrayLabelMapping();
 		$doesntMatterLabel = searchConfig::$doesntMatterLabel;
 		$allLabel = searchConfig::$allLabel;
-                
+
 		/* 
 		* loop through all cluster to display 
 		* clusters with 'n' options/counts will be set here.
@@ -242,8 +237,8 @@ class SearchService
 				*/
 				{
 					$ncr = FieldMap::getFieldLabel('delhiNcrCities','',1);
-					if(is_array($res["CITY_RES"]))
-					foreach($res["CITY_RES"] as $k3=>$v3)
+					if(is_array($res["CITY_INDIA"]))
+					foreach($res["CITY_INDIA"] as $k3=>$v3)
 					{
 						if(in_array($k3,$ncr))
 							$res["STATE"]["NCR"]+=$v3; 
@@ -252,7 +247,7 @@ class SearchService
 						unset($res["STATE"]["DE00"]);
 					arsort($res["STATE"]);
 				}
-				elseif($v1=='CITY_RES')
+				elseif($v1=='CITY_INDIA')
 				/**
 				* In This case we need to show "All Metros" option as well.
 				*/
@@ -260,13 +255,13 @@ class SearchService
 					if($SearchParamtersObj->getSTATE()=='' && !$moreClusterSoring)
 					{
 						$delmetro = FieldMap::getFieldLabel('allMetros','',1);
-						if(is_array($res["CITY_RES"]))
-						foreach($res["CITY_RES"] as $k3=>$v3)
+						if(is_array($res["CITY_INDIA"]))
+						foreach($res["CITY_INDIA"] as $k3=>$v3)
 						{
 							if(in_array($k3,$delmetro))
-								$res["CITY_RES"]["METRO"]+=$v3; 
+								$res["CITY_INDIA"]["METRO"]+=$v3; 
 						}
-						arsort($res["CITY_RES"]);
+						arsort($res["CITY_INDIA"]);
 					}
 				}
 
@@ -493,7 +488,7 @@ class SearchService
 			}
 		}
 		//print_r($this->clusterArr[$clusterName]);
-                
+
                 if($moreClusterSoring==1)
                 {
 			if($clusterName=='EDU_LEVEL_NEW' || $clusterName=='OCCUPATION')
@@ -516,7 +511,7 @@ class SearchService
 				unset($grpArr_1);
 				foreach($grpArr as $k=>$v)
 				{
-					if(in_array($v,$this->othersArray))
+					if(in_array($v,array('Others','Other','other','others')))
 					{
 						$grpArr_1[$k]=$v;
 						unset($grpArr[$k]);
@@ -663,7 +658,7 @@ class SearchService
 				}
                         }
                         else
-               		{
+               		{         
 				/** 
 				* At the top of each cluster , we need to show All / Doesn't matter.
 				*/
@@ -677,17 +672,6 @@ class SearchService
 					$topClusterOptionLabel = $allLabel;
 				$this->clusterArr[$clusterName][$topClusterOptionLabel][0]='Show';
 				$this->clusterArr[$clusterName][$topClusterOptionLabel][1]='ALL';
-                                
-                                $ifAny = "";
-                                if($v1 == 'KNOWN_COLLEGE'){
-                                        $ifAny = $SearchParamtersObj->{"getKNOWN_COLLEGE_IGNORE"}();
-                                     $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][0]='Show';
-                                     $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][1]='Any';
-                                     if($ifAny=='000')
-                                        $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][2]='Y';
-                                     else
-                                        $this->clusterArr[$clusterName][searchConfig::$anyWellKnownClg][2]=''; 
-                                }
 				if($SearchParamtersObj->{"get".$v1}()=='')
 				{
 					$isAll_Y = 1;
@@ -695,7 +679,7 @@ class SearchService
 						$isAll_Y = 0;
 					if($v1=='EDUCATION_GROUPING' && $SearchParamtersObj->getEDU_LEVEL_NEW()!='')
 						$isAll_Y = 0;
-					if($isAll_Y && $ifAny =="")	
+					if($isAll_Y)	
 						$this->clusterArr[$clusterName][$topClusterOptionLabel][2]='Y';
 				}
 				elseif($v1=='MSTATUS' && $SearchParamtersObj->{"get".$v1}()=='DONT_MATTER')
@@ -778,8 +762,8 @@ class SearchService
 				*/
 				{
 					$ncr = FieldMap::getFieldLabel('delhiNcrCities','',1);
-					if(is_array($res["CITY_RES"]))
-					foreach($res["CITY_RES"] as $k3=>$v3)
+					if(is_array($res["CITY_INDIA"]))
+					foreach($res["CITY_INDIA"] as $k3=>$v3)
 					{
 						if(in_array($k3,$ncr))
 							$res["STATE"]["NCR"]+=$v3; 
@@ -788,7 +772,7 @@ class SearchService
 						unset($res["STATE"]["DE00"]);
 					arsort($res["STATE"]);
 				}
-				elseif($v1=='CITY_RES')
+				elseif($v1=='CITY_INDIA')
 				/**
 				* In This case we need to show "All Metros" option as well.
 				*/
@@ -796,13 +780,13 @@ class SearchService
 					if($SearchParamtersObj->getSTATE()=='' && !$moreClusterSoring)
 					{
 						$delmetro = FieldMap::getFieldLabel('allMetros','',1);
-						if(is_array($res["CITY_RES"]))
-						foreach($res["CITY_RES"] as $k3=>$v3)
+						if(is_array($res["CITY_INDIA"]))
+						foreach($res["CITY_INDIA"] as $k3=>$v3)
 						{
 							if(in_array($k3,$delmetro))
-								$res["CITY_RES"]["METRO"]+=$v3; 
+								$res["CITY_INDIA"]["METRO"]+=$v3; 
 						}
-						arsort($res["CITY_RES"]);
+						arsort($res["CITY_INDIA"]);
 					}
 				}
 
@@ -931,6 +915,7 @@ class SearchService
 							        if($isSelected)
 						                	$this->clusterArr[$clusterName][$label][2]='Y';
 							 	}
+
                 					        if($label=='Others' || $label=='Other')
 							 	{
 									if($isSelected)
@@ -1027,7 +1012,7 @@ class SearchService
 							unset($this->clusterArr['INDIA_NRI']['All'][2]);
 				}
 			}
-                }
+		}
                 if(1)
                 {
 			foreach($clustersToShow as $k1=>$v1)
@@ -1055,7 +1040,7 @@ class SearchService
 					unset($grpArr_1);
 					foreach($grpArr as $k=>$v)
 					{
-						if(in_array($v,$this->othersArray))
+						if(in_array($v,array('Others','Other','other','others')))
 						{
 							$grpArr_1[$k]=$v;
 							unset($grpArr[$k]);
@@ -1065,13 +1050,12 @@ class SearchService
 						foreach($grpArr_1 as $k=>$v)	
 							$grpArr[$k] = $v;
 					//Move Others option to the end
-					
 					foreach($grpArr as $k=>$v)
 					{
-						if (in_array($v,$this->sameOccupationNameArray))
-						{
-							$v = $v." ";
-						}
+						if($v=='Others')
+							$v = 'Others ';//differtiate between value 'other' and group Other
+						if($v=='Defence')
+							$v = 'Defence ';//differtiate between value 'Defence' and group Defence
 						$temp = $grpMappArr[$k];
 						$tempArr = explode(",",$temp);
 						$finalArr[$v][0] = 'Heading';
@@ -1115,7 +1099,7 @@ class SearchService
 						unset($removeOthersArr);
 						foreach($clusterValueArr as $clusterOpt=>$clusterOptVal)
 						{
-							if(in_array($clusterOpt,$this->othersArray))
+							if(in_array($clusterOpt,array('Others','Other','other','others')))
 							{
 								$removeOthersArr[$clusterOpt]=$clusterOptVal;
 								unset($this->clusterArr[$clusterName][$clusterOpt]);
@@ -1130,7 +1114,7 @@ class SearchService
 			}
 			}
 		}
-                
+
 		/**
 		* Unsetting options that add no value for special case cluster 'LAST_ACTIVITY'	and 'PROFILE_ADDED';
 		*/

@@ -1122,16 +1122,6 @@ while($myrow=mysql_fetch_array($result))
 
 fwrite($fp,");\n
         break;\n
-case \"wellKnownColleges\":\n
-        \$arr=array(\n");
-
-$sql="select VALUE,LABEL from newjs.KNOWN_COLLEGES";
-$result=mysql_query($sql) or die(mysql_error().$sql);;
-while($myrow=mysql_fetch_array($result))
-	fwrite($fp,"\"" . $myrow["VALUE"] . "\"=>\"".$myrow["LABEL"]."\",\n");
-
-fwrite($fp,");\n
-        break;\n
 
 case \"caste_clusters_breadcrumb\":\n
         \$arr=array(\n");

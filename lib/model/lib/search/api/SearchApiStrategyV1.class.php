@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID','THUMBNAIL_PIC','availforchat','COMPLETE_VERIFICATION_STATUS');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -86,7 +86,8 @@ class SearchApiStrategyV1
 	* @return array search respone in format for api
 	*/
 	public function convertResponseToApiFormat($loggedInProfileObj,$searchClustersArray,$searchId,$SearchParamtersObj,$relaxedResults="",$casteMappingCnt="",$casteMappingCastes="",$currentPage,$noOfPages,$request,$relaxCriteria)
-	{            
+	{
+            
 		if($request->getParameter("myJs")==1)
 			$this->photoType= 'ProfilePic120Url';
 		if($request->getParameter("searchBasedParam"))
@@ -106,7 +107,7 @@ class SearchApiStrategyV1
 		elseif($request->getParameter("contactViewAttempts")==1)
                         $this->searchCat = 'contactViewAttempts';
 
-                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request);
+                $this->setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj);
                 if($this->noResults!=1)
 		{
 			if($this->results_orAnd_cluster!='onlyClusters')
@@ -144,7 +145,7 @@ class SearchApiStrategyV1
         * @param string $casteMappingCastes list of caste suggested
         * @param array $relaxCriteria array to be relaxed
 	*/ 
-	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj,$request)
+	public function setMetaDataResponse($SearchParamtersObj,$currentPage,$searchId,$noOfPages,$relaxedResults,$casteMappingCnt,$casteMappingCastes,$relaxCriteria,$loggedInProfileObj)
 	{
 		$cnt = $this->responseObj->getTotalResults();
 		$this->output["dppLinkAtEnd"] = null;
@@ -182,20 +183,14 @@ class SearchApiStrategyV1
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
 		$this->output["pageTitle"] = SearchTitleAndTextEnums::getTitle($params);
 		$this->output["result_count"] = SearchTitleAndTextEnums::getHeading($params);
-        $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
-        $this->output["gaTracking"] = SearchTitleAndTextEnums::getGATracking($params);
+                $this->output["pageSubHeading"] = SearchTitleAndTextEnums::getSubHeading($params);
 		$this->output["noresultmessage"] = SearchTitleAndTextEnums::getMessageResult($params);
 		$this->output["searchBasedParam"] = $params["SearchType"]?$params["SearchType"]:null;
 		$this->output["diffGenderSearch"] = null;
 		if($loggedInProfileObj && $loggedInProfileObj->getGENDER()!=$SearchParamtersObj->getGENDER())
 			$this->output["diffGenderSearch"] = 1;
-		if($request->getParameter("androidMyjsNew")==1 || $request->getParameter("fromSPA")==1){
-			$this->photoType= 'ProfilePic120Url';
-		}
-		else
-		{
-			$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
-		}
+		
+		$this->photoType = SearchTitleAndTextEnums::getDefaultPicSize($params);
 		/* trac#4249 : at the end*/
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{
@@ -216,10 +211,6 @@ class SearchApiStrategyV1
 		else
 			$this->output["sortType"]= 'Relevance';
 		$this->output["stype"]= $SearchParamtersObj->getSEARCH_TYPE();
-                if($request->getParameter("retainSearchType"))
-                {
-                        $this->output["stype"]= $request->getParameter("retainSearchType");
-                }
 		$this->output["defaultImage"]= PictureFunctions::getNoPhotoJSMS($SearchParamtersObj->getGENDER(),$this->photoType);
 		if($noOfPages>$currentPage)
 			$this->output["next_avail"]= "true";
@@ -232,12 +223,7 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
-		$this->output["checkonline"]=false;
-		if (JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
-		{
-			//$this->output["checkonline"]=true;
-		}
-
+		
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{
 			$this->output["relaxation_text1"] = self::search_relaxation_text1;
@@ -341,42 +327,6 @@ class SearchApiStrategyV1
                         $searchSummaryObj = new SearchService();
                         $searchSummaryResult = $searchSummaryObj->searchSummary($searchId);
                         $this->output["searchSummary"]=$searchSummaryResult;
-                        
-                        if(MobileCommon::isAndroidApp()  || MobileCommon::isIOSApp()){
-                                $clusterIndex = $SearchParamtersObj->getCURRENT_CLUSTER();
-                                if($clusterIndex != ""){
-                                        if(in_array($clusterIndex, explode(",",SearchConfig::$searchFullRangeParameters))){
-                                                eval('$clusterLVal = $SearchParamtersObj->getL'.$clusterIndex.'();');
-                                                eval('$clusterHVal = $SearchParamtersObj->getH'.$clusterIndex.'();');
-                                                $clusterData = array("0"=>array("key"=>"L".$clusterIndex,"value"=>$clusterLVal),"1"=>array("key"=>"H".$clusterIndex,"value"=>$clusterHVal));
-                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
-                                        }else{
-                                                $key = $clusterIndex;
-                                                if($clusterIndex == "EDUCATION_GROUPING"){
-                                                        $clusterIndex = "EDU_LEVEL_NEW";
-                                                        $key = "EDU_LEVEL_NEW";
-                                                }elseif($clusterIndex == "OCCUPATION_GROUPING"){
-                                                        $clusterIndex = "OCCUPATION";
-                                                        $key = "OCCUPATION";
-                                                }elseif($clusterIndex == "COUNTRY_RES"){
-                                                        $key = "LOCATION";
-                                                }elseif($clusterIndex == "CITY_RES"){
-                                                        $key = "LOCATION_CITIES";
-                                                }elseif($clusterIndex == "HAVEPHOTO"){
-                                                        $key = "PHOTO";
-                                                }elseif($clusterIndex == "CASTE_GROUP"){
-                                                        $key = "CASTE";
-                                                }elseif($clusterIndex == "STATE"){
-                                                        $key = "LOCATION_CITIES";
-                                                }elseif($clusterIndex == "LAST_ACTIVITY"){
-                                                        $clusterIndex = "ONLINE";
-                                                }
-                                                eval('$clusterVal = $SearchParamtersObj->get'.$clusterIndex.'();');
-                                                $clusterData = array("0"=>array("key"=>$key,"value"=>$clusterVal));
-                                                $this->output["searchSummary"]["FILTER_FIELD"] = $clusterData;
-                                        }
-                                }
-                        }
                 }
                 $featuredProfileArrNew = array();
                // echo '<pre>';
@@ -425,9 +375,8 @@ class SearchApiStrategyV1
                                 {
                                 	    foreach($this->profileTupleInfoArr as $kk=>$vv)
                                         { 
-																			
+																					
                                                 $fieldName = $this->customizedFieldName($vv);
-
                                                 if(!$searchResultArray)
                                                 {
                                                         $value = $this->handlingSpecialCasesForSearch($fieldName,$v[$vv],$profileVal[$k]['PHOTO_REQUESTED'],$SearchParamtersObj->getGENDER(),$SearchParamtersObj,$profileVal[$k]);                
@@ -452,9 +401,6 @@ class SearchApiStrategyV1
 
 
                                                 }
-                                                elseif($fieldName=='availforchat'){
-                                                        $this->output[$profileKey][$i][$fieldName] = $value;
-						}
                                                 elseif($fieldName=='photo')
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 elseif($fieldName=='size'){
@@ -597,8 +543,6 @@ class SearchApiStrategyV1
                 //echo $key."\n\n";
 		switch($key) 
 		{
-			case "availforchat":
-				return $value;
 			 case "gender":
                                 $value = $SearchParamtersObj->getGENDER();
                                 break;
@@ -660,9 +604,6 @@ class SearchApiStrategyV1
 				break;
 			case "photo":
 				$value = PictureFunctions::mapUrlToMessageInfoArr($value,$this->photoType,$isPhotoRequested,$gender);
-				break;
-                        case "THUMBNAIL_PIC":
-				$value = PictureFunctions::mapUrlToMessageInfoArr($value,'ThumbailUrl',$isPhotoRequested,$gender);
 				break;
 			case "album_count":
 				$value =  ButtonResponseApi::getAlbumButton($value,$gender);
@@ -767,15 +708,10 @@ class SearchApiStrategyV1
 		}
 		if($key=='eoi_label')
 		{
-			if($value==self::contactNoLabel)
+			if($value==self::contactNoLabel)		
 			{
-				$request = sfContext::getInstance()->getRequest();
 				$iconId = IdToAppImagesMapping::ENABLE_CONTACT;
-				$page = '';
-				if(MobileCommon::isApp() =="A" && $request->getParameter('API_APP_VERSION') >= 96)
-				$page['comingFromPage'] = 'search';
-				if($request->getParameter('JSMS_MYJS') == '1') $page['stype'] = SearchTypesEnums::MATCHALERT_MYJS_JSMS;
-				$value = ButtonResponseApi::getInitiateButton($page);
+				$value = ButtonResponseApi::getInitiateButton('');
 			}
 			else
 				$value = ButtonResponseApi::getCustomButton($value,"","","",$value==self::contactSentLabel?IdToAppImagesMapping::TICK_CONTACT:IdToAppImagesMapping::DISABLE_CONTACT);

@@ -25,7 +25,6 @@ class InboxJSPC extends InboxJS
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 			if($loggedInProfileObj->getAGE()=='')
 				$loggedInProfileObj->getDetail("","","RELIGION,SUBSCRIPTION");
-			$this->profileId = $loggedInProfileObj->getPROFILEID();			
 			$actionObject = $params["actionObject"];
 			$request = $params["request"];
 			$actionObject->CC_RESULTS_PER_PAGE = InboxConfig::$ccPCProfilesPerPage;
@@ -64,8 +63,7 @@ class InboxJSPC extends InboxJS
 			//$searchid = $request->getParameter('infoTypeId');
 			//$page = $request->getParameter('pageNo');
 			//$actionObject->NAVIGATOR = $navObj->navigation($navigation_type,"infoTypeId__$searchid@pageNo__$page",'','Symfony');
-			$actionObject->NAVIGATOR = $ResponseArr["NAVIGATOR"];											
-			
+			$actionObject->NAVIGATOR = $ResponseArr["NAVIGATOR"];
 			$actionObject->setTemplate("index");
 		}
 		else
@@ -78,15 +76,9 @@ class InboxJSPC extends InboxJS
 	**/
 	private function setDefaultInboxTabs($params)
 	{
-		$actionObject = $params["actionObject"];		
-		$request = $params["request"];				
-		//This part was added to allow idfy to go Online percentage wise		
-		$actionObject->showIdfy = CommonFunction::getFlagForIdfy($this->profileId);
-		
-		if(!$actionObject->showIdfy)
-			$actionObject->contactCenterTabMapping = InboxConfig::$cctabArr;
-		else
-			$actionObject->contactCenterTabMapping = InboxConfig::$cctabArrForIdfy;
+		$actionObject = $params["actionObject"];
+		$request = $params["request"];
+		$actionObject->contactCenterTabMapping = InboxConfig::$cctabArr;	
 		$actionObject->ccTabsMappingData = json_encode($actionObject->contactCenterTabMapping);
 		if($request->getParameter('infoTypeId'))
     	{

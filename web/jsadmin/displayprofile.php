@@ -10,6 +10,8 @@ include("../crm/func_sky.php");
 //include("view_contact.php");
 include("matches_display_results.inc");
 //include("view_contact.php");
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/jsadmin/displayprofile.php in USE",$msg);
 $db=connect_db();
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))

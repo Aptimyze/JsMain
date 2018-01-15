@@ -44,7 +44,6 @@ class EditDetails{
 			$myProfileArr["Family"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiFamilyDetails());
 			$myProfileArr["Lifestyle"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiLifeAttr());
 			$myProfileArr["Contact"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiContactInfo());
-			$myProfileArr["Critical"]=ProfileCommon::removeBlank($apiProfileSectionObj->getApiCriticalInfo());
 
 
 
@@ -64,7 +63,7 @@ class EditDetails{
 						$albumArr[$k]["pictureid"] = $v->getPICTUREID();
 						$albumArr[$k]["url"] = $v->getMainPicUrl();
 						
-						if(MobileCommon::isApp() && $v->getOrdering()=="0" && $k==0){
+						if(MobileCommon::isApp()=="I" && $v->getOrdering()=="0" && $k==0){
 							if($v->getProfilePic235Url())
 								$myProfileArr["album"]["profilePicUrl"]=$v->getProfilePic235Url();
 							else if($v->getProfilePic120Url())

@@ -44,7 +44,7 @@ class LoggingConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"loggingQueue");
+      RabbitmqHelper::sendAlert($str,"default");
     }
     try
     {
@@ -54,7 +54,7 @@ class LoggingConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"loggingQueue");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }
   }
@@ -76,7 +76,7 @@ class LoggingConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"loggingQueue");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }  
     try
@@ -86,7 +86,7 @@ class LoggingConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"loggingQueue");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')
@@ -126,36 +126,13 @@ class LoggingConsumer
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
     $body['profileId'] = intval($body['profileId']);
-    $key=$body['profileId']."_loggedIn";
-    $date = date("Y-m-d");
-    $codeException = 0;
-    $deliveryException = 0;
     try
     {
         ApiAuthentication::completeLoginTracking($body);
-        if($body['misLoginTracking'] && ($body['websiteVersion']=="N" || $body['websiteVersion']=="I"))
-        {
-          file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/LoginTracking".$date.".txt",$body['websiteVersion']."===Not to be stored\n",FILE_APPEND);
-        }
-        elseif($body['profileId'])
-        {
-          $alreadyLoggedIn=JsMemcache::getInstance()->get($key);
-          if($alreadyLoggedIn===false ||$alreadyLoggedIn==null) {
-            JsMemcache::getInstance()->set($key,1,10);
-            $WebAuthentication = new WebAuthentication;
-            $loginData=$WebAuthentication->setPaymentGatewayAuthchecksum($body['profileId']);
-            $authURL = 'http://auth.js.jsb9.net:8390/auth/v1/chat?authchecksum='.$loginData["AUTHCHECKSUM"];
-            $postParams = (array("aasduthchecksum"=>$loginData["AUTHCHECKSUM"]));
-                $result=CommonUtility::sendCurlPostRequest($authURL,$postParams);
-            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/LoginTracking".$date.".txt",$result."\n",FILE_APPEND);
-          }
-        }
-    
     }     
     
     catch (Exception $exception) 
     {
-      $codeException = 1;
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str,"loggingQueue");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
@@ -181,12 +158,8 @@ class LoggingConsumer
     } 
     catch(Exception $exception) 
     {
-      $deliveryException = 1;
       $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
-    }
-    if($codeException || $deliveryException){
-        die("Killed due to code exception or delivery exception");
     }
   }
 }

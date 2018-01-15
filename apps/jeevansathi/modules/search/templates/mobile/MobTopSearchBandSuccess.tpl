@@ -208,7 +208,9 @@
 <div class="hamburger dn" id="dropdown" >
 ~include_partial("search/mobSearch/dropdown")`
 </div>
+<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
+</div>
 <div class="hamoverlay" id="dropdownoverlay"></div>
 </div>
 <script>	

@@ -6,7 +6,7 @@ class ValidateInputFactory
 		if($module == "search")
 			$obj = new SearchModuleInputValidate;
 		elseif($module == "profile")
-			$obj = new SearchModuleInputValidate;
+			$obj = new ProfileModuleInputValidate;
 		elseif($module == "register")
 			$obj = new RegisterModuleInputValidate;
 		elseif($module == "api")

@@ -79,26 +79,7 @@ class NEWJS_PROFILE_DEL_REASON extends TABLE{
 			throw new jsException($e);
 		}
 	}
-
-    public function getProfilesForSuccesStory($date) {
-        $reason = "I found my match on Jeevansathi.com";
-        try{
-            $sql = "SELECT PROFILEID, USERNAME
-                    FROM newjs.PROFILE_DEL_REASON
-                    WHERE DEL_REASON = :REASON AND PROFILE_DEL_DATE = :DATE";
-
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(':REASON',$reason,PDO::PARAM_STR);
-            $prep->bindValue(':DATE',$date,PDO::PARAM_STR);
-            $prep->execute();
-            $prep->setFetchMode(PDO::FETCH_ASSOC);
-            while($row = $prep->fetch()){
-                $result[$row["PROFILEID"]] = $row["USERNAME"];
-            }
-            return $result;
-        }catch (Exception $e){
-            throw new jsException($e);
-        }
-	}
+		
+		
 }
 ?>

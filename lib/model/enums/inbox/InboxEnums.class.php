@@ -12,7 +12,7 @@ class InboxEnums {
             4 => array("page" => "messages", "filter" => "A"),
             5 => array("page" => "visitors", "filter" => "R"),
             6 => array("page" => "eoi", "filter" => "M"),
-            7=>array("page"=>"matches","filter"=>"R"),
+            //7=>array("page"=>"","filter"=>""),
             8 => array("page" => "favorite", "filter" => "M"),
             9 => array("page" => "photo", "filter" => "R"),
             10 => array("page" => "decline", "filter" => "R"),
@@ -297,19 +297,6 @@ class InboxEnums {
                     "navigation_type" => "IC",
                     "contactFlag" => "'IC'"
                 )
-            ),
-            "matches" => array(
-                "R" => array(
-                "self" => "RECEIVER",
-                "contact" => "USER",
-                "type" => "R",
-                "flag" => "M",
-                "stype" => "WM",
-                "navigation_type" => "MAT",
-                "SHOW_DATE_SEARCH" => 1,
-                "get_contact_field" => "RECEIVER",
-                
-				)
             )
         );
         /**

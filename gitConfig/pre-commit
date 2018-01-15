@@ -13,22 +13,24 @@ if [[ "$FILE" =~ ^.+(php|inc)$ ]]; then
 fi
 done || exit $?
 
-#declare IsCssJsChanged;
-#git diff --cached --name-only |{
-#        while read FILE; do
-#        if [[ "$FILE" =~ ^.+(js|css)$ ]]; then
-#                if [[ -f $FILE ]]; then
-#                        IsCssJsChanged=1;
-#                        echo "/$FILE" >> /tmp/jsCssFilelog.txt
-#                fi
-#        fi
-#        done
-#
-#        if [[ "$IsCssJsChanged" == "1" ]]; then
-#                echo "Committing capistrano/generate_commonfile_functions.php";
-#                php capistrano/generate_commonfile_functions.php
-#                echo "" > /tmp/jsCssFilelog.txt
-#        fi}
+declare IsCssJsChanged;
+git diff --cached --name-only |
+{
+        while read FILE; do
+        if [[ "$FILE" =~ ^.+(js|css)$ ]]; then
+                if [[ -f $FILE ]]; then
+                        IsCssJsChanged=1;
+                        echo "/$FILE" >> /tmp/jsCssFilelog.txt
+                fi
+        fi
+        done
+
+        if [[ "$IsCssJsChanged" == "1" ]]; then
+                echo "Committing capistrano/generate_commonfile_functions.php";
+                php capistrano/generate_commonfile_functions.php
+                echo "" > /tmp/jsCssFilelog.txt
+        fi
+}
 git diff --cached --name-only |
 {
        while read FILE; do

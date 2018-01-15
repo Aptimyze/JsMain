@@ -42,14 +42,6 @@ class staticActions extends sfActions
 	else if(MobileCommon::isMobile())
         $this->setTemplate("mob404");
   }
-  
-   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
-  public function executeOldMobileSite(sfWebRequest $request)
-  {
-        $key = 'oldMobileSiteCount_'.date('Y-m-d');
-        JsMemcache::getInstance()->set($key,$_SERVER[HTTP_USER_AGENT]);
-  }
-  
 	public function executeVerifyAuth(sfWebRequest $request)
 	{
 		$siteUrl=JsConstants::$siteUrl;
@@ -298,100 +290,13 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
             $pObj->getDetail($loginData['PROFILEID'], "PROFILEID","PASSWORD,EMAIL");
             $this->emailStr=$pObj->getPROFILEID();
-            if(MobileCommon::isAppWebView()) {
-              $this->referer = '/static/settings';
-            }
-            else{
-              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
-            }
-
             
         }
         public function executeDeleteOption(sfWebRequest $request) {
         	//print_r("expression");die;
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
-            if(MobileCommon::isAppWebView()) {
-              $this->referer = '/static/settings';
-            }
-            else{
-              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
-              if ( strpos($this->referer,'static/deleteReason') !== false || strpos($this->referer,'static/passCheck') !== false )
-              {
-                $this->referer = '/';
-              }
-            }
         }
-
-        public function executeHideOption(sfWebRequest $request) 
-        {
-          if(MobileCommon::isAppWebView()) {
-              $this->webView = 1;
-          }
-          if(MobileCommon::isAppWebView()) {
-              $this->referer = '/static/settings';
-          }
-          else{
-              $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';
-              if ( strpos($this->referer,'static/hideCheckPassword') !== false )
-              {
-                $this->referer = '/';
-              }
-          }
-        }
-
-        public function executeUnHideOption(sfWebRequest $request) 
-        {
-          if(MobileCommon::isAppWebView()) {
-              $this->webView = 1;
-              $this->referer = '/static/settings';
-          }
-          else{
-            $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
-          }
-
-        }
-
-        public function executeUnHideResult(sfWebRequest $request) 
-        {
-
-          if(MobileCommon::isAppWebView()) {
-              $this->webView = 1;
-              $this->referer = '/static/settings';
-          }
-        }
-
-        public function executeHideCheckPassword(sfWebRequest $request)
-        {
-            $pObj = LoggedInProfile::getInstance();
-            $this->hideOption = $request->getParameter("hide_option");
-            if(MobileCommon::isAppWebView()) {
-              $this->webView = 1;
-            }
-        }
-
-        public function executeHideDuration(sfWebRequest $request)
-        {
-            $pObj = LoggedInProfile::getInstance();
-            $this->hideOption = $request->getParameter("hide_option");
-            if($this->hideOption=="1")
-            {
-              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION1." days";
-            }
-            elseif ($this->hideOption=="2")
-            {
-              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION2." days";
-            }
-            elseif ($this->hideOption=="3")
-            {
-              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
-            }
-            
-            if(MobileCommon::isAppWebView()) {
-              $this->webView = 1;
-            }
-        }
-
         public function executeDeleteReason(sfWebRequest $request) {
         	//echo "string";die;
             $loginData = $request->getAttribute("loginData");
@@ -426,12 +331,6 @@ class staticActions extends sfActions
 			if($loginData['PROFILEID'])
 			{
 				$this->loggedIn=1;
-                // show hide profile
-                $this->hide = 1;
-                if($loginData['ACTIVATED'] == 'H')
-                {
-                    $this->hide = 0;
-                }
         $notificationObj = new NotificationConfigurationFunc();
         $toggleOutput = $notificationObj->showNotificationToggleLayer($loginData['PROFILEID']);
         $this->showNotificationBox = $toggleOutput["showToggleLayer"];
@@ -473,55 +372,13 @@ class staticActions extends sfActions
 
     }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
-    $this->calObject = $layerData; 
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
-    $this->subText = $layerData[SUBTEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
-    $this->contentTextNEW = $layerData[TEXTNEW];
-    $this->button1TextNEW = $layerData[BUTTON1NEW];
-    $this->button2TextNEW = $layerData[BUTTON2NEW];
     $this->action1 = $layerData[ACTION1];
     $this->action2 = $layerData[ACTION2];
-    $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
-    $this->subtitle = $layerData[SUBTITLE];
-    $this->textUnderInput = $layerData[TEXTUNDERINPUT];
-    if($this->layerId==18 || $this->layerId==20 || $this->layerId==23 || $this->layerId == 25)
-    {
-          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
-          $this->chosenJs=getCommaSeparatedJSFileNames(array('jspc/utility/chosen/chosen_jquery','jspc/utility/chosen/docsupport/prism'));
-          $this->chosenCss='css/'.getCssFileName('jspc/utility/chosen/chosen_css').'.css';
-   }
-
-   if($this->layerId == 14)
-   {  
-    $profileObject = LoggedInProfile::getInstance('newjs_master');
-                        $contactNumOb=new ProfileContact();
-                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
-    $this->altEmail = $numArray['0']['ALT_EMAIL'];
-   }
-
-    if($this->layerId==19)
-     {    
-
-            $this->discountPercentage = $request->getParameter('discountPercentage');
-            $this->discountSubtitle  = $request->getParameter('discountSubtitle');
-            $this->startDate  = $request->getParameter('startDate');
-            $this->oldPrice = $request->getParameter('oldPrice');
-            $this->newPrice = $request->getParameter('newPrice');
-            $this->time = floor($request->getParameter('time')/60);
-            $this->symbol = $request->getParameter('symbol');
-     }
-   if($this->layerId==24)
-    {
-          $this->loginProfile=LoggedInProfile::getInstance();
-          $profileId=$this->loginProfile->getPROFILEID();
-          $nameData=(new NameOfUser())->getNameData($profileId);
-          $this->NAME = $nameData[$profileId]["NAME"];
-    }
-
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -535,11 +392,6 @@ public function executeCALRedirection($request){
       $loggedInProfileObj = LoggedInProfile::getInstance();
       $profileid=$loggedInProfileObj->getPROFILEID();
       $profileid=  intval($profileid);
-      if($request->getParameter("redirecPdUrl") && $request->getParameter("button")=='B2')
-      {
-        $url=$request->getParameter("redirecPdUrl");
-          header("Location: $url");die;
-      }
       $layerToDisplay=$request->getParameter("layerR");
       if($request->getParameter("button")=='B1') {
         if(MobileCommon::isNewMobileSite())
@@ -549,8 +401,6 @@ public function executeCALRedirection($request){
       }
       
       if(($request->getParameter("button")=='B2') && MobileCommon::isNewMobileSite()) {
-        if($request->getParameter("fromPdLightCal")==1)
-          $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');  
         $actionUrl=CriticalActionLayerDataDisplay::getDataValue($layerToDisplay,'JSMS_ACTION2');
       }
 
@@ -566,75 +416,6 @@ public function executeCALRedirection($request){
       die;
     }
 
-
-public function executeGetCALData($request){
-  //Api Response Object
-  $layerToDisplay=$request->getParameter("layerId");
-  $data = array();
-  if(!$layerToDisplay){
-    $status = ResponseHandlerConfig::$NO_CAL_LAYERID;
-  }
-
-  else {
-      $status = ResponseHandlerConfig::$SUCCESS;
-      $data = CriticalActionLayerDataDisplay::getDataValue($layerToDisplay);
-      switch($data['LAYERID']){
-        case '24':
-          $loginData=$request->getAttribute("loginData");
-          $nameData=(new NameOfUser())->getNameData($loginData['PROFILEID']);
-          $nameOfUser=$nameData[$loginData['PROFILEID']]['NAME'];
-          $data['NAME_OF_USER'] = $nameOfUser ? $nameOfUser : NULL;
-        break;
-      }
-  }
-  $apiResponseHandlerObj = ApiResponseHandler::getInstance();
-  $apiResponseHandlerObj->setHttpArray($status);
-  $apiResponseHandlerObj->setResponseBody(array('calObject'=>$data));
-  $apiResponseHandlerObj->generateResponse();
-  return sfView::NONE;
-  die;
-
-}
-//PostWeddingServices page
-  public function executePostWeddingServices(sfWebRequest $request)
-  {
-    $loginData = $request->getAttribute("loginData");
-    $this->finalResponse=array();
-     $loggedInProfileObj = LoggedInProfile::getInstance();
-    if($loggedInProfileObj->getPROFILEID()){
-      $loggedInProfileObj->getDetail($loggedInProfileObj->getPROFILEID(),"PROFILEID","*");
-
-      $this->city=strtolower($loggedInProfileObj->getDecoratedCity());
-    }
-    if($loginData[PROFILEID])
-    {
-      $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj();
-      $authenticationLoginObj->logout($loginData[PROFILEID]);
-      
-    }
-    $urbanClapUrl="https://www.urbanclap.com/api/v1/hiringguides/getjeevansathi";
-    $result=CommonUtility::sendCurlGETRequest($urbanClapUrl);
-    if($result)
-      $data=json_decode($result,true);
-    if($data['isError']===false || is_array($data['success']))
-    {      
-      $this->finalResponse['postServicesPage']=true;
-      $this->finalResponse['servicesData']=$data['success'];
-    }
-    else{
-      $this->finalResponse['postServicesPage']=false;
-      $this->finalResponse['servicesData']="";
-    }
-
-    $this->finalResponse=json_encode($this->finalResponse);
-    //Stopping Common functionality 
-    $this->chat_hide = 1;
-    $this->logoutChat = 1;
-    if(MobileCommon::isNewMobileSite()){
-      $this->setTemplate("mobPostWeddingServices");
-      $this->isMob=1;
-    }
-  }
     //Logout page
   public function executeLogoutPage(sfWebRequest $request)
   {
@@ -673,12 +454,10 @@ public function executeGetCALData($request){
 		else
 			$this->fromSignout=0;
 		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
-      $request->setParameter('currentPageName', "jsms Login Page");
-				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Free Matrimonial Sites, Match Making");
-				$this->getResponse()->addMeta('description', "Most trusted Indian matrimony site. 10Lac+ Profiles, 3-level profile check, Search by caste and community, Privacy control & Register FREE! ‘Be Found’ Now");
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
 			}
 		else{
-      $request->setParameter('currentPageName', "jsms Logout Page");
 			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");
 			$this->getResponse()->addMeta('description', "Logout - Jeevansathi");
 		}
@@ -943,12 +722,7 @@ public function executeAppredirect(sfWebRequest $request)
 	{
 		$this->redirect("https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=%{idfa}&cs=organic&cm=JSMS&cn=JSIA&cc=hamburger");
 	}	
-	elseif($playstore=="apppromotionSRPAndroid")
-	{
-                $this->redirect("https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3DSRP_M%26utm_campaign%3DJSAA");
-        }elseif($playstore=="apppromotionSRPIos"){
-                $this->redirect("https://itunes.apple.com/in/app/jeevansathi/id969994186?mt=8");
-        }else{
+	else{
 
 		$ua = $_SERVER['HTTP_USER_AGENT']; 
         if(JsCommon::checkIOSPromoValid($ua)) 
@@ -1096,36 +870,10 @@ public function executeAppredirect(sfWebRequest $request)
 		  
 		  foreach($arrKeys as $key=>$val)
 		  {
-			  if($val == "mstatus_edit" || $val=="mstatus_muslim_edit"){
-				$outData[$val] = $this->getFieldMapData("mstatus");
-                                if($val == "mstatus_edit"){
-                                        foreach($outData[$val][0] as $k=>$v){
-                                                $kys = array_keys($v);
-                                                if(in_array("M", $kys)){
-                                                        unset($outData[$val][0][$k]);
-                                                }
-                                        }
-                                }
-                          }elseif($val !== "reg_caste_" && $val!=="reg_city_"){
+			  if($val !== "reg_caste_" && $val!=="reg_city_")
 				$outData[$val] = $this->getFieldMapData($val);
-                          }else{//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
+			  else//As in case of reg_caste_ , we are getting array of caste as per religion for optimising calls
 			  	$outData = array_merge($outData,$this->getFieldMapData($val));
-                          }
-                          
-        //this part was added to remove religion "Others" from Registration in JSMS
-      if(MobileCommon::isMobile() && $val=="religion")
-      {
-        foreach($outData["religion"] as $k1=>$v1)
-        {
-          foreach($v1 as $k2=>$v2)
-          {
-            if(strpos($v2[8], RegistrationEnums::$otherText) !== false)
-            {
-              unset($outData["religion"][$k1][$k2]);
-            }
-          }
-        }        
-      }
 			if($val=="family_income")
 			{
 				$optionalArr[0] = array("0"=>array("0"=>"Select"));
@@ -1134,10 +882,6 @@ public function executeAppredirect(sfWebRequest $request)
 					$mergedArr = array_merge($optionalArr,$y);
 					$outData['family_income'][$x]=$mergedArr;
 				}
-			}
-			if($val=="res_status")
-			{
-				
 			}
 			if($val=="state_india" || $val=="native_country")
 			{
@@ -1166,17 +910,6 @@ public function executeAppredirect(sfWebRequest $request)
 	  else if($k)
 	  {
 			$output = $this->getFieldMapData($k);
-                        if($k == "mstatus_edit" || $k=="mstatus_muslim_edit"){
-				$output = $this->getFieldMapData("mstatus");
-                                if($k == "mstatus_edit"){
-                                        foreach($output[0] as $k=>$v){
-                                                $kys = array_keys($v);
-                                                if(in_array("M", $kys)){
-                                                        unset($output[0][$k]);
-                                                }
-                                        }
-                                }
-                          }
 			if($k=="reg_city_jspc")
 			{
 				$outData = $output;
@@ -1218,35 +951,16 @@ public function executeAppredirect(sfWebRequest $request)
   	$this->setTemplate("knowYourCustomer");
   }
   
-  public function executePrivacySettings()
-  {
-    $loggedInProfileObj = LoggedInProfile::getInstance();
-    $profileId = $loggedInProfileObj->getPROFILEID(); 
-    $this->profileDetail = $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
-    //print_R($this->profileDetail);die;
-    $this->altMobileIsd = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE_ISD;
-    $this->altMobile = $loggedInProfileObj->getExtendedContacts()->ALT_MOBILE;
-    $this->showAltMob = $loggedInProfileObj->getExtendedContacts()->SHOWALT_MOBILE;
-    $this->referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '/';     
-  }
 	private function getFieldMapData($szKey)
 	{
-		$k = $szKey;    
-    if(strpos($k, 'p_') !== false)
-    {
-      $forDpp = 1; //This has been added so as to remove Select from the output where not required
-    }
+		$k = $szKey;
 		$output = "";
-		if($k=="relationship" || $k=="relation")
+		if($k=="relationship")
 		{
 			$output=$this->getField("relationship_edit");
 		}
                 if($k == "relationship_reg")
                   $output=$this->getField("relationship");
-		if($k=="res_status")
-		{
-			$output = $this->getResStatus();
-		}
 		if($k=="country_res" || $k=="p_country")
 		{
 		$output=$this->getCountry($k);
@@ -1283,18 +997,17 @@ public function executeAppredirect(sfWebRequest $request)
 
 		if($k=="p_occupation")
 		$k="occupation";
-    if($k=="p_occupation_grouping")
-      $k="occupation_grouping";
 		if($k=="p_religion")
 		$k="religion";
 		if($k=="p_manglik")
 		$k="manglik";
 		if($k=="manglik")
-                $output=  $this->removeDontKnowManglik();              
+                $output=  $this->removeDontKnowManglik();
 		if($k=="p_height" || $k=="height")
 		$k="height_without_meters";
 		if($k=="p_age")
 		$k="age";
+
 		if($k=="p_diet" || $k=="diet")
 		$output=$this->getField("diet");
 		if($k=="p_smoke" || $k=="smoke")
@@ -1310,7 +1023,8 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_nchallenged")
 		$k="nature_handicap";
 
-		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation", "occupation_grouping","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type","jamaat");
+		$fieldMapLib=array("horoscope_match","family_values","family_type","family_status","rashi","nakshatra", "degree_ug", "degree_pg", "occupation","complexion","thalassemia","hiv","religion",'mstatus','children','height_without_meters','namaz','maththab','zakat','fasting','umrah_hajj','quran','sunnah_beard','sunnah_cap','hijab','working_marriage','nature_handicap',"height_json","open_to_pet","own_house","have_car","rstatus","blood_group","hiv_edit","state_india","spreading_gospel","offer_tithe","read_bible","baptised","amritdhari","cut_hair","trim_beard","wear_turban","clean_shaven","parents_zarathushtri","zarathushtri","work_status","going_abroad","hijab_marriage","sunsign","astro_privacy","number_owner_male","number_owner_female","number_owner_male_female","stdcodes","id_proof_type","degree_grouping_reg","addr_proof_type");
+
 		if(in_array($k,$fieldMapLib))
 		$output=$this->getField($k);
 
@@ -1319,7 +1033,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="btype")
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
-		$output=$this->getMstatus();
+		$output=$this->getField("mstatus");
 		if($k=="p_havechild")
                     $output=$this->getField("children");
                 if($k=="parent_city_same")
@@ -1390,9 +1104,6 @@ public function executeAppredirect(sfWebRequest $request)
 				{
 					$key = $k.$arrAllowedCaste[$i].'_';
 					$output[$key] = $this->getRegCaste($key);
-                                        if($i==1){
-                                            unset($output[$key][2]);
-                                        }
 					++$i;
 				}
 			}
@@ -1458,12 +1169,6 @@ if($k=="state_res")
 		{
 			$output = $this->getJsmsNativeCountry();
 		}
-    if($forDpp) //To remove Select from fields where it is not required
-    {
-      if($output[0][0][0] == DPPConstants::$removeLabelFromDpp || $output[0][0][S0] == DPPConstants::$removeLabelFromDpp)
-        unset($output[0][0]);
-    }
-    
 		return $output;
 	}
   
@@ -1475,21 +1180,6 @@ if($k=="state_res")
 	  //$Arr[0]=array(array("0:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM"));
 	  return $Arr;
   }
-  
-  private function getMstatus()
-  {
-  	$arr=FieldMap::getFieldLabel('mstatus','',1);
-  	foreach($arr as $key=>$val)
-  	{
-  		if ($key == "M")
-  		{
-  			continue;	// JSM-4631
-  		}
-  		$output[0][]=array($key=>$val);
-  	}
-  	return $output;
-  }
-  
   private function getTimeToCall()
   {
 	  $temp=array("12:00 AM","1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM","6:00 AM","7:00 AM","8:00 AM","9:00 AM","10:00 AM","11:00 AM","12:00 PM","1:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM","7:00 PM","8:00 PM","9:00 PM","10:00 PM","11:00 PM");
@@ -1573,7 +1263,7 @@ if($k=="state_res")
 		  $Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
 		 
 	  }
-	  unset($Arr[2][0][2]);
+	  
 		return $Arr;
   }
   private function getNonOtherCaste()
@@ -1703,17 +1393,6 @@ if($k=="state_res")
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
 	  return $Arr;
-  }
-  private function getResStatus()
-  {
-          $Arr[0]=FieldMap::getFieldLabel("rstatus",'',1);
-          foreach($Arr as $key=>$val)
-                  {
-                                foreach($val as $k=>$v)
-                                        $output[]=array($k=>$v);
-                  }
-          return array($output);
-
   }
   private function getCountry($onlyCountry)
   {
@@ -2161,7 +1840,6 @@ if($k=="state_res")
     }
     
     $arrCaste[1][0] = $arrOut;
-    unset($arrCaste[2][0][2]);
     return $arrCaste;
   }
   
@@ -2343,81 +2021,4 @@ if($k=="state_res")
             }
             return $Arr;
         }
-  
-  /**
-   * 
-   * @param sfWebRequest $request
-   */
-  public function executeMembershipPlanAudioV1(sfWebRequest $request)
-  {
-    $arrData = $request->getParameter("CustomField");
-    
-    //Right Now contains membershipValue
-    $memberShipValue = $arrData;
-    
-    //Thoushand
-    $arrOut[]  = intVal($memberShipValue / 1000);
-    $memberShipValue = $memberShipValue%1000;
-    $arrOut[] = "1000";
-    
-    // Hundred
-    $arrOut[]  = intVal($memberShipValue / 100);
-    $memberShipValue = $memberShipValue%100;
-    $arrOut[] = "100";
-    
-    if($memberShipValue > 0) {
-      $arrOut[] = $memberShipValue;
-    }
-    // content type required is text/plain
-    header("Content-type: text/plain");
-    /**
-     * 
-     */
-    foreach($arrOut as $val) {
-      echo JsConstants::$siteUrl, OutBoundEventEnums::AUDIO_FILE_BASE_PATH,OutBoundEventEnums::AUDIO_NUMBER_PATH,"/",$val,OutBoundEventEnums::AUDIO_FORMAT,"\n";
-    }
-    die();
-  }
-
-  public function executeOutboundCallStatusV1(sfWebRequest $request)
-  {
-    $getParameters = array(
-        "CallSid","From","To","Direction","DialCallDuration","StartTime","EndTime","CallType","digits","RecordingUrl","CustomField","flow_id","DialCallStatus","ForwardedFrom","ProcessStatus","CurrentTime"
-    );
-    
-    $CallSid = $request->getPostParameter('CallSid');
-    $Status = $request->getPostParameter('Status');
-    $RecordingUrl = $request->getPostParameter('RecordingUrl');
-    $DateUpdated = $request->getPostParameter('DateUpdated');
-
-    $totalResponse = ' Status : '.$Status.' DateUpdated : '.$DateUpdated.' RecordingUrl : '.$RecordingUrl. "\n\n";
-    
-    $digitPressed = "";
-    if($request->getMethod() == sfWebRequest::GET && is_null($CallSid) && count($request->getGetParameters())) {
-      foreach($getParameters as $key) {
-        
-        if ($key == "CallSid") {
-          $CallSid = $request->getParameter($key);
-          continue;
-        }
-        if($key == "digits") {
-          $digitPressed = $request->getParameter($key);
-          continue;
-        }
-        $arrOut[] = " $key : " . $request->getParameter($key);
-      }
-      
-      $totalResponse = implode(", ", $arrOut);
-      
-      $totalResponse .= "\n\n";
-    }
-    
-    $storeObj = new OUTBOUND_THIRD_PARTY_CALL_LOGS();
-    $storeObj->updateCallResponse($CallSid, $totalResponse, $digitPressed);
-    
-    $respObj = ApiResponseHandler::getInstance();
-    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-    $respObj->generateResponse();
-    die();
-  }
 }

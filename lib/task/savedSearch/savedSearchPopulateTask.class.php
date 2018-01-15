@@ -36,7 +36,7 @@ EOF;
         $savedSearchObj = new send_saved_search_mail();
     
     //Truncate table Data       
-    $savedSearchDDLObj = new send_saved_search_mail('newjs_master');
+    $savedSearchDDLObj = new send_saved_search_mail('newjs_masterDDL');
     $savedSearchDDLObj->truncateSavedSearchData();
 
         $lastLoginDate = date('Y-m-d', strtotime("-1 month"));

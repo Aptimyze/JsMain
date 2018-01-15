@@ -9,7 +9,6 @@ var arrErors = {
 	"PASSWORD_REQUIRED":"Please provide a password",
 	"PASSWORD_INVALID":"Password should be at least 8 characters long",
 	"PASSWORD_COMMON":"Password you have chosen is not secure",
-	"PASSWORD_ONLY_NUMERIC":"Your password cannot be only numeric",
 	"PINCODE_ERROR_1":"Please provide a pin code that belongs to <City>",
 	"PINCODE_REQUIRED":"Please provide a pin code of your residence",
 	"EMAIL_REQUIRED":"Please provide an email",
@@ -39,16 +38,13 @@ var arrErors = {
 	"OCCUPATION_REQUIRED":"Please provide an occupation",
 	"INCOME_REQUIRED":"Please provide an income range",
 	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
-	"NAME_ERROR":"Name should have alphabets only",
-        "CASTEMUSLIM_REQUIRED":"Please provide a Caste",
-        "JAMAAT_REQUIRED":"Please provide a Jamaat",
-	"RESIDENTIALSTATUS_REQUIRED":"Please mention your residential status"
+	"NAME_ERROR":"Name should have alphabets only"
 };
 //regular expressions for validations
 var name_regex = /^[a-zA-Z\s\.\']*$/;
 var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 var isd_regex = /^([+]{0,1}[0-9]{1,3})$/;
-var phonePatternIndia = /^([6-9]{1}[0-9]{9})$/;
+var phonePatternIndia = /^([7-9]{1}[0-9]{9})$/;
 var phonePatternOther = /^([1-9]{1}[0-9]{5,13})$/;
 var isdCodes = ["0", "91","+91"];
 //pincode array and validation starting substring for particular states
@@ -289,9 +285,6 @@ var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage"
 //length check error for password
 	if(password && password.length<8)
 		passError =arrErors['PASSWORD_INVALID'];
-//only numeric check error for password
-	if(!passError && $.isNumeric(password))
-		passError =arrErors['PASSWORD_ONLY_NUMERIC'];
 	if(!passError){
 		var passCommon =this.checkCommonPassword(password);//check if the password is common like jeevansathi etc
 		var userPassMatch =this.checkPasswordUserName(password,email);// check if the password is same as username
@@ -819,55 +812,7 @@ return pincodeValidator;
    })();
    this.casteValidator=casteValidator;
  }).call(this);
-// inherted class from validator for caste
-(function() {
-    var casteMuslimValidator = (function () {
-      //inheriting form base class
-      inheritsFrom(casteMuslimValidator,validator);
-      //constructor
-      function casteMuslimValidator(fieldElement) {
-      casteMuslimValidator.prototype.parent.constructor.call(this,fieldElement);
-      }
-      casteMuslimValidator.prototype.validate = function()
-      {
-        var casteMuslim = this.getValue("casteMuslim");
-        casteMuslimValidator.prototype.parent.validate.call(this,casteMuslim);
-        if(this.error){
-            if((inputData["religion"] =="2"))
-	      this.error=arrErors["CASTEMUSLIM_REQUIRED"];
-                return false;
-        }
-        return true;
-      }
-   return casteMuslimValidator;
-   })();
-   this.casteMuslimValidator=casteMuslimValidator;
- }).call(this);
- 
- // inherted class from validator for Jamaat
-(function() {
-    var jamaatValidator = (function () {
-      //inheriting form base class
-      inheritsFrom(jamaatValidator,validator);
-      //constructor
-      function jamaatValidator(fieldElement) {
-      jamaatValidator.prototype.parent.constructor.call(this,fieldElement);
-      }
-      jamaatValidator.prototype.validate = function()
-      {
-        var jamaat = this.getValue("jamaat");
-        jamaatValidator.prototype.parent.validate.call(this,jamaat);
-        if(this.error){
-            if((inputData["religion"] =="2") && (inputData["caste"] =="152"))
-	      this.error=arrErors["JAMAAT_REQUIRED"];
-                return false;
-        }
-        return true;
-      }
-   return jamaatValidator;
-   })();
-   this.jamaatValidator=jamaatValidator;
- }).call(this);
+
 // inherted class from validator for hdegree
 (function() {
     var hdegreeValidator = (function () {
@@ -1131,28 +1076,3 @@ return pincodeValidator;
    })();
    this.horoscopeMatchValidator=horoscopeMatchValidator;
  }).call(this);
-
-
-
-
-(function() {
-    var residentialStatusValidator = (function () {
-      //inheriting form base class
-      inheritsFrom(residentialStatusValidator,validator);
-      //constructor
-      function residentialStatusValidator(fieldElement) {
-      residentialStatusValidator.prototype.parent.constructor.call(this,fieldElement);
-      }
-      residentialStatusValidator.prototype.validate = function()
-      {
-        var residentialStatus = this.getValue("residentialStatus");
-        residentialStatusValidator.prototype.parent.validate.call(this,residentialStatus);
-        if(this.error)
-                return false;
-        return true;
-      }
-   return residentialStatusValidator;
-   })();
-   this.residentialStatusValidator=residentialStatusValidator;
- }).call(this);
-

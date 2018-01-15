@@ -25,10 +25,6 @@ inbox_rule2:
 inbox_rule1:
  url:  /inbox/:infoTypeId/:pageNo
  param:  { module: inbox, action: index }
- 
-inbox_ruleNoPage:
- url:  /inbox/:infoTypeId/
- param:  { module: inbox, action: index }
 
 search_rule:
   url:  /profile/search.php/*
@@ -291,10 +287,6 @@ static_page:
 settings:
   url:   /settings/
   param: { module: settings, action: index }
-
-sathiForLife:
-  url:   /SathiForLife/
-  param: { module: sathiForLife, action: index }
 
 # generic rules
 # please, remove them by adding more specific rules

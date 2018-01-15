@@ -88,7 +88,7 @@ abstract class AbstractProfileCompletionScore {
 		}
 		else
         {
-            $this->m_objProfile->getDetail($this->m_objProfile->getPROFILEID(),"PROFILEID",self::LIST_FIELDS);
+            $this->m_objProfile->getDetail("","",self::LIST_FIELDS);
         }
         $this->m_objProfile->setNullValueMarker("");
         //If Activated is set to D then, profile is delete marked
@@ -112,7 +112,7 @@ abstract class AbstractProfileCompletionScore {
         //If non numeric score or null then dont update
         if(!is_numeric(intval($iScore)) || !$iScore)
 		{
-			$subject = "ProfileCompletionScore : Score is non numeric score or null ::{$iScore}::";
+			$subject = "ProfileCompletionScore : Score is non numeric score or null";
             $szMailBody = "Profileid of user is : ".$this->m_objProfile->getPROFILEID();
             $szMailBody .= "\n\n'".print_r($this->m_objProfile,true)."'";
             
@@ -125,8 +125,9 @@ abstract class AbstractProfileCompletionScore {
 			$objScoreTable->replaceRecord($this->m_objProfile->getPROFILEID(), intval($iScore));
 		}
 		catch(Exception $e)
-		{
-		     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
+		{     LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$e);
+			$subject = "ProfileCompletionScore : Exception While updaing score";
+			SendMail::send_email("kunal.test02@gmail.com","'".print_r($e,true)."'",$subject);
 		}
     }
     

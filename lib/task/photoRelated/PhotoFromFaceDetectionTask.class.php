@@ -65,7 +65,6 @@ EOF;
 					}
 					else
 						$copy= true;
-					PictureFunctions::setHeaders();
 					$mainImageInfo = getimagesize($value["MainPicUrl"]);
 					$faceDetected= false;
 					switch($imageInfo["mime"])
@@ -90,8 +89,7 @@ EOF;
 						$image = imagecreatefromgif($mainPic);
 					else
 						$image = imagecreatefromjpeg($mainPic);
-						
-					
+
 					$outputGot = $faceDetectionObj->getPictureCoordinates($mainPic);
 					$coordRegex ="/^(\d)+x(\d)+\+(\d)+\+(\d)+/";
 					unset($profilesUpdate);

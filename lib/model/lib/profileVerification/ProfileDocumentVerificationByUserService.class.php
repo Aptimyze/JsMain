@@ -104,7 +104,7 @@ class ProfileDocumentVerificationByUserService
                 if(!$type)
                         $type=".jpg";
                 else
-                        $type=".".end($type);
+                        $type=".".$type[1];
 
                 $docUrlId=$this->docEncyption($profileId,$pre);
                 $saveUrl=sfConfig::get("sf_upload_dir")."/VerificationDocumentByUser/".$docUrlId.$type;

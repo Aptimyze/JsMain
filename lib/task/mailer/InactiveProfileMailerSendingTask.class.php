@@ -98,8 +98,6 @@ EOF;
 		
 			$email_sender->send();
 			$status = $email_sender->getEmailDeliveryStatus();
-			ProfileCacheLib::getInstance()->__destruct();
-
 			$IncompleteMasterobj->UpdateStatusIncomplete($key,$status);
 			}
 			/** code for daily count monitoring**/

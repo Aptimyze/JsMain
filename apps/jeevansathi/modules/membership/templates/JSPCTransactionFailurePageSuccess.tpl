@@ -127,21 +127,15 @@
         eraseCookie('paymentMode');
         eraseCookie('cardType');
         $("#tryAgainBtn").click(function(e){
-            if(checkEmptyOrNull(readCookie('backendLink'))){
-                var url = readCookie('backendLink');
-                $.redirectPost(url,{});
-            }else{
-                if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
-                    if(checkEmptyOrNull(readCookie('selectedVas'))){
-                        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
-                    } else {
-                        var upgradeMem = "~$data.checkMemUpgrade`";
-                        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop','upgradeMem':upgradeMem});
-                    }
+            if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
+                if(checkEmptyOrNull(readCookie('selectedVas'))){
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
                 } else {
-                    if(checkEmptyOrNull(readCookie('selectedVas'))){
-                        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'', 'mainMemDur':'', 'selectedVas':readCookie('selectedVas'), 'device':'desktop','upgradeMem':upgradeMem});
-                    }
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':readCookie('mainMem'), 'mainMemDur':readCookie('mainMemDur'), 'device':'desktop'});
+                }
+            } else {
+                if(checkEmptyOrNull(readCookie('selectedVas'))){
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'', 'mainMemDur':'', 'selectedVas':readCookie('selectedVas'), 'device':'desktop'});
                 }
             }
         })

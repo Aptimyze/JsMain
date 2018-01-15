@@ -32,7 +32,7 @@ class canSendEmail extends canSendBaseClass {
    * Declaring and Defining Member Function
    */
    
-  public function __construct($emailArray,$profileid,$subscriptionClassObj='',$bouncedMailObj,$mailID="") 
+  public function __construct($emailArray,$profileid,$subscriptionClassObj='',$bouncedMailObj) 
   {
 	parent::__construct($profileid);
 	$this->channel = CanSendEnums::$channelEnums[EMAIL];
@@ -40,10 +40,6 @@ class canSendEmail extends canSendBaseClass {
         $this->subscriptionClassObj = $subscriptionClassObj;
 	$this->alertType = $emailArray['EMAIL_TYPE'];
         $this->bouncedMailObj = $bouncedMailObj;
-        if($mailID)
-        {
-          $this->mailID = $mailID;
-        }
 	if(!$this->email || !$this->alertType)
 		$this->incompleteData=true;
   }
@@ -99,11 +95,7 @@ class canSendEmail extends canSendBaseClass {
 	if($subscriptionField)
 	{
 		$profileSubscribed = $this->subscriptionClassObj->getSubscriptions($this->profileid,$subscriptionField);
-    if($this->mailID && in_array($this->mailID, CanSendEnums::$exceptionForMailId))
-    {
-      return true;
-    }
-		elseif($profileSubscribed && $profileSubscribed==CanSendEnums::$fieldMap[$subscriptionField]['NOT_ALLOWED_VALUE'])
+		if($profileSubscribed && $profileSubscribed==CanSendEnums::$fieldMap[$subscriptionField]['NOT_ALLOWED_VALUE'])
 		{
 			return false;
 		}

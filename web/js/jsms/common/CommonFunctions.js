@@ -1,75 +1,3 @@
-function GAMapper(GAEvent, extraParams)
-{
-	return;
-    try {
-    	var PageName = "";
-    	if(typeof(currentPageName) != "undefined"){
-         PageName = currentPageName || "";
-    	}
-        var userStatus = "Unregistered";
-        if(typeof(loggedInJspcGender) === "string" && loggedInJspcGender.length > 0){
-            userStatus = loggedInJspcGender;
-        }
-
-        var GAMapping = {
-        	"GA_HOME_PAGE"					:["V", "Home page"],
-
-        	"GA_LOGIN_REPONSE_FAIL"			:["E", "Login Response", "Success"],
-        	"GA_LOGIN_REPONSE_SUCCESS"		:["E", "Login Response", "Fail"],
-        	"GA_HOME_LOGIN_BTN"				:["E", PageName || "Login Page", "Login Button"],
-        	"GA_HOME_REGISTER"				:["E", PageName || "Login Page", "Register Button"],
-        	"GA_HOME_SEARCH"				:["E", PageName || "Login Page", "Search Button"],
-        	"GA_HOME_FORGOT"				:["E", PageName || "Login Page", "Forgot Password"],
-
-        	"GA_FORGOT_CANCEL"				:["E", "Forgot Page", "Cancel"],
-        	"GA_FORGOT_RESET"				:["E", "Forgot Page", "Reset"],
-            // verify otp layer
-            // 
-            "GA_PVS1_EDIT_NUMBER"			:["E", "Phone Verification", "Edit Number"],
-            "GA_PVS1_VALIDATE_NUMBER"		:["E", "Phone Verification", "Continue"],
-
-            "GA_PVS1_VERIFY_BTN"			:["E", "Phone Verification", "Verify Button"],
-            "GA_PVS2_SHOW"					:["V", "Submit Otp Layer"],
-            "GA_PVS2_VERIFY_BTN"			:["E", "Verify Otp Layer", "Verify Button"],
-            "GA_PVS2_RESEND"				:["E", "Verify Otp Layer", "Resend"],
-            "GA_PVS3_WRONGOTPLAYER"			:["V", "Wrong otp layer"],
-            "GA_PVS3_TRIALSOVER"			:["V", "Trials Over layer"],
-            "GA_PVS3_VERIFY_SUCCESS"		:["V", "Otp verified layer"],
-            "GA_PVS3_WRONGOTPLAYER"			:["V", "Wrong otp layer"],
-            "GA_PVS3_TRIALSOVER"			:["V", "Trials over layer"],
-
-
-            "GA_PVS2_MISS_CALL"				:["E", "Phone Verification", "Miss Call"],
-            "GA_PVS3_STOP"					:["E", "Phone Verification Attempt", "Stop"],
-            "GA_PVS3_VERIFIED_OK"			:["V", "Phone Verified OKay layer"],
-
-            "GA_OTP_VERIFY_FAILED"			:["E", "Phone Verification Attempt", "Failed"],
-
-            "GA_CAL_CLOSE"					:["E", "CAL " + extraParams['currentPageName'] , "Close"],
-            "GA_CAL_ACCEPT"					:["E", "CAL " + extraParams['currentPageName'] , "Open"],
-
-
-            "GA_MYJS_PAGE"					:["V", "Myjs page"],
-            "GA_PHONEVERIFICATION_PAGE"		:["V", "Phone Verification Screen"],
-            "GA_CAL_PAGE"					:["V", "CAL "+extraParams['layerid']],
-
-  			"GA_CONTACT_ENGINE"				:["E", PageName || "Contact Engine",  extraParams["actionDetail"] || "default"]
-
-        }
-        if(GAMapping[GAEvent]){
-        	// console.log(GAMapping[GAEvent]);
-            if(GAMapping[GAEvent][0] == "E"){
-                trackJsEventGA(GAMapping[GAEvent][1], GAMapping[GAEvent][2], userStatus);
-            }else if(GAMapping[GAEvent][0] == "V"){
-                _gaq.push(['_trackPageview', GAMapping[GAEvent][1]]);            
-            }
-        }
-    }
-    catch(err) {
-        return;
-    }
-}
-
 /**
 * This function will replace string with mapping present in object(mapObj)
 * @param str {string}
@@ -110,23 +38,6 @@ function removeNull(msg)
                 return msg;
         return '';
 }
-
-function isSessionStorageExist()
-    {
-        var bVal = true;
-        if(typeof(Storage)=='undefined')
-            bVal = false;
-        
-        try{
-            sessionStorage.setItem('testLS',"true");
-            sessionStorage.getItem('testLS');
-            sessionStorage.removeItem('testLS');
-        }catch(e)
-        {
-            bVal = false;
-        }
-        return bVal;
-    }
 
 /**
 * This function will show slider with validation message {e} at a particular height {divhgt}
@@ -292,14 +203,6 @@ function BindNextPage(){
 }
 function ShowNextPage(url,nottostore,transition)
 {
-  	try
-  	{
-    	localStorage.setItem("prevUrlListing",window.location.href);
-  	}
-  	catch(e)
-  	{
-    	console.log(e);
-  	}
 	if(typeof(history.pushState)=='undefined')
 	{
 		document.location.href=url; 
@@ -348,7 +251,6 @@ var xhrReq={}
 var timer=300;
 function SingleTonNextPage(data,nottostore,url,transition)
 {
-   window.location.href = url;return;
    var random=Math.random();
    $.each(cancelUrl,function(key,value)
    {
@@ -367,7 +269,7 @@ function SingleTonNextPage(data,nottostore,url,transition)
    var cacheMin = 2;
    var ttl = 60000 * cacheMin;
     
-   if(isSessionStorageExist() && arrAllowedUrls.indexOf(url) != -1 && 
+   if(arrAllowedUrls.indexOf(url) != -1 && 
      sessionStorage.getItem("myjsTime") != undefined && 
      new Date().getTime() - sessionStorage.getItem("myjsTime") < ttl) 
    {
@@ -375,22 +277,18 @@ function SingleTonNextPage(data,nottostore,url,transition)
       
       trackJsEventGA("jsms","fetchLocalHtml", "", "");
       if(cancelUrl[random]==1) {
-      	if(typeof pageMyJs != 'undefined' && pageMyJs == 1)
-      		pageMyJs = 0;
         ShowNextPageTrue(data,nottostore,url,transition);  
       }
 			
       startTouchEvents(timer);
    } else  {
       xhrReq[random]=$.ajax({url: url}).done(function(data){
-      if(arrAllowedUrls.indexOf(url) != -1 && isSessionStorageExist()) {
-      	sessionStorage.setItem("myjsTime",new Date().getTime());
+      if(arrAllowedUrls.indexOf(url) != -1) {
+        sessionStorage.setItem("myjsTime",new Date().getTime());
         sessionStorage.setItem("myjsHtml",data);	
       }
       
       if(cancelUrl[random]==1) {
-      	if(typeof pageMyJs != 'undefined' && pageMyJs == 1)
-      		pageMyJs = 0;
         ShowNextPageTrue(data,nottostore,url,transition);
       }
         
@@ -681,121 +579,8 @@ function hostReachable() {
     }
 }
 
-function createCookieExpireMidnight(name,value,path,specificDomain) {
-	var expires = "";
-	var date = new Date();
-	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-	expires = "; expires=" + midnight.toGMTString();
-	if (!path) {
-		path = "/";
-	}
-        if(specificDomain == undefined || specificDomain == ""){
-            document.cookie = escape(name) + "=" + escape(value) + expires + "; path="+path;
-        }else{
-            document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path="+path;
-        }
-        
-}
-
-function readCookie(name) {
-    var nameEQ = escape(name) + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
-    }
-    return null;
-}
-
-
-
-function showTimerForLightningMemberShipPlan(source) {
-    if(source == "jsmsMyjs"){
-        if(getIosVersion()){
-            var cT = new Date(current.replace(/\s+/g, 'T'));
-            var eT = new Date(membershipPlanExpiry.replace(/\s+/g, 'T'));
-        }
-        else{
-            var cT = new Date(current);
-            var eT = new Date(membershipPlanExpiry);
-        }
-        lightningDealExpiryInSec = Math.floor((eT-cT)/1000);
-    }
-    if(!lightningDealExpiryInSec) 
-        return;
-    var currentTime=new Date(); 
-    var expiryDate=new Date();
-    expiryDate.setSeconds(expiryDate.getSeconds() + parseInt(lightningDealExpiryInSec));
-    if(expiryDate<currentTime) return;
-    var timeDiffInSeconds=(expiryDate-currentTime)/1000;
-    if (timeDiffInSeconds>48*60*60) return;  // check for the timer if the time diff is less than 48 hrs
-    var temp=timeDiffInSeconds;
-    var timerSeconds=temp%60;
-    temp=Math.floor(temp/60);
-    var timerMinutes=temp%60;
-    temp=Math.floor(temp/60);
-    var timerHrs=temp;
-    memTimerExtraDays=Math.floor(timerHrs/24);
-    memTimerTime=new Date();
-    memTimerTime.setHours(timerHrs);
-    memTimerTime.setMinutes(timerMinutes);
-    memTimerTime.setSeconds(timerSeconds);
-    src = source;
-    memTimer=setInterval('updateMemTimer()',1000);
-}
-
-
-function formatTime(i) {
-    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
-    return i;
-}
-
-
-function updateMemTimer(){
-  var h = memTimerTime.getHours();
-  var s = memTimerTime.getSeconds();
-  var m = memTimerTime.getMinutes();
-  if (!m && !s && !h) {
-    if(!memTimerExtraDays) clearInterval(memTimer);
-    else memTimerExtraDays--;
-  }
-  
-    memTimerTime.setSeconds(s-1);
-    h=h+memTimerExtraDays*24;
-    
-    m = formatTime(m);
-    s = formatTime(s);
-    h = formatTime(h);
-    
-    if(src == "jsmsLanding"){
-        $("#jsmsLandingM").html(m);
-        $("#jsmsLandingS").html(s);
-    }
-    else if (src == "jsmsMyjs"){
-        $("#myjsM").html(m);
-        $("#mysjsS").html(s);
-    }
-    else if( src == "jspcLanding"){
-        $("#jspcLandingM").html(m);
-        $("#jspcLandingS").html(s);
-    }
-    else if( src == "jspcMyjs"){
-        $("#jspcMyjsM").html(m);
-        $("#jspcMyjsS").html(s);
-    }
-}
-
 (function(){
   $(document).ready(function() {
-    if(typeof trackingProfile != "undefined" && trackingProfile!=""){
-        var url = window.location.hostname;
-        var profile = readCookie('hinditracking');
-        if((url.indexOf("hindi") != -1 )&& (profile!=trackingProfile) && (trackingProfile!="")){
-            createCookieExpireMidnight("hinditracking",trackingProfile);
-            trackJsEventGA('jsms', 'hindi',trackingProfile);
-        }
-    }
     if(navigator.userAgent.indexOf("UCBrowser") != -1) {
         setInterval(function(){
             var online = hostReachable();

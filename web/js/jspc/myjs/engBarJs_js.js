@@ -298,7 +298,6 @@ var acceptance = function() {
         innerHtml=innerHtml.replace(/\{\{phone_view_Contact\}\}/g,'phone'+i);
         innerHtml=innerHtml.replace(/\{\{handled_contact\}\}/g,'profileHandled'+i);
         innerHtml=innerHtml.replace(/\{\{email\}\}/g,'email'+i);
-        innerHtml=innerHtml.replace(/\{\{relationshipManager\}\}/g,'relationshipManager'+i);
           innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
           
         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(i+1)+"&contact_id="+this.data.contact_id);
@@ -744,7 +743,7 @@ try{
         }
 		else {
 			for (i = 0; i < noOfRes && interestsCount<20; i++) {
-				if (profiles[i]['filtered']=='Y' || profiles[i]['filtered']=='J'){ filteredArray[filteredCount++]=profiles[i]; continue;} 
+				if (profiles[i]['filtered']=='Y'){ filteredArray[filteredCount++]=profiles[i]; continue;} 
         else {
           if(++interestsCount==20 && showViewAll==1)
             break;

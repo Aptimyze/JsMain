@@ -4,7 +4,6 @@ include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking
-$date =date("Y-m-d");
 $msg="\nPopulate Score # Start Time=".date("Y-m-d H:i:s");
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Scoring Algorithm Score Computation Shard-1";
@@ -75,17 +74,17 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                /*$hit_log1 =$profileid."#".$newmodelJson;
-                                                $fileName1 ="score_hit_log_for_nullResponse_".$date.".txt";
-                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");*/
+                                                $hit_log1 =$profileid."#".$newmodelJson;
+                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
+                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
                                         }
                                         else{
                                                 $score1 =round($score1,0);
                                         }
 					// temporary_logging   
-                                        /*$hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
-                                        $fileName ="score_hit_log_".$date.".txt";
-                                        passthru("echo '$hit_log' >>/tmp/$fileName");*/
+                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
+                                        $fileName ="score_hit_log".$date.".txt";
+                                        passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }
                                 if(isset($score))
                                 {
@@ -133,17 +132,7 @@ function sendPostData ($url, $post) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-
-        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-        curl_setopt($ch, CURLOPT_HEADER, $header);
-        curl_setopt($ch, CURLOPT_USERAGENT,"JsInternal");    
-
 	$result = curl_exec($ch);
-
-        // remove header from curl Response 
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $result = substr($result, $header_size);
-
 	curl_close($ch);
 	return $result;
 }

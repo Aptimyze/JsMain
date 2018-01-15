@@ -7,17 +7,14 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php";
 include_once(JsConstants::$docRoot."/classes/ShortURL.class.php");
 
 if (authenticated($cid)) {
-
     $name = getname($cid);
     $center = get_centre($cid);
-
     $smarty->assign("name", $name);
     $serviceObj = new Services;
-
     $max_limit = '80';
     $mainServiceArr = array("P", "C", "D", "ESP", "X", "NCP");
-    if ($submit) {
 
+    if ($submit) {
         $is_error = 0;
 
         if ($discount == "") {
@@ -71,7 +68,7 @@ if (authenticated($cid)) {
         }
 
         if ($is_error >= 1) {
-            $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$profileid);
+            $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
             $smarty->assign("SERVICE_MAIN", $service_main);
             $smarty->assign("USERNAME", stripslashes($USERNAME));
             $smarty->assign("PROFILEID", $profileid);
@@ -125,8 +122,8 @@ if (authenticated($cid)) {
             $incentiveBDSLObj = new incentive_BACKEND_DISCONT_SENT_LOG();
             $incentiveBDSLObj->insertLinkDetails($name, addslashes(stripslashes($USERNAME)), $profileid, $SERVICE, $currencyType, $price, $discountPrice);
 
-            if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'https://crm.jeevansathi.com') {
-                $SITE_URL = 'https://www.jeevansathi.com';
+            if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {
+                $SITE_URL = 'http://www.jeevansathi.com';
             } else {
                 $SITE_URL = JsConstants::$siteUrl;
             }
@@ -161,7 +158,8 @@ if (authenticated($cid)) {
             die();
         }
 
-        $service_main = $serviceObj->getAllServices('SHOW_ONLINE_ALL',$pid);
+        $service_main = $serviceObj->getAllServices('SHOW_ONLINE');
+
         $smarty->assign("SERVICE_MAIN", $service_main);
         $smarty->assign("USERNAME", stripslashes($username));
         $smarty->assign("PROFILEID", $pid);

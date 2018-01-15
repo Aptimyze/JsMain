@@ -21,7 +21,6 @@ class ProfileAUTO_EXPIRY
      * @var instance of NEWJS_PROFILE|null
      */
     private $objAUTO_EXPIRY = null;
-    private $dbname = null;
 
     /**
      * @fn __construct
@@ -30,7 +29,7 @@ class ProfileAUTO_EXPIRY
      */
     public function __construct($dbname = "")
     {
-        $this->dbname=$dbname;
+        $this->objAUTO_EXPIRY = new jsadmin_AUTO_EXPIRY($dbname);
     }
 
 
@@ -58,12 +57,10 @@ class ProfileAUTO_EXPIRY
             return $result;
         }
         // get from values database by query
-        $result = $this->getProfileExpiryObj()->getDate($profileid);
+        $result = $this->objAUTO_EXPIRY->getDate($profileid);
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? ProfileCacheConstants::NOT_FILLED : $result;
-        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
-        }
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
          
     }
@@ -77,7 +74,7 @@ class ProfileAUTO_EXPIRY
     public function replace($pid,$type,$date)
     {
         $objProCacheLib = ProfileCacheLib::getInstance();        
-        $result = $this->getProfileExpiryObj()->replace($pid,$type,$date);
+        $result = $this->objAUTO_EXPIRY->replace($pid,$type,$date);
         
         if($result) {
             $dummyResult['PROFILEID'] = $pid;
@@ -132,11 +129,6 @@ class ProfileAUTO_EXPIRY
     JsMemcache::getInstance()->hIncrBy($key, $funName);
     
     JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
-  }
-  private function getProfileExpiryObj(){
-    if(!$this->objAUTO_EXPIRY)
-        $this->objAUTO_EXPIRY = new jsadmin_AUTO_EXPIRY($this->dbname);
-    return $this->objAUTO_EXPIRY;
   }
 }
 ?>

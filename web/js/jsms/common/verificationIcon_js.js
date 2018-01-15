@@ -24,7 +24,7 @@ $('body').on('click touchstart', '.loadStaticPage', function()
 function showPopup(profilechecksum,tupleno) 
 {
 	
-	$("#docLayer"+tupleno).css({
+	$(".docLayer").css({
 		'height':window.innerHeight,
 		'width':window.innerWidth,
 		'display':"block",
@@ -79,10 +79,10 @@ function showPopup(profilechecksum,tupleno)
 }
 
 //This function closes the document verification layer
-function closePopup(tupleno)
+function closePopup()
 {
-	$("#docLayer"+tupleno).css('display',"none");
-	$("#docLayer"+tupleno).css('overflow',"auto");
+	$(".docLayer").css('display',"none");
+	$(".docLayer").css('overflow',"auto");
 	$("#js-docVerified"+tupleno).addClass('dispnone');
 	$("#js-docVerified"+tupleno).removeClass('dispblock');
 	$(".putData").hide();

@@ -4,18 +4,7 @@
       <ul class="hor_list clearfix cclist1 pos-rel" style="width:16000px;" id="ccHorizontalTabsBar">
         ~foreach from=$contactCenterTabMapping key=k item=v`
           ~foreach from=$v["horizontalTabsArr"] key=kk item=vv name=horizontalTabsLoop`
-          ~if $showIdfy && ($vv["HTabId"] eq 8 || $vv["HTabId"] eq 11)`
-          ~if $vv["HTabId"] eq 8`
-                ~assign var="act" value="click from acceptances"`
-          ~else if $vv["HTabId"] eq 11`
-                ~assign var="act" value="click from message"`
-          ~/if`
-          <li  id="idfyDiv" class="idfyDiv" onclick="trackJsEventGA('idfy','~$act`','M/F','')"><span class="color5 f12 idfyText">Get details of users verified</span><i class="idfyIcon"></i></li>
-          ~elseif $vv["HTabId"] eq 10`
-          <li class="vishid">1</li>
-          ~else`
            <li data-id="~$vv["HTabId"]`" data-infoId="~$vv["infoTypeID"]`" id="HorizontalTab~$vv["infoTypeID"]`" class="js-ccHorizontalLists cursp">~$vv["Hname"]`</li>
-           ~/if`
           ~/foreach` 
           ~assign var=TabsArrLength value=$v["horizontalTabsArr"]|count`
           ~assign var=blankTabsCount value=3-$TabsArrLength`

@@ -61,7 +61,7 @@ class NEWJS_JP_MUSLIM extends TABLE{
 					
 					if(!$resUpdateReligion->rowCount())
 					{
-						$sqlEditReligion = "INSERT IGNORE INTO JP_MUSLIM ($keys) VALUES ($values)";
+						$sqlEditReligion = "REPLACE INTO JP_MUSLIM ($keys) VALUES ($values)";
 						$resEditReligion = $this->db->prepare($sqlEditReligion);
 						foreach($paramArr as $key=>$val)
 							$resEditReligion->bindValue(":".$key, $val);
@@ -75,30 +75,12 @@ class NEWJS_JP_MUSLIM extends TABLE{
 						throw new jsException($e);
 					}
 		}
-                
-                public function delete($pid)
-		{
-	   
-			try {   
-                                if($pid)
-				{ 
-					$sql="DELETE FROM JP_MUSLIM WHERE PROFILEID=:PROFILEID";
-					$prep=$this->db->prepare($sql);
-					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
-					$prep->execute();
-                                }
-			}catch(PDOException $e)
-			{
-                                throw new jsException($e);
-			}
-		}
     private function logFunctionCalling($funName)
     {
-    	return;
-      // $key = __CLASS__.'_'.date('Y-m-d');
-      // JsMemcache::getInstance()->hIncrBy($key, $funName);
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      // JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
 		
 }

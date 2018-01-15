@@ -20,16 +20,12 @@ class memUser
     public $contactsRemaining;
     public $memObj;
     public $festFlag;
-    public $memUpgradeEligible = false;
-    public $mtongue;
-    public $addonMtongue;
 
     function __construct($profileid) {
         if ($profileid != '') {
             $this->setProfileid($profileid);
             $this->ipAddress = $this->getIpAddress();
             $this->currency = $this->getCurrency();
-            $this->setMtongue($profileid);
             $this->memObj = new JMembership();
         } 
         else {
@@ -37,43 +33,11 @@ class memUser
             $this->userType = "1";
             $this->currency = $this->getCurrency();
             $this->ipAddress = $this->getIpAddress();
-            $this->mtongue = "-1";
-            $this->addonMtongue = "-1";
         }
     }
 
-    public function setMtongue($profileid=""){
-        
-        if($profileid != ""){
-            $profileObj = LoggedInProfile::getInstance('newjs_master');
-
-            if($profileObj != null){
-                $this->mtongue = $profileObj->getMTONGUE();
-                $this->addonMtongue = $this->mtongue;
-            }
-
-            if(!empty($this->mtongue)){
-                $memHandlerObj = new MembershipHandler(false);
-                $mainMemcount = $memHandlerObj->getOnlineActiveMainMemDurationsWrapper($this->mtongue);
-                $addonMemcount = $memHandlerObj->getOnlineActiveAddonDurationsWrapper($this->mtongue);
-                unset($memHandlerObj);
-                if($mainMemcount == 0){
-                    $this->mtongue = "-1";
-                }
-                if($addonMemcount == 0){
-                    $this->addonMtongue = "-1";
-                }
-            }
-            else{
-                $this->mtongue = "-1";
-                $this->addonMtongue = "-1";
-            }
-
-        }
-    }
-
-    public function setMemStatus($fromBackend="") {
-        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid,$fromBackend);
+    public function setMemStatus() {
+        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid);
         if ($userType == 2) {
             $this->userType = memUserType::FREE;
         } 
@@ -97,14 +61,9 @@ class memUser
         } 
         elseif ($userType == 7) {
             $this->userType = memUserType::ONLY_VAS;
-        }
-        elseif ($userType == memUserType::UPGRADE_ELIGIBLE) {
-            $this->userType = memUserType::UPGRADE_ELIGIBLE;
-            $this->memStatus = $memStatus;
-        }
+        } 
         else echo "blank";
         $this->expiryDate = date("jS F", strtotime($expiryDate));
-        $this->memUpgradeEligible = $memUpgradeEligible;
     }
 
     public function getIpAddress() {
@@ -139,8 +98,8 @@ class memUser
         return $this->festFlag;
     }
 
-    public function getRemainingContacts($profileid,$extraFields="") {
-        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid,$extraFields);
+    public function getRemainingContacts() {
+        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid);
         return $contacts;
     }
 

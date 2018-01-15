@@ -72,19 +72,8 @@ class Consumer
     {
       $this->channel->queue_declare(MQ::MAILQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);   
       $this->channel->queue_declare(MQ::SMSQUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+      $this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
       $this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
-      
-      //For Instant Mail
-      $this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
-					array(
-            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
-            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
-						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
-					);
-      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
-
-
     } 
     catch (Exception $exception) 
     {
@@ -96,16 +85,8 @@ class Consumer
     {
       $this->channel->basic_consume(MQ::MAILQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
       $this->channel->basic_consume(MQ::SMSQUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
+      $this->channel->basic_consume(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
       $this->channel->basic_consume(MQ::DUPLICATE_LOG_QUEUE, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
-      //For Instant Mail
-      $this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
-      $this->channel->queue_declare(MQ::DELAYED_INSTANT_MAIL, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
-					array(
-            "x-dead-letter-routing-key"=>array("S",MQ::MAILQUEUE),
-            "x-dead-letter-exchange" => array("S", MQ::EXCHANGE),
-						"x-message-ttl" => array("I", MQ::INSTANT_MAIL_DELAY_TTL*1000))
-					);
-      $this->channel->queue_bind(MQ::DELAYED_INSTANT_MAIL, MQ::WRITE_MSG_exchangeDelayed5min, MQ::DELAYED_INSTANT_MAIL);
     }
     catch (Exception $exception) 
     {
@@ -148,43 +129,30 @@ class Consumer
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
-    $codeException = 0;
-    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
       switch($process)
       {
-        case 'MAIL':
-          $handlerObj->sendMail($type,$body);
-          ProfileCacheLib::getInstance()->__destruct();
+        case 'MAIL':  
+          $handlerObj->sendMail($type,$body);  
           break;
         case 'SMS':   
-          $handlerObj->sendSMS($type,$body);
-          ProfileCacheLib::getInstance()->__destruct();
+          $handlerObj->sendSMS($type,$body);  
           break;
         case 'GCM':   
           $handlerObj->sendGCM($type,$body);  
-          ProfileCacheLib::getInstance()->__destruct();
           break;
         case 'BUFFER_INSTANT_NOTIFICATIONS':
           $handlerObj->sendInstantNotification($type,$body);
-          ProfileCacheLib::getInstance()->__destruct();
             break;
         case 'DUPLICATE_LOG':
-          $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
-          ProfileCacheLib::getInstance()->__destruct();
+            $handlerObj->logDuplicate($msgdata['phone'],$msgdata['profileId']);
           break;
-        case MQ::DELAYED_MAIL_PROCESS:
-          $handlerObj->sendMail($type,$body,true);
-          ProfileCacheLib::getInstance()->__destruct();
-          break;
-      }
-      
+      }     
     }
     catch (Exception $exception) 
     {
-        $codeException = 1;
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str,"default");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
@@ -210,13 +178,8 @@ class Consumer
     } 
     catch(Exception $exception) 
     {
-        $deliveryException = 1;
-      $dt = date('Y-m-d H:i:s');
-      $str="\n".$dt."RabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
+      $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
-    }
-    if($codeException || $deliveryException){
-        die("Killed due to code exception or delivery exception");
     }
   }
 }

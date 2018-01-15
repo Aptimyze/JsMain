@@ -15,6 +15,7 @@ if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
 if($zipIt)
 	ob_start("ob_gzhandler");
 //end of it
+mail("kunal.test02@gmail.com","ip_new_1.php in USE",print_r($_SERVER,true));
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 include_once("hits.php");

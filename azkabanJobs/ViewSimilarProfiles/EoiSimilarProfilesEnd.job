@@ -1,3 +1,0 @@
-type=command
-dependencies=EoiSimilarProfilesCalculate0Task,EoiSimilarProfilesCalculate1Task,EoiSimilarProfilesCalculate2Task
-command=echo Success

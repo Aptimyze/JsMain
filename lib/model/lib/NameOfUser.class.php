@@ -53,18 +53,16 @@ class NameOfUser
                 $nameObj = new incentive_NAME_OF_USER();
                 $profileid = "'".implode("','",$noCache)."'";
                 $nameData = $nameObj->getArray(array("PROFILEID"=>$profileid),'','','*');
-		if(is_array($nameData)){	
-                	foreach($nameData as $k=>$v)
-                	{
-                	        $this->setNameInCache($v['PROFILEID'],$v);
-                	        $finalData[$v['PROFILEID']]=$v;
-                	}
-		}
+                foreach($nameData as $k=>$v)
+                {
+                        $this->setNameInCache($v['PROFILEID'],$v);
+                        $finalData[$v['PROFILEID']]=$v;
+                }
         }
        //print_r($finalData);die;
 	return $finalData;
     }
-    public function insertName($profileid,$name,$display="")
+    public function insertName($profileid,$name,$display)
     {
 	if($profileid && ($name ||$display))
 	{
@@ -216,22 +214,4 @@ print_r($returnArr);die;
         }
         return $profileCache;
     }
-    
-    public function getValidNames(){
-		 $memObject=JsMemcache::getInstance();
-		 $validNameData=$memObject->getSetsAllValue('ValidNames');
-		 if(empty($validNameData)){
-           
-			  $validNameListObj = new newjs_ValidNameList($dbName="","M");
-			   $dataArrMale= $validNameListObj->getValidNames();
-			   $validNameListObj = new newjs_ValidNameList($dbName="","F");
-			   $dataArrFemale= $validNameListObj->getValidNames();
-			   $validNameData= array_unique(array_merge($dataArrMale,$dataArrFemale));
-			   
-			   $memObject->storeDataInCacheByPipeline("ValidNames",$validNameData);
-			  
-		}
-		return $validNameData;
-	}
 }
-

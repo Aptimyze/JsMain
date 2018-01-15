@@ -26,17 +26,13 @@ class MIS_LOGIN_TRACKING extends TABLE{
                         throw new jsException($e);
                 }
         }
-        public function getLastLoginProfilesForDate($profileStr="",$lastLoginDt, $channelStr)
+        public function getLastLoginProfilesForDate($profileStr,$lastLoginDt, $channelStr)
         {     
-                if(!$lastLoginDt)
-                        throw new jsException("","date blank passed");
+                if(!$profileStr || !$lastLoginDt)
+                        throw new jsException("","profiles/date blank passed");
                 try
                 {
-                        $sql = "select distinct PROFILEID from MIS.LOGIN_TRACKING where ";
-                        if(!empty($profileStr)){
-                            $sql .= "PROFILEID IN($profileStr) AND ";
-                        }
-                        $sql .= "DATE>=:DATE AND WEBSITE_VERSION IN($channelStr)";
+                        $sql = "select distinct PROFILEID from MIS.LOGIN_TRACKING where PROFILEID IN($profileStr) AND DATE>=:DATE AND WEBSITE_VERSION IN($channelStr)";
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":DATE",$lastLoginDt,PDO::PARAM_STR);
                         $res->execute();
@@ -105,25 +101,6 @@ class MIS_LOGIN_TRACKING extends TABLE{
                 }
         }
 
-        public function insert($profileid,$date,$url,$channel,$websiteVersion,$stype)
-        {
-                if (!$profileid)
-                        throw new jsException("", "Profile id not passed");
-                try {
-			$sql ="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES (:PROFILEID , :URL , :DATE, :CHANNEL, :WEBSITE_VERSION, :STYPE)";
-                        $res = $this->db->prepare($sql);
-                        $res->bindValue(":PROFILEID",$profileid, PDO::PARAM_STR);
-                        $res->bindValue(":URL",$url, PDO::PARAM_STR);
-                        $res->bindValue(":DATE",$date, PDO::PARAM_STR);
-                        $res->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
-                        $res->bindValue(":WEBSITE_VERSION",$websiteVersion, PDO::PARAM_STR);
-                        $res->bindValue(":STYPE",$stype, PDO::PARAM_STR);
-                        $res->execute();
-                        return true;
-                } catch (PDOException $e) {
-                        throw new jsException($e);
-                }
-        }
 
 }
 ?>

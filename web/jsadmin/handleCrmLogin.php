@@ -18,7 +18,7 @@ if($from_dialer_inbound=='Y' || $from_dialer=='Y' || $from_dialer_phone=='Y' || 
 }	
 else
 {
-	$cid = preg_replace('/[^A-Za-z0-9\. -_]/', '',$_COOKIE["CRM_NOTIFICATION_AGENTID"]);
+	$cid = $_COOKIE["CRM_NOTIFICATION_AGENTID"];
 	if(!$checksum)
 	    $checksum = $cid;
 }

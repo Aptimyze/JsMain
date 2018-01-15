@@ -95,19 +95,19 @@ class BrowserGCM {
 				$updateRegArr[$index]["old_regid"] = $regIds[$k];
                 $updateRegArr[$index]["new_regid"] = $v['registration_id'];
                 $index++;
-                $updateArr = array("RESPONSE"=>"REGID_UPDATE","SENT_TO_FCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_REGID_EXPIRED);
+                $updateArr = array("RESPONSE"=>"REGID_UPDATE","SENT_TO_GCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_REGID_EXPIRED);
 			}
 			else if($v['message_id'])
 			{
-				$updateArr = array("RESPONSE"=>ltrim($v['message_id'],"0:"),"SENT_TO_FCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_SUCCESS);
+				$updateArr = array("RESPONSE"=>ltrim($v['message_id'],"0:"),"SENT_TO_GCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_SUCCESS);
 			}
 			else if($v['error'])
 			{
-				$updateArr = array("RESPONSE"=>$v['error'],"SENT_TO_FCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_FAILURE);
+				$updateArr = array("RESPONSE"=>$v['error'],"SENT_TO_GCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_FAILURE);
 			}
 			else
 			{
-				$updateArr = array("RESPONSE"=>"INVALID","SENT_TO_FCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_INVALID);
+				$updateArr = array("RESPONSE"=>"INVALID","SENT_TO_GCM"=>'Y',"STATUS"=>BrowserNotificationEnums::GCM_INVALID);
 			}
 			
 			if($updateArr)

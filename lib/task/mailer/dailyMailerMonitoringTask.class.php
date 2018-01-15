@@ -33,10 +33,9 @@ EOF;
 	$arg = $arguments['mailer_key'];
 	$mailer_key = explode("#",$arg);
 
-	if($mailer_key[1] == 'INSERT'){
-	    date_default_timezone_set("Asia/Calcutta");
+	if($mailer_key[1] == 'INSERT')
 		$countObj->insertData($mailer_key[0],0,0,0,0,0,0,date("Y-m-d H:00:00"));
-	}else
+	else
 	{
 		$instanceID = $countObj->getID($mailer_key[0]);
 
@@ -83,7 +82,6 @@ EOF;
 			$countArr = $ynObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
-            echo "YesNoMail successfully sent";
 		}
 
 		//Filtered mailer
@@ -234,7 +232,6 @@ EOF;
                         $countArr = $mailVerOb->getMailCountForRange();
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
-                        echo "Remind Unresponded mailer successfully sent";
                 }           
         //Expiring interest mailer
         if($mailer_key[0]=='ExpiringInterest_MAILER')
@@ -243,7 +240,6 @@ EOF;
             $countArr = $eiObj->getMailCountForRange();
             $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
             unset($countArr);
-            echo "ExpiringMail successfully sent";
         }
 	}
   }

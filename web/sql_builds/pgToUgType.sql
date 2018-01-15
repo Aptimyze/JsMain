@@ -1,4 +1,0 @@
-use newjs;
-
-
-UPDATE `EDUCATION_LEVEL_NEW` SET `OLD_VALUE` = '4' WHERE `ID` = '53' LIMIT 1 ;

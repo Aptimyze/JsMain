@@ -3,15 +3,12 @@
 class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
-	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="",$loggedInProfileObj = "")
-	{				//echo "<pre>";print_R($trendsArr);print_R($type);print_R($valArr);
-                if($loggedInProfileObj == ""){
-                        $loggedInProfileObj = LoggedInProfile::getInstance();
-                }
+	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
+	{				
+		$loggedInProfileObj = LoggedInProfile::getInstance();
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
-		$this->religion = $loggedInProfileObj->getRELIGION();
 		$this->calLayer = $calLayer;
 		if($this->calLayer)
 		{
@@ -29,9 +26,8 @@ class dppSuggestions
 		if($type == "MTONGUE")
 		{
 			$valueArr["data"] = $this->getHindiAllSuggestions($valArr);
-			$valueArr["data"] = $this->getUrduHindiDelhiSuggestions($valArr,$valueArr["data"]);
 		}
-		if(is_array($trendsArr) && !empty($trendsArr))
+		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
@@ -44,27 +40,14 @@ class dppSuggestions
 		if($type == "INCOME")
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
-		}
-		if($type == "RELIGION")
-		{
-			$valueArr["data"] = $this->getSuggestionsForReligion($type,$valArr);
-		}	
-                if($type == "HEIGHT"){
-                        $valueArr = $this->getSuggestionForHeight($loggedInProfileObj, $valArr);
-                }
-                if($type == "DRINK"){
-                        $valueArr["data"] = $this->getSuggestionForDrinkOrSmoke('drink',$valArr);
-                }
-                if($type == "SMOKE"){
-                        $valueArr["data"] = $this->getSuggestionForDrinkOrSmoke('smoke',$valArr);
-                }
+		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
-			if ($type == "EDUCATION")
+			if ($type == "EDUCATION" || $type == "OCCUPATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 			}			
-			else if($type != "SMOKE" && $type != "DRINK")
+			else
 			{
 				foreach($valArr as $k2=>$v2)
 				{
@@ -77,7 +60,7 @@ class dppSuggestions
 			}
 		}
 		$valueArr["type"] = $type;
-		if($type == "AGE" || $type == "INCOME" || $type == "HEIGHT")
+		if($type == "AGE" || $type == "INCOME")
 		{
 			$valueArr["range"] = 1;
 		}
@@ -88,8 +71,8 @@ class dppSuggestions
 		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
-		}
-                
+		}	
+
 		return $valueArr;
 	}
 
@@ -280,15 +263,12 @@ class dppSuggestions
 		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);	
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{			
-			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);		
-			if(!is_array($trendsArr))
-				$trendsArr= Array('0'=>'0');
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);			
 			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
-		{      
-			unset($trendsArr['0']);  		
+		{        		
 			return $trendsArr;        		
 		}
 	}
@@ -427,10 +407,10 @@ class dppSuggestions
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$eduGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$eduGrouping,'',1);
 		}
-		/*if($type == "OCCUPATION")
+		if($type == "OCCUPATION")
 		{
 			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$occupationGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$occupationGrouping,'',1);
-		}*/
+		}
 		foreach($GroupingArr as $groupingKey => $stringVal)
 		{
 			$GroupingArr[$groupingKey] = explode(",",$stringVal);
@@ -440,7 +420,7 @@ class dppSuggestions
 	}
 
 	public function getSuggestionForAge($type,$valArr)
-        {
+	{		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
 		if($this->gender == "F")
 		{
@@ -558,21 +538,7 @@ class dppSuggestions
 		}
 		return $arr;
 	}
-        public function getUrduHindiDelhiSuggestions($valArr,$valueArr=array()){
-                $valArr = array_unique($valArr);
-                $checkHindiMtongueValues = array("36","10","19","33","28");
-                foreach ($valArr as $key => $value) {
-                        if (in_array(trim($value, ' '), $checkHindiMtongueValues) && $this->religion == 2){
-                                $mtongueHindiUrduFlag = 1;
-                        }
-                }
-                if($mtongueHindiUrduFlag == 1){
-                        foreach($checkHindiMtongueValues as $mtongue){
-                                $valueArr[$mtongue] = FieldMap::getFieldlabel("community_small",$mtongue);
-                        }
-                }
-                return $valueArr;
-        }
+
 	public function getHindiAllSuggestions($valArr)
 	{		
 		$valArr = array_unique($valArr);
@@ -599,86 +565,5 @@ class dppSuggestions
 		}
 		return $mtongueArr;
 	}
-
-	public function getSuggestionsForReligion($type,$valArr)
-	{
-		$religionArr = array();
-		$religionValues = FieldMap::getFieldLabel("religion","",1);		
-		$religionValuesArr = array_flip($religionValues);
-
-		if(is_array($valArr))
-		{
-			if(in_array($religionValuesArr["Hindu"],$valArr))
-			{
-				$religionArr[] = $religionValuesArr["Sikh"];
-				$religionArr[] = $religionValuesArr["Jain"];				
-			}
-			if(in_array($religionValuesArr["Sikh"],$valArr) || in_array($religionValuesArr["Jain"],$valArr))
-			{
-				$religionArr[]=$religionValuesArr["Hindu"];				
-			}
-			unset($religionValuesArr);
-			if(is_array($religionArr) && !empty($religionArr))
-			{
-				$result = array_diff($religionArr, $valArr);
-			}
-			foreach($result as $k=>$v)
-			{
-				$finalArr[$v] = $religionValues[$v];
-			}
-			unset($religionValues);
-		}	
-		return $finalArr;
-	}
-        public function getSuggestionForHeight($loggedInProfileObj,$valueArr=array()){
-            $arr=DppAutoSuggestEnum::$HEIGHT_ARRAY;
-            $height=$loggedInProfileObj->getHEIGHT();
-            $gender=$loggedInProfileObj->getGENDER();
-            foreach($arr as $K=>$V)
-            {
-                foreach($V as $k=>$v)
-                {
-                    if($K==$gender)
-                        if($k==$height){
-                            foreach ($v as $k1=>$v1){
-                                $sugHgt[0] = $k1;
-                                $sugHgt[1] = $v1;
-                            }
-                        }
-                }
-            }
-            if($sugHgt[0] >= $valueArr[0] && $sugHgt[1] <= $valueArr[1])
-                return array();
-            if($valueArr[0] < $sugHgt[0])
-                $sugHgt[0] = $valueArr[0];
-            if($valueArr[1] > $sugHgt[1])
-                $sugHgt[1] = $valueArr[1];
-            $mapValues = FieldMap::getFieldLabel("height_json","",1);
-            $finalRet['data']['LHEIGHT'] = $mapValues[$sugHgt[0]];
-            $finalRet['data']['HHEIGHT'] = $mapValues[$sugHgt[1]];
-            return $finalRet;
-        }
-        
-        public function getSuggestionForDrinkOrSmoke($type,$valueArr=array()){
-            if(in_array('Y', $valueArr)){
-                if(!in_array('N', $valueArr) && !in_array('O', $valueArr))
-                    $toReturn = array('O','N');
-                else if(!in_array('O', $valueArr))
-                    $toReturn = array('O');
-                else if(!in_array('N', $valueArr))
-                    $toReturn = array('N');
-            }
-            else if(in_array('O', $valueArr)){
-                if(!in_array('N', $valueArr))
-                    $toReturn = array('N');
-            }
-            else
-                $toReturn = array();
-            $mapValues = FieldMap::getFieldLabel($type,"",1);
-            foreach($toReturn as $k=>$v){
-                $finalReturn[$v] = $mapValues[$v];
-            }
-            return $finalReturn;
-        }
 }
 ?>

@@ -125,8 +125,6 @@ class JsNotificationsLogConsume
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
-    $codeException = 0;
-    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
@@ -136,7 +134,7 @@ class JsNotificationsLogConsume
       if($type == 'REGISTRATION_ID')
       {
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
-	//$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
+	$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
       }     
       elseif($type == 'LOCAL_NOTIFICATION_LOG')
       {
@@ -150,8 +148,7 @@ class JsNotificationsLogConsume
 	$messageId	=$body['messageId'];
 	$status		=$body['status'];
 	$osType		=$body['osType'];			
-	$rabbitMq	=1;
-	NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType,$rabbitMq);
+	NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
       }
       elseif($type == 'UPDATE_NOTIFICATION_STATUS_API')
       {
@@ -177,7 +174,6 @@ class JsNotificationsLogConsume
     }
     catch (Exception $exception) 
     {
-      $codeException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
     }
     try 
@@ -186,12 +182,8 @@ class JsNotificationsLogConsume
     } 
     catch(Exception $exception) 
     {
-      $deliveryException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
-    }
-    if($codeException || $deliveryException){
-        die("Killed due to code exception or delivery exception");
     }
   }
 }

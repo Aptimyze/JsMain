@@ -353,7 +353,7 @@ if(stristr($_SERVER['HTTP_USER_AGENT'],'googlebot') || stristr($_SERVER['HTTP_US
 	$smarty->assign("SEARCHCHECKSUM",$searchchecksum);
 	/* Tracking Contact Center, as per Mantis 4724 Starts here */
 	$end_time=microtime(true)-$start_tm;
-	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif"));
+	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif"));
 	/* Ends Here */
 
 	$smarty->assign("NoClusterToDisplay",1);

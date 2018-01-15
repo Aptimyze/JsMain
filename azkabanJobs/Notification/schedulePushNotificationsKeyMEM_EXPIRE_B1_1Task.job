@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey MEM_EXPIRE_B1 1 0

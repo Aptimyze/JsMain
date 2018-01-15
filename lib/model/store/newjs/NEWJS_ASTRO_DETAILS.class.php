@@ -74,7 +74,7 @@ class NEWJS_ASTRO extends TABLE {
      * return - array of astro details
      *
      */
-    public function getAstroDetails($profileIds, $fields,$setWithProfileId='',$shutDownConnections='') {
+    public function getAstroDetails($profileIds, $fields,$setWithProfileId='') {
          try {
 		if ($fields == '') $fields = "*";
         	foreach ($profileIds as $key => $pid) {
@@ -97,11 +97,7 @@ class NEWJS_ASTRO extends TABLE {
 			$astroArr[$pid]= $result;
 	   	}
         	}
-                
-                if($shutDownConnections)
-                    jsDatabaseManager::getInstance()->shutdown();
-
-                return $astroArr;
+        	return $astroArr;
 	}
 	catch(PDOException $e) {
             throw new jsException($e);

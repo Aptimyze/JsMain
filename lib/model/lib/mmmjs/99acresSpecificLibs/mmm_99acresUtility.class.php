@@ -80,10 +80,7 @@ class mmm_99acresUtility
 	}
 	public static function sendCurlRequestFor99($url){
 		$ch = curl_init($url);
-                 $header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,application/json,";
-			$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/jpeg,*/*;q=0.9";
-			curl_setopt($ch, CURLOPT_HEADER, $header);
-			curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+                curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_POST, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 500);

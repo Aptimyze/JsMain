@@ -92,7 +92,7 @@ class StrategyKundli extends StrategyClass
 					if(count($tempSet)==$maxLimit || $k==(count($this->profileSet)-1))
 					{
 						$api_param = $kundliFunctionsObj->fetchAstroDetails($tempSet,$this->receiverObj->getPartnerProfile()->getGENDER());
-                                		$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull";
+                                		$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull";
                                 		$ch = curl_init($url);
                                 		curl_setopt($ch, CURLOPT_HEADER, 0);
                                 		curl_setopt($ch, CURLOPT_POST, 1);

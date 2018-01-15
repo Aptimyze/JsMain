@@ -15,7 +15,7 @@ $logFilesPath = array("/data/projects/logs/consumer_user_acceptance.log"=>array(
 					 "/data/projects/logs/consumer_user_accptance.log"=>array("S1"=>10,"S2"=>20),
 					 "/data/projects/logs/consumer_user_accptance_sent.log"=>array("S1"=>10,"S2"=>20)
 					 );
-$mobileNumberArr = array("9910244159","9818424749","8989931104","9810300513");
+$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513");
 $branchPath = JsConstants::$cronDocRoot;
 $currTime = time();
 $i = 0;
@@ -61,7 +61,6 @@ if(is_array($notUpdatedFiles)){
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = sendMonitoringSMS($message,$from,$v,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $v);
         debugLog($smsState);
     }*/
     sendAlertMail(implode(",", $notUpdatedFiles));
@@ -81,7 +80,7 @@ function debugLog($message){
 
 function sendAlertMail($message){
 	debugLog("sending mail-".$message."\n");
-	mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nitishpost@gmail.com","Error in chat consumers","Please check the logs- ".$message);
+	mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com","Error in chat consumers","Please check the logs- ".$message);
 }
 
 /*function sendMonitoringSMS($message,$from,$mobile,$profileid,$gsm,$table=''){

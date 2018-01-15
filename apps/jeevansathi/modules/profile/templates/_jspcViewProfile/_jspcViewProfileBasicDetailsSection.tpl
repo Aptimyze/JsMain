@@ -42,15 +42,13 @@
                                 </span>
                         ~/if`
                        ~/if`
-                 ~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "2" || $apiData['about']['complete_verification_status'] eq "3"`
+                 ~if $apiData['about']['verification_value'] neq "0"`
                                     <span class="verified3" style="position:relative;">
 
                                     	<i class="verIcon js-verificationPage "></i>
-                                        <div class="pos-abs verIcNo"><div class="verIcInnNo">~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "2"`1~else`2~/if`</div></div> 
+
                                     	<span class="hoverDiv3 js-verificationPage">
-                                                ~if $apiData['about']['complete_verification_status'] eq "2" || $apiData['about']['complete_verification_status'] eq "3"`         <div class="f14 fontreg blueColor">Aadhaar</div>
-                                                <div class="f12 fontreg lightgrey ~if $apiData['about']['complete_verification_status'] eq '3'`pb10~/if`">Aadhar is verified against name</div>~/if`
-                                                ~if $apiData['about']['complete_verification_status'] eq "1" || $apiData['about']['complete_verification_status'] eq "3"`
+
                                     		<div class="f14 fontreg blueColor">Verified by visit</div>
                        ~if $apiData['about']['verification_value'] neq "1"`
                                    			<div class="f12 pt10 fontreg lightgrey ">Documents provided:</div>
@@ -66,7 +64,7 @@
                                     		</ul>
 			~/if`
 
-                                    		<a href="/static/agentinfo" class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</a>~/if`
+                                    		<a href="/static/agentinfo" class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</a>
 
                                     	</span>
 
@@ -86,7 +84,6 @@
                     <li class="textTru">~$apiData['about']['educationOnSummary']`</li>
                     <li class="textTru">~$apiData['about']['location']`</li>
                     <li class="textTru">~$apiData['about']['work_status']['value']`</li>
-                    
                     <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
                     <li class="textTru">~$apiData['about']['income']`</li>
                     <li class="textTru">~$apiData['about']['mtongue']`</li>
@@ -96,7 +93,7 @@
                     ~/if`
                   </ul> 
                 </div>
-                  <div class="pt20 wid50p disp_ib fl"> 
+                  <div class="pt20"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
                     ~if !$loginProfileId`
@@ -161,8 +158,8 @@
                   ~/if`
                     <!--start:tooltip-->
                     <div class="reportChild">
-                      <div class="boxtip5 colrw fontlig prfp8 prfwid6">
-                        Report as Fake/Spam
+                      <div class="boxtip5 colrw fontlig prfp8 wd74">
+                        Report Profile
                       </div>                                    
                     </div>
                     <!--end:tooltip--> 
@@ -170,9 +167,6 @@
 
 
                   </div>
-                  ~if $showIdfy`
-                   <div  id="idfyDiv" class="idfyDiv2 disp_ib fr wid223 mt16 fl" onclick="trackJsEventGA('idfy','click from profile','M/F','')"><span class="color5 f13 fontlig idfyText ml3">Get details of this user verified</span><i class="idfyIcon"></i></div>
-                  ~/if`
               </div>
             </div>
             ~if $apiData['about']['gender'] eq "Male"`

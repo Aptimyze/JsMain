@@ -53,14 +53,16 @@ class newjs_IGNORE_PROFILE extends TABLE {
           2) users ignored
          */
         public function listIgnoredProfile($profileid, $seperator = '') {
-                $sql = "SELECT SQL_CACHE PROFILEID AS PID , DATE AS TIME , 'other' as IGNORED_BY FROM newjs.IGNORE_PROFILE WHERE IGNORED_PROFILEID=:PID UNION SELECT IGNORED_PROFILEID AS PID , DATE AS TIME ,'me' as IGNORED_BY FROM newjs.IGNORE_PROFILE WHERE PROFILEID=:PID ORDER BY TIME DESC";
+                $sql = "SELECT SQL_CACHE PROFILEID AS PID , DATE AS TIME FROM newjs.IGNORE_PROFILE WHERE IGNORED_PROFILEID=:PID UNION SELECT IGNORED_PROFILEID AS PID , DATE AS TIME FROM newjs.IGNORE_PROFILE WHERE PROFILEID=:PID ORDER BY TIME DESC";
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PID", $profileid, PDO::PARAM_INT);
                 $res->execute();
-                while ($row = $res->fetch(PDO::FETCH_ASSOC)) 
-                {                        
-                    $ignoreArr[$row["PID"]] = $row["IGNORED_BY"];
-                }                
+                while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
+                        if ($seperator == 'spaceSeperator')
+                                $ignoreArr.= $row["PID"] . " ";
+                        else
+                                $ignoreArr[] = $row["PID"];
+                }
                 return $ignoreArr;
         }
 

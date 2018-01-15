@@ -230,8 +230,6 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 	
 		<div class="fr wid88p"></div>
 	</div>
-  <div id="{{relationshipManager}}" class="fullwid clearfix pt10 ">
-  </div>
 </div>
 <!--end:text box-->
 </div>
@@ -279,13 +277,13 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
                 <a href=""  class="filteredAnchor vishid"> <li><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class=" myjs-dim7 filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></li></a>
                 <a href=""  class="filteredAnchor vishid"> <li><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class=" myjs-dim7 filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></li></a>
                   <li class="pos-rel" style='margin-right:0px;'>
-                   <a href='/inbox/12/1'> <div id='filteredMoreCount' class="disp-none myjs-ovrlay2 pos-abs myjs-dim7 txtc">
+                   <a href='/profile/contacts_made_received.php?page=filtered_eoi&filter=R'> <div id='filteredMoreCount' class="disp-none myjs-ovrlay2 pos-abs myjs-dim7 txtc">
                       <div class="disp-cell vmid colrw fontreg f30">+<span></span></div>
                     </div></a>
                   <a href='' class="filteredAnchor vishid"><div class='myjs-dim7 mauto scrollhid'><img src="" style='width:96px;' class="myjs-dim7  filteredImage " oncontextmenu="return false;" onmousedown="return false;"></div></a>
                   </li>
                 </ul>
-                <a href="/inbox/12/1" >
+                <a href="/profile/contacts_made_received.php?page=filtered_eoi&filter=R" >
                 <div class="txtc pt13 pr5 pl5">
                   <p class="f15 fontreg colr5">Filtered Interests</p>
                   <p class="f13 fontlig color11 pt10">These profiles have sent you interest</p>

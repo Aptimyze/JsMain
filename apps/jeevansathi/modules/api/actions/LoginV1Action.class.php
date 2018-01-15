@@ -9,14 +9,14 @@
  * @author     Nitesh Sethi
  */
 class LoginV1Action extends sfActions
-{
+{ 
 	/**
 	* Executes index action
 	*
 	* @param sfRequest $request A request object
 	*/
 	public function execute($request)
-	{
+	{	
         $responseData = array();
 	$loginObj=AuthenticationFactory::getAuthenicationObj();
 	//To allow login from between api calls
@@ -54,12 +54,8 @@ class LoginV1Action extends sfActions
 						{
 							$szToUrl = JsConstants::$ssl_siteUrl;
 						}
-						elseif($request->getParameter("secureSite"))
-                    		$szToUrl = JsConstants::$ssl_siteUrl;
-            			else
-                    		$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 						$js_function = " <script>	var message = \"\";
-						if(window.addEventListener)
+						if(window.addEventListener)	
 							message ={\"body\":\"1\"};
 						else
 							message = \"1\";
@@ -71,7 +67,7 @@ class LoginV1Action extends sfActions
 							window.location.href = '$szToUrl';
 						}
 						</script> ";
-
+						
 						echo $js_function;
         			}
 					else
@@ -109,10 +105,6 @@ class LoginV1Action extends sfActions
 					{
 						$szToUrl = JsConstants::$ssl_siteUrl;
 					}
-					elseif($request->getParameter("secureSite"))
-                    	$szToUrl = JsConstants::$ssl_siteUrl;
-            		else
-                    	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 					$js_function = " <script>	var message = \"\";
 					if(window.addEventListener)
 						message ={\"body\":\"2\"};
@@ -144,39 +136,26 @@ class LoginV1Action extends sfActions
 	}
 	$registrationid=$request->getParameter("registrationid");
 	$rememberMe=$request->getParameter("rememberme");
-	
-	$responseData = $loginObj->checkForMultipleProfiles($email, $password);       //$email is emailOrMobile
-	if($responseData['isSuccess'] == false){       //multiple profiles for same mobile
-	    $errorData = $responseData['data'];
-	    if(!$errorData){
-	        $errorData = ResponseHandlerConfig::$FLOGIN_EMAIL_ERR;
-	    }
-	    $apiObj->setHttpArray($errorData);
-	    $apiObj->generateResponse();
-	    die;
-	}else{                                     //single profile available
-	    $result=$loginObj->login($email, $password, $rememberMe, $responseData);
-	}
+	$result=$loginObj->login($email,$password,$rememberMe);
 	
 	if($result && $result[ACTIVATED]<>'D' && $result[GENDER]!="")
 	{
 		$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
-		setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-                /*$maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
+                $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
                 $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
                 $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
                 $alarmTime[$result['PROFILEID']]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
                 $alarmTimeObj = new MOBILE_API_ALARM_TIME;
                 $alarmTimeObj->replace($alarmTime);
-                $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$result['PROFILEID']]);*/
+                $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$result['PROFILEID']]);
                 if(CommonFunction::getMainMembership($result[SUBSCRIPTION]))
 					$subscription=CommonFunction::getMainMembership($result[SUBSCRIPTION]);
 				else
 					$subscription="";
 		$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$result['PROFILEID'])?"1":"0";
 		$notificationStatus = NotificationFunctions::settingStatus($registrationid,$result['PROFILEID']);
-
-		if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)
+		
+		if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)  
 	    {
 	    	//For JPSC/JSMS,reenable notifications  if disabled on logout
 		    $channel = MobileCommon::isMobile()?"M":"D";
@@ -199,13 +178,8 @@ class LoginV1Action extends sfActions
 			{
 				$szToUrl = JsConstants::$ssl_siteUrl;
 			}
-			elseif($request->getParameter("secureSite"))
-            	$szToUrl = JsConstants::$ssl_siteUrl;
-    		else
-            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
-
 			$js_function = " <script>	var message = \"\";
-			if(window.addEventListener)
+			if(window.addEventListener)	
 				message ={\"body\":\"$result\"};
 			else
 				message = \"$result\";
@@ -217,7 +191,7 @@ class LoginV1Action extends sfActions
 				window.location.href = '$szToUrl';
 			}
 			</script> ";
-
+			
 			echo $js_function;
 			die;
 		}
@@ -261,12 +235,8 @@ class LoginV1Action extends sfActions
 			{
 				$szToUrl = JsConstants::$ssl_siteUrl;
 			}
-			elseif($request->getParameter("secureSite"))
-            	$szToUrl = JsConstants::$ssl_siteUrl;
-    		else
-            	$szToUrl = str_replace("https",'http',JsConstants::$ssl_siteUrl);
 			$js_function = " <script>	var message = \"\";
-			if(window.addEventListener)
+			if(window.addEventListener)	
 				message ={\"body\":\"$result\"};
 			else
 				message = \"$result\";
@@ -278,17 +248,17 @@ class LoginV1Action extends sfActions
 				window.location.href = '$szToUrl';
 			}
 			</script> ";
-
+			
 			echo $js_function;
 			die;
-		}
+		}	
 		else
 			$apiObj->generateResponse();
-
+		
 	}
   if($request->getParameter('INTERNAL')==1){
 			return sfView::NONE;
-	}
+	} 
 	die;
     }
 

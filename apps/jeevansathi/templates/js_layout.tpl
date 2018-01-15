@@ -5,5 +5,6 @@
   </head>
   <body>
     ~$sf_content`
+    ~include_partial('global/freshDesk')`
   </body>
 </html>

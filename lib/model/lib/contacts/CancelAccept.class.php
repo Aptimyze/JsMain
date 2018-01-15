@@ -79,7 +79,6 @@ class CancelAccept extends ContactEvent{
     $this->handleMessage();
     //Remove from acceptance roster
     $producerObj=new Producer();
-//TODO
     if($producerObj->getRabbitMQServerConnected())
     {
       $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCEL', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
@@ -142,15 +141,7 @@ class CancelAccept extends ContactEvent{
   public function sendMail(){
     $sender = $this->contactHandler->getViewer();
 	$receiver = $this->contactHandler->getViewed();
-  
-  $producerObj=new Producer();
-    if($producerObj->getRabbitMQServerConnected())
-    {
-      $sendMailData = array('process' =>MessageQueues::DELAYED_MAIL_PROCESS ,'data'=>array('type' => 'CANCEL_ACCEPT_CONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID()) ), 'redeliveryCount'=> 0 );
-      $producerObj->sendMessage($sendMailData);
-    } else {
-      ContactMailer::sendCancelledMailer($receiver,$sender);
-    }
+	ContactMailer::sendCancelledMailer($receiver,$sender);
 	return true;
   }
 

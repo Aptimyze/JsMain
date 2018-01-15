@@ -212,7 +212,7 @@ class incentive_SALES_CSV_DATA_TEMP extends TABLE
         public function deleteProfilesRegisteredWithin2Days()
         {
                 try{
-                        $sql ="delete from incentive.SALES_CSV_DATA_TEMP WHERE ENTRY_DT>DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+                        $sql ="delete from incentive.SALES_CSV_DATA_TEMP WHERE ENTRY_DT>DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                 }
@@ -225,7 +225,7 @@ class incentive_SALES_CSV_DATA_TEMP extends TABLE
         public function fetchProfilesRegisteredWithin2Days()
         {
                 try{
-                        $sql ="select PROFILEID,USERNAME from incentive.SALES_CSV_DATA_TEMP WHERE ENTRY_DT>DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+                        $sql ="select PROFILEID,USERNAME from incentive.SALES_CSV_DATA_TEMP WHERE ENTRY_DT>DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                         while($result=$prep->fetch(PDO::FETCH_ASSOC))

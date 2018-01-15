@@ -27,25 +27,20 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-  	ini_set('max_execution_time',0);
-  	ini_set('memory_limit',-1);
-    sfContext::createInstance($this->configuration);
+	ini_set('max_execution_time',0);
+	ini_set('memory_limit',-1);
+        sfContext::createInstance($this->configuration);
 
-  	// Main VD process
-    $membershipHandlerObj =new MembershipHandler();
-    $membershipHandlerObj->addVariableDiscountProfiles();
+	// Main VD process
+        $membershipHandlerObj =new MembershipHandler();
+        $membershipHandlerObj->addVariableDiscountProfiles();
 
-    // Mini-vd process
-    $entryDate =date("Y-m-d");
-    $sendMailAlert = true;  
-    $VDObj = new VariableDiscount();
+	// Mini-vd process
+	$entryDate =date("Y-m-d");
+	$sendMailAlert = true;  
+        $VDObj = new VariableDiscount();
+        $VDObj->populateRemainingRecordsFromVDTemp($entryDate,$sendMailAlert);
+        unset($VDObj);
 
-    // Extended VD process
-    $VDObj->activateExtendedVD($entryDate);
-
-    // Mini-vd process 	    	
-    $VDObj->populateRemainingRecordsFromVDTemp($entryDate,$sendMailAlert);
-          
-    unset($VDObj); 
   }
 }

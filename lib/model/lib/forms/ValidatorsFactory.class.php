@@ -55,12 +55,6 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'string':
 			return new sfValidatorString(array('required'=>false));
 			break;
-                case 'jamaat':
-                        return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
-                        break;
-                case 'sectMuslim':
-                        return new jsValidatorSectMuslim(array('religion'=>$form_values['religion'],'required'=>false),array('required' => $defaultMsg));
-                        break;
 		case 'email':
 			$err_em_mes="This email is already registered in our system.";
                         if(!MobileCommon::isApp() && !MobileCommon::isMobile())
@@ -110,8 +104,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 				$min=21;
 			else
 				$min=18;
-			$max = 70;
-			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" )),'min'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$max year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site.",'min'=>"Maximum age criteria not met."));
+			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
 			break;
 		case 'caste':
 		{
@@ -141,12 +134,11 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 	public static function getEditValidator($field,$form_values="",$loggedInObj){
 		$const_cl=$field->getConstraintClass();
 		$field_map_name=ObjectiveEditFieldMap::getFieldMapKey($field->getName(),$page);
-                        
 		//get all dropdown values from Fieldmaplib
 		$defaultMsg = ErrorHelp::getDefaultMessage($field->getNAME());
 		$errInvalid = ErrorHelp::INVALID_VALUE_ERR;
 		$hobby_arr=array('hobbies_language','hobbies_hobby','hobbies_interest','hobbies_music','hobbies_book','hobbies_sports','hobbies_cuisine','hobbies_dress','hobbies_movie');
-		$not_to_check_arr=array('termsandconditions','source','record_id','phone_mob','phone_res','promo','email','password','dtofbirth','isd','gender','jamaat');
+		$not_to_check_arr=array('termsandconditions','source','record_id','phone_mob','phone_res','promo','email','password','dtofbirth','isd','gender');
 		if($field_map_name && !in_array($field_map_name,$hobby_arr)&& !in_array($field_map_name,$not_to_check_arr))
 		{
 			$choices=@array_keys(FieldMap::getFieldLabel($field_map_name,'',1));
@@ -165,14 +157,6 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'string':
 			return new sfValidatorString(array('required'=>false));
 			break;
-                case 'dob':
-			return new jsValidatorDateOfBirth(array("dtofbirth"=>$form_values['DTOFBIRTH']),array('required' => true));
-//			if(@$loggedInObj->getGENDER()=='M')
-//				$min=21;
-//			else
-//				$min=18;
-//			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
-			break;
 		case 'stringName':
 			return new sfValidatorString(array('required'=>false,'nameField'=>1));
 			break;
@@ -181,17 +165,6 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			break;
 		case 'alt_email':
 			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
-			break;
-		case 'jamaat':
-			if($form_values['CASTE'])
-			{
-				$caste = $form_values['CASTE'];
-			}
-			else
-			{
-				$caste = $loggedInObj->getCASTE();
-			}
-			return new jsValidatorJamaat(array('caste'=>$caste,'required'=>false),array('required' => $defaultMsg));
 			break;
 		case 'pin':
 		{
@@ -232,13 +205,14 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			return new sfValidatorString(array(),array('required' => $defaultMsg));
 			break;
 		case 'mstatus':
-                        return new jsValidatorMStatus(array('required' => true));
+			return new sfValidatorAnd(
+                    array(new jsValidatorMStatus(),$choiceValidator),array(),array('required'=>$defaultMsg));
 			break;
 		case 'havechild':
 			return new sfValidatorAnd(array($choiceValidator,new jsValidatorHasChildren(array('mstatus'=>$form_values['mstatus']))),array('required'=>false),array('required' => $defaultMsg));
 			break;	
 		case 'caste':
-			return new jsValidatorCaste(array('religion'=>$loggedInObj->getRELIGION(),'jamaat'=>@$form_values['JAMAAT']),array('required' => $defaultMsg));
+			return new jsValidatorCaste(array('religion'=>$loggedInObj->getRELIGION()),array('required' => $defaultMsg));
 			break;
 		case 'religion':
 			return new jsValidatorReligion(array('caste'=>$form_values['CASTE'],'required'=>false),array('required' => $defaultMsg));
@@ -255,7 +229,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'time_to_call':
 			return new jsValidatorTimeToCall(array('required'=>false));
 			break;
-                case 'city':
+		case 'city':
 			$city=$form_values['CITY_RES'];
 			$country=$form_values['COUNTRY_RES'];
 			return new jsValidatorCountryCity(array('required'=>false,'city'=>$city,'country'=>$country,'fieldName'=>'city'));
@@ -265,7 +239,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			$country=$form_values['COUNTRY_RES'];
 			return new jsValidatorCountryCity(array('required'=>true,'city'=>$city,'country'=>$country,'fieldName'=>'country'));
 			break;
-                case 'sect':
+		case 'sect':
 			return new jsValidatorSect(array('religion'=>$loggedInObj->getRELIGION(),'required'=>false),array('required' => $defaultMsg));
 			break;	
 		case 'integer':
@@ -331,14 +305,13 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 		case 'partner_nchallenged':
 		case 'partner_education':
 		case 'partner_occupation':
-		case 'partner_occupation_grouping':
 		case 'partner_state':
 		case 'partner_city_india':
 			{
 				$szName = $field->getName();
 				$szMapLabel = ObjectiveEditFieldMap::getFieldMapKey($szName);
 				$InputValues = $form_values[$field->getName()];
-				
+
 				return new jsValidatorWhiteList(array('required'=>false,'FieldMapLabel'=>@$szMapLabel,'Value'=>@$InputValues,'FieldName'=>@$szName,'isHobby'=>0));
 				break;
 			}
@@ -370,12 +343,6 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 				return new jsValidatorProof(array('required'=>false,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size']));
 				break;
 			}
-                        case 'mstatus_proof':
-			{
-                $szName = $field->getName();
-				return new jsValidatorDivorcedProof(array('required'=>true,'file'=>@$form_values[$szName],'name'=>@$form_values[$szName]['name'],'size'=>@$form_values[$szName]['size'],'mstatus'=>@$form_values['MSTATUS']));
-				break;
-			}
 		}
 	}
 
@@ -404,9 +371,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 				$min=21;
 			else
 				$min=18;
-                        $max = 70;
-                        return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" )),'min'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$max year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site.",'min'=>"Maximum age criteria not met."));
-
+			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
 			break;
 		case 'mobile':
 			if(isset($form_values['PHONE_RES']['landline']))

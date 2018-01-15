@@ -5,9 +5,9 @@ JSPCLandingPageSuccess:
   http_metas:
     content-type: text/html
 
-  javascripts:    [jspc/membership/jspc_mem_slider@bottom,jspc/membership/jspc_mem_js@bottom,jspc/membership/jspc_mem_sweetalert@bottom,jspc/membership/jspc_mem_scrollpane@bottom,jspc/membership/jspc_mem_mousewheel@bottom,jspc/membership/jspc_mem_select_box@bottom,jspc/membership/jspc_mem_md5@bottom,jspc/membership/upgrade_mem_js@bottom]
+  javascripts:    [jspc/membership/jspc_mem_slider@bottom,jspc/membership/jspc_mem_js@bottom,jspc/membership/jspc_mem_sweetalert@bottom,jspc/membership/jspc_mem_scrollpane@bottom,jspc/membership/jspc_mem_mousewheel@bottom,jspc/membership/jspc_mem_select_box@bottom,jspc/membership/jspc_mem_md5@bottom]
 
-  stylesheets:    [jspc/membership/jspc_mem_css,jspc/membership/jspc_mem_sweetalert,jspc/membership/jspc_mem_scrollpane,jspc/membership/jspc_mem_custom_select,jspc/membership/upgrade_mem_css]
+  stylesheets:    [jspc/membership/jspc_mem_css,jspc/membership/jspc_mem_sweetalert,jspc/membership/jspc_mem_scrollpane,jspc/membership/jspc_mem_custom_select]
   layout: jspcLayout
 
 JSPCVasPageSuccess:
@@ -136,7 +136,7 @@ JSMSLandingPageSuccess:
   metas:
     title:  Membership Plans - Jeevansathi.com
   stylesheets: [-*,jsms/membership/new_revamp_membership_css]
-  javascripts: [-*,jsms/membership/new_revamp_mobile_membership,jsms/membership/new_revamp_mobile_payment,jsms/membership/jsms_upgrade_js@bottom]
+  javascripts: [-*,jsms/membership/new_revamp_mobile_membership,jsms/membership/new_revamp_mobile_payment]
   layout: jsmsMobLayout
 
 JSMSVasPageSuccess:

@@ -68,8 +68,8 @@ class page3Action extends sfAction {
             $this->form->bind($request->getParameter('reg'));
             if ($this->form->isValid()) {
                 if ($name_of_user = $this->form->getValue('name_of_user')) {
-                    $name_pdo = new NameOfUser();
-                    $name_pdo->insertName($this->loginData[PROFILEID], $name_of_user); //CHECK THIS
+                    $name_pdo = new incentive_NAME_OF_USER();
+                    $name_pdo->insertName($this->loginData[PROFILEID], $name_of_user);
                 }
                 if($this->form->getValue('familyinfo'))
 					RegChannelTrack::insertPageChannel($this->loginData[PROFILEID],PageTypeTrack::_ABOUTFAMILY);

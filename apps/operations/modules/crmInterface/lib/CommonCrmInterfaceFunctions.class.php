@@ -44,26 +44,25 @@ class CommonCrmInterfaceFunctions
         }
 	/* general function to generate date dropdown
 	arguments: startDate,daysNo */
-	public function getDateDropDown($startDate,$daysNo){
-		for($i=0;$i<=$daysNo;$i++){
-			$formatter = date("Y-m-d", strtotime($startDate ." +$i day"));
-			$display_date[$formatter] = date("d M Y", strtotime($startDate ." +$i day"));
+		public function getDateDropDown($startDate,$daysNo){
+				for($i=0;$i<=$daysNo;$i++){
+						$formatter = date("Y-m-d", strtotime($startDate ." +$i day"));
+						$display_date[$formatter] = date("d M Y", strtotime($startDate ." +$i day"));
+				}
+				return $display_date;
 		}
-		return $display_date;
-	}
-	public function startVdOffer($vdStartDate, $vdEndDate,$scheduleDate)
-	{
-		$vdDurationObject =new billing_VARIABLE_DISCOUNT_DURATION();
-		$resultSuccess =$vdDurationObject->setVdOfferDates($vdStartDate, $vdEndDate,$scheduleDate);
-		/*
+		public function startVdOffer($vdStartDate, $vdEndDate)
+		{
+				$vdDurationObject =new billing_VARIABLE_DISCOUNT_DURATION();
+				$resultSuccess =$vdDurationObject->setVdOfferDates($vdStartDate, $vdEndDate);
 		if($resultSuccess){
 			// Execute VD Process in background
 			$filePath =JsConstants::$cronDocRoot."/crontabs/crm/vd_discount.php >/dev/null &";
 			$cmd 	  =JsConstants::$php5path." -q ".$filePath;	
 			$cmd = preg_replace('/[^A-Za-z0-9\. -_>&]/', '', $cmd);
 			passthru($cmd);
-		}*/
-	}
+		}
+		}
         public function getCashDiscountExpiryDate()
         {
                 $cdObject =new billing_DISCOUNT_OFFER_LOG();

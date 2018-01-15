@@ -32,7 +32,7 @@ class SkipProfile
      * Private construct so nobody else can instance it
      *
      */
-    public function __construct($profile)
+    private function __construct($profile)
     {
 	    $this->_profileid =$profile;
     }

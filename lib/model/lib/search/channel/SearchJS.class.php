@@ -154,14 +154,13 @@ class SearchJS implements SearchChannelInterface
                                         
                                         if(count($respObj->getSearchResultsPidArr())==0)
                                         {
-                                              //  JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
-                                                /*unset($featuredProfileObj);
+                                                unset($featuredProfileObj);
                                                 $featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
                                                 $featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
                                                 
                                                 $SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
                                                 
-                                                $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);*/
+                                                $respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
                                         }
 
                                         if(count($respObj->getSearchResultsPidArr())>0)

@@ -169,9 +169,7 @@ class soap_transport_http extends nusoap_base {
 		// follow location headers (re-directs)
 		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, 1);
 		// ask for headers in the response output
-		$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-		curl_setopt($this->ch, CURLOPT_HEADER, $header);
-		curl_setopt($this->ch,CURLOPT_USERAGENT,"JsInternal");	
+		curl_setopt($this->ch, CURLOPT_HEADER, 1);
 		// ask for the response output as the return value
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
 		// encode

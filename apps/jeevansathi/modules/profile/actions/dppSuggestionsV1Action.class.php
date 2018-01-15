@@ -33,16 +33,14 @@ class dppSuggestionsV1Action extends sfActions
 		foreach($decodedData as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
-			{	
-				$type  = $val->type;								
-				
+			{									
+				$type  = $val->type;
 				if($key1 == "data")
 				{											
 					$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1);
 				}					
 			}
 		}
-		
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

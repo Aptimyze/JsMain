@@ -1,4 +1,0 @@
-use billing;
-
-ALTER TABLE  `PURCHASES` ADD  `USD_TO_INR` ENUM(  'N',  'Y' ) DEFAULT  'N';
-ALTER TABLE  `ORDERS` ADD  `USD_TO_INR` ENUM(  'N',  'Y' ) DEFAULT  'N';

@@ -60,9 +60,7 @@ class PackageManagerDownloader{
 		$fp = sugar_fopen($save_dir . $file_name, 'w');
 		curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID='.$session_id. ';');
 		curl_setopt($ch, CURLOPT_FILE, $fp);
-		$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-		curl_setopt($ch, CURLOPT_HEADER, $header);
-		curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_exec($ch);
 		curl_close($ch);

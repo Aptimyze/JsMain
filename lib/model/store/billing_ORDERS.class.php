@@ -168,13 +168,12 @@ class BILLING_ORDERS extends TABLE{
         }       
     }
 
-    public function getFailedPayUOrders($entryDt,$timeMax){
+    public function getFailedPayUOrders($entryDt){
         try     
         {       
-            $sql="SELECT ID, ORDERID, CURTYPE, PROFILEID FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT AND ENTRY_DT<=:MAX_DT";
+            $sql="SELECT ID, ORDERID, CURTYPE, PROFILEID FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
-            $prep->bindValue(":MAX_DT", $timeMax, PDO::PARAM_STR);//Added to remove entries that might still be on PG
             $prep->execute();
             while($result = $prep->fetch(PDO::FETCH_ASSOC))
             {       
@@ -257,27 +256,6 @@ class BILLING_ORDERS extends TABLE{
             $sql="SELECT * FROM billing.ORDERS WHERE ID=:ID";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":ID", $id, PDO::PARAM_INT);
-            $prep->execute();
-            if($result = $prep->fetch(PDO::FETCH_ASSOC))
-            {       
-                $res = $result;
-            }       
-            return $res;
-
-        }       
-        catch(PDOException $e)
-        {       
-            /*** echo the sql statement and error message ***/
-            throw new jsException($e);
-        }       
-    }
-
-    public function getOrderDetailsForOrderIdOnly($orderid){
-        try     
-        {       
-            $sql="SELECT * FROM billing.ORDERS WHERE ORDERID=:ORDERID";
-            $prep=$this->db->prepare($sql);
-            $prep->bindValue(":ORDERID", $orderid, PDO::PARAM_STR);
             $prep->execute();
             if($result = $prep->fetch(PDO::FETCH_ASSOC))
             {       

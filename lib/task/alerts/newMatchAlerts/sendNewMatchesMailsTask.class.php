@@ -14,7 +14,6 @@ class sendNewMatchesMailsTask extends sfBaseTask
         $this->addArguments(array(
                 	new sfCommandArgument('totalScript', sfCommandArgument::REQUIRED, 'My argument'),
                     new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
-                    new sfCommandArgument('dailyCron', sfCommandArgument::OPTIONAL, 'My argument',0),
 		));
         
         $this->addOptions(array(
@@ -39,9 +38,8 @@ EOF;
             sfContext::createInstance ($this->configuration);
         
         
-        $dailyCron = $arguments["dailyCron"];
         $newMatchAlertReceiver = new new_matches_emails_RECEIVER();
-        $profilesArr = $newMatchAlertReceiver->getProfilesToSendEmails($arguments["totalScript"],$arguments["currentScript"],$dailyCron);
+        $profilesArr = $newMatchAlertReceiver->getProfilesToSendEmails($arguments["totalScript"],$arguments["currentScript"]);
         foreach($profilesArr as $key=>$value)
         {
                 $profileId=$value["PROFILEID"];
@@ -51,11 +49,11 @@ EOF;
                 $loggedInProfileObj = LoggedInProfile::getInstance();
 		$loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
                 
-                $newMatchAlertReceiver->updateSent($profileId,$dailyCron);
+                $newMatchAlertReceiver->updateSent($profileId);
                 
                 $StrategyFactoryObj = new NewMatchesMailerStrategy($loggedInProfileObj, $this->limitRec,$dppSwitch,$hasTrends);   
                 if($StrategyFactoryObj->getSameGenderAndDppExistsError() == false){
-                        $StrategyFactoryObj->getMatches($dailyCron);        
+                        $StrategyFactoryObj->getMatches();        
                 }else{
                         $this->sameGenderProfiles[] = $profileId;
                 }

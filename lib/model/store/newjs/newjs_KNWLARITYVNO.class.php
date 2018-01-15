@@ -19,11 +19,11 @@ class newjs_KNWLARITYVNO extends TABLE{
                 }
 
 	}
-	public function getProfilesInTable($totalChunks,$chunk)
+	public function getProfilesInTable()
 	{
 		try
 		{
-			$sql = "SELECT DISTINCT(PROFILEID) FROM `KNWLARITYVNO` WHERE PROFILEID%$totalChunks=$chunk";
+			$sql = "SELECT DISTINCT(PROFILEID) FROM `KNWLARITYVNO` WHERE 1";
 			$prep=$this->db->prepare($sql);
 			$prep->execute();
 			while($result = $prep->fetch(PDO::FETCH_ASSOC))
@@ -80,7 +80,7 @@ class newjs_KNWLARITYVNO extends TABLE{
 		
 		try
 		{
-			$sql = "SELECT VIRTUALNO,PHONENO FROM newjs.KNWLARITYVNO WHERE PROFILEID=:PROFILEID ORDER BY ID DESC LIMIT 1";
+			$sql = "SELECT VIRTUALNO,PHONENO FROM newjs.KNWLARITYVNO WHERE PROFILEID=:PROFILEID";
 			$prep=$this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->execute();

@@ -30,11 +30,11 @@
     var google_remarketing_only = true;
 </script>
 
-<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js"></script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
 
 <noscript>
     <div style="display:inline;">
-        <img height="1" width="1" style="border-style:none;" alt="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
+        <img height="1" width="1" style="border-style:none;" alt="" src="http://googleads.g.doubleclick.net/pagead/viewthroughconversion/1056682264/?value=0&amp;label=j5CPCPy1_gIQmOLu9wM&amp;guid=ON&amp;script=0"/>
     </div>
 </noscript>
 <!-- Google Remarketing Ends -->
@@ -68,7 +68,7 @@
         <div class="mainwid container">
             <!--start:top navigation-->
             <div class="pt35">
-                ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1,"registerSource"=>$registerSource])`
+                ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1])`
             </div>
             <!--end:top navigation-->
             <p class="txtc fontreg f30 colrw comp3 pb15 txtshadow">Happily ever after is not a fairy tale. It's a choice.</p>
@@ -81,7 +81,7 @@
             <p>100% screening of profiles before they start appearing in your search results</p>
             <p class="pb24">'Verified Seal' added to members who we have met in person and collected their documents on ID, education, income etc. </p>
             <div class="mauto wid280">
-                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=~if $registerSource`~$registerSource`~else`L2_MT_242~/if`&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
+                <div class="fullwid txtc fontlig f24 bg5 lh63"> <a href="/profile/registration_new.php?source=L2_MT_242&mini_reg=1" class="colrw disp_b">Register Free</a> </div>
             </div>
         </div>
         <!--start:pink bg-->

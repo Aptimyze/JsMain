@@ -84,7 +84,7 @@ class AssignMailHost
 		public static function getNewMailHost($from,$to,$randomNumber)
 		{
 			$date = date("Y-m-d");
-				//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/Matched".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
+				file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/Matched".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
 			return JsConstants::$newMailHost.";".JsConstants::$localHostIp;
 		}
 		public static function getOldMailHost($from,$to,$randomNumber)
@@ -94,11 +94,11 @@ class AssignMailHost
 			{
 				$oldMailerCount = JsMemcache::getInstance()->get("oldMailerCount".$date);
 				if($oldMailerCount=='')	$oldMailerCount=0;
-				//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/noMatch".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
+				file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/noMatch".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
 				JsMemcache::getInstance()->set("oldMailerCount".$date, $oldMailerCount+1);
 			}
 			else
-				//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/otherFroms".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
+				file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/otherFroms".$date.".txt",$to."(".$from.":".$randomNumber.")\n",FILE_APPEND);
 			return JsConstants::$mailHost.";".JsConstants::$localHostIp;
 		}
 }

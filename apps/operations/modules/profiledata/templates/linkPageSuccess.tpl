@@ -84,23 +84,10 @@
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&actiontocall=PaymentLog&dialer_check=1">Generate PDF</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$pdfUrl`/csv?cid=~$cid`&profileid1=~$profileid`&actiontocall=PaymentLog&dialer_check=1">Generate CSV</a> </TD>
 	</TR>
-        <TR>
 	<TD class="label" valign="middle" colspan="1" align="center" >Album</TD>	
 	<TD class="label" valign="middle" colspan="1" align="center" ><a href="/operations.php/photoScreening/getAlbum?cid=~$cid`&profileid=~$profileid`">click to view</a> </TD>
 	<TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid=~$profileid`&profileid1=~$profileid`&actiontocall=getAlbum&dialer_check=1">Generate PDF</a></TD>
 	<TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
-	</TR>
-        <TR>
-	<TD class="label" valign="middle" colspan="1" align="center" >Chat Detail</TD>	
-	<TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/ChatDetail?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
-	<TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&profileid1=~$profileid`&actiontocall=ChatDetail&dialer_check=1">Generate PDF</a></TD>
-	<TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
-	</TR>
-    <TR>
-        <TD class="label" valign="middle" colspan="1" align="center" >View Contact Details</TD>	
-        <TD class="label" valign="middle" colspan="1" align="center" ><a href="~$moduleurl`/ViewContacts?cid=~$cid`&profileid1=~$profileid`">click to view</a> </TD>
-        <TD class="label" valign="middle" colspan="1" align="center" > <a href="~$pdfUrl`/pdf?cid=~$cid`&profileid1=~$profileid`&profileid1=~$profileid`&actiontocall=ViewContacts&dialer_check=1">Generate PDF</a></TD>
-        <TD class="label" valign="middle" colspan="1" align="center" >  - </TD>
 	</TR>
 	
 </table>

@@ -50,12 +50,6 @@ var errorMsg = "Something went wrong!! Please try again later";
                 this.originalHtml=hamHtml=$("#HAM_OPTION_1").html();            
 			
 			this.alreadyUpdated=false;
-                        this.type = $(element).attr('dshow').toLowerCase();
-
-                        var preFetchArray = ["height","country_res","state_res","reg_city_jspc","edu_level_new","occupation","income","reg_mstatus","reg_mtongue","religion","res_status"];
-                        if(preFetchArray.indexOf(this.type) != -1) {
-                            staticTables.getData(this.type);
-                        }
 
 			if(this.whenHide=="multiple")
 				this.optionHeight=220;
@@ -77,9 +71,9 @@ var errorMsg = "Something went wrong!! Please try again later";
 				searchHamburger(ele.type,ele.ulOption,ele.tapid);	
 				(function(elem)
 				{
-					//setTimeout(function(){
+					setTimeout(function(){
 						elem.ShowHamburger();
-					//},5);
+					},5);
 				})(ele);
 				
 			});
@@ -178,14 +172,6 @@ var errorMsg = "Something went wrong!! Please try again later";
         }
 		Hamburger.prototype.hideHamburger=function()
 		{
-			var myScope = angular.element('#perspective').scope();
-			if(myScope.fields.length>=3 && localStorage.getItem("UD"))
-			{
-				if(myScope.fields[3].storeKey == "casteNoBar" && JSON.parse(localStorage.getItem("UD")).casteNoBar == "true") 
-				{
-					myScope.fields[3].value=true;
-				}
-			}
 			if(this.bHideStatus)
 				return;
 			var ele=this;	
@@ -244,8 +230,7 @@ var errorMsg = "Something went wrong!! Please try again later";
 				$("#TAPNAME_1").html("");
 				},animationtimer+250);
 			startScrolling();
-		
-};
+		};
 		Hamburger.prototype.UpdateHamburgerHTML=function()
 		{
 			var ele=this;
@@ -357,9 +342,7 @@ var errorMsg = "Something went wrong!! Please try again later";
                 });
             });
             //Add Elements in DOM
-            //setTimeout(function(){
-                ele.AddElement(0,resultArr,selArr,alreadySelectedValue,50);
-            //},1)
+            setTimeout(function(){ele.AddElement(0,resultArr,selArr,alreadySelectedValue,50)},1)
         }
         
         Hamburger.prototype.AddElement=function(index,resultArr,selArr,alreadySelectedValue,chunkValue)
@@ -378,9 +361,6 @@ var errorMsg = "Something went wrong!! Please try again later";
             
             for(var i=0;i<chunkValue;i++)
 			{
-                                if(actualIndex == 0 && i == 15) {
-                                    this.showLoader(false);
-                                }
 				
 				try{
 					var value=resultArr[index]["value"];	
@@ -453,9 +433,9 @@ var errorMsg = "Something went wrong!! Please try again later";
                     }
                     else
                     {
-                       // setTimeout(function(){
+                        setTimeout(function(){
                             ele.AddElement(index,resultArr,selArr,alreadySelectedValue,chunkValue);
-                       // },40);
+                        },40);
                     }
                 }
                     
@@ -608,11 +588,6 @@ var errorMsg = "Something went wrong!! Please try again later";
 		};
 		Hamburger.prototype.FilterData=function(json)
 		{
-			if(this.type=="sect")
-			{
-				var religion = staticTables.getUserData('sectDepReligion');
-				return json[religion];
-			}
                         if(this.type=="family_income")
                         {
                             this.depValue = staticTables.getUserData('familyIncomeDep')

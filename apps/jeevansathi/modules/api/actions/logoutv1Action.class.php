@@ -25,8 +25,8 @@ class logoutv1Action extends sfActions
 			$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($loginData[PROFILEID]));
 			$dbObj->insert($loginData[PROFILEID],CommonFunction::getIP());
 
-		//	$dbObj=new userplane_recentusers;
-                    //    $dbObj->DeleteRecord($loginData[PROFILEID]);
+			$dbObj=new userplane_recentusers;
+                        $dbObj->DeleteRecord($loginData[PROFILEID]);
 
                         // Remove Online-User
 		        $dateTime1 ='11';

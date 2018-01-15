@@ -47,7 +47,7 @@
               <tr>
                 <td valign="top"><br />
 			<font color="#000000">
-				<a href="https://www.surveymonkey.com/r/ZBWK85R?USERNAME=~$username`" target="_blank" style="color:#0f529d;">Click here to take the survey.</a>
+				<a href="https://www.surveymonkey.com/r/ZBWK85R" target="_blank" style="color:#0f529d;">Click here to take the survey.</a>
 			</font>
 		</td>
               </tr>

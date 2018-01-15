@@ -39,7 +39,6 @@ class JPartnerDecorated extends JPartner{
 					"HINCOME"=>"hincome",
 					"PARTNER_INCOME"=>"partner_income",
 					"STATE"=>"state_india",
-					"OCCUPATION_GROUPING"=>"occupation_grouping",
 				);
 				//Add  Fields to this array if want to show Does Not matter in value instead of hyphen
 				$this->dosntMatterArr=array(
@@ -62,7 +61,7 @@ class JPartnerDecorated extends JPartner{
 			public function __call($name,$arguments){
 				if(preg_match("/^getDecorated/",$name)){
 					 $funcName=str_replace("getDecorated","get",$name);
-					 $labelName=str_replace("getDecorated","",$name);						
+					 $labelName=str_replace("getDecorated","",$name);
 					 if($this->fromPage=="View")
 						$def_val="";
 					else
@@ -168,9 +167,6 @@ include_once(JsConstants::$docRoot."/commonFiles/incomeCommonFunctions.inc");
 					$partnerCountry = $this->getPARTNER_COUNTRYRES();
 					$partnerReligion = $this->getPARTNER_RELIGION();
 					$partnerOccupation = $this->getPARTNER_OCC();
-                                        
-                                        if($partnerCity && substr($partnerCity, 0, 1) != "'")
-                                            $partnerCity = $this->addQuotesToCity($partnerCity);
 					
 					$partnerLinkArr = $dbObj->getLink($partnerCaste, $partnerOccupation, $partnerReligion, $partnerMtongue, $partnerCity, $partnerCountry,$this->page_source);
 					
@@ -207,10 +203,4 @@ include_once(JsConstants::$docRoot."/commonFiles/incomeCommonFunctions.inc");
 					$this->partnerLink=$partnerLink;
 			}
 		}
-                private function addQuotesToCity($cityWithoutQuotes){
-                    $cityArr = explode(',', $cityWithoutQuotes);
-                    $cityWithQuotes = implode("','", $cityArr);
-                    $cityWithQuotes = "'".$cityWithQuotes."'";
-                    return $cityWithQuotes;
-                }
 }

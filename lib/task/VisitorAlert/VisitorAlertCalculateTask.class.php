@@ -40,8 +40,6 @@ EOF;
         {
 		$flag = 1;
                 do{
-                        if(CommonUtility::hideFeaturesForUptime())
-                            successfullDie();
 			//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/bhavana_1".$currentScript.".txt","p1 ::::::::::".(memory_get_usage(false)/1024/1024)." MiB\n",FILE_APPEND);
 		   	$visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
            		$profiles = $visitoralertMailerVisitors->getMailerProfiles($totalScripts,$currentScript,$this->limit,$sent='U');

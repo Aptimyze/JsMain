@@ -401,7 +401,7 @@ function common_assign($data)
 		
 		
 	$smarty->assign("TRACK_HEAD",BrijjTrackingHelper::getHeadTrackJs());
-	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif"));
+	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif"));
 	$smarty->assign("TRACK_JSFLAG",BrijjTrackingHelper::setJsLoadFlag(0));
 	$smarty->assign("TRACK_JSFLAGTRACK",BrijjTrackingHelper::setJsLoadFlag(1));
         //Assigning variable that will be called by thickbox class when window is reloaded by login layer
@@ -2663,7 +2663,6 @@ function develop_url()
                         if($key=='nextViewSim')
                                 $link.='nextViewSim1__1@';
                 }
-               
 	return $link;
 }
 function navigation($type,$param,$username='',$symfony='')
@@ -2846,7 +2845,7 @@ function navigation($type,$param,$username='',$symfony='')
 		$link=develop_url();
 
                 //Overwrite the link that to be developed ..
-                if($coming_from_dp==1)	
+                if($coming_from_dp==1)
                         $link=$param;
 
                 if($link)
@@ -3055,14 +3054,12 @@ function navigation($type,$param,$username='',$symfony='')
                         //$link_developed="$first;$second;$third";
                 }
                 $link_developed="$first;$second;$third";
-
         }
 //echo $link_developed;
-
+	
 	$ins_row=navigation_inserted_id($link_developed);
-	$cc_navigator="NAVIGATOR=$ins_row";
+	$cc_navigator="NAVIGATOR=$ins_row";	
 	$smarty->assign("NAVIGATOR",$cc_navigator);
-//	sfContext::getInstance()->getRequest()->setParameter('NAVIGATOR_FOR_SYMFONY',$cc_navigator); // ADDED BY PALASH FOR RETREIVING THE NAVIGATOR IN DETAILEDAPI FOR PROFILE PAGE(SPA PROJECT)
 	$smarty->assign("NAVIGATOR_LINK","$ins_row");
 	$showNavigator=show_navigation($link_developed,$show_all,$ins_row);
 	if($symfony==2)
@@ -3077,7 +3074,6 @@ function show_navigation($navigator,$show_all,$navig_id)
         $isMobile = MobileCommon::isMobile();
         $isPc = MobileCommon::isDesktop();
 	$type_arr=explode(";",$navigator);
-	
 	$TYPE['SR']="/search/perform";
 	$TYPE['VS']="/profile/simprofile_search.php";
 	$TYPE['DP']="/profile/viewprofile.php";
@@ -3147,19 +3143,6 @@ function show_navigation($navigator,$show_all,$navig_id)
     $TYPE["MA"] = "/search/matchalerts";//Match Alerts
     $TYPE["KM"] = "/search/kundlialerts";//Kundli Alerts
     $TYPE["JVS"] = "/search/MobSimilarProfiles";//Jsms View Similar
-    
-     if($isMobile)
-    {
-		
-		foreach($TYPE as $k=>$v)
-		{
-			if($v=="/profile/contacts_made_received.php")
-			{
-				$TYPE[$k]="/inbox/jsmsPerform";
-				
-			}
-		}
-	}
     
 	$minus=0;
 	if($type_arr[1]=="")
@@ -3258,7 +3241,6 @@ function show_navigation($navigator,$show_all,$navig_id)
 		}
 
 	}
-	
 	return $navigation;
 }
 
@@ -8770,7 +8752,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
 	if($row_jp["SUBSCRIPTION"])
 	{
 		$subArray=explode(",",$row_jp["SUBSCRIPTION"]);
-		if(in_array("X",$subArray))
+		if(in_array("T",$subArray))
 		{
 			$sqlAP="DELETE FROM Assisted_Product.AP_PROFILE_INFO WHERE PROFILEID='$profileid'";
 		        mysql_query_decide($sqlAP) or logError($sqlAP);

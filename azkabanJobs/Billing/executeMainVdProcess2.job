@@ -1,2 +1,0 @@
-type=command
-command=${php5} ${docRoot}/crontabs/crm/vd_discount.php

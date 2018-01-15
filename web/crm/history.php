@@ -37,17 +37,14 @@ function gethistory($USERNAME,$limit='')
                 $i++;
         unset($process);
         }
-	//$factor = getfactor($profileid);
-	$sql="SELECT SQL_CACHE Display FROM incentive.show_IM";
+	$factor = getfactor($profileid);
+	$sql="SELECT Display FROM incentive.show_IM";
  	$res=mysql_query_decide($sql) or die(mysql_error_js());
-	$row=mysql_fetch_assoc($res);
-	$showIM =$row['Display'];	
-	$values['show_IM']=$showIM;
 
-	if($showIM=='Y'){
-		$factor = getfactor($profileid);
-		$values['IM'] = $factor;
-	}
+	$row=mysql_fetch_assoc($res);
+	
+        $values['IM'] = $factor;
+	$values['show_IM']=$row['Display'];
 	return $values;
 }
 
@@ -62,7 +59,7 @@ function getfactor($pid,$from='I')
 	$row_c=mysql_fetch_array($res_c);
 	$alloted_to= $row_c['ALLOTED_TO'];
 
-	$sql="SELECT SQL_CACHE PRIVILAGE FROM jsadmin.PSWRDS WHERE USERNAME='$alloted_to'";
+	$sql="SELECT PRIVILAGE FROM jsadmin.PSWRDS WHERE USERNAME='$alloted_to'";
 	$res_c=mysql_query_decide($sql,$db) or die("$sql".mysql_error($db));
 	$row_c=mysql_fetch_array($res_c);
 	$priv = explode("+",$row_c['PRIVILAGE']);
@@ -126,24 +123,17 @@ function getfactor($pid,$from='I')
         return $factor;
 }
 
-function getHistoryCount($profileid='',$allotTime='')
+function getHistoryCount($profileid='')
 {
 	$countNo =0;
 	if(!$profileid)
 		return $countNo;
-	
-	if(!$allotTime){
-		$sql_h1 ="select ALLOT_TIME from incentive.MAIN_ADMIN WHERE PROFILEID='$profileid'";
-		$res_h1 = mysql_query_decide($sql_h1) or die(mysql_error_js());
-		$row_h1=mysql_fetch_array($res_h1);
-		if(mysql_num_rows($res_h1)>0)
-			$allotmentDate_h  =$row_h1['ALLOT_TIME'];
-	}
-	else
-		$allotmentDate_h =$allotTime;	
-
-	if($allotmentDate_h)
+	$sql_h1 ="select ALLOT_TIME from incentive.MAIN_ADMIN WHERE PROFILEID='$profileid'";
+	$res_h1 = mysql_query_decide($sql_h1) or die(mysql_error_js());
+	$row_h1=mysql_fetch_array($res_h1);
+	if(mysql_num_rows($res_h1)>0)
 	{
+		$allotmentDate_h  =$row_h1['ALLOT_TIME'];
 		$dateArr=explode(" ",$allotmentDate_h);
 		$date1 =$dateArr[0];
 		$sql_h2 ="select count(*) AS COUNT from incentive.HISTORY WHERE PROFILEID='$profileid' AND ENTRY_DT>='$date1'";

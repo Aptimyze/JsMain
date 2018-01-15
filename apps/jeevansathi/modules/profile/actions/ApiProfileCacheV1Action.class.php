@@ -19,7 +19,7 @@ class ApiProfileCacheV1Action extends sfAction
     $respObj=ApiResponseHandler::getInstance();
     
     //if env is producation then allow only post method
-    if(JsConstants::$whichMachine == 'prod'){
+    if(JsConstants::$whichMachine == 'prod' && false === $this->request->isMethod('POST')){
       $respObj->setHttpArray(ResponseHandlerConfig::$POST_PARAM_INVALID);
       $respObj->generateResponse();
       die;
@@ -81,49 +81,28 @@ class ApiProfileCacheV1Action extends sfAction
   {
     switch(strtolower(trim($command)))
     {
+      case "flushall":
+        try{
+          if(JsMemcache::getInstance()->client instanceof Predis\Client) {
+            $res = JsMemcache::getInstance()->client->flushall();
+            $arr = array('msg'=>$res->__toString());
+          }
+        } catch(Exception $ex) {
+          $arr = array('error'=>$ex->getMessage());
+        }
+      break;
       case "flush":
         $iProfileID = $this->request->getParameter('profileid');
         $res = ProfileCacheLib::getInstance()->removeCache($iProfileID);
-	         $this->deleteCALKeys($iProfileID);
-    	     $this->deleteIgnoreKeys($iProfileID);
-           $this->removeProfileMemcacheData($iProfileID);
-           $this->removePictureCacheData($iProfileID);
         if($res)
           $arr = array('msg'=>"Success");
         else
           $arr = array('error'=>"Issue while remove from cache");
       break;
     }
-
+    
     if(isset($arr))
       return $arr;
   }
-  private function deleteCALKeys($profileId){
-    $redis = JsMemcache::getInstance();
-    $redis->delete($profileId.'_NOCAL_DAY_FLAG');
-    $redis->delete($profileId.'_CAL_DAY_FLAG');
-    $redis->delete($profileId.'_NO_LI_CAL');
-  return true;
-}
-  private function deleteIgnoreKeys($profileId){
-    $inst = IgnoredProfileCacheLib::getInstance();
-    $inst->deleteDataFromCache($profileId);
-    return true;
-}
-
- private function removeProfileMemcacheData($profileId){
-    $redis = JsMemcache::getInstance();
-    $redis->delete("_k_".$profileId);
-    return true;
-}
-
-private function removePictureCacheData($profileId){
-    $redis = JsMemcache::getInstance();
-    $redis->delete("PIC_NEW:".$profileId);
-    return true;
-}
-
-
 }
 ?>
-

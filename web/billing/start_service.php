@@ -218,6 +218,7 @@ if(isset($data))
 			if(mysql_num_rows($res)>0)
 			{
 				$row = mysql_fetch_array($res);
+
 				$custname = addslashes($row['NAME']);
 				$gender = $row['GENDER'];
 				$address = $row['ADDRESS'];
@@ -303,8 +304,7 @@ if(isset($data))
 			
 			$subject = "Bill for your subscription";
 			$msg = $memObj->membership_mail();
-                        //$timeNow = date("Y-m-d h:m:s");
-                        $bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
+			$bill = $memObj->printbill($memObj->getReceiptid(),$memObj->getBillid());
 
 			$sql="SELECT EMAIL from newjs.JPROFILE where PROFILEID='$profileid'";
 			$result=mysql_query_decide($sql,$db_slave) or die("$sql<br>".mysql_error_js());

@@ -101,7 +101,7 @@ class ASSISTED_PRODUCT_AP_TEMP_DPP extends TABLE
                 {
       $http_msg=print_r($_SERVER,true);
       $params = print_r($parameters,true);
-                            mail("lavesh.rawat@gmail.com","AP_TEMP_DPP Replace Data","$http_msg , $params");
+                            mail("kunal.test02@gmail.com,lavesh.rawat@gmail.com","AP_TEMP_DPP Replace Data","$http_msg , $params");
                         throw new jsException($e);
                 }
 	}

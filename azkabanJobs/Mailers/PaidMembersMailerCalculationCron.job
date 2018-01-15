@@ -1,3 +1,0 @@
-type=command
-dependencies=PaidMembersCalculate0Task
-command=echo Success

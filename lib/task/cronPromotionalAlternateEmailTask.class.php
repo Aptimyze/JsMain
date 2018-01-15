@@ -1,3 +1,4 @@
+
 <?php
 /**
  * This cron identifies Junk characters entered in 'About me' and auto-mark incomplete after removing Junk characters

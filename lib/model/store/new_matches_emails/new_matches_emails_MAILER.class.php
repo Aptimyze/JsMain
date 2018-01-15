@@ -20,18 +20,14 @@ class new_matches_emails_MAILER  extends TABLE
 	* @param whereSentInY : flag used to find details for already sent mail for tracking on current date
 	* @return result : details of mailer to be sent 
 	*/
-	public function getMailerProfiles($fields="",$totalScript="1",$script="0",$limit="",$whereSentInY='',$dailyCron=0)
+	public function getMailerProfiles($fields="",$totalScript="1",$script="0",$limit="",$whereSentInY='')
 	{
 		try 
 		{
 			$defaultFields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,LOGIC_USED,LINK_REQUIRED,RELAX_CRITERIA";
 
 			$selectfields = $fields?$fields:$defaultFields;
-                        if($dailyCron ==1){
-                                $sql = "SELECT $selectfields FROM new_matches_emails.MAILER_DAILY where ";
-                        }else{
-        			$sql = "SELECT $selectfields FROM new_matches_emails.MAILER where ";
-                        }
+			$sql = "SELECT $selectfields FROM new_matches_emails.MAILER where ";
 			if(!$whereSentInY)
 			{
 				$sql .=" COALESCE(SENT, '') = ''";
@@ -76,18 +72,14 @@ class new_matches_emails_MAILER  extends TABLE
         *@param sno : serial number of mail
         *@param flag : sent status of the mail
         */
-	public function updateSentForUsers($sno,$flag,$dailyCron=0)
+	public function updateSentForUsers($sno,$flag)
 	{
 		try
                 {
 			if(!$sno || !$flag)
 				throw new jsException("no sno /flag passed in updateSentForUsers function in new_matches_emails_MAILER.class.php");
 			
-                        if($dailyCron ==1){
-                                $sql="UPDATE new_matches_emails.MAILER_DAILY SET SENT=:FLAG,DATE=:DATE WHERE SNO=:SNO";
-                        }else{
-                                $sql="UPDATE new_matches_emails.MAILER SET SENT=:FLAG,DATE=:DATE WHERE SNO=:SNO";
-                        }
+			$sql="UPDATE new_matches_emails.MAILER SET SENT=:FLAG,DATE=:DATE WHERE SNO=:SNO";
 			$res = $this->db->prepare($sql);
                         $res->bindValue(":SNO", $sno, PDO::PARAM_INT);
 			$res->bindValue(":FLAG", $flag, PDO::PARAM_STR);
@@ -129,14 +121,10 @@ class new_matches_emails_MAILER  extends TABLE
                 return $output;
         }
         
-        public function truncateTable($dailyCron)
+        public function truncateTable()
         {
                 try{
-                        if($dailyCron == 1){
-                                $sql = "TRUNCATE TABLE new_matches_emails.MAILER_DAILY";
-                        }else{
-                                $sql = "TRUNCATE TABLE new_matches_emails.MAILER";
-                        }
+                        $sql = "TRUNCATE TABLE new_matches_emails.MAILER";
                         $res=$this->db->prepare($sql);
                         $res->execute();
                 }
@@ -147,12 +135,8 @@ class new_matches_emails_MAILER  extends TABLE
                 }
         }
         
-        public function insertLogRecords($receiverId, $profileIds, $LogicLevel,$linkRequired,$relaxCriteria,$dailyCron=0){
-                if($dailyCron == 1){
-                        $sql="INSERT IGNORE INTO new_matches_emails.MAILER_DAILY (RECEIVER";
-                }else{
-                        $sql="INSERT IGNORE INTO new_matches_emails.MAILER (RECEIVER";
-                }
+        public function insertLogRecords($receiverId, $profileIds, $LogicLevel,$linkRequired,$relaxCriteria){
+                $sql="INSERT IGNORE INTO new_matches_emails.MAILER (RECEIVER";
                 $n=count($profileIds);
                 $userValues = '';
                 for($i=1;$i<=$n;$i++)

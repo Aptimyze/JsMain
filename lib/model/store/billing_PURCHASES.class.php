@@ -89,24 +89,6 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getExclusiveProfile($date){
-        try{
-            //$sql = "SELECT PROFILEID,ENTRY_DT FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
-            $sql = "SELECT PROFILEID,ENTRY_DT,BILLID FROM billing.PURCHASES WHERE SERVEFOR LIKE '%X%' AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":ENTRY_DT", $date, PDO::PARAM_INT);
-            
-            $prep->execute();
-            $profiles = array();
-            while($result = $prep->fetch(PDO::FETCH_ASSOC)){
-                $profiles[$result["PROFILEID"]] = $result;
-            }
-            return $profiles;
-        }catch(PDOException $e){
-            throw new jsException($e);
-        }
-    }
-    
     public function isPaidBefore($profileid, $time='')
     {
         try
@@ -224,33 +206,18 @@ class BILLING_PURCHASES extends TABLE
         return $res;
     }
 
-    public function getCurrentlyActiveService($profileid,$extraFields="")
+    public function getCurrentlyActiveService($profileid)
     {
         try {
-            $sql  = "SELECT PU.SERVICEID";
-            if($extraFields != ""){
-                $sql = $sql.",".$extraFields;
-            }
-            $sql = $sql." FROM billing.PURCHASES PU LEFT JOIN billing.SERVICE_STATUS SS USING(BILLID) WHERE SS.PROFILEID=:PROFILEID AND SS.SERVEFOR LIKE '%F%' AND SS.ACTIVE='Y' ORDER BY SS.EXPIRY_DT ASC LIMIT 1";
+            $sql  = "SELECT PU.SERVICEID FROM billing.PURCHASES PU LEFT JOIN billing.SERVICE_STATUS SS USING(BILLID) WHERE SS.PROFILEID=:PROFILEID AND SS.SERVEFOR LIKE '%F%' AND SS.ACTIVE='Y' ORDER BY SS.EXPIRY_DT ASC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->execute();
             if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                if($extraFields == ""){
-                    $res = $row['SERVICEID'];
-                }
-                else{
-                    $res = $row;
-                }
+                $res = $row['SERVICEID'];
                 if (!empty($res)) {
-                    if($extraFields == ""){
-                        $temp = explode(",", $res);
-                        $res  = $temp[0];
-                    }
-                    else{
-                        $temp = explode(",", $res['SERVICEID']);
-                        $res['SERVICEID']  = $temp[0];
-                    }
+                    $temp = explode(",", $res);
+                    $res  = $temp[0];
                 } else {
                     $res = "FREE";
                 }
@@ -327,26 +294,21 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            if(empty($profileStr)){
-                throw new jsException("empty profileStr passed in isPaidEver in billing_PURCHASES class");
+            $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+            if ($start_dt) {
+                $sql .= " AND ENTRY_DT >= :START_DT";
             }
-            else{
-                $sql = "SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
-                if ($start_dt) {
-                    $sql .= " AND ENTRY_DT >= :START_DT";
-                }
 
-                $prep = $this->db->prepare($sql);
-                if ($start_dt) {
-                    $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
-                }
-
-                $prep->execute();
-                while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                    $res[$row['PROFILEID']] = $row['ENTRY_DT'];
-                }
-                return $res;
+            $prep = $this->db->prepare($sql);
+            if ($start_dt) {
+                $prep->bindValue(":START_DT", $start_dt, PDO::PARAM_STR);
             }
+
+            $prep->execute();
+            while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
+            }
+            return $res;
         } catch (PDOException $e) {
             throw new jsException($e);
         }
@@ -407,23 +369,6 @@ class BILLING_PURCHASES extends TABLE
         return $profiles;
     }
 
-    public function fetchJsBoostBillingPool($entryDt)
-    {
-        try
-        {
-            $sql  = "SELECT DISTINCT(BILLID) AS BILLID FROM billing.PURCHASES WHERE ENTRY_DT >= :ENTRY_DT AND SERVEFOR LIKE '%J%' AND SERVEFOR LIKE '%N%' ORDER BY ENTRY_DT ASC";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
-            $prep->execute();
-            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $profiles[] = $result['BILLID'];
-            }
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-        return $profiles;
-    }
-
     public function getUpsellEligibleProfiles($prevDateTime, $currtDateTime)
     {
         try
@@ -476,20 +421,6 @@ class BILLING_PURCHASES extends TABLE
         return $profiles;
     }
 
-    public function updateDiscountPercent($billIdStr,$discountPercent)
-    {
-        try
-        {
-            $sql  = "UPDATE billing.PURCHASES SET DISCOUNT_PERCENT=:DISCOUNT_PERCENT WHERE BILLID IN(".$billIdStr.")";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":DISCOUNT_PERCENT", $discountPercent, PDO::PARAM_INT);
-            $prep->execute();
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-        return $profiles;
-    }
-
     public function genericPurchaseInsert($paramsStr, $valuesStr)
     {
         if (empty($paramsStr) || empty($valuesStr)) {
@@ -528,13 +459,7 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,"
-                    . "PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT,"
-                    . " ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY,"
-                    . " PUR.MEM_UPGRADE"
-                    . " FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD"
-                    . " WHERE PD.BILLID=PUR.BILLID"
-                    . " AND PUR.BILLID=:BILLID";
+            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();
@@ -600,21 +525,6 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getBillDetails($billid,$columns=""){
-        try {
-            $sql  = "SELECT BILLID,".$columns." FROM billing.PURCHASES WHERE BILLID=:BILLID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-            $prep->execute();
-            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $output[$result['BILLID']] = $result;
-            }
-            return $output;
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
-    }
-
     public function getProfilesWithinDateRange($start_dt, $end_dt)
     {
         try {
@@ -632,15 +542,12 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getProfilesForReconsiliationAfter($time,$limit="1")
+    public function getProfilesForReconsiliationAfter($time)
     {
         try
         {
             if ($time) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC";
-                if($limit != ""){
-                    $sql .= " LIMIT ".$limit;
-                }
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND ENTRY_DT>=:ENTRY_DT ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
                 $prep->execute();
@@ -655,129 +562,22 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function getDataFromTaxBreakUp($start,$endDt){
-    	try{
-    		$sql = "Select	tax_brk_up.BILLID,tax_brk_up.SGST,tax_brk_up.IGST,tax_brk_up.CGST,tax_brk_up.COUNTRY_RES,tax_brk_up.CITY_RES
-					from	billing.TAXBREAKUP tax_brk_up 
-					Where   tax_brk_up.ENTRY_DT>=:START_DATE AND tax_brk_up.ENTRY_DT<=:END_DATE";
-    		$prep = $this->db->prepare($sql);
-    		$prep->bindValue(":START_DATE", $start, PDO::PARAM_STR);
-    		$prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
-    		$prep->execute();
-    		while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-    			$profiles[$result["BILLID"]] = $result;
-    		}
-    		return $profiles;
-    	}catch(PDOException $e){
-    		throw new jsException($e);
-    		
-    	}
-    }
-    
-    public function fetchFinanceData($startDt, $endDt, $device = 'other',$offset=0,$limit='', $table = "PAYMENT_DETAIL", $condition = "='DONE'")
+    public function fetchFinanceData($startDt, $endDt, $device = 'other')
     {
         try {
             if ($device == "other") {
-                $sql = "SELECT	pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE,
-								pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE,
-								ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE,p.MEM_UPGRADE 
-						
-						FROM	billing.$table pd,  billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p 
-
-						WHERE 	p.BILLID=pd.BILLID AND	p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
-								pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0 AND
-								p.BILLID NOT IN 
-								(
-									SELECT	pd.BILLID 
-									
-									FROM	billing.$table pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
-
-									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
-											pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND
-											pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0
-								)
- 							ORDER BY p.ENTRY_DT";
+                $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.SUBSCRIPTION_START_DATE AS ASSD,pur_d.SUBSCRIPTION_END_DATE ASED,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID NOT IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
             } else {
-                $sql = "SELECT	pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, 
-								pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE,
-								ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE
-						
-						FROM	billing.$table pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
-						
-						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
-								o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND 
-								pd.STATUS $condition AND pd.AMOUNT!=0 AND 
-								p.BILLID IN 
-								(
-									SELECT pd.BILLID 
-	
-									FROM	billing.$table pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o 
-									
-									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
-											pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND 		pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0
-								) ORDER BY p.ENTRY_DT";
-            }
-            if($limit>0&& $offset>=0){
-                $sql.=" limit :OFFSET,:LIMIT";
+                $sql = "SELECT pd.ENTRY_DT, pd.BILLID, pd.RECEIPTID, pd.PROFILEID, p.USERNAME, pur_d.SERVICEID, pur_d.START_DATE, pur_d.END_DATE, pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE ASED, pur_d.CUR_TYPE, ROUND(((pd.AMOUNT*pur_d.SHARE)/100)*0.7,2) AS AMOUNT, pur_d.DEFERRABLE, pd.INVOICE_NO,pur_d.PRICE FROM billing.PAYMENT_DETAIL pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 AND p.BILLID IN (SELECT pd.BILLID FROM billing.PAYMENT_DETAIL pd,   billing.PURCHASE_DETAIL pur_d,   billing.PURCHASES p,   billing.ORDERS o WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0)";
             }
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DATE", $startDt, PDO::PARAM_STR);
             $prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
-            if($limit>0&& $offset>=0){
-                $prep->bindValue(":OFFSET", $offset, PDO::PARAM_INT);
-                $prep->bindValue(":LIMIT", $limit, PDO::PARAM_INT);
-             }
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $profiles[] = $result;
             }
             return $profiles;
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
-    }
-     public function fetchFinanceDataCount($startDt, $endDt, $device = 'other', $table = "PAYMENT_DETAIL", $condition = "='DONE'")
-    {
-        try {
-            if ($device == "other") {
-                $sql = "SELECT count(*) AS COUNT 
-
-						FROM   billing.$table pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p
-
-						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID  
-       						 	AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0 AND 
-								p.BILLID NOT IN (
-										SELECT	pd.BILLID
-
- 									 	FROM	billing.$table pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o
-
- 	 									WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND
-												pd.BILLID=pur_d.BILLID AND  o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE
-												AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0
-								)";
-            } else {
-                $sql = "SELECT	count(*) AS COUNT 
-
-						FROM	billing.$table pd, billing.PURCHASE_DETAIL pur_d, billing.PURCHASES p, billing.ORDERS o 
-						
-						WHERE	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND 
-								o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND 
-								pd.STATUS $condition AND pd.AMOUNT!=0 AND 
-								p.BILLID IN (
-										SELECT	pd.BILLID
- 
-										FROM	billing.$table pd,billing.PURCHASE_DETAIL pur_d,billing.PURCHASES p,billing.ORDERS o
-										WHERE 	p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND 
-												pd.BILLID=pur_d.BILLID aND o.ID=p.ORDERID AND o.GATEWAY='APPLEPAY' AND pd.ENTRY_DT>=:START_DATE AND
- 												pd.ENTRY_DT<=:END_DATE AND pd.STATUS $condition AND pd.AMOUNT!=0
-								)";
-            }
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":START_DATE", $startDt, PDO::PARAM_STR);
-            $prep->bindValue(":END_DATE", $endDt, PDO::PARAM_STR);
-            $prep->execute();
-            $result = $prep->fetch(PDO::FETCH_ASSOC);
-            return $result['COUNT'];
         } catch (PDOException $e) {
             throw new jsException($e);
         }
@@ -807,7 +607,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt) - 30 * 24 * 60 * 60); // expiry - 30 days
-            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
+            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT AND STATUS='DONE'";
             $prep  = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -828,7 +628,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt) - 30 * 24 * 60 * 60); // expiry - 30 days <-> expiry
-            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
+            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT AND STATUS='DONE'";
             $prep    = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -850,7 +650,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt) + 10 * 24 * 60 * 60); // expiry <-> expiry + 10 days
-            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
+            $sql   = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE AND STATUS='DONE'";
             $prep  = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -872,7 +672,7 @@ class BILLING_PURCHASES extends TABLE
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt) + 10 * 24 * 60 * 60); // expiry + 10 days
-            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE AND STATUS='DONE' AND MEM_UPGRADE IS NULL AND DISCOUNT_PERCENT<100";
+            $sql     = "SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE AND STATUS='DONE'";
             $prep    = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
@@ -923,75 +723,6 @@ class BILLING_PURCHASES extends TABLE
                 return $output;
             }
         } catch (PDOException $e) {
-            throw new jsException($e);
-        }
-    }
-    
-    public function getPaidProfiledWithinRange($startDate){
-        try{
-            $sql = "SELECT PROFILEID, SERVICEID, EMAIL, ENTRY_DT, MEM_UPGRADE FROM billing.PURCHASES WHERE ENTRY_DT > :START_DATE AND STATUS = 'DONE' ORDER BY ENTRY_DT ASC";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":START_DATE", $startDate, PDO::PARAM_STR);
-            $prep->execute();
-            while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                $result[$row["PROFILEID"]][] = $row;
-            }
-            return $result;
-        } catch (Exception $ex) {
-            throw new jsException($ex);
-        }
-    }
-
-    public function getUserName($profilesid){
-        try{
-            $sql = "SELECT USERNAME,PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN (";
-            $COUNT=1;
-            foreach($profilesid as $key=>$value) {
-                $valueToInsert .= ":KEY" . $COUNT . ",";
-                $bind["KEY" . $COUNT]["VALUE"] = $value;
-                $COUNT++;
-            }
-            $valueInsert = rtrim($valueToInsert,',').")";
-            $sql .=$valueInsert;
-            $prep = $this->db->prepare($sql);
-            foreach($bind as $key=>$val) {
-                $prep->bindValue($key, $val["VALUE"], PDO::PARAM_INT);
-            }
-            $prep->execute();
-            $prep->setFetchMode(PDO::FETCH_ASSOC);
-            while($row = $prep->fetch()){
-                $result[$row["PROFILEID"]] = $row["USERNAME"];
-            }
-            return $result;
-        }catch (Exception $e){
-            throw new jsException($e);
-        }
-    }
-
-    public function getDiscountDetail($billid,$serviceid){
-        try{
-            $sql = "SELECT DISCOUNT,ORDERID,DISCOUNT_PERCENT FROM billing.PURCHASES WHERE BILLID = :BILLID AND SERVICEID LIKE :SERVICEID";
-            $serviceid = "%".$serviceid."%";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
-            $prep->bindValue(":SERVICEID",$serviceid,PDO::PARAM_STR);
-            $prep->execute();
-            $prep->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $prep->fetch();
-            return $result;
-        }catch (Exception $e){
-            throw new jsException($e);
-        }
-    }
-
-    public function updateUSDtoINRflag($usdTOinr,$billid){
-        try{
-            $sql = "UPDATE billing.PURCHASES SET USD_TO_INR=:USDTOINR WHERE BILLID = :BILLID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
-            $prep->bindValue(":USDTOINR",$usdTOinr,PDO::PARAM_INT);
-            $prep->execute();
-        }catch (Exception $e){
             throw new jsException($e);
         }
     }

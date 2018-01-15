@@ -170,13 +170,9 @@ if(isset($data))
 		$sql ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID ,BOUNCE_DT  , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY ) VALUES ('', '$receiptid', '$profileid', '$billid', NOW(),DATE_ADD( CURDATE() , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
 		mysql_query_decide($sql) or die(mysql_error_js());
 
-        
-        if($cmdcheck=="stop"){
-            $clearRedis = "BOUNCE";
-        }
         //**START - Entry for negative transactions
         $memHandlerObject = new MembershipHandler();
-        $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)),$clearRedis);
+        $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)));
         unset($memHandlerObject);
         //**END - Entry for negative transactions
         

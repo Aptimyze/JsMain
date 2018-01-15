@@ -4,7 +4,7 @@ Class ButtonResponse
 	private $buttonResponseObj;
 	public function __construct($loginProfile='', $otherProfile='', $page='', $contactHandler = "")
 	{
-	if(MobileCommon::isApp()=='I' || (MobileCommon::isNewMobileSite() && sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1') )
+		if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
 			$this->buttonResponseObj = new ButtonResponseJSMS($loginProfile, $otherProfile, $page, $contactHandler);
 		elseif(MobileCommon::isAPP()=="A")
 			$this->buttonResponseObj = new ButtonResponseApi($loginProfile, $otherProfile, $page, $contactHandler );
@@ -18,7 +18,7 @@ Class ButtonResponse
 	}
 	public static function __callStatic($functionName,$arguements)
         {
-		if(MobileCommon::isApp()=='I' || (MobileCommon::isNewMobileSite() && sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1'))
+		if(MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I')
 			return call_user_func_array(array("ButtonResponseJSMS",$functionName),$arguements);
 		elseif(MobileCommon::isAPP()=="A")
 			return call_user_func_array(array("ButtonResponseApi",$functionName),$arguements);

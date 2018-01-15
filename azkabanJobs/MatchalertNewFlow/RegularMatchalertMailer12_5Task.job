@@ -1,4 +1,0 @@
-type=command
-dependencies=MatchAlertMailerTask
-command=${php5} ${docRoot}/symfony  mailer:RegularMatchalertMailer 12 5
-

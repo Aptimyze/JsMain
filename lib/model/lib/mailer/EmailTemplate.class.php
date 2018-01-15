@@ -31,10 +31,10 @@ class EmailTemplate implements MessageTemplate{
     $this->smarty->assign('GENDER',$this->profile->getGENDER());
 	if($this->profile->getPHONE_MOB() || $this->profile->getPHONE_RES())
 		$this->smarty->assign('HAVE_CONTACT_NO',1);
-    //$agentArr=CommonFunction::getJsCenterDetails($this->profile->getCITY_RES());
-    //if(is_array($agentArr))
-      //$this->smarty->assign('AGENT','Y');
-    //else
+    $agentArr=CommonFunction::getJsCenterDetails($this->profile->getCITY_RES());
+    if(is_array($agentArr))
+      $this->smarty->assign('AGENT','Y');
+    else
       $this->smarty->assign('AGENT','N');
     $this->smarty->assign('SITE_URL', sfConfig::get('app_site_url'));
     $this->smarty->assign('IMG_URL', sfConfig::get('app_img_url'));

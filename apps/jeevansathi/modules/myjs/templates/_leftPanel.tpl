@@ -8,7 +8,7 @@
                         <div class="inboxlist_v1">
                              	<ul>
                                    	<li>
-                                        	<a class="txt5color_v1" href="~$SITE_URL`/inbox/1/1">
+                                        	<a class="txt5color_v1" href="~$SITE_URL`/P/contacts_made_received.php?page=eoi&filter=R">
                                             	<div class="fl_v1 wid200_v1 fntsize14_v1 colorh padright5_v1 ">Interests Received</div>
 						~if $countObj["INTEREST_RECEIVED"] gt 0`
                                                 	<div class="fl_v1 wid16_v1 txtalign_c_v1">
@@ -19,7 +19,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="txt5color_v1" href="~$SITE_URL`/inbox/2/1">
+                                            <a class="txt5color_v1" href="~$SITE_URL`/P/contacts_made_received.php?page=accept&filter=R">
                                                 <div class="fl_v1 wid200_v1 fntsize14_v1 colorh padright5_v1">Acceptances</div>
 						~if $countObj["ACCEPTANCES_RECEIVED"] gt 0`
 	                                                <div class="fl_v1 wid16_v1 txtalign_c_v1">
@@ -30,7 +30,7 @@
                                             </a>
                                         </li>   
                                         <li>
-                                            <a class="txt5color_v1" href="~$SITE_URL`/inbox/4/1">
+                                            <a class="txt5color_v1" href="~$SITE_URL`/P/contacts_made_received.php?page=messages&filter=R">
                                                 <div class="fl_v1 wid200_v1 fntsize14_v1 colorh padright5_v1">Messages Received</div>
 						~if $countObj["MESSAGE_RECEIVED"] gt 0`
 							<div class="fl_v1 wid16_v1 txtalign_c_v1">
@@ -52,7 +52,7 @@
                                             </a>
                                         </li>  
                                         <li>
-                                            <a class="txt5color_v1" href="~$SITE_URL`/inbox/10/1">
+                                            <a class="txt5color_v1" href="~$SITE_URL`/P/contacts_made_received.php?page=decline&filter=R">
                                                 <div class="fl_v1 wid200_v1 fntsize14_v1 colorh padright5_v1">Decline Received</div>
 						~if $countObj["DECLINE_RECEIVED"] gt 0`
 	                                                <div class="fl_v1 wid16_v1 txtalign_c_v1">

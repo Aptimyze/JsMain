@@ -87,21 +87,4 @@ class billing_RENEWAL_DISCOUNT extends TABLE {
                 throw new jsException($e);
         }
     }
-    
-    public function getProfilesDiscount($profileStr,$todaysDt){
-        try{
-            if($profileStr){
-                $sql = "SELECT PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT where PROFILEID IN ($profileStr)";
-                $prep = $this->db->prepare($sql);
-                //$prep->bindValue(":EXPIRY_DT",$todaysDt,PDO::PARAM_STR);
-                $prep->execute();
-                while($res = $prep->fetch(PDO::FETCH_ASSOC)){
-                    $result[] = $res;
-                }
-                return $result;
-            }
-        } catch (Exception $ex) {
-            throw new jsException($ex);
-        }
-    }
 }

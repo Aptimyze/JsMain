@@ -264,7 +264,12 @@ function openPhotoAlbum(username,profilechecksum,AlbumCount,hasAlbum){
             $("#photoAlbumNext").hide();
         }
         ajaxCallForAlbum(username,profilechecksum);
+
+        $("#photoLayerMain").show();
         $("#commonOverlay").fadeIn();
+        //$("#photoAlbumPrev").hide();
+        $("#photoAlbumCaption").text(currentView+" / "+totalImg);
+        $("#photoAlbumUsername").text(username);
     }
     else{
         return false;
@@ -289,31 +294,15 @@ function ajaxCallForAlbum(username,profilechecksum){
         success: function (result, status, xResponse) {
           var noPhotoErrorMsg = "User has recently hidden photo(s) from privacy settings.";
           photoURL = result.albumUrls;
-          if(result.albumUrls==null)
-          {
-            if(result.showConditionalPhotoLayer) //code to show layer for upload photo
-            {
-               // alert("SHOW LAYER :"+result.showLayer);
-                $("#commonOverlay").css('display','block');
-                $("#commonOverlay").css('background-color','rgba(0, 0, 0, 0.94)');
-                $("#conditionalPhotoLayer").css('display','block');
-                $("#commonOverlay").click(function(event){
-                    if(!$(event.target).parents('div#actualconditionalLayer').length)
-                        closeConditionalLayer();
-                });
-            }
-            else
-            {
-                closePhotoAlbum();
-                //alert("No Album Pc Exists "+result.responseMessage);
-                var errorMsg =  $("#js-commonErrorMsg").html();
-                $("#js-commonErrorMsg").html(noPhotoErrorMsg);
-                $("#commonError").slideDown("slow");
-                setTimeout('$("#commonError").slideUp("slow")',1500);
-                setTimeout(function(errorMsg){$("#js-commonErrorMsg").html(errorMsg);},4000,errorMsg);
-            }
-              
-           }
+          if(result.albumUrls==null){
+              closePhotoAlbum();
+                    //alert("No Album Pc Exists "+result.responseMessage);
+                    var errorMsg =  $("#js-commonErrorMsg").html();
+                    $("#js-commonErrorMsg").html(noPhotoErrorMsg);
+                    $("#commonError").slideDown("slow");
+                    setTimeout('$("#commonError").slideUp("slow")',1500);
+                    setTimeout(function(errorMsg){$("#js-commonErrorMsg").html(errorMsg);},4000,errorMsg);
+                }
                 else{
                     totalImg = result.albumUrls.length;
                     currentView=1;
@@ -322,10 +311,6 @@ function ajaxCallForAlbum(username,profilechecksum){
                     
                     loadImage("#photo1 div div img",photoURL[0]);
                     loadImage("#photo2 div div img",photoURL[1]);
-                    $("#photoLayerMain").show();
-                    //$("#photoAlbumPrev").hide();
-                    $("#photoAlbumCaption").text(currentView+" / "+totalImg);
-                    $("#photoAlbumUsername").text(username);
                     
                 }
             }
@@ -342,14 +327,4 @@ function loadImage(idOfDiv,Image){
         } else {
         }
     });
-}
-
-//Close Button
-$("#conditionalLayerClose").on('click',function(){closeConditionalLayer();});
-
-//Close button functionality
-function closeConditionalLayer(){
-    reloadScrollBars();
-    $("#conditionalPhotoLayer").hide();    
-    $("#commonOverlay").fadeOut();
 }

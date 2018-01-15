@@ -18,10 +18,8 @@
             <div id="overlayHead" class="bg1 txtc pad15">
                 <div class="posrel lh30">
                     <div class="fontthin f20 white dispibl">Your Success Story</div>
-                    ~if $fromMailer neq 'true'`
-                        <span id="skipSuccess" class="white fr fontthin cursp">Skip</span>
-                        <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1 cursp"></i></a>
-                    ~/if`
+                    <span id="skipSuccess" class="white fr fontthin cursp">Skip</span>
+                    <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1 cursp"></i></a>
                 </div>
             </div>
             <!--end:top-->
@@ -36,8 +34,6 @@
                     <textarea name="successStoryMsg" id="successStory" rows="9" placeholder="Share your success story and get attractive gifts from Jeevansathi" class="f16 fontthin fullwid colorBlack"></textarea>
                     ~/if`
                 </div>
-                <input type="hidden" name="fromSuccessStoryMailer" value="~$fromMailer`">
-                <input type="hidden" name="mailid" value="~$mailId`">
                 <!--end:input field-->
                 <!--start:submit button-->
                 <div id="foot" class="posfix fullwid bg7 btmo cursp">

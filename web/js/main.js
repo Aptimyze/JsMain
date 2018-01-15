@@ -1,37 +1,24 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-if('serviceWorker' in navigator) 
+if ('serviceWorker' in navigator) 
 {
-    var config = {
-    	messagingSenderId: "323372390615" 
-  };
-  firebase.initializeApp(config);
-  const messaging = firebase.messaging();
-  var url = ssl_siteUrl+"/js/sw_fcm.js"; 
-
-
-  if(Notification.permission === 'default' || Notification.permission === 'granted')
-  {
-  navigator.serviceWorker.register(url) 
-          .then((registration) => {
-             setTimeout(function() {
-              registration.update();  // update the service worker
-              messaging.useServiceWorker(registration);
-              messaging.requestPermission()
-                      .then(function() {
-                        var x = messaging.getToken();
-                        console.log(x);
-                        return x;
-              })
-              .then(function(regId) {
-                          var relativeUrl = "/api/v1/notification/insertChromeId";
-                          $.ajax({
+    if(Notification.permission === 'default' || Notification.permission === 'granted')
+    {
+        Notification.requestPermission(function(permission){
+            if(permission === 'granted'){
+                //var url ='https://www.jeevansathi.com/js/sw.js';
+                var url = ssl_siteUrl+'/js/sw.js';
+                navigator.serviceWorker.register(url).then(function(reg){
+                    setTimeout(function(){
+                        reg.pushManager.subscribe({
+                            userVisibleOnly: true
+                        }).then(function(sub){
+                            var endpoint = sub.endpoint;
+                            endPointArr = endpoint.split('/');
+                            var regId = endPointArr[endPointArr.length - 1];
+                            //var chromeVersion = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2];
+                            url = "/api/v1/notification/insertChromeId"
+                            $.ajax({
                                 type: 'POST',
-                                url: relativeUrl,
+                                url: url,
                                 data:{
                                     regId: regId,
                                 },
@@ -40,15 +27,26 @@ if('serviceWorker' in navigator)
                                     window.close();
                                 }
                             });
-              })
-              .catch(function (err) {
-              });
-          }, 1000);
+                        },function(rea){
+                            //console.log(rea);
+                        });
+                    },1000);
+                }, function(reason){
+                    //console.log(reason);
+                }).catch(function(error){
+                    $("#permissionResponse").html("Something went wrong,please try again");
+                    //console.log(':^(', error);
+                });
+            }
+            else{
+                $("#permissionResponse").html("Notifications blocked for this site");
+                window.close();
+            }
         });
- }
- 
-else {
-    $("#permissionResponse").html("Please enable blocked notifications for this site in chrome://settings");
+    }
+    else if(Notification.permission === 'denied')
+    {
+        $("#permissionResponse").html("Please enable blocked notifications for this site in chrome://settings");
         setTimeout(function(){window.close();},10000);
     }
 }

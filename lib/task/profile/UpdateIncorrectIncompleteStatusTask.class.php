@@ -22,16 +22,9 @@ class UpdateIncorrectIncompleteStatusTask extends sfBaseTask{
      The [cronUpdateIncorrectIncompleteStatus|INFO] fetches data from JPROFILE of profile's whose incomplete status is wrong and updates the incomplete status and also saves the profileId along with Entry Date in a log file:
      [php symfony cron:cronUpdateIncorrectIncompleteStatus] 
 EOF;
-$this->addOptions(array(
-        new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
-     ));
-
-
   }
   protected function execute($arguments = array(), $options = array())
   {
-        if(!sfContext::hasInstance())
-                sfContext::createInstance($this->configuration);
   	$today = date("Y-m-d H:i:s"); 
   	$backDays = "1";
   	$requiredDate = date("Y-m-d H:i:s",JSstrToTime('now -'.$backDays.' days'));

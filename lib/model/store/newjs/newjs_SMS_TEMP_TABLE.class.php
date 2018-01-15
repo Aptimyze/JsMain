@@ -39,12 +39,10 @@ class newjs_SMS_TEMP_TABLE extends TABLE{
                         	{
 					if($fields)
 					{
-						if(is_array($defaultFieldsRequired)){
-							foreach($defaultFieldsRequired as $k=>$fieldName)
-							{
-								if(!stristr($fields,$fieldName))
-									$fields.=",".$fieldName;
-							}
+						foreach($defaultFieldsRequired as $k=>$fieldName)
+						{
+							if(!stristr($fields,$fieldName))
+								$fields.=",".$fieldName;
 						}
 					}
 					else

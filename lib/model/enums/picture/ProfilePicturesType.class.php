@@ -27,8 +27,7 @@ class ProfilePicturesTypeEnum
                                             "PROCESS"=>2,
                                             "APPROVE"=>2,
                                             "DELETE"=>3,
-                                            "EDIT"=>4,
-		                                    "CROPPEDFACE"=>0);
+                                            "EDIT"=>4);
       
         // SCREEN BIT defined by (Key of pictureSizes array + 2)
 	public static $SCREEN_BIT_POSITION = array("FACE","MainPicUrl");
@@ -43,18 +42,6 @@ class ProfilePicturesTypeEnum
                                             "Thumbail"=>"thumbnail",
                                             "ThumbailUrl"=>"thumbnail",
                                             "SearchPicUrl"=>"searchPic");
-
-	public static $PICTURE_UPLOAD_TEST_DIR = array("ProfilePic120Url"=>"testprofilePic120",
-		"ProfilePic235Url"=>"testprofilePic235",
-		"ProfilePic450Url"=>"testprofilePic450",
-		"ProfilePicUrl"=>"testprofilePic",
-		"MobileAppPicUrl"=>"testmobileAppPic",
-		"OriginalPicUrl"=>"testmainPic",
-		"MainPicUrl"=>"testnewMainPic",
-		"Thumbail96"=>"testthumbnail96",
-		"Thumbail"=>"testthumbnail",
-		"ThumbailUrl"=>"testthumbnail",
-		"SearchPicUrl"=>"testsearchPic");
         
         public static $WATERMARK = array("ProfilePic235Url",
                                          "ProfilePic450Url",
@@ -77,7 +64,7 @@ class ProfilePicturesTypeEnum
 						"MobileAppPicUrl","ThumbailUrl","SearchPicUrl");
 	public static $PICTURE_NONSCREENED_SIZES_FIELDS = array("MainPicUrl","OriginalPicUrl","ProfilePic120Url",
 						"ProfilePic235Url","ProfilePicUrl","ProfilePic450Url",
-						"MobileAppPicUrl","Thumbail96Url","ThumbailUrl");
+						"MobileAppPicUrl","Thumbail96Url");
 	public static $PICTURE_SCREENED_SIZES_FIELDS = array("MainPicUrl","OriginalPicUrl","ProfilePic120Url",
 						"ProfilePic235Url","ProfilePicUrl","ProfilePic450Url",
 						"MobileAppPicUrl","Thumbail96Url",

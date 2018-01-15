@@ -25,6 +25,7 @@ EOF;
         $expiryDt         = date("Y-m-d", time() + 29 * 24 * 60 * 60);
         $startDt          = date("Y-m-d");
         $discountExpiryDt = date("Y-m-d", strtotime("$expiryDt +10 days"));
+
         $ssObj = new BILLING_SERVICE_STATUS('newjs_slave');
         $res   = $ssObj->getRenewalProfiles($expiryDt);
         $memHandlerObj = new MembershipHandler();
@@ -32,17 +33,7 @@ EOF;
         $rdLogObj      = new billing_RENEWAL_DISCOUNT_LOG();
         $rdObj->removedExpiredProfiles();
         $billPurObj     = new BILLING_PURCHASES('newjs_slave');
-        //Skip south Indian profile for discouting JSC-3618
-        if(count($res)>0){
-            $jprofile = new JPROFILE('newjs_slave');
-            foreach ($res as $key => $profileid){
-                $Mtognue = $jprofile->getMtongue($profileid);
-                if(in_array($Mtognue, crmParams::$eliminateMotherTongues)) {
-                    unset($res[$key]);
-                }
-            }
-        }
-        $res = array_values($res);
+
         // Get bulk details of profiles last main membership transactions
         if (count($res) > 0) {
             foreach ($res as $key => $profileid) {
@@ -64,7 +55,7 @@ EOF;
             }
         }
 	$totRenewal =count($countArr);
-	if($totRenewal<100 && JsConstants::$whichMachine == "prod"){	
+	if($totRenewal<100){	
                 $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com";
                 $latest_date    =date("Y-m-d");
                 $subject        ="Renewal Discount Calculated For: ".date("jS F Y", strtotime($latest_date));

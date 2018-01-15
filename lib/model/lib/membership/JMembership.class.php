@@ -11,9 +11,9 @@ include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/globalVariables.Class.php");
 class JMembership extends Membership
 {
     
-    public function getRemainingContactsForUser($profileid,$extraFields="") {
+    public function getRemainingContactsForUser($profileid) {
         $contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
-        $contacts = $contactsAllotedObj->getRemainingContactsForProfile($profileid,$extraFields);
+        $contacts = $contactsAllotedObj->getRemainingContactsForProfile($profileid);
         return $contacts;
     }
     

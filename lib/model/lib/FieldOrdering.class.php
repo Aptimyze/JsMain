@@ -507,15 +507,6 @@ class FieldOrder
 			    return "Please select ".strtolower($type);
 		}
 	}
-        
-        public function getSectMuslim()
-	{
-		$choices=FieldMap::getFieldLabel("sect_muslim",'',1);
-                foreach($choices as $key=>$val){
-                    $choices[$key] = explode(" ",$val)[1];
-                }
-                return $choices;
-	}
 					
 }
 ?>

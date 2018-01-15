@@ -32,20 +32,6 @@ var Button= function(elementObj) {
 
 
 Button.prototype.request= function() {
-	
-	/* GA tracking */
-	try{
-		if(this.name=="IGNORE")
-		{
-			if(this.params==="&ignore=0")
-				GAMapper("GA_CE" ,{action:"UNBLOCK"});
-			else
-				GAMapper("GA_CE" ,{action:"BLOCK"});
-		}	
-		else
-			GAMapper("GA_CE" ,{action:this.name});
-	}
-	catch(e){}
 if(this.name=='WRITE_MESSAGE_LIST')
     {
         this.params+=('&pagination=1');
@@ -58,17 +44,10 @@ if (!this.profileChecksum) return;
 if(this.name=="MEMBERSHIP" || this.name=="EDITPROFILE")
 {
 	if(this.name=="MEMBERSHIP")
-		{
-			location.href="/profile/mem_comparison.php";
-			return;
-		}
-
+		location.href="/profile/mem_comparison.php";
 	else
-		{
-			location.href="/profile/viewprofile.php?ownview=1";
-			return;
-		}
-
+		location.href="/profile/viewprofile.php?ownview=1";
+	
 }
 ajaxData=this.makePostDataForAjax(this.profileChecksum);
          $.myObj.ajax({
@@ -123,18 +102,15 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 				$( "#"+messageKeyName).removeClass("cursp bg_pink contactEngineIcon").addClass("bg10");
 				$( "#"+messageKeyName).unbind();
 			}
-           else if((data.name=="INITIATE" || data.name=="REMINDER" || data.name=="ACCEPT") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
+           else if((data.name=="INITIATE" || data.name=="REMINDER") && data.pageName=="VDP" && (response.actiondetails.redirect !=null && response.actiondetails.redirect ==true))
 			{
-				var stypeViewSimilar='V';
-				if(data.name=="ACCEPT")
-					stypeViewSimilar='CA';
 				var queryStringParams=window.location.href.slice(window.location.href.indexOf('?') + 1);
 				var url = '/search/viewSimilarProfile';
                                 var form = $("<form action='" + url + "' method='post'>" +
                                    "<input type='hidden' name='profilechecksum' value='" + ProCheckSum + "' />"+
                                     "<input type='hidden' name='SIM_USERNAME' value='" + ViewedUserName + "' />"+
                                     "<input type='hidden' name='queryStringParams' value='" + queryStringParams + "' />"+
-                                     "<input type='hidden' name='Stype' value='"+stypeViewSimilar+"'/>"+
+                                     "<input type='hidden' name='Stype' value='V'/>"+
                                      
                                      "<input id='hiddenVspInput' type='hidden' name='actions_buttons' value='' /></form>"); $('body').append(form);
                                      $("#hiddenVspInput").val(JSON.stringify(response));
@@ -218,23 +194,16 @@ Button.prototype.setPostActionData= function(data) {
 }
 
 Button.prototype.post= function() {
+
 this.actionDetails=this.data.actiondetails;
 this.buttonDetails=this.data.buttondetails;
 	
 //remove layer after send_Message overlay
 if((this.name=="SEND_MESSAGE"|| this.name=="WRITE_MESSAGE") && this.data.isSent)
 {
-  	var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
-	superdata = contactLayerDiv.attr('superdata');
-	if(superdata){
-		var contactLayerDivParent = contactLayerDiv.parent();
-		contactLayerDiv.remove();
-		contactLayerDivParent.append(postCommonWarningLayer(WARNING[superdata], superdata, WARNING.pageSource, "PAID"));
-		cECloseBinding();
-	}else{
-  		contactLayerDiv.addClass("disp-none");
-		contactLayerDiv.html("");
-	}
+  var contactLayerDiv=this.parent.find("#contactEngineLayerDiv").eq(0);
+  contactLayerDiv.addClass("disp-none");
+	contactLayerDiv.html("");
 }
 
 if(this.name=='REMOVE'){
@@ -254,8 +223,6 @@ return;
 		innerLayerHtml=this.displayObj.postDisplay(this.data,this.profileChecksum,this.error);  
 		this.parent.find('#contactEngineLayerDiv').remove();
 		this.parent.prepend(innerLayerHtml);
-		if(typeof this.data.actiondetails.limitWarning != "undefined")
-		this.parent.find('#contactEngineLayerDiv').attr('superdata', this.profileChecksum);
 
 		
 	if(typeof(this.actionDetails.lastsent)!='undefined' && this.actionDetails.lastsent)
@@ -439,9 +406,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	var data = this.data;
 	viewerImage = data.viewer;
 	var innerHtml = $("#messageDisplaytuple").html();
-	
 	var profile = data.profile;
-	
 	innerHtml=innerHtml.replace(/\{age\}/g,profile.age);
 	innerHtml=innerHtml.replace(/\{height\}/g,profile.height);
 	innerHtml=innerHtml.replace(/\{mstatus\}/g,profile.mstatus);
@@ -474,15 +439,14 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 			var mymessage = '';
 			mymessage = othertuple.replace(/\{time\}/g,removeNull(val.timeTxt));
 			mymessage = mymessage.replace(/\{otherimage\}/g,removeNull(data.viewed));
-			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,"")));
+			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/(<([^>]+)>)/ig,"")));
 			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
 		}
-                mymessage = mymessage.replace(/\{id\}/g,index);
 		messageCount = index+1;
 	});
         var tempJObj=$(innerHtml);
-
+        
         if(this.pagination){
             tempObj=$("#messageWindow").find('#list-'+profile.profilechecksum);
             tempLiObj=tempObj.find('li').eq(0);
@@ -498,15 +462,6 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	
         $("#messageWindow").html(innerHtml);
     }
-		var typeArray = new Array("{ccTupleImage}","{otherimage}","{myimage}");
-		$('img[dsrc]').each(function() {
-			var src = $(this).attr("dsrc");
-			if($.inArray(src,typeArray)<0)
-			{
-				$(this).attr("src",src);
-			}
-		});
-
         
         if(data.hasNext!=true)this.allMessageLoaded=true;
         this.MSGID=data.MSGID;        

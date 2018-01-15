@@ -71,9 +71,6 @@ class ContactMailer
 				$paidStatus = "eValue";
 			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 				$paidStatus = "eRishta";
-			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
-				$paidStatus = "JsExclusive";
-
 			$smartyObj->assign("paidStatus",$paidStatus);
 		}
 		$havePhoto = $receiver->getHAVEPHOTO();
@@ -83,7 +80,6 @@ class ContactMailer
 		$smartyObj->assign("FTO",$FTO);
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
-		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
                 if(CommonConstants::contactMailersCC)
@@ -126,8 +122,6 @@ class ContactMailer
 				$paidStatus = "eValue";
 			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 				$paidStatus = "eRishta";
-			else if($sender->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
-				$paidStatus = "JsExclusive";
 			$smartyObj->assign("paidStatus",$paidStatus);
 		}
 		
@@ -164,7 +158,6 @@ class ContactMailer
 			
 		$partialList->addPartial('jeevansathi_contact_address','jeevansathi_contact_address');
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
-		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$smartyObj->assign("acceptanceTemplate",$acceptanceTemplate);
 		$smartyObj->assign("acceptance_mailer",1);
 		$smartyObj->assign("FTO",$FTO);
@@ -233,7 +226,6 @@ class ContactMailer
 		$smartyObj->assign("FTO",$FTO);
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
-		$smartyObj->assign("otherProfileId",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
                 if(CommonConstants::contactMailersCC)
@@ -268,7 +260,6 @@ class ContactMailer
 	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
 	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
-	$tpl->getSmarty()->assign("otherProfile", $sender->getPROFILEID());
 
 	if(!empty($variableDiscount))
 	{
@@ -310,63 +301,6 @@ class ContactMailer
 	$emailSender->send('','',$ccEmail);
 	}
 
-	/**
-	 * 
-	 * method to send mail on writing a message
-	 * @param Object $receiver Profile Object of receiver
-	 * @param Object $sender   Profile Object of sender
-	 * @param string $message
-	 */
-	public static function sendAutoReminderMailer($receiver,$sender)
-	{
-        $emailSender = new EmailSender(MailerGroup::EOI, 1847);
-        $tpl = $emailSender->setProfileId($receiver->getPROFILEID());
-	$variableDiscountObj = new VariableDiscount();
-	$variableDiscount = $variableDiscountObj->getDiscDetails($receiver->getPROFILEID());
-	$subscriptionStatus=CommonFunction::isPaid($receiver->getSUBSCRIPTION());
-	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
-	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
-	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
-	$tpl->getSmarty()->assign("otherProfile", $sender->getPROFILEID());
-        $tpl->setSubject($sender->getUSERNAME()." who had sent interest has uploaded a new photo");
-        
-
-	if(!empty($variableDiscount))
-	{
-		$vdDisplayText = $variableDiscountObj->getVdDisplayText($receiver->getPROFILEID(),'small');
-		$discountMax = $variableDiscount["DISCOUNT"];
-		$tpl->getSmarty()->assign("variableDiscount",$discountMax);
-		$tpl->getSmarty()->assign("vdDisplayText",$vdDisplayText);
-		$tpl->getSmarty()->assign("VD_END_MONTH",date("M",JSstrToTime($variableDiscount["EDATE"])));
-                $tpl->getSmarty()->assign("VD_END_YEAR",date("Y",JSstrToTime($variableDiscount["EDATE"])));
-                $tpl->getSmarty()->assign("VD_END_DAY",date("d",JSstrToTime($variableDiscount["EDATE"])));
-                $tpl->getSmarty()->assign("VD_END_DAY_SUFFIX",date("S",JSstrToTime($variableDiscount["EDATE"])));
-		$tpl->getSmarty()->assign("topSource","VDMSG1".$discountMax);
-		$tpl->getSmarty()->assign("BottomSource","VDMSG2".$discountMax);
-	}
-	else
-	{
-		$tpl->getSmarty()->assign("BottomSource","VDMSG2");
-	}
-	$partialObj = new PartialList();
-        $partialObj->addPartial("autoReminderMailerTuple", "autoReminderMailerTuple", array($sender->getPROFILEID()));
-        $tpl->setPartials($partialObj);
-    
-        if(CommonConstants::contactMailersCC)
-        {                
-        $contactNumOb=new ProfileContact();
-        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
-        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
-        {
-           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
-        }
-        else $ccEmail = "";
-        }
-        else $ccEmail = "";
-
-        $emailSender->send("",'',$ccEmail);
-	}
-        
   /**
    * Fire instant EOI mailer
    *
@@ -381,11 +315,10 @@ class ContactMailer
    * @param $subscriptionStatus The subscription status of viewed.
    * @return boolean
    */
-  public static function InstantEOIMailer	($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
+  public static function InstantEOIMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
     $emailSender = new EmailSender(MailerGroup::EOI, 1754);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
-    $tpl->getSmarty()->assign("otherProfile", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
@@ -449,15 +382,12 @@ class ContactMailer
 $emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
-    $tpl->getSmarty()->assign("otherProfile", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
   	$viewerProfileIdObj = new Profile('',$viewerProfileId);
     if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
 		$paidStatus = "eValue";
 	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
-	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='JSEXCLUSIVE')
-				$paidStatus = "JsExclusive";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
 	$smartyObj->assign("count", 1);

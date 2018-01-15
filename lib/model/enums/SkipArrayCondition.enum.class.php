@@ -20,7 +20,11 @@ class SkipArrayCondition {
 									ContactHandler::CANCEL_CONTACT),
 						"IGNORE");
 	
-	public static $MESSAGE = array("IGNORE");
+	public static $MESSAGE = array(
+						"CONTACT"=>array(
+									ContactHandler::DECLINE,
+									ContactHandler::CANCEL),
+						"IGNORE");
 	public static $PHOTO_REQUEST = array(
 						"CONTACT"=>array(
 									ContactHandler::DECLINE,

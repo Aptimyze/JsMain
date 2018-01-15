@@ -40,7 +40,7 @@ EOF;
 		//  Slave connection
 		$misSearchquerySlaveObj = new MIS_SEARCHQUERY('newjs_slave');
 		//  Master connection
-                $misSearchqueryObj = new MIS_SEARCHQUERY('newjs_master');
+                $misSearchqueryObj = new MIS_SEARCHQUERY('newjs_masterDDL');
 
 		$startingID = $misSearchquerySlaveObj->getMinID();
 		$lastID = $misSearchquerySlaveObj->getIdForCorrespondingDateTime($startDt);

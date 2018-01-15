@@ -50,31 +50,16 @@ if(authenticated($cid) || $JSIndicator==1)
 			//finding count of those profiles which are yet to be screened.
 			//$sql_new_unscreened = "SELECT COUNT(*) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY FROM newjs.JPROFILE WHERE ACTIVATED='N' AND INCOMPLETE='N' AND MOD_DT BETWEEN '$st_date' AND '$end_date' and activatedKey=1  and MOD_DT < date_sub(now(), interval 10 minute) GROUP BY DAY";
       $sql_new_unscreened = <<<SQL
-        SELECT COUNT(*) AS COUNT,DAY FROM (
-        SELECT J.PROFILEID,DAYOFMONTH(MOD_DT) AS DAY 
+        SELECT COUNT(J.PROFILEID) AS COUNT,DAYOFMONTH(MOD_DT) AS DAY 
         FROM newjs.JPROFILE J
         LEFT JOIN newjs.JPROFILE_CONTACT C
-        ON J.PROFILEID=C.PROFILEID
+        ON J.PROFILEID=C.PROFILEID 
         WHERE 
-        ACTIVATED='N'
+        ACTIVATED='N' 
         AND INCOMPLETE='N' 
         AND MOD_DT BETWEEN '$st_date' AND '$end_date' 
         AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
-        UNION
-        SELECT J.PROFILEID,DAYOFMONTH(MOD_DT) AS DAY 
-        FROM newjs.JPROFILE J
-        LEFT JOIN newjs.JPROFILE_CONTACT C
-        ON J.PROFILEID=C.PROFILEID
-        LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A
-        ON J.PROFILEID=A.PROFILEID
-        WHERE 
-        A.PROFILEID IS NOT NULL
-        AND INCOMPLETE='N' 
-        AND MOD_DT BETWEEN '$st_date' AND '$end_date' 
-        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
-        AND activatedKey=1
-        )
-        AS TEMP GROUP BY DAY
+        GROUP BY DAY
 SQL;
 			$res_new_unscreened = mysql_query_decide($sql_new_unscreened) or die("$sql_new_unscreened".mysql_error_js());
 			while($row_new_unscreened = mysql_fetch_array($res_new_unscreened))
@@ -102,11 +87,8 @@ SQL;
         FROM newjs.JPROFILE J
         LEFT JOIN newjs.JPROFILE_CONTACT C
         ON J.PROFILEID=C.PROFILEID 
-        LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A
-        ON A.PROFILEID=J.PROFILEID
         WHERE 
         J.ACTIVATED='Y' 
-        AND A.PROFILEID IS NULL
         AND J.SCREENING < '1099511627775' 
         AND J.MOD_DT BETWEEN '$st_date' AND '$end_date' 
         AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
@@ -164,18 +146,6 @@ SQL;
         J.ACTIVATED='N' AND J.INCOMPLETE='N' 
         AND MOD_DT BETWEEN '$st_date' AND '$end_date'
         AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
-        UNION
-        SELECT J.MOD_DT 
-        FROM newjs.JPROFILE J
-        LEFT JOIN newjs.JPROFILE_CONTACT C
-        ON J.PROFILEID=C.PROFILEID
-        LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A
-        ON A.PROFILEID = J.PROFILEID
-        WHERE 
-        A.PROFILEID IS NOT NULL AND J.INCOMPLETE='N' 
-        AND MOD_DT BETWEEN '$st_date' AND '$end_date'
-        AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
-        AND activatedKey=1
 SQL;
     }
 		elseif($type == "edit"){
@@ -186,12 +156,10 @@ SQL;
         LEFT JOIN newjs.JPROFILE_CONTACT C
         ON J.PROFILEID=C.PROFILEID 
         LEFT JOIN jsadmin.MAIN_ADMIN mad 
-        ON mad.PROFILEID = J.PROFILEID
-        LEFT JOIN jsadmin.ACTIVATED_WITHOUT_YOURINFO A
-        ON A.PROFILEID=J.PROFILEID
+        ON mad.PROFILEID = J.PROFILEID  
         WHERE 
         (mad.PROFILEID IS NULL) 
-        AND (ACTIVATED = 'Y' AND A.PROFILEID IS NULL AND SCREENING < '4094303') 
+        AND (ACTIVATED = 'Y' AND SCREENING < '4094303') 
         AND J.MOD_DT BETWEEN '$st_date' AND '$end_date'
         AND (J.MOB_STATUS='Y' OR J.LANDL_STATUS='Y' OR C.ALT_MOB_STATUS='Y')
 SQL;

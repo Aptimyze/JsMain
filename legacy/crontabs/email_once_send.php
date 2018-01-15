@@ -196,7 +196,7 @@ while($rowi=mysql_fetch_array($resi))
 				{
 					if($type[$recr][$row["SENDER"]]){
 						$error_eoi_message = "TYPE:".$type[$recr][$row["SENDER"]]."\nRECEIVER:".$recr."\nSENDER:".$row["SENDER"]."\nCONTACTID:".$row['CONTACTID']."\nMESSAGE:".$message."\n";
-						mail("nitesh.s@jeevansathi.com","EOI mail after acceptance",$error_eoi_message);
+						mail("tanu.gupta@jeevansathi.com","EOI mail after acceptance",$error_eoi_message);
 					}
 					unset($contact_id);
 					$rec=$recr;

@@ -61,7 +61,6 @@ class ShowProfileStats
 		$this->geMembershipDiscount();
 		$this->getServiceRequirement();
 		$this->getScore();
-		$this->getEoiLimit();
 		$this->detailedDataArr['SOURCE'] = $this->profileObj->getSOURCE();
 
 		// get Table Name for Contact
@@ -76,11 +75,9 @@ class ShowProfileStats
         /**
          * @return array
          */
-        public function geMainProfileStats($loginProfile)
+        public function geMainProfileStats($profileDetailArr)
         {
-            $cScoreObject = ProfileCompletionFactory::getInstance(null,$loginProfile,null);
-
-		$profileCompletion =$cScoreObject->getProfileCompletionScore();
+		$profileCompletion =$profileDetailArr['profileCompletion']['PCS'];
 		$this->profileCompletion =$profileCompletion;
                 $this->getOnlineStatus();
                 $this->getMembesrhipDetails();
@@ -104,7 +101,7 @@ class ShowProfileStats
          */
         public function geCustomisedUsername()
         {
-		$nameOfUserObj =new incentive_NAME_OF_USER('crm_slave');
+		$nameOfUserObj =new incentive_NAME_OF_USER('newjs_slave');
 		$nameOfUser =$nameOfUserObj->getName($this->profileid);
 		$this->mainDataArr['PROFILE_NAME'] =$nameOfUser;
 	}
@@ -153,36 +150,11 @@ class ShowProfileStats
 	 */
 	private function getScore()
 	{
-		$adminPoolObj = new incentive_MAIN_ADMIN_POOL('crm_slave');
+		$adminPoolObj = new incentive_MAIN_ADMIN_POOL('newjs_slave');
 		$result = $adminPoolObj->get($this->profileid, 'PROFILEID', 'SCORE,ANALYTIC_SCORE');
 		$this->detailedDataArr['SCORE'] = $result['SCORE'];
 		$this->detailedDataArr['ANALYTIC_SCORE'] = $result['ANALYTIC_SCORE'];
 
-	}
-
-	private function getEoiLimit()
-	{
-		$startDates = CommonFunction::getContactLimitDates($this->profileObj);
-		if(is_array($startDates))
-		{
-			$this->detailedDataArr['weekStartDate'] = $startDates['weekStartDate'];
-			$this->detailedDataArr['weekEndDate'] = CommonFunction::getLimitEndingDate("WEEK", $this->profileObj);
-			$this->detailedDataArr['monthStartDate'] = $startDates['monthStartDate'];
-			$this->detailedDataArr['monthEndDate'] = CommonFunction::getLimitEndingDate("MONTH", $this->profileObj);
-		}
-		
-		$limitArr = CommonFunction::getContactLimits($this->profileObj->getSUBSCRIPTION(), $this->profileid);
-
-		// Limits given
-		$this->detailedDataArr['dayLimit'] = $limitArr['DAY_LIMIT'];
-		$this->detailedDataArr['weeklyLimit'] = $limitArr['WEEKLY_LIMIT'];
-		$this->detailedDataArr['monthlyLimit'] = $limitArr['MONTH_LIMIT'];
-
-		//  Sent Limits
-		$profileMemcacheServiceObj = new ProfileMemcacheService($this->profileObj);
-		$this->detailedDataArr['todaySentLimit'] = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
-		$this->detailedDataArr['weeklySentLimit'] = $profileMemcacheServiceObj->get("WEEK_INI_BY_ME");
-		$this->detailedDataArr['monthlySentLimit'] = $profileMemcacheServiceObj->get("MONTH_INI_BY_ME");
 	}
 	/**
 	 *
@@ -238,7 +210,7 @@ class ShowProfileStats
 
 		// Membership Expiry Date
 		if ($mainMembership) {
-			$serviceStatusObj = new BILLING_SERVICE_STATUS('crm_slave');
+			$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_slave');
 			$expDate = $serviceStatusObj->getMaxExpiryDate($this->profileid);
 			if($expDate)
 				$membershipExpDate = date("M d, Y", strtotime($expDate));
@@ -280,7 +252,7 @@ class ShowProfileStats
 		$loginFrequency =$loginCount.'/ '.$ageOfRegistration;
 
 		if($searchReq){
-			$searchQueryObj = new MIS_SEARCHQUERY('crm_slave');
+			$searchQueryObj = new MIS_SEARCHQUERY('newjs_slave');
 			$searchFrequency = $searchQueryObj->performedSearchInLast10Days($this->profileid, $date10DayPrev);
 		}
 		$serviceRequirement = $this->serviceRequirement($havePhoto, $totalContacted, $lastLoginDt, $profilePercent, $searchFrequency, $ageOfRegistration, $date10DayPrev);
@@ -444,9 +416,9 @@ class ShowProfileStats
 							$DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
 							break;
 						case 'I':
-							if ($value["FILTERED"] == 'Y' || $value["FILTERED"] == 'J' ){
+							if ($value["FILTERED"] == 'Y'){
 								if ($value['TIME1']=='0'){
-									if ($value["SEEN"] != 'Y' && $value["FILTERED"] == 'Y')
+									if ($value["SEEN"] != 'Y')
 										$FILTERED_NEW = $FILTERED_NEW + $value["COUNT"];
 									$FILTERED = $FILTERED + $value["COUNT"];
 								}
@@ -546,16 +518,15 @@ class ShowProfileStats
 		if($this->profileObj->getACTIVATED()!="D")
 		{
 			$profilememcacheObj = new ProfileMemcacheService($this->profileObj);
-			$contactByMeProfile = unserialize($profilememcacheObj->get('CONTACTED_BY_ME'));
-			if(is_array($contactByMeProfile)){
-				foreach ($contactByMeProfile as $type=>$profileids)
+			$contactByMeProfile = unserialize($profilememcacheObj->memcache->getCONTACTED_BY_ME());
+			foreach ($contactByMeProfile as $type=>$profileids)
+			{
+				foreach($profileids as $key=>$profileid)
 				{
-					foreach($profileids as $key=>$profileid)
-					{
-						$profiles[] = $profileid;
-					}
+					$profiles[] = $profileid;
 				}
 			}
+
 			$this->detailedDataArr["CONTACTS_VIEWED"] = $profilememcacheObj->get("CONTACTS_VIEWED");
 			$viewLogObj = new JSADMIN_VIEW_CONTACTS_LOG();
 			$this->detailedDataArr["DIRECT_CONTACTS_VIEWED"] = $viewLogObj->totalContactsByViewer($this->profileid);
@@ -598,8 +569,7 @@ class ShowProfileStats
 		$ntimesObj = new NEWJS_JP_NTIMES();
 		$ntimes = $ntimesObj->getProfileViews($this->profileid);
 		$this->detailedDataArr["TOTAL_VIEW"] = $ntimes;
-		if($ntimes)
-			$this->detailedDataArr["EOI_RATIO"] = round((($this->detailedDataArr["CONTACTS"]["TOTAL_RECEIVED"]/$ntimes)*100),1);
+		$this->detailedDataArr["EOI_RATIO"] = round((($this->detailedDataArr["CONTACTS"]["TOTAL_RECEIVED"]/$ntimes)*100),1);
 	}
 
 	private function getMobileVerificaionStatus(){

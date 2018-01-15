@@ -25,7 +25,7 @@
   </tr>
   ~if $selectedCities neq ''`
         <tr class="formhead" align="center">
-                <td colspan="2" style="background-color:PeachPuff"><font size=2>~$selectedLabel`: ~$selectedCities`</font></td>
+                <td colspan="2" style="background-color:PeachPuff"><font size=2>Cities: ~$selectedCities`</font></td>
         </tr>
   ~/if`
 </table>

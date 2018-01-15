@@ -1,2 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony  cron:PhotoTransfer 1 0 CRITICAL_INFO_DIVORCED_DOC

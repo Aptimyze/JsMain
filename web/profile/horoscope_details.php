@@ -182,7 +182,7 @@ include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 			//mysql_close();
 
 			//$url = "http://www.matchstro.com/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
-			$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
+			$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
 			//reading the data from matchstro into a file.
 			$f = fopen($url,"r");
 			//reading the entire file into an array.
@@ -310,7 +310,7 @@ include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 			//mysql_close();
 			
 			//$url = "http://www.matchstro.com/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
-			$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
+			$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
 			//reading the data from matchstro into a file.
 			$f = fopen($url,"r");
 			//reading the entire file into an array.

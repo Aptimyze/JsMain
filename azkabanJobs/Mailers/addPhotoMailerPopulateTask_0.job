@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony  photoRelated:addPhotoMailerPopulate 1 0
-retries=3
-retry.backoff=60000

@@ -13,7 +13,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                 if(!$res[$v])
                 {
                         $cc='esha.jain@jeevansathi.com';
-						$to='nitesh.s@jeevansathi.com';
+						$to='tanu.gupta@jeevansathi.com';
                         $subject=$msg." verification might not be working";
                         $msg.='No verification is done via '.$v.' from '.$time.' till now.<br/>';
                         send_email($to,$msg,$subject,"",$cc);

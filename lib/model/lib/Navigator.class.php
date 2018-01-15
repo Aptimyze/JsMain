@@ -475,7 +475,6 @@ function show_navigation($navigator,$show_all,$navig_id)
 	$TYPE['DP']="/profile/viewprofile.php";
 	$TYPE['DP_NEW']="/profile/viewprofile.php";
 	$TYPE["CVS_NEW"]="/profile/viewprofile.php";
-	
         if($isPc)
         {
                 $TYPE["PCV"]="/inbox/index";
@@ -544,19 +543,7 @@ function show_navigation($navigator,$show_all,$navig_id)
     $TYPE["MA"] = "/search/matchalerts";//Match Alerts
     $TYPE["KM"] = "/search/kundlialerts";//Kundli Alerts
     $TYPE["JVS"] = "/search/MobSimilarProfiles";//Jsms View Similar
-    if($isMobile)
-    {
-		
-		foreach($TYPE as $k=>$v)
-		{
-			if($v=="/profile/contacts_made_received.php")
-			{
-				$TYPE[$k]="/inbox/jsmsPerform";
-				
-			}
-		}
-	}
-	
+    
 	$minus=0;
 	if($type_arr[1]=="")
 		$minus=+2;

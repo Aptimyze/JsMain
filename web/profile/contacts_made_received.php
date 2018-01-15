@@ -1531,7 +1531,7 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 
 		/* Tracking Contact Center, as per Mantis 4724 Starts here */
 		$end_time=microtime(true)-$start_tm;
-		$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif"));
+		$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif"));
 		/* Ends Here */
 		if($printPage)
 			$smarty->assign("small_header",true);

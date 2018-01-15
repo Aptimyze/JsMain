@@ -20,12 +20,12 @@
             <div class="f17 "><a href="/successStory/story" class="color11">Back</a></div>
         </div>
         ~if $COMMENTS eq ''`
-        <div class="mauto wid80p txtc f28 pt40 pb40">We are delighted to know that you found your match with us!<br>~if $fromMailer neq 'true'`Before we delete your profile~else`Before we wish you a happy married life~/if`, we recommend that you share your success story and get attractive gifts from Jeevansathi</div>
+        <div class="mauto wid80p txtc f28 pt40 pb40">We are delighted to know that you found your match with us!<br>Before we delete your profile, we recommend that you share your success story and get attractive gifts from Jeevansathi</div>
         ~else`
         <div class="mauto wid80p txtc f28 pt40 pb40">Dear ~if $NAME`~$NAME`~else`~$USERNAME`~/if`, thanks for sharing your success story with us. <br>Please upload your wedding photo too to publish the story on Jeevansathi</div>
         ~/if`
         <!--start:form-->
-        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer?~if $offerConsent eq 'Y'`offerConsent=Y&~/if`~if $fromMailer eq 'true'`fromSuccessStoryMailer=true&mailid=~$mailid`~/if`" method="post" enctype="multipart/form-data" target="_self">
+        <form id="submit_ss" name="submit_ss" action="/successStory/submitlayer~if $offerConsent eq 'Y'`?offerConsent=Y~/if`" method="post" enctype="multipart/form-data" target="_self">
             <div class="clearfix ssp6 pb30 ssbrd3">
                 <div class="fl f15 pt10">Your story</div>
                 <div class="fl pl15 ssfwid6">
@@ -190,13 +190,6 @@
                             ~/if`
                         </div>
                     </li>
-                    ~if $fromMailer eq 'true'`
-                        <li class="clearfix fullwid">
-                            <div class="ssfm1" style="overflow:hidden;position: relative;display: inline-block;">
-                            <input id="main_button" type="button" class="cursp fontlig ssfwid3 bg_pink colrw brdr-0 pinkRipple hoverPink" value="Submit Story" style="border:none;"></input>
-                            </div>
-                        </li>
-                    ~else`
                     <li class="clearfix fullwid">
                         <div class="ssfm1" style="overflow:hidden;position: relative;display: inline-block;">
                         <input id="main_button" type="button" class="cursp fontlig ssfwid3 bg_pink colrw brdr-0 pinkRipple hoverPink" value="Submit Story & Delete Profile" style="border:none;"></input>
@@ -207,7 +200,6 @@
                         </div>
                         ~/if`
                     </li>
-                    ~/if`
                 </ul>
                 <input type="hidden" name="checksum" value="~$profileChecksum`">
                 <input type="hidden" name="submit_ss_flag" value="1">
@@ -221,13 +213,13 @@
     <!--end:form-->
     <div id="resultContainer" class="disp-none container mainwid fontlig color11">
         <div class="mauto ssfwid4 f24 txtc sspf9">
-            <p>~if $fromMailer neq 'true'`Your profile is deleted &amp; your~else`Your~/if` story will be uploaded on Jeevansathi. 
+            <p>Your profile is deleted &amp; your story will be uploaded on Jeevansathi. 
             You will soon recieve a surprise gift from our side</p>
         </div>
     </div>
     <div id="skipContainer" class="disp-none container mainwid fontlig color11">
         <div class="mauto ssfwid4 f24 txtc sspf9">
-            <p>Your profile is deleted, we have sent a link to your email id so that you</p>
+            <p>Your profile is deleted, we have send a link to your email id so that you</p>
             <p>can upload your success story in your free time</p>
         </div>
     </div>
@@ -249,11 +241,10 @@
         var errorLog = 0;
         var errorMessage = "";
         if(useCase == 'skipDelete') {
-           // $("#formContainer").fadeOut(500);
-            //$(window).scrollTop(0);
-            window.location.href= "/static/PostWeddingServices";
-            /*$("#skipContainer").fadeIn(500);            
-            return errorLog;*/
+            $("#formContainer").fadeOut(500);
+            $("#skipContainer").fadeIn(500);
+            $(window).scrollTop(0);
+            return errorLog;
         }
         if(useCase == 'photo'){
             $(".jfilestyle").addClass('err');
@@ -343,9 +334,8 @@
             $("ul.weddate").parent().removeClass('err');
         }
         if(useCase == 'verified'){
-            //$("#formContainer").fadeOut(2000);
-            window.location.href= "/static/PostWeddingServices";
-            /*$("#resultContainer").fadeIn(500);*/
+            $("#formContainer").fadeOut(500);
+            $("#resultContainer").fadeIn(500);
         } else {
             $('html,body').animate({scrollTop: $("#errorMessage").offset().top-20},1000);
             $("#errorMessage").html(errorMessage);

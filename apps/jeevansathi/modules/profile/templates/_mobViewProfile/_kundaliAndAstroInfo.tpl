@@ -1,9 +1,8 @@
-
+~if isset($arrData.city_country) || isset($arrData.date_time) || isset($arrData.more_astro)`
     <!--start:Kundali And Astro-->
     <div class="pad5 bg4 fontlig color3 clearfix f14">
       <div class="fl"><i class="vpro_sprite vpro_kund"></i></div>
       <div class="fl color2 f14 vpro_padlTop" id="vpro_astroSection">Kundali & Astro</div>
-    ~if isset($arrData.city_country) || isset($arrData.date_time) || isset($arrData.more_astro)`   
       <div class="clr hgt10"></div>
         ~if isset($arrData.city_country)` 
             <div class="f12 color1">City, Country of Birth</div>
@@ -25,21 +24,7 @@
                 <div class="clearfix">
                     <div class="fontlig fl vpro_wordwrap2" id="vpro_more_astro_nakshatra" >~$arrData.more_astro.nakshatra`</div>
                 </div>
-                ~/if`
-        ~/if`
-    ~/if`
-                ~if $arrData.sameGender neq 1`
-                <!--start:button-->
-                <div class="clearfix pb20 pt20">
-                ~if ($arrData.othersHoroscope eq 'Y' && ($arrData.toShowHoroscope eq 'Y' || $arrData.toShowHoroscope eq '') )`
-                <a href = "~$SITE_URL`/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=~$arrData.username`&SIM_USERNAME=~$arrData.username`&type=Horoscope&checksum=&otherprofilechecksum=~$otherProfilechecksum`&randValue=890&GENDER=~$arrData.gender`"><button class="fontlig lh40 astroBtn1" style="width:49%">Download Horoscope</button></a>
-                ~/if`
-                ~if (!$arrData.NO_ASTRO && $arrData.sameGender neq 1)`
-                 <button class="fontlig lh40 astroBtn1 fr ~if $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N' AND $arrData.paidMem eq 'Y'` js-astroCompMem ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N'` js-freeAstroComp ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION neq 'N'` js-astroMem ~/if`" style="width:48%">Get Astro Report</button>
-                 ~/if`               
-             </div>
-             ~/if`
-             <!--end:button-->
+                ~/if`	
                 ~if isset($arrData.more_astro.horo_match)`
                 <div class="clearfix pt10">
                     <div class="fl"><i class="vpro_sprite vpro_pin"></i></div>
@@ -50,9 +35,11 @@
                 </div>
                 
             </div>
+        ~/if`
+       
     </div>
     <!--end:Kundali And Astro--> 
-
+~/if`
 <!-- Religious Beliefs Section-->
 ~if isset($arrData.muslim_m) || isset($arrData.sikh_m) || isset($arrData.christian_m)`
 <div class="pad5 bg4 fontlig color3 clearfix f14">
@@ -79,19 +66,4 @@
 </div>    
 ~/if`
 
-<!--start:later for astro download-->
-      
-    
-    <div class="setcenter fontlig f18 dispnone js-astroTextButton">
-        <div class="astrob1 js-textAstro">            
-        </div>
-        <a class="f18 fontlig astrob2 js-buttonAstro dispbl txtc"></a>
-    </div>
-    <!--end:later for astro download-->
-<script>
 
-var username = "~$arrData.username`";
-var otherProfilechecksum = "~$otherProfilechecksum`";
-var gender = "~$arrData.gender`";
-var astroSent = "~$astroSent`";
-</script>

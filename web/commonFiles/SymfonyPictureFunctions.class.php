@@ -326,7 +326,7 @@ class SymfonyFTOFunctions
 		{
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 			$cc='esha.jain@jeevansathi.com';
-			$to='nitesh.s@jeevansathi.com';
+			$to='tanu.gupta@jeevansathi.com';
 			$msg='';
 			$subject="error: updateFTOState in SymfonyPictureFunction.class.php";
 			$msg='error with profileid:'.$profileid.' and action:'.$action.' <br/><br/>Warm Regards';

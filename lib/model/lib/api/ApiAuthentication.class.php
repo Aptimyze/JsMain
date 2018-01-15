@@ -47,143 +47,18 @@ Abstract class ApiAuthentication
 	{
 		$this->request=$request;
 	}
-	
-	/**
-	 * check if multiple profiles are present per mobile number, check for unique profile with given password 
-	 * and get data for single profile.
-	 * 
-	 * @return array => {"isSuccess", "data"}
-	 */
-	public function checkForMultipleProfiles($emailOrMobile, $password){
-	    $response = array();
-	    $isSuccess = false;
-	    $data = null;
-	    
-	    $emailOrMobile = trim($emailOrMobile);
-	    if($emailOrMobile){
-	        // Email/Mobile validations and set flag for 'Email/Mobile'
-	        if(!$this->validate($emailOrMobile)){
-	            $isSuccess = false;
-	            $data = ResponseHandlerConfig::$FLOGIN_EMAIL_ERR;
-	        }else{
-	            $dbJprofile= new JPROFILE();
-	            $MultipleProfilesPerPhone = 0;
-	            $SingleUniqueProfileFound = 0;
-	            
-	            $profileColumns = "MOB_STATUS,PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT";
-	            if($this->flag == 'E'){
-	                $data = $dbJprofile->get($this->finalString, "EMAIL", $profileColumns);
-	                $isSuccess = true;
-	            }else if($this->flag == 'M'){
-	                for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleUniqueProfileFound); $i--){
-	                    $phone_mob= substr($this->finalString, -$i);
-	                    $arr=array('PHONE_MOB'=>"'$phone_mob'");
-	                    $excludeArr=array('ACTIVATED'=>"'D'");
-	                    $data=$dbJprofile->getArray($arr,$excludeArr,'',$profileColumns);
-	                    if(count($data) == 1){
-	                        //  1 unique profile found
-	                        $data = $data[0];
-	                        $isSuccess = true;
-	                        $SingleUniqueProfileFound = 1;
-	                    }else if(count($data) > 1){
-	                        $responseData = $this->checkUniquePasswordInMultipleProfiles($data, $password);
-	                        $hasUniquePassword = $responseData['hasUniquePassword'];
-	                        
-	                        if($hasUniquePassword == true){
-	                            $data = $responseData['rowData'];
-	                            $isSuccess = true;
-	                            $SingleUniqueProfileFound = 1;
-	                        }else{
-	                            $MultipleProfilesPerPhone = 1;
-	                            $isSuccess = false;
-	                        }
-	                    }
-	                }
-	            }
-	            
-	            if($this->flag == 'M' && $MultipleProfilesPerPhone){
-	                $data = ResponseHandlerConfig::$FLOGIN_PHONE_ERR;
-	                $isSuccess = false;
-	            }
-	        }
-	    }
-	    $response["isSuccess"] = $isSuccess;
-	    $response["data"] = $data;
-	    return $response;
-	}
-	
-	private function checkUniquePasswordInMultipleProfiles($profileData, $password){
-	   $response = array();
-	   $hasUniquePassword = false;
-	   $responseData = null;
-	   
-	   if($profileData && $password){
-	       foreach ($profileData as $rowData){
-	           if(PasswordHashFunctions::validatePassword($password, $rowData['PASSWORD'])){       //password matches
-	               if($hasUniquePassword == true){
-	                   $hasUniquePassword = false;
-	                   $responseData = null;
-	                   break;
-	               }
-	               
-	               $responseData = $rowData;
-	               $hasUniquePassword = true;
-	           }
-	       }
-	   }
-	   
-	   $response['hasUniquePassword'] = $hasUniquePassword;
-	   $response['rowData'] = $responseData;
-	   return $response;
-	}
-	
-	public function validate($email){
-	    $regex = "/^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})/";
-	    if($email == ''){
-	        return false;
-	    }
-	    else if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-	        $this->flag='E';
-	        $this->finalString=$email;
-	        return true;
-	    }else{
-	        if(strpos($email, '+')===0)
-	            $email=substr($email, 1);
-	            $email=$this->replaceFirstOccurence('-','',$email);
-	            $email = ltrim($email,'0');
-	            $regex = "/^[0-9]{7,}/";
-	            if(preg_match($regex, $email)){
-	                $this->flag='M';
-	                $this->finalString=$email;
-	                return true;
-	            }
-	    }
-	    return false;
-	}
-	
-	private function replaceFirstOccurence($needle, $replace, $haystack){
-	    $pos = strpos($haystack, $needle);
-	    if ($pos !== false) {
-	        $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
-	        return $newstring;
-	    }
-	    return $haystack;
-	}
 
 	
-	public function login($email,$password,$rememberMe, $data = null)
+	public function login($email,$password,$rememberMe)		//to be changed in connect_auth.inc
 	{
 		if($email && $password)
 		{
-		    if($data == null){    //email login
-		        //Get the Login Data from JProfile -->call Store
-		        $dbJprofile=new JPROFILE();
-		        $paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT';
-		        $loginData=$dbJprofile->get($email,"EMAIL",$paramArr);
-		    }else{                //mobile login
-		        $loginData= $data['data'];
-		    }
+			//Get the Login Data from JProfile -->call Store
+			$dbJprofile=new JPROFILE();
 			
+			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL,SORT_DT';
+			
+			$loginData=$dbJprofile->get($email,"EMAIL",$paramArr);
 			if(is_array($loginData))
 			{
 				if(PasswordHashFunctions::validatePassword($password, $loginData['PASSWORD'])||$this->hashedPasswordFromDb)
@@ -202,7 +77,6 @@ Abstract class ApiAuthentication
 					{
 						$profileObj= LoggedInProfile::getInstance();
 						$profileObj->getDetail($this->loginData[PROFILEID],"PROFILEID","*");
-						$this->setLoginTrackingCookie($this->loginData);
 						if(IncompleteLib::isProfileIncomplete($profileObj) && $profileObj->getINCOMPLETE()!="Y")
 						{
 							$this->loginData[INCOMPLETE]="Y";
@@ -301,7 +175,7 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification") || strstr($_SERVER["REQUEST_URI"],"api/v3/notification")){
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
 				$this->loginData =$loginData;
 				$this->loginData[AUTHCHECKSUM]=$authChecksum;
 				return $this->loginData;
@@ -347,11 +221,10 @@ Abstract class ApiAuthentication
 		//need to check the DOB,GENDER,ACTIVATION,INCOMPLETE fields
 		//Get the Login Data from JProfile -->call Store
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$loggedInProfileObj=LoggedInProfile::getInstance();
+			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_masterRep");
 		else
-			$loggedInProfileObj=LoggedInProfile::getInstance();
+			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
-		
 		//If any changes Found then logout user
 		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
 		{
@@ -374,9 +247,9 @@ Abstract class ApiAuthentication
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$dbObj=new ProfileAUTO_EXPIRY();
+			$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
 		else
-			$dbObj=new ProfileAUTO_EXPIRY();
+			$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
 		
 		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
@@ -412,8 +285,6 @@ Abstract class ApiAuthentication
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
             $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
             $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
-            $loginData["LAST_LOGIN_DT"]=$loggedInProfileObj->getLAST_LOGIN_DT();
-            $loginData["HAVEPHOTO"] = $loggedInProfileObj->getHAVEPHOTO();
 			return $loginData;
 		}
                 
@@ -422,7 +293,6 @@ Abstract class ApiAuthentication
      
     public function CommonLoginTracking()
 	{
-		if($this->loginData['ACTIVATED']=='D') return ;
 		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
 		$profileId=$this->loginData["PROFILEID"];
 		$ip=CommonFunction::getIP();
@@ -477,8 +347,6 @@ Abstract class ApiAuthentication
 			$queueArr['websiteVersion']=$websiteVersion;
 			$queueArr['channel']=$this->channel;
 			$queueArr['page']=$page;
-                        $queueArr['whichChannel'] = MobileCommon::getChannel();
-            $queueArr['latLoginDt']=$this->loginData["LAST_LOGIN_DT"];
 			$queueArr['misLoginTracking']=true;
 		}
 		
@@ -508,7 +376,6 @@ Abstract class ApiAuthentication
         {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
-		//$this->updateAppRegistrationId();
         }
         $curDat = date('Y-m-d');
         if($queueArr['profileId'] && JsMemcache::getInstance()->get("DISC_HIST_".$curDat."_".$queueArr['profileId']) != "Y"){
@@ -524,7 +391,6 @@ Abstract class ApiAuthentication
                 JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
             }
             unset($prodObj,$queueData,$body);
-
         }
 	}
 	
@@ -545,17 +411,14 @@ Abstract class ApiAuthentication
 				$dbJprofile=new JPROFILE("newjs_masterRep");
 			else
 				$dbJprofile=new JPROFILE("newjs_master");
-			if($username){
-				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-				$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
-				$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
-				$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
-				if(!PasswordHashFunctions::slowEquals($pwd,$password))
-					return NULL;
-				$time=36*60;
-			}
-			else
+			
+			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+			$this->loginData=$dbJprofile->get($username,"USERNAME",$paramArr);
+			$pwdData = PasswordHashFunctions::unmixString($this->loginData['PASSWORD']);
+			$pwd = PasswordHashFunctions::encrypt($pwdData['STRING1'],$this->remSalt,$this->mixer);
+			if(!PasswordHashFunctions::slowEquals($pwd,$password))
 				return NULL;
+			$time=36*60;
 		}
 		else
 		{
@@ -583,16 +446,12 @@ Abstract class ApiAuthentication
 					return NULL;
 			}
 			$id=$temp[PR];
-			if($id){
-				if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-					$dbJprofile=new JPROFILE("newjs_masterRep");
-				else
-					$dbJprofile=new JPROFILE("newjs_master");
-				$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
-				$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
-			}
+			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+				$dbJprofile=new JPROFILE("newjs_masterRep");
 			else
-				return NULL;
+				$dbJprofile=new JPROFILE("newjs_master");
+			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD';
+			$this->loginData=$dbJprofile->get($id,"PROFILEID",$paramArr);
 		}
 
 		return $this->encryptAppendTime($this->createAuthChecksum($time));
@@ -650,13 +509,6 @@ Abstract class ApiAuthentication
 		@setcookie($this->AUTH,"",0,"/",$this->domain);
 		 @setcookie($this->cookieRemName,"",0,"/",$this->domain);
 			@setcookie($this->cookieRemPass,"",0,"/",$this->domain);
-
-		//For 1 week only to delete cookie on www.jeevansathi.com
-		@setcookie($this->AUTHCHECKSUM,"",0,"/",".jeevansathi.com");
-       @setcookie($this->HMT,"",0,"/",".jeevansathi.com");
-       @setcookie($this->AUTH,"",0,"/",".jeevansathi.com");
-       @setcookie($this->cookieRemName,"",0,"/",".jeevansathi.com");
-       @setcookie($this->cookieRemPass,"",0,"/",".jeevansathi.com");
 	}
 		
 	/*
@@ -950,9 +802,6 @@ Abstract class ApiAuthentication
 		if(!$profileId)return ;
 		$ip = $trackingData['ip'];
 		$currentTime = $trackingData['currentTime'];
-		//For trackig two months old data
-		
-      	
 		if($trackingData[misLoginTracking])
 		{
 			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
@@ -961,20 +810,6 @@ Abstract class ApiAuthentication
 			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
 			$loginTracking->setRequestURI($trackingData["page"]);
 			$loginTracking->loginTracking('',$currentTime);
-            $trackingData['type'] = LoggingEnums::COOL_M_LOGIN;
-            LoggingManager::getInstance()->writeToFileForCoolMetric($trackingData);
-            if($trackingData['latLoginDt']){
-            	$lastLoginDate=$trackingData['latLoginDt'];
-				$ContactTime=strtotime($lastLoginDate);
-	      		$time = time();
-      			$daysDiff  = floor(($time - $ContactTime)/(3600*24));
-            	if($daysDiff>=60)
-            	{
-	            	$dbOldProfileTrackingDbObj= new MIS_LOGIN_TRACKING_OLDPROFILES();
-            		$dbOldProfileTrackingDbObj->insert($profileId,$currentTime);
-            	}
-            }
-                        
 		}
 		if($trackingData[logLoginHistoryTracking])
 		{
@@ -998,13 +833,10 @@ Abstract class ApiAuthentication
 			$dbJprofile=new JPROFILE("newjs_master");
 			$dbJprofile->updateLoginSortDate($profileId,$currentTime);
 		}
-
-		if($trackingData["appLoginProfileTracking"] || ($trackingData[misLoginTracking] && ($trackingData["websiteVersion"] == 'A' ||$trackingData["websiteVersion"] == 'I') ) )
+		if($trackingData["appLoginProfileTracking"])
 		{
 			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
-			$appType = $trackingData["websiteVersion"];
-			$date = $trackingData["currentTime"];
-			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId,$appType,$date);
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
 		}
 		if($trackingData["logLogoutTracking"])
 		{
@@ -1019,59 +851,5 @@ Abstract class ApiAuthentication
 
 	}
 
-	/*
-	* @function: setLoginTrackingCookie
-	* @param array - login data
-	*/ 
-    public function setLoginTrackingCookie($loginData)
-	{
-		if(MobileCommon::isApp())
-			return ;
-
-		$username = $loginData["USERNAME"];
-		$cookieName = "loginTracking";
-		$expiryTime = 31536000; // Approx 1 year
-
-		if(!isset($_COOKIE[$cookieName]))
-		{
-			@setcookie($cookieName, json_encode(array($username)), time() + $expiryTime, "/", $this->domain);
-			// send mail
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
-			CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
-		}
-		else
-		{
-			$cookieData = json_decode($_COOKIE[$cookieName], true);
-			if(!in_array($username, $cookieData))
-			{
-				array_push($cookieData, $username);
-				@setcookie($cookieName, json_encode($cookieData), time() + $expiryTime, "/", $this->domain);
-				// send mail
-				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login User : $username ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
-				CommonFunction::SendEmailNewLogin($loginData["PROFILEID"]);
-			}
-		}
-	}
-
-	// App Registration-Id Login time Update Handling
-        public function updateAppRegistrationId()
-        {
-	    //if(strstr($_SERVER["REQUEST_URI"],"api/v1/")
-            $registrationid     =sfContext::getInstance()->getRequest()->getParameter('registrationid');
-            $apiappVersion      =sfContext::getInstance()->getRequest()->getParameter('CURRENT_VERSION');
-            $lastLoginDate      =$this->loginData["LAST_LOGIN_DT"];
-	    $todayDate		=date("Y-m-d");	 
-	    $checkDate 		=date("Y-m-d H:i:s",strtotime("$todayDate -2 days"));
-	    if(strtotime($lastLoginDate)<=strtotime($checkDate)){		
-            	if($registrationid && !$this->isNotApp){
-                        $producerObj = new JsNotificationProduce();
-                        if($producerObj->getRabbitMQServerConnected()){
-                                $dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion);
-                                $msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
-                                $producerObj->sendMessage($msgdata);
-                        }
-            	}
-	    }	
-        }
 }
 ?>

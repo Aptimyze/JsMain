@@ -12,6 +12,7 @@ class editDppInterfaceAction extends sfActions {
 					
 							$this->cid = $request->getParameter("cid");
               $profileChecksum = $request->getParameter('profileChecksum');
+             
 							if($profileID)
 							{
 								$this->profile = Operator::getInstance("", $profileID);
@@ -29,7 +30,8 @@ class editDppInterfaceAction extends sfActions {
 									echo "Invalid ID";
 									die;
 								}
-							}	
+							}
+												
 						global $protect;
 						JsCommon::oldIncludes();
 						$protect = new protect();
@@ -37,10 +39,7 @@ class editDppInterfaceAction extends sfActions {
 						$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
 						$echecksum = $protect->js_encrypt($checksum);
 						$this->profileid = $this->profile->getPROFILEID();
-						$agentAllocationObj = new AgentAllocationDetails();
-						$username = $agentAllocationObj->fetchAgentName($this->cid);
-						file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/editDppBackend.txt","id: ".$this->profileid." | op: ".$_COOKIE['OPERATOR']." | opp: ".$username." | d: ".date('Y-m-d H:i:s')."\n",FILE_APPEND);
-						$this->autologinUrl=JsConstants::$siteUrl."/profile/dpp?allowLoginfromBackend=1&profileChecksum=" . $profileChecksum . "&checksum=" . $checksum."&cid=".$this->cid;
+						$this->autologinUrl="http://www.jeevansathi.com/profile/dpp?allowLoginfromBackend=1&profileChecksum=" . $profileChecksum . "&checksum=" . $checksum."&cid=".$this->cid;
 						$this->redirect($this->autologinUrl);
 				}	
 }

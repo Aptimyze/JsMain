@@ -413,35 +413,5 @@ class NEWJS_SUCCESS_STORIES extends TABLE{
 				throw new jsException($e);
 			}
 		}
-
-		public function checkIfSuccessStoriesUploaded($userNames) {
-			try{
-				$sql = "SELECT USERNAME_H, USERNAME_W
-						FROM newjs.SUCCESS_STORIES
-						WHERE USERNAME_H IN (" ;
-
-                $COUNT=1;
-                foreach($userNames as $key => $value){
-                    $valueToSearch[] = ":KEY".$COUNT;
-                    $bind["KEY".$COUNT]["VALUE"] = $value;
-                    $COUNT++;
-                }
-                $values = implode(",",$valueToSearch);
-                $sql = $sql . $values . ") OR USERNAME_W IN (" . $values .");";
-                $prep = $this->db->prepare($sql);
-                foreach($bind as $key=>$val) {
-                    $prep->bindValue($key, $val["VALUE"], PDO::PARAM_STR);
-                }
-                $prep->execute();
-                $prep->setFetchMode(PDO::FETCH_ASSOC);
-                while($row = $prep->fetch()){
-                    $result[] = $row["USERNAME_H"];
-                    $result[] = $row["USERNAME_W"];
-                }
-                return $result;
-			}catch (Exception $e){
-				throw new jsException($e);
-			}
-		}
 }
 ?>

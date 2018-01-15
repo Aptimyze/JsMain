@@ -30,22 +30,13 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 	{
 		if(!$registrationid)
 			return;
-                $sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET `APP_VERSION` =:APP_VERSION";
-
-		if($osVersion && $deviceBrand && $deviceModel){
-			$sqlUpdate .=", `OS_VERSION`=:OS_VERSION, `DEVICE_BRAND`=:DEVICE_BRAND, `DEVICE_MODEL`=:DEVICE_MODE";
-		}
-		$sqlUpdate .=", `TIME`=now() WHERE `REG_ID`=:REG_ID";
+                $sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET `APP_VERSION` =:APP_VERSION, `OS_VERSION`=:OS_VERSION, `DEVICE_BRAND`=:DEVICE_BRAND, `DEVICE_MODEL`=:DEVICE_MODEL,`TIME`=now() WHERE`REG_ID`=:REG_ID";
                 $resUpdate = $this->db->prepare($sqlUpdate);
                 $resUpdate->bindValue(":REG_ID",$registrationid,constant('PDO::PARAM_'.$this->{'REG_ID_BIND_TYPE'}));
 		$resUpdate->bindValue(":APP_VERSION",$appVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
-
-		if($osVersion && $deviceBrand && $deviceModel){
-	                $resUpdate->bindValue(":OS_VERSION",$osVersion,constant('PDO::PARAM_'.$this->{'OS_VERSION_BIND_TYPE'}));
-	                $resUpdate->bindValue(":DEVICE_BRAND",$deviceBrand,constant('PDO::PARAM_'.$this->{'DEVICE_BRAND_BIND_TYPE'}));
-	                $resUpdate->bindValue(":DEVICE_MODEL",$deviceModel,constant('PDO::PARAM_'.$this->{'DEVICE_MODEL_BIND_TYPE'}));
-		}
-
+                $resUpdate->bindValue(":OS_VERSION",$osVersion,constant('PDO::PARAM_'.$this->{'OS_VERSION_BIND_TYPE'}));
+                $resUpdate->bindValue(":DEVICE_BRAND",$deviceBrand,constant('PDO::PARAM_'.$this->{'DEVICE_BRAND_BIND_TYPE'}));
+                $resUpdate->bindValue(":DEVICE_MODEL",$deviceModel,constant('PDO::PARAM_'.$this->{'DEVICE_MODEL_BIND_TYPE'}));
                 $resUpdate->execute();
 	}
 	public function updateProfileId($registrationid,$profileid='')
@@ -179,30 +170,11 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$return.=" ".$param." ".$relation." (".$str.") ";
 		return $return;
 	}
-        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='',$androidMaxVersion='',$notificationStatus = '',$separateWhereProfile = '',$separateSelectColumns = '')
+        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='')
         {
                 //$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT";
-   
-		$sqlUpdate = "SELECT";
-		if($separateSelectColumns == ""){
-			$sqlUpdate = $sqlUpdate." DISTINCT(PROFILEID)";
-		}
-		else{
-			$sqlUpdate = $sqlUpdate." ".$separateSelectColumns;
-		}
-		
-		$sqlUpdate = $sqlUpdate." FROM MOBILE_API.REGISTRATION_ID WHERE";
-		if($separateWhereProfile != ''){
-			$sqlUpdate = $sqlUpdate." ".$separateWhereProfile;
-		}
-		else{
-			$sqlUpdate = $sqlUpdate." PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT";
-		}
-		$sqlUpdate = $sqlUpdate." AND (";
-		//To pick profiles having maximum app versions.
-        if($androidMaxVersion)
-            $sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND APP_VERSION<:MAX_AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
-		else if($andAppVersion)
+		$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT AND (";
+		if($andAppVersion)
 			$sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
 		//else
 		//	$sqlUpdate = $sqlUpdate."(OS_TYPE=:AND_OS_TYPE)";
@@ -211,27 +183,16 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 		//else
 		//	$sqlUpdate = $sqlUpdate." OR (OS_TYPE=:IOS_OS_TYPE)";
 		$sqlUpdate = $sqlUpdate.")";
-		if($notificationStatus)
-			$sqlUpdate = $sqlUpdate." AND (NOTIFICATION_STATUS=:NOTIFICATION_STATUS)";
-		
 	        $resUpdate = $this->db->prepare($sqlUpdate);
-	    if($separateWhereProfile == ''){
-			$resUpdate->bindValue(":NO_OF_SCRIPTS",$noOfScripts,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
-			$resUpdate->bindValue(":CURRENT_SCRIPT",$currentScript,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
-		}
+		$resUpdate->bindValue(":NO_OF_SCRIPTS",$noOfScripts,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+		$resUpdate->bindValue(":CURRENT_SCRIPT",$currentScript,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 		if($andAppVersion){
 			$resUpdate->bindValue(":AND_APP_VERSION",$andAppVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
 			$resUpdate->bindValue(":AND_OS_TYPE",'AND',constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
 		}
-        if($androidMaxVersion){
-            $resUpdate->bindValue(":MAX_AND_APP_VERSION",$androidMaxVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
-        }
 		if($iosAppVersion){
 			$resUpdate->bindValue(":IOS_APP_VERSION",$iosAppVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
 			$resUpdate->bindValue(":IOS_OS_TYPE",'IOS',constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
-		}
-		if($notificationStatus){
-			$resUpdate->bindValue(":NOTIFICATION_STATUS",$notificationStatus,constant('PDO::PARAM_'.$this->{'NOTIFICATION_STATUS_BIND_TYPE'}));
 		}
         	$resUpdate->execute();
 		return $resUpdate;
@@ -247,19 +208,6 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$pid =$rowSelectDetail['PROFILEID'];
                 return $pid;
         }
-
-        public function getValidRegisteredProfiles($osType="AND")
-        {
-            $sqlSel = "SELECT PROFILEID,REG_ID FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID IS NOT NULL && PROFILEID <> 0 AND NOTIFICATION_STATUS=:NOTIFICATION_STATUS AND OS_TYPE=:OS_TYPE";
-            $resSel = $this->db->prepare($sqlSel);
-            $resSel->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
-            $resSel->bindValue(":NOTIFICATION_STATUS","Y",constant('PDO::PARAM_'.$this->{'NOTIFICATION_STATUS_BIND_TYPE'}));
-            $resSel->execute();
-            $output = array();
-			while($rowSelectDetail = $resSel->fetch(PDO::FETCH_ASSOC))
-				$output[] =$rowSelectDetail;
-	        return $output;
-	    }
         
         public function checkNotificationSubscriptionStatus($profileid){
         	try{
@@ -279,28 +227,6 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 				throw new jsException($e);
 			}
 		}
-
-        public function getAppRegisteredProfile($osType,$dateTime1, $dateTime2, $limit1, $limit2)
-        {
-		try{
-                	$sqlSel = "SELECT REG_ID FROM MOBILE_API.REGISTRATION_ID WHERE OS_TYPE=:OS_TYPE AND TIME>=:TIME1 AND TIME2<=:TIME2 LIMIT $limit1,$limit2";
-                	$resSel = $this->db->prepare($sqlSel);
-
-                	$resSel->bindValue(":OS_TYPE", $osType, PDO::PARAM_STR);
-                	$resSel->bindValue(":TIME1", $dateTime1, PDO::PARAM_STR);
-                	$resSel->bindValue(":TIME2",$dateTime2, PDO::PARAM_STR);
-                	$resSel->execute();
-                	if($rowSelectDetail = $resSel->fetch(PDO::FETCH_ASSOC))
-                	        $regIdArr[] =$rowSelectDetail['REG_ID'];
-                	return $regIdArr;
-			}
-                catch(PDOException $e)
-                {
-                	throw new jsException($e);
-                }
-
-        }
-
 
 }
 ?>

@@ -5,7 +5,7 @@ class misRegistrationQualityTask extends sfBaseTask
 {
   protected $screenDate =3;
   protected $registrationArray = array();
-  protected $CC = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13,37); // core community
+  protected $CC = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13); // core community
   protected $SIC = array(31,16,17,3,25); // south indian community
   protected function configure()
   {
@@ -38,7 +38,7 @@ EOF;
     $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate," 00:00:00");
    
     $profile_ids = array();
-    $qualityProfiles = array();
+
     foreach ($profiles as $profile) {
       $profiles_entry_date = date("Y-m-d",strtotime($profile["ENTRY_DT"]));
       if ( $registerDate == $profiles_entry_date) 
@@ -57,8 +57,7 @@ EOF;
       } else {
         $cityRES = $profile["SOURCECITY"];
       }
-      $countryRes = $profile["SOURCE_COUNTRY"];
-      $cityRES .= "_".$countryRes;
+      
       if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
               $this->registrationArray[$regKey][$sourceGroupId] =array();
       }
@@ -68,7 +67,6 @@ EOF;
       }
       
       
-      $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['source_country']  = $countryRes;
       $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['total_reg'] ++;
       if (in_array($profile['MTONGUE'], $this->SIC)){
         $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['screened_SIC'] ++;
@@ -80,7 +78,6 @@ EOF;
         $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER']] ++;
         $mobVerified = $this->verifyMobile($profile['MV']);
         if($mobVerified == 1){
-          $qualityProfiles[] = $profile["PROFILEID"];
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MV'] ++;
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MVCC'] += $ccStatus;
         }
@@ -95,6 +92,7 @@ EOF;
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['OTHERS_COMMUNITY'] ++;
       }
       }
+      //print_r($this->registrationArray);die;
     $regQualityObj = new REGISTRATION_QUALITY();
     $regQualityObj->insertQualityRegistration($this->registrationArray);
 
@@ -102,9 +100,6 @@ EOF;
    
     $regQualityActivated->insert($profile_ids,$registerDate); 
 
-    $qualityUpdate = new MIS_CAMPAIGN_KEYWORD_TRACKING(); // update quality column in CAMPAIGN keyword tracking MIS
-    $qualityUpdate->updateIsQualityProfile($qualityProfiles);
-    
     $this->logSection('data inserted');
   }
   function verifyMobile($MV) {

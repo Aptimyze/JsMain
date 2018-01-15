@@ -6,7 +6,6 @@
 ~assign var=profileid value= $sf_request->getAttribute('profileid')`
 ~assign var=zedoValue value= $sf_request->getAttribute('zedo')`
 ~assign var=zedo value= $zedoValue["zedo"]`
-~assign var=showFreshChat value= CommonUtility::checkFreshChatPanelCondition($module,$action,$profileid)`
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
@@ -72,7 +71,6 @@
                         <li><a href="/profile/registration_pg1.php?source=js_footer">Register free</a></li>-->
                         <li><a href="/search/AdvancedSearch">Advanced search</a></li>
                         <li><a href="/successStory/story">Success stories</a></li>
-                        <li><a href="/blog/">Matrimonial Blog</a></li>
                         <li><a href="/profile/site_map.php">Sitemap</a></li>
                     </ul>
                 </div>
@@ -83,7 +81,7 @@
                         <li class="f16 fontreg">Services</li>
                         <!--<li><a target="_blank" href="http://www.jeevansathimatchpoint.com">Jeevansathi offline</a></li>-->
                         <li><a href="/membership/jspc">Membership Options</a></li>
-                        <li><a href="https://careers.jeevansathi.com">Jeevansathi Careers</a></li>
+                        <li><a href="http://careers.jeevansathi.com">Jeevansathi Careers</a></li>
                     </ul>
                 </div>
                 <!--end:column one-->
@@ -153,35 +151,24 @@
                         <div id="images">
                             <div class="basic">
                                 <ul>
-                                    <li class="pl40"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
-                                    <li class="pl40"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
-                                    <li class="pl40"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
-            
+                                    <li class="pl17"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
+                                    <li class="pl17"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
+                                    <li class="pl17"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
+                                    <li class="pl30"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
                                 </ul>
                             </div>
                             <div class="basic">
-                                <ul>
-                                    <li class="pl55"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
-                                    <li class="pl55"><a href="http://www.mydala.com" target="_blank" title="mydala"><i class="headfootsprtie mydala"></i></a></li>
-                                    <li class="pl55"><a href="https://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
-                
-                                </ul>
-                            </div>
-                            <div class="basic">
-                                <ul>
-                                    <li class="pl55"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
-                                    <li class="pl55"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
-                                    <li class="pl30"><a href="http://ambitionbox.com" target="_blank" title="AmbitionBox – Interview Prep & Company Reviews"><i class="headfootsprtie ambitionbox"></i></a></li>
-                                </ul>
+                                <div>
+                                    <ul>
+                                        <li class="pl17"><a href="http://www.mydala.com" target="_blank" title="mydala"><i class="headfootsprtie mydala"></i></a></li>
+                                        <li class="pl30"><a href="https://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
+                                        <li class="pl40"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
+                                        <li class="pl20"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <a id="prev" href="javascript:void(0);"> 
-                            <i class="headfootsprtie leftslide"></i> 
-                        </a>
-                        <a id="next" href="javascript:void(0);">
-                            <i class="headfootsprtie rightsmall"></i> 
-                        </a> 
-                    </div>
+                    <a id="prev" href="javascript:void(0);"> <i class="headfootsprtie leftslide"></i> </a> <a id="next" href="javascript:void(0);"> <i class="headfootsprtie rightsmall"></i> </a> </div>
                 </div>
                 <!--endt:slider-->
             </div>
@@ -201,16 +188,19 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $showFreshChat && $profileid`
-        ~assign var="userDetails" value=CommonUtility::getFreshChatDetails($profileid)`
-        ~assign var="tag" value=CommonUtility::getUserType($profileid)`
-        ~/if`
-        ~if $module eq 'static' && $action eq 'logoutPage'`
-        localStorage.removeItem("login");
-        localStorage.setItem("logout",1);
-        ~elseif $profileid`
-        localStorage.removeItem("logout");
-        localStorage.setItem("login",1);
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
+            ~if $profileid`
+                var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
+                var userDetails = $.parseJSON(udObj);
+                populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~if $module eq 'membership' || $fromSideLink eq '1'`
+                    popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~/if`
+            ~else`
+                ~if $fromSideLink eq '1'`
+                    popupFreshDeskGlobal("", "");
+                ~/if`
+            ~/if`
         ~/if`
         slider();
         ~if $module neq 'register'`
@@ -218,9 +208,29 @@
         ~/if`
     });
 </script>
-
-~if $showFreshChat`
+<!-- Begin Inspectlet Embed Code -->
+<script type="text/javascript" id="inspectletjs" > 
+window.__insp = window.__insp || [];
+__insp.push(['wid', 1937430883]);
+(function () {
+    function ldinsp() {
+        if (typeof window.__inspld != "undefined") return;
+        window.__inspld = 1;
+        var insp = document.createElement('script');
+        insp.type = 'text/javascript';
+        insp.async = true;
+        insp.id = "inspsync";
+        insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(insp, x);
+    };
+    setTimeout(ldinsp, 500);
+    document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
+})(); 
+</script>
+<!-- End Inspectlet Embed Code -->
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
-        ~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$profileid,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
+        ~include_partial('global/freshDesk')`
     ~/if`
 ~/if`

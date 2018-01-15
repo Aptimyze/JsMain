@@ -85,7 +85,7 @@ window.onload=function(){
     if (prev_handler) {
         prev_handler();
     }
-    setTimeout(function(){loadScript('https://saxp.zedo.com/sclient/tt3/fmos.js',renderBanners);},100);
+    setTimeout(function(){loadScript('http://xp1.zedo.com/client/xp1/fmos.js',renderBanners);},100); 
     var zedoLoad = 1;
 }
 </script>
@@ -123,7 +123,6 @@ window.onload=function(){
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
                                 <li><a class="disp_b" href="/search/visitors?matchedOrAll=A">Profile Visitors</a></li>
-                                <li style="display:none"><a href="/common/realSearch"></a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
@@ -342,7 +341,7 @@ window.onload=function(){
                                                 <div class="fullwidth clearfix pl10">
                                                     <div class="contentHeader mCustomScrollbar" style="height:360px;padding-bottom:25px;">
                                                         <ul class="clearfix hor_list">
-                                                            <li><a title="Hindi Delhi Matrimony" href="/matrimonials/hindi-matrimonial/"> Hindi-Delhi </a></li>
+                                                            <li><a title="Hindi Delhi Matrimony" href="/hindi-delhi-matrimony-matrimonials"> Hindi-Delhi </a></li>
                                                             <li><a title="Marathi Matrimony" href="/matrimonials/marathi-matrimonial/"> Marathi </a></li>
                                                             <li><a title="Hindi UP Matrimony" href="/hindi-up-matrimony-matrimonials"> Hindi-UP </a></li>
                                                             <li><a title="Punjabi Matrimony" href="/matrimonials/punjabi-matrimonial/"> Punjabi </a></li>
@@ -722,7 +721,7 @@ window.onload=function(){
         </div>
         <!--end:middle-->
         <!--start:registration-->
-        <div tabindex="1" class="fr hpbg1 hpwid3 lh63 txtc disp-tbl"> <a class="disp-cell vmid fontreg f14 colrw" href="/profile/registration_new.php?source=~if $registerSource`~$registerSource`~else`gnb~/if`">REGISTER FREE</a> </div>
+        <div tabindex="1" class="fr hpbg1 hpwid3 lh63 txtc disp-tbl"> <a class="disp-cell vmid fontreg f14 colrw" href="/profile/registration_new.php?source=gnb">REGISTER FREE</a> </div>
         <!--end:registration-->
     </div>
 </div>

@@ -8,9 +8,8 @@ class IOS implements NotificationEngine {
 	$this->iosUrl = JsConstants::$iosApnsUrl;
     }
 
-    public function sendNotification($registrationIds, $details, $profileid='',$notificationImageArr="") 
+    public function sendNotification($registrationIds, $details, $profileid='') 
     {
-
 	$this->profileid =$profileid;
 	$this->logObj = new MOBILE_API_IOS_RESPONSE_LOG;
 	$this->notificationKey = $details['NOTIFICATION_KEY'];
@@ -35,19 +34,13 @@ class IOS implements NotificationEngine {
 	stream_set_blocking ($fp, 0);
 	$dataArray =FormatNotification::formaterForIos($details);
 	foreach($registrationIds as $key=>$deviceToken){
-		$body = array();
+		
 		// Message details start:
 		$message = $details['MESSAGE'];
 		$title = $details['TITLE'];
-		if(is_array($notificationImageArr) && $notificationImageArr[$key] && $notificationImageArr[$key]=='Y' && !empty($details['IOS_PHOTO_URL']) && $details['IOS_PHOTO_URL']!="D"){
-			$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default','mutable-content'=>'1','category'=>'IMAGE');
-			$body['icon'] = $details['IOS_PHOTO_URL'];
-		}
-		else{
-			$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default');
-		}
-		$body['Arguments'] = $dataArray;
-        //print_r($body);die;
+		$body['aps'] = array('alert' => array("body" => $message,"title"=>$title),'badge' =>1,'sound'=>'default');
+               	$body['Arguments'] = $dataArray;
+
 		// Encode the payload as JSON
                 $payload = json_encode($body);
 
@@ -61,8 +54,7 @@ class IOS implements NotificationEngine {
 		$this->checkAppleErrorResponse($fp,$deviceToken);
 	    }
 	    // Close the connection to the server	
-	    fclose($fp);
-
+	    fclose($fp);	
 	}
 
 	// Resonse handling

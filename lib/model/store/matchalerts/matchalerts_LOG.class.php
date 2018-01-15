@@ -336,27 +336,8 @@ echo $sql."\n";
                 throw new jsException($ex);
             }
         }
-        /*
-         * Get minimum partition Value
-         */
-        public function getLastPartitionRange(){
-            //get the range of the latest partition
-            try{
-		$sql = "SELECT MIN(PARTITION_DESCRIPTION) AS PARTITION_DESCRIPTION FROM information_schema.PARTITIONS WHERE TABLE_SCHEMA = 'matchalerts' AND TABLE_NAME = 'LOG'";
-                $prep = $this->db->prepare($sql);
-                $prep->execute();
-                $row = $prep->fetch(PDO::FETCH_ASSOC);
-                $lastPartitionRange = $row['PARTITION_DESCRIPTION'];  
-                return $lastPartitionRange;
-            }
-            catch (PDOException $ex) {
-                throw new jsException($ex);
-            }
-        }
-        public function insertLogRecords($receiverId, $userIds, $LogicLevel,$date=""){
-                if($date == ""){
-                        $date=MailerConfigVariables::getNoOfDays();
-                }
+        public function insertLogRecords($receiverId, $userIds, $LogicLevel){
+          $date=MailerConfigVariables::getNoOfDays();
           
           $sql_log="INSERT INTO matchalerts.LOG (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
           $userCounter = 1;
@@ -377,6 +358,5 @@ echo $sql."\n";
           }
           $res->execute();
         }
-
 }
 ?>

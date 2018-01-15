@@ -102,7 +102,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				}
 				else
 				{
-					throw new jsException("","profile id array is not specified in function deleteMessages of newjs_DELETED_MESSAGES.class.php");
+					throw new jsException("","profile id array is not specified in function deleteMessages of newjs_MESSAGES.class.php");
 				}
 			}
 			catch(PDOException $e)
@@ -113,7 +113,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 			}
 		}
 		
-	public function insertMessageLogHousekeeping($arrProfileId,$tablePrefix="",$tableSuffix="")
+	public function insertMessageLogHousekeeping($arrProfileId)
 	{
 		try 
 		{
@@ -124,7 +124,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				else
 				{
 					$idStr=implode(",",$arrProfileId);
-					$sql="REPLACE INTO newjs.{$tablePrefix}DELETED_MESSAGES{$tableSuffix} SELECT * FROM newjs.MESSAGES WHERE ID IN (".$idStr.")";
+					$sql="REPLACE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;

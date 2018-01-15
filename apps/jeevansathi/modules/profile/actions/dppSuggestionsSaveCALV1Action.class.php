@@ -22,7 +22,6 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		$this->loginProfile = LoggedInProfile::getInstance('newjs_master');	
 		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
-                $this->hHeight = $this->getFieldMapLabels("height_json",'',1);
 		$calLayer = 1;
 
 		$apiProfileSectionObj=  ApiProfileSections::getApiProfileSectionObj($this->loginProfile);		
@@ -85,24 +84,13 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 							}						
 						}
 					}
-                                        elseif ($value->type == "HEIGHT")
-					{
-						foreach($value->data as $k=>$v)
-						{
-								$finalDppArr["P_".$k] = array_search($v,$this->hHeight);
-						}
-					}
 					else
 					{
-						$dppDataTypeArr = array();
-						$dppDataTypeArr = explode(",",$dppDataArr[$value->type]);
-						$appendArr = array();
 						foreach($value->data as $k=>$v)
 						{
-							if(!in_array($v,$dppDataTypeArr) && !in_array($v,$appendArr))
+							if(strpos($dppDataArr[$value->type],$v) === false && strpos($appendValues,$v) === false)
 							{
 								$appendValues.= ",".$v;
-								$appendArr[]=$v;
 							}
 						}
 						$finalDppArr["P_".$value->type] = $dppDataArr[$value->type].$appendValues;

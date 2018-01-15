@@ -111,6 +111,36 @@
     </div>
     </div>
     <!--end:UG college--> 
+    <!--start:Other PG degree-->
+    <div class="mt7 disp-none" id="otherPgDegreeInput">
+      <!--start:error div-->
+      <div class="clearfix f14 fontlig">
+        <div class="reg-wid3 fr colr5  visHid" id="otherPgDegree_error"></div>
+      </div>
+      <!--end:error div-->
+      <div class="fullwid pos_rel clearfix">
+        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="otherPgDegree_box">
+          <label class="lblreg pos_abs js-otherPgDegree js-list pos1_lbl1" id="otherPgDegree_label" data-attr="otherPgDegree">Other PG Degree (optional)&nbsp;&nbsp;&nbsp;</label>
+          <input autocomplete="off" maxlength="40" class="js-tBox reg_wid2 fr brdr-0 f15 fontlig " id="otherPgDegree_value" data-type="text" type="text" data-toSave ="other_pg_degree" data-required=false data-characters-only="1" data-validate=true tabindex="-1" data-fieldtype="otherPgDegree"/>
+        </div>
+      </div>
+    </div>
+    <!--end:Other Pg Degree-->
+    <!--start:Other Ug degree-->
+    <div class="mt7 disp-none" id="otherUgDegreeInput">
+      <!--start:error div-->
+      <div class="clearfix f14 fontlig">
+        <div class="reg-wid3 fr colr5  visHid" id="otherUgDegree_error"></div>
+      </div>
+      <!--end:error div-->
+      <div class="fullwid pos_rel clearfix">
+        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="otherUgDegree_box">
+          <label class="lblreg pos_abs js-otherUgDegree js-list pos1_lbl1" id="otherUgDegree_label" data-attr="otherUgDegree">Other UG Degree (optional)&nbsp;&nbsp;&nbsp;</label>
+          <input autocomplete="off" maxlength="40" class="js-tBox reg_wid2 fr brdr-0 f15 fontlig " id="otherUgDegree_value" data-type="text" type="text" data-toSave ="other_ug_degree" data-required=false data-characters-only="1" data-validate=true tabindex="-1" data-fieldtype="otherUgDegree"/>
+        </div>
+      </div>
+    </div>
+    <!--end:Other Ug Degree-->
             <!--start:Occupation-->
              <div class="mt7">
               <!--start:error div-->

@@ -31,15 +31,11 @@ class new_matches_emails_RECEIVER  extends TABLE
 		}
 	}
         
-        public function truncateTable($temp=0)
+        public function truncateTable()
 	{
 		try 
 		{
-                        if($temp == 1){
-                                $sql= "TRUNCATE TABLE new_matches_emails.RECEIVER_DAILY";
-                        }else{
-                                $sql= "TRUNCATE TABLE new_matches_emails.RECEIVER";
-                        }
+			$sql= "TRUNCATE TABLE new_matches_emails.RECEIVER";
 			$prep = $this->db->prepare($sql);
 			$prep->execute();
 		}
@@ -50,16 +46,12 @@ class new_matches_emails_RECEIVER  extends TABLE
 		}
 	}
         
-        public function insertValuesFromJprofileAndJprofileAlerts($sortDate,$entryDate,$loginDate,$temp=0)
+        public function insertValuesFromJprofileAndJprofileAlerts($sortDate,$entryDate,$loginDate)
 	{
 		try 
 		{
 			// All parameters are in date time format.
-                        if($temp == 1){
-                                $sql= " INSERT INTO  new_matches_emails.RECEIVER_DAILY(PROFILEID,SENT) SELECT J.PROFILEID AS PROFILEID,'N' FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS JA ON J.PROFILEID = JA.PROFILEID WHERE J.PROFILEID%11 <=1 && (J.ACTIVATED='Y' OR ( J.ACTIVATED = 'N' AND J.INCOMPLETE = 'Y' ) ) AND J.SORT_DT >= :SORTDATE AND (J.ENTRY_DT >= :ENTRYDATE || (J.ENTRY_DT < :ENTRYDATE && (J.MOB_STATUS = 'Y' || J.LANDL_STATUS = 'Y')) && (J.LAST_LOGIN_DT >= :LOGINDATE)) AND (JA.NEW_MATCHES_MAILS IS NULL OR JA.NEW_MATCHES_MAILS='' OR JA.NEW_MATCHES_MAILS='S')";
-                        }else{
-                                $sql= " INSERT INTO  new_matches_emails.RECEIVER(PROFILEID,SENT) SELECT J.PROFILEID AS PROFILEID,'N' FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS JA ON J.PROFILEID = JA.PROFILEID WHERE J.PROFILEID%11 >2 && (J.ACTIVATED='Y' OR ( J.ACTIVATED = 'N' AND J.INCOMPLETE = 'Y' ) ) AND J.SORT_DT >= :SORTDATE AND (J.ENTRY_DT >= :ENTRYDATE || (J.ENTRY_DT < :ENTRYDATE && (J.MOB_STATUS = 'Y' || J.LANDL_STATUS = 'Y')) && (J.LAST_LOGIN_DT >= :LOGINDATE)) AND (JA.NEW_MATCHES_MAILS IS NULL OR JA.NEW_MATCHES_MAILS='' OR JA.NEW_MATCHES_MAILS='S')";
-                        }
+			$sql= " INSERT INTO  new_matches_emails.RECEIVER(PROFILEID,SENT) SELECT J.PROFILEID AS PROFILEID,'N' FROM newjs.JPROFILE J LEFT JOIN newjs.JPROFILE_ALERTS JA ON J.PROFILEID = JA.PROFILEID WHERE (J.ACTIVATED='Y' OR ( J.ACTIVATED = 'N' AND J.INCOMPLETE = 'Y' ) ) AND J.SORT_DT >= :SORTDATE AND (J.ENTRY_DT >= :ENTRYDATE || (J.ENTRY_DT < :ENTRYDATE && (J.MOB_STATUS = 'Y' || J.LANDL_STATUS = 'Y')) && (J.LAST_LOGIN_DT >= :LOGINDATE)) AND (JA.NEW_MATCHES_MAILS IS NULL OR JA.NEW_MATCHES_MAILS='' OR JA.NEW_MATCHES_MAILS='S')";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":SORTDATE",$sortDate,PDO::PARAM_STR);
                         $prep->bindValue(":ENTRYDATE",$entryDate,PDO::PARAM_STR);
@@ -74,15 +66,11 @@ class new_matches_emails_RECEIVER  extends TABLE
 		}
 	}
         
-        public function updateSent($profileId,$dailyCron=0)
+        public function updateSent($profileId)
 	{
 		try 
 		{
-                        if($dailyCron==1){
-                                $sql= " UPDATE new_matches_emails.RECEIVER_DAILY SET SENT = 'Y' WHERE PROFILEID = :PROFILEID";
-                        }else{
-                                $sql= " UPDATE new_matches_emails.RECEIVER SET SENT = 'Y' WHERE PROFILEID = :PROFILEID";
-                        }
+			$sql= " UPDATE new_matches_emails.RECEIVER SET SENT = 'Y' WHERE PROFILEID = :PROFILEID";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
 			$prep->execute();
@@ -93,15 +81,11 @@ class new_matches_emails_RECEIVER  extends TABLE
 		}
 	}
         
-        public function getProfilesToSendEmails($totalScript,$currentScript,$dailyCron = 0)
+        public function getProfilesToSendEmails($totalScript,$currentScript)
 	{
 		try 
 		{
-                        if($dailyCron==1){
-                                $sql= " SELECT PROFILEID,HASTRENDS,DPP_SWITCH FROM new_matches_emails.RECEIVER_DAILY  WHERE SENT = 'N' AND PROFILEID%:TOTALSCRIPT= :CURRENTSCRIPT";
-                        }else{
-                                $sql= " SELECT PROFILEID,HASTRENDS,DPP_SWITCH FROM new_matches_emails.RECEIVER WHERE SENT = 'N' AND PROFILEID%:TOTALSCRIPT= :CURRENTSCRIPT";
-                        }
+			$sql= " SELECT PROFILEID,HASTRENDS,DPP_SWITCH FROM new_matches_emails.RECEIVER WHERE SENT = 'N' AND PROFILEID%:TOTALSCRIPT= :CURRENTSCRIPT";
 			$prep = $this->db->prepare($sql);
                         $prep->bindValue(":TOTALSCRIPT",$totalScript,PDO::PARAM_INT);
                         $prep->bindValue(":CURRENTSCRIPT",$currentScript,PDO::PARAM_INT);

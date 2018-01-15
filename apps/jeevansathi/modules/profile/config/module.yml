@@ -72,5 +72,3 @@ all:
     enable_login: off
   VSPLoadCheckV1:
     enable_login: off
-  downloadHoroscopeV1:
-    enable_login: off

@@ -22,7 +22,7 @@
         <div class="f14 color13"><i class="mainsp mem_coma"></i>
           <span id="reqCallBackMessage"></span>
           <br>
-          <div id="closeOvr2" class="fr f14 pt15 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp" style="padding-bottom:30px;padding-right:10px;">Close</div>
+          <div id="closeOvr2" class="fr f14 pt15 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp" style="padding-bottom:30px;padding-right:10px;">Close</div>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
         <div class="rv2_pad17" id="ContentDiv">
           <!--start:payment card option-->
           <div class="pt10">
-            <div class="rv2_brdr1 color8 rv2_brrad1 fontlig selectedOption" name="payMode" payMode="" selId="" onclick="addPayCard(this,~$data.appVersion<=VariableParams::$androidAppVersionForMaterial`);">
+            <div class="rv2_brdr1 color8 rv2_brrad1 fontlig selectedOption" name="payMode" payMode="" selId="" onclick="addPayCard(this);">
               <div class="disptbl fullwid">
                 <div class="dispcell rv2_wid8 imgIconId">
                   <div class="rv2_sprtie1" id="ic_id"></div>
@@ -80,14 +80,10 @@
          <input type="hidden" name="couponID" value="~$data.couponID`">
          <input type="hidden" name="mainMembership" value="~$data.tracking_params.mainMembership`">
          <input type="hidden" name="userProfile" value="~$data.userProfile`">
-         <input type="hidden" name="usdTOinr" value="~$data.usdTOinr`">
         ~if $data.eSathiFlag eq '1' and $data.backendLink.fromBackend neq '1'`
           <input id="vasImpression" type="hidden" name="vasImpression" value="">
         ~else`
           <input id="vasImpression" type="hidden" name="vasImpression" value="~$data.tracking_params.vasImpression`">
-        ~/if`
-        ~if $data.upgradeMem && $data.backendLink.fromBackend neq '1'`
-        <input type="hidden" name="upgradeMem" value="~$data.upgradeMem`">
         ~/if`
          ~if $data.backendLink.fromBackend eq '1'`
           <input type="hidden" name="backendRedirect" value="~$data.backendLink.fromBackend`">
@@ -97,7 +93,7 @@
           <input type="hidden" name="reqid" value="~$data.backendLink.reqid`">
         ~/if`
          <div style="overflow:hidden;position:relative;height: 61px;" class="disp_b btmo">
-         <div class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp pinkRipple" id="contPaymentBtn"> ~$data.proceed_text` </div>
+         <div class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp pinkRipple" id="contPaymentBtn"> ~$data.proceed_text` </div>
          </div>
        </form>	
      </div>
@@ -174,9 +170,9 @@
   <div class="rv2_pad4">
    <div id="directCallButton" class="rv2_brdr1 txtc pad2 color8 rv2_brrad1 fontlig rv_ft2">
      ~if $data.currency eq '$'`
-     Call us at <a style="cursor:pointer; color:~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`#8d1316~else`#d9475c~/if` !important;"href="tel:+911204393500">+911204393500</a>
+     Call us at <a style="cursor:pointer; color:~if $data.device eq 'Android_app'`#8d1316~else`#d9475c~/if` !important;"href="tel:+911204393500">+911204393500</a>
      ~else`
-     Call us at <a style="cursor:pointer; color:~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`#8d1316~else`#d9475c~/if` !important;"href="tel:18004196299">1800-419-6299</a> (Toll Free)
+     Call us at <a style="cursor:pointer; color:~if $data.device eq 'Android_app'`#8d1316~else`#d9475c~/if` !important;"href="tel:18004196299">1800-419-6299</a> (Toll Free)
      ~/if`
    </div>
  </div>
@@ -185,7 +181,7 @@
  <!--start:div-->
  <div class="pt20">
    <div class="rv2_pad4">
-     <div id="callButton" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv2_brrad1 fontlig rv_ft2 cursp">
+     <div id="callButton" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_brrad1 fontlig rv_ft2 cursp">
       ~$data.requestCallBack.title`            	
     </div>
   </div>
@@ -195,12 +191,10 @@
 <!--start:div-->
 <div class="pt20">
  <div class="rv2_pad4">
-    ~if !$data.hidePayAtBranchesOption || $data.hidePayAtBranchesOption eq false`
-      <div class="rv2_brdr1 txtc pad2  rv2_brrad1 fontlig">
-       <div id="payAtBranch" class="~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` rv_ft2 cursp">~$data.pay_text1`</div>
-       <div class="rv_ft3 rv2_colr2">~$data.pay_text2`</div>
-      </div>
-   ~/if`
+   <div class="rv2_brdr1 txtc pad2  rv2_brrad1 fontlig">
+     <div id="payAtBranch" class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv_ft2 cursp">~$data.pay_text1`</div>
+     <div class="rv_ft3 rv2_colr2">~$data.pay_text2`</div>
+   </div>
  </div>
 </div>
 <!--end:div-->
@@ -212,8 +206,6 @@
 </div>
 
 <script type="text/javascript">
-    var appVersion = "~$data.appVersion`";
-    var androidAppVersionForMaterial = "~VariableParams::$androidAppVersionForMaterial`";
   var AndroidPromotion = 0;
 	var topHeading 	=new Array();
 	var continueText =new Array();
@@ -272,18 +264,22 @@
   });
   $("#payAtBranch").click(function(e){
     var url = "~sfConfig::get('app_site_url')`/membership/jsms?displayPage=10";
-    var upgradeMem = $('[name=upgradeMem]').val();
-    if(checkEmptyOrNull(upgradeMem)){
-      url += "&upgradeMem="+upgradeMem;
-    }
     if(checkEmptyOrNull(readCookie('device'))){
-      url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+      url += '&device=' + readCookie('device');
     }
     window.location.href = url;
   });
   $("#pageBack").click(function(e){
       window.history.back();
   });
+  var username = "~$data.userDetails.USERNAME`";
+  var email = "~$data.userDetails.EMAIL`";
+  setInterval(function(){
+    autoPopulateFreshdeskDetails(username,email);
+  },100);
+  setTimeout(function(){
+    autoPopupFreshdesk(username,email);
+  }, 90000);
   // function to make sure window is resized properly on table view 
   $(window).load(function(){
     var h = $(window).height();

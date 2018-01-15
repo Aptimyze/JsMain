@@ -141,9 +141,7 @@ class JsValidatorsFactory {
 				$min=21;
 			else
 				$min=18;
-                        $max = 70;
-                        return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" )),'min'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$max year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site.",'min'=>"Maximum age criteria not met."));
-
+			return new sfValidatorDate(array('required'=>true,'max'=>date('Y-m-d',strtotime( date('Y-m-d') . " -$min year" ))),array('required' => $defaultMsg,'max'=>"You must be atleast $min years old to register to this site."));
 			break;
 		case 'caste':
 		{
@@ -187,11 +185,8 @@ class JsValidatorsFactory {
 			return new jsValidatorCountryCity(array('required'=>true,'city'=>$city,'country'=>$country,'fieldName'=>'country'));
 			break;
 		case 'sect':
-			return new jsValidatorSectMuslim(array('religion'=>$form_values['religion_caste'],'required'=>false),array('required' => $defaultMsg));
-			break;
-                case 'jamaat':
-			return new jsValidatorJamaat(array('caste'=>$form_values['caste'],'required'=>false),array('required' => $defaultMsg));
-			break;
+			return new jsValidatorSect(array('religion'=>$form_values['religion_caste'],'required'=>false),array('required' => $defaultMsg));
+			break;	
 		case 'integer':
 			return new sfValidatorInteger(array('required'=>false));
 			break;	

@@ -30,7 +30,6 @@ EOF;
 	{	
         // if (!sfContext::hasInstance())
         //     sfContext::createInstance($this->configuration);
-		PictureFunctions::setHeaders();
         $tableName = $arguments["tableName"];
         $maxCount = $arguments["maxCount"];  //The max count provided should ideally be greater than the limit
         $curInst = $arguments['curInst'];

@@ -271,8 +271,6 @@ class ScreenedPicture extends Picture
 	{
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->ins($paramArr);
-		if(array_key_exists("PROFILEID",$paramArr))
-			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 		return $status;
 	}
 	/**
@@ -282,60 +280,12 @@ class ScreenedPicture extends Picture
         **/
         public function get($paramArr=array(),$getFromMasterR='')
         {
-		/** 
-		* handled by lavesh/ankit tempor, @esha need to fix
-		* Picture caching was not working for more than 1 params, so we have unseting ordering, however if pictureid comes cache wont be used as isCacheable will be false bcoz of condition there where they expect count paramarr == 1. 
-		*/
-		$tempParamArr = $paramArr;
-		unset($paramArr["ORDERING"]);
-
-		if (PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__)) 
-		{
-			if(PictureNewCacheLib::getInstance()->isCached($paramArr,__CLASS__))
-			{
-				$result = PictureNewCacheLib::getInstance()->get($paramArr, __CLASS__);
-				if (false !== $result) 
-				{
-					$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-				}
-				$this->logCacheConsumed();
-			}
-			else
-			{
-				$photoObj=new PICTURE_NEW;
-				$result=$photoObj->get(array("PROFILEID"=>$paramArr['PROFILEID']));
-				foreach($result  as $k=>$v)
-					$encodedData[$v['ORDERING']] = json_encode($v);
-				PictureNewCacheLib::getInstance()->cacheThis($paramArr['PROFILEID'],$encodedData);
-				$this->logTableConsumed();
-			}
-			$result = PictureNewCacheLib::getInstance()->processWhere($result,$tempParamArr);
-		}
+		if($getFromMasterR=='1')
+			 $photoObj=new PICTURE_NEW("newjs_masterRep");
 		else
-		{
-			if($getFromMasterR=='1')
-				 $photoObj=new PICTURE_NEW("newjs_masterRep");
-			else
-				$photoObj=new PICTURE_NEW;
-			$result=$photoObj->get($tempParamArr);
-		}
-		return $result;
-	}
-	public function logCacheConsumed()
-	{
-		return;
-		$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
-		$funName  = "PIC_NEW";
-		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
-	}
-	public function logTableConsumed()
-	{
-		return;
-		$redisKey = 'picNewFromTable' . '_' . date('Y-m-d');
-		$funName  = "PIC_NEW";
-		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+			$photoObj=new PICTURE_NEW;
+                $detailArr=$photoObj->get($paramArr);
+                return $detailArr;
 	}
 	 /**
          Wrapper for PICTURE_NEW->edit()
@@ -347,7 +297,6 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->edit($paramArr,$pictureId,$profileId);
-		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 	
@@ -355,8 +304,6 @@ class ScreenedPicture extends Picture
         {
     		$photoObj=new PICTURE_NEW;
                 $count=$photoObj->del($paramArr);
-		if(array_key_exists("PROFILEID",$paramArr))
-			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
                 return $count;
 
         }
@@ -365,8 +312,6 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateOrdering($paramArr);
-		if(array_key_exists("PROFILEID",$paramArr))
-			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 	}
 	
 	public function getMaxOrdering($profileId)
@@ -393,14 +338,12 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateScreenedPhotosOrdering($profileid);
-		PictureNewCacheLib::getInstance()->removeCache($profileid);
 	}
 
 	public function insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl='',$ProfilePic120Url='',$ProfilePic235Url='',$ProfilePic450Url='',$OriginalPicUrl='',$SearchPicUrl,$PicFormat)
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl,$ProfilePic120Url,$ProfilePic235Url,$ProfilePic450Url,$OriginalPicUrl,$SearchPicUrl,$PicFormat);
-		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 
@@ -424,114 +367,18 @@ class ScreenedPicture extends Picture
                 $status=$photoObj->hasUnscreenedTitle($profileId);
                 return $status;
 	}
+	
 	public function getMultipleUserProfilePics($whereCondition)
-	{
-		if( array_key_exists("PROFILEID",$whereCondition))
-		{
-			$allPics = $this->getMultipleUserPics($whereCondition);
-			foreach($allPics as $profileid=>$pic)
-			{
-				$final[$profileid]=$pic[0];
-			}
-			return $final;
-		}
-		else
-		{
-			$photoObj=new PICTURE_NEW("newjs_masterRep");
-			$profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
-			return $profilePicsArr;
-		}
-	}
-	public function getMultipleUserPics($whereCondition)
         {
-		$final = array();
-		if(array_key_exists("PROFILEID",$whereCondition))
-		{
-			$paramArr = $whereCondition;
-			if(is_array($whereCondition['PROFILEID']))
-			{
-				/**
-				* handled by lavesh/ankit tempor, @esha need to fix
-				* unsetting complate array as fallback was giving the complete data.
-				*/
-				unset($paramArr);
-				$paramArr['PROFILEID']=current($whereCondition['PROFILEID']);
-				if ( PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__))
-				{
-					foreach($whereCondition['PROFILEID'] as $k=>$pid)
-					{
-						$paramArr['PROFILEID']= $pid;
-						if(PictureNewCacheLib::getInstance()->isCached($paramArr,__CLASS__))
-						{
-							$result = PictureNewCacheLib::getInstance()->get($paramArr, __CLASS__);
-							if (false !== $result)
-							{
-								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-							}		
-							/**
-							* Maintain ordering
-							*/					
-							if(is_array($result)){
-								usort($result, function ($a, $b) { return $a['ORDERING'] - $b['ORDERING']; });
-							}
-							$this->logCacheConsumed();
-						}
-						else
-						{
-							$queryProfiles[]=$pid;
-						}
-						if(is_array($result))
-							$final[$pid]=$result;
-						unset($result);
-					}
-					if(is_array($queryProfiles))
-					{
-						$photoObj=new PICTURE_NEW();
-						$data  = $photoObj->getMultiProfilesData($queryProfiles);
-						foreach($data  as $cProfileid=>$cData)
-						{
-							//$final[$cProfileid] = $cData;
-							unset($encodedData);
-							foreach($cData as $cOrdering=>$cPicArr)
-								$encodedData[$cOrdering] = json_encode($cPicArr);
-							PictureNewCacheLib::getInstance()->cacheThis($cProfileid,$encodedData);
-							$paramArr['PROFILEID'] = $cProfileid;
-							if(is_array($cData))
-								$final[$cProfileid]=$cData;
-							unset($result);
-						}
-						$this->logTableConsumed();
-					}
-					return $final;
-				}
-				else
-				{
-					$photoObj=new PICTURE_NEW("newjs_masterRep");
-					$profilePicsArr=$photoObj->getMultiProfilesData($whereCondition['PROFILEID']);
-					return $profilePicsArr;
-				}
-			}
-			else
-			{
-				return $this->get($whereCondition);
-			}
-		}
+		$photoObj=new PICTURE_NEW("newjs_masterRep");
+                $profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
+                return $profilePicsArr;
 	}
+
 	public function getMultipleUserPicsCount($whereCondition)
         {
-		if( is_array($whereCondition) && array_key_exists("PROFILEID",$whereCondition) && count($whereCondition)==1)
-		{
-			$profilesData = $this->getMultipleUserPics($whereCondition);
-			foreach($profilesData as $profileid=>$pics)
-			{
-				$profilePicsCountArr[$profileid]=count($pics);
-			}
-		}
-		else
-		{
-			$photoObj=new PICTURE_NEW("newjs_masterRep");
-			$profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
-		}
+                $photoObj=new PICTURE_NEW("newjs_masterRep");
+                $profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
                 return $profilePicsCountArr;
         }
 

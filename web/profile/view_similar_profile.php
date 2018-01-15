@@ -160,7 +160,7 @@
 
 	/* Tracking Contact Center, as per Mantis 4724 Starts here */
         $end_time=microtime(true)-$start_tm;
-        $smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif","SIMILAR_PROFILE_PAGE"));
+        $smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif","SIMILAR_PROFILE_PAGE"));
         /* Ends Here */
 	
 	$smarty->assign("SIM_SEARCH",'Y');

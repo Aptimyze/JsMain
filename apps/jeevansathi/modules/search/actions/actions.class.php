@@ -52,7 +52,6 @@ class searchActions extends sfActions
 	*/
 	public function executePerform(sfWebRequest $request)
 	{
-
 		if(!in_array($request->getParameter("callingSource"),array('ap','ap_eoi','myjs','sms')) )
 			MobileCommon::forwardmobilesite($this,'','',1);
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsSearchUrl);
@@ -322,7 +321,7 @@ class searchActions extends sfActions
                         if($request->getParameter("justJoinedMatches")==1){
 						$profileId=$loggedInProfileObj->getPROFILEID();
 						$mprofileMemcache=new ProfileMemcacheService($profileId);
-						$tempJustJoined=$mprofileMemcache->get('JUST_JOINED_MATCHES_NEW')*(-1);//print_r($tempJustJoined); 
+						$tempJustJoined=$mprofileMemcache->memcache->getJUST_JOINED_MATCHES_NEW()*(-1);//print_r($tempJustJoined); 
 						$mprofileMemcache->update('JUST_JOINED_MATCHES_NEW',$tempJustJoined); 
 						$mprofileMemcache->updateMemcache();
 			
@@ -547,13 +546,11 @@ class searchActions extends sfActions
 					$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
 					if(count($respObj->getSearchResultsPidArr())==0)
 					{
-                                                //JsMemcache::getInstance()->incrCount("FEATURE_PROFILE_RELAX_HITS");
-						/*unset($featuredProfileObj);
+						unset($featuredProfileObj);
 						$featuredProfileObj = new FeaturedProfile($loggedInProfileObj);
 						$featuredProfileObj->getFeaturedSearchCriteria($SearchParamtersObj,1);
 						$SearchServiceObj->setSearchSortLogic($featuredProfileObj,$loggedInProfileObj,'FP');
 						$respObj = $SearchServiceObj->performSearch($featuredProfileObj,"onlyResults",'','','',$loggedInProfileObj);
-                                                 */
 					}
 
 					if(count($respObj->getSearchResultsPidArr())>0)
@@ -632,7 +629,6 @@ class searchActions extends sfActions
 		$params["SearchType"]= $this->searchBasedParam;
 		$params["Count"]=$this->noOfResults;
 		$title = SearchTitleAndTextEnums::getTitle($params);
-
 		$this->setTitle($title);
 		$this->heading = SearchTitleAndTextEnums::getHeading($params);
 		$this->subHeading = SearchTitleAndTextEnums::getSubHeading($params);
@@ -697,7 +693,7 @@ class searchActions extends sfActions
 	public function executeSummaryProfiles(sfWebRequest $request)
 	{
 		ini_set("max_execution_time",0);
-		ini_set("memory_limit","1536M");
+		ini_set("memory_limit","512M");
 		ini_set("mysql.connect_timeout",-1);
 		ini_set("default_socket_timeout",259200); // 3 days
 		ini_set("log_errors_max_len",0);
@@ -1489,10 +1485,7 @@ class searchActions extends sfActions
 			$searchResultsCountForAutoRelaxation = SearchConfig::$searchResultsCountForAutoRelaxation;
                         
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-                        $this->premiumDummyUser = 0;
-			if($loggedInProfileObj->getPROFILEID()!='' && PremiumMember::isDummyProfile($loggedInProfileObj->getPROFILEID()))
-				$this->premiumDummyUser = 1;
-                        
+			
 			if($loggedInProfileObj->getPROFILEID()!='')
 			{
 				if($loggedInProfileObj->getAGE()=="")
@@ -1591,7 +1584,7 @@ class searchActions extends sfActions
 						if($request->getParameter("justJoinedMatches")==1){
 						$profileId=$loggedInProfileObj->getPROFILEID();
 						$mprofileMemcache=new ProfileMemcacheService($profileId);
-						$tempJustJoined=$mprofileMemcache->get('JUST_JOINED_MATCHES_NEW')*(-1);//print_r($tempJustJoined); 
+						$tempJustJoined=$mprofileMemcache->memcache->getJUST_JOINED_MATCHES_NEW()*(-1);//print_r($tempJustJoined); 
 						$mprofileMemcache->update('JUST_JOINED_MATCHES_NEW',$tempJustJoined); 
 						$mprofileMemcache->updateMemcache();
 			
@@ -1713,16 +1706,13 @@ class searchActions extends sfActions
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
                                 
+                                
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
 				
 				if($resultArr["no_of_results"]==0)
 				{
                                         $statusArr = $this->SearchChannelObj->searchZeroResultMessage();
-                                        if($request->getParameter("myjs") && $this->SearchChannelObj->getChannelType()=="APP")
-                                        {
-											$statusArr["statusCode"]='0'; // For App Myjs it is not error case
-										}
 				}
 				else
 				{
@@ -1731,9 +1721,9 @@ class searchActions extends sfActions
 				}
 
 			}
+			
 			/** caching **/
-                        if($SearchParamtersObj->getSEARCH_FAILED() != 1)
-                                $ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
 
 			/** caching **/
 
@@ -1745,11 +1735,11 @@ class searchActions extends sfActions
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-				$request->setParameter("currentPageName", $resultArr['searchBasedParam']);
+
 
         		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
-                $respObj->setHttpArray($statusArr);
+                $respObj->setHttpArray($statusArr);//print_r($resultArr);
                 $respObj->setResponseBody($resultArr);
                 $respObj->generateResponse();    
                       
@@ -1855,29 +1845,4 @@ class searchActions extends sfActions
     $this->searchList = $savedSearchesResponse;
     $this->setTemplate('JSPC/advancedSearch');
   }
-
- public function executeStyleheight50px(sfWebRequest $request){
-		$app = MobileCommon::isApp();
-                if(!$app){
-                        if(MobileCommon::isDesktop()){
-                                $app = "D";
-                        }elseif(MobileCommon::isNewMobileSite()){
-                                $app = "J";
-                        }else{
-                                $app = "O";
-                        }
-                }
-                $searchKey .= $app."_";
-                if(php_sapi_name() === 'cli'){
-                        $searchKey .= "CLI_";
-                }
-
-         $http_msg=print_r($_SERVER,true);
-         mail("lavesh.rawat@gmail.com","Style Height called $searchKey","CALLED:$http_msg");
-	 die;
-   }
-
-
-
-
 }

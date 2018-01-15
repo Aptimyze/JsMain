@@ -329,7 +329,7 @@ $('body').on('click', '.moreCluster', function()
                     /**
                     * Preparing Object in format like returned from AJAX
                     */
-                    if(valueLabel!="All" && valueLabel != "Any Well Known College"){
+                    if(valueLabel!="All"){
                         resultOfInputElementsFormatted[valueLabel]={"count":countLabel,"isSelected":isChecked,"label":valueLabel,"id":codedValueLabel};
                     }
                     
@@ -586,6 +586,7 @@ $('body').on('click', '.js-cluster', function()
 	var atleastOneOptionSelected = false;
         //console.log($(this).parent().parent().parent().parent(".sideClusters"));
 	handleClusterTick(this);
+      
 	/* last activity */
 	if(this.name=='appCluster1[]')
 	{
@@ -673,11 +674,11 @@ $('body').on('click', '.js-cluster', function()
 
 
 
-	if(this.value=='ALL' || this.value == 'Any') //LATER
+	if(this.value=='ALL') //LATER
 	{
 		array.push(this.value);
 		$('input[name="'+tempName+'"]:checked').each(function(i,el){
-	    		if(el.value!='ALL' && el.value!='Any') //LATER
+	    		if(el.value!='ALL') //LATER
 		    	{
 				el.checked='';
 				uncheckClusterOptions(el);
@@ -714,25 +715,10 @@ $('body').on('click', '.js-cluster', function()
     if(atleastOneOptionSelected)
     {
     	$('input[name="'+tempName+'"]:checked').each(function(i,el){
-        	if(el.value=='ALL' || el.value == 'Any') 
+        	if(el.value=='ALL') 
 		{
 	    		el.checked='';
 			uncheckClusterOptions(el);
-                        if(el.value == 'Any'){
-                            var deletedAny = 0;
-                            $.each(array,function(k,v){
-                               if(v=='Any'){
-                                   delete array[k];
-                                   deletedAny = 1;
-                               }
-                               else if(deletedAny){
-                                   array[k-1] = array[k];
-                               }
-                            });
-                            if(deletedAny){
-                                array.pop();
-                            }
-                        }
 		}
         });
     }

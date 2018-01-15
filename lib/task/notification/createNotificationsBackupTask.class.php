@@ -26,19 +26,16 @@ EOF;
 		{
 			sfContext::createInstance($this->configuration);
 		}
-	        ini_set('max_execution_time',0);
-	        ini_set('memory_limit',-1);
 		$backupObj = new MOBILE_API_BROWSER_NOTIFICATION_BACKUP();
 		$sourceSlaveObj = new MOBILE_API_BROWSER_NOTIFICATION("newjs_masterRep");
 		$sourceMasterObj = new MOBILE_API_BROWSER_NOTIFICATION();
 
 		//count of notifications picked from BROWSER_NOTIFICATION and backed up at a time
-		$limit = 100000; //BrowserNotificationEnums::$backupNotificationsCountLimit; 
+		$limit = BrowserNotificationEnums::$backupNotificationsCountLimit; 
 		$offset = 0;
 		
 		$count = $sourceSlaveObj->getAllRowsCount();
-		//$curDate = date('Y-m-d H:i:s');
-		$curDate = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+		$curDate = date('Y-m-d H:i:s');
 		if($count>0)
 		{
 			for($i=$offset;$i<=$count;$i=$i+$limit)
@@ -47,6 +44,7 @@ EOF;
 				//get notifications to be backed up in backup table
 				$data = array();
 				$data = $sourceSlaveObj->getBackupEligibleNotifications("*",$limit,$i);
+				//print_r($data);
 				if(is_array($data) && count($data)>0)
 					foreach ($data as $key => $value) 
 					{
@@ -55,15 +53,7 @@ EOF;
 							$backupToBeDone = true;
 						else
 						{
-							$ttlValue 	=$value['TTL'];
-							$ttlTimeCheck 	=date("Y-m-d",strtotime($curDate)-$ttlValue)." 23:59:59";
-							$ttlTimeCheck	=strtotime($ttlTimeCheck);
-							$dayCheck 	=date("Y-m-d",strtotime("- 1 day"))." 23:59:59";
-							$dayCheck	=strtotime($dayCheck);
-							$entryDate 	=strtotime($value['ENTRY_DT']);
-
-							//if(($value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime($curDate)-$value['TTL'])) || (!$value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime("- 2 day"))))
-							if(($ttlValue && $entryDate<=$ttlTimeCheck) || (!$ttlValue && $entryDate<$dayCheck))	
+							if(($value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime($curDate)-$value['TTL'])) || (!$value['TTL'] && $value['ENTRY_DT']<date("Y-m-d H:i:s",strtotime("- 1 day"))))
 							{
 								$backupToBeDone=true;
 							}

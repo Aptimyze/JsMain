@@ -17,8 +17,7 @@ var strophieWrapper = {
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
         "RECEIVER_RECEIVED_READ": 'receiver_received_read',
-        "FORWARDED": 'forwarded',
-        "MESSAGE_RECEIVED": 'message_received'
+        "FORWARDED": 'forwarded'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,
@@ -839,7 +838,7 @@ strophieWrapper.sendPresence();
                     to: to,
                     type: 'chat',
                     id:messageId
-                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type,username:self_username},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                    }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 //console.log(reply);
@@ -884,28 +883,6 @@ strophieWrapper.sendPresence();
         }
         return outputObj;
     },
-
-    //send websocket stanza to check contact status between logged in user and viewed user
-    sendContactStatusRequest:function(to,msg_type){
-        try {
-            if (to && strophieWrapper.getCurrentConnStatus()) {
-                var checkStanza;
-                checkStanza = $msg({
-                    from: strophieWrapper.getSelfJID(),
-                    to: to,
-                    type: 'chat',
-                    id:strophieWrapper.getUniqueId()
-                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type},msg_type).c('active', {
-                        xmlns: "http://jabber.org/protocol/chatstates"
-                });
-                //console.log(checkStanza);
-                strophieWrapper.connectionObj.send(checkStanza);
-            }
-        } catch (e) {
-            console.log("exception-"+e);
-        }
-    },
-
     getUniqueId: function (suffix) {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0,

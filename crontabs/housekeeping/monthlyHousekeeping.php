@@ -7,26 +7,6 @@ include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-
-checkForEndTime();
-if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod')
-        successfullDie();
-
-
-$monthDiff = 12;
-$timeDiff = $monthDiff + 6 ;
-$timestamp=mktime(0, 0, 0, date("m") - $monthDiff , date("d"), date("Y"));
-$inactivityDate=date("Y-m-d",$timestamp);
-
-$timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
-$inactivityDate_plus_onemonth=date("Y-m-d",$timestamp);
-
-$timestamp=mktime(0, 0, 0, date("m") - $timeDiff , date("d"), date("Y"));
-$oldActivityOneYear=date("Y-m-d",$timestamp);
-
-$delArchivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
-$delArchiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
-
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 $dbSlave=connect_slave();
@@ -36,20 +16,17 @@ echo "Start\n\n";
 $inactiveRecordTable="INACTIVE_RECORDS_6_MONTHS_FOR_CRON";
 $mysqlObj=new Mysql;
 
-
 //$inactivityDate='2011-10-02';
 //Store list of profile which are not logged in b/w 6-7 months
 $sql="TRUNCATE TABLE test.$inactiveRecordTable";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 
-$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate' ";
+$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'";
 //$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT < '$inactivityDate'";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 //Store list of profile which are not logged in b/w 6-7 months
-$orgNoOfActiveServers = $noOfActiveServers ;
-//$noOfActiveServers =2;
 
 //dumping INACTIVE_RECORDS_6_MONTHS_FOR_CRON to all slaves as they are needed for joins
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
@@ -59,26 +36,29 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
         mysql_select_db("test",$dbS);
 
 	$sql="TRUNCATE TABLE test.$inactiveRecordTable";
-echo "Query on slave",$activeServerId,": ",$sql."\n\n";
+echo $sql."\n\n";
 	mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 }
+
 $s1=getDumpCommandConnectionDetails('S',"$inactiveRecordTable",'test','source');//slave
 
 $t1=getDumpCommandConnectionDetails('SS1','','test','target');//shardslave1
 $p=$s1." | ".$t1;
 passthru($p);
 
-echo "Dump1","\n\n";
+echo "Dump1";
 
 $t2=getDumpCommandConnectionDetails('SS2','','test','target');//shardslave2
-echo $p=$s1." | ".$t2;
+$p=$s1." | ".$t2;
 passthru($p);
-echo "Dump2","\n\n";
+echo "Dump2";
+
 $t3=getDumpCommandConnectionDetails('SS3','','test','target');//shardslave3
 $p=$s1." | ".$t3;
 passthru($p);
-echo "Dump3","\n\n";
+echo "Dump3";
 //dumping INACTIVE_RECORDS_6_MONTHS_FOR_CRON to all slaves as they are needed for joins
+
 //BOOKMARKS
 for($i=0;$i<2;$i++)
 {
@@ -91,7 +71,7 @@ echo $sql."\n\n";
 	$res=mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 	while($row=mysql_fetch_array($res))
 	{
-	checkForEndTime();
+
 if($laveshBookmark++%1000==0)
 	echo $laveshBookmark." - ";
 
@@ -104,9 +84,8 @@ if($laveshBookmark++%1000==0)
 		$sql_1="BEGIN";
 		mysql_query($sql_1,$db) or die(mysql_error($db).$sql_1);
 		
-		$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_BOOKMARKS{$delArchiveSuffix} SELECT * FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
+		$sql_i="REPLACE INTO newjs.DELETED_BOOKMARKS SELECT * FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
 		$sql_i.=$whereCondition;
-		//echo $sql_i,"\n\n";
 		mysql_query($sql_i,$db) or die(mysql_error($db).$sql_i);
 
 		$sql_d="DELETE FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
@@ -158,7 +137,6 @@ echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
-	checkForEndTime();
 if($laveshPhoto++%1000==0)
 	echo $laveshPhoto." - ";
 			$col1=$row["PID"];
@@ -186,9 +164,8 @@ if($laveshPhoto++%1000==0)
 				$sql_1="BEGIN";
 				mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PHOTO_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
+				$sql_i="REPLACE INTO newjs.DELETED_PHOTO_REQUEST SELECT * FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
-				//echo $sql_i,"\n\n";
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 		
 				$sql_d="DELETE FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
@@ -204,7 +181,7 @@ if($laveshPhoto++%1000==0)
 		}
 	}
 	//PHOTO REQUEST
-//die(X);
+
 	//HOROSCOPE REQUEST
 	for($i=0;$i<2;$i++)
 	{
@@ -216,7 +193,6 @@ echo $sql."\n\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
-	checkForEndTime();
 if($laveshHoro++%1000==0)
 	echo $laveshHoro." - ";
 			$col1=$row["PID"];
@@ -244,9 +220,8 @@ if($laveshHoro++%1000==0)
                         	$sql_1="BEGIN";
 	                        mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_HOROSCOPE_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
+				$sql_i="REPLACE INTO newjs.DELETED_HOROSCOPE_REQUEST SELECT * FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
-				//echo $sql_i,"\n\n";
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 	
 				$sql_d="DELETE FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
@@ -265,7 +240,7 @@ if($laveshHoro++%1000==0)
 	//HOROSCOPE REQUEST
 echo "\n\n\n";
 	//CONTACTS -- EOI -- MESSAGE_LOG -- MESSAGES
-	for($i=0;$i<1;$i++)
+	for($i=0;$i<3;$i++)
 	{
 		$dbNameS=getActiveServerName($activeServerId,"slave");
 		$dbS=$mysqlObj->connect($dbNameS);
@@ -274,70 +249,63 @@ echo "\n\n\n";
                 $dbNameM=getActiveServerName($activeServerId,"master");
 				$dbmaster=$myDbArr[$dbNameM];
                 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbmaster);
-//if($i==0)
-//			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' ";
-//		elseif($i==1)
-//			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.SENDER=B.PROFILEID";
-//		elseif($i==2)
-//			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
-//    
-echo "Contacts :\n";
-			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE A.SENDER=B.PROFILEID OR A.RECEIVER=B.PROFILEID";
 
-			//$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
+
+		if($i==0)
+			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' AND TYPE='I' ";
+		elseif($i==1)
+			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND TYPE<>'I' AND A.SENDER=B.PROFILEID";
+		elseif($i==2)
+			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND TYPE<>'I' AND A.RECEIVER=B.PROFILEID";
 echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
-    echo mysql_num_rows($res),"\n\n";
-    $icount = 0;
 		while($row=mysql_fetch_array($res))
 		{
-      ++$icount;  
-      checkForEndTime();
-      if($laveshC++%1000==0)
-        echo $laveshC." - ";
-      $col1=$row["SENDER"];
-      $col2=$row["RECEIVER"];
+if($laveshC++%1000==0)
+	echo $laveshC." - ";
+			$col1=$row["SENDER"];
+			$col2=$row["RECEIVER"];
 
 			unset($col_id);
 			unset($col_str);
 
-//                        $sqlAdded="SELECT COUNT(*) as CNT FROM newjs.CONTACTS  WHERE SENDER='$col1' and RECEIVER='$col2' AND TIME<'$inactivityDate'";
-//                        $resAdded=mysql_query($sqlAdded,$dbmaster) or die(mysql_error($dbmaster).$sqlAdded);
-//                        $rowAdded=mysql_fetch_array($resAdded);
-//                        $cntAdded=$rowAdded["CNT"];
+                        $sqlAdded="SELECT COUNT(*) as CNT FROM newjs.CONTACTS  WHERE SENDER='$col1' and RECEIVER='$col2' AND TIME<'$inactivityDate'";
+                        $resAdded=mysql_query($sqlAdded,$dbmaster) or die(mysql_error($dbmaster).$sqlAdded);
+                        $rowAdded=mysql_fetch_array($resAdded);
+                        $cntAdded=$rowAdded["CNT"];
 
-      if(1 || $cntAdded>0)
+                        if($cntAdded>0)
 			{
 				
-				$resMsgLog=$dbMessageLogObj->getMessageLogHousekeeping($col1,$col2);
+				$res=$dbMessageLogObj->getMessageLogHousekeeping($col1,$col2);
 				//$sql_1="SELECT ID FROM newjs.MESSAGE_LOG WHERE SENDER IN ('$col1','$col2') AND RECEIVER IN ('$col1','$col2')";
 				//$res_1=mysql_query($sql_1,$dbS) or die(mysql_error($dbS).$sql_1);
 				//while($row_1=mysql_fetch_array($res_1))
-				foreach($resMsgLog as $k=>$row_1)
+				foreach($res as $k=>$row_1)
 				{
 					$col_id[]=$row_1["ID"];
 				}
 
-        unset($affectedDb);
-        $myDbName = getProfileDatabaseConnectionName($col1, '', $mysqlObj);
-        $myDb = $myDbArr[$myDbName];
-        $affectedDb[0] = $myDb;
+                                unset($affectedDb);
+                                $myDbName=getProfileDatabaseConnectionName($col1,'',$mysqlObj);
+				$myDb=$myDbArr[$myDbName];
+                                $affectedDb[0]=$myDb;
 
-        $myDbName = getProfileDatabaseConnectionName($col2, '', $mysqlObj);
-        $viewedDb = $myDbArr[$myDbName];
-        if (!in_array($viewedDb, $affectedDb))
-          $affectedDb[1] = $viewedDb;
-
-        $ProfileId1shard=JsDbSharding::getShardNo($col1);
-        $ProfileId2shard=JsDbSharding::getShardNo($col2);
-        $dbMessageLogObj1=new NEWJS_MESSAGE_LOG($ProfileId1shard);
-        $dbMessageLogObj2=new NEWJS_MESSAGE_LOG($ProfileId2shard);
-        $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES($ProfileId1shard);
-        $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES($ProfileId2shard);
-        $dbMessageObj1=new NEWJS_MESSAGES($ProfileId1shard);
-        $dbMessageObj2=new NEWJS_MESSAGES($ProfileId2shard);
-        $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG($ProfileId1shard);
-        $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
+                                $myDbName=getProfileDatabaseConnectionName($col2,'',$mysqlObj);
+				$viewedDb=$myDbArr[$myDbName];
+                                if(!in_array($viewedDb,$affectedDb))
+                                        $affectedDb[1]=$viewedDb;
+                                        
+$ProfileId1shard=JsDbSharding::getShardNo($col1);
+$ProfileId2shard=JsDbSharding::getShardNo($col2);
+$dbMessageLogObj1=new NEWJS_MESSAGE_LOG($ProfileId1shard);
+$dbMessageLogObj2=new NEWJS_MESSAGE_LOG($ProfileId2shard);
+$dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES($ProfileId1shard);
+$dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES($ProfileId2shard);
+$dbMessageObj1=new NEWJS_MESSAGES($ProfileId1shard);
+$dbMessageObj2=new NEWJS_MESSAGES($ProfileId2shard);
+$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG($ProfileId1shard);
+$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 
 				for($ll=0;$ll<count($affectedDb);$ll++)
 				{$shard=$ll+1;
@@ -364,28 +332,26 @@ echo $sql."\n\n";
 					if(is_array($col_id))
 					{
 						$col_str=implode("','",$col_id);
-						$dbDeletedMessageLogObj->insertMessageLogHousekeeping($col_id, $delArchivePrefix, $delArchiveSuffix);
+						$dbDeletedMessageLogObj->insertMessageLogHousekeeping($col_id);
 						//$sql_1="REPLACE INTO newjs.DELETED_MESSAGE_LOG SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 						$dbMessageLogObj->deleteMultipleLogForSingleProfile($col_id);
 						//$sql_1="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
-						$dbDeletedMessagesObj->insertMessageLogHousekeeping($col_id, $delArchivePrefix, $delArchiveSuffix);
+						$dbDeletedMessagesObj->insertMessageLogHousekeeping($col_id);
 						//$sql_1="REPLACE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 						$dbMessageObj->deleteMessages($col_id);
 						//$sql_1="DELETE FROM newjs.MESSAGES WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 					}
-					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PROFILE_CONTACTS{$delArchiveSuffix} SELECT * FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
-					//echo $sql_1,"\n\n";
+					$sql_1="REPLACE INTO newjs.DELETED_PROFILE_CONTACTS SELECT * FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
 					$sql_1="DELETE FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_EOI_VIEWED_LOG{$delArchiveSuffix} SELECT * FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
-					//echo $sql_1,"\n\n";
+					$sql_1="REPLACE INTO newjs.DELETED_EOI_VIEWED_LOG SELECT * FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 			
 					$sql_1="DELETE FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
@@ -404,56 +370,21 @@ echo $sql."\n\n";
                                         $sql_1="COMMIT";
                                         $dbMessageLogObj->commitTransaction();
                                         mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
-					checkForEndTime();
                                 }
 			}
-		}
-    echo "Total loop run is :",$icount,"\n\n\n";
+		}	
 	}
 	//CONTACTS -- EOI -- MESSAGE_LOG -- MESSAGES
 }
-$timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
+$timestamp=mktime(0, 0, 0, date("m")-3  , date("d"), date("Y"));
 $inactivityDateViewLog=date("Y-m-d",$timestamp);
-
-
 //VIEW LOG
-
 $db_211=$mysqlObj->connect("viewLogRep");
-
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_211);
 
 //$db_211_slave=connect_211_slave();
 $db_211_slave = $mysqlObj->connect("211Slave");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_211_slave);
-
-
-echo "\n\n";
-$memObject=JsMemcache::getInstance();
-$viewersGT5k=$memObject->getSetsAllValue("ViewLogGT5k");
-
-if(is_array($viewersGT5k)){
-	foreach($viewersGT5k as $k=>$v){
-		if($v!=''){
-			$sql="SELECT VIEWER,VIEWED FROM newjs.VIEW_LOG  WHERE VIEWER=$v ORDER BY DATE DESC LIMIT 5000,100000";
-			$res=mysql_query($sql,$db_211_slave) or die(mysql_error($db_211_slave).$sql);
-			while($row=mysql_fetch_assoc($res))
-			{
-				    $viewer=$row["VIEWER"];
-			        $viewed=$row["VIEWED"];
-			//TODO
-			        $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
-				//echo $sqlI,"\n\n";
-			        mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
-			
-			
-			        $sqlD="DELETE FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
-			        mysql_query($sqlD,$db_211) or die(mysql_error($db_211).$sqlD);
-			      			
-			}
-			$memObject->deleteSpecificDataFromCache("ViewLogGT5k",$v);
-		}
-	}
-}
 
 echo "\n\n";
 echo $sql="SELECT VIEWER,VIEWED FROM newjs.VIEW_LOG  WHERE DATE<'$inactivityDateViewLog'";
@@ -461,7 +392,6 @@ echo "\n\n";
 $res=mysql_query($sql,$db_211_slave) or die(mysql_error($db_211_slave).$sql);
 while($row=mysql_fetch_assoc($res))
 {
-	checkForEndTime();
 if($laveshrawat++%10000==0)
 {
         echo $laveshrawat."-";
@@ -471,9 +401,8 @@ if($laveshrawat++%10000==0)
 
         $viewer=$row["VIEWER"];
         $viewed=$row["VIEWED"];
-//TODO
-        $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
-	//echo $sqlI,"\n\n";
+
+        $sqlI="REPLACE INTO newjs.DELETED_VIEW_LOG SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
         mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
 
 
@@ -481,9 +410,6 @@ if($laveshrawat++%10000==0)
         mysql_query($sqlD,$db_211) or die(mysql_error($db_211).$sqlD);
 
 }
-
-
-
 echo "\n\n";
 echo "done";
 //VIEW LOG
@@ -515,12 +441,8 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$sipArr[0]=$x[0];
 			$s=$x[1];
 		}
-		else{
-			
-			$sipArr[0]=MysqlDbConstants::$shard1Slave[HOST];
-			$sipArr[1]=MysqlDbConstants::$shard1Slave[PORT];
-			
-		}
+		else
+			$sipArr=explode(":",MysqlDbConstants::$shard1Slave[HOST]);
 	}
         elseif($case=='SS2')
         {
@@ -534,13 +456,8 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$s=$x[1];
 		}
 		else
-		{
-
-                        $sipArr[0]=MysqlDbConstants::$shard2Slave[HOST];
-                        $sipArr[1]=MysqlDbConstants::$shard2Slave[PORT];
-
-                }
-	}
+	                $sipArr=explode(":",MysqlDbConstants::$shard2Slave[HOST]);
+        }
         elseif($case=='SS3')
         {
                 $h=MysqlDbConstants::$shard3Slave[HOST];
@@ -552,13 +469,8 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$sipArr[0]=$x[0];
 			$s=$x[1];
 		}
-		else{
-
-                        $sipArr[0]=MysqlDbConstants::$shard3Slave[HOST];
-                        $sipArr[1]=MysqlDbConstants::$shard3Slave[PORT];
-
-                }
-
+		else
+                	$sipArr=explode(":",MysqlDbConstants::$shard3Slave[HOST]);
         }
 
 	
@@ -578,21 +490,4 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 		$str.=' '.$table;
 	return $str;
 }
-
-function checkForEndTime()
-{
-	$orgTZ = date_default_timezone_get();
-        date_default_timezone_set("Asia/Calcutta");
-
-	 if(in_array(date('H'),array("07","08","09")))
-	 {
-		date_default_timezone_set($orgTZ);
-		successfullDie();		
-            return 1;
-         }
-		
-
-	date_default_timezone_set($orgTZ);
-}
-
 ?>

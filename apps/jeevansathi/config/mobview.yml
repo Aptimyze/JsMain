@@ -8,7 +8,7 @@ default:
 
 jsmsMobLayout:
 
-  javascripts: [modernizr_p_js,tracking_js,jsms/common/CommonFunctions,jsms/common/scrollTo,jsms/common/urlParamHandling,app_promo_js,commonMob,jsms/common/touchswipe_js,jsms/common/disableScroll_js,jsms/common/history_js,commonExpiration_js,rippleEffectCommon_js,common_comscore_js,jspc/common/AjaxWrapper]
+  javascripts: [modernizr_p_js,tracking_js,jsms/common/CommonFunctions,jsms/common/scrollTo,jsms/common/urlParamHandling,app_promo_js,commonMob,jsms/common/touchswipe_js,jsms/common/disableScroll_js,jsms/common/history_js,commonExpiration_js,rippleEffectCommon_js,common_comscore_js]
   stylesheets: [jsms/common/commoncss,jsms/common/errorBar,jsms/common/fonts,jsms/common/mediaquery,jsms/common/jsmsApp_promo_css,rippleEffectCommon_css]
   
 newPhotoAlbumLayout:

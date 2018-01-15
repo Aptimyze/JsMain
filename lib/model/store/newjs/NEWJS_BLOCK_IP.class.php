@@ -12,11 +12,6 @@ class NEWJS_BLOCK_IP extends TABLE
         **/
 	public function blockIP($ip)
 	{
-                if(JsConstants::$whichMachine =="test" )
-                {
-                        return false;
-                }
-
 		try
 		{
 			$ts = time();

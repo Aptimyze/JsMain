@@ -12,7 +12,7 @@
 				    	<a href="/profile/viewprofile.php?profilechecksum={profilechecksum}&total_rec={total_rec}&actual_offset={actual_offset}&contact_id={contact_id}&contact={contact}&self={self}&self_profileid={self_profileid}&flag={flag}&type={type}&page={page}&{tracking}&tupleId={ccTupleIDNo}&fromPage={fromPage}&{NAVIGATOR}" class="js-colorParent js-urlCC">
 							<div class="fl">
 	                                                    <div class="ccdim1Parent scrollhid bgColorG">
-								<img dsrc='{ccTupleImage}' class="ccdim1 vtop"/>
+								<img src="{ccTupleImage}" class="ccdim1 vtop"/>
 	                                                    </div>
 							</div>
 							<div class="fl ccwid5 pos-rel">
@@ -71,7 +71,7 @@
 <div class="disp-none" id="othermessagetuple">
 <li class="clearfix pt30"> 
 <div class="fl wid85p" id="othermessage{id}">
-    <div class="fl pt5"><img dsrc='{otherimage}' class="ccdim3 vtop"></div>
+    <div class="fl pt5"><img src="{otherimage}" class="ccdim3 vtop"></div>
     <div class="fl f12 lh20 pl15 wid90p">
     <div>{message}</div>
     <div class="f10 opa50">{time}</div>
@@ -83,7 +83,7 @@
 <div class="disp-none" id ="mymessagetuple">
 <li class="clearfix pt30">    
 <div class="fr wid85p" id="mymessage{id}">
-    <div class="fr pt5"><img dsrc='{myimage}' class="ccdim3 vtop"></div>
+    <div class="fr pt5"><img src="{myimage}" class="ccdim3 vtop"></div>
     <div class="fr f12 lh20 pr15 wid90p"><div class="txtr">{message}</div> 
     <div class="f10 opa50 txtr">{time}</div></div>
 </div>

@@ -42,7 +42,7 @@ class settingsActions extends sfActions
                                         PictureFunctions::photoUrlCachingForChat($profileid, array(), "ProfilePic120Url",'', "remove");
     					//$loggedInProfileObj->edit()
     					$privacyArray[0]=$request->getParameter("privacy");
-    					$privacyArray[1]=$privacyValue;                        
+    					$privacyArray[1]=$privacyValue;
     					ob_end_clean();
     					print_r(implode("",$privacyArray));die;
     				}

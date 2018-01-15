@@ -5,7 +5,7 @@ class REGISTRATION_QUALITY extends TABLE
   public function __construct($dbname="")
   {
           parent::__construct($dbname);
-          $this->fields = "`REG_DATE` , `SOURCEID`,`SOURCE_COUNTRY`, `SOURCECITY` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC` , `SCREENED_CC` , `OTHERS_COMMUNITY`";
+          $this->fields = "`REG_DATE` , `SOURCEID`, `SOURCECITY` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC` , `SCREENED_CC` , `OTHERS_COMMUNITY`";
   }
 
 	//Three function for innodb transactions
@@ -30,18 +30,16 @@ class REGISTRATION_QUALITY extends TABLE
                     $param = array();
                     $countReg = count($regDateData);
                     for($i = 1;$i<=$countReg;$i++){
-                      $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :SOURCECOUNTRY_".$i.", :SOURCECITY_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.", :SCREENED_CC_".$i.",:OTHERS_COMMUNITY_".$i.")";
+                      $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :SOURCECITY_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.", :SCREENED_CC_".$i.",:OTHERS_COMMUNITY_".$i.")";
                     }
                     $paramStr = implode(",",$param);
                     $sql = $sql.$paramStr;
                     $res=$this->db->prepare($sql);
                     $i = 1;
                     foreach($regDateData as $sourceCity=>$regData){
-                            $cityCountry = explode("_",$sourceCity);
                       $res->bindValue(":REG_DATE_".$i, $regData['date'], PDO::PARAM_STR);
                       $res->bindValue(":SOURCEID_".$i, $sourceGroup, PDO::PARAM_STR);
-                      $res->bindValue(":SOURCECOUNTRY_".$i, $cityCountry[1], PDO::PARAM_STR);
-                      $res->bindValue(":SOURCECITY_".$i, $cityCountry[0], PDO::PARAM_STR);
+                      $res->bindValue(":SOURCECITY_".$i, $sourceCity, PDO::PARAM_STR);
                       $res->bindValue(":TOTAL_REG_".$i, $regData['total_reg'], PDO::PARAM_INT);
                       $res->bindValue(":F22_".$i, $regData['F'], PDO::PARAM_INT);
                       $res->bindValue(":F22MV_".$i, $regData['FMV'], PDO::PARAM_INT);
@@ -75,10 +73,6 @@ class REGISTRATION_QUALITY extends TABLE
       $filters['source_cities'] = implode('","', array_map('addSlashes',$filters['source_cities']));
       $filters['source_cities'] = '"'.$filters['source_cities'].'"';
       $condition[] = 'rq.SOURCECITY IN ('.$filters['source_cities'].')';
-    }elseif(isset($filters['source_countries'])){
-      $filters['source_countries'] = implode('","', array_map('addSlashes',$filters['source_countries']));
-      $filters['source_countries'] = '"'.$filters['source_countries'].'"';
-      $condition[] = 'rq.SOURCE_COUNTRY IN ('.$filters['source_countries'].')';
     }
     
     $where .= implode(' AND ',$condition);

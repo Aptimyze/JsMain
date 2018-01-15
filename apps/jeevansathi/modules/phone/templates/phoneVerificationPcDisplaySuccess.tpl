@@ -12,7 +12,7 @@ var showDuplicateConsentMsg='~$showDuplicateConsentMsg`';
 ~if $sf_request->getAttribute('currency') eq 'RS'`~assign var='tollFree' value=CommonConstants::HELP_NUMBER_INR`~else`~assign var='tollFree' value=CommonConstants::HELP_NUMBER_NRI`~/if`
 
   <!--start:body-->
-<link rel="stylesheet" async="true" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+<link rel="stylesheet" async="true" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
 ~if isset($fromReg)`
 <!--start:overlay-->
   <div class="hpoverlay z2 js-regOverlay disp-none"></div>

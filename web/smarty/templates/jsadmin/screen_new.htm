@@ -19,16 +19,13 @@
       	}
  		 });
 
-		
+
 		/**
 		 * Added this function to count total characters when page is loaded.
 		 */
 		$(document).ready(function()
 		{
-		 	aboutLength=0;
-            if($("#YOURINFO").val()!=null && $("#YOURINFO").val()!=undefined){
-                aboutLength = $("#YOURINFO").val().length;
-            }
+		 	aboutLength = $("#YOURINFO").val().length;
 			$("#minimum_characters_length").val("NULL");
 
 
@@ -46,26 +43,12 @@
 			/*
 				This function is written for dynamic resizing of textareas.
 			 */
-			var maxHeight = 180;
+			
 			$('textarea').each(function () {
-			  this.style.width = '480 px';
-			  if($(this).hasClass()!="backdrop"){
-			  height = ((this.scrollHeight>maxHeight)?maxHeight:this.scrollHeight) + 2;
-			  this.setAttribute('style', 'height:' + (height) + 'px;');
-			  handleCorrection(this);
-			  }
-			  if($(this).attr("data")){
-				  
-				handleInput(this);
-				}
+			  this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
 			}).on('input', function () {
 			  this.style.height = 'auto';
 			  this.style.height = (this.scrollHeight) + 'px';
-			  
-			}).on('scroll',function(){
-				if($(this).attr("data")){
-					handleScroll(this);
-				}
 			});
 
 			/*
@@ -78,26 +61,6 @@
 			    $(this).attr('size',size);
 			 });
 		});
-		
-		
-			function handleCorrection(e) {
-			  id= $(e).attr("name");
-			  height = document.getElementsByName(id)[0].style.height;
-			  id="obscene_"+id;
-			  if(document.getElementById(id)!=null){
-				  document.getElementById(id).style.height= height;
-				  document.getElementsByName(id)[0].style.height= height;
-				  id1="Backdrop_"+id;
-				  document.getElementById(id1).style.height= height;
-				  id1="td_"+id;
-				  document.getElementById(id1).style.height= height;
-				  id="container_"+id;
-				  document.getElementById(id).style.height= height;
-				}
-			  
-			}
-			
-		
 
 		 	/**
 		 	 * This function is used to count the number of characters in the your info field.
@@ -154,34 +117,6 @@
 			      retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length);
 			   }
 			   return retValue;
-			}
-			
-			function applyHighlights(text,words) {
-				var array = words.split(',');
-				var arrayLength = array.length;
-				for (var i = 0; i < arrayLength; i++) {
-				    
-				     text = text.replace(new RegExp(array[i], 'ig'), '<mark>$&</mark>');
-				}
-			 return text;
-			}
-			
-			function handleInput(e) {
-			  var text = $(e).val();
-			  var words = $(e).attr("data");
-			  var name = $(e).attr("name");
-			  var highlightedText = applyHighlights(text,words);
-			  $("#"+name).html(highlightedText);
-			  //$(e).html(highlightedText	);
-			 
-			}
-			function handleScroll(e) {
-				 var name ="Backdrop_"+ $(e).attr("name");
-				var scrollTop = $(e).scrollTop();
-			  $("#"+name).scrollTop(scrollTop);
-			 
-			  var scrollLeft = $(e).scrollLeft();
-			  $("#"+name).scrollLeft(scrollLeft);  
 			}
 
 			function validate()
@@ -320,7 +255,7 @@
 			</font>
 			</p>
 		~/if`
-		<center class="topDetails" style="width:98%;z-index: 1">
+		<center class="topDetails" style="width:98%">
 		<table width="600" border="0" cellspacing="1" cellpadding='3' ALIGN="CENTER" >
 			<tr width=100% class="formhead">
 				<td width=75% class="formhead" border=1><font><b>Welcome : ~$user` <span style="float:right;">~if $PAID eq 'Y'` Paid Member ~else` Free Member ~/if`</span></b></font></td>
@@ -362,9 +297,6 @@
 		</table>
 		</center>
 		<form name=fr1 action="screen_new.php" method="post" onsubmit="return validate()">
-                    ~if $activatedWithoutYourInfo`
-                        <input type="hidden" name="activatedWithoutYourInfo" id="activatedWithoutYourInfo" value="~$activatedWithoutYourInfo`">
-                    ~/if`
 			<table width="750" border="0" cellspacing="0" cellpadding="0" align="center">
 				<tr>
 					<input type="hidden" name="from_skipped" value=~$from_skipped`>
@@ -688,20 +620,10 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><textarea name="EDUCATION" rows="3" cols="76" class="textboxes1 textarea">~$EDUCATIONvalue`</textarea></td>
+						<td><textarea name="EDUCATION" rows="3" cols="40" class="textboxes1">~$EDUCATIONvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_EDUCATION || $OBSCENE_WORDS_EDUCATION`
+					~if $OBSCENE_EDUCATION`
 						~$OBSCENE_MESSAGE_EDUCATION`
-						<tr id="td_obscene_EDUCATION">
-						<td>&nbsp;</td>
-						<td ><div class="container" id="container_obscene_EDUCATION" >
-							<div class="textboxes1 backdrop" id="Backdrop_obscene_EDUCATION">
-							<div class="highlights" id="obscene_EDUCATION"></div>
-							</div>
-
-								<textarea name="obscene_EDUCATION" class="textboxes1 textarea" data=~$OBSCENE_WORDS_EDUCATION`>~$EDUCATIONvalue`</textarea>
-							</div>
-						</tr>
 					~/if`
 					~if $EXCEED_NUMERIC_EDUCATION`
 						~$EXCEED_NUMERIC_MESSAGE`
@@ -776,24 +698,14 @@
 					~/if`
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="YOURINFO" id="YOURINFO" onkeyup="countCharactersAbout()" cols="60" rows="8" class="textboxes1 textarea">~$YOURINFOvalue`</textarea>
+						<td><textarea name="YOURINFO" id="YOURINFO" onkeyup="countCharactersAbout()" cols="40" rows="8" class="textboxes1">~$YOURINFOvalue`</textarea>
 						<!-- commented since the code was written for benchmarking purpose -->
 						<!-- <input name="YOURINFO_ORIGINAL" id="YOURINFO_ORIGINAL" type="hidden" value="~$YOURINFOvalue`"/> -->
 							<p> Total Characters: <span id="count_character_about"></span></p>
 						</td>
 					</tr>
-					~if $OBSCENE_YOURINFO || $OBSCENE_WORDS_YOURINFO`
+					~if $OBSCENE_YOURINFO`
 						~$OBSCENE_MESSAGE_INFO`
-						<tr id="td_obscene_YOURINFO">
-						<td>&nbsp;</td>
-						<td ><div class="container" id="container_obscene_YOURINFO" >
-							<div class="textboxes1 backdrop" id="Backdrop_obscene_YOURINFO">
-							<div class="highlights" id="obscene_YOURINFO"></div>
-							</div>
-
-								<textarea name="obscene_YOURINFO" cols="60" rows="8" class="textboxes1 textarea" data=~$OBSCENE_WORDS_YOURINFO`>~$YOURINFOvalue`</textarea>
-							</div>
-						</tr>
 					~/if`
 					~if $EXCEED_NUMERIC_YOURINFO`
 						~$EXCEED_NUMERIC_MESSAGE`
@@ -842,20 +754,10 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="FAMILYINFO" cols="60" rows="8" class="textboxes1 textarea">~$FAMILYINFOvalue`</textarea></td>
+						<td><textarea name="FAMILYINFO" cols="40" rows="8" class="textboxes1">~$FAMILYINFOvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_FAMILYINFO || $OBSCENE_WORDS_FAMILYINFO`
+					~if $OBSCENE_FAMILYINFO`
 						~$OBSCENE_MESSAGE_FAMILY`
-						<tr id="td_obscene_FAMILYINFO">
-						<td>&nbsp;</td>
-						<td ><div class="container" id="container_obscene_FAMILYINFO" >
-							<div class="textboxes1 backdrop" id="Backdrop_obscene_FAMILYINFO">
-							<div class="highlights" id="obscene_FAMILYINFO"></div>
-							</div>
-
-								<textarea name="obscene_FAMILYINFO" cols="60" rows="8" class="textboxes1 textarea" data=~$OBSCENE_WORDS_FAMILYINFO`>~$FAMILYINFOvalue`</textarea>
-							</div>
-						</tr>
 					~/if`
 					~if $EXCEED_NUMERIC_FAMILYINFO`
 						~$EXCEED_NUMERIC_MESSAGE`
@@ -875,23 +777,10 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="SPOUSE" cols="60" rows="8" class="textboxes1 textarea">~$SPOUSEvalue`</textarea></td>
+						<td><textarea name="SPOUSE" cols="40" rows="8" class="textboxes1">~$SPOUSEvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_SPOUSE || $OBSCENE_WORDS_SPOUSE`
-					<tr class="fieldsnew">
+					~if $OBSCENE_SPOUSE`
 						~$OBSCENE_MESSAGE_SPOUSE`
-					</tr>
-						<tr id="td_obscene_SPOUSE" class="fieldsnew">
-						<td>&nbsp;</td>
-						<td><div class="container"  id="container_obscene_SPOUSE">
-							<div class="textboxes1 backdrop" id="Backdrop_obscene_SPOUSE">
-							<div class="highlights" id="obscene_SPOUSE"></div>
-							</div>
-
-								<textarea name="obscene_SPOUSE" cols="60" rows="8" class="textboxes1 textarea" data=~$OBSCENE_WORDS_SPOUSE`>~$SPOUSEvalue`</textarea>
-							</div>
-						</tr>
-					
 					~/if`
 					~if $EXCEED_NUMERIC_SPOUSE`
 						~$EXCEED_NUMERIC_MESSAGE`
@@ -911,20 +800,10 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td><textarea name="JOB_INFO" cols="60" rows="8" class="textboxes1 textarea">~$JOB_INFOvalue`</textarea></td>
+						<td><textarea name="JOB_INFO" cols="40" rows="8" class="textboxes1">~$JOB_INFOvalue`</textarea></td>
 					</tr>
-					~if $OBSCENE_JOB_INFO || $OBSCENE_WORDS_JOB_INFO`
+					~if $OBSCENE_JOB_INFO`
 						~$OBSCENE_MESSAGE_JOBINFO`
-						<tr id="td_obscene_JOB_INFO">
-						<td>&nbsp;</td>
-						<td ><div class="container" id="container_obscene_JOB_INFO" >
-							<div class="textboxes1 backdrop" id="Backdrop_obscene_JOB_INFO">
-							<div class="highlights" id="obscene_JOB_INFO"></div>
-							</div>
-
-								<textarea name="obscene_JOB_INFO" cols="60" rows="8" class="textboxes1 textarea" data=~$OBSCENE_WORDS_JOB_INFO`>~$JOB_INFOvalue`</textarea>
-							</div>
-						</tr>
 					~/if`
 					~if $EXCEED_NUMERIC_JOB_INFO`
 						~$EXCEED_NUMERIC_MESSAGE`

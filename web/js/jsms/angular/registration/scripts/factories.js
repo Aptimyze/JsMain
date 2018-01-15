@@ -25,7 +25,6 @@
 			"EMAIL_INVALID_DOMAIN":"Provide a valid email.",
 			"EMAIL_EXIST":"An account with this Email already exists",
 			"PASSWORD_REQUIRED":"Provide a password",
-			"PASSWORD_NUMERIC":"Your password cannot be only numeric",
 			"PASSWORD_INVALID":"Provide a valid password.",
 			"PASSWORD_COMMON":"The password you have chosen is not secure",
 			"MOBILE_REQUIRED":"Provide a mobile number",
@@ -186,29 +185,24 @@
 			{"label":"Country living in","value":notFilled,"show":"true","storeKey":"country_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":""},
 			{"label":"State living in","value":notFilled,"show":"false","storeKey":"state_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"state_res","userDecision":"","dindex":"4","tapName":'State',"dependant_tapName":""},
 			{"label":"City living in","value":notFilled,"show":"false","storeKey":"city_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_city_jspc","userDecision":"","dindex":"5","tapName":'City',"dependant_tapName":""},
-			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""},
-			{"label":"Residential Status","value":notFilled,"show":"false","screenName":"s2","userDecision":"","dindex":"7","dshow":"res_status","storeKey":"res_status","errorLabel":"","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","tapName":"Residential Status"},
-
+			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""}
 				],
 		"s3" : [
 			{"label":"Highest Education","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"edu_level_new","userDecision":"","dindex":"0","storeKey":"edu_level_new","tapName":"Highest Education"},
       {"label":"PG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_pg","userDecision":"","dindex":"1","storeKey":"degree_pg","tapName":"PG Degree","required":"false"},
       {"label":"PG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"2","storeKey":"pg_college","inputType":"text","hint":notFilled,"required":"false"},
-//      {"label":"Other PG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"3","storeKey":"other_pg_degree","inputType":"text","hint":notFilled,"required":"false"},
-      {"label":"UG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_ug","userDecision":"","dindex":"3","storeKey":"degree_ug","tapName":"UG Degree","required":"false"},
-      {"label":"UG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"4","storeKey":"college","inputType":"text","hint":notFilled,"required":"false"},
-//      {"label":"Other UG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"6","storeKey":"other_ug_degree","inputType":"text","hint":notFilled,"required":"false"},
-			{"label":"Work Area","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"occupation","userDecision":"","dindex":"5","storeKey":"occupation","tapName":"Work Area"},
-			{"label":"Annual Income","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"income","userDecision":"","depValue":"","dindex":"6","storeKey":"income","tapName":"Annual Income"}
+      {"label":"Other PG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"3","storeKey":"other_pg_degree","inputType":"text","hint":notFilled,"required":"false"},
+      {"label":"UG degree (optional)","value":notFilled,"show":"false","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"degree_ug","userDecision":"","dindex":"4","storeKey":"degree_ug","tapName":"UG Degree","required":"false"},
+      {"label":"UG college (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"5","storeKey":"college","inputType":"text","hint":notFilled,"required":"false"},
+      {"label":"Other UG degree (optional)","value":"","show":"false","screenName":"s3","hamburgermenu":"0","userDecision":"","dindex":"6","storeKey":"other_ug_degree","inputType":"text","hint":notFilled,"required":"false"},
+			{"label":"Work Area","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"occupation","userDecision":"","dindex":"7","storeKey":"occupation","tapName":"Work Area"},
+			{"label":"Annual Income","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"income","userDecision":"","depValue":"","dindex":"8","storeKey":"income","tapName":"Annual Income"}
 				],
 		"s4": [
 			{"label":"Marital Status","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"children","dshow":"reg_mstatus","userDecision":"","dindex":"0","storeKey":"mstatus","optIndex":"0","tapName":"Martial Status","dependant_tapName":"Have Children"},
 			{"label":"Mother Tongue","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_mtongue","userDecision":"","dindex":"1","storeKey":"mtongue","tapName":"Mother Tongue"},
 			{"label":"Religion-Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"reg_caste_","depValue":"","dshow":"religion","userDecision":"","dindex":"2","storeKey":"religion","optIndex":"1","tapName":"Religion","dependant_tapName":""},
-			{"label":"Jamaat","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"jamaat","userDecision":"","dindex":"3","storeKey":"jamaat","tapName":"Mother Tongue","required":"false"},
-			{"label":"Caste","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"sect","userDecision":"","dindex":"4","storeKey":"sect","tapName":"Caste"},
-			{"label":"I am open to marry people of all castes \n(Caste No Bar)","value":"","inputType":"checkbox","show":"false","screenName":"s4","storeKey":"casteNoBar","hamburgermenu":"0","dindex":"5","dshow":"","required":"false"},
-      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"6","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
+      {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"3","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
 			],
 		"s5": [
       {"label":"Full Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
@@ -276,13 +270,6 @@
 		}
 		factory.showModalWindow = function($scope)
 		{
-			var errorStr = "";
-                        angular.forEach($scope.fields, function(field,key) {
-                                if(field.errorLabel.length !== 0) {
-                                        errorStr = errorStr + field.errorLabel + "  ";
-                                }
-                        });
-			trackJsEventGA("jsms","regErrorTracking"+$scope.screenName, errorStr);
 			$scope.bModalWindow =true;
 			$timeout(function(){if($scope.bModalWindow)factory.hideModalWidow($scope);},Constants.getMsgTimeOut());
 		}
@@ -416,7 +403,7 @@
 					arrDependantFields[++iCount] = regFields['s2'][1];/*DOB Field*/                    
 				break;
 				case 'country_res':
-					arrDependantFields[iCount] = regFields['s3'][6];/*Income*/
+					arrDependantFields[iCount] = regFields['s3'][8];/*Income*/
                     arrDependantFields[iCount].value = notFilled;
                     arrDependantFields[iCount].userDecision = "";
                     arrDependantFields[++iCount] = regFields['s9'][3];/*Family Income*/
@@ -430,9 +417,6 @@
 				break;
 				case 'mtongue':
 					arrDependantFields[iCount] = regFields['s4'][2];/*Religion*/
-				break;
-				case 'religion':
-				    Storage.storeUserData('sectDepReligion',parseInt(field.userDecision));
 				break;
 				default:
 					return;
@@ -632,15 +616,6 @@
 				return;
 				 });
 			}
-			    else if(fields[indexPos].storeKey=="casteNoBar") 
-				{
-                                fields[indexPos].userDecision=output[fields[indexPos].storeKey].value;
-                                fields[indexPos].value=output[fields[indexPos].storeKey].label;
-                                fields[indexPos].errorLabel = "";       
-                                UserDecision.store(fields[indexPos].storeKey,fields[indexPos].userDecision);
-                                fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
-                                factory.handleDepValue(fields[indexPos]);
-                        }
 			else
 			{
 			fields[indexPos].userDecision=output[fields[indexPos].dshow].value;
@@ -860,9 +835,9 @@
 
 		var fieldsStoreKey={
 			"s1":["relationship"],
-			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode","res_status"],
+			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode"],
 			"s3":["edu_level_new","pg_college","degree_pg","other_pg_degree","college","degree_ug","other_ug_degree","occupation","income"],
-			"s4":["mstatus","mtongue","religion","caste","sect","jamaat","havechild","casteNoBar","horoscope_match"],
+			"s4":["mstatus","mtongue","religion","caste","havechild","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
 			"s6":["yourinfo"],
             "s9":["t_brother","m_brother","t_sister","m_sister","family_type","family_values","family_status","family_income","family_back","mother_occ","gothra","native_country","native_state","native_city","ancestral_origin"],
@@ -901,7 +876,6 @@
 				delete data["city_res"];
 				delete data["state_res"];
 				delete data["pincode"];
-				delete data["res_status"];
 			}
 			if(key=="state_res")
 			{
@@ -1002,7 +976,6 @@
 			'reg[_csrf_token]':'a4ec6e42ea632a304661bc3b8a6180cd',
 			'reg[relationship]':'',
 			'reg[gender]':'',
-			'reg[res_status]':'',
 			'reg[dtofbirth][day]':'',
 			'reg[dtofbirth][month]':'',
 			'reg[dtofbirth][year]':'',
@@ -1013,8 +986,6 @@
 			'reg[pincode]':'',
 			'reg[mstatus]':'',
 			'reg[mtongue]':'',
-			'reg[sect]':'',
-			'reg[jamaat]':'',
 			'reg[religion]':'',
 			'reg[caste]':'',
 			'reg[edu_level_new]':'',
@@ -1034,7 +1005,6 @@
       'reg[other_pg_degree]':'',
       'reg[other_ug_degree]':'',
       'reg[name_of_user]':'',
-      'reg[casteNoBar]':'',
       'reg[horoscope_match]':''
 		};
 		var regPage2Fields={
@@ -1226,7 +1196,7 @@
 	});
 	
 	app.factory ('Validate',function($window,Gui,Constants,UserDecision){
-		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","vibhor1234","omsairam","jaimatadi","abcd1234","parvezkk","priyanka","jeevansathi@123","pytw2560","waheguru","jeevansathi123","js123456","jeevansathi.com","india@123","p@ssw0rd","abhishek","pass@123","jeevan123","welcome@123","mayank2463","welcome123","abc123","password123","qwertyuiop","india123","password@123","nehaavyan123","abcd@1234","pd592001","shaadi@123","yasu4333","krishna","jeevan@123","radhika02","anik.singh","jabalpur123","qwerty","sairam","singh4345","rahul123","sachin","rahul@123","iloveyou","ganesh","saibaba","jeevansaathi","harekrishna","hariom","himanshu","shaadi123","pooja123","singh123","qwerty123","kareenakhan23","sonu1234","sunita","deepak","abcdefgh","sanjay","mummypapa","chaman111","qwerty@123","priyanka123","kaushal69sc@gmail.com","goodluck","rajkumar","rajusohel","pankaj");
+		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","12345678","123456789","1234567890");
 		var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 		var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 	        var isd_regex = /^[+]?[0-9]+$/;
@@ -1405,11 +1375,7 @@
 			}
 			if(password && password.length<8)
 				passError =Constants.getErrorMsg('PASSWORD_INVALID');
-                        if(!passError)
-                        {
-                                if(!isNaN(parseFloat(password)) && isFinite(password))
-                                        passError =Constants.getErrorMsg('PASSWORD_NUMERIC');
-                        }
+
 			if(!passError){
 				var passCommon =factory.checkCommonPassword(password);
 				var userPassMatch =factory.checkPasswordUserName(password,email);

@@ -16,7 +16,9 @@
 	</div>
 	</div>
 	</div>
+	<div id="hamburger" class="hamburgerCommon dn fullwid">	
 		~include_component('static', 'newMobileSiteHamburger')`	
+	</div>
 </div>
 <script>
 var d = new Date();

@@ -63,58 +63,8 @@
             </div>
           </div>
         </div>
-        <!-- Start: Caste No Bar -->
-     
-      <div class="mt10 clearfix f14 fontlig" id="casteNoBarDiv">
-        <div class="reg-wid3 fr">
-          <div class="disp_ib">
-            <input type="checkbox" id="caste_no_bar"/>
-          </div>
-          <div class="disp_ib colr4 opa80 fontreg">
-            I am open to marry people of all castes(Caste no bar)
-          </div>
-        </div>
-      </div>
-      <!-- End: Caste No Bar -->
       </div>
       <!--end:Caste--> 
-      <!-- Start: Jamaat -->
-      <div class="mt7 disp-none" id="jamaat-selector">
-        <!--start:error div-->
-        <div class="clearfix f14 fontlig">
-          <div class="reg-wid3 fr colr5  visHid" id="jamaat_error"></div>
-        </div>
-        <!--end:error div-->
-        <div class="fullwid pos_rel clearfix">
-          <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="jamaat" tabindex="0" id="jamaat_box">
-            <label class="lblreg pos_abs js-jamaat js-list pos1_lbl1" id="jamaat_label" data-attr="jamaat">Jamaat</label>
-            <div id="jamaat_value" data-type="gridDropdown" data-required=false  data-validate=true   data-fieldtype="jamaat" data-toSave ="jamaat" data-columns="3" data-search="true">
-              <input autocomplete="off" class="reg_wid2 fr brdr-0 f15 fontlig" id="jamaat-inputBox_set" tabindex="-1"/>
-              <div id="jamaat-gridDropdown_set"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-        <!-- End: Jamaat -->
-      <!-- Start: CasteMuslim -->
-      <div class="mt7 disp-none" id="casteMuslim-selector">
-        <!--start:error div-->
-        <div class="clearfix f14 fontlig">
-          <div class="reg-wid3 fr colr5  visHid" id="casteMuslim_error"></div>
-        </div>
-        <!--end:error div-->
-        <div class="fullwid pos_rel clearfix">
-          <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" data-attr="casteMuslim" tabindex="0" id="casteMuslim_box">
-            <label class="lblreg pos_abs js-casteMuslim js-list pos1_lbl1" id="casteMuslim_label" data-attr="casteMuslim">Caste</label>
-            <div id="casteMuslim_value" data-type="gridDropdown" data-required=false  data-validate=true   data-fieldtype="casteMuslim" data-toSave ="castemuslim" data-columns="3" data-search="true">
-              <input autocomplete="off" class="reg_wid2 fr brdr-0 f15 fontlig" id="casteMuslim-inputBox_set" tabindex="-1"/>
-              <div id="casteMuslim-gridDropdown_set"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-        <!-- End: CasteMuslim -->
-      
       <!--start:subCaste-->
       <div class="mt7 disp-none" id="subcaste_selector">
         <!--start:error div-->
@@ -298,26 +248,7 @@
         </div>
       </div>
     </div>
-    <!--end:Pincode-->
-    <!--start:Residential status?-->
-    <div id="residentialStatus_selector" class="mt7 disp-none">
-      <!--start:error div-->
-      <div class="clearfix f14 fontlig">
-        <div class="reg-wid3 fr colr5  visHid" id="residentialStatus_error"></div>
-      </div>
-      <!--end:error div-->
-      <div class="fullwid pos_rel clearfix">
-        <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="residentialStatus_box">
-          <label class="lblreg pos_abs js-residentialStatus pos1_lbl1 required" id="residentialStatus_label" data-attr="residentialStatus">Residential Status?</label>
-          <div class="js-tBox" id='residentialStatus_value' data-toSave ="res_status" data-columns="3" data-type="gridDropdown"  data-validate=true data-required=true data-fieldtype="residentialStatus">
-            <div id="residentialStatus-inputBox_set"></div>
-            <div id="residentialStatus-gridDropdown_set"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--end:Residential status?-->
- 
+    <!--end:Pincode--> 
     <!--start:registration button-->
     <div class="fullwid mt30">
       <div class="reg-marl1"> 

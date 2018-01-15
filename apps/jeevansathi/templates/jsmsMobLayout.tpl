@@ -3,28 +3,18 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        ~if $sf_request->getParameter('showAndBeyond')`
-        <script type="text/javascript" src="//ht-jeevansindia.native.andbeyond.media/js/abm_jeevansaathiindia.js" async></script>
-        ~/if`
-  ~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
+	<head>
 	<script>
-  var currentPageName = "~$currentPageName`";
-  var loggedInJspcGender = "~$sf_request->getAttribute('gender')|decodevar`";
-
 	if(typeof history.pushState=="undefined" || typeof history.replaceState=='undefined' || typeof window.onpopstate=='undefined')
 	{
 		document.location.href="/static/redirectToOldJsms?rUrl="+escape(document.location.href);
 	}
+	if (window.location.protocol == "https:")
+            window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 	</script>
 	~include_http_metas`
 	~include_metas`
-        ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-        ~if $ampurl|strstr:"amp"`
-            <link rel="amphtml" href="~$ampurl`"/>
-        ~/if`
-	~include_canurl`
-        ~include_partial('global/jsmsCommonHeader')`
+  ~include_partial('global/jsmsCommonHeader')`
 	<script type="text/javascript">
         	var t_pagestart = new Date().getTime();
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
@@ -32,25 +22,21 @@
                         var webView= "~$webView`";
                         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
 	</script>
-	<meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
 	<meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
 	<meta http-equiv="content-language" content="en" />
 	<meta name="theme-color" content="#415765">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+        <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
         <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
 	<link rel="apple-touch-icon" href="/apple-touch-icon_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
-	<link rel="manifest" href="/manifest.json">
 
-	~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
-	~assign var=module value=$sf_request->getParameter('module')`
-	~assign var=action value=$sf_request->getParameter('action')`
-	~assign var=showFreshChat value= CommonUtility::checkFreshChatPanelCondition($module,$action,$trackProfileId)`
+    ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
+    ~include_canurl`
     ~use helper = SfMinify`
 
     <script  src="~JsConstants::$jquery`"></script>
@@ -72,27 +58,9 @@
 		~/if`
 		var appPromoPerspective=0;
 		var DualHamburger=1;
-                ~if $sf_request->getAttribute('messageListAppPromo')`
-                    var messageListAppPromo=~$sf_request->getAttribute('messageListAppPromo')`;
-                ~/if`
 	</script>
 ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
 <script>
-
-    ~if $showFreshChat && $trackProfileId`
-		~assign var="userDetails" value=CommonUtility::getFreshChatDetails($trackProfileId)`
-		~assign var="tag" value=CommonUtility::getUserType($trackProfileId)`
-	~/if`
-	var profileID = "~$trackProfileId`";
-	if(!readCookie("AUTHCHECKSUM")){
-		~assign var="logout" value=1`
-		localStorage.removeItem("login");
-		localStorage.setItem("logout",1);
-	} else if(profileID){
-        ~assign var="logout" value=0`
-		localStorage.removeItem("logout");
-		localStorage.setItem("login",1);
-	}
 
 var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
@@ -164,15 +132,15 @@ var domainCode={};
         	<img border="0">
         
         </div>
-	~if $showFreshChat`
-		~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
-			~include_partial('global/freshChat',[userDetails=>$userDetails,profileid=>$trackProfileId,token=>FreshChat::$token,tag=>$tag,logout=>$logout])`
-		~/if`
-	~/if`
+  ~if $sf_request->getParameter('module') eq 'membership' || $sf_request->getParameter('module') eq 'help'`
+    ~if !($trackProfileId eq '8298074' || $trackProfileId eq '13038359' || $trackProfileId eq '12970375')`
+        ~include_partial('global/freshDesk')`
+     ~/if`
+  ~/if`
   </body>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`
-	~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
+	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
  ~/if`
   ~if JsConstants::$boomerjs eq 1`
 					<script type="text/javascript" src="~sfconfig::get("app_img_url")`/min/?f=/js/modernizr_js.js"></script>

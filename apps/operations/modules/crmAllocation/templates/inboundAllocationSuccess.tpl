@@ -55,11 +55,7 @@
                   ~if $errorCriteria`
                   Profile Out Of Region
                   ~elseif $errorPaid`
-                        ~if $errorExpiry`
-                            Inbound allocation for this profile is not permitted as the expiry date is outside the 30 day expiry period.
-                        ~else`
-                            Inbound allocation for this profile is not permitted. Please email your supervisor to get the allocation
-                        ~/if`
+                  Inbound allocation for this profile is not permitted. Please email your supervisor to get the allocation
                   ~/if`
                   </font>
                 </td>

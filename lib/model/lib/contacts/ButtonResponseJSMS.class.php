@@ -304,12 +304,6 @@ Class ButtonResponseJSMS
 				$buttonPrimary = self::getUploadPhotoButton();
 				$responseArray["buttons"]["primary"][0] = $buttonPrimary;
 			}
-                        
-                        if(is_array($responseArray["buttons"]["others"]))
-                        foreach ($responseArray["buttons"]["others"] as $key => $value) {
-                            if($key!=0)
-                                $responseArray["buttons"]["others"][$key]['secondary'] = 'true';
-                        }
 		}
 		else
 		{
@@ -522,8 +516,9 @@ Class ButtonResponseJSMS
 			//var_dump($viewer);
 			//var_dump($type);die;
 
-                        $params["isIgnored"] = $params["IGNORED"];
+			
 			$buttons = ButtonResponseFinal::getListingButtons($infoKey, "M", $viewer,$type,$params,$count);
+
 			if($params["IGNORED"] == 1){
 			
 			$buttons["buttons"]["3"]["label"]="Unblock";
@@ -627,21 +622,19 @@ Class ButtonResponseJSMS
 			$button["label"]  = "Shortlisted";
 			$button["action"] = "SHORTLIST";
 			$button["params"] = "&shortlist=true";
-			$button["enable"] = true;
-		}
+		} 
 		else{
 			$button["iconid"] = IdToAppImagesMapping::SHORTLISTBUTTON;
 			$button["label"]  = "Shortlist";
 			$button["action"] = "SHORTLIST";
 			$button["params"]  = "&shortlist=false";
-			$button["enable"] = true;
 		}
 		return (self::buttonMerge($button,$enable));
 	}
 
         public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true)
         {
-
+        	
 			if ($isIgnored) {
                $button["label"]  = "Unblock";
 			if(MobileCommon::isApp()=="I")
@@ -670,7 +663,7 @@ Class ButtonResponseJSMS
         	
                 
                         $button["iconid"] = IdToAppImagesMapping::REPORTABUSE;
-                        $button["label"]  = "Report as Fake/Spam";
+                        $button["label"]  = "Report Abuse";
                         $button["action"] = "REPORTABUSE";
                 
                 return (self::buttonMerge($button,$enable));
@@ -713,7 +706,6 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
-                
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -730,9 +722,6 @@ Class ButtonResponseJSMS
 		{
 			$button["params"] = $params["tracking"];
 		}
-                if($page['primary'])  
-                    $button["primary"] = 'true';
-
 		$button = self::buttonMerge($button);
 		return $button;
 	}

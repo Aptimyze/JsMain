@@ -1,5 +1,5 @@
 <?php
 class DateConstants
 {
-	const PhoneMandatoryLive = '1900-01-09';
+	const PhoneMandatoryLive = '2005-01-09';
 }

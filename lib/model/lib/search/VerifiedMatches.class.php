@@ -22,7 +22,6 @@ class verifiedMatches extends PartnerProfile
 	{
 		$this->getDppCriteria();
                 $this->setFSO_VERIFIED('F,');
-                $this->setAADHAAR_VERIFIED(",A");
                 if($searchId)
                 {
                         $paramArr['ID'] = $searchId;

@@ -39,7 +39,7 @@ class apiActions extends sfActions
 				$notificationKey = $request->getParameter("notificationKey");
 				$loginData =$request->getAttribute("loginData");
         		$profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
-				
+				//error_log("in api request ankita-".$msgId."---".$notificationKey);
 				//file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
 				NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$msgId,"notificationKey"=>$notificationKey));
 			}
@@ -79,11 +79,8 @@ class apiActions extends sfActions
 	{
 		$respObj = ApiResponseHandler::getInstance();
 		//$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
-		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-    if($appVersion<94 && $appVersion>0 ){
 		$hamburgerDetails = HamburgerApp::getHamburgerDetails($loginData[PROFILEID],$request->getParameter("version"),$forwardingArray);
 		$respObj->setHamburgerDetails($hamburgerDetails);
-		}
 		if($upgradeStatus)
 			$respObj->setUpgradeDetails($upgradeStatus);
 
@@ -91,14 +88,7 @@ class apiActions extends sfActions
 	}
         public function executeHamburgerDetailsV1(sfWebRequest $request)
 	{
-		 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-		 $forwardingArray =ApiRequestHandler::getInstance($request)->getModuleAndActionName($request);
-		 $respObj = ApiResponseHandler::getInstance();
-		if($appVersion>=94 || MobileCommon::isNewMobileSite()){
-			$hamburgerDetails = HamburgerApp::getHamburgerDetails($request->getAttribute('profileid'),$request->getParameter("version"),$forwardingArray);
-			$respObj->setHamburgerDetails($hamburgerDetails);
-		}
-		
+		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();
 		die;

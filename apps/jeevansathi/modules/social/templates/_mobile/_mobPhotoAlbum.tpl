@@ -1,19 +1,3 @@
- <!-- start: upload more text layer -->
- ~if $alreadyPhotoCount gt 0 and $alreadyPhotoCount lt 3`
-  <div class="posabs btmo fullwid bg14" id="updatetextover" style="bottom:0;z-index: 110">
-    <div class="pad3">
-      <div class="clearfix">
-        <div class="fl wid80p fontlig f14 white">
-          <a class="white" href="~sfConfig::get('app_site_url')`/social/MobilePhotoUpload" id="uploadMoreText">75% of our users feel they need at least 3 photos to send an expression of interest...Upload more</a>
-        </div>
-        <div class="fr wid5p pt5" id="uploadPhotoClose">
-            <i class="mainsp opa70" style="background-position: -162px -229px;width: 19px;height: 20px;"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-  ~/if`
-<!-- end: upload more text layer -->
 ~if $selectTemplate eq 0`
 <div id="addPhotoAlbumPage" class="bg7" style="background-color:rgb(255,255,255)">
 ~else`

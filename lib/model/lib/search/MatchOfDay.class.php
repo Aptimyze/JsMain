@@ -26,11 +26,7 @@ class MatchOfDay extends TwoWayMatch
 	{
 		$this->LAST_LOGGEDIN=7;
                 parent::getSearchCriteria();
-                $subscription = '';
-                foreach(SearchConfig::$jsBoostSubscription as $modSubs){
-                        $subscription .= '"'.$modSubs.'" ';
-                }
-                $this->setSUBSCRIPTION($subscription);
+                $this->setSUBSCRIPTION('"F"');
                 $this->setPHOTO_VISIBILITY_LOGGEDIN(2);
                 $this->setHAVEPHOTO('Y');
                 $this->setPRIVACY('"A"');

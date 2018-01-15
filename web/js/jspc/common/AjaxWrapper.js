@@ -1,6 +1,5 @@
 /**
 * @author Lavesh Rawat & Pankaj Khandelwal
-* This file is included in mobile site too.
 * Please do not modify without consulting the Author of this file.
 */
 (function($) {
@@ -10,10 +9,6 @@
       if (typeof _rID != "undefined" && typeof objConfig.headers != "undefined") {
           objConfig.headers['RID_AJAX'] = _rID;
           var str=_rID + " is the Request id and the ajax header id is " + objConfig['RID_AJAX'] + "\n";
-      }
-      if ( typeof objConfig.headers != "undefined" )
-      {
-        objConfig.headers['X-Requested-By'] = 'jeevansathi';
       }
       /*
        * Done for chat because of undefined _rID erroron hide profile page.
@@ -25,7 +20,7 @@
       $.ajax({
         type: objConfig.type, 
         url: objConfig.url,
-        headers: (objConfig.headers != undefined)?objConfig.headers:{'RID_AJAX':_rID,'X-Requested-By':'jeevansathi'}, 
+        headers: (objConfig.headers != undefined)?objConfig.headers:{'RID_AJAX':_rID}, 
         async: (objConfig.async != undefined)?objConfig.async:true,
         data : (objConfig.data != undefined)?objConfig.data:{},
         dataType : (objConfig.dataType != undefined)?objConfig.dataType:'json',
@@ -51,11 +46,8 @@
         }
         //console.log("before complete",objConfig.updateChatListImmediate,oldUrl,window.location.href);
         //update non roster chat list
-        if ( typeof reActivateNonRosterPolling !== 'undefined')
-        {
         if($.isFunction(reActivateNonRosterPolling) && ((window.location.href != oldUrl) || objConfig.updateChatList == true || objConfig.updateChatListImmediate == true)){
           reActivateNonRosterPolling("ajax",objConfig.updateChatListImmediate,objConfig.updateNonRosterChatGroups);
-        }
         }
       },
 
@@ -79,11 +71,8 @@
     error: function(data, textStatus, xhr) {
      /** add common code **/
      if(objConfig.showError==true||typeof objConfig.showError=="undefined")
-      { 
-        if ( typeof objConfig.channel === 'undefined' || objConfig.channel !== 'mobile' )
-          {
+      {
             showCustomCommonError("Something went wrong. Please try again after some time.",1500);
-          }
         }
         if ( $.isFunction(objConfig.error) ) {
           objConfig.error(data, objConfig.context)   

@@ -39,7 +39,7 @@ EOF;
 	$processObj->setIdAllot('10');
         $processObj->setProcessName("Allocation");
         $processObj->setMethod("FIELD_SALES");
-	//$agentAllocDetailsObj->createPhoneVerifiedPool($processObj);
+	$agentAllocDetailsObj->createPhoneVerifiedPool($processObj);
 
 	// Sub-method 1 : FIELD_SALES
         $processObj->setSubMethod("FIELD_SALES");

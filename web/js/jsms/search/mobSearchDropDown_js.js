@@ -1294,8 +1294,8 @@ function searchHamburger(option,type)
             var realStr=v.str.trim().replace("("," ").replace(")","");
 			var strArr=realStr.split(/[\ \/,]/);
 			
+			
 			var regex = new RegExp(regexAnchor + prev.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
-
 			 var findinArr=0;
              for(var i=0;i<=strArr.length;i++)
              {
@@ -1303,9 +1303,7 @@ function searchHamburger(option,type)
                  var str=v.str.trim();
                  else    
                  str=strArr[i];
-
-                var StrTocheck = str.replace(".","");
-			if((regex.test(str) || regex.test(StrTocheck) ) && !$(v.id).hasClass("isGroupheading"))
+			if(regex.test(str) && !$(v.id).hasClass("isGroupheading"))
 			{
 				if(!findArr[realStr])
 				{

@@ -39,23 +39,13 @@ EOF;
  if($layer)
  { 
  if($layer['UNLIMITED'] == 'Y')
- $beforeDate = date('Y-m-d',strtotime('-6 months'));
+ $beforeDate = date('Y-m-d',strtotime('-11 months'));
  else
- $beforeDate = date('Y-m-d',strtotime('-6 months'));
+ $beforeDate = date('Y-m-d',strtotime('-11 months'));
  $CALHousekeepingObject->truncateForUserAndLayer('',$i,$beforeDate);
  }
  else break;
  }
-
-//jira JSI-3211 houskeeping for some cal before 45 days
-
-  $cal45DaysHousekeeping=array(11,16,12,2,4,17);
-  $before45Date = date('Y-m-d',strtotime('-45 days'));
-  foreach($cal45DaysHousekeeping as $k=>$v)
-  {
-    $CALHousekeepingObject->truncateForUserAndLayer('',$v,$before45Date);
-  }
-
 
   }
 }

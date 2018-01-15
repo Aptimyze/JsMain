@@ -127,12 +127,3 @@ background-position: -200px -200px;
  
  
 .loaderSmallIcon{width:20px;height:20px}
-
-.cutcol1{color:#c0c0c0}
-.strike {
-    text-decoration: line-through;
-}
-ul.time{list-style-type:none;}
-ul.time li{display:inline-block;font-size:16px}
-ul.time li span{font-size:11px}
-.inscol:after{ content:":"; padding-left:10px}

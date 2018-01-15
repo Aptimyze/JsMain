@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey JUST_JOIN 7 2
+command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey JUST_JOIN 5 2

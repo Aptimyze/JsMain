@@ -24,7 +24,8 @@ ini_set(mysql.connect_timeout,-1);
 ini_set(default_socket_timeout,25920000);
 ini_set(log_errors_max_len,0);
 
-$inactivityPeriodThreshold=date("Y-m-d", mktime(0, 0, 0, date("m")-3,date("d"),date("Y"))); /* for last 3 months */
+$timestamp=mktime(0, 0, 0, date("m")-6,date("d")-6,date("Y"));
+$inactivityDate6Month=date("Y-m-d",$timestamp);
 
 $ts=time();
 $ts-=24*60*60;
@@ -62,11 +63,11 @@ for($serverId=0;$serverId<$noOfActiveServers;$serverId++)
 		$res_check=mysql_query($sql_check,$db)or die(mysql_error($db).$sql_check);
 		$row_check=mysql_fetch_array($res_check);
 		if($row_check[0]>9 || !$row_check)
-			Spam_Checker($my_profileid,$row1['USERNAME'],$db,$parameters,$my_gender,$dbM,$my_age,$my_inc,$my_height,$inactivityPeriodThreshold);
+			Spam_Checker($my_profileid,$row1['USERNAME'],$db,$parameters,$my_gender,$dbM,$my_age,$my_inc,$my_height,$inactivityDate6Month);
 	}
 }
 
-function Spam_Checker($my_profileid,$username,$db,$parameters,$my_gender,$dbM,$myage,$myincome,$myheight,$inactivityPeriodThreshold)
+function Spam_Checker($my_profileid,$username,$db,$parameters,$my_gender,$dbM,$myage,$myincome,$myheight,$inactivityDate6Month)
 {
 	//echo "--->>".$my_profileid."<<<----\n\n";
 	global $today;
@@ -83,7 +84,7 @@ function Spam_Checker($my_profileid,$username,$db,$parameters,$my_gender,$dbM,$m
 	unset($needInitialValue);
 	unset($tempcontactResult);
 
-	$time_clause="TIME>='$inactivityPeriodThreshold'";
+	$time_clause="TIME>='$inactivityDate6Month'";
 
 	$row0['PROFILEID']=$my_profileid;
 	$sendersIn=$my_profileid;

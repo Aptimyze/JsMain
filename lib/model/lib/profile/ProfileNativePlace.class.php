@@ -88,13 +88,7 @@ class ProfileNativePlace
         $result = self::$objNativePlaceMysql->InsertRecord($arrRecordData);
         
         if($result && isset($arrRecordData['PROFILEID'])) {
-                if(!$arrRecordData["NATIVE_CITY"]){
-                        $arrRecordData['NATIVE_CITY']='';
-                }
-                if(!$arrRecordData["NATIVE_STATE"]){
-                        $arrRecordData['NATIVE_STATE']='';
-                }
-            ProfileCacheLib::getInstance()->insertInCache($arrRecordData['PROFILEID'], $arrRecordData,__CLASS__);
+            ProfileCacheLib::getInstance()->insertInCache($arrRecordData['PROFILEID'], $arrRecordData);
         }
         return $result;
     }
@@ -136,6 +130,7 @@ class ProfileNativePlace
                 $result = null;
             }
         }
+        
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;
@@ -146,16 +141,16 @@ class ProfileNativePlace
         
         if(is_null($result)) { 
             //TODO check PROFILEID is Valid or not
-                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $iProfileID);
+            $dummyResult = array('PROFILEID'=>$iProfileID, "NATIVE_COUNTRY"=>ProfileCacheConstants::NOT_FILLED, "NATIVE_STATE"=>"", "NATIVE_CITY" => "");
         }
         
-        if (is_array($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
+        if (is_array($result) && false === $objProCacheLib->isCommandLineScript()) {
             $result['PROFILEID'] = $iProfileID;
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result,__CLASS__);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
         }
         
-        if (is_array($dummyResult) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
+        if (is_array($dummyResult) && false === $objProCacheLib->isCommandLineScript()) {
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult);
         }
         return $result;
     }
@@ -203,27 +198,25 @@ class ProfileNativePlace
         
         //Get Records from Mysql
         $result = self::$objNativePlaceMysql->getNativeDataForMultipleProfiles($profileidArray);
-        //echo "adads";print_r($result);die;
+        
         if(is_array($result) && count($result) !== count($profileidArray)) {
             $arrDataNotExist = array();
             foreach($result as $key=>$val){
                 $arrDataNotExist[] = $val['PROFILEID'];
             }
             $arrDataNotExist = array_diff($profileidArray, $arrDataNotExist);
-            //print_r($arrDataNotExist);die;
             $dummyArray = array();
             foreach($arrDataNotExist as $k => $v){
-                    $data = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $v);
-                    $dummyArray[] = $data;
+                $dummyArray[] = array('PROFILEID'=>$v, "NATIVE_COUNTRY"=>ProfileCacheConstants::NOT_FILLED, "NATIVE_STATE"=>"", "NATIVE_CITY" => "");
             }
         }
         
-        if(is_array($result) && count($result) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
-            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result,__CLASS__);
+        if(is_array($result) && count($result)) {
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
         }
         
-        if($dummyArray && is_array($dummyArray) && count($dummyArray) && false === ProfileCacheFunctions::isCommandLineScript("set")) {
-            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray,__CLASS__);
+        if($dummyArray && is_array($dummyArray) && count($dummyArray)) {
+            $objProCacheLib->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $dummyArray);
         }
         return $result;
     }

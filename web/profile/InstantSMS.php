@@ -9,15 +9,14 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER","REPORT_INVALID"
-		);
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
 	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $sendToInternational = array("FORGOT_PASSWORD");
 	private $eoiSMSLimit = 2;
-	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST","REPORT_INVALID" );
+	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST");
 	private $kycCity = array("DE00", "UP25", "UP06", "RA07", "UP47", "UP12");
 	private $kycLocality = "";//Comma separated
 	
@@ -33,6 +32,7 @@ class InstantSMS {
 	}
 	
 	private function setProfileDetails() {
+				
 		$sql = "SELECT EMAIL,JPROFILE.PROFILEID, GENDER, USERNAME, PASSWORD, SUBSCRIPTION, PHONE_MOB, CASTE, DTOFBIRTH, MSTATUS, MTONGUE,  MOB_STATUS,EMAIL, SEC_SOURCE,CITY_RES,COUNTRY_RES,PINCODE,ISD FROM newjs.JPROFILE LEFT JOIN newjs.JPROFILE_ALERTS ON JPROFILE.PROFILEID=JPROFILE_ALERTS.PROFILEID WHERE JPROFILE.PROFILEID = '$this->profileid'";
 		if(!in_array($this->smsKey,$this->settingIndependent))
 			$sql.=" and  (JPROFILE_ALERTS.SERVICE_SMS !=  'U' OR JPROFILE_ALERTS.SERVICE_SMS IS NULL)";
@@ -56,14 +56,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$this->varArray["SAPHONE"] = $row["PHONE"];
 			}
 		}
-                if($this->varArray["editedFields"] && $this->smsKey == "CRITICAL_INFORMATION"){
-                        $this->varArray["WAS_WERE"] = "was";
-                        if($this->varArray["editedFieldsCount"]>1){
-                                $this->varArray["WAS_WERE"] = "were";
-                        }
-                }
                 if($this->varArray) 
                     $this->profileDetails = array_merge($this->profileDetails,$this->varArray);
+//		print_r($this->profileDetails);
 		
 	}	
 	private function inDNC() {
@@ -86,11 +81,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
 		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
 		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
-		if($this->smsKey=='CRITICAL_INFORMATION') return true;
-
 		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
-	
 		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
 		switch ($this->smsKey) {
@@ -157,16 +149,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				 case "REQ_CRM_DEL_OTHER":
 				 	return true;
 
-				 case "REPORT_INVALID":
-				 if($this->profileDetails["MOB_STATUS"] == 'Y')
-				 	return true;
-
 			default:
 				return $this->profileDetails["MOB_STATUS"] == 'Y';
 		}		
 	}		
 	
 	private function getMessage () {
+		
 		$DEFAULT_SUBSCRIPTION = "A";
 		$DEFAULT_GENDER = "A";
 		
@@ -179,7 +168,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		else $GENDER = "F";
 		
 		$sql = "SELECT MESSAGE, GENDER, SUBSCRIPTION, TIME_CRITERIA, CUSTOM_CRITERIA from newjs.SMS_TYPE WHERE SMS_TYPE = 'I' and (SUBSCRIPTION LIKE \"%".$SUBSCRIPTION."%\" OR SUBSCRIPTION = \"".$DEFAULT_SUBSCRIPTION."\") and GENDER IN ( \"".$GENDER."\", \"".$DEFAULT_GENDER."\") and  STATUS = 'Y' and SMS_KEY = '".$this->smsKey."'";
-	
 		if(in_array($this->customCriteria,array("0","1")))
 			$sql.=" AND CUSTOM_CRITERIA IN ('".$this->customCriteria."')";
 		$sql.=";";
@@ -231,10 +219,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			}
                     }
                 }
-
-
                 $this->otherProfileDetails["DATA"] = $row;		
-				
+		
 	}
 	
 	private function getActualMessage ($message) {
@@ -245,13 +231,12 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		$this->smsKey;
 		if(in_array($this->smsKey,$this->otherProfileRequired))
 		{
-                      
+                        
 			$this->setOtherProfile();
 			$this->otherProfileDetails["RECEIVER"]["USERNAME"] = $this->profileDetails["USERNAME"];
 			$this->otherProfileDetails["RECEIVER"]["PROFILEID"] = $this->profileDetails["PROFILEID"];
 			$this->otherProfileDetails["EMAIL"] = $this->profileDetails["EMAIL"];
 			$this->otherProfileDetails["DATA_TYPE"] = "OTHER";
-
 		}
 		for ($i = 0; $i < $mLength; $i++) {
 			
@@ -261,7 +246,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				$startToken = 1;
 				continue;
 			}
-			else if ($message[$i] == '}') {
+			else if ($message[$i] == '}') { 
 				if(in_array($this->smsKey,$this->otherProfileRequired))
 					$actualMessage .= $this->SMSLib->getTokenValue($messageToken,$this->otherProfileDetails);
 				else
@@ -277,11 +262,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 	//Returns sms text	
 	private function getSMS () {
+
 		$this->setProfileDetails();
 		$message = "";
 		if ($this->isWhitelistedProfile()) { 
 			$message = $this->getMessage();
 			$message = $this->getActualMessage($message);
+			
 		}
 		return $message;
 		
@@ -298,7 +285,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
     // GET SMS Message
     public function getSmsMessage()
-    {  
+    {
         $message = '';
         $this->setProfileDetails();
         $message = $this->getMessage();
@@ -308,13 +295,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
     //Send sms
     public function send($acc = "transaction")
     {
-    	$message = $this->getSMS();
+        $message = $this->getSMS();
         if ($message) {
-        	
-        	include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
+            include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
             $sent = "N";
+
             if (in_array($this->smsKey, $this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()) {
-            	$sent         = "Y";
+                $sent         = "Y";
                 $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
                 $xmlResponse  = $smsVendorObj->generateXml($this->profileid, $this->profileDetails['ISD'] . $this->profileDetails["PHONE_MOB"], $message, $this->smsSettings["SEND_TIME"]);
                 $smsVendorObj->send($xmlResponse, $acc);

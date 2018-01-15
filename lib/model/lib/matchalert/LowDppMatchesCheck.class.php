@@ -2,8 +2,7 @@
 /*This class is used to handle informing user to broaden his dpp due to low dpp matches*/
 class LowDppMatchesCheck
 {
-        private $informTimes = 1;
-        public static $mailerFreq = '-1 week';
+        private $informTimes = 2;
 	public function __construct($dbname='')
 	{
 		$this->dbname = $dbname;

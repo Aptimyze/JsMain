@@ -6,7 +6,6 @@
 include("MysqlDbConstants.class.php");
 include("DialerHandler.class.php");
 include('PriorityHandler.class.php');
-include('DialerApplication.class.php');
 
 // Live Connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
@@ -18,7 +17,6 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer);
-$dialerApplicationObj = new DialerApplication();
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
 $npriority =5;
@@ -43,12 +41,10 @@ foreach($campaign_nameArr as $key=>$campaignName)
 			$expiryDate1 		=strtotime($expiryDate);
 			$expiryDatePrev5Days 	=date('Y-m-d', strtotime('-4 days',strtotime($expiryDate)));
 			$expiryDatePrev5Days1 	=strtotime($expiryDatePrev5Days);
-			if($dialerApplicationObj->checkProfileInProcess($profileid)){
-                // Prioritize - with 6 priority
-                $priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,6);
-			} else if($todayDate1>=$expiryDatePrev5Days1 && $todayDate1<=$expiryDate1){
-				// Prioritize - with 4 priority
-				$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,4);
+
+			if($todayDate1>=$expiryDatePrev5Days1 && $todayDate1<=$expiryDate1){
+				// Prioritize - with new priority
+				$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);
 			}
 			else{
 				// De-prioritize - with old priority

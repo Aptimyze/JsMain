@@ -4,7 +4,6 @@
 class ApiCommon
 {
 	private $noTime = "0000-00-00 00:00:00";
-	private $apiCacheTime = 86400;
 	private $religionNotNeededInRegistration = 8;
 
 	public function __construct()
@@ -18,31 +17,12 @@ class ApiCommon
 	*/
 	public function getStaticTablesData($param)
 	{
-		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW","jamaat"=>"JAMAAT");
-                $memObject=JsMemcache::getInstance();
-                $cachedTime = $memObject->getHashAllValue('STATIC_TABLES_CACHED_ON');
-                $cachedData = $memObject->getHashAllValue('STATIC_TABLES_CACHED_DATA');
-                if(empty($cachedTime)){
-                        $gsObj = new GeneralStore;
-                        $tableInfo = $gsObj->getTablesInformation("newjs",$tableMapping,1);
-                        $memObject->setHashObject("STATIC_TABLES_CACHED_ON",$tableInfo,$this->apiCacheTime);
-                }else{
-                        $tableInfo = $cachedTime;
-                }
+		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW");
+		$gsObj = new GeneralStore;
+		$tableInfo = $gsObj->getTablesInformation("newjs",$tableMapping,1);
 		unset($gsObj);
 		foreach($param as $k=>$v)
 		{
-                        $fromCache=0;
-                        if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
-                        {
-                                if(isset($cachedData[$k]) && $cachedData[$k] != ""){
-                                        $fromCache = 1;
-                                        $output[$k]["result"] = "yes";
-                                        $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-                                        $output[$k]["data"] = unserialize($cachedData[$k]);
-                                        continue;
-                                }
-                        }
 			if($k=="religion")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
@@ -73,57 +53,32 @@ class ApiCommon
 					$output[$k]["data"] = null;
 				}
 			}
-                elseif($k=="jamaat")
-                {
-                                if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
-                                {
-                                        $output[$k]["result"] = "yes";
-                                        $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-					$jamaatArr = FieldMap::getFieldLabel("jamaat",'',1);
-					$i=0;
-					foreach($jamaatArr as $kk=>$vv)
-					{
-						$tempArr[$i]['label']=$vv;
-						$tempArr[$i]['value']=$kk;
-						$i++;
-					}
-					$output[$k]['data']=$tempArr;
-					unset($tempArr);
-                                }
-				else
-				{
-                                        $output[$k]["result"] = "no";
-                                        $output[$k]["uptime"] = $v;
-                                        $output[$k]["data"] = null;
-				}
-                }
-
 			elseif($k=="caste")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
 				{
-                                       $output[$k]["result"] = "yes";
-                                       $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-                                       $ncObj = new NEWJS_CASTE;
-                                       $casteArr = $ncObj->getFullTableForRegistration();
-                                       unset($ncObj);
-                                       $i=0;
-                                       foreach($casteArr as $kk=>$vv)
-                                       {
-                                               $tempArr[$i]["id"] = $vv["ID"];
-                                               if(strstr($vv["LABEL"],":"))
-                                               {
-                                                       $tempArr[$i]["label"] = trim(ltrim(strstr($vv["LABEL"],":"),":"));
-                                               }
-                                               else
-                                                       $tempArr[$i]["label"] = $vv["LABEL"];
-                                               $tempArr[$i]["value"] = $vv["VALUE"];
-                                               $tempArr[$i]["parent"] = $vv["PARENT"];
-                                               $i++;
-                                       }
-                                       $output[$k]["data"] = $tempArr;
-                                       unset($casteArr);
-                                       unset($tempArr);
+					$output[$k]["result"] = "yes";
+					$output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+					$ncObj = new NEWJS_CASTE;
+					$casteArr = $ncObj->getFullTableForRegistration();
+					unset($ncObj);
+					$i=0;
+					foreach($casteArr as $kk=>$vv)
+					{
+						$tempArr[$i]["id"] = $vv["ID"];
+						if(strstr($vv["LABEL"],":"))
+                                		{
+                                        		$tempArr[$i]["label"] = trim(ltrim(strstr($vv["LABEL"],":"),":"));
+                                		}
+                                		else
+                                        		$tempArr[$i]["label"] = $vv["LABEL"];
+						$tempArr[$i]["value"] = $vv["VALUE"];
+						$tempArr[$i]["parent"] = $vv["PARENT"];
+						$i++;	
+					}
+					$output[$k]["data"] = $tempArr;
+					unset($casteArr);
+					unset($tempArr);
 				}
 				else
 				{
@@ -363,39 +318,6 @@ class ApiCommon
 					$output[$k]["data"] = null;
                                 }
 			}
-			//occupation grouping being added 
-			elseif($k=="occupation_grouping")
-			{
-				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]) || strtotime($v)<strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
-                                {
-                                        $output[$k]["result"] = "yes";
-                                        if(strtotime($tableInfo[$tableMapping[$k]]) < strtotime($tableInfo[$tableMapping["occupation_grouping"]]))
-                                                $output[$k]["uptime"] = $tableInfo[$tableMapping["occupation_grouping"]];
-                                        else
-                                                $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-                                        $noObj = new NEWJS_OCCUPATION_GROUPING;
-                                        $occArr = $noObj->getFullTable();
-                                        
-                                        unset($noObj);
-                                        $i=0;
-                                        foreach($occArr as $kk=>$vv)
-                                        {                                                
-                                                $tempArr[$i]["label"] = trim($vv["LABEL"]);
-                                                $tempArr[$i]["value"] = $vv["VALUE"];                                                
-                                                $i++;
-                                        }
-                                        $output[$k]["data"] = $tempArr;                                        
-                                        unset($occArr);
-                                        unset($tempArr);
-                                }
-                                else
-                                {
-                                	$output[$k]["result"] = "no";
-                                	$output[$k]["uptime"] = $v;
-                                	$output[$k]["data"] = null;
-                                }
-			}
-			//occupation grouping code ends here
 			elseif($k=="height")
 			{
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
@@ -546,10 +468,6 @@ class ApiCommon
 			{
 				return null;
 			}
-
-                        if($output[$k]["data"]!=null && $fromCache !=1){
-                                $memObject->setHashObject("STATIC_TABLES_CACHED_DATA",array($k=>serialize($output[$k]['data'])),$this->apiCacheTime);
-                        }
 		}
 
 		foreach($output as $k=>$v)

@@ -27,13 +27,7 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS"]["DOCURL"]="V_D";
 		self::$imageTypeEnum["VERIFICATION_DOCUMENTS_BYUSER"]["PROOF_VAL"]="V_DU";
 		self::$imageTypeEnum["PICTURE_DELETED"]["MAIN_PHOTO_URL"]="PD_M";
-		self::$imageTypeEnum["CRITICAL_INFO_DIVORCED_DOC"]["DOCUMENT_PATH"]="CI_DD";
-          //ABUSE ENUMS
-          self::$imageTypeEnum["ABUSE_ATTACHMENTS"]["DOC_1"]="A_D1";
-          self::$imageTypeEnum["ABUSE_ATTACHMENTS"]["DOC_2"]="A_D2";
-          self::$imageTypeEnum["ABUSE_ATTACHMENTS"]["DOC_3"]="A_D3";
-          self::$imageTypeEnum["ABUSE_ATTACHMENTS"]["DOC_4"]="A_D4";
-          self::$imageTypeEnum["ABUSE_ATTACHMENTS"]["DOC_5"]="A_D5";
+
         }
 	
 	/* retrieve enum form type eg: returns M for MainPicUrl
@@ -68,6 +62,6 @@ class IMAGE_SERVER_IMAGE_TYPE_ENUM
 			throw new jsException('',"Invalid Image Type is requested in IMAGE_SERVER_IMAGE_TYPE_ENUM.class.php");
         }
 		return $imageType;
-}
+    	}
 }
 ?>

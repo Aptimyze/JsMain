@@ -5,7 +5,6 @@
  *********************************************************************************************/
 include "MysqlDbConstants.class.php";
 include_once "DialerLog.class.php";
-include("DialerApplication.class.php");
 $dialerLogObj = new DialerLog();
 
 //Open connection at JSDB
@@ -13,78 +12,73 @@ $db_js     = mysql_connect(MysqlDbConstants::$misSlave['HOST'], MysqlDbConstants
 $db_master = mysql_connect(MysqlDbConstants::$master['HOST'], MysqlDbConstants::$master['USER'], MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
 $db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'], MysqlDbConstants::$slave111['USER'], MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'], MysqlDbConstants::$dialer['USER'], MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
-mysql_query("set session wait_timeout=2000",$db_master);
 
-$dialerApplicationObj = new DialerApplication();
 $campaignName   = 'OB_JS_RCB';
 $action         = 'STOP';
-$action1	= 'STOP-D';	
 $str            = 'Dial_Status=0';
-$date2DayBefore = date("Y-m-d H:i:s", time() - 48 * 60 * 60);
-$scbValue 	='Schedule Call Back';	
+$date2DayBefore = date("Y-m-d H:i:s", time() - 58 * 60 * 60);
+
 $profilesArr   = fetchProfiles($db_master);
 
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
-$allPids        =array_merge($eligibleArr, $inEligibleArr);
+if(is_array($inEligibleArr))
+	$profileStrIneligible = implode(",", $inEligibleArr);
 
-$deletedArr     = $dialerApplicationObj->getDeletedProfiles($allPids,$db_js);
-$paidArr      	= getPaidProfiles($allPids, $db_master, $date2DayBefore);
-$paidDeletedArrNew = array_merge($deletedArr, $paidArr);
-$paidDeletedArrNew = array_unique($paidDeletedArrNew);
-$paidDeletedArrNew = array_values($paidDeletedArrNew);
-if(is_array($inEligibleArr)){
-	$inEligibleArrNew =array_diff($inEligibleArr, $paidDeletedArrNew);
-	$inEligibleArrNew =array_values($inEligibleArrNew);
+$allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
+$paidArr      = getPaidProfiles($eligibleArr, $db_js);
+
+if (!empty($allocatedArr) && !empty($paidArr)) {
+    $eligibleArrNew = array_merge($allocatedArr, $paidArr);
+} else if (empty($allocatedArr)) {
+    $eligibleArrNew = $paidArr;
+} else if (empty($paidArr)) {
+    $eligibleArrNew = $allocatedArr;
+} else {
+    $eligibleArrNew = array();
 }
-
+$eligibleArrNew = array_unique($eligibleArrNew);
+$eligibleArrNew = array_values($eligibleArrNew);
 
 // Stop profiles which are 2 days old
-    $query0 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition IS NULL";
-    mssql_query($query0, $db_dialer) or $dialerLogObj->logError($query0, $campaignName, $db_dialer, 1);
-
-    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore' AND Last_disposition IS NOT NULL AND Last_disposition!='$scbValue'";
+if ($profileStrIneligible != '') {
+    // Set dial status=0 for paid campaign
+    $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore'";
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
+    deleteProfiles($db_master, $profileStrIneligible);
 
-if(is_array($inEligibleArrNew)) {
-    foreach($inEligibleArrNew as $key=>$pid) {
-	$getLatDispositionArr 	=checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj);
-        $getLatDisposition      =$getLatDispositionArr['Last_disposition'];
-        $easyCode               =$getLatDispositionArr['easycode'];
-        if($getLatDisposition==$scbValue){
-        	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=3 WHERE PROFILEID='$pid' AND Dial_Status!='3' AND easycode='$easyCode'";
-                mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,'1',$campaignName);
-        }
-	else{
-		$pidArr[] =$pid;
-	}
+    foreach ($inEligibleArr as $key => $profileid) {
+	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
     }
-  if(is_array($pidArr)){
-    $profileStr     =implode(",",$pidArr);
-    if($profileStr)
-	deleteProfiles($db_master,$profileStr);
-    
-    foreach ($pidArr as $key => $profileid) {
-	addLog($profileid, $campaignName, $str, $action1, $db_js_111);	
-    }
-  }
 }
 
-// Stop profiles which are paid 
-if (count($paidDeletedArrNew > 0)) {
-    foreach ($paidDeletedArrNew as $key => $profileid) {
-            $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
-            mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-	    deleteProfiles($db_master,$profileid);	
-            addLog($profileid, $campaignName, $str, $action, $db_js_111);
+// Stop profiles which are paid and allocated
+if (count($eligibleArrNew > 0)) {
+    foreach ($eligibleArrNew as $key => $profileid) {
+
+        $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
+        mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
+        addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
+    $profileStrEligible = implode(",", $eligibleArrNew);
+    /*if (is_array($deleteArr)){
+         $profileStrDel = implode(",", $deleteArr);
+         deleteProfiles($db_master, $profileStrDel);
+         unset($deleteArr);
+    }*/
 }
+
+// mail added
+$profilesStr =$profileStrIneligible."###".$profileStrEligible;
+$to   = "manoj.rana@naukri.com";
+$sub  = "Dialer updates of RCB Campaign Process.";
+$from = "From:vibhor.garg@jeevansathi.com";
+//mail($to, $sub, $profilesStr, $from);
 
 // Fetch profile with dial status 0
 function fetchProfiles($db_js)
 {
-    $eligibleArr =array();
-    $inEligibleArr =array();	
+    $profileArr = array();
     $sql        = "SELECT PROFILEID, DIAL_STATUS, CSV_ENTRY_DATE FROM incentive.SALES_CSV_DATA_RCB";
     $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
@@ -97,26 +91,6 @@ function fetchProfiles($db_js)
         }
     }
     return array("ELIGIBLE" => $eligibleArr, "IN_ELIGIBLE" => $inEligibleArr);
-}
-
-function updateDialStatus($profileid,$dialStatus,$db_master)
-{
-        $sql= "update incentive.SALES_CSV_DATA_RCB SET DIAL_STATUS='$dialStatus' WHERE PROFILEID='$profileid'";
-        $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_master));
-
-}
-function checkProfileDisposition($pid, $campaignName,$scbValue,$db_dialer,$dialerLogObj)
-{
-        $lastDisp =array();
-        $squery1 = "SELECT top 1 Last_disposition,easycode FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$pid' order by CSV_ENTRY_DATE DESC";
-        $sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,'1',$campaignName);
-        if($srow1 = mssql_fetch_array($sresult1)){
-                $val =$srow1['Last_disposition'];
-		$val =trim($val);
-                if($val==$scbValue)
-                        $lastDisp =$srow1;
-        }
-        return $lastDisp;
 }
 
 function deleteProfiles($db_master, $profiles)
@@ -132,13 +106,26 @@ function addLog($profileid, $campaignName, $str = '', $action, $db_js_111)
     mysql_query($log_query, $db_js_111) or die($log_query . mysql_error($db_js_111));
 }
 
-// Fetch Paid profiles
-function getPaidProfiles($profileArr, $db_master, $date2DayBefore)
+// Fetch allocated profiles
+function getAllocatedProfiles($profileArr, $db_js)
 {
     $dataArr    = array();
     $profileStr = implode(",", $profileArr);
-    $sql= "SELECT distinct PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN($profileStr) AND STATUS='DONE' AND ENTRY_DT>='$date2DayBefore' AND MEMBERSHIP='Y'";	
-    $res        = mysql_query($sql, $db_master) or die($sql . mysql_error($db_master));
+    $sql        = "SELECT PROFILEID FROM incentive.MAIN_ADMIN WHERE PROFILEID IN($profileStr)";
+    $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
+    while ($myrow = mysql_fetch_array($res)) {
+        $dataArr[] = $myrow["PROFILEID"];
+    }
+    return $dataArr;
+}
+
+// Fetch Paid profiles
+function getPaidProfiles($profileArr, $db_js)
+{
+    $dataArr    = array();
+    $profileStr = implode(",", $profileArr);
+    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' AND ACTIVATED='Y'";
+    $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
         $dataArr[] = $myrow["PROFILEID"];
     }

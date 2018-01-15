@@ -24,7 +24,7 @@ if(authenticated($cid))
                 $myrow = mysql_fetch_row($result);
                 $TOTALREC = $myrow[0];
 		
-		$sql="SELECT REF_ID,PROFILEID,USERNAME,SCREENED_TIME,SCREENING from jsadmin.SCREENING_LOG where SCREENED_BY='$screener' and SCREENED_TIME between '$st_date' and '$end_date' and ENTRY_TYPE='M' and GRADED<>'Y' LIMIT $j,$PAGELEN";
+		$sql="SELECT REF_ID,PROFILEID,USERNAME,SCREENED_TIME from jsadmin.SCREENING_LOG where SCREENED_BY='$screener' and SCREENED_TIME between '$st_date' and '$end_date' and ENTRY_TYPE='M' and GRADED<>'Y' LIMIT $j,$PAGELEN";
 		$result=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
 		if(mysql_num_rows($result)>0)
 		{
@@ -33,16 +33,8 @@ if(authenticated($cid))
 			{
 				$arr[$i]["id"]=$myrow["REF_ID"];	
 				$arr[$i]["pid"]=$myrow["PROFILEID"];	
-				$arr[$i]["username"]=$myrow["USERNAME"];
-                                $dt = new DateTime($myrow["SCREENED_TIME"], new DateTimeZone('America/New_York'));
-                                $dt->setTimezone(new DateTimeZone('Asia/Kolkata'));
-				$arr[$i]["time"]=$dt->format('Y-m-d H:i:s');
-                                if($myrow["SCREENING"] == 2)
-                                    $arr[$i]["type"] = "New";
-                                else if($myrow["SCREENING"] == 3)
-                                    $arr[$i]["type"] = "Edit";
-                                else
-                                    $arr[$i]["type"] = "N/A";
+				$arr[$i]["username"]=$myrow["USERNAME"];	
+				$arr[$i]["time"]=$myrow["SCREENED_TIME"];	
 				$i++;
 			}
 		}

@@ -154,8 +154,6 @@ abstract class Picture
                 $saveUrl = "";
                 if(!$type)
                         $type=".jpeg";
-                // elseif($type == "png")
-                // 		$type=".jpeg";
                 elseif(!strstr($type,"."))
                         $type=".".$type;
 
@@ -180,7 +178,6 @@ abstract class Picture
 	}
         public function getDisplayPicUrlPicture($picType,$picId,$profileId,$type="",$objectType,$imgAttachName="")
         {
-        	
 		$saveUrl = "";
 		if($picType == "MailImages")
 		{
@@ -190,12 +187,9 @@ abstract class Picture
 		{
 			if(!$type)
 				$type=".jpeg";
-			elseif($type == "png")
-                	$type=".jpeg";		
 			elseif(!strstr($type,"."))
 				$type=".".$type;
-			
-			$photoUrlId=$this->photoEncyption($picId,$profileId);			
+			$photoUrlId=$this->photoEncyption($picId,$profileId);
 			if($picType == "canvasPic")
 			{
 				$saveUrl = sfConfig::get("app_photo_url")."/uploads/".$picType."/".$photoUrlId.$type;

@@ -40,7 +40,7 @@ class csvUploadActions extends sfActions
                                 $this->invalidFile =1;
                         }
                         else{
-                                $notificationCsvObj =new MOBILE_API_CSV_NOTIFICATION_TEMP('newjs_master');
+                                $notificationCsvObj =new MOBILE_API_CSV_NOTIFICATION_TEMP('newjs_masterDDL');
                                 $notificationCsvObj->truncate();
                                 $status =$notificationCsvObj->insertRecord($fileTemp);
 				if($status){

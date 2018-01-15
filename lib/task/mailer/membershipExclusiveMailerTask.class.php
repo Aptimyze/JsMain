@@ -17,23 +17,8 @@ class membershipExclusiveMailerTask extends sfBaseTask
 		[php symfony mailer:membershipExclusiveMailer|INFO]
 EOF;
 	}
-    //Start:JSC-2649: Remove dummy profiles from mailer
-    public function returnFilteredProfilesAfterDummyExclusion($profileArr) {
-        // Exclude Dummy Marked profiles from the list of incoming profiles
-        // Bulk Function, makes single call to jsadmin_PremiumUsers Table
-        // Gets array of dummy marked profiles out of original profiles array
-        $premiumUsersObj = new jsadmin_PremiumUsers('newjs_slave');
-        $profileDummyArr = $premiumUsersObj->filterDummyProfiles($profileArr);
-        $profileArr= array_diff($profileArr, $profileDummyArr);
-        // Sanitization of final array after removal of dummy profiles
-        $profileArrFinal = array_values(array_filter(array_unique($profileArr)));
-        // Clear Memory
-        unset($profileArr, $profileDummyArr);
-        return $profileArrFinal;
-    }
-    //End:JSC-2649: Remove dummy profiles from mailer
 
-       protected function execute($arguments = array(), $options = array())
+	protected function execute($arguments = array(), $options = array())
 	{
 	    	// SET BASIC CONFIGURATION
 		if(!sfContext::hasInstance()){
@@ -42,42 +27,27 @@ EOF;
 		$mailId ='1797';
 		$mmObj = new MembershipMailer();
 		$profilesArr =$mmObj->getJsExclusiveProfiles();
-                //JSC-2649:Going to remove dummy profiles from complete profiles array
-               $profilesArr = $this->returnFilteredProfilesAfterDummyExclusion($profilesArr);
-        $todayDate =date("d");
 		if(count($profilesArr)>0){
 			$jprofileObj = new JPROFILE('newjs_slave');
 			$subsArr = $jprofileObj->getAllSubscriptionsArr($profilesArr);
-		if ($todayDate == 4){
-    		    $message="Thank You for choosing Jeevansathi Exclusive. Do let us know if you are happy with our services. Your feedback is important to us. Click goo.gl/3TrskH";
-    		    foreach ($profilesArr as $key => $profileid){
-    		        $phone = $subsArr[$profileid]['PHONE_MOB'];
-    		        CommonUtility::sendInstantSms($message, $phone, $profileid);
-    		    }
-		}
-		else if($todayDate == 2){
 			foreach($profilesArr as $key=>$profileid){
 				if(strpos($subsArr[$profileid]['ISD'], "91") !== false){
 					$currency = "RS";
 				} else {
 					$currency = "DOL";
 				}
-                                $dataArr["username"] = $subsArr[$profileid]['USERNAME'];
 				$dataArr['currency'] =$currency;
 				$mmObj->sendMembershipMailer($mailId, $profileid, $dataArr);
 				unset($dataArr);
 				$count++;
 			}
-		  }	
 		}
 		unset($mmObj);
-		if($todayDate == 2){
-                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com,anurag.tripathi@jeevansathi.com";
+                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com,vibhor.garg@jeevansathi.com";
 		$latest_date	=date("Y-m-d");
                 $subject        ="Exclusive Feerback Monthly Mailer for ".date("jS F Y", strtotime($latest_date));
                 $fromEmail      ="From:JeevansathiCrm@jeevansathi.com";
                 $msg            ="Total mails sent : $count";
                 mail($to,$subject,$msg,$fromEmail);
-		}
 	}
 }

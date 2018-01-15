@@ -10,7 +10,7 @@ function clearOverlay() {
         'height': 'auto'
     });
     $("#callButton").show();
-    //e.preventDefault();
+    e.preventDefault();
 }
 
 function createCookie(name, value, days) {
@@ -100,8 +100,7 @@ function changeMemCookie(mainMem, mainMemDur) {
     }
 }
 
-function trackVasCookie(vasKey, vasId,isMaterialApp) {
-    isMaterialApp = (typeof isMaterialApp !== 'undefined') ?  isMaterialApp : false;
+function trackVasCookie(vasKey, vasId) {
     if (readCookie('selectedVas') && checkEmptyOrNull(readCookie('selectedVas'))) {
         var currentVas = readCookie('selectedVas');
         if (currentVas.indexOf(",") > -1) {
@@ -130,7 +129,7 @@ function trackVasCookie(vasKey, vasId,isMaterialApp) {
         currentVas = tempArr.join(",");
         createCookie('selectedVas', currentVas, 0);
     } else {
-        if(checkEmptyOrNull(readCookie('device')) && !isMaterialApp){
+        if(checkEmptyOrNull(readCookie('device'))){
           if ($("#" + vasId).hasClass(readCookie('device')+'_vassel')) {
               // default case when no vas was selected
               createCookie('selectedVas', vasId);
@@ -178,8 +177,7 @@ function removeFromVas(vasId) {
     }
 }
 
-function callRedirectManager(appVersion) {
-    appVersion = (typeof appVersion !== 'undefined') ?  appVersion : 1;
+function callRedirectManager() {
     var paramStr = "";
     if (readCookie('backState') != "changePlan") {
         if (checkEmptyOrNull(readCookie("mainMem")) && checkEmptyOrNull(readCookie("mainMemDur"))) {
@@ -210,7 +208,7 @@ function callRedirectManager(appVersion) {
         return;
     }
     if(checkEmptyOrNull(readCookie('device'))){
-      paramStr += '&device=' + readCookie('device') + "&API_APP_VERSION=" + appVersion;
+      paramStr += '&device=' + readCookie('device');
       window.history.pushState("newBack", "Jeevansathi Membership", "/membership/jsms?" + "displayPage=2&mainMem=" + readCookie("mainMem") + "&mainMemDur=" + readCookie("mainMemDur") + "&device=" + readCookie('device'));
     } else {
       window.history.pushState("newBack", "Jeevansathi Membership", "/membership/jsms?" + "displayPage=2&mainMem=" + readCookie("mainMem") + "&mainMemDur=" + readCookie("mainMemDur"));
@@ -249,9 +247,8 @@ function autoPopulateFreshdeskDetails(username, email){
   }
 }
 
-function updateSelectedVas(action,isMaterialApp)
+function updateSelectedVas(action)
 {
-    isMaterialApp = (typeof isMaterialApp !== 'undefined') ?  isMaterialApp : false;
     var currentVas = readCookie('selectedVas');
     if(currentVas.indexOf(",") > -1){
         // case when more than one vas was selected
@@ -280,7 +277,7 @@ function updateSelectedVas(action,isMaterialApp)
                     $("body").find("#"+item).parent().parent().addClass("scrollTo");
                 }
             }
-            if(checkEmptyOrNull(readCookie('device')) && !isMaterialApp){
+            if(checkEmptyOrNull(readCookie('device'))){
                 $("#"+item).addClass(readCookie('device')+'_vassel');   
             } else {
                 $("#"+item).addClass('vassel'); 

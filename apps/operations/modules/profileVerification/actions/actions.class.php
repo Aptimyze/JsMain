@@ -552,10 +552,6 @@ class profileVerificationActions extends sfActions
 
     public function executeFetchAbuseInvalidData(sfWebRequest $request)
     {
-            $getUsername = $request->getParameter('userName');
-            if($getUsername){
-              $this->userName = $getUsername;
-            }
             $this->setTemplate('fetchAbuseInvalidData');
     } 
 

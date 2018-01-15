@@ -144,7 +144,7 @@ class NewMatchesMailer extends SearchParamters
 				elseif($v==$this->cityRelaxation)		//City relaxation
 				{
 					$this->setCITY_RES("");
-					//$this->setCITY_INDIA("");
+					$this->setCITY_INDIA("");
 				}
 				elseif($v==$this->casteRelaxation)		//Caste relaxation
 				{

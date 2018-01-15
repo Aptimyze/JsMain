@@ -147,11 +147,12 @@ class newjs_TEMP_SMS_DETAIL extends TABLE{
                 $paramBindValue = $this->{"PROFILEID_BIND_TYPE"};
 		$smsKeyBindType =$this->{"SMS_KEY_BIND_TYPE"}; 
                 $str = $this->getBindString($pStr,"PROFILEID",1,"IN");
-                $sqlUpdate="UPDATE newjs.TEMP_SMS_DETAIL SET `SENT` = 'Y' WHERE ".$str." AND SENT!='Y' AND SMS_KEY IN ($notificationKey)";
+                $sqlUpdate="UPDATE newjs.TEMP_SMS_DETAIL SET `SENT` = 'Y' WHERE ".$str." AND SENT!='Y' AND SMS_KEY=:SMS_KEY";
                 $resUpdate = $this->db->prepare($sqlUpdate);
                 $values = explode(",",$pStr);
                 foreach($values as $k1=>$val)
                         $resUpdate->bindValue(":PROFILEID_1_".$k1,$val,constant('PDO::PARAM_'.$paramBindValue));
+		$resUpdate->bindValue(":SMS_KEY",$notificationKey, constant('PDO::PARAM_'.$smsKeyBindType));
                 $resUpdate->execute();
         }
 

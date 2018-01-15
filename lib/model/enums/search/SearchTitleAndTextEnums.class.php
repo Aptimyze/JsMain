@@ -19,7 +19,6 @@ class SearchTitleAndTextEnums
         static public $MESSAGE_0RESULT_MAPPING = array();
         static private $DEFAULT_PIC_SIZE = array();
         static private $CUSTOM_SUBHEADING_MAPPING = array();
-        static private $GA_TRACKING_MAPPING = array();
         const JUST_JOIN_CUSTOM_MESSAGE_COUNT = 5;
         const DPP_CUSTOM_MESSAGE_COUNT = 50;
        /*
@@ -155,15 +154,6 @@ class SearchTitleAndTextEnums
                 self::$DEFAULT_PIC_SIZE["V1"]["JSMS"]["DEFAULT"] = "MobileAppPicUrl";
                 self::$DEFAULT_PIC_SIZE["V1"]["APP"]["DEFAULT"] = "MobileAppPicUrl";
                 self::$DEFAULT_PIC_SIZE["V1"]["IOS"]["DEFAULT"] = "MobileAppPicUrl";
-                
-                self::$GA_TRACKING_MAPPING["V1"]["PC"]["DEFAULT"] = "";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["partnermatches"] = "Desired partner matches";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["twowaymatch"] = "Mutual matches";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["justJoinedMatches"] = "Just Joined";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["verifiedMatches"] = "Matches verified by visit";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["reverseDpp"] = "Members looking for me";
-                self::$GA_TRACKING_MAPPING["V1"]["APP"]["matchalerts"] = "Daily recommendations"; 
-				self::$GA_TRACKING_MAPPING["V1"]["APP"]["kundlialerts"] = "Kundli matches";
               
         }
         
@@ -186,19 +176,8 @@ class SearchTitleAndTextEnums
 	*/
         static public function getDefaultPicSize($params)
         {
-			return self::getValue("DEFAULT_PIC_SIZE",$params);
-		}
-		
-	 /*
-	* This function will return GA tracking.
-	* @access public
-	* @param string $params will include version of api,channel calling api, search type, cnt number of results 
-	* @return string ga tracking string
-	*/
-        static public function getGATracking($params)
-        {
-			return self::getValue("GA_TRACKING_MAPPING",$params);
-		}
+		return self::getValue("DEFAULT_PIC_SIZE",$params);
+	}
 	
 	/*
 	* This function will return search criteria.

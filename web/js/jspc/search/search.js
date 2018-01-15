@@ -826,7 +826,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 				jsLoadFlag = 1; 	
 				timeE = new Date().getTime();
 				timeD = (timeE - timeI)/3600;
-				jsb9init_fourth(timeD,true,2,'https://track.99acres.com/images/zero.gif','AJAXSEARCHURL');
+				jsb9init_fourth(timeD,true,2,'http://track.99acres.com/images/zero.gif','AJAXSEARCHURL');
 			}
 		},
 		error: function(xhr) 

@@ -1,2 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony smsNotification:sendNotifications LOGIN_REGISTER

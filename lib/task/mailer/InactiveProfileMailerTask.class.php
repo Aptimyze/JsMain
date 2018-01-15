@@ -38,7 +38,7 @@ EOF;
 			ini_set("memory_limit","512M");
 				if(!sfContext::hasInstance())
 	                sfContext::createInstance($this->configuration);
-	            $IncompleteMasterobj = new NEWJS_INACTIVE_PROFILES("newjs_master");
+	            $IncompleteMasterobj = new NEWJS_INACTIVE_PROFILES("newjs_masterDDL");
 	            $IncompleteSlaveobj = new NEWJS_INACTIVE_PROFILES("newjs_slave");
 	            $IncompleteMasterobj->EmptyIncomplete();
 	         if($arguments["oneTime"]=="0"){

@@ -54,8 +54,9 @@ function handleImportedPhotoSlider(top)
 /*set pointer towards selected album
 @param : thisElement
 */
-function setActiveAlbumPointer(offset)
+function setActiveAlbumPointer(thisElement)
 {
+	var offset = parseInt($(thisElement).attr("data-id")); //album offset
 	var newtop = initialAlbumImportPointerTop + ((offset % importPhotosBarCountPerShift) * 138);
 	$("#selectedAlbumPointer").css('top',newtop + 'px');
 }
@@ -89,5 +90,4 @@ $(document).ready(function() {
 		//enable arrow after certain time to prevent subsequent clicks
 		enableShiftArrowsAfterInterval();
 	});
-	showMessageZeroMorePhoto();
 });

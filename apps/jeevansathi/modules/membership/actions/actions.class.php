@@ -21,53 +21,6 @@ class membershipActions extends sfActions
         $this->redirect('/membership/jspc');
     }
 
-    /*api to deactivate current membership of user
-    * @inputs: $request
-    * @return: api response
-    */
-    public function executeDeactivateCurrentMembershipV1(sfWebRequest $request){
-        //parse request inputs and format
-        if($request->getParameter("PROFILECHECKSUM")){
-            $profileid = JsAuthentication::jsDecryptProfilechecksum($request->getParameter("PROFILECHECKSUM"));
-            if($profileid){
-                $membership = "MAIN";
-                if($request->getParameter("MEMBERSHIP")){
-                    $membership = $request->getParameter("MEMBERSHIP");
-                }
-                if(!$request->getParameter("USERNAME")){
-                    $profileObj      = new PROFILE();
-                    $detail       = $profileObj->getDetail($profileid, 'PROFILEID', "USERNAME");
-                    unset($profileObj);
-                    if(is_array($detail)){
-                        $username = $detail["USERNAME"];
-                    }
-                }
-                else{
-                    $username = $request->getParameter("USERNAME");
-                }
-               
-                //deactivate current membership based on inputs
-                $memHandlerObj = new MembershipHandler();
-                $deactivationStatus = $memHandlerObj->deactivateCurrentMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username,"MEMBERSHIP"=>$membership,"NEW_ORDERID"=>$request->getParameter("NEW_ORDERID")));
-                unset($memHandlerObj);
-            }
-        }
-        $respObj = ApiResponseHandler::getInstance();
-        if(isset($deactivationStatus)){
-            if($deactivationStatus == true){
-                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-            }
-            else{
-                $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-            }
-        }
-        else{
-            $respObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_MISSING);
-        }
-        $respObj->generateResponse();
-        die;
-    }
-
     // JSPC
     public function executeJspc(sfWebRequest $request)
     {
@@ -92,7 +45,6 @@ class membershipActions extends sfActions
         $request->setParameter('device', 'desktop');
 
         $memActFunc = new MembershipActionFunctions();
-        $membershipHandlerObj = new MembershipHandler();
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
         switch ($displayPage) {
             case '1':
@@ -100,9 +52,6 @@ class membershipActions extends sfActions
                 $template  = 'JSPCLandingPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
 
                 if ($data['dividerExpiry'] != null) {
                     list($this->days, $this->showCountdown, $this->countdown) = $memActFunc->setTickerData($data['dividerExpiry']);
@@ -125,10 +74,7 @@ class membershipActions extends sfActions
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileId);
-                $currency = $data["paymentOptionsData"]["currency"];
-                JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
                 break;
 
@@ -147,9 +93,7 @@ class membershipActions extends sfActions
                 $template  = 'JSPCTransactionSuccessPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage4Url);
                 break;
 
@@ -161,6 +105,7 @@ class membershipActions extends sfActions
                 $template  = 'JSPCTransactionFailurePage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage5Url);
                 break;
 
@@ -195,10 +140,9 @@ class membershipActions extends sfActions
         header('Cache-Control: no-transform');
 
         $memActFunc = new MembershipActionFunctions();
-        $membershipHandlerObj = new MembershipHandler();
 
         //parse request params for module
-        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum,$upgradeMem) = $memActFunc->getReqParamsForRevMobMem($request);
+        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
         if ($device == "Android_app") {
 
             $_SERVER[HTTP_USER_AGENT] = "Chrome/39 JsAndWeb";
@@ -213,12 +157,7 @@ class membershipActions extends sfActions
                 $this->passedKey = $fromBackend;
                 $data            = $this->fetchApiData($apiParams, $request, 3);
                 $data            = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if($data["device"]=="Android_app"){
-                    JsMemcache::getInstance()->set($profileId."_appVersion",$data["appVersion"],15*60*60);
-                }
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage1Url);
                 break;
 
@@ -227,12 +166,7 @@ class membershipActions extends sfActions
                 $template  = 'JSMSVasPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if($data["device"]=="Android_app" && !$data["appVersion"]){
-                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
-                }
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage2Url);
                 break;
 
@@ -241,19 +175,14 @@ class membershipActions extends sfActions
                 $template  = 'JSMSCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if($data["device"]=="Android_app" && !$data["appVersion"]){
-                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
-                }
-                $this->isCityEntered = $membershipHandlerObj->isCityEntered($profileId);
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage3Url);
                 break;
 
             case '4':
                 $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
-                $this->upgradeMem = $upgradeMem;
                 $template                         = 'JSMSCouponPage';
-                $data["appVersion"] = $request->getParameter("API_APP_VERSION");
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);
                 break;
 
@@ -264,16 +193,7 @@ class membershipActions extends sfActions
                 $data                 = $this->fetchApiData($apiParams, $request, 3);
 
                 $data = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userProfile"];
-                $currency = $data["currency"];
-                if($currency == "$")
-                    $currency = "DOL";
-                else
-                    $currency = "RS";
-                if($data["device"]=="Android_app" && !$data["appVersion"]){
-                    $data["appVersion"] = JsMemcache::getInstance()->get($profileId."_appVersion");
-                }
-                JsMemcache::getInstance()->set($profileId."_currency",$currency,15*60*60);
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage5Url);
                 break;
 
@@ -304,9 +224,7 @@ class membershipActions extends sfActions
                 $template  = 'JSMSSuccessPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
-                $profileId = $data["userDetails"]["PROFILEID"];
-                if(is_numeric($profileId))
-                    JsMemcache::getInstance()->delete($profileId."_currency");
+
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage8Url);
                 break;
 
@@ -514,12 +432,12 @@ class membershipActions extends sfActions
 
             $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
 
-            // ankita :Code removed to specifically remove 1 month membership from display
-            /*if (isset($allMainMem['P']['P1'])) {
+            // Code added to specifically remove 1 month membership from display
+            if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
-            }*/
+            }
 
-            $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj,"NA",'old_mobile_website');
+            $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
             $discountType       = $discountTypeArr['TYPE'];
             $this->discountType = $discountType;
             if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
@@ -667,11 +585,11 @@ class membershipActions extends sfActions
         $allMainMem = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
         $this->tabs = $memHandlerObj->getMobMembershipTabs($allMainMem, $this->memID);
 
-        // ankita Code removed to specifically remove 1 month membership from display
-        /*if (isset($allMainMem['P']['P1'])) {
+        // Code added to specifically remove 1 month membership from display
+        if (isset($allMainMem['P']['P1'])) {
             unset($allMainMem['P']['P1']);
             unset($this->tabs[1]);
-        }*/
+        }
 
         $this->mainSubMemId   = $request->getParameter('mainSubMemId');
         $this->allMemberships = $memHandlerObj->getMobSuggestedService($this->memID, $this->tabs);
@@ -683,7 +601,7 @@ class membershipActions extends sfActions
         }
 
         $allMainMem         = $memHandlerObj->fetchMembershipDetails("MAIN", $userObj, 'old_mobile_website');
-        $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj,"NA","old_mobile_website");
+        $discountTypeArr    = $memHandlerObj->getDiscountInfo($userObj);
         $discountType       = $discountTypeArr['TYPE'];
         $this->discountType = $discountType;
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
@@ -940,7 +858,7 @@ class membershipActions extends sfActions
 
         $this->instaContacts = $allMainMem[$mainMem][$subMem]["CALL"];
         $this->fest          = $memHandlerObj->getFestiveFlag();
-        $discountTypeArr     = $memHandlerObj->getDiscountInfo($userObj,"NA","old_mobile_website");
+        $discountTypeArr     = $memHandlerObj->getDiscountInfo($userObj);
         $discountType        = $discountTypeArr['TYPE'];
         $this->discountType  = $discountType;
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
@@ -1374,16 +1292,6 @@ class membershipActions extends sfActions
 
         $respObj->setResponseBody($output);
         $respObj->generateResponse();
-        die();
-    }
-
-    public function executeUpdateRestoreIdV1(sfWebRequest $request){
-        $profileid = $request->getParameter('profileid');
-        $restoreid = $request->getParameter('restoreid');
-        if($profileid && $restoreid){
-            $freshchat = new NEWJS_FRESHCHAT();
-            $freshchat->insertRestoreID($profileid,$restoreid);
-        }
         die();
     }
 }

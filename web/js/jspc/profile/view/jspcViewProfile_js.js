@@ -150,7 +150,6 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
-        CriticalActionLayer();
        	
       });
       $('.js-hasaction').click(function() {
@@ -182,14 +181,14 @@ function closeWeTalkForYou(){
         $.myObj.ajax({
           showError: false, 
           method: "POST",
-          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum+'&sameGender='+sameGender,
+          url : '/api/v1/profile/gunascore?oprofile='+ProCheckSum,
           data : ({dataType:"json"}),
           async:true,
           timeout:20000,
           success:function(response){
             //hideCommonLoader();
             gunaScore = response.SCORE;
-            if(gunaScore != null && gunaScore != 0){
+            if(gunaScore != null){
               $(".js-showGuna").html(gunaScore);
               $(".js-hideGuna").show();
               $(".js-changeText").html("Guna Match");
@@ -224,7 +223,7 @@ function closeWeTalkForYou(){
       	showCommonLoader();
         $.ajax({
           method: "POST",
-          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&showDownload=1&GENDERSAME="+sameGender, //added an extra parameter here which shows the Download part
+          url : "/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+ViewedUserName+"&SIM_USERNAME="+ViewedUserName+"&type=Horoscope&ajax_error=2&checksum=&profilechecksum="+ProCheckSum+"&randValue=890&GENDERSAME="+sameGender,
           async:true,
           timeout:20000,
           success:function(response){
@@ -439,7 +438,6 @@ $('#cls-astroComp').click(function(){
 });
 
 $('.js-searchTupleImage').click(function(){
-    GAMapper("GA_PROFILE_ALBUM");
     var photoData = $(this).attr("data");
     photoData = photoData.split(",");
 
@@ -462,9 +460,7 @@ function showReportAbuseLayer(){
 	var jObject=$("#reportAbuse-layer");
 	jObject.find('.js-username').html(finalResponse.about.username);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
-  $("#reportAbuseList").mCustomScrollbar({
- theme: "light",
-});
+
 $('.js-overlay').unbind();
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportAbuse-layer').fadeIn(300,"linear",function(){})}); 
 closeReportAbuseLayer=function() {
@@ -475,7 +471,7 @@ $('.js-overlay').fadeOut(200,"linear",function(){
 };
 
 $('#reportAbuseCross').bind('click',closeReportAbuseLayer);
-$('.js-abuseAttachment').off('click').on('click', attachAbuseDocument);
+
 
 }
 
@@ -587,76 +583,30 @@ jQuery.myObj.ajax(ajaxConfig);
 
 function reportAbuse(ele){
 var reason='';
-var mainReason = '';
-var layerObj=$("#reportAbuse-layer");  
-var isValid = false;
-    layerObj.find("#reportAbuseList li").each(function(){
-      if($(this).hasClass('selected')) { 
-        mainReason = $(this).find(".reason").html();
-        if($(this).hasClass("openBox")) {
-         //reason=$($(this).find(".otherOptionMsgBox textarea")[0]).val().trim();
-        reason=$('.js-AbuseOpenTextArea').val().trim();
-        if(!reason || reason.length < 25) {
-            $('.js-errorMsg').removeClass('disp-none');
-            //$(this).find('#errorText').removeClass('disp-none');
-            isValid = true;
-        } else {
-            $('.js-errorMsg').addClass('disp-none');
-        }
-      }
-    }
-    })
-    if(isValid == true) {
-      return;
-    }
-
-var bUploadSuccessFul = false;
-if(arrReportAbuseFiles.length) {
-    showCommonLoader();
-    var bResult = uploadAttachment();
-    if( false == bResult )
-        return ;
-    
-    for(var itr = 0; itr < arrReportAbuseFiles.length; itr++) {
-        if(arrReportAbuseFiles[itr].hasOwnProperty("uploded") || 
-                arrReportAbuseFiles[itr].uploded == false || 
-                (arrReportAbuseFiles[itr].hasOwnProperty("error") && arrReportAbuseFiles[itr].error == true) ) {
-            bUploadSuccessFul = false;
-            break;
-        }
-        bUploadSuccessFul = true;
-    }
-    if(false === bUploadSuccessFul)
-        return bUploadSuccessFul;
+var layerObj=$("#reportAbuse-layer");
+if(layerObj.find("#otherOptionBtn").is(':checked')) {
+	var reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
+	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
 }
-    
 $('.js-overlay').unbind('click');
 if (finalResponse) var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
 var layerObj=$("#reportAbuse-layer");
 var ajaxConfig=new Object();
 if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
-if(!mainReason) mainReason=layerObj.find(".selected").eq(0).text().trim();
-if(!mainReason||!selfUname || !otherUser) return;
+if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
+if(!reason||!selfUname || !otherUser) return;
 showCommonLoader();
 var feed={};
 reason=$.trim(reason);
 //feed.message:as sdf sd f
 feed.category='Abuse';
-feed.mainReason=mainReason;
 feed.message=otherUser+' has been reported abuse by '+selfUname+' with the following reason:'+reason;
-if( bUploadSuccessFul ) {
-    feed.attachment = 1;
-    feed.temp_attachment_id = arrReportAbuseFiles['tempAttachmentId'] ;
-}
-
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':ProCheckSum,'reason':reason};
 ajaxConfig.url='/api/v1/faq/feedbackAbuse';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST'
-ajaxConfig.error=function(response) {
-    hideCommonLoader();
-}
+
 ajaxConfig.success=function(response){
 	$('#reportAbuse-layer').fadeOut(300,"linear");
 
@@ -692,22 +642,3 @@ jQuery.myObj.ajax(ajaxConfig);
 
 }
 
-$('.js-abuseBack').on('click',function() {
-    $('.js-reportAttachLayer').addClass('disp-none');
-    
-    //Clear Text
-    $('.js-selectedOption').html("");
-    $('.js-AbuseOpenTextArea').val("");
-    
-    //Clear already attached docs
-    arrReportAbuseFiles = [];
-    var photoNode = document.getElementById("previewContainer");
-    while (photoNode.hasChildNodes()) {
-        photoNode.removeChild(photoNode.lastChild);
-    }
-    
-   $("#previewContainer").append("<div class='abuse_opt-sel f11 pb10 errcolr js-attachError'></div>");
-    
-    $('.js-reportOptionLayer').find('.selected').removeClass('selected');
-    $('.js-reportOptionLayer').removeClass('disp-none');
-})

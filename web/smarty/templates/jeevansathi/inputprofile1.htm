@@ -369,7 +369,7 @@ function hide_msg()
    <td width="22%">~if $check_horo eq "Y"`<font color="red">~/if`Add your Horoscope<font color="#CC0000">*</font></td>
    <td width="78%">
 <!--<input type="radio" name="display_horo" value="Y" ~if $display_horo eq 'Y' OR $display_horo eq ''` checked ~/if` onclick="disabl_astroform();">Yes-->
-<input type="radio" name="display_horo" value="Y" ~if $display_horo eq 'Y'` checked ~/if` onclick="disable_astroform();MM_openBrWindow('https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?JS_UniqueID=~$js_UniqueID`&JS_Year=~$BIRTH_YR`&JS_Month=~$BIRTH_MON`&JS_Day=~$BIRTH_DAY`','Astro_Details','width=500,height=500,left=200,top=100,scrollbars=1,resizable=0,toolbar=0,location=0,menubar=0,status=0,directories=0')">Yes
+<input type="radio" name="display_horo" value="Y" ~if $display_horo eq 'Y'` checked ~/if` onclick="disable_astroform();MM_openBrWindow('http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?BirthPlace?JS_UniqueID=~$js_UniqueID`&JS_Year=~$BIRTH_YR`&JS_Month=~$BIRTH_MON`&JS_Day=~$BIRTH_DAY`','Astro_Details','width=500,height=500,left=200,top=100,scrollbars=1,resizable=0,toolbar=0,location=0,menubar=0,status=0,directories=0')">Yes
 <input type="radio" name="display_horo" value="N" ~if $display_horo eq 'N'` checked ~/if` onclick="disable_astroform();">No
 </td>
   </tr>
@@ -672,10 +672,10 @@ if (1) {
 var google_conversion_label = "Lead";
 //-->
 </script>
-<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 </script>
 <noscript>
-<img height=1 width=1 border=0 src="https://www.googleadservices.com/pagead/conversion/1067322789/?value
+<img height=1 width=1 border=0 src="http://www.googleadservices.com/pagead/conversion/1067322789/?value
 =1&label=Lead&script=0">
 </noscript>
                                                                                                                              
@@ -696,7 +696,7 @@ var google_conversion_label = "Signup";
 -->
 </script>
 <script language="JavaScript"
-src="https://www.googleadservices.com/pagead/conversion.js">
+src="http://www.googleadservices.com/pagead/conversion.js">
 </script>
 <noscript>
 <!--  old code
@@ -704,7 +704,7 @@ src="https://www.googleadservices.com/pagead/conversion.js">
 src="http://www.googleadservices.com/pagead/conversion/1072672959/?script=0">
 -->
 <img height=1 width=1 border=0
-src="https://www.googleadservices.com/pagead/conversion/1072672959/?value=1&label=Signup&script=0">
+src="http://www.googleadservices.com/pagead/conversion/1072672959/?value=1&label=Signup&script=0">
                                                                                                                              
 </noscript>
 ~/if`

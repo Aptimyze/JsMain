@@ -24,10 +24,10 @@
 			$res1 = $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
 			// $sql="UPDATE JPROFILE SET ACTIVATED=PREACTIVATED WHERE PROFILEID='$profileid' AND ACTIVATE_ON<='$today'";
 			//mysql_query($sql) or logError($sql);
-//			if(false !== $res1) {
-//				$argv[1] = $profileid;
-//				include_once(JsConstants::$docRoot."/profile/retrieveprofile_bg.php");
-//			}
+			if(false !== $res1) {
+				$argv[1] = $profileid;
+				include_once(JsConstants::$docRoot."/profile/retrieveprofile_bg.php");
+			}
 		}
 	}
 	else

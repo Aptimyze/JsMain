@@ -143,15 +143,15 @@ class IgnoredProfileCacheLib
     	return $resultVal;
     }
 
-    //This function removes an ignoredProfileId from three different keys. (List_<profileId>_IgnoredAll,List_<profileId>_IgnoredByMe,List_<ignoredProfileId>_IgnoredAll)
+    //This function removes an ignoredProfileId from three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
     public function deleteDataFromCache($profileid,$ignoredProfileid)
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey1 = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;
-    	$pidKey2 =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
-        $pidKey3 = ignoredProfileCacheConstants::PREPEND_KEY.$ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+    	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
+    	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
         if(JsMemcache::getInstance()->keyExist($pidKey3))
         {
             JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey3,$profileid);   
@@ -160,31 +160,21 @@ class IgnoredProfileCacheLib
     	JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey2,$ignoredProfileid);
     }
 
-    //This function adds an ignoredProfileId to three different keys. (List_<profileId>_IgnoredAll,List_<profileId>_IgnoredByMe,List_<ignoredProfileId>_IgnoredAll)
-    public function addDataToCache($profileid,$ignoredProfileid,$extraParameter="")
+    //This function adds an ignoredProfileId to three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
+    public function addDataToCache($profileid,$ignoredProfileid)
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-        if($extraParameter)
+    	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
+    	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+        if(JsMemcache::getInstance()->keyExist($pidKey3))
         {
-            $pidKey =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
-            JsMemcache::getInstance()->addDataToCache($pidKey,"");
+            JsMemcache::getInstance()->addDataToCache($pidKey3,$profileid);   
         }
-        
-        else
-        {
-            $pidKey1 = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;
-            $pidKey2 =  ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;
-            $pidKey3 = ignoredProfileCacheConstants::PREPEND_KEY.$ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
-            
-            if(JsMemcache::getInstance()->keyExist($pidKey3))
-            {
-                JsMemcache::getInstance()->addDataToCache($pidKey3,$profileid);   
-            }
-            JsMemcache::getInstance()->addDataToCache($pidKey1,$ignoredProfileid);
-            JsMemcache::getInstance()->addDataToCache($pidKey2,$ignoredProfileid);
-        }    	
+    	JsMemcache::getInstance()->addDataToCache($pidKey1,$ignoredProfileid);
+    	JsMemcache::getInstance()->addDataToCache($pidKey2,$ignoredProfileid);
     }
 
     //This function checks if a particular value exists in the redis corresponding to a given key and accordingly returns the boolean response
@@ -193,23 +183,19 @@ class IgnoredProfileCacheLib
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-        if($suffix == ignoredProfileCacheConstants::BYME)
+        if($suffix == "byMe")
         {
-           $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::BYME_DATA;                        
+           $pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA; 
         }
     	else
         {
-            $pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileid.ignoredProfileCacheConstants::ALL_DATA;              
+             $pidKey = $profileid.ignoredProfileCacheConstants::ALL_DATA; 
         }
-    	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);        
-        if($keyExists)
+    	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
+        if($keyExists == 1)
     	{
-    		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);    		
-            if($response == 0)
-            {
-                $response = "no";
-            }            
-            return $response;
+    		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);
+    		return $response;
     	}
     	else
     	{
@@ -222,7 +208,7 @@ class IgnoredProfileCacheLib
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey = ignoredProfileCacheConstants::PREPEND_KEY.$profileID.ignoredProfileCacheConstants::BYME_DATA;
+    	$pidKey = $profileID.ignoredProfileCacheConstants::BYME_DATA;
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
     	if($keyExists == 1)
     	{

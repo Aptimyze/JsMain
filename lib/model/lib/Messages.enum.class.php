@@ -55,8 +55,6 @@ class Messages
 
   const CONTACT_ERROR = "Object is not contact obj";
   const AP_MESSAGE = "This is an Interest sent by Jeevansathi on behalf of {{USERNAME}} as part of the 'Response Booster' service. Your profile strictly matches {{USERNAME}} Desired Partner preferences. You may accept the interest by clicking on the 'Accept' button.";
-  const AP_MESSAGE_RM = "This is an Interest sent by the Relationship Manager on behalf of {{USERNAME}} as part of the personalized ‘Exclusive Service'. Your profile strictly matches the Desired Partner preferences of {{USERNAME}}. You may accept the interest by clicking on the 'Accept' button and call us on {{RMNUMBER}} to take it forward.";
-  
   const IGNORED_MESSAGE = "You cannot perform this action as {{USERNAME}} has blocked you.";
   const I_IGNORE_MESSAGE = "You cannot perform this action as you blocked {{USERNAME}}.";
   const SAMEGENDER = "You cannot initiate contact with profile(s) of the same gender.";
@@ -104,7 +102,6 @@ class Messages
 
 	const JSExNoPhoMes="We have liked your profile. If you are interested in taking things forward then please indicate by \"Accepting\". 
 	Also would request you to please forward some of your photos to our mail id {{EMAIL}} .";
-  const JSExReminderNoPhoMes="We like your profile. Please accept this interest to take things forward. Thanks.";
 
   //privilege error message ends here
 
@@ -132,10 +129,6 @@ class Messages
 
   const PAID_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
   const PAID_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted.";
-   const FREE_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you after you upgrade.";  
-  const FREE_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted after you upgrade.";
-  const REMINDER_SENT_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from interest sent";
-  const SECOND_REMINDER_BEFORE_TIME = "You can not send a reminder to this profile until 24 hours from the last reminder sent";
   
   public static $contactEngineCalled;
   /**
@@ -933,10 +926,5 @@ class Messages
 		else
 			return Messages::DETAILS_UNDERSCREENING;
 	}
-
-    public static function getReminderSentBeforeTimeMessage($message)
-  {
-    return Messages::getMessage($message);
-  }
 }
 ?>

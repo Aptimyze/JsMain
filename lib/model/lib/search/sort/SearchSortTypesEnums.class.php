@@ -24,14 +24,5 @@ class SearchSortTypesEnums
         const FullDppWithReverseFlag = 'DR'; 
         const SortByLoginDate = 'LT';
         const SortByVisitorsTimestamp = 'VT';
-        const SortByBroaderDppScore = 'BD'; 
-        
-        // unified match alerts sort types
-        const SortByStrictTrends = 'ST'; 
-        const SortByStrictNonTrends = 'SNT';
-        const SortByPhotoForAP = 'PAP';
-        
-        const SortByRelaxedTrends = 'RT'; 
-        const SortByRelaxedNonTrends = 'RNT'; 
 }
 ?>

@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony  alert:newMatchAlertsPopulate 1
-retries=3
-retry.backoff=60000

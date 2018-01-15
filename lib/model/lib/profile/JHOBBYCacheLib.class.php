@@ -87,15 +87,14 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
             
             if(count($noResult) === 0) {
-                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
+                $dummyResult = array();
+                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
             } else {
                 $dummyResult = $result;
             }
             $dummyResult[ProfileCacheConstants::CACHE_CRITERIA] = $pid;
             
-            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
-            }
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
         }
 
         if ($onlyValues) {
@@ -187,16 +186,15 @@ class JHOBBYCacheLib extends TABLE
             $noResult = $result;
 
             if (0 === count($noResult)) {
-                $dummyResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__,$pid);
+                $dummyResult['PROFILEID'] = $pid;
+                $dummyResult['HOBBY'] = ProfileCacheConstants::NOT_FILLED;
             }
             else {
                 $dummyResult = $result;
                 $dummyResult['PROFILEID'] = $pid;
             }
             //Cache the RAW DATA
-            if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
-            }
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
         }
 
         $hobbies = array();
@@ -232,11 +230,10 @@ class JHOBBYCacheLib extends TABLE
      */
     private function logCacheConsumeCount($funName)
     {
-        return;
-       /* $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));*/
+        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
 
 }

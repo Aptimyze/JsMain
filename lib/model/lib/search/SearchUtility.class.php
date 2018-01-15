@@ -63,23 +63,18 @@ class SearchUtility
                                                 $Obj = new ContactsRecords;
                                                 $hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
                                                 
-                                                // adding code to remove temporary contacts sent by the user while the user is unscreened.
-                                                if($tempContacts)
-                                                {		
-                                                        $contactsTempObj =  new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
-                                                        $hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid,$seperator);
-                                                }
-                                                
                                                 if($getFromCache == 1){
-                                                        $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
+                                                       $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
                                                 }
                                         }
 					/** matchAlerts Profile **/
+					
 					if($removeMatchAlerts)
-                                        {
-                                                $matchalerts_LOG = new matchalerts_LOG();
-                                                $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
-                                        }
+					{
+						$matchalerts_LOG = new matchalerts_LOG();
+						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
+					}
+
 
 					
 					$request = sfContext::getInstance()->getRequest();	
@@ -102,6 +97,12 @@ class SearchUtility
 					}
 					
 				}
+				// adding code to remove temporary contacts sent by the user while the user is unscreened.
+				if($tempContacts)
+				{		
+					$contactsTempObj =  new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
+					$hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid,$seperator);
+				}
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
 				/* For Online search  */
 				{
@@ -118,14 +119,10 @@ class SearchUtility
 					{
 						$showArrCluster=1;
 						$showArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
-						if($showArr=="")
-						{
-							$showArr = '0 0';
-						}											
 					}
 					elseif($SearchParamtersObj->getVIEWED()==$this->notViewed)
-						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);					
-				}			
+						$hideArr.= $ViewedLogObj->findViewedProfiles($pid,$seperator);
+				}
 				if( ($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER() || $SearchParamtersObj->getKUNDLI_DATE_CLUSTER())&& $pid)
 				{
 					$alreadyInShowStr = $SearchParamtersObj->getProfilesToShow();
@@ -195,9 +192,8 @@ class SearchUtility
 								$showArr= implode(" ",$matArr);
 						}
 					}
-					else{
+					else
 						$showArr = '0 0';
-					}
 				}
                                 //remove profiles for AP cron
                                 if($notInArray)
@@ -234,7 +230,7 @@ class SearchUtility
         */
 	public function getSearchCriteriaAfterClusterApplication($request,$addRemoveCluster,$SearchParamtersObj)
 	{
-            
+		
 		$searchParamsSetter['SEARCH_TYPE']= $this->stypeCluster;
 
 		if($request->getParameter("appCluster"))
@@ -243,7 +239,7 @@ class SearchUtility
 			$cluster = $solr_labels[$request->getParameter("appCluster")];
 			if($request->getParameter("dollar")==1)
 				$cluster=$cluster."_DOL";
-			$clusterVal = $request->getParameter("appClusterVal");		
+			$clusterVal = $request->getParameter("appClusterVal");
 			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
                             if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
@@ -281,7 +277,7 @@ class SearchUtility
 		if($SearchParamtersObj->getNEWSEARCH_CLUSTERING())
 			$list_of_clusters = explode(",",$SearchParamtersObj->getNEWSEARCH_CLUSTERING());
 		$clusterGetter = "get".$cluster;
-                $searchParamsSetter['CURRENT_CLUSTER'] = $cluster;
+                
 		if($clusterVal == 'ALL')
 		{
 			if($cluster != 'MATCHALERTS_DATE_CLUSTER' && $cluster != 'KUNDLI_DATE_CLUSTER')
@@ -305,12 +301,15 @@ class SearchUtility
 				{
 					$searchParamsSetter['COUNTRY_RES']='';
 					$searchParamsSetter['STATE']='';
+					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
 				}
                                 elseif($cluster == 'COUNTRY_RES'){
 					$searchParamsSetter['STATE']='';
+					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster == 'STATE'){
+					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
                                 }elseif($cluster=='OCCUPATION_GROUPING')
 					$searchParamsSetter['OCCUPATION']='';
@@ -332,16 +331,12 @@ class SearchUtility
 				}
 			}
 		}
-                else if($clusterVal == 'Any' && $cluster=='KNOWN_COLLEGE'){
-                    $searchParamsSetter['KNOWN_COLLEGE'] = '';
-                    $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = '000';
-                }
 		else
 		{
 			if(!is_array($list_of_clusters) || (is_array($list_of_clusters) && !in_array($cluster,$list_of_clusters)) )
 				$list_of_clusters[] = $cluster;
 			$searchParamsSetter['NEWSEARCH_CLUSTERING'] = implode(",",$list_of_clusters);
-                        
+
 			if(strstr($clusterVal,'$'))
 			{
 				$temp = explode("$",$clusterVal);
@@ -355,19 +350,7 @@ class SearchUtility
 					$searchParamsSetter["L".$cluster]=$temp[0];
 					$searchParamsSetter["H".$cluster]=$temp[1];
 				}
-                                if(($cluster == "INCOME" || $cluster == "INCOME_DOL") && strpos($clusterVal,"$$") !== false){
-                                        $temp = explode("$$",$clusterVal);
-                                        $rupeesValues = explode("$",$temp[0]);
-                                        $dollerValues = explode("$",$temp[1]);
-                                        $searchParamsSetter["LINCOME"] = $rArr["minIR"] = $rupeesValues[0];
-                                        $searchParamsSetter["HINCOME"] = $rArr["maxIR"] = $rupeesValues[1];
-                                        $searchParamsSetter["LINCOME_DOL"] = $dArr["minID"] = $dollerValues[0];
-                                        $searchParamsSetter["HINCOME_DOL"] = $dArr["maxID"] = $dollerValues[1];
-                                        $incomeMappingObj = new IncomeMapping($rArr,$dArr);
-                                        $incomeValues = $incomeMappingObj->getAllIncomes(1);
-                                        unset($incomeMappingObj);
-                                        $searchParamsSetter[$cluster]=implode(",",$incomeValues);
-                                }elseif($cluster == "INCOME")
+				if($cluster == "INCOME")
 				{
 					if($temp[0]=="-" && $temp[1]=="-")	//If Rupee checkbox is unclicked i.e. dont use Rupee parameter
 					{
@@ -469,14 +452,14 @@ class SearchUtility
 					$ncrS = FieldMap::getFieldLabel('delhiNcrStates','',1);
 					$temp = implode(",",$ncrS);
 					$clusterVal = str_replace("NCR","NCR,".$temp,$clusterVal);
-					$city = $SearchParamtersObj->getCITY_RES();
+					$city = $SearchParamtersObj->getCITY_INDIA();
 					if($city && $city!='DONT_MATTER')
 						$city = $city.",".implode(",",$ncrC);
 					else
 						$city = implode(",",$ncrC);
 
 					$city = $this->str_to_array_unique($city);
-					$searchParamsSetter['CITY_RES']=$city;
+					$searchParamsSetter['CITY_INDIA']=$city;
 				}
 				if($cluster=='HANDICAPPED')
 				{
@@ -485,7 +468,7 @@ class SearchUtility
 				/**
 				* If METRO is choosen in state then we need to map all city correspoinding to it
 				*/
-				if(strstr($clusterVal,'METRO') && $cluster=='CITY_RES')
+				if(strstr($clusterVal,'METRO') && $cluster=='CITY_INDIA')
 				{
 					$delmetro = FieldMap::getFieldLabel('allMetros','',1);									     
 					$temp = implode(",",$delmetro);	
@@ -581,22 +564,16 @@ class SearchUtility
                                         $selectedVAl = explode(",",$clusterVal);
                                         if(!in_array(51, $selectedVAl)){
                                                 $searchParamsSetter['STATE']='';
+                                                $searchParamsSetter['CITY_INDIA']='';
                                                 $searchParamsSetter['CITY_RES']='';
                                         }
-                                }
-                                if($cluster=='STATE'){
-                                        $searchParamsSetter['CITY_RES']='';
                                 }
 				$searchParamsSetter[$cluster]=$clusterVal;
 			}
 		}
 		//print_r($searchParamsSetter); die;
 //die;
-                if($cluster == "CITY_RES"){
-                        $SearchParamtersObj->setter($searchParamsSetter,2);
-                }else{
-                        $SearchParamtersObj->setter($searchParamsSetter);
-                }
+		$SearchParamtersObj->setter($searchParamsSetter);
 		//return $SearchParamtersObj;
 	}
 	
@@ -904,7 +881,7 @@ class SearchUtility
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
         {  
                 $caching = $request->getParameter("caching");
-                if($caching || $type=="del")
+                if($caching)
                 {       
 			if(!$pid)
 			{
@@ -1002,17 +979,9 @@ class SearchUtility
                elseif($request->getParameter("searchBasedParam")=='matchalerts')
                         {	
                                 if($type=='set')
-                                {
-					if($request->getParameter("androidMyjsNew"))
-					{
-						JsMemcache::getInstance()->set("cachedDMAS$pid",serialize($statusArr));
-                                                JsMemcache::getInstance()->set("cachedDMAR$pid",serialize($resultArr));
-					}
-					else
-					{	
-	                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
-        	                                JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
-					}
+                                {	
+                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
                                         $profileIdPoolArray = array();
                                         if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
@@ -1026,16 +995,8 @@ class SearchUtility
                                 }
                                 elseif($type=='get')
                                 {	
-					if($request->getParameter("androidMyjsNew"))
-                                        {
-	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMAS$pid");
-	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMAR$pid");
-                                        }       
-                                        else
-                                        {
-	                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
-	                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
-					}
+                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
                                         if($statusArr && $resultArr)
                                         {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
@@ -1088,57 +1049,13 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
                 JsMemcache::getInstance()->set("cachedPMR$pid","");
                 JsMemcache::getInstance()->set("cachedDMS$pid","");
-                JsMemcache::getInstance()->set("cachedDMAS$pid","");
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
-                JsMemcache::getInstance()->set("cachedDMAR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
-                // delete data Match of the day
-                JsMemcache::getInstance()->set("cachedMM24$pid","");
+                JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$pid);
 			}	
                 }
                 return 0;
-        }
-        /**
-         * This function returns space separated list of ignored profiles having ignored, contacted,matchalerts and temp contacted profiles.
-         * @param type $pid
-         * @param type $seperator
-         * @param type $noAwaitingContacts
-         * @param type $removeMatchAlerts
-         * @param type $tempContacts
-         * @param type $SearchParamtersObj
-         * @return type
-         */
-        function getIgnoredProfiles($pid,$seperator,$noAwaitingContacts,$removeMatchAlerts,$tempContacts,$getFromCache) {
-                if($getFromCache == 1){
-                        $memObject=JsMemcache::getInstance();
-                        $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
-                        if ($removeMatchAlerts) {
-                                $matchalerts_LOG = new matchalerts_LOG();
-                                $hideArr.= " ".$matchalerts_LOG->getProfilesSentInMatchAlerts($pid, $seperator);
-                        }
-                        if($hideArr != ""){
-                                return $hideArr;
-                        }
-                }
-                $IgnoredProfilesObj = new IgnoredProfiles();
-                $hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid, $seperator);
-
-                /* contacted profiles */
-                $Obj = new ContactsRecords;
-                $hideArr.= $Obj->getContactsList($pid, $seperator, $noAwaitingContacts);
-
-                if ($removeMatchAlerts) {
-                        $matchalerts_LOG = new matchalerts_LOG();
-                        $hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid, $seperator);
-                }
-
-                if ($tempContacts) {
-                        $contactsTempObj = new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
-                        $hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid, $seperator);
-                }
-                
-                return $hideArr;
         }
 
 }

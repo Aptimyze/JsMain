@@ -123,7 +123,13 @@ class ContactFactory
 					$memObject->delete('commHistory_'.$viewerObj->getPROFILEID().'_'.$viewedObj->getPROFILEID());
 					$memObject->delete('commHistory_'.$viewedObj->getPROFILEID().'_'.$viewerObj->getPROFILEID());
 					// block to delete the myjs cached data for ms and apps
-					MyJsMobileAppV1::deleteMyJsCache(array($viewerObj->getPROFILEID(),$viewedObj->getPROFILEID()));
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_I');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_I');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_A');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_A');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_M');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_M');
+
 			return $action;
 
 		}

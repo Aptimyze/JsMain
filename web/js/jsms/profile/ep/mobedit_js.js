@@ -13,8 +13,6 @@ var storeJson={};
 var hamburgerObj={};
 var overlayObj={};
 var NOT_FILLED_IN="Not filled in";
-var outerMessageContact= {'':'Show to all','Y':'Show to all','N':'Hidden','C':'Show on interest'};
-var selectedListValue;
 
 	function overlaySet(){
             
@@ -41,15 +39,10 @@ var selectedListValue;
 			var ele=this;
 			
 			$(this).bind(clickEventType,function(){
-                            
+				
 				setOverlayLocation();
-                                if(attr.split(",")[1] == "AADHAAR"){
-                                    window.location.href= "/cal?layerId=24&fromEdit=1";
-                                }
-                                else{
-                                    UpdateOverlayLayer(attr);
-                                    RemoveDnClass(pageJson,attr);
-                                }
+				UpdateOverlayLayer(attr);
+                                RemoveDnClass(pageJson,attr);
 				 
 				return false;
 		});
@@ -105,49 +98,6 @@ function showOverLayer(json,attr)
 		
 	});
 	$("#SaveSub").bind(clickEventType,function(){
-                var arr=attr.split(",");
-                if(arr[1]=="critical")
-                {
-                        var whereToSubmit=submitObj.has_value();
-                        if(!whereToSubmit)
-                        {
-                                return false;
-                        }
-                        isValid=$("#"+validatorFormId).valid();
-                        if(!isValid){
-                                ShowTopDownError(jsonError);
-                                jsonError=[];
-                                return false;
-                        }
-                        var validatedDate = validateDate();
-                        if(validatedDate === false){
-                                jsonError[0]="Please provide a valid date of birth";
-                                ShowTopDownError(jsonError);
-                                jsonError=[];
-                                return false;
-                        }
-                        editFieldArr=submitObj.editFieldArray;
-                        var prevDob = storeJson["DTOFBIRTH"].split(",");
-                        var prevMstatus = storeJson["MSTATUS"];
-                        var Mstatus = editFieldArr['MSTATUS'];
-                        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-                        var firstDate = new Date(editFieldArr["YEAR"],editFieldArr["MONTH"],editFieldArr["DAY"]);
-                        var secondDate = new Date(prevDob[2],prevDob[1],prevDob[0]);
-                        var msg1 = "We will intimate your accepted members, interests received and interests sent that there is a change in your basic details.";
-                        var msg2 = "You will not be able to edit any of these basic details any further after you click ‘Save’.";
-                        
-                        var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
-                        if(diffDays > 730){
-                                msg1 =  "We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts.";
-                                msg2 = "You will not be able to edit any of these basic details any further after you click ‘Save’";
-                        }
-                        if(typeof Mstatus != "undefined" && ((prevMstatus == "N" && Mstatus != "N") || (prevMstatus != "N" && Mstatus == "N"))){
-                                msg1 =  "We will remove your accepted members, interests received and interests sent, as your profile has changed considerably and may no longer be relevant to your contacts.";
-                                msg2 = "You will not be able to edit any of these basic details any further after you click ‘Save’";
-                        }
-                        updateAndShowConfirmOverlay(json,attr,arr[1],msg1,msg2);
-                        return false;
-                }
 		SaveSub(json,attr);
 	});
         
@@ -168,7 +118,8 @@ function showOverLayer(json,attr)
 		});
 	
 	if(cntArr)
-	{	
+	{
+				
 		if(json[arr[0]][arr[1]].OnClick.length==1)
 		{
 				setTimeout(function(){
@@ -247,11 +198,6 @@ function showOverLayer(json,attr)
     }
         
 }
-function ConfirmSub(key,label)
-{
-        updateAndShowCancelOverlay(json,attr);
-	setTimeout(function(){setOverlayLocation();},animationtimer);
-}
 function CancelSub(json,attr)
 {
 	if(submitObj.has_value())
@@ -290,6 +236,7 @@ function SaveSub(json,attr)
 	}
 	else
 		isValidStateCity = true;
+		
 	if(isValid && isValidStateCity){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
@@ -377,7 +324,7 @@ function UpdateOverlayLayer(attr)
 		var labelval=key[i]["label_val"];
 		
 		
-		if(!labelval || labelval===null || labelval===undefined || labelval==="-" || labelval==="Select")
+		if(!labelval || labelval===null || labelval===undefined || labelval==="-")
 		{
 			
 			key[i]["label_val"]=labelval="";
@@ -411,15 +358,12 @@ function UpdateOverlayLayer(attr)
 	
 	$("#overLayer").html("");
 	$("#overLayer").html(tempHtml);
-        if(tabKey == "critical" && $.inArray("Critical",storeJson["canEdit"]) !== -1){
-                $("#overLayer").find("#overlayContent").append('<div class="fullwid bg4 " id="bottom_TOP" dindexpos="1"><div class="pad1"><div class="pad2"><div class="fl wid94p "><div id="MSTATUSlabel" class="color3 f14 fontlig pb12">We will not allow any change in <span style="font-weight: 400;"> Date of Birth or Marital Status</span> after you submit this form. So please reconfirm the details carefully before submitting.</div></div></div></div></div>');
-        }
 	//$("#overLayer").css("min-height",$(window).height()).css("background","white");
 	$("#overLayer").css("background","white");
 	$('#'+tabKey).submit(function() {
 	  return false;
 	});
-	setContactOverlayClick();
+
 	
 }
 function checkForLabelVal(html,json)
@@ -463,16 +407,8 @@ function getPlaceholder(key)
 	return text;
 }
 function UpdateOverlayTags(string,json,indexPos)
-{
+{     
         string=string.replace(/\{\{dindex\}\}/,"dindexpos=\""+indexPos+"\"");
-        if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
-	{
-		string=string.replace(/\{\{contactIconShow\}\}/g,"");
-	}     
-	else
-	{
-		string=string.replace(/\{\{contactIconShow\}\}/g,"dn");
-	}
 	if(json.action==2 ||json.action==3)
 	{
 		divOverlay=$("#divOverlay").html();
@@ -482,23 +418,14 @@ function UpdateOverlayTags(string,json,indexPos)
 				
 		divOverlay=checkForLabelVal(divOverlay,json);
 		if(json.action==3){
-                        if(json.key == "DTOFBIRTH" || json.key == "MSTATUS"){
-                                divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","");
-                        }else{
-                                divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","showNonEditableOverLayer(1)");		
-                        }
+			divOverlay=divOverlay.replace("showNonEditableOverLayer(0)","showNonEditableOverLayer(1)");		
 		}
 		
 		string=string.replace(/\{\{inputDiv\}\}/g,divOverlay);
 		
-                if(json.key == "MSTATUS" && json.screenBit != 0){
-                        string=string.replace(/\{\{underScreening\}\}/g,"(awaiting proof validation)");
-                        string=string.replace(/\{\{underScreening\}\}/g,"");
-                }
 		if(json.action==3){
 			string=string.replace(/\{\{backGroundColor\}\}/g,"bg3");
 			string=string.replace(/\{\{displayArrow\}\}/g,"lock");
-                        //string=string.replace(/\{\{displayDiv\}\}/g,"dn");
 		}
 	}
         if(json.action==1)
@@ -531,19 +458,14 @@ function UpdateOverlayTags(string,json,indexPos)
 	string=string.replace(/\{\{divid\}\}/g,json.key+"_TOP");
 	if(json.action==2)
 	{
-                
-                
 		//json.key="country";
 		//json.dependant="city";
 		var dhide="single";
 		var dselect="radio";
+		
 		string=string.replace(/\{\{ehamburgermenu\}\}/g,"ehamburgermenu=\""+1+"\"");
 		string=string.replace(/\{\{dmove\}\}/,"dmove=\"right\"");
-                if(json.staticData != ""){
-                        string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.staticData+"'");
-                }else{
-                        string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
-                }
+		string=string.replace(/\{\{dshow\}\}/g,"dshow='"+json.key+"'");
 		
 		
 		if(json.dependant)
@@ -556,9 +478,6 @@ function UpdateOverlayTags(string,json,indexPos)
 		var dcallback="UpdateSection";
 		if(json.callBack)
 			dcallback=json.callBack;
-                if(json.key == "MSTATUS" || json.key == "DTOFBIRTH"){
-                        storeJson[json.key] = json.value;
-                }
 		//console.log(dhide+" "+dselect+" "+json.dependant);	
 		string=string.replace(/\{\{dhide\}\}/g,"dhide='"+dhide+"'");
 		string=string.replace(/\{\{dselect\}\}/g,"dselect='"+dselect+"'");
@@ -588,27 +507,14 @@ function UpdateOverlayTags(string,json,indexPos)
 		var input="";
 		if(json.key=="PHONE_MOB" || json.key=="PHONE_RES" || json.key=="ALT_MOBILE" )
 		{
-			OnClickArray = changingEditData.Contact.PHONE_MOB.OnClick;
-			showSettingText = "SHOW"+json.key;
-            for (var key in OnClickArray)
-            {
-            	if ( OnClickArray.hasOwnProperty(key))
-            	{
-            		if ( OnClickArray[key].key == showSettingText)
-            		{
-            			string=string.replace(/\{\{contactPrivacySettingText\}\}/g,outerMessageContact[OnClickArray[key].value]);
-            			selectedListValue = OnClickArray[key].value;
-            		}
-            	}
-            }
-
+			
+			
 			textInputIsdOverlay=$("#textInputIsdOverlay").html();
 			textInputStdOverlay=$("#textInputStdOverlay").html();
-
+			
 			textInputIsdOverlay=textInputIsdOverlay.replace(/json_key/g,json.key);
 			textInputIsdOverlay=textInputIsdOverlay.replace(/json_label_val/g,json.label_val);
 			textInputIsdOverlay=textInputIsdOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
-
 			if(!json.value)
 				phoneArray=["91","",""];
 			else
@@ -676,6 +582,7 @@ function UpdateOverlayTags(string,json,indexPos)
 			}
 		}
 		else{
+
 			textInputOverlay=$("#textInputOverlay").html();
 			textInputOverlay=textInputOverlay.replace(/json_key/g,json.key);
 			textInputOverlay=textInputOverlay.replace(/keyfunctionShow/g,"updateSectionContact(this)");
@@ -687,30 +594,15 @@ function UpdateOverlayTags(string,json,indexPos)
 
 		}
 		string=string.replace(/\{\{inputDiv\}\}/g,input);
-
+		
 		//Checks for contact tab.
 		if(json.screenBit==1 && $.inArray(json.key,['EMAIL','PHONE_MOB','ALT_MOBILE','PHONE_RES','ALT_EMAIL'])==-1 && json.label_val!="")
 			string=string.replace(/\{\{underScreening\}\}/g,underScreenStr);
 		string=string.replace(/\{\{underScreening\}\}/g,"");
 		string=string.replace(/\{\{displayArrow\}\}/g,"dn");
-	}else if(json.action==6)
-	{
-		fileOverlay=$("#fileOverlay").html();
-		fileOverlay=fileOverlay.replace(/json_key/g,json.key);
-                fileOverlay=fileOverlay.replace(/OverlayID/g,"Overlay"+json.key);
-                fileOverlay=fileOverlay.replace(/default_val/g,"default"+json.key);
-                fileOverlay=fileOverlay.replace(/file_key/g,"file_key"+json.key);
-                fileOverlay=fileOverlay.replace(/default_key/g,"default_key"+json.key);
-                fileOverlay=fileOverlay.replace(/default_label_key/g,"default_label_key"+json.key);
-                fileOverlay=fileOverlay.replace(/json_label_val/g,json.label_val)
-                fileOverlay=fileOverlay.replace(/dcallback_fn/g,json.callBack+"(this);");
-		string=string.replace(/\{\{inputDiv\}\}/g,fileOverlay);
-		string=string.replace(/\{\{displayArrow\}\}/g,"dn");
-		string=string.replace(/\{\{displayDiv\}\}/g,"dn");
-		string=string.replace(/\{\{backGroundColor\}\}/g,"back-Gray");
 	}
 	string=string.replace(/\{\{backGroundColor\}\}/g,"bg4");
-	if(json.action==1 || json.action==6)
+	if(json.action==1)
             string=string.replace(/\{\{HS\}\}/g,"display:none");
         else
             string=string.replace(/\{\{displayArrow\}\}/g,"arow1");
@@ -752,95 +644,6 @@ function updateAndShowCancelOverlay(json,attr)
     bCallCreateHoroscope = false;
 		FlushChangedJson();
 		RemoveCancelOverLayer();
-		RemoveOverLayer();
-	});
-	
-}
-function RemoveConfirmOverLayer()
-{
-	$("#ed_slider").removeClass("dn");
-	ConfirmOverLayerAnimation(1);
-	
-}
-function ConfirmOverLayerAnimation(close)
-{
-	if(close)
-	{
-		$("#confirmOverLayer").removeClass("top_2").addClass('top_3');
-		setTimeout(function(){
-			$("#confirmOverLayer").addClass("dn").removeClass("top_3").css("margin-top","").addClass("top_1");
-			hideCancelBackgroundDiv();
-			},animationtimer3s);
-	}
-	else
-	{
-		var height=$("#confirmOverLayer").outerHeight();
-		var sh=Math.floor(($(window).height()-height)/2);
-		
-		$("#confirmOverLayer").removeClass("dn");
-		setTimeout(function(){
-			$("#confirmOverLayer").removeClass("top_1").css("margin-top",sh).addClass("top_2");
-			},10);
-	}
-	
-}
-function CommonOverlayDisplaySettingsConfirm(tabName,SectionName,background,action)
-{
-		$("#"+tabName).addClass("CancelOverlay");
-		$("#"+SectionName).addClass("CancelOverlay");
-		if(background){
-			$("#cancelOverLayBackGround").css("min-height",screen.height);
-			$("#cancelOverLayBackGround").addClass("web_dialog_overlay");
-			$("#cancelOverLayBackGround").removeClass("dn");
-		}
-		ConfirmOverLayerAnimation();
-		
-		//$("#"+tabName).css("top",(screen.height/3));
-		//setTimeout(function(){},animationtimer3s);		
-		//setTimeout(function(){$("#"+tabName).removeClass("right_1");},animationtimer3s);
-		
-		setTimeout(function(){$("#ed_slider").addClass("dn");},animationtimer);
-		if(action=="error")
-		{
-			$("#TEXT2_ID").remove();
-			$("#TAB2_ID").remove();
-			$("#Action2").remove();
-			$("#TAB1_ID").removeClass("wid49p");
-			$("#TAB1_ID").addClass("fullwid");
-			$("#validation_error").removeClass("dn");
-		}
-}
-function updateAndShowConfirmOverlay(json,attr,sectionName,text1,text2)
-{	
-	var tempHtml=$("#confirmOverLayer").html();
-	tempHtml=tempHtml.replace(/PromptSectionName/g,sectionName+"_confirmSection");	
-	tempHtml=tempHtml.replace(/TEXT1/g,text1);
-	tempHtml=tempHtml.replace(/TEXT2/g,text2);
-	tempHtml=tempHtml.replace(/TAB1_NAME/g,"Save");
-	tempHtml=tempHtml.replace(/TAB2_NAME/g,"Discard");
-	tempHtml=tempHtml.replace(/Action1/g,"saveAfterConfirmOverlay");
-	tempHtml=tempHtml.replace(/Action2/g,"discardAfterConfirmOverlay");
-	$("#confirmOverLayer").html(tempHtml);
-	
-	CommonOverlayDisplaySettingsConfirm("confirmOverLayer","overLayCancelSection",1,"cancel");
-	
-	$("#saveAfterConfirmOverlay").unbind(clickEventType);
-	$("#discardAfterConfirmOverlay").unbind(clickEventType);
-	$("#saveAfterConfirmOverlay").bind(clickEventType,function(){
-
-		RemoveConfirmOverLayer();
-		SaveSub(json,attr);		
-		FlushChangedJson();
-		
-	});
-	$("#discardAfterConfirmOverlay").bind(clickEventType,function(){
-    bCallCreateHoroscope = false;
-                $(".text1Confirm").html("TEXT1");
-                $(".text1Confirm").attr("id","TEXT1");
-                $(".text2Confirm").html("TEXT2");
-                $(".text2Confirm").attr("id","TEXT2");
-		FlushChangedJson();
-		RemoveConfirmOverLayer();
 		RemoveOverLayer();
 	});
 	
@@ -1175,7 +978,7 @@ function showNonEditableOverLayer(toShow)
 		var tempHtml=overLayCancelHtml;
 		tempHtml=tempHtml.replace(/PromptSectionName/g,"overLayNonEditableSection");	
 		tempHtml=tempHtml.replace(/TEXT1/g,"This field is read-only");
-		tempHtml=tempHtml.replace(/TEXT2/g,"Call us for change(s) in Gender or Religion");
+		tempHtml=tempHtml.replace(/TEXT2/g,"Call us for change(s) in Gender,<BR> Date of Birth, Marital Status or Religion");
 		tempHtml=tempHtml.replace(/TAB1_NAME/g,"Dismiss");
 		tempHtml=tempHtml.replace(/TAB2_NAME/g,"<a href='tel:18004196299' title='call' alt='call' class='fontthin f17 color2'>Call</a>");
 		tempHtml=tempHtml.replace(/Action1/g,"dismissNonEditableOverlay");
@@ -1221,7 +1024,6 @@ function hideLoader(noAjax)
 		if(sliderCurrentPage){
 		//setSliderLocation(sliderCurrentPage);
 		bxslider.gotoSlide(sliderCurrentPage);
-		//showCalDppSugg(sliderCurrentPage);
 		}
 		//else
 		//setSliderLocation(0);
@@ -1346,10 +1148,7 @@ function ToggleMore(keyName)
 		$("#topbar").css("position","").css("z-index","");
 		
 		if(typeof(index)!='undefined' && index!=-1)
-		{
 			bxslider.gotoSlide(parseInt(index));
-			//showCalDppSugg(index);
-		}
 		ev.preventDefault();
 		ev.stopPropagation();
 	//}
@@ -1447,7 +1246,6 @@ function SlideToCurrentPage()
 			if(typeof(sliderCurrentPage)!='undefined'){
 				//setSliderLocation(sliderCurrentPage);
 				bxslider.gotoSlide(parseInt(sliderCurrentPage),-1);
-				//showCalDppSugg(parseInt(sliderCurrentPage));
 			}
 }
 
@@ -1482,85 +1280,3 @@ function onHoroscopeButtonClick()
   bCallCreateHoroscope = true;
   $('[slideoverlayer="Kundli,HOROSCOPE_MATCH"]').trigger('click');
 }
-
-function setContactOverlayClick()
-{
-	var clickedId;
-
-	$(".contact_icon").each(function(index, element) {
-        $(this).on("click", function(){
-            $("#contactOverlay").removeClass("dn");
-            clickedId = "SHOW"+($(this).parent().attr("id").replace("label",""));
-
-            OnClickArray = changingEditData.Contact.PHONE_MOB.OnClick;
-            for (var key in OnClickArray)
-            {
-            	if ( OnClickArray.hasOwnProperty(key))
-            	{
-            		if ( OnClickArray[key].key == clickedId)
-            		{
-            		
-            			$("#showToAllContacts").removeClass("sp_contact_tick");
-            			$("#showToInterestedContacts").removeClass("sp_contact_tick");
-            			if (OnClickArray[key].value == 'Y' )
-            			{
-            				$("#showToAllContacts").addClass("sp_contact_tick");
-            			}
-            			if (OnClickArray[key].value == 'C')
-            			{
-            				$("#showToInterestedContacts").addClass("sp_contact_tick");
-            			}
-            		}
-            	}
-            }
-            
-        });
-    });
-
-	$("#contactSelect li").each(function(index, element) {
-		$(element).on("click",function(){
-			if(!$(element).find("i").hasClass("sp_contact_tick")) {
-				$("#contactSelect li").each(function(index2, element2) {
-					$(element2).find("i").removeClass("sp_contact_tick");
-				});
-				$(element).find("i").addClass("sp_contact_tick");
-				selectedListValue = $(this).attr('value');
-				submitObj.push(clickedId,selectedListValue);
-			} 
-		});
-	});
-
-	$("#submitContactPrivacySettings").on("click",function() {
-		$("#contactOverlay").addClass("dn");
-		$('#'+(clickedId+'label').replace('SHOW','')).find('.contact_icon > div')[0].innerText = outerMessageContact[selectedListValue]; 
-	});
-}
-function validateDate(){
-        var DTOFBIRTH = $('#DTOFBIRTH').attr("value");
-        if(DTOFBIRTH != ""){
-                var dtofbirthArr = DTOFBIRTH.split(",");
-                var yearVal = dtofbirthArr[2];
-                var monthIntVal = dtofbirthArr[1];
-                var dayVal = dtofbirthArr[0];
-                        var bInValidDate = false;
-                        var correspondingDate = new Date(yearVal,parseInt(monthIntVal)-1,dayVal);
-                        if(correspondingDate.getDate() !== parseInt(dayVal))
-                                bInValidDate = true;
-
-                        var M = parseInt(correspondingDate.getMonth())+1;
-                        if(M !== parseInt(monthIntVal))
-                                bInValidDate = true;
-
-                        if(correspondingDate.getFullYear() !== parseInt(yearVal))
-                                bInValidDate = true;
-                        
-                        if(bInValidDate){
-                                return false;     
-                        }
-                        return true;
-        }else{
-                return true;
-        }
-}
-
-

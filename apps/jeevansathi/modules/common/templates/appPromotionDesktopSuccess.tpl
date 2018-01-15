@@ -9,7 +9,7 @@ var user_login="~$sf_request->getAttribute('login')`";
 var google_plus=0;
 </script>
 <input type="hidden" id="PHONE_VERIFIED" value="~$sf_request->getAttribute('PHONE_VERIFIED')`">
-<link rel="stylesheet" type="text/css" href="https://static.jeevansathi.com/min/?f=/css/global_4.css,/css/common_css_5.css,/css/header-footer_5.css"/>
+<link rel="stylesheet" type="text/css" href="http://static.jeevansathi.com/min/?f=/css/global_4.css,/css/common_css_5.css,/css/header-footer_5.css"/>
 <style type="text/css">
 @font-face {
 font-family:"Roboto Lt";

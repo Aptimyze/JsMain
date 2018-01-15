@@ -153,9 +153,8 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->bindValue(":VAL", $val, PDO::PARAM_STR);
             $prep->execute();
-            $updatedRows = $prep->rowCount();
             $this->logFunctionCalling(__FUNCTION__);
-            return array(true,$updatedRows);
+            return true;
         }
         catch(PDOException $e) {
             throw new jsException($e);
@@ -241,38 +240,10 @@ class newjs_JPROFILE_ALERTS extends TABLE
 
     private function logFunctionCalling($funName)
     {
-        return;
-    /*  $key = __CLASS__.'_'.date('Y-m-d');
+      $key = __CLASS__.'_'.date('Y-m-d');
       JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));*/
-    }
-    
-    public function insertAllColumns($params){
-        try{
-            $sql = "INSERT IGNORE INTO newjs.JPROFILE_ALERTS (PROFILEID, MEMB_CALLS, OFFER_CALLS, SERV_CALLS_SITE, SERV_CALLS_PROF, MEMB_MAILS, CONTACT_ALERT_MAILS, KUNDLI_ALERT_MAILS, PHOTO_REQUEST_MAILS, NEW_MATCHES_MAILS, SERVICE_SMS, SERVICE_MMS, SERVICE_USSD, PROMO_USSD, SERVICE_MAILS, PROMO_MMS) VALUES (:PROFILEID, :MEMB_CALLS, :OFFER_CALLS, :SERV_CALLS_SITE, :SERV_CALLS_PROF, :MEMB_MAILS, :CONTACT_ALERT_MAILS, :KUNDLI_ALERT_MAILS, :PHOTO_REQUEST_MAILS, :NEW_MATCHES_MAILS, :SERVICE_SMS, :SERVICE_MMS, :SERVICE_USSD, :PROMO_USSD, :SERVICE_MAILS, :PROMO_MMS)";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $params["PROFILEID"], PDO::PARAM_STR);
-            $prep->bindValue(":MEMB_CALLS", $params["MEMB_CALLS"], PDO::PARAM_STR);
-            $prep->bindValue(":OFFER_CALLS", $params["OFFER_CALLS"], PDO::PARAM_STR);
-            $prep->bindValue(":SERV_CALLS_SITE", $params["SERV_CALLS_SITE"], PDO::PARAM_STR);
-            $prep->bindValue(":SERV_CALLS_PROF", $params["SERV_CALLS_PROF"], PDO::PARAM_STR);
-            $prep->bindValue(":MEMB_MAILS", $params["MEMB_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":CONTACT_ALERT_MAILS", $params["CONTACT_ALERT_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":KUNDLI_ALERT_MAILS", $params["KUNDLI_ALERT_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":PHOTO_REQUEST_MAILS", $params["PHOTO_REQUEST_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":NEW_MATCHES_MAILS", $params["NEW_MATCHES_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_SMS", $params["SERVICE_SMS"], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_MMS", $params["SERVICE_MMS"], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_USSD", $params["SERVICE_USSD"], PDO::PARAM_STR);
-            $prep->bindValue(":PROMO_USSD", $params["PROMO_USSD"], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_MAILS", $params["SERVICE_MAILS"], PDO::PARAM_STR);
-            $prep->bindValue(":PROMO_MMS", $params["PROMO_MMS"], PDO::PARAM_STR);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-        } catch (Exception $ex) {
-            throw new jsException($ex);
-        }
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
 }
 ?>

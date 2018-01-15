@@ -56,10 +56,6 @@ class changePhotoPrivacyV1Action extends sfActions
 		$editArray = array("PHOTO_DISPLAY"=>$photoDisplay,"PROFILEID"=>$profileid,"MOD_DT"=>$now);
 		$editLogObj = new EDIT_LOG();
 		$editLogObj->log_edit($editArray, $profileid);
-                if($photoDisplay == 'A'){
-                     $PhotoPrivacyObj = new PROFILE_VOA_TRACKING();   
-                     $PhotoPrivacyObj->insert($profileid);
-                }
 		die;
 	}
 

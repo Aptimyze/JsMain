@@ -9,10 +9,3 @@ ScreeningCountMisSuccess:
   stylesheets:    [jquery_dateLists]
 
   javascripts:    [jquery_dateLists]
-CampaignsRegistrationSuccess:
-  metas:
-    title:        Jeevansathi.com - MIS
-
-  stylesheets:    [jquery_dateLists]
-
-  javascripts:    [jquery_dateLists]
