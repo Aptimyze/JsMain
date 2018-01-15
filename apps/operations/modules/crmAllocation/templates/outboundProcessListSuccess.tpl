@@ -138,7 +138,7 @@
 </body>
 <script src="~sfConfig::get('app_img_url')`/min/?f=/js/timetracker_js.js"></script>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
-                ~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+                ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
  ~/if`
 <script>
 var objtnm = new tnm();

@@ -10,7 +10,7 @@ var config = {
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
-var incomeLDOL = 0;
+
 function fillValuesInChosen(ele){
 
   
@@ -307,7 +307,7 @@ $('#partner_mstatus_arr').on("change",function(){
   
   $('#Submit').on("click",function(){
     $form = $("<form action='/search/advanceSearch' name='searchForm' method='post' style='display:none;'></form>");
-
+    
     $('.js-frmfld').each(function(){
       $value="";
       if($(this).is('select'))
@@ -395,7 +395,6 @@ function populateAdvanceSearchForm(){
     disableFieldsOption('Min_Height',JSON.parse($('#Min_Height').attr('data'))["VALUE"]);
     disableFieldsOption('rsLIncome',JSON.parse($('#rsLIncome').attr('data'))["VALUE"]);
     disableFieldsOption('doLIncome',JSON.parse($('#doLIncome').attr('data'))["VALUE"]);
-    incomeLDOL = JSON.parse($('#doLIncome').attr('data'))["VALUE"];
     $('.js-openSection').each(function(){
       openSection(this);
     });
@@ -644,17 +643,6 @@ $(function(){
     disableFieldsOption($(myele).attr("id"),$(this).attr('id'));
     $(myele).find(".js-dd").addClass("disp-none");
     ev.stopPropagation();
-    if($(this).parent("ul").hasClass("list-minlincome") && $(this).attr('id') != 0){
-            var myele1 = $("#doLIncome");
-            if(myele1.find('ul .js-selected').attr("id") == 0 && incomeLDOL !=12){
-                myele1.find('ul .js-selected').removeClass('js-selected');
-                myele1.find('ul').find("#12").addClass('js-selected');
-                var datalabel = myele1.find('ul .js-selected').attr("data");
-                var val1 ='{"VALUE":"12","LABEL":"'+datalabel+'"}';
-                $(myele1).attr('data',val1);
-                fillValuesInRange(myele1);
-        }
-    }
   });
 
   $('.js-remall').click(function(){

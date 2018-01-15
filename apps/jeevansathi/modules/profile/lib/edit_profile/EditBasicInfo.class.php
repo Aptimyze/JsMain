@@ -6,12 +6,8 @@ class EditBasicInfo extends EditProfileComponent {
 		$uname= $this->request->getParameter('username');
 		if((preg_match('/^[a-zA-Z\.\,\s\']+$/',$uname))||$uname=="")
 		{
-			//caching
-			$nameOfUserOb=new NameOfUser();      		
-      		$nameOfUserArr = $nameOfUserOb->getNameData($this->loginProfile->getPROFILEID());
-      		$this->action->oldName = $nameOfUserArr[$this->loginProfile->getPROFILEID()]["NAME"];
-			/*$db= new incentive_NAME_OF_USER;
-			$this->action->oldName=$db->getName($this->loginProfile->getPROFILEID());*/
+			$db= new incentive_NAME_OF_USER;
+			$this->action->oldName=$db->getName($this->loginProfile->getPROFILEID());
 			$curflag = $this->getScreeningFlag('name');
 			if($this->request->getParameter('username'))
 			{

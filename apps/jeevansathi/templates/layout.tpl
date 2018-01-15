@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-<meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
 <meta http-equiv="content-language" content="en" />
     ~include_http_metas`
     ~include_metas`
@@ -71,7 +70,8 @@ var domainCode={};
     ~minify_include_javascripts('commonBottom')`
     ~minify_include_javascripts('bottom')`
     <!--Google Analytics Code-->
+  ~include_partial('global/freshDesk')`
   </body>
-  ~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+  ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 
 </html>

@@ -27,8 +27,8 @@ EOF;
 
         try 
         {
-            $dbFilterSlave=new ProfileFilter('newjs_slave');
-            $dbFilterMaster=new ProfileFilter();
+            $dbFilterSlave=new NEWJS_FILTER('newjs_slave');
+            $dbFilterMaster=new NEWJS_FILTER();
 
             $profileIDs = array();
 

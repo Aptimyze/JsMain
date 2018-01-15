@@ -1,6 +1,5 @@
 <?php
 include("connect.inc");
-//include(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 if(authenticated($cid))
 {
@@ -13,7 +12,7 @@ if(authenticated($cid))
 
 	if($submit && trim($mobno)!='')
 	{
-		$sql = "select PROFILEID, USERNAME, ACTIVATED, HAVEPHOTO, MOB_STATUS, LANDL_STATUS from newjs.JPROFILE where PHONE_MOB='$mobno' or PHONE_WITH_STD='$mobno'";
+		$sql = "select USERNAME, ACTIVATED from newjs.JPROFILE where PHONE_MOB='$mobno' or PHONE_WITH_STD='$mobno'";
 		$result = mysql_query_decide($sql) or die("$sql".mysql_error_js());
 		if(mysql_num_rows($result))
 		{
@@ -21,23 +20,7 @@ if(authenticated($cid))
 			while($row=mysql_fetch_array($result))
 			{
 				$users[$i]["USERNAME"] = $row['USERNAME'];
-                                
-                                if($row['ACTIVATED'] == 'N' && $row['HAVEPHOTO'] == 'Y'){
-                                    if($row['MOB_STATUS'] == 'Y' || $row['LANDL_STATUS'] == 'Y')
-                                        $users[$i]["ACTIVATED"] = 'Y';
-                                    else{
-                                        $phoneVerified = JsMemcache::getInstance()->get($row['PROFILEID']."_PHONE_VERIFIED");
-                                        if(!$phoneVerified){
-                                            $contactNumOb= new ProfileContact();
-                                            $numArray=$contactNumOb->getArray(array('PROFILEID'=>$row['PROFILEID']),'','',"ALT_MOB_STATUS");
-                                            if($numArray['0']['ALT_MOB_STATUS']=='Y')
-                                                $users[$i]["ACTIVATED"] = 'Y';
-                                        }
-                                        
-                                    }
-                                }
-                                if(!$users[$i]["ACTIVATED"])
-                                    $users[$i]["ACTIVATED"] = $row['ACTIVATED'];
+				$users[$i]["ACTIVATED"] = $row['ACTIVATED'];
 				$i++;
 			}
 		}

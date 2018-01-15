@@ -35,8 +35,8 @@
 										'P_GENDER'=>'GENDER',
                                         'P_HAVECHILD'=>'CHILDREN',
                                         'P_STATE'=>'STATE',
-										'P_OCCUPATION_GROUPING'=>'OCCUPATION_GROUPING', //added this. Check if key or value needs to be changed
- 										);
+                                        'CITY_INDIA'=>'CITY_INDIA'
+										);
 	public static $FormatColums = array(
 									'P_RELIGION',
 									'P_CASTE',
@@ -56,7 +56,7 @@
 									'P_CITY',
                                     'P_HAVECHILD',
                                     'P_STATE',
-                                    'P_OCCUPATION_GROUPING',
+                                    'CITY_INDIA'
 									);									
 	public static $arrAP_DPP_TEMP_FIELDS = array(
 										'GENDER',
@@ -206,7 +206,7 @@
 	  		"MANGLIK" => "Manglik",),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "Highest Education",
-	  		"OCCUPATION" => "Occupation", 
+	  		"OCCUPATION" => "Occupation",
 	  		"INCOME" =>"Income",
 	  		),
 	  	"LIFESTYLE" => array(
@@ -272,7 +272,7 @@
 	  		),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "p_education",
-	  		"OCCUPATION" => "p_occupation_grouping",
+	  		"OCCUPATION" => "p_occupation",
 	  		"INCOME" =>array(
 	  			"minIncomeRs"=>"lincome",
 	  			"maxIncomeRs"=>"hincome",
@@ -309,7 +309,7 @@
 	  		),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => 'P_EDUCATION',
-	  		"OCCUPATION" => 'P_OCCUPATION_GROUPING',  //recheck
+	  		"OCCUPATION" => 'P_OCCUPATION',
 	  		"INCOME" =>'P_INCOME'
 	  		),
 	  	"LIFESTYLE" => array(
@@ -444,7 +444,7 @@
 	  		"MANGLIK" => "manglik",),
 	  	"EDUCATION" => array(
 	  		"HIGHEST_EDUCATION" => "highestEducation",
-	  		"OCCUPATION" => "occupationGrouping",
+	  		"OCCUPATION" => "occupation",
 	  		"INCOME" =>"income",
 	  		),
 	  	"LIFESTYLE" => array(
@@ -475,8 +475,7 @@
 
   const AP_SCREEN_MSG = 'Your desired partner profile will be vetted by our matchmaking expert before it is updated on your profile';
   public static $removeCasteFromDppArr = array("242","243","244","245","246");
-  public static $removeLabelFromDpp = "Select";
-  public static $editDppFields = Array('ID','PROFILEID','GENDER','CHILDREN','LAGE','HAGE','LHEIGHT','HHEIGHT','HANDICAPPED','DATE','ALERTS','PAGE','DPP','CASTE_MTONGUE','PARTNER_BTYPE','PARTNER_CASTE','PARTNER_CITYRES','PARTNER_COUNTRYRES','PARTNER_DIET','PARTNER_DRINK','PARTNER_ELEVEL_NEW','PARTNER_INCOME','PARTNER_MANGLIK','PARTNER_MSTATUS','PARTNER_MTONGUE','PARTNER_NRI_COSMO','PARTNER_OCC','PARTNER_RELATION','PARTNER_RES_STATUS','PARTNER_SMOKE','PARTNER_COMP','PARTNER_RELIGION','PARTNER_NAKSHATRA','NHANDICAPPED','LINCOME','HINCOME','LINCOME_DOL','HINCOME_DOL','PARTNER_DEGREE','HAVEPHOTO','HIV','HIJAB_MARRIAGE','SPEAK_URDU','SAMPRADAY','ZARATHUSHTRI','HOROSCOPE','AMRITDHARI','CUT_HAIR','MATHTHAB','WEAR_TURBAN','LIVE_PARENTS','EDUCATION_GROUPING','LAST_ACTIVITY','OCCUPATION_GROUPING','INDIA_NRI','STATE','CITY_INDIA','MARRIED_WORKING','GOING_ABROAD','CASTE_GROUP','VIEWED','MAPPED_TO_DPP','CHANNEL');
+ 
  }
  
 ?>

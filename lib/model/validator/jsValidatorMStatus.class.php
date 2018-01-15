@@ -21,18 +21,7 @@ class jsValidatorMStatus extends sfValidatorBase
 	{
 		$editFieldArr = $request->getParameter('editFieldArr');
 		$gender = $editFieldArr['GENDER'];
-                if(!$gender){
-                        $gender = LoggedInProfile::getInstance()->getGENDER();
-                }
 		$religion = $editFieldArr['RELIGION'];
-                if(!$religion){
-                        $religion = LoggedInProfile::getInstance()->getRELIGION();
-                }
-                if($value == "D" && !isset($editFieldArr["MSTATUS_PROOF"])){
-                        if(!isset($_FILES["MSTATUS_PROOF"]) && !isset($_FILES["editFieldArr"]["name"]["MSTATUS_PROOF"])){
-                                throw new sfValidatorError($this, ErrorHelp::$ERR_REQUIRED[mstatus_proof]);	
-                        }
-                }
 	}
 	elseif(is_array($request->getParameter('formValues')))
 	{
@@ -51,11 +40,11 @@ class jsValidatorMStatus extends sfValidatorBase
     }*/
     if($value=='M' && $gender=='F')
     {
-		throw new sfValidatorError($this, ErrorHelp::$ERR_MSTATUS[2]['msg']);			
+		throw new sfValidatorError($this, 'mstatus_error_muslim_male', array('value' => $value));		
     }
     elseif($value =='M' && $gender=='M' && $religion!=2)
     {
-		throw new sfValidatorError($this, ErrorHelp::$ERR_MSTATUS[3]['msg']);				
+		throw new sfValidatorError($this, 'mstatus_error_muslim', array('value' => $value));		
     }    
 	return $clean;
   }

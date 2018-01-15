@@ -4,8 +4,8 @@
 
 class ApiRequestHandler
 {
-	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 111;
-	public static $ANDROID_PLAYSTORE_APP_VERSION = 111;
+	public static $ANDROID_OPTIONAL_UPGRADE_VERSION = 65;
+	public static $ANDROID_PLAYSTORE_APP_VERSION = 80;
 	public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
 	private $responseFlag = false;
@@ -19,7 +19,7 @@ class ApiRequestHandler
 		if ($this->responseFlag) {
 			$this->AuthenticateDevice($request);
 		}
-		$this->app = array("android" => array('APILEVEL' => '16', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
+		$this->app = array("android" => array('APILEVEL' => '11', "CURRENT_VERSION" => "2.3", "API_APP_VERSION" => self::$ANDROID_OPTIONAL_UPGRADE_VERSION, "FORCE_API_APP_VERSION" => self::$ANDROID_FORCE_UPGRADE_VERSION), "ios" => array("APILEVEL" => "1", "CURRENT_VERSION" => "5", "API_APP_VERSION" => 1));
 	}
 
 	/*
@@ -162,55 +162,22 @@ class ApiRequestHandler
 		$profileid = $request->getAttribute('profileid');
 		$loginData = $request->getAttribute('loginData');
 		if ($profileid) {
-                        $verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
-                        if(!$verifyPhoneForRequest && $loginData[ACTIVATED] == 'N' && $loginData['HAVEPHOTO'] == 'Y'){
-                            CommonFunction::markProfileCompleteAndActivated();
-                            $loginData[INCOMPLETE] = 'N';
-                            $loginData[ACTIVATED] = 'Y';
-                        }
-			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData"|| ($output["moduleName"]=='social' && $request->getParameter("fromAppRegistration")==1)) {
+			if ($request->getParameter("actionName") == "staticTablesData" || $request->getParameter("actionName") == "searchFormData") {
 			}
-			elseif (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
+			if (($loginData[INCOMPLETE] == "Y") && ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y") && ($output["moduleName"] != "register") && ($output["actionName"] != "AlertManagerV1") && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api")) {
 				$request->setParameter('sectionFlag', "incomplete");
 				$output["moduleName"] = "profile";
 				$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["editprofile"][$request->getParameter("version")];
 			} elseif ($output["actionName"] != "ApiEditSubmitV1" && $request->getAttribute("incomplete") != "Y" && ($output["actionName"] != "logoutv1" && $output["moduleName"] != "api") && ($output["actionName"] != "AlertManagerV1")) {
+				$verifyPhoneForRequest = JsCommon::verifyPhoneForRequest($profileid, $output['moduleName'], $output['actionName']);
 				if ($verifyPhoneForRequest) {
 					$output["moduleName"] = "phone";
 					$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["display"][$request->getParameter("version")];
 				}
-				else if($output['moduleName']!="register" && $output['moduleName']!="static" && $output["moduleName"] != "phone" )
-				{
-					$isApp = MobileCommon::isApp();
-					if($isApp || $request->getParameter("fromSPA"))
-					{
-						$versionArr = array('A'=>107,'I'=>5.9);
-						$showConsentMsg = '';
-						$appVersion = $request->getParameter("API_APP_VERSION"); 
-						if (( $appVersion && ($appVersion >= $versionArr[$isApp]) && $profileid) || $request->getParameter("fromSPA"))
-						{
-							$memObject=JsMemcache::getInstance();
-							$showConsentMsg=$memObject->get('showConsentMsg_'.$profileid); 
-							if(!$showConsentMsg) 
-							{
-								$showConsentMsg = JsCommon::showConsentMessage($profileid) ? 'Y' : 'N';
-								$memObject->set('showConsentMsg_'.$profileid,$showConsentMsg);
-							}
-
-						}
-						if($showConsentMsg=='Y')
-						{	
-							$output["moduleName"] = "phone";
-							$output["actionName"] = RequestHandlerConfig::$moduleActionVersionArray[$output["moduleName"]]["DNCConsent"][$request->getParameter("version")];
-						}	
-					}
-
-				}
-
-
 			}
 
 		}
+
 
 		return $output;
 	}
@@ -242,8 +209,7 @@ class ApiRequestHandler
 					else
 						$defaultArray[FORCEUPGRADE] = "N";
 				} else {
-                                        if($apiLevel >= $Device[APILEVEL]  && ($request->getParameter(KEY)!='android' || $this->checkForRandomNess()))
-                                            $defaultArray[UPGRADE] = "Y";
+					$defaultArray[UPGRADE] = "Y";
 					if ($this->forceUpgrade || ($apiappVersion < $Device[FORCE_API_APP_VERSION]))
 						$defaultArray[FORCEUPGRADE] = "Y";
 				}
@@ -258,19 +224,9 @@ class ApiRequestHandler
 			if ($defaultArray[FORCEUPGRADE] == "Y")
 				$defaultArray["forceupgrade_message"] = "This version of your Jeevansathi App has expired please upgrade";
 		} else
-			$defaultArray["message"] = "This version of your Jeevansathi App has expired. Please upgrade";
+			$defaultArray["message"] = "This version of your Jeevansathi App has expired please upgrade";
 		return $defaultArray;
 	}
-// if for 50% set divisor =2, 25 % set to 4
-        
-        public function  checkForRandomNess(){
-        	return true;
-            $Divisor = 10;
-            $randNum = rand(1,$Divisor);
-            if($randNum % $Divisor  == 0 )return true;
-            else return false;
-            
-        }
 }
 
 ?>

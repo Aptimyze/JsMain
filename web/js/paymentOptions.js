@@ -13,7 +13,7 @@ function testForMainMembership(mainMembership){
   var content = "<div class='center f22' style='padding: 5px; background-color:#fb6464;color:#fff;'>Alert</div>"+
                 "<div class='f16' style='padding:20px'>To proceed you need to purchase a Main Membership Plan along with the Additional Services you have selected</div><hr>"+
                 "<a class='center f15' href='/membership/membershipMaster' style='background-color:#00b200; color:#fff; padding: 10px; float: right; margin: 7px; width: 100px;'>OK</a>";
-  if(userType == "5" || userType == "6" || userType == "8"){
+  if(userType == "5" || userType == "6"){
 		return true;
 	} else {
 		if(mainMembership){

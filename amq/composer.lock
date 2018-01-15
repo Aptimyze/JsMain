@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6864f70e997927075b9aeb5dd3c123d9",
+    "hash": "1e3618f5910796521f95ba476d57eb51",
     "packages": [
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.5.2",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "eb8f94d97c8e79900accf77343dbd7eca7f58506"
+                "url": "https://github.com/videlalvaro/php-amqplib.git",
+                "reference": "3eb257444961f1ca7e6415c6e6f3c3e7a8e1d3fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/eb8f94d97c8e79900accf77343dbd7eca7f58506",
-                "reference": "eb8f94d97c8e79900accf77343dbd7eca7f58506",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/3eb257444961f1ca7e6415c6e6f3c3e7a8e1d3fa",
+                "reference": "3eb257444961f1ca7e6415c6e6f3c3e7a8e1d3fa",
                 "shasum": ""
             },
             "require": {
@@ -38,8 +38,8 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "PhpAmqpLib\\": "PhpAmqpLib/"
+                "psr-0": {
+                    "PhpAmqpLib": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -58,8 +58,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "abandoned": "php-amqplib/php-amqplib",
-            "time": "2015-08-11T12:30:09+00:00"
+            "time": "2015-06-16 08:18:39"
         }
     ],
     "packages-dev": [],

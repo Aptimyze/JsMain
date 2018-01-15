@@ -103,28 +103,19 @@ EOF;
 		$serverUrl ="";
 		if($url && $id)
 		{
-				$isaObj = new ImageServerApi;
-				$serverOutput = $isaObj->generateDeleteRequestFromPid($id);
-				if($serverOutput && is_array($serverOutput) && $serverOutput["urlFile"])
-				{
-						if($serverOutput["deleted"]=="Y")
-								$serverUrl =IMAGE_SERVER_ENUM::$cloudArchiveUrl."/".$serverOutput["urlFile"];
-				}
-				elseif($serverOutput!="ERR_UNUSED_PID")
-				{
-						$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
-				}
-				else
-				{
-						$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$deleted);
-				}
-				unset($isaObj);
+			$isaObj = new ImageServerApi;
+			$serverOutput = $isaObj->generateDeleteRequestFromPid($id);
+			if($serverOutput && is_array($serverOutput) && $serverOutput["urlFile"])
+			{
+				if($serverOutput["deleted"]=="Y")
+					$serverUrl =IMAGE_SERVER_ENUM::$cloudArchiveUrl."/".$serverOutput["urlFile"];
+			}
+			else
+			{
+				$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
+			}
+			unset($isaObj);
 		}
-		else
-		{
-				$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$deleted);
-		}
-
 		return $serverUrl;
 	}
 

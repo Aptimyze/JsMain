@@ -255,7 +255,7 @@ class SearchParamtersLayer
 		$SearchUtilityObj->setParametersPassedThroughUrl($request,$SearchParamtersObj);
 
 		/***add india to search criteria, if indian city is choosen ****/
-		$cities     = $SearchParamtersObj->getCITY_RES();
+		$cities     = $SearchParamtersObj->getCITY_INDIA();
 		$countryRes = $SearchParamtersObj->getCOUNTRY_RES();
 		if($cities && !$countryRes && $cities!='DONT_MATTER')
 		{

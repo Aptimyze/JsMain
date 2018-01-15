@@ -5,14 +5,11 @@ class BellCounts
         {
 		if($profileid)
 		{
-			$isApp = MobileCommon::isApp();
-			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
-
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$bellCounts['AWAITING_RESPONSE_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
 			$bellCounts['ACC_ME_NEW']=JsCommon::convert99($profileMemcacheObj->get("ACC_ME_NEW"));
-			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1 || ($isApp=='A' && $appVersion>89))
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
 	            $bellCounts['MESSAGE_NEW']=0;
 	        else
 				$bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
@@ -44,7 +41,9 @@ class BellCounts
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
-			
+			$isApp = MobileCommon::isApp();
+			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
+
 			if(($isApp=="I" && $appVersion<3.9 )||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;

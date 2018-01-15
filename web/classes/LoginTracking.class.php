@@ -66,6 +66,8 @@ class LoginTracking
 			{
 				if($requestURI)
 					$this->setRequestURI($requestURI);
+				$mysql= new Mysql;
+				$db=$mysql->connect();
 				if($this->requestURI)
 				{
 					$page=explode('?',$this->requestURI);
@@ -95,7 +97,8 @@ class LoginTracking
 				$pageStype=addslashes($pageStype);
 				$pageName=addslashes($pageName);
                                 $time = $currentTime ? $currentTime : date("Y-m-d H:i:s");
-                                (new MIS_LOGIN_TRACKING())->insert($this->profileId,$time,$pageName,$this->channel,$this->websiteVersion,$pageStype);
+				$sqlLog="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES ('".$this->profileId."', '".$pageName."', '".$time."','".$this->channel."','".$this->websiteVersion."','".$pageStype."')";
+				$mysql->executeQuery($sqlLog,$db);
 			}
 		}
 		}

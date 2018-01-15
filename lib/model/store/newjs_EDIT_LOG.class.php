@@ -12,16 +12,13 @@ class NEWJS_EDIT_LOG extends TABLE{
         {
 			parent::__construct($dbname);
         }
-        public function getDetails($pid,$fields="")
+        public function getDetails($pid)
         {
 			try 
 			{
 				if($pid)
 				{ 
-                                        if($fields == ""){
-                                                $fields = "GENDER,RELIGION,CASTE,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COMPANY_NAME,EDU_LEVEL,INCOME,AGE,COUNTRY_RES,CITY_RES,COUNTRY_BIRTH,CITY_BIRTH,PHONE_RES,PHONE_MOB,ALT_MOBILE,EMAIL,HANDICAPPED,FAMILY_BACK,MOTHER_OCC,PROFILE_HANDLER_NAME,CONTACT,PARENTS_CONTACT,FAMILY_INCOME,IPADD";
-                                        }
-					$sql="SELECT $fields, CONVERT_TZ(MOD_DT,'SYSTEM','right/Asia/Calcutta') as MOD_DT FROM newjs.EDIT_LOG WHERE PROFILEID = :PROFILEID ORDER BY MOD_DT DESC ";
+					$sql="SELECT GENDER,RELIGION,CASTE,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COMPANY_NAME,EDU_LEVEL,INCOME,AGE,COUNTRY_RES,CITY_RES,COUNTRY_BIRTH,CITY_BIRTH,PHONE_RES,PHONE_MOB,ALT_MOBILE,EMAIL,HANDICAPPED,FAMILY_BACK,MOTHER_OCC,PROFILE_HANDLER_NAME,CONTACT,PARENTS_CONTACT,FAMILY_INCOME,IPADD, CONVERT_TZ(MOD_DT,'SYSTEM','right/Asia/Calcutta') as MOD_DT FROM newjs.EDIT_LOG WHERE PROFILEID = :PROFILEID ORDER BY MOD_DT DESC ";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();

@@ -12,8 +12,6 @@ class schedulePushNotificationsKey extends sfBaseTask
 $this->addArguments(array(new sfCommandArgument('notificationKey', sfCommandArgument::REQUIRED, 'My argument')));
 $this->addArguments(array(new sfCommandArgument('noOfScripts', sfCommandArgument::REQUIRED, 'My argument')));
 $this->addArguments(array(new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument')));
-$this->addArguments(array(new sfCommandArgument('androidMaxVersion', sfCommandArgument::OPTIONAL, 'My argument')));
-$this->addArguments(array(new sfCommandArgument('currentAndroidMaxVersion', sfCommandArgument::OPTIONAL, 'My argument')));
 
     $this->namespace        = 'notification';
     $this->name             = 'schedulePushNotificationsKey';
@@ -43,30 +41,7 @@ $this->addOptions(array(
 		$notificationKey = $arguments["notificationKey"];
 		$noOfScripts = $arguments["noOfScripts"];
 		$currentScript = $arguments["currentScript"];
-        	$androidMaxVersion = $arguments["androidMaxVersion"];
-        	$currentAndroidMaxVersion = $arguments["currentAndroidMaxVersion"];
-        	$this->checkForUpdateApp($notificationKey, $androidMaxVersion, $currentAndroidMaxVersion);
-                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript,$androidMaxVersion);
-                $appNotificationSchedulerObj->scheduleNotificationsForKey($currentScript);
-                $this->mailScheduleComplete($notificationKey,$noOfScripts,$currentScript);
-  }
-  
-  public function checkForUpdateApp($notificationKey,$androidMaxVersion,$currentAndroidMaxVersion){
-      if($notificationKey == "UPGRADE_APP"){
-          if(!($androidMaxVersion && $currentAndroidMaxVersion && is_numeric($androidMaxVersion) && is_numeric($currentAndroidMaxVersion))){
-              die("Please provide android version till which update app notification needs to be send and current max android version");
-          }
-          else{
-              $upgradeAppObj = new MOBILE_API_UPGRADE_APP_NOTIFICATION();
-              $upgradeAppObj->insert($androidMaxVersion, $currentAndroidMaxVersion);
-          }
-      }
-  }
-  
-  public function mailScheduleComplete($notificationKey,$noOfScripts,$currentScript){
-      if(in_array($notificationKey, NotificationEnums::$mailScheduleComplete)){
-          $msg = "$notificationKey notification current script $currentScript, Total script: $noOfScripts  scheduling complete";
-          SendMail::send_email(NotificationEnums::$jscDevMail, $msg, $msg);
-      }
+                $appNotificationSchedulerObj = new AppNotificationScheduler($notificationKey,$noOfScripts,$currentScript);
+                $appNotificationSchedulerObj->scheduleNotificationsForKey();
   }
 }

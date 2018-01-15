@@ -234,11 +234,10 @@ function updateEducation(json,realJson,indexPos)
 					$.each(v1,function(key,value){	
 						if(parseInt(key)==parseInt(val))
 						{
-							showPgDegree = 1;
-                                                        if(parseInt(val) != 42 && parseInt(val) != 21 && realJson['OnClick'][1].value==null)
-							{
-								CommonOverlayEditUpdate(val,"degree_pg");
-							}
+                                                        if(parseInt(val) == 42 || parseInt(val) == 21)
+                                                             showPgDegree = 1;
+                                                        else
+                                                            CommonOverlayEditUpdate(val,"degree_pg");
 							findpg=1;
 							findug=1;
 						}
@@ -402,29 +401,9 @@ function UpdateSection(json,realJson,indexPos)
 		if(k=="p_sect")
 			k="p_caste";
 		
-                if((typeis=="mstatus_edit" || typeis=="mstatus_muslim_edit")){
-                        if(inValueArr[0] != "D" || storeJson["MSTATUS"] =="D"){
-                                submitObj.pop('MSTATUS_PROOF');
-                                $('#file_keyMSTATUS_PROOF').val("");
-                                $("#default_label_keyMSTATUS_PROOF").html('jpg/pdf only');
-                                $("#MSTATUS_PROOF_TOP").addClass('dn');
-                        }else{
-                                $("#MSTATUS_PROOF_TOP").removeClass('dn');
-                        }
-                        k = "mstatus";
-                        if(storeJson["MSTATUS"] =="D" && inValueArr[0] == "D"){
-                                submitObj.pop('MSTATUS');
-                        }else{
-                                if(storeJson["MSTATUS"] == inValueArr[0]){
-                                        submitObj.pop('MSTATUS');
-                                }else{
-                                        CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
-                                }
-                        }
-                }else{
-                        CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
-                }
+		CommonOverlayEditUpdate(inValueArr.join(","),k.toUpperCase());
 	});
+
 	
 	//For caste,sect append religion.
 	if(typeis=="caste" || typeis=="sect")
@@ -442,42 +421,6 @@ function UpdateSection(json,realJson,indexPos)
 	
 	CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
 
-}
-function UpdateMuslimSectSection(json,realJson,indexPos)
-{
-	if(realJson.OnClick[0].key=="RELIGION" && realJson.OnClick[0].value=='2' && json.hasOwnProperty('caste'))
-	{
-		if(!json['caste'].hasOwnProperty("Sunni"))
-		{
-		        $('#JAMAAT_TOP').addClass('dn');
-			var pos = $('#JAMAAT_TOP').attr('dindexpos');
-			CommonOverlayEditUpdate("","JAMAAT");
-			UpdateSection.call($('#JAMAAT_TOP'),{'jamaat':''},realJson,pos);
-			$("#JAMAAT").html(NOT_FILLED_IN).attr("value","");
-			$("#JAMAAT").addClass("color2").removeClass("color3o color3");
-			$("#JAMAATlabel").addClass("color2").removeClass("color3");			
-				
-		}
-		else
-		{
-		    $('#JAMAAT_TOP').removeClass('dn');
-		    var jamaatVal =realJson.OnClick[2].value;
-		    if(jamaatVal)
-			CommonOverlayEditUpdate(jamaatVal,"JAMAAT");
-		}
-	}
-        UpdateSection.call(this,json,realJson,indexPos);
-        return;
-}
-function UpdateJamaat(json,realJson,indexPos)
-{
-	if(json.hasOwnProperty('jamaat'))
-	{
-		$("#JAMAAT").removeClass("color2").addClass("color3o color3");
-		$("#JAMAATlabel").removeClass("color2").addClass("color3");
-	}
-        UpdateSection.call(this,json,realJson,indexPos);
-        return;
 }
 function UpdateCountrySection(json,realJson,indexPos)
 {
@@ -846,85 +789,4 @@ function updateNative(json,realJson,indexPos)
 	
   UpdateSection.call(this,json,realJson,indexPos);
 	return;
-}
-function updateProofLabel(thisObject){
-        var fileLabelId = $(thisObject).attr("labelKey");
-        var file = thisObject.files[0];
-        var nameArr = file.name.split(".");
-        var fileExt = nameArr[nameArr.length-1];
-        if (file && fileExt == "jpg" || fileExt == "JPG" || fileExt == "jpeg" || fileExt == "JPEG" || fileExt == "PDF" || fileExt == "pdf") {
-        } else {
-            $("#"+fileLabelId).html('jpg/pdf only');
-            ShowTopDownError(["Invalid file format"]);
-            submitObj.pop('MSTATUS_PROOF');
-            return false;
-        }
-        if(file.size > 5242880) {
-                $("#"+fileLabelId).html('jpg/pdf only');
-                ShowTopDownError(["File size exceeds limit (5MB)"]);
-                submitObj.pop('MSTATUS_PROOF');
-                return false;
-        } else {
-               $("#"+fileLabelId).html(file.name);
-               CommonOverlayEditUpdate(file,"MSTATUS_PROOF");
-        }
-}
-function UpdateDobSection(json,realJson,indexPos)
-{
-	var dateMap = {'day':1,"month":2,"year":3}
-	var originalValue = realJson.OnClick[0].value;
-	var dateArr = originalValue.split(",");
-        var ele=$(this).find("div[data=1]");
-        var labelArr=new Array();
-        var valueArr=new Array();
-        var valueCheckArr=new Array();
-        $i=0;
-        $.each(json,function(k,v)
-        {
-		var index= dateMap[k]-1;
-                var inValueArr=new Array();
-                var inLabelArr=new Array();
-                $.each(v,function(key,value){
-                        if(value=='' || value==undefined)
-                        {
-				value = dateArr[index];
-                                json[k][value]=value;
-				key = value;
-                        }
-                        if(value <10){
-                                valueCheckArr[index] = "0"+value;
-                        }else{
-                                valueCheckArr[index] = value;
-                        }
-                        inValueArr[index]=valueArr[index]=value;
-                        inLabelArr[index]=labelArr[index]=key;
-                });
-                CommonOverlayEditUpdate(inValueArr.join(""),k.toUpperCase());
-        });
-        var dayVal = labelArr[0];
-        if(dayVal == 2 || dayVal == 22){
-                labelArr[0] +="nd ";
-        }else{
-                if(dayVal == 1 || dayVal == 21 || dayVal == 31){
-                        labelArr[0] +="st";
-                }else{
-                        if(dayVal == 3 || dayVal == 23){
-                                labelArr[0] +="rd";
-                        }else{
-                                labelArr[0] +="th";
-                        }
-                }
-        }
-        var joinStr=" ";
-        var valStr = valueCheckArr.join(",");
-        if(valStr == storeJson["DTOFBIRTH"]){
-                $.each(json,function(k,v)
-                {
-                        submitObj.pop(k.toUpperCase());
-                });
-        }
-        CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
-}
-function triggerFileClick(){
-        $('#file_keyMSTATUS_PROOF').click();
 }

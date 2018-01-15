@@ -44,7 +44,7 @@ EOF;
   */
   protected function execute($arguments = array(), $options = array())
   {
-      if(!CommonUtility::runFeatureInDaytime() || CommonUtility::hideFeaturesForUptime())
+      if(CommonUtility::hideFeaturesForUptime())
         successfullDie();
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
@@ -84,10 +84,8 @@ EOF;
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
                                 $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,"",$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				$otherUserId = $data["USERS"][0]->getPROFILEID();
-				if($pid && $subject){
-					$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
-	                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
-				}
+				$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
+                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
 			}
 			else
 				$flag = "I"; // Invalid users given in database

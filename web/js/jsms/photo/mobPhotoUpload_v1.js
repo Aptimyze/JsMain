@@ -72,7 +72,7 @@ window.onload = function() {
 			setTransition_UploadToAlbum();
                     }
                     ajaxRequestToTrack(profileId,"fileTypeError","File Type-"+fileType);
-                    displayConfirmationMessage("Only jpg/jpeg/png images are supported.");
+                    displayConfirmationMessage("Only jpg/jpeg images are supported.");
                     $("#file").val("");
                     continue;
                 }
@@ -384,7 +384,7 @@ $('.skipped').click(function(event) {
 	window.location=SITE_URL + "/profile/viewprofile.php?ownview=1";
 });	
 	
-if(typeof alreadyPhotoCount !=="undefined" && alreadyPhotoCount==0){
+if(alreadyPhotoCount==0){
     $('#photoUploadProgress').css({"height":vhgt-50});
     $('.padProgress').css({"height":vhgt-50});
 	$('.skipped').css("display","none");

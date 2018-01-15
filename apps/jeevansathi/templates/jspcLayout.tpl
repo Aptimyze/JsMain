@@ -1,8 +1,6 @@
 ~assign var=module value= $sf_request->getParameter('module')`
 ~assign var=loggedIn value= $sf_request->getAttribute('login')`
 ~assign var=action value= $sf_context->getActionName()`
-~assign var=pageType value= $sf_request->getParameter('type')`
-~assign var=currentPageName value= $sf_request->getParameter('currentPageName')`
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
@@ -11,26 +9,14 @@
 <!DOCTYPE html>
 <head>
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta name="google-site-verification" content="PkzDGYxBMHDwW2Q_08toE4d3LdlWYCpH9nWZFW56BO0" />
     <meta http-equiv="content-language" content="en" />
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="shortcut icon" href="/favicon1.ico" />
-    <link rel="stylesheet" async=true type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
-    <link rel="manifest" href="/manifest.json">
-    ~assign var=ampurl value= $sf_request->getAttribute('ampurl')`
-  <!--  ~if $pageType =="privacypolicy"`
-        <link rel="amphtml" href="~$ampurl`">
-    ~/if`-->
-    ~if $ampurl`
-        <link rel="amphtml" href="~$ampurl`"/>
-    ~/if`
-    ~include_canurl`
+    <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
     ~include_http_metas`
+    ~include_canurl`
     ~include_title`
     ~include_metas`
-    ~if $pageType =="privacypolicy"`
-        <link rel="amphtml" href="~$ampurl`" />
-    ~/if`
     ~use helper = SfMinify`
     ~minify_include_stylesheets('common')`
     ~minify_include_stylesheets()`
@@ -39,7 +25,6 @@
     ~minify_include_javascripts('top')`
     ~if sfConfig::get("mod_"|cat:$sf_context->getModuleName()|cat:"_"|cat:$sf_context->getActionName()|cat:"_enable_google_analytics") neq 'off'`
     <script>
-    var currentPageName = "~$currentPageName`";
     var _rID = "~sfContext::getInstance()->getRequest()->getAttribute('REQUEST_ID_FOR_TRACKING')`";
         var domainCode={};
         domainCode[".hindijeevansathi.in"]="UA-20942264-1";
@@ -67,8 +52,6 @@
         }
         function trackJsEventGA(category, action, label, value){
             if (ucode){
-                if(label == "M/F")
-                       label = loggedInJspcGender;
                 if (value) {
                        _gaq.push(['_trackEvent', category, action, label, value]);
                 } else {
@@ -92,8 +75,8 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`","chatAuth":"~JsConstants::$chatListingWebServiceUrl['chatAuth']`","rosterRemoveMsg":"~JsConstants::$chatListingWebServiceUrl['rosterRemoveMsg']`"};
-        var nonRosterRefreshUpdate = {"dpp":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Paid']`"},"shortlist":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Paid']`"}};
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
+        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
         //console.log("dppLiveForAll",dppLiveForAll);
@@ -127,7 +110,6 @@
             var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
-    <script src="//cdn.automatad.com/axt/ad_axt_jeevansathi.min.js" async></script>
 </head>
 ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 ~JsTrackingHelper::getHeadTrackJs()`
@@ -171,10 +153,11 @@
     <!--Google Analytics Code-->
 </div>
 </body>
-~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
-
+if (window.location.protocol == "https:")
+	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
 <!-- Facebook Pixel Code -->

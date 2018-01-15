@@ -99,8 +99,7 @@ function login ($id, $pass)
 
 				$ret["ID"] = $md."i".$userno;
 				$ret["USER"]=$myrow["USER"];
-				$agentCookie = preg_replace('/[^A-Za-z0-9\. -_]/', '',$_COOKIE["CRM_NOTIFICATION_AGENT"]);
-				setLoginCookies($ret["ID"],$agentCookie);
+				setLoginCookies($ret["ID"],$_COOKIE["CRM_NOTIFICATION_AGENT"]);
 				//$ret = TRUE;
 			}
 			else
@@ -352,8 +351,7 @@ function checkemail($email)     // returns 1 if email id not valid
                                                                                                                              
 	return $flag;
 }
-if(!function_exists('my_format_date'))
-{
+
 function my_format_date($day,$month,$year)
 {
 	if($month=="01" || $month=="1")
@@ -385,7 +383,6 @@ function my_format_date($day,$month,$year)
 		$day= "0" . $day;
 		
 	return $month . " " . $day . ", " . $year;
-}
 }
 
 function create_dd($selected,$cname,$minormax=0,$labelselect="")

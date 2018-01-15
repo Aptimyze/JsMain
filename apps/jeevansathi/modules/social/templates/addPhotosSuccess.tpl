@@ -18,8 +18,7 @@
     <p class="txtr color11 f13  txtu pt7">
 	<a href="/" class="color11" ~if $fromReg eq ''`style="visibility:hidden;"~/if`>I will do this later</a>
 </p>
-    <p class="txtc color11 f22 opa80" id="morePhotoUploadedMessage">Profile with photos get 8 times more responses</p>
-    <p class="txtc color11 f22 opa80" id="lessPhotoUploadedMessage">75% of our users feel they need at least 3 photos to send an expression of interest...<a href="/social/addPhotos?uploadType=F" class="color11">Upload More</a></p>
+    <p class="txtc color11 f22 opa80">Profile with photos get 8 times more responses</p>
     <!--start:div-->
     <div  class="mt23 pubg2 clearfix"> 
       <!--start:left-->
@@ -40,9 +39,8 @@
       <!--end:div one--> 
 <div class='photoLoader' style="display:none;"><div class='loaderLinearPhoto'></div></div>
      <!--start:div-->
-     <div class="pup16 continueDiv" >
-
-        <div class="pt30 pb24 clearfix pubdr10" id="morePhotoUploaded">
+     <div class="pup16 continueDiv">
+        <div class="pt30 pb24 clearfix pubdr10">
                 <div class="fl wid70p">
                 <p class="color11 opa90 pl40 f24 txtc" id="continueText"></p>
             </div>
@@ -50,35 +48,8 @@
                 <div class="pr40"><button class="bg_pink f20 fontreg lh44 colrw cursp brdr-0 pup15" id="continue">Continue</button></div>
             </div>
         </div>
-
-
-         <div class="pt30 pb24 clearfix pubdr10 color11 fontlig" id="lessPhotoUploaded" style="display:none;">
-          <div class="fl wid50p pt2 pl20">
-              <p class="f16" id="continueText"><p>
-              <p class="f13 pt5">75% of our users feel they need at least 3 photos to send an expression of interest</p>
-          </div>
-          <div class="fr wid40p pr20">
-            <div class="fullwid clearfix">
-              <div class="fl">
-                <div class="bg_pink lh44 pup15">
-                  <a href="/social/addPhotos?uploadType=F" class="fontreg colrw f16">Upload More</a>
-                </div>
-
-              </div>
-              <div class="fr  pt10 pr10">
-                <button class="f14 fontreg cursp skipbtn1 color11" id="skip_continue">
-                  Skip & Continue
-                </button>
-              </div>
-            </div> 
-           
-          </div>
-        </div>
-
      </div>
      <!--end:div-->
-
-
      <!--start:div-->
      <div class="pup16" style="display:none;" id="nowUpload">
         <div class="pt30 pb24 clearfix pubdr10">
@@ -121,7 +92,7 @@ var photoDisplay = "~$PHOTODISPLAY|decodevar`";
 var photosDetails =jQuery.makeArray(~$urlsJson|decodevar`);
 var pictureids = jQuery.makeArray(~$pictureidsJson|decodevar`);
 var maxNoOfPhotos = ~sfConfig::get("app_max_no_of_photos")`;
-var imageFormat = ["image/jpg", "image/jpeg","image/png"];
+var imageFormat = ["image/jpg", "image/jpeg"];
 var hideOrNot = 0;      
 var selectFile = "~$selectFileOrNot`";
 var debug = true;

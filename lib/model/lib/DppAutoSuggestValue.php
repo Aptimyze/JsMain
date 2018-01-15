@@ -24,10 +24,10 @@ class DppAutoSuggestValue
 	 * @fieldID field Id
 	 * @return $jpartnerObj jpartner of profile
 	 */
-	public static function getAutoSuggestValue($field,$fieldId,$profileObj,$casteNoBar="")
+	public static function getAutoSuggestValue($field,$fieldId,$profileObj)
 	{
 		$dppData = DppAutoSuggestEnum::$AUTO_SUGGEST_ARRAY;
-		$field="get".$field;		
+		$field="get".$field;
 		$value= call_user_func(array($profileObj,$field));
 		//REmoving looping of array 
 		if($dppData[$fieldId][$value][0])
@@ -37,7 +37,7 @@ class DppAutoSuggestValue
 			foreach($dppData[$fieldId] as $k=>$value)
 			{
 				if($value[1])
-					$result = call_user_func_array(array('DppAutoSuggestValue',$value[1]), array($profileObj,$casteNoBar));
+					$result = call_user_func_array(array('DppAutoSuggestValue',$value[1]), array($profileObj));
 				return $result;
 			}
 		}
@@ -81,7 +81,7 @@ class DppAutoSuggestValue
 	 * @profileidobj profile obj of user
 	 */
 	
-	static function  MANGLIKAutoSuggest($profileObj,$casteNoBar="")
+	static function  MANGLIKAutoSuggest($profileObj)
 	{
 		$manglik=$profileObj->getMANGLIK();
 		$horoscope=$profileObj->getHOROSCOPE_MATCH();
@@ -104,7 +104,7 @@ class DppAutoSuggestValue
 	 * @profileidobj profile obj of user
 	 */
 	
-	static function  AGEAutoSuggest($profileObj,$casteNoBar="")
+	static function  AGEAutoSuggest($profileObj)
 	{
 		$arr=DppAutoSuggestEnum::$AGE_ARRAY;
 		$age=$profileObj->getAGE();
@@ -135,7 +135,7 @@ class DppAutoSuggestValue
 	* @return Array containg Lower HEIGHT and Upper HEIGHT as Key value Pair respectively
 	 * @profileidobj profile obj of user
 	 */
-	static function HEIGHTAutoSuggest($profileObj,$casteNoBar="")
+	static function HEIGHTAutoSuggest($profileObj)
 	{
 		$arr=DppAutoSuggestEnum::$HEIGHT_ARRAY;
 		$height=$profileObj->getHEIGHT();
@@ -157,7 +157,7 @@ class DppAutoSuggestValue
 	 * @profileidobj profile obj of user
 	 */
 	
-	static function CommonAutoSuggest($profileObj,$casteNoBar="")
+	static function CommonAutoSuggest($profileObj)
 	{
 		return ;
 	}
@@ -166,7 +166,7 @@ class DppAutoSuggestValue
 	* @return string
 	 * @profileidobj profile obj of user
 	 */
-	static function HANDICAPPEDAutoSuggest($profileObj,$casteNoBar="")
+	static function HANDICAPPEDAutoSuggest($profileObj)
 	{
 		if($profileObj->getHANDICAPPED()=="N")
 			return "N";
@@ -180,7 +180,7 @@ class DppAutoSuggestValue
 	* @return Array containg Lower INCOME and Upper INCOME as Key value Pair respectively
 	 * @profileidobj profile obj of user
 	 */
-	static function INCOMEAutoSuggest($profileObj,$casteNoBar="")
+	static function INCOMEAutoSuggest($profileObj)
 	{
 		$arr=DppAutoSuggestEnum::$INCOME_ARRAY;
 		$income=$profileObj->getINCOME();
@@ -209,18 +209,12 @@ class DppAutoSuggestValue
 	* @return string
 	 * @profileidobj profile obj of user
 	 */
-	static function ReligionAutoSuggest($profileObj,$casteNoBar="")
+	static function ReligionAutoSuggest($profileObj)
 	{
-		if($casteNoBar=="true" && $profileObj->getRELIGION()=="1")
-		{
-			return DppAutoSuggestEnum::$religionAutoSuggestForCasteNoBar;
-		}
-		else
-		{
-			$arr=DppAutoSuggestEnum::$RELIGION_ARRAY;
-			$caste=$profileObj->getCASTE();			
-			return ($arr[$caste]["RELIGION"]);
-		}
+		$arr=DppAutoSuggestEnum::$RELIGION_ARRAY;
+		$caste=$profileObj->getCASTE();
+		return ($arr[$caste]["RELIGION"]);
+
 	}
 	
 

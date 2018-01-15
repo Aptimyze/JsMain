@@ -1,4 +1,3 @@
-<div id="astroReportLayer" class="overlayAstro dispnone js-astroReportLayer"></div>  
 <div id="loadingOverlay" class="loadingOverlay"></div>
 ~if !isset($errorMsg)`
     <div id="comHistoryOverlay" class="vpro_dn" >
@@ -13,7 +12,7 @@
 		<div id="aboutContent">
 			~include_partial("profile/mobViewProfile/_basicInfo",['arrData'=>$arrOutDisplay.about])`
 			~include_partial("profile/mobViewProfile/_educationAndCareerInfo",['arrData'=>$arrOutDisplay.about])`
-			~include_partial("profile/mobViewProfile/_kundaliAndAstroInfo",['arrData'=>$arrOutDisplay.about,'otherProfilechecksum'=>$arrOutDisplay.page_info.profilechecksum,'astroSent'=>$arrOutDisplay.astroSent])`
+			~include_partial("profile/mobViewProfile/_kundaliAndAstroInfo",['arrData'=>$arrOutDisplay.about])`
 			~include_partial("profile/mobViewProfile/_lifestyleInfo",['arrData'=>$arrOutDisplay.lifestyle,'posted_by'=>$arrOutDisplay.about.posted_by])`
 <div class="space70" >&nbsp;</div>
 		</div>
@@ -22,7 +21,7 @@
 <div class="space70" >&nbsp;</div>
 		</div>
 		<div id="dppContent">
-			~include_partial("profile/mobViewProfile/_dppInfo",['arrData'=>$arrOutDisplay.dpp,'gender'=>$arrOutDisplay.about.gender,'matchingArr'=>$arrOutDisplay.showTicks,'picArr'=>$arrOutDisplay["pic"],'thumbnailPic'=>$arrOutDisplay.about.thumbnailPic,'myPreview'=>$myPreView,'selfThumbnail'=>$arrOutDisplay.about.selfThumbail,'selfProfileId'=>$arrOutDisplay.selfProfileId])`
+			~include_partial("profile/mobViewProfile/_dppInfo",['arrData'=>$arrOutDisplay.dpp,'gender'=>$arrOutDisplay.about.gender])`
 <div class="space70" >&nbsp;</div>
 		</div>
 	~/if`
@@ -59,7 +58,6 @@ var commHistoryJson = null;
 var contactEngineChannel = "VDP";
 var szHisHer = "~$szHisHer`";
 var isGunnaCallRequire = '~$gunaCallRequires`';
-var sameGender = "~$arrOutDisplay.about.sameGender`";
 ~if isset($BREADCRUMB)`
 	var backLink =  '~$BREADCRUMB|decodevar`';
 ~else if $myPreView eq 1`

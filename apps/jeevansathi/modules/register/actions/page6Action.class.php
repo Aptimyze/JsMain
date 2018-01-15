@@ -149,7 +149,7 @@ class page6Action extends sfAction
 	//*****************************PENDING********************
 	
 	//From login page redirection and filter page redirection logic:
-	$dbFilters= new ProfileFilter();
+	$dbFilters= new NEWJS_FILTER();
 		if($this->fromPage=='loginDeclineRedirect' || $this->fromPage=='filter_redirect')
 			{
 				$whrStr=" and (HARDSOFT='Y' OR COUNT>3)";

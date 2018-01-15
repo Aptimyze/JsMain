@@ -1,3 +1,0 @@
-type=command
-dependencies=sendNewMatchesDailyMails0Task,sendNewMatchesDailyMails1Task,sendNewMatchesDailyMails2Task,sendNewMatchesDailyMails3Task,sendNewMatchesDailyMails4Task
-command=echo newMatchAlerts successfully sent

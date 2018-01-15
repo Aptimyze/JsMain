@@ -63,7 +63,7 @@ $("#noMsgDiv").css('height',$(window).height());
 ~foreach from=$firstResponse.profiles item=tupleInfo key=id`
 ~assign var=offset value=(($firstResponse.page_index-1)*$_SEARCH_RESULTS_PER_PAGE) +$id`
 ~assign var=idd value=$offset+1`
-<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1 inview" onClick="setLocalStorageUrl()">
+<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1 inview">
     <div class="fullwid ">
 		<div class="fl widrsp1 txtc">
 			<a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`&stype=~SearchTypesEnums::PHONEBOOK_JSMS`&total_rec=~$firstResponse.no_of_results`&tupleId=~$idd`&searchid=~$firstResponse.searchid`&responseTracking=~JSTrackingPageType::PHONEBOOK_JSMS`&offset=~$offset`&contact_id=~$firstResponse.contact_id`&actual_offset=~$idd`" > 
@@ -140,7 +140,9 @@ $("#noMsgDiv").css('height',$(window).height());
        </div>
   ~/if`
 </div>
+<div id="hamburger" class="hamburgerCommon dn fullwid">	
 	~include_component('static', 'newMobileSiteHamburger')`	
+</div>
 </div>
 <script>
 function showDirectContactDetailLayer(url,profileChecksum)
@@ -156,14 +158,5 @@ if($('#noMsgDiv').length){
 	$('#noMsgDiv').css({"width":ol_vwid,"height":vhgt-heightHeader});
 	$("#mainContent").css({"height":vhgt+'px', "overflow":"hidden"});
 }
-function setLocalStorageUrl()
-{
-	try
-	{
-		localStorage.setItem("prevUrlListing",window.location.href);
-	}
-	catch(e)
-	{
-	}
-}
+
 </script>

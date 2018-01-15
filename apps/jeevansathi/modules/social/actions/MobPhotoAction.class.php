@@ -70,23 +70,6 @@ class MobPhotoAction extends sfActions {
                         die;
                         $this->setTemplate("");
                 }
-
-                $app = MobileCommon::isApp();
-                if(!$app){
-                        if(MobileCommon::isDesktop()){
-                                $app = "D";
-                        }elseif(MobileCommon::isNewMobileSite()){
-                                $app = "J";
-                        }else{
-                                $app = "O";
-                        }
-                }
-                $searchKey .= $app."_";
-                if(php_sapi_name() === 'cli'){
-                        $searchKey .= "CLI_";
-                }
-                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/mob.txt",var_export($_SERVER,true)."\napp:".$searchKey."\nperform:".$request->getParameter("perform")."\n\n\n",FILE_APPEND);
-		die;
         }
         
 

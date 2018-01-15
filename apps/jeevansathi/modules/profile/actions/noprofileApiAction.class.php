@@ -124,11 +124,11 @@ class noprofileApiAction extends sfAction
 		else if($iErrorID == 2)
 		{
 			$hidden=$this->profile->getACTIVATED();
-			
+		
 			if($hidden=="N" || $hidden=="U" || $hidden=="P")
 				$this->MESSAGE=sfConfig::get("app_profile_screened");
 			elseif($hidden=="H")
-				$this->MESSAGE=sfConfig::get("app_profile_hidden");
+				$this->MESSAGE="The profile with this ID is hidden";
 			elseif($hidden=="D")
 				$this->MESSAGE =  "The profile with this ID is deleted";
 		}
@@ -176,8 +176,6 @@ class noprofileApiAction extends sfAction
 		
 		$infoOut['about']['username'] = $this->TopUsername;		
 		$infoOut['page_info']['page_offset'] = $iOffset;
-		$infoOut['about']['gender'] = $gender;
-		$infoOut['about']['loginRequired'] = $this->LOGIN_REQUIRED;
 		
 		$respObj->setHttpArray($arrOut);
 		$respObj->setResponseBody($infoOut);
@@ -252,7 +250,7 @@ class noprofileApiAction extends sfAction
 			$objProfileDisplay = new profileDisplay;
 			
 			// Adding +1 in offset as ProfileDisplay ID starts from 1 to total rec
-			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1,$request->getParameter("stype"));
+			$this->profilechecksum = $objProfileDisplay->getNextPreviousProfile($this->loginProfile,$szContactID,$iOffset + 1);
 			
 			// No need to Subtract -1, as we already did that in apidetailv1 action
 			$this->actual_offset = $iOffset; 

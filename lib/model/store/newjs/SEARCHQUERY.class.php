@@ -41,7 +41,7 @@ class SEARCHQUERY extends TABLE
                         $columnNames = rtrim($columnNames,",");
                         $values = rtrim($values,",");
 
-			$sql = "INSERT INTO newjs.SEARCHQUERY ($columnNames) VALUES ($values)";
+			$sql = "REPLACE INTO newjs.SEARCHQUERY ($columnNames) VALUES ($values)";
 			$res = $this->db->prepare($sql);
 			if(is_array($bindMeInt))
 				foreach($bindMeInt as $k=>$v)

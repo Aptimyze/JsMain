@@ -29,13 +29,13 @@ $shardSlave112[0]='112Slave_shard1';// 3309
 $shardSlave112[1]='112Slave_shard2'; // 3306
 $shardSlave112[2]='112Slave_shard3'; // 3307
 
-/*$ddlShardUser[0]= 'shard1DDL';
+$ddlShardUser[0]= 'shard1DDL';
 $ddlShardUser[1]= 'shard2DDL';
 $ddlShardUser[2]= 'shard3DDL';
 
 $ddlShardSlaveUser[0]= 'shard1SlaveDDL';
 $ddlShardSlaveUser[1]= 'shard2SlaveDDL';
-$ddlShardSlaveUser[2]= 'shard3SlaveDDL';*/
+$ddlShardSlaveUser[2]= 'shard3SlaveDDL';
 
 /**
 * This function is used to map serverId to ServerName. Server name is required for connection.
@@ -51,23 +51,20 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
 	global $ddlShardSlaveUser;
         global $slave_activeServers;
         global $shardSlave112;
-        global $shardedServers;
         if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
         elseif($master_or_slave=='slave112')
                 return $shardSlave112[$activeServerId];
-        //elseif($master_or_slave=='masterDDL')
-        //        return 'masterDDL';
-	//elseif($master_or_slave=='alertsDDL')
-        //        return 'alertsDDL';
-	//elseif($master_or_slave=='viewLogDDL')
-        //        return 'viewLogDDL';
-        //elseif($master_or_slave=='shardDDL')
-        //        return $ddlShardUser[$activeServerId];
-    	elseif($master_or_slave=='shardServer')
-                return $shardedServers[$activeServerId];
-	//elseif($master_or_slave=='shardSlaveDDL')
-        //        return $ddlShardSlaveUser[$activeServerId];
+        elseif($master_or_slave=='masterDDL')
+                return 'masterDDL';
+	elseif($master_or_slave=='alertsDDL')
+                return 'alertsDDL';
+	elseif($master_or_slave=='viewLogDDL')
+                return 'viewLogDDL';
+        elseif($master_or_slave=='shardDDL')
+                return $ddlShardUser[$activeServerId];
+	elseif($master_or_slave=='shardSlaveDDL')
+                return $ddlShardSlaveUser[$activeServerId];
         else
                 return $slave_activeServers[$activeServerId];
 }
@@ -111,8 +108,7 @@ function IsValInteger($val)
 */
 function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 {
-        $myDbId=JsDbSharding::getShardNumber($profileid);
-	/*$profileid=trim($profileid,"'");
+	$profileid=trim($profileid,"'");
 	$profileid=trim($profileid,"\"");
 	if(!IsValInteger($profileid))
 	{
@@ -140,13 +136,10 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 			else
 				$db=$mysqlObj->connect("slave");
 		}
-		//This saves a query
-		$myDbId=JsDbSharding::getShardNumber($profileid);
-		
-		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
-		// $result = $mysqlObj->executeQuery($sql,$db);
-  //               $myrow=$mysqlObj->fetchArray($result);                
-  //               $myDbId=$myrow["SERVERID"];
+		$sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
+		$result = $mysqlObj->executeQuery($sql,$db);
+                $myrow=$mysqlObj->fetchArray($result);
+                $myDbId=$myrow["SERVERID"];
 		if(!$matchalertServer)
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);
@@ -163,18 +156,15 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 		else
 			$db=$mysqlObj->connect("master");
 	
-		//This saves a query
-		$myDbId=JsDbSharding::getShardNumber($profileid);
-		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
-		// $result = $mysqlObj->executeQuery($sql,$db);
-		// $myrow=$mysqlObj->fetchArray($result);
-		// $myDbId=$myrow["SERVERID"];
-
+		$sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
+		$result = $mysqlObj->executeQuery($sql,$db);
+		$myrow=$mysqlObj->fetchArray($result);
+		$myDbId=$myrow["SERVERID"];
 		if(!$matchalertServer)
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);
 		}        
-	}*/
+	}
 	return $myDbId;
 }
 
@@ -185,7 +175,7 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 */
 function assignServerToProfile($profileid)
 {
-	/*global $matchalertServer;
+	global $matchalertServer;
 	global $noOfShardedServers,$noOfActiveServers,$activeServers;
 	$mysqlObj=new Mysql;
 	$db_main=$mysqlObj->connect("master");
@@ -197,7 +187,7 @@ function assignServerToProfile($profileid)
 	$reshardingArray[1]=5;
 	if(in_array($serverid,$reshardingArray))
 		$serverid=$reshardingArray[$serverid];
-	
+	*/
 	//On Re-sharding
 	$shard=$serverid;
 	$assign_date=date("Y-m-d");
@@ -208,6 +198,6 @@ function assignServerToProfile($profileid)
 
 		$myDb=$mysqlObj->connect($activeServers[$shard]);
 		$mysqlObj->executeQuery($sql,$myDb);
-	}*/
+	}
 }
 ?>

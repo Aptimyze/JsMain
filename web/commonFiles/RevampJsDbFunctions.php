@@ -20,8 +20,7 @@ function get_all_caste_revamp_js_db($caste, $db = "", $output_param, $from_match
   
   foreach ($allCasteArray as $value=>$arrCasteRow) {
     if ($arrCasteRow["ISALL"] == "Y") { 
-      $casteParent = $arrCasteRow["PARENT"];
-      $tempArr = explode(',',AllCasteMap::$arrAllCaste_GroupByParent[$casteParent]);
+      $tempArr = explode(',',AllCasteMap::$arrAllCaste_GroupByParent[$value]);
       $Caste_arr = array_merge($Caste_arr,$tempArr);
       unset($tempArr);
     } else if ($arrCasteRow["ISGROUP"] == "Y") {

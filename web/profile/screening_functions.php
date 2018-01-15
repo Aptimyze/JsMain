@@ -521,7 +521,8 @@ function delete_record($pid)
 	        if(is_array($result)){
 				foreach($result as $key=>$row)
 				{
-						$dbMessageLogObj->deleteMessageLogById($row);
+						$id=$row['ID'];
+						$dbMessageLogObj->deleteMessageLogById($id);
 						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
 						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
 				}
@@ -533,7 +534,8 @@ function delete_record($pid)
 	        if(is_array($res)){
 				foreach($res as $key=>$row)
 				{
-						$dbMessageLogObj->deleteMessageLogById($row);
+						$id=$row['ID'];
+						$dbMessageLogObj->deleteMessageLogById($id);
 						//$sql1="DELETE FROM newjs.MESSAGE_LOG WHERE ID='$id'";
 						//$mysqlObj->executeQuery($sql1,$myDb) or die(mysql_error_js($myDb));
 				}
@@ -547,7 +549,8 @@ function delete_record($pid)
         	if(is_array($resp)){
 				foreach($resp as $key=>$row)
 				{
-						$dbDeletedMessageLogObj->deleteMessageLogById($row);
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj->deleteMessageLogById($id);
 						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
 						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
 				}
@@ -559,7 +562,8 @@ function delete_record($pid)
 	        if(is_array($response)){
 				foreach($response as $key=>$row)
 				{
-						$dbDeletedMessageLogObj->deleteMessageLogById($row);
+						$id=$row['ID'];
+						$dbDeletedMessageLogObj->deleteMessageLogById($id);
 						//$sql1="DELETE FROM newjs.DELETED_MESSAGE_LOG WHERE ID='$id'";
 						//$mysqlObj->executeQuery($sql1,$myDb)  or die("$sql1".mysql_error_js());
 				}

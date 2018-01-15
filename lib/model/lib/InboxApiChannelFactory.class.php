@@ -17,19 +17,19 @@ class InboxApiChannelFactory
 		{
 			$message = "Call to InboxApiChannelFactory::getChannel() returned isIOS() true";
 			$subject = "Inbox Alert";
-			SendMail::send_email("lavesh.rawat@gmail.com",$message,$subject);		
+			SendMail::send_email("nsitankita@gmail.com",$message,$subject);		
 		}
         else if(MobileCommon::isApp()=="A")
 		{
 			$message = "Call to InboxApiChannelFactory::getChannel() returned isApp() true";
 			$subject = "Inbox Alert";
-			SendMail::send_email("lavesh.rawat@gmail.com",$message,$subject);
+			SendMail::send_email("nsitankita@gmail.com",$message,$subject);
 		}
 		else if(MobileCommon::isMobile())
 		{
 			$message = "Call to InboxApiChannelFactory::getChannel() returned isMobile() true";
 			$subject = "Inbox Alert";
-			SendMail::send_email("lavesh.rawat@gmail.com",$message,$subject);
+			SendMail::send_email("nsitankita@gmail.com",$message,$subject);
 		}
 		else
 		{	

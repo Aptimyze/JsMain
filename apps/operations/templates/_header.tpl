@@ -14,9 +14,6 @@
 <tr width=100% border=1>
 <td width="33%" class="formhead" height="23" align="center"><b>Welcome ~$sf_request->getAttribute('name')` </b></td>
 <td width="33%" class="formhead" height="23" align="center"><a onclick="goBrowserBack()" href="~sfConfig::get('app_site_url')`/jsadmin/mainpage.php">Click here to go to main page</a></td>
-~if $showExclusiveServicingBack`
-<td width="33%" class="formhead" height="23" align="center"><a onclick="goBrowserBack()" href="~sfConfig::get('app_site_url')`/operations.php/jsexclusive/menu">Go back to exclusive main menu</a></td>
-~/if`
 <td width="33%" class="formhead" align='CENTER' height="23"><a href="~sfConfig::get('app_site_url')`/jsadmin/logout.php">Logout</a></td>
 
 </tr>

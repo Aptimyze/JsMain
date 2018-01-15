@@ -24,10 +24,6 @@ class mobHoroscopeAction extends sfAction
     $this->BIRTH_YR = $BIRTH_YR;
     $this->BIRTH_DAY = $BIRTH_DAY;
     $this->BIRTH_MON = $BIRTH_MON;
-    if($request->getParameter("KEY")=="ios")
-    {
-      $this->backButton = 1;
-    }
 	$androidView = $request->getParameter('andWebView');
         {
             if ($androidView == 1) 

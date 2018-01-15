@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony mailer:NEWJS_SHORTLISTED_PROFILES 101
+command=${php5} ${docRoot}/symfony mailer:NEWJS_SHORTLISTED_PROFILES 100

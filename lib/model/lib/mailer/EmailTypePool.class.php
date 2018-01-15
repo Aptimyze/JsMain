@@ -5,9 +5,7 @@ class EmailTypePool{
 	private $email_pdo;
 	private function __construct(){
 		self::$type_pool = array();
-		//Moving the function to file based caching
 		$this->email_pdo=new jeevansathi_mailer_EMAIL_TYPE();
-		
 	}
 	public static function getInstance(){
 		if (!self::$instance){ 
@@ -18,10 +16,8 @@ class EmailTypePool{
 	public function getEmailTpl($mail_id){
 		if(in_array($mail_id,self::$type_pool))
 			    return self::$type_pool[$mail_id];
-		else{		
-					//Moving this function to file based caching
-			       // $result=$this->email_pdo->getEmailType($mail_id);
-					$result=MailerType::getemailTypeArray($mail_id);
+		else{
+			        $result=$this->email_pdo->getEmailType($mail_id);
 					$email_tpl=$this->setAllParamsInEmailType($result);
 					 self::$type_pool[$mail_id]=$email_tpl;
 					return $email_tpl;

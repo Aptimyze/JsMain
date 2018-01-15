@@ -3,17 +3,17 @@
 This class handles all reponse tracking for contact actions
 **/
 class JSResponseTracking {
-
-	/**
-	 * calculate response tracking string on profile page
+		
+	/** 
+	 * calculate response tracking string on profile page 	
 	 * name: getProfilePageTracking
 	 * parameter: request object
 	 * return responsetracking string
 	 * */
 	public static function getProfilePageTracking($request)
-	{
+	{	
 		$responseTracking = $request->getParameter("responseTracking");
-		if($responseTracking=='null')$responseTracking='';
+		
 		if(MobileCommon::isApp())
 		{
 			if(MobileCommon::isApp()=="I")

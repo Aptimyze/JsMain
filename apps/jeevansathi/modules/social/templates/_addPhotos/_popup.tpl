@@ -8,7 +8,7 @@
         <!--end:title-->
         <div class="pup6 fontlig">
                 <p class="txtc color11 opa90 pt20">Strong Photo Privacy Options | No downloads allowed | Photos are Watermarked</p>
-            <p class="txtc color11 opa90 pt5">Jpeg, Jpg, PNG | Upto 10MB | 20 photos only</p>
+            <p class="txtc color11 opa90 pt5">Jpeg, Jpg | Upto 6MB | 20 photos only</p>
             <div class="pt15">
 		~include_partial("social/addPhotos/_uploadPhotoFrom",[])`
             </div>

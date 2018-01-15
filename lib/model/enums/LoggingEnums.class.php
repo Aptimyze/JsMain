@@ -18,7 +18,7 @@ class LoggingEnums
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
     const CONFIG_ON = true;
-    // Info For VA, on for referer or phishing urls in logs
+    // Info For VA, on for referer in logs
     const CONFIG_INFO_VA = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
@@ -28,8 +28,6 @@ class LoggingEnums
     const COMMONLOG = 'common';
     const EX500 = '500';
     const EX404 = '404';
-    // status code for SQL syntax error
-    const ERR_STATUS_CODE = '42000';
     // name of channels returned
     const P = 'P';
     const A = 'A';
@@ -79,14 +77,6 @@ class LoggingEnums
     const JPC = 'Jprofile_Contact';
     const MAPPING = 'Parent';
     const SCRIPT = 'Script';
-    const LOG_DELETION = 1;
-    const TRACE_STRING = 'traceString';
-    const CONSUMER_NAME = 'Rabbitmq-Consumer';
-    const PHISHING_URL = 'phishingUrl';
-    const COOL_M_LOGIN = 'LOG';
-    const NEW_LOGIN_TRACK = 'LoginAlert';
-    const DEVICEID = 'Registration id';
-    const DETAILS = 'Detail';
 
     public static $MappingNames = array(
         // JSC module names
@@ -117,7 +107,6 @@ class LoggingEnums
         21 => 'Others',
         22 => 'Javascript',
         23 => 'Feedback',
-        24 => 'DeleteCron'
         );
 
     public static $ModuleMapping = array(
@@ -186,16 +175,5 @@ class LoggingEnums
         "successStory" => 5,
         "myjs_api" => 10,
         "common" => 21,
-        "deletecron"=>24,
         );
-    
-     
-     public static $COOL_METRIC = array(
-         
-         'ACC' =>true,
-         'REG' => true,
-         'EOI' => true,
-         self::COOL_M_LOGIN=>true
-         
-     );
 }

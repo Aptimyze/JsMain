@@ -518,20 +518,12 @@ class XmppPrebind {
 		if ($this->useGzip) {
 			$header[] = 'Accept-Encoding: gzip, deflate';
 		}
-		else
-			$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-	
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		curl_setopt($ch, CURLOPT_USERAGENT,"JsInternal");
 
 		curl_setopt($ch, CURLOPT_VERBOSE, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		$response = curl_exec($ch);
-
-                // remove header from curl Response 
-                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                $response = substr($response, $header_size);
 
 		// Check if curl failed to get response
 		if ($response === false) {

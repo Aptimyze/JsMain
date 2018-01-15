@@ -1,5 +1,5 @@
 type=command
-dependencies=cron_FilterFOI_send0,cron_FilterFOI_send1,cron_FilterFOI_send2,cron_FilterFOI_send3,cron_FilterFOI_send4
+dependencies=cron_FilterFOI_send0,cron_FilterFOI_send1,cron_FilterFOI_send2,cron_FilterFOI_send3
 command=echo Filter EOI successfully sent
 retries=3
 retry.backoff=10000

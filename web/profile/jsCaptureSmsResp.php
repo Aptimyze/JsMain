@@ -40,7 +40,7 @@ else
 	
 /* Ticket #1771
 $cc='esha.jain@jeevansathi.com';
-$to='nitesh.s@jeevansathi.com';
+$to='tanu.gupta@jeevansathi.com';
 $subject="jsCapturSmsResp.phh unknown response error mail";
 
 $msg='The message : '.$_GET["messagetext"].' is received from the number '.$mobile.'.<br/><br/>Warm Regards';
@@ -69,7 +69,7 @@ if($sms_key=='MTONGUE_CONFIRM' || $sms_key=='REGISTER_CONFIRM')
 function jsCaptureIgnoreSmsphpFunction($message,$mobileno)
 {
 $cc='esha.jain@jeevansathi.com';
-$to='nitesh.s@jeevansathi.com';
+$to='tanu.gupta@jeevansathi.com';
 $subject="ignoreSms error mail";
 $mobile=substr($mobileno,-10);
 $userName=substr($message, 5);

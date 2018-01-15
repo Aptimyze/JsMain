@@ -110,7 +110,7 @@
   <a href="~sfConfig::get('app_site_url')`/contactus/index">Others</a>
 </p>
 <p>&nbsp;</p>
-<p><a target="_blank" href="https://careers.jeevansathi.com">Jeevansathi Careers</a></p>
+<p><a target="_blank" href="http://careers.jeevansathi.com">Jeevansathi Careers</a></p>
         </div>
         </div>
         

@@ -77,6 +77,11 @@ abstract class EditProfileComponent implements EditComponent {
 					unset($paramArr[$field]);
 				}
 			}
+      $subject = "EDIT_LOG in Usage";
+      $szMailBody = "EDIT_LOG in Usage: EditProfileComponent";
+      $szMailBody .= "\n\n'".print_r($_SERVER,true)."'";
+            
+			SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
 			$log_paramArr = array_merge($paramArr, $appendToLog);
 			$log_paramArr['PROFILEID'] = $this->loginProfile->getPROFILEID();
 			log_edit($log_paramArr);

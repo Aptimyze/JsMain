@@ -44,7 +44,7 @@ class postNotInterestedv1Action extends sfAction
 					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
-					$responseArray           = $this->getContactArray($request);
+					$responseArray           = $this->getContactArray();
 				}
 			}
 		}
@@ -53,7 +53,6 @@ class postNotInterestedv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
-			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -68,21 +67,14 @@ class postNotInterestedv1Action extends sfAction
 	}
 	
 	
-	private function getContactArray($request)
+	private function getContactArray()
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = array();
-		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
-		{
-			$actionType = "CHATDECLINE";
-		}
-		else{
-			$actionType = ContactHandler::DECLINE;
-		}
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton($actionType);
+			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::DECLINE);
 		}
 		else
 		{

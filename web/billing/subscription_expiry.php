@@ -10,9 +10,9 @@ include_once "functions.php";
 include_once "comfunc_sums.php";
 include_once "../jsadmin/ap_common.php";
 include_once JsConstants::$docRoot . "/classes/JProileUpdateLib.php";
-include_once(JsConstants::$alertDocRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db = connect_db();
+
 $ts = time();
 //current date
 $curdate = date("Y-m-d", $ts);
@@ -20,22 +20,16 @@ $curdate = date("Y-m-d", $ts);
 $ts -= (24 * 60 * 60) * 10;
 $before_ten_days = date("Y-m-d", $ts);
 
-$sql = "SELECT ID,PROFILEID, EXPIRY_DT, SERVEFOR, BILLID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT BETWEEN '$before_ten_days' AND '$curdate' AND ACTIVE='Y'";
+$sql = "SELECT ID,PROFILEID, EXPIRY_DT, SERVEFOR FROM billing.SERVICE_STATUS WHERE EXPIRY_DT BETWEEN '$before_ten_days' AND '$curdate' AND ACTIVE='Y'";
 $res = mysql_query_decide($sql, $db) or die($sql . mysql_error_js());
 while ($row = mysql_fetch_array($res)) {
     $id                = $row['ID'];
     $pid               = $row['PROFILEID'];
     $profileids_arr1[] = $pid;
-    $billid            = $row['BILLID'];
     //if(strstr($row['SERVEFOR'],'O'))
     //    $offline_arr[$pid]=$pid;
-    if (($row['SERVEFOR'] == 'L') || ($row['SERVEFOR'] == 'T') || (strpos($row['SERVEFOR'],'X')!==false)) {
-        if(strpos($row['SERVEFOR'],'X')!==false){
-            $assisted_arr[$pid][] = 'X';
-        }
-        else{
-            $assisted_arr[$pid][] = $row['SERVEFOR'];
-        }
+    if (($row['SERVEFOR'] == 'L') || ($row['SERVEFOR'] == 'T')) {
+        $assisted_arr[$pid][] = $row['SERVEFOR'];
     }
 
     $sql1 = "UPDATE billing.SERVICE_STATUS SET ACTIVE='E' WHERE ID=$id";
@@ -44,15 +38,6 @@ while ($row = mysql_fetch_array($res)) {
         endIntroCalls($pid);
     }
 
-    //Reactivate previous old unlimited membership after expiration of new service
-    $membershipHandler = new MembershipHandler();
-    $membershipHandler->changeUnlimitedServiceStatusForNewService($billid,false);
-
-    // Deleting entry from billing.EXCLUSIVE_SERVICING as soon as subs expire
-    if (strpos($row['SERVEFOR'],'X')){
-        $exclusiveFunctionsObj = new ExclusiveFunctions();
-        $exclusiveFunctionsObj->deleteEntryFromExclusiveServicing($pid,'X',$billid);
-    }
 }
 $profileids_arr_n = array_unique($profileids_arr1);
 $profileids_arr   = array_values($profileids_arr_n);
@@ -85,13 +70,10 @@ if (count($profileids_arr) > 0) {
         }
         if (is_array($assisted_arr[$profile])) {
             $expire_assist = array_diff($assisted_arr[$profile], $check_main);
-            
-            if (in_array("X", $expire_assist)) {
-                endAutoApply($profile);
-            }
             if (in_array("T", $expire_assist)) {
                 endAutoApply($profile);
             }
+
             if (in_array("L", $expire_assist)) {
                 endHomeDelivery($profile);
             }

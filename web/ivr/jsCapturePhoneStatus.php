@@ -25,7 +25,9 @@ if($virtualno && $phoneno)
 
 			$verificationObj=new MissedCallVerification($phoneno,$virtualno);
 			$verified = $verificationObj->phoneUpdateProcess("KNW");
-        }
+                        if (!$verified)
+                        SendMail::send_email('palashc2011@gmail.com',"$phoneno $virtualno ".$verificationObj->getTempText(),'missedcallVer');
+	}
 $xmlStr= phoneKnowlarity::genrate_xml();
 echo $xmlStr;
 }

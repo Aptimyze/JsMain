@@ -40,15 +40,13 @@ function MM_openBrWindow(obj,theURL,winName,features)
     </tr>
 	<td class="label" width="15%" height="20" align="CENTER"><b>USERNAME</b></td>
       <td class="label" width="10%" height="20"><b>PROFILEID</b></td>	
-      <td class="label" width="10%" height="20"><b>SCREENING-TIME</b></td>	
-      <td class="label" width="10%" height="20"><b>SCREENING-TYPE</b></td>	
+      <td class="label" width="10%" height="20"><b>SCREENING-TIME( in EST)</b></td>	
       </tr>
     ~section name=index loop=$arr`
     	<tr align="left" bgcolor="#fbfbfb" class="fieldsnew">
 	<td height="20" align="CENTER" width="8%"><a href='qc_view.php?id=~$arr[index].id`&cid=~$cid`&pid=~$arr[index].pid`' target='_blank'>~$arr[index].username`</a></td>
       	<td height="21" width="10%"><font color=blue>~$arr[index].pid`</font></td>
       	<td height="21" width="10%"><font color=blue>~$arr[index].time`</font></td>
-        <td height="21" width="10%"><font color=blue>~$arr[index].type`</font></td>
     </tr>
     ~/section`
 <tr>

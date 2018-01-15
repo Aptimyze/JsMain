@@ -19,9 +19,7 @@
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="f19 fontthin">~$data.title`</div>
-				~if $data.backendLink.fromBackend neq 1`
-                                    <div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
-                                ~/if`
+				<div class="posabs rv2_pos2"><i id="pageBack" class="mainsp arow2 cursp"></i></div>
 			</div>
 		</div>
 	</div>
@@ -40,7 +38,7 @@
 							<div id="removeServ" class="color3 pt10"></div>
 							<div id="removeMsg" class="pt10 rv2_colr2"></div>
 						</div>
-						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">
+						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">
 							<div id="removeBtn" vasId="" memId="" class="dispcell rv2_brdrright1 wid50p txtc rv2_lh60 cursp">Remove</div>
 							<div id="removeCncl" class="dispcell wid50p txtc cursp">Cancel</div>
 						</div>
@@ -64,7 +62,7 @@
 							<div id="removeServCoup" class="color3 pt10"></div>
 							<div id="removeMsgCoup" class="pt10 rv2_colr2"></div>
 						</div>
-						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if`">
+						<div class="disptbl brdr21 fullwid fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">
 							<div id="changeBtn" vasId="" memId="" class="dispcell rv2_brdrright1 wid50p txtc rv2_lh60 cursp">Remove</div>
 							<div id="removeCnclCoup" class="dispcell wid50p txtc cursp">Cancel</div>
 						</div>
@@ -112,7 +110,7 @@
 								<span id="membershipRemoveButton" class="dispibl cursp removeCall">~$v.remove_text`</span>
 								<span class="dispibl rv2_pad11">|</span>
 								~/if`
-								~if $v.change_text && $data.upgradeMem neq "MAIN"`
+								~if $v.change_text`
 								<span id="memnbershipChangeButton" class="dispibl cursp changeCall">~$v.change_text`</span>
 								~/if`
 							</div>
@@ -126,13 +124,11 @@
 			~/foreach`
 			~/if`
 			~if $data.cart_items.vas_memberships`
-            ~if !($data.totalVasCount eq "1" and $data.cart_items.vas_memberships[0].service_name eq "Profile Boost")`
 			<!--start:div-->
 			<div id="vasCard" class="pt10">
 				<div class="rv2_boxshadow">
 					<div class="bg4 rv2_pad3">
 						~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
-                        ~if $v.service_name neq "Profile Boost"`
 						<!--start:VAS plan-->
 						<!--start:strike through-->
 						~if $v.vas_price_strike`
@@ -172,18 +168,14 @@
 							<!--end:div-->
 						</div>
 						<!--end:VAS plan-->
-                        ~if $data.subscription_id neq 'NCP'`
-                            ~if not $smarty.foreach.vasServLoop.last`
-                            <div class="pad9"><div class="rv2_top2"></div></div>
-                            ~/if`
-                        ~/if`
-                        ~/if`
+						~if not $smarty.foreach.vasServLoop.last`
+						<div class="pad9"><div class="rv2_top2"></div></div>
+						~/if`
 						~/foreach`
 					</div>
 				</div>
 			</div>
 			<!--end:div-->
-            ~/if`
 			~/if`
 			<!--start:div-->
 			<div class="rv2_pad3">
@@ -195,7 +187,7 @@
 				</div>
 				<div class="disptbl fullwid rv2_brdrbtm3 pb10">
 					<div id="couponPriceText" class="dispcell f16 color7 wid60p">~$data.coupon_discount_text`</div>
-					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~if $data.upgradeMem &&  $data.upgradeMem neq 'NA'`  ~$data.coupon_discount` ~else` ~$data.cart_discount` ~/if`</div>
+					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~$data.cart_discount`</div>
 				</div>
 				~/if`
 				<div class="disptbl fullwid rv2_brdrbtm3 pt10 pb10">
@@ -204,14 +196,8 @@
 				</div>
 				<!--end:total pay div-->
 				<div id="cartTaxText" class="rv2_colr2 fontlig f11 pt5 padl10">~$data.cart_tax_text`</div>
-				~if $data.currency eq '$'`
-				<div class="txtc pt7 f14 fontlig clearfix">
-					<input type="checkbox" id="USDtoINR" name="USDtoINR" value="USDtoINR">
-					<span class="pos-rel" style="display: inline-block; padding-left: 6px;">I wish to pay with Indian card</span>
-				</div>
-				~/if`
 				~if $data.apply_coupon_text`
-				<div id="enterCouponBtn" class="txtc pt22 f16 ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` fontlig cursp">~$data.apply_coupon_text`</div>
+				<div id="enterCouponBtn" class="txtc pt22 f16 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` fontlig cursp">~$data.apply_coupon_text`</div>
 				~/if`
 				<div id="cartBottomText" class="txtc f16 color8 fontlig pt30">~$data.cart_bottom_text`</div>
 				
@@ -222,18 +208,14 @@
 	<!--start:main body-->
 	<!--start:continue button-->
 	<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app' && $data.appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple">~$data.continueText`</div>
+	<div id="continueBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple">~$data.continueText`</div>
 	</div>
 	<!--end:continue button-->
 </div>
 <script type="text/javascript">
-    var appVersion = "~$data.appVersion`";
-    var androidAppVersionForMaterial = "~VariableParams::$androidAppVersionForMaterial`";
-    var isCityEntered = "~$isCityEntered`";
 	var AndroidPromotion = 0;
 	var skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	~if $data.backendLink`
-                createCookie('backendLink', window.location.href, 0.0188);
 		~if $data.cart_items.main_memberships`
 			createCookie('mainMem', '~$data.subscription_id`', 0);
 			createCookie('mainMemDur', '~$data.subscription_duration`', 0);
@@ -250,7 +232,6 @@
 		~/if`
 	~/if`
 	$(document).ready(function(){
-		var upgradeMem = "~$data.upgradeMem`";
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
 		~if $data.coupon_success`
@@ -305,13 +286,13 @@
 			}
 			if(vasId){
 				removeFromVas(vasId);
-				callRedirectManager(appVersion);
+				callRedirectManager();
 			} else if(memId){
 				eraseCookie('mainMem');
 				eraseCookie('mainMemDur');
 				url = "/membership/jsms?"+"displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 				window.location.href = url;
 			}
@@ -330,13 +311,13 @@
 					url = "/membership/jsms?"+"displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 				window.location.href = url;
 			} else if(memId){
 				url = "/membership/jsms?"+"displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 				window.location.href = url;
 			}
@@ -387,13 +368,13 @@
 						url = "/membership/jsms?"+"displayPage=2&mainMem="+readCookie("mainMem")+"&mainMemDur="+readCookie("mainMemDur");
 					}
 					if(checkEmptyOrNull(readCookie('device'))){
-						url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+						url += '&device=' + readCookie('device');
 					}
 					window.location.href = url;
 				} else if(memId){
 					url = "/membership/jsms?"+"displayPage=1";
 					if(checkEmptyOrNull(readCookie('device'))){
-						url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+						url += '&device=' + readCookie('device');
 					}
 					window.location.href = url;
 				}
@@ -403,29 +384,24 @@
 			if(readCookie('backState') == "couponMain"){
 				url = "/membership/jsms?displayPage=1";
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "couponVas") {
-				if(upgradeMem == 'MAIN'){
-					url = "/membership/jsms?displayPage=1";
-				}
-				else{
-					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
-				}
+				url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
-				if(upgradeMem != "MAIN" && checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
+				if(checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
 				{
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				} else {
 					url = "/membership/jsms?displayPage=1";
 				}
 				if(checkEmptyOrNull(readCookie('device'))){
-					url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
+					url += '&device=' + readCookie('device');
 				}
 				window.location.href = url;
 			} else {
@@ -435,57 +411,48 @@
 		});
 		$("#continueBtn").click(function(){
 			eraseCookie('backState');
-            var usdTOinr;
-
-            if($("#USDtoINR").is(":checked")){
-                usdTOinr = 1;
-            }else{
-                usdTOinr = 0;
-            }
-			if(isCityEntered){
-                ~if $data.backendLink`
-				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`&usdTOinr=" + usdTOinr;
-                    ~else`
+			~if $data.backendLink`
+				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
+			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
 				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas');  
 			    } else {
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem+"&usdTOinr="+usdTOinr;
-			    }
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression=";
+			    }	
 			} else {
 				if(checkEmptyOrNull(readCookie('selectedVas'))){
-					paramStr = "displayPage=5&mainMembership=&vasImpression="+readCookie('selectedVas')+"&usdTOinr="+usdTOinr;
+					paramStr = "displayPage=5&mainMembership=&vasImpression="+readCookie('selectedVas');  
 			    } else {
-					paramStr = "displayPage=5&mainMembership=&vasImpression="+"&usdTOinr="+usdTOinr;
+					paramStr = "displayPage=5&mainMembership=&vasImpression=";
 			    }
 			}
-
+			
 		    if(checkEmptyOrNull(readCookie('couponID'))){
 		    	paramStr += "&couponID="+readCookie('couponID');
 		    }
 		    ~/if`
-                url = "/membership/jsms?" + paramStr;
-                if(checkEmptyOrNull(readCookie('device'))){
-                    url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
-                }
-                window.location.href = url;
-            } else{
-			    var errorMsg = ["Please fill 'State' in 'Edit Profile : Basic Details' section to proceed."];
-			    ShowTopDownError(errorMsg,3000);
-            }
-
+		    url = "/membership/jsms?" + paramStr;
+		    if(checkEmptyOrNull(readCookie('device'))){
+				url += '&device=' + readCookie('device');
+			}
+		    window.location.href = url;
 		});
 		$("#enterCouponBtn").click(function(e){
-			var upgradeMem = "~$data.upgradeMem`";
 			url = "/membership/jsms?displayPage=4";
 			if(checkEmptyOrNull(readCookie('device'))){
-				url += '&device=' + readCookie('device')+"&API_APP_VERSION="+appVersion;
-			}
-			if(checkEmptyOrNull(upgradeMem)){
-				url += "&upgradeMem="+upgradeMem;
+				url += '&device=' + readCookie('device');
 			}
 		    ShowNextPage(url,0,0);
 		});
+		var username = "~$data.userDetails.USERNAME`";
+		var email = "~$data.userDetails.EMAIL`";
+		setInterval(function(){
+			autoPopulateFreshdeskDetails(username,email);
+		},100);
+		setTimeout(function(){
+			autoPopupFreshdesk(username,email);
+		}, 90000);
 	});
 </script>
 ~/if`

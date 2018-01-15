@@ -10,8 +10,6 @@ class dnc_DNC_LIST extends TABLE
 		try
                 {
 			$count = count($phoneNumArr);
-			if($count==0)
-				return array();
                         $in_params = trim(str_repeat('?, ', $count), ', ');
 			$sql = "SELECT PHONE FROM DNC.DNC_LIST WHERE PHONE IN({$in_params})";
                         $prep = $this->db->prepare($sql);

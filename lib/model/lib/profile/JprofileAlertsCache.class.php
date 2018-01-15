@@ -71,13 +71,8 @@ class JprofileAlertsCache
             $output = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);  
 
             if (is_array($output) && false !== $output) { 
-                $bServedFromCache = true;
-                $output = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $output);
-                foreach($output as $k=>$out){
-                        if(in_array(ProfileCacheConstants::NOT_FILLED, $out)) {
-                                unset($output[$k]);
-                        }
-                }
+            $bServedFromCache = true;
+            $output = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $output);
             }
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
@@ -93,11 +88,13 @@ class JprofileAlertsCache
 
             if($newOutput == NULL)
             {  
+            $keys = array('PROMO_MMS','PROMO_USSD','SERVICE_USSD','SERVICE_MMS','KUNDLI_ALERT_MAILS','SERV_CALLS_PROF','SERV_CALLS_SITE','OFFER_CALLS','MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
+            $values = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult = array_fill_keys($keys, $values);
                 foreach ($profileArr as $key => $value) {
-                        $tempInsertResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $value);
-                        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
-                        }
+            $tempInsertResult['PROFILEID'] = $value;       
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+
                 }
 
                 return $newOutput;
@@ -110,16 +107,16 @@ class JprofileAlertsCache
              if(($tempInsertResult) == NULL)
              {
 
-                $tempInsertResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $value);
-                if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
-                }
+                 $keys = array('PROMO_MMS','PROMO_USSD','SERVICE_USSD','SERVICE_MMS','KUNDLI_ALERT_MAILS','SERV_CALLS_PROF','SERV_CALLS_SITE','OFFER_CALLS','MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
+             $values = ProfileCacheConstants::NOT_FILLED;
+
+             $tempInsertResult = array_fill_keys($keys, $values);
+             $tempInsertResult['PROFILEID'] = $value;
+             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
 
              }
              else{
-                     if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
-                     }
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
             }
                 }
 
@@ -131,19 +128,7 @@ class JprofileAlertsCache
     public function update($profileid, $key, $val) {
 
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-        list($out,$affectedRows) = $objJALT->update($profileid, $key, $val);
-        if($affectedRows == 0){
-            $jprofileAlertObj = new JprofileAlertsCache();
-            $row = $jprofileAlertObj->getAllSubscriptions($profileid);
-            unset($jprofileAlertObj);
-            if($row != NULL){
-                $row["PROFILEID"] = $profileid;
-                $objJALT->insertAllColumns($row);
-            }
-            else{
-                $jprofileAlertObj->insertNewRow($profileid);
-            }
-        }
+        $out = $objJALT->update($profileid, $key, $val);
         if($out === true)
         {   
             $updateCacheVal[$key] = $val;
@@ -250,24 +235,27 @@ class JprofileAlertsCache
  
         if($result === NULL)
         {   
-                $tempInsertResult = ProfileCacheFunctions::setNotFilledArray(__CLASS__, $profileid);
+              $keys = array('MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','NEW_MATCHES_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
+             $values = ProfileCacheConstants::NOT_FILLED;
+
+             $tempInsertResult = array_fill_keys($keys, $values);
              $dummyResult['RESULT_VAL'] = $tempInsertResult;
         }
 
-        if(false === ProfileCacheFunctions::isCommandLineScript("set")){
-                $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
-        }
+
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
 
         return $result;  
             
     }  
 
     private function logCacheConsumeCount($funName)
-  { return;
-   /* $key = 'cacheConsumption'.'_'.date('Y-m-d');
+  { 
+    $key = 'cacheConsumption'.'_'.date('Y-m-d');
     JsMemcache::getInstance()->hIncrBy($key, $funName);
     
-    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));*/
+    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
   }
 }
 

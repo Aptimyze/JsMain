@@ -76,7 +76,7 @@ changeActiveServicesInterfaceSuccess:
   metas:
     title:        Change Active Service Interface
   stylesheets:    []
-  javascripts:    [jspc/crm/changeActiveServiceInterface_js] 
+  javascripts:    [] 
 
 crmSmsFunctionalityInterfaceSuccess:
   metas:

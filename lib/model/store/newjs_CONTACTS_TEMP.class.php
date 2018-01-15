@@ -109,10 +109,6 @@ class NEWJS_CONTACTS_TEMP extends TABLE
             if ($error)
                 $prep->bindValue(":ERROR", $error, PDO::PARAM_STR);
             $prep->execute();
-            $currdate = date('Y-m-d');
-            $file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQConsume-$currdate", "a+");
-            fwrite($file, "set delivered for $sender with error : $error\n");
-            fclose($file);
         }
         catch (PDOException $e) {
             throw new jsException($e);

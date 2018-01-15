@@ -129,15 +129,15 @@
 				~if $eAdvantageService eq 'NCP'`
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">1</P></TD>
-					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($memUpgrage,"MAIN")` Upgrade to ~/if` ~$eAdvantageServiceName`&nbsp;</P></TD>
+					<TD class="tr2 td7 txtc"><P class="p1 ft4">~$eAdvantageServiceName`&nbsp;</P></TD>
 					<TD class="tr2 td8 txtc"><P class="p1 ft6">~$SERVICES[0].S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[0].E_DATE`&nbsp;</P></TD>
 				</TR>
 				~foreach from=$SERVICES key=k item=v name=servicesLoop`
-				~if !(strstr($v.NAME_DUR,$excludeInPrintBill[0]) || strstr($v.NAME_DUR,$excludeInPrintBill[1]))`
+				~if $smarty.foreach.servicesLoop.index gt 2`
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">~$v.NUM`</P></TD>
-					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($v.MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$v.NAME_DUR`&nbsp;</P></TD>
+					<TD class="tr2 td7 txtc"><P class="p1 ft4">~$v.NAME_DUR`&nbsp;</P></TD>
 					<TD class="tr2 td8 txtc"><P class="p1 ft6">~$v.S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$v.E_DATE`&nbsp;</P></TD>
 				</TR>
@@ -145,14 +145,12 @@
 				~/foreach`
 				~else`
 				~section name=index loop=$SERVICES`
-                ~if !(strstr($SERVICES[index].NAME_DUR,$excludeInPrintBill[1]))`
 				<TR>
 					<TD class="tr2 td6 txtc" style="width: 20px;"><P class="p8 ft5">~$SERVICES[index].NUM`</P></TD>
-					<TD class="tr2 td7 txtc"><P class="p1 ft4">~if strstr($SERVICES[index].MEM_UPGRADE,"MAIN")` Upgrade to ~/if` ~$SERVICES[index].NAME_DUR`&nbsp;</P></TD>
+					<TD class="tr2 td7 txtc"><P class="p1 ft4">~$SERVICES[index].NAME_DUR`&nbsp;</P></TD>
 					<TD class="tr2 td8 txtc"><P class="p1 ft6">~$SERVICES[index].S_DATE`&nbsp;</P></TD>
 					<TD class="tr2 td9 txtc"><P class="p1 ft6">~$SERVICES[index].E_DATE`&nbsp;</P></TD>
 				</TR>
-                ~/if`
 				~/section`
 				~/if`
 			</TABLE>

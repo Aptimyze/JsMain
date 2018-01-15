@@ -100,7 +100,6 @@
 			</tr>
 			<tr align="CENTER">
 				<td class="label" width=5% height="20"><b>Serial Number</b></td>
-				<td class="label" width=5% height="20"><b>Status</b></td>
 				<td class="label" width=9% height="20"><b>Name</b></td>
 				<td class="label" width=9% height="20"><b>User Name</b></td>
 				~if $subMethod eq 'RENEWAL_NOT_DUE'`
@@ -172,7 +171,6 @@
 			<tr ~if stristr($profiles.SUBSCRIPTION,'F') || stristr($profiles.SUBSCRIPTION,'D')` class=label ~else` class=fieldsnew ~/if` align="CENTER">
 				~/if`
 				<td height="21" width="5%" align=center> ~$num++` </td>
-				<td class="status" height="21" width="5%" align=center id="~$k`"> ~$profiles.STATUS` </td>
 				<td height="21" width="5%" align=left>~if $profiles.NAME eq ''` --NA-- ~else` ~$profiles.NAME` ~/if` </td>
 				<td height="21" width="10%" align="left">
 					<a href="#" onclick="MM_openBrWindow('~sfConfig::get('app_site_url')`/operations.php/crmAllocation/agentAllocation?name=~$agentName`&username=~$profiles.USERNAME`&profileid=~$profiles.PROFILEID`&cid=~$cid`&subMethod=~$subMethod`&orders=~$orders`&pchecksum=~$profiles.CHECKSUM`','','width=800,height=600,scrollbars=yes'); return false;">~$profiles.USERNAME`<br>~$profiles.EMAIL`</a>
@@ -308,7 +306,7 @@
 	</body>
 	<script src="~sfConfig::get('app_img_url')`/min/?f=/js/timetracker_js.js"></script>
 	~if get_slot('optionaljsb9Key')|count_characters neq 0`
-	~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 	~/if`
 	<script>
 	var objtnm = new tnm();
@@ -317,36 +315,5 @@
 	window.onload = function () {objtnm.init();}
 	window.onunload = function() { objtnm.LogCatch.call(objtnm);}
 	});
-	</script>
-	<script>
-		var update_online_status = function (onlineProfiles) {
-            $(".status").each(function(){
-                var value = $.trim($(this).text());
-		        if(value == "ONLINE"){
-                    $(this).text("OFFLINE");
-				}
-            });
-            var profilesArr = $.parseJSON(onlineProfiles);
-            profilesArr.forEach(function (profile,index) {
-                $("#" + profile).text("ONLINE");
-            });
-        };
-
-        var get_online_profiles = function() {
-            var profilesArr = "~$jsonProfilesArr`";
-            var url = "/operations.php/crmApi/ApiGetOnlineProfilesV1/";
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data:{
-                    profilesid: profilesArr
-                },
-                success: function(data) {
-                    update_online_status(data);
-                }
-            });
-        };
-
-        setInterval(get_online_profiles,~CommonConstants::$REFRESH_INTERVAL_RATE`);
 	</script>
 </html>

@@ -89,9 +89,7 @@ function clearCache(){
     curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
-	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-	curl_setopt($ch, CURLOPT_HEADER, $header);
+
     $store = curl_exec($ch);
     //curl_setopt($ch, CURLOPT_URL, $fetchPagePath);
 
@@ -109,9 +107,6 @@ function clearCache(){
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
-    curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
-	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-	curl_setopt($ch, CURLOPT_HEADER, $header);
     //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
     $data = curl_exec($ch);
     //print_r($data);
@@ -122,7 +117,7 @@ function sendMail($usagePercentage){
 	global $domain, $environment,$sleepTimeout;
 	if($environment == "prod"){
 
-	     //mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after ".($sleepTimeout*3)."sec @ ".$usagePercentage."%","Please check");
+	     //mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after ".($sleepTimeout*3)."sec @ ".$usagePercentage."%","Please check");
 	    mail("nitishpost@gmail.com","Openfire memory usage on ".$domain."@ ".$usagePercentage."%","Please check");
 	}
 	elseif($environment == "dev"){

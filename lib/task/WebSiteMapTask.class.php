@@ -326,8 +326,8 @@ EOF;
 	}
 	private function UpdateXML($domtree,$domEle,$url,$priority,$changefreq='weekly')
 	{
-		$siteUrl = "http://www.jeevansathi.com";	
-		$domEle->appendChild($domtree->createElement("loc",$siteUrl.$url));
+		
+		$domEle->appendChild($domtree->createElement("loc",JsConstants::$siteUrl.$url));
 		$domEle->appendChild($domtree->createElement("lastmod",date("c")));
 		$domEle->appendChild($domtree->createElement("priority",$priority));
 		$domEle->appendChild($domtree->createElement("changefreq",$changefreq));
@@ -342,20 +342,18 @@ EOF;
 	}
 	private function ParentXmlName($webpath=0)
 	{
-		$siteUrl = "http://www.jeevansathi.com";
 		$arr[0][0]="sitemap_index.xml";
 		$arr[0][1]="sitemap_index_daily.xml";
 		$arr[1][0]="sitemap_index_mobile.xml";
 		$arr[1][1]="sitemap_index_mobile_daily.xml";
 		$path=JsConstants::$docRoot;
 		if($webpath)
-		$path=$siteUrl;
+		$path=JsConstants::$siteUrl;
 		return $path."/".$arr[$this->mobile][$this->daily];
 		
 	}
 	private function SubXmlName($webpath=0)
 	{
-		$siteUrl = "http://www.jeevansathi.com";
 		$arr[0][0]="sitemap".$this->getLastIndex().".xml";
 		$arr[0][1]="sitemap".$this->getLastIndex()."-daily.xml";
 		$arr[1][0]="sitemap_mobile".$this->getLastIndex().".xml";
@@ -363,7 +361,7 @@ EOF;
 		$path=JsConstants::$docRoot;
 		if($webpath)
 		{
-			$path=$siteUrl;
+			$path=JsConstants::$siteUrl;
 			return $path."/xmldir/".$arr[$this->mobile][$this->daily].".gz";
 		}
 		return $path."/xmldir/".$arr[$this->mobile][$this->daily];

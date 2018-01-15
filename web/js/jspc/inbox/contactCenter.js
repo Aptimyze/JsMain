@@ -86,17 +86,6 @@ function loadContactCenterTuples(response)
 	if(tuplesHtml){
 		$("#ccTuplesMainDiv").append(tuplesHtml);
 		tuplesHtml = '';
-		
-		var typeArray = new Array("{ccTupleImage}","{otherimage}","{myimage}");
-		$('img[dsrc]').each(function() {
-			var src = $(this).attr("dsrc");
-			if($.inArray(src,typeArray)<0)
-			{
-				$(this).attr("src",src);
-			}
-		});
-        
-
 		cECommonBinding();
 	}
 	
@@ -178,11 +167,6 @@ if(typeof response.searchid!="undefined")
     	uploadRequestParamArr["ccnavigator"]=response.ccnavigator;
     }
 	//show horroscope/photo request option if requests tab is selected
-	try{
-		currentPageName = response['infotype'];
-	}catch(err){
-		
-	}
 	showRequestsSubTypeListings(response,uploadRequestParamArr);
 	
        	//typeOfApi='';
@@ -452,7 +436,7 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
                 
 		if(val.name_of_user!='' && val.name_of_user!=null)
 			val.username = val.name_of_user;
-        
+                
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 
@@ -479,7 +463,6 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 				'{personalizedmessageClass}': removeNull(personalizedmessageClass),
 				'{personalizedmessage}': removeNull(personalizedmessage)
 			 };
-			
 	return mapping;
 }
 
@@ -649,7 +632,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 			jsLoadFlag = 1;
 			timeE = new Date().getTime();
 			timeD = (timeE - timeI)/3600;
-			jsb9init_fourth(timeD,true,2,'https://track.99acres.com/images/zero.gif','AJAXCONTACTCENTERURL');
+			jsb9init_fourth(timeD,true,2,'http://track.99acres.com/images/zero.gif','AJAXCONTACTCENTERURL');
 		},
 		error: function(xhr) 
 		{
@@ -869,6 +852,7 @@ function handleIntroCallsListVisibility(flag)
 }*/
 
 $(document).ready(function() {
+	
 		//show loader
 		showCCLoader('Show');
 		

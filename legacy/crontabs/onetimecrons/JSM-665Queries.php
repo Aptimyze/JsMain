@@ -60,9 +60,6 @@ function mysql_error1($msg)
 	$from           = "JSSRVR";
 	$profileid      = "144111";
 	$smsState1 = send_sms($message,$from,$mobile1,$profileid,'','Y');
-    CommonUtility::logTechAlertSms($message, $mobile1);
         $smsState2 = send_sms($message,$from,$mobile2,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $mobile2);
         $smsState3 = send_sms($message,$from,$mobile3,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $mobile3);
 }

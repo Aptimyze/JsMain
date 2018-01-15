@@ -51,8 +51,7 @@ $(document).ready(function() {
     $("#cashChequePickup").click(function() {
         var mainMembership = $('[name=mainMembership]').val();
         var vasImpression = $('[name=vasImpression]').val();
-        var upgradeMem = $('[name=upgradeMem]').val();
-        var paramStr = 'displayPage=6' + '&mainMembership=' + mainMembership + '&vasImpression=' + vasImpression+'&upgradeMem='+upgradeMem;
+        var paramStr = 'displayPage=6' + '&mainMembership=' + mainMembership + '&vasImpression=' + vasImpression;
         if(checkEmptyOrNull(readCookie('device'))){
           paramStr += '&device=' + readCookie('device');
         }
@@ -153,9 +152,8 @@ function displayOverlayContent(payMode) {
     $("div.selectedOption:first").trigger('click');
 }
 
-function addPayCard(e,isMaterialApp) {
-    isMaterialApp = (typeof isMaterialApp !== 'undefined') ?  isMaterialApp : false;
-    if(checkEmptyOrNull(readCookie('device'))&& !isMaterialApp){
+function addPayCard(e) {
+    if(checkEmptyOrNull(readCookie('device'))){
       $('div.selectedOption').removeClass(readCookie('device')+'_selected_d');
     } else {
       $('div.selectedOption').removeClass('selected_d');
@@ -169,7 +167,7 @@ function addPayCard(e,isMaterialApp) {
     } else {
         $("#paymentMode").val($(e).attr('payMode'));
     }
-    if(checkEmptyOrNull(readCookie('device'))&& !isMaterialApp){
+    if(checkEmptyOrNull(readCookie('device'))){
       $(e).closest('div.selectedOption').addClass(readCookie('device')+'_selected_d');
     } else {
       $(e).closest('div.selectedOption').addClass('selected_d');

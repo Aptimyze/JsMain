@@ -14,7 +14,7 @@ class postSendReminderv2Action extends sfAction
   *
   * @param sfRequest $request A request object
   */
-
+  
 	function execute($request){
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
@@ -34,7 +34,7 @@ class postSendReminderv2Action extends sfAction
 				if ($this->loginProfile->getPROFILEID()) {
 					$this->userProfile = $request->getParameter('profilechecksum');
 					if ($this->userProfile) {
-
+						
 						$this->Profile = new Profile();
 						$profileid     = JsCommon::getProfileFromChecksum($this->userProfile);
 						$this->Profile->getDetail($profileid, "PROFILEID");
@@ -64,13 +64,13 @@ class postSendReminderv2Action extends sfAction
 		}
 		die;
 	}
-
-
+	
+	
 	private function getContactArray($request)
 	{
 		$pictureServiceObj=new PictureService($this->Profile);
 		$profilePicObj = $pictureServiceObj->getProfilePic();
-
+		
 		if($profilePicObj)
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
@@ -96,12 +96,12 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["headerthumbnailurl"] = $thumbNail;;
 				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
 				$responseArray["selfthumbnailurl"] = $ownthumbNail;
-				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID();
+				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&receiver=".$this->Profile->getPROFILEID().'&contactId='.$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-				$responseArray['draftmessage'] = "Reminder sent. You may send a personalized message with the reminder." ;
+				$responseArray['draftmessage'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
-
+				
 
 			}
 			else
@@ -110,10 +110,9 @@ class postSendReminderv2Action extends sfAction
 				{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top'];
-                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
+					$MembershipMessage = $data2['hamburger_message']['top']; 
 					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
-					$responseArray["footerbutton"]["label"]  = "Upgrade";
+					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
@@ -167,14 +166,13 @@ class postSendReminderv2Action extends sfAction
 				{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top'];
-                    $MembershipMessage = $memHandlerObj->modifiedMessage($data2);
+					$MembershipMessage = $data2['hamburger_message']['top']; 
 					$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
-					$responseArray["footerbutton"]["label"]  = "Upgrade";
+					$responseArray["footerbutton"]["label"]  = "View Memebrship Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 					$responseArray["footerbutton"]["text"] = $MembershipMessage;
-
+						
 				}
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Limit Exceeded";
@@ -186,7 +184,7 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::PHONE_NOT_VERIFIED;
 				$responseArray["footerbutton"]["label"] = "Verify your number";
 				$responseArray["footerbutton"]["value"] = "";
-				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";
+				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
 			}
 			elseif($errorArr["INCOMPLETE"] == 2)
 			{
@@ -195,8 +193,8 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["footerbutton"]["label"] = "complete your profile";
 				$responseArray["footerbutton"]["value"] = "";
 				$responseArray["footerbutton"]["action"] = "COMPLETEPROFILE";
-				$responseArray["headerlabel"] = "Your Profile is Incomplete";
-				$responseArray["redirect"] = true;
+				$responseArray["headerlabel"] = "Your Profile is Incomplete";	
+				$responseArray["redirect"] = true;				
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
@@ -204,22 +202,6 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 				$responseArray["redirect"] = true;
-			}
-			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
-			{
-				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
-				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
-				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Reminder cannot be sent";
-				//$responseArray["redirect"] = true;
-			}
-			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
-			{
-				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
-				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
-				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Second Reminder cannot be sent";
-				//$responseArray["redirect"] = true;
 			}
 			else
 			{
@@ -231,29 +213,16 @@ class postSendReminderv2Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
-    if(MobileCommon::isNewMobileSite())
+		if(MobileCommon::isNewMobileSite())
 		{
-        if(sfContext::getInstance()->getRequest()->getParameter('fromSPA')!='1')
-        {
-          $finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
-    			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
-    			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
-          $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","R");
+			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
+			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
+			//$finalresponseArray["button_after_action"]["photo"]=$restResponseArray["photo"];
+            $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
+			//$finalresponseArray["button_after_action"][] = 
 
-        }
-        else
-          {
-            $finalresponseArray['buttondetails'] =ButtonResponseFinal::getListingButtons("CE_PD","M","S","R",'',$this->contactHandlerObj->getContactObj()->getCount());
-//            $finalresponseArray['buttondetails']['buttons'][0] = $responseButtonArray["button"];
-            $restResponseArray= $buttonObj->jsmsRestButtonsrrayNew();
-      			$finalresponseArray["buttondetails"]["photo"]=$thumbNail;
-            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
-//            die("sssss");
-//            $finalresponseArray["buttondetails"]["topmsg"]=$restResponseArray["topmsg"];
-
-          }
 		}
-
 		else
 		{
                 $button_after_action = $buttonObj->getButtonArray();
@@ -262,3 +231,4 @@ class postSendReminderv2Action extends sfAction
 		return $finalresponseArray;
 	}
 }
+

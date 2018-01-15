@@ -47,7 +47,6 @@ class FreePrivilege extends Privilege
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewer()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_PAID_SELF);
 			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::ACCEPT_PRESET_FREE);
-			$presetMessage[] = str_ireplace("{{USERNAME}}",$contactHandler->getViewed()->getUSERNAME(),Messages::EOI_PRESET_FREE);
 			
 			foreach($messages as$k=>$val)
 			{

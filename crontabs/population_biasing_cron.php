@@ -7,7 +7,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/arrays.php");
 
-$db_ddl = connect_db();
+$db_ddl = connect_ddl();
 
 $mysqlObj = new Mysql;
 $dbM = $mysqlObj->connect("master") or logError("Unable to connect to master","ShowErrTemplate");

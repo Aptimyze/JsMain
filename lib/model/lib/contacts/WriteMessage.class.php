@@ -120,15 +120,6 @@ class WriteMessage extends ContactEvent{
   
  
 	$profileMemcacheServiceViewedObj->updateMemcache();
-
-    //update redisc memcache for new notifications
-      $message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
-
-      $syncRecords[$this->contactHandler->getViewer()->getPROFILEID()]=round(microtime(true) * 1000);
-      JsMemcache::getInstance()->setHashObject($this->contactHandler->getViewed()->getPROFILEID()."_lastCommunicationId",$syncRecords,24*60*60);
-
-      $chatNotification[$this->contactHandler->getViewer()->getPROFILEID()."_".$this->contactHandler->getViewed()->getPROFILEID()]=json_encode(array("msg"=>$message,"ip"=>FetchClientIP(),"from"=>$this->contactHandler->getViewer()->getPROFILEID(),"id"=>"","to"=>$this->contactHandler->getViewed()->getPROFILEID()));
-      JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
     }
     catch (Exception $e) {
       throw new jsException($e);
@@ -176,7 +167,7 @@ class WriteMessage extends ContactEvent{
         $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key'=>$key) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'MESSAGE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
-        //$producerObj->sendMessage($gcmData); //Commenting due to notifications being sent through service
+        $producerObj->sendMessage($gcmData);
         try
         {
           //send instant JSPC/JSMS notification
@@ -200,7 +191,7 @@ class WriteMessage extends ContactEvent{
       $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
       $senderProfileid = $this->contactHandler->getViewer()->getPROFILEID();
       $receiverProfileid = $this->contactHandler->getViewed()->getPROFILEID();
-      //$instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message); //Commenting due to notifications being sent through service
+      $instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message);
       // send instant app notification - end
     }
 	}
@@ -243,7 +234,7 @@ class WriteMessage extends ContactEvent{
       }
     }
     
-    JsMemcache::getInstance()->setHashObject($key,$arrValue,3600*6);
+    JsMemcache::getInstance()->setHashObject($key,$arrValue);
 
     date_default_timezone_set($orgTZ);
     return $key;

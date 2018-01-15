@@ -1,9 +1,5 @@
 <?php
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-if(!MobileCommon::isApp() && !MobileCommon::isDesktop() && MobileCommon::isMobile() && !MobileCommon::isNewMobileSite() && !sfContext::getInstance()->getRequest()->getParameter('redirectFromOldSite') && !strstr($_SERVER["REQUEST_URI"],"/api/v1/chat/getRoasterData") && !MobileCommon::isCron()){
-	$url=JsConstants::$siteUrl."/static/oldMobileSite?redirectFromOldSite=1";
-		header("Location: " . $url);die;
-}
  include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 function login($username,$password,$allowDeactive=0)
 {

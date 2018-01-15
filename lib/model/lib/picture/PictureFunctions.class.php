@@ -2,20 +2,13 @@
 class PictureFunctions
 {
 	
-	public static function setHeaders(){
-		ini_set('user_agent','JsInternal');	
-		header('Content-Type: image/jpeg'); 
-	}
-	
 	/*This function is used to get image format of image
 	@param imageUrl: image url
 	@return imageType: image format type
 	*/
-	public static function getImageFormatType($imageUrl,$flag="")
+	public static function getImageFormatType($imageUrl)
 	{
-		PictureFunctions::setHeaders();
 		$imageInfo = getimagesize($imageUrl);
-		
 		switch($imageInfo["mime"])
 		{
 			case 'image/jpg':
@@ -27,19 +20,7 @@ class PictureFunctions
 			case 'image/gif':
 				$imageT = "gif";
 				break;
-				case 'image/png':
-				if($flag=="1")
-				{
-					$imageT = "png";
-				}
-				else
-				{
-					$imageT ="jpeg";
-				}
-				
-				break;
 		}
-		
 		return $imageT;
 
 	}
@@ -79,21 +60,17 @@ class PictureFunctions
 	
 	public function maintain_ratio_canvas($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$type_of_image,$click='1')
 	{
-		PictureFunctions::setHeaders();
-		$filename = $pic_name;		
-		if($type_of_image == "image/png")
-			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
-		else
-			$new_filename = $final_pic_name;
-
+		$filename = $pic_name;
+		$new_filename = $final_pic_name;
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			$image = imagecreatefromgif($filename);		
+			$image = imagecreatefromgif($filename);
 		else
-			$image = imagecreatefromjpeg($filename); //since we have already converted the png under the $filename, we can now use the jpeg function instead of the png
-					
+			$image = imagecreatefromjpeg($filename);
+			
+
 		$width_orig = imagesx($image);
 		$height_orig = imagesy($image);
-		
+
 		$ratio_orig = ($width_orig/$height_orig);
                  if ($click == "1") {
                         if ($width_orig < $width && $height_orig < $height) {
@@ -136,7 +113,7 @@ class PictureFunctions
 
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
-			imagegif($image_p, $new_filename);		
+			imagegif($image_p, $new_filename);
 		else
 			imagejpeg($image_p, $new_filename);
 		//$command = "chmod -R 777 ".$new_filename;
@@ -146,19 +123,11 @@ class PictureFunctions
 
 	public function maintain_ratio_profile_thumb($pic_name,$final_pic_name,$x1,$y1,$x2,$y2,$width,$height,$final_width,$final_height,$type_of_image)
 	{
-		PictureFunctions::setHeaders();
 		$filename = $pic_name;
-		if($type_of_image == "image/png")
-			$new_filename = str_replace(".png",".jpeg",$final_pic_name); //added for png support
-		else
-			$new_filename = $final_pic_name;
+		$new_filename = $final_pic_name;
 
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			$image = imagecreatefromgif($filename);
-		/*elseif($type_of_image == "image/png")
-		{
-			$image = imagecreatefrompng($filename);		 //Note required since we have already converted the pic to jpeg hence jpeg function can be used
-		}*/
 		else
 			$image = imagecreatefromjpeg($filename);
 			
@@ -175,11 +144,6 @@ class PictureFunctions
 		// Output
 		if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 			imagegif($image_p1, $new_filename);
-		/*elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
-		{
-			imagejpeg($image_p1, $new_filename);
-   			imagedestroy($image);
-		}*/
 		else
 			imagejpeg($image_p1, $new_filename);
 
@@ -189,20 +153,17 @@ class PictureFunctions
 	}
 
 	public function generate_image_for_canvas($new_filename,$max_height,$max_width,$type_of_image,$click="1")
-	{		
-		PictureFunctions::setHeaders();
+	{
 		$filename1 = $new_filename;
-
+		
 		$hmargin=0;
 	        $wmargin=0;
 	        
 	      	if($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF")
 	          	$src_img = imagecreatefromgif($filename1);
-	        elseif($type_of_image == "image/png")
-				$src_img = imagecreatefrompng($filename1);					
 	    	else
 	            	$src_img = imagecreatefromjpeg($filename1);
-			
+	
 	        $w=imagesx($src_img);
 	        $h=imagesy($src_img);
                 if ($click == "1") {
@@ -236,34 +197,20 @@ class PictureFunctions
                                         $filename = sfConfig::get('sf_web_dir') . "/images/white340.jpg";
                                 else
                                         $filename = sfConfig::get('sf_web_dir') . "/images/white96.jpg";
-                                $des_img = imagecreatefromjpeg($filename);                                
+                                $des_img = imagecreatefromjpeg($filename);
                         }
 
                         imagecopymerge($des_img, $src_img, $x, $y, 0, 0, $w, $h, 100);
                         unset($src_img);
                         if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF") {
                                 imagegif($des_img, $filename1);
-                        }
-                        elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
-                        {
-                        	imagejpeg($des_img, $filename1);
-                        	imagedestroy($des_img);
-                        } 
-                        else
-                        {
+                        } else {
                                 imagejpeg($des_img, $filename1);
                         }
                 } else {
                         if ($type_of_image == "image/gif" || $type_of_image == "image/GIF" || $type_of_image == ".gif" || $type_of_image == ".GIF") {
                                 imagegif($src_img, $filename1);
-                        }
-                        elseif($type_of_image == "image/png") //since str replace was used above to convert the image filename from .png to .jpeg ,this elseif might not be required
-                        {
-                        	imagejpeg($des_img, $filename1);
-                        	imagedestroy($des_img);
-                        }
-                        else 
-                        {
+                        } else {
                                 imagejpeg($src_img, $filename1);
                         }
                 }
@@ -333,12 +280,11 @@ class PictureFunctions
 
 	public function createWatermark($filename_path,$type_of_pic,$format)
 	{
-		PictureFunctions::setHeaders();
 		if ($type_of_pic == "main")
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_new.gif";
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_big_1.gif";
 		else
-			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small_new.gif"; 
-		
+			$watermark_path = sfConfig::get('sf_web_dir')."/images/watermark_small.gif";
+			
 		$destination_path = $filename_path;
 
 		if($format == "image/gif" || $format == "image/GIF")
@@ -355,7 +301,7 @@ class PictureFunctions
 
 		$x = $width-$w;
 		$y = ($height-$h)/2;
-		
+
 		imagecopymerge($src_handle,$watermark_handle,$x,$y,0,0,$w,$h,30);
 
 		if ($format == "image/gif" || $format == "image/GIF")
@@ -395,7 +341,6 @@ class PictureFunctions
 	*/
 	public function moveImage($source,$dest)
 	{
-		PictureFunctions::setHeaders();
 		//$success = move_uploaded_file($source, $dest);		
 		$success = copy($source, $dest);		
 		return $success;
@@ -407,7 +352,6 @@ class PictureFunctions
 	*/
 	public function moveImageFromRemoteLocationToLocalDisk($src,$dest)
 	{
-		PictureFunctions::setHeaders();
 		$picture = CommonUtility::sendCurlPostRequest($src,0);
 		$fh = fopen($dest, 'w+');
 		fwrite($fh, $picture);
@@ -460,7 +404,6 @@ class PictureFunctions
 	*/
 	public static function rotateImage($filename_path,$angle,$format)
 	{
-		PictureFunctions::setHeaders();
 		$destination_path = $filename_path;
 
                 if($format == "image/gif" || $format == "image/GIF")
@@ -569,21 +512,16 @@ class PictureFunctions
 	 */	
 	public function createImage($Path)
 	{
-		PictureFunctions::setHeaders();
-		$szType = $this->getImageFormatType($Path,"1");
-		
+		$szType = $this->getImageFormatType($Path);
 		if($szType == "gif")
 		{
 			$image = imagecreatefromgif($Path);
 		}
-		elseif($szType == "jpeg")
+		else if($szType == "jpeg")
 		{
 			$image = imagecreatefromjpeg($Path);
 		}
-		elseif($szType == 'png')
-		{
-			$image = imagecreatefrompng($Path);
-		}		
+		
 		return $image;
 	}
 
@@ -597,19 +535,12 @@ class PictureFunctions
 	 */	
 	public function storeResizedImage($new_image,$StoragePath,$type)
 	{
-		PictureFunctions::setHeaders();
-
 		if($type == "gif")
 		{
 			imagegif($new_image, $StoragePath);
 		}
 		else if($type == "jpeg" || $type == "jpg")
 		{
-			imagejpeg($new_image, $StoragePath,90);
-		}
-		elseif($type == "png")
-		{
-			$StoragePath = str_replace(".png",".jpeg",$StoragePath);
 			imagejpeg($new_image, $StoragePath,90);
 		}
 	}
@@ -631,12 +562,7 @@ class PictureFunctions
 					$pictureServiceObj = new PictureService($loginProfile);
 					$profilePicObj = $pictureServiceObj->getProfilePic();
 				   	if($profilePicObj){
-				   		if($profilePic=='U')	
-							$picUrl = $profilePicObj->getThumbail96Url();
-						else
-							$picUrl = $profilePicObj->getProfilePic120Url();
-
-					   	$photoArray = self::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$gender);
+					   	$photoArray = self::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$gender);
 					   	if($photoArray[label] != ''){
 	                    	$thumbnailUrl = self::getNoPhotoJSMS($gender,'ProfilePic120Url');
 					   	} else {
@@ -718,36 +644,6 @@ class PictureFunctions
                 }elseif($perform == 'remove'){
                         JsMemcache::getInstance()->remove($key);
                 }
-        }
-
-        //This function is used for conditional access of photos defining conditions on when to show the photo.
-        public static function conditionalPhotoAccess()
-        {
-        	$loginProfile = LoggedInProfile::getInstance();
-        	$profilePic = $loginProfile->getHAVEPHOTO();        	
-        	$subscription = $loginProfile->getSUBSCRIPTION();
-        	$verifyActivatedDate = $loginProfile->getVERIFY_ACTIVATED_DT();
-        	$time = time();
-        	if($verifyActivatedDate == PictureStaticVariablesEnum::VERIFY_ACT_DATE_BLANK)
-        	{
-        		$verifyActivatedDate = $loginProfile->getENTRY_DT();
-        	}
-
-       		$dateDiff = $time - strtotime($verifyActivatedDate);  		       		
-        	if(!$loginProfile->getPROFILEID()) //not logged in. Hence login 
-        	{
-        		return 0;
-        	}
-        	elseif($subscription) //if member is paid, dont show layer
-        	{
-        		return 0;
-        	}
-        	elseif($dateDiff > PictureStaticVariablesEnum::VERIFY_ACTIVATION_DATE_FOR_CONDITIONAL_ACCESS && !in_array($profilePic,PictureStaticVariablesEnum::$acceptedhavePhotoValues) && $dateDiff != $time) //if verify activation date is 15 days and above AND pic is not uploaded
-        	{
-        		return 1;
-        	}
-        	else
-        		return 0;
         }
 }
 ?>

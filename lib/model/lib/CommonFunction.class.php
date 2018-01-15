@@ -107,14 +107,6 @@ class CommonFunction
 				$overall_limit=800000;
 				$notValidNumber_limit=100;		
 			}
-			else if(CommonFunction::isEverPaid())
-			{
-				$day_limit=100;
-				$weekly_limit=100;
-				$month_limit=400;
-				$overall_limit=800000;
-				$notValidNumber_limit=100;
-			}
 			if(CommonFunction::isOfflineMember($subscription))
 			{
 				$day_limit=225;
@@ -138,26 +130,6 @@ class CommonFunction
             $paid=1;
         }
 		return $paid;
-	}
-
-	public static function isEverPaid()
-	{
-		
-		$everPaid = false;
-		$billing = new BILLING_PURCHASES();
-		$loginProfile = LoggedInProfile::getInstance();
-		$pid = $loginProfile->getPROFILEID();
-		if(!isset($pid))
-		{
-			return $everPaid;
-		}
-
-		$payment = $billing->isPaidEver($pid);
-		if(is_array($payment) && $payment[$pid])
-		{
-			$everPaid = true;
-		}
-		return $everPaid;
 	}
 
 	public static function isEvalueMember($subscription)
@@ -518,7 +490,7 @@ class CommonFunction
 		return $years;
 	}
 
-	 public static function sendWelcomeMailer($pid,$sendQuery=1)
+	 public static function sendWelcomeMailer($pid)
 	{
 		$email_sender=new EmailSender(MailerGroup::WELCOME,1780);
 		$emailTpl=$email_sender->setProfileId($pid);
@@ -532,12 +504,9 @@ class CommonFunction
 		$top8Mailer->send();
 		
 		//logging time when user gets activated and phone verified for first time.
-		if($sendQuery){
-			$jprofileDbObject=JPROFILE::getInstance();
+		$jprofileDbObject=JPROFILE::getInstance();
 		$paramArr["VERIFY_ACTIVATED_DT"]=date("Y-m-d H:i:s");
 		$jprofileDbObject->edit($paramArr,$pid);
-		unset($jprofileDbObject);
-		}
 	}
 	public static function getChannel()
 	{
@@ -579,11 +548,11 @@ class CommonFunction
 		$source='';
 		$viewerState=$contactHandler->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
 		$viewedState=$contactHandler->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
-		if($viewerState=='FREE' && ($viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE"))
+		if($viewerState=='FREE' && $viewedState=="EVALUE")
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
-		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE") && $contactHandler->getContactObj()->getTYPE()=='A')
+		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA") && $contactHandler->getContactObj()->getTYPE()=='A')
 			$source=CONTACT_ELEMENTS::ACCEPTANCE_TRACKING;
-		else if(($viewerState=="EVALUE" || $viewerState=="ERISHTA" || $viewerState=="JSEXCLUSIVE" ) && ($viewedState=="EVALUE" || $viewedState=="JSEXCLUSIVE"))
+		else if($viewerState=="EVALUE" || $viewerState=="ERISHTA" && $viewedState=="EVALUE")
 			$source=CONTACT_ELEMENTS::EVALUE_TRACKING;
 		else
 			$source=CONTACT_ELEMENTS::CALL_DIRECTLY_TRACKING;
@@ -594,7 +563,7 @@ class CommonFunction
                 $manglikArr = explode(",", $manglikVal);
                 $returnStr = "";
                 foreach ($manglikArr as $key=>$val){
-                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know" || $val == "'S0'" || $val == "S0" || $val == "Select")
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
                         continue;
                     else
                         $returnStr.=",".$val;
@@ -747,405 +716,6 @@ class CommonFunction
       $producerObj = new Producer();
       $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
       $producerObj->sendMessage($queueData);
-    }
-    
-    public static function getCitiesForStates($stateArr){
-        $cityList = "";
-        foreach($stateArr as $key=>$val){
-            $cityList .= ",".FieldMap::getFieldLabel("state_CITY", $val);
-        }
-        $cityList=explode(",",trim($cityList,","));
-        return $cityList;
-    }
-
-    	
-    /**
-     * this function returns occupation groups
-     * @param  string  $occupationValues comma separated occuaptaion values
-     * @param  boolean $isSingleQuote    whether occupation values are stored as single quote sorrounded
-     * @return string                    returns comma separated string.
-     */		
-    public static function getOccupationGroups($occupationValues,$isSingleQuote=false)
-    {
-        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
-        if($isSingleQuote)
-        {
-        	$occupationValuesArray = explode (",", str_replace("'", "", $occupationValues));
-        }
-        else
-        {
-        	$occupationValuesArray = explode (",", $occupationValues);
-        }
-
-        $occupationGroupString = "";
-
-    	foreach ($occupationGrouping as $key => $occupationGroupingValues) 
-    	{
-    		$occupationGroupingValuesArray = array_map('intval',explode(',',$occupationGroupingValues));
-    		if ( count(array_intersect($occupationValuesArray,$occupationGroupingValuesArray)) > 0)
-    		{
-    			$occupationGroupString .= $key.",";
-    		}	
-    	}
-    	$occupationGroupString = rtrim($occupationGroupString,",");
-
-    	if($isSingleQuote)
-		{
-			$occupationGroupString = "'".$occupationGroupString."'";
-			$occupationGroupString = str_replace(",", "','", $occupationGroupString);
-		}
-    	return $occupationGroupString;
-    }
-
-    /**
-     * returns occupation values, given occupation groups.
-     * @param  string  $occupationGroups comma separated groups
-     * @param  boolean $isSingleQuote    whether return values needs to be sorrounded by comma or not
-     * @return string                    occupation values, comma separated
-     */
-    public static function getOccupationValues($occupationGroups,$isSingleQuote=false)
-    {
-        $occupationGrouping = FieldMap::getFieldLabel('occupation_grouping_mapping_to_occupation', '',1);
-		if($isSingleQuote)
-        {
-        	$occupationGroupsArray = explode (",", str_replace("'", "", $occupationGroups));
-        }
-        else
-        {
-        	$occupationGroupsArray = explode (",", $occupationGroups);
-        }
-
-		$occupationValuesString = "";
-
-		foreach($occupationGrouping as $key => $occupationGroupingValues) 
-		{
-			if(in_array($key,$occupationGroupsArray))
-			{
-				$occupationValuesString .= $occupationGroupingValues.",";
-			}		
-		}
-
-		$occupationValuesString = rtrim($occupationValuesString,",");
-
-		if($isSingleQuote)
-		{
-			$occupationValuesString = "'".$occupationValuesString."'";
-			$occupationValuesString = str_replace(",", "','", $occupationValuesString);
-		}
-		return $occupationValuesString;
-    }
-
-    public static function getOccupationGroupsLabelsFromValues($occupationGroups)
-    {
-    	$occupationGroupsArr = explode(",",$occupationGroups);
-    	$decoratedOccGroups = "";
-    	$occupationGroupingFieldMapLib = FieldMap::getFieldLabel('occupation_grouping', '',1);    	
-    	foreach($occupationGroupsArr as $key=>$value)
-    	{
-    		$decoratedOccGroups.= $occupationGroupingFieldMapLib[$value].", ";
-    	}
-    	$decoratedOccGroups = rtrim($decoratedOccGroups,", ");
-    	return $decoratedOccGroups;
-    }
-
-    public static function getContactLimitDates($profileObj = '',$profileid='')
-	{
-		
-		if($profileObj == '')
-			$loginProfile = LoggedInProfile::getInstance();
-		else
-			$loginProfile = $profileObj;
-		if(!$loginProfile->getPROFILEID())
-		{
-
-			if($profileid)
-			{
-				$loginProfile=new Profile();
-				$loginProfile->getDetail($profileid, "PROFILEID","*");
-			}
-		}
-
-		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
-		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
-		{
-			$verifyDate = $loginProfile->getENTRY_DT();
-		}
-		$x = date('Y-m-d',strtotime($verifyDate));
-		$y = date('Y-m-d');
-
-		$dayObject = date_diff( date_create($y), date_create($x));
-		$daysDiff = $dayObject->days;
-
-		$weeks = floor($daysDiff/7) * 7;
-
-		$weekStartDate = date('Y-m-d', strtotime($x. " + $weeks days"));
-
-		$months = floor($daysDiff/30) * 30;
-
-		$monthStartDate = date('Y-m-d', strtotime($x. " + $months days"));
-
-		return array('weekStartDate' => $weekStartDate, 'monthStartDate' => $monthStartDate);
-	}
-
-	public static function getLimitEndingDate($errlimit, $profileObj = '')
-	{
-		$loginProfile = $profileObj;
-
-		if($profileObj == '')
-			$loginProfile = LoggedInProfile::getInstance();
-
-		$verifyDate = $loginProfile->getVERIFY_ACTIVATED_DT();
-		if(!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00')
-		{
-			$verifyDate = $loginProfile->getENTRY_DT();
-		}
-		$x = date('Y-m-d',strtotime($verifyDate));
-		$y = date('Y-m-d');
-
-		$dayObject = date_diff( date_create($y), date_create($x));
-		$daysDiff = $dayObject->days;
-		if($errlimit == "WEEK")
-		{
-			if($daysDiff % 7 == 0)
-				$daysDiff += 1;
-			$weeks = ceil($daysDiff/7) * 7 - 1;
-			$endDate = date('Y-m-d', strtotime($x. " + $weeks days"));
-
-		}
-		elseif($errlimit == "MONTH")
-		{
-			if($daysDiff % 30 == 0)
-				$daysDiff += 1;
-			$months = ceil($daysDiff/30) * 30 - 1;
-			$endDate = date('Y-m-d', strtotime($x. " + $months days"));
-		}
-
-		return $endDate;
-	}
-
-     /**
-         * 
-         * @param type $country : country is the country that the person belongs to. eg: 51 for INDIA
-         * @param type $state :  it is a comma separated string of the form <state>,<native_state>
-         * @param type $cityVal : it is a comma separated string of the form <city>,<native_city>
-         * @param type $nativeCityOpenText : it is an open text value specifying the native place. eg:faizabad
-         * @param type $decoredVal : this is set to "city" 
-         * @return string
-         */
-
-     public static function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal)
-     {        
-     	$label = '';
-     	$city = explode(',',$cityVal);
-        $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
-        if(FieldMap::getFieldLabel($decoredVal,$city[0]) == '')
-        {
-        	$label = html_entity_decode(FieldMap::getFieldLabel('country',$country));
-        }
-        else
-        {
-        	if(substr($city[0],2)=="OT")
-        	{
-        		$stateLabel = FieldMap::getFieldLabel("state_india",substr($city[0],0,2));
-        		$label = $stateLabel."-"."Others";
-        	}
-        	else
-        	{
-        		$label = FieldMap::getFieldLabel($decoredVal,$city[0]);	
-        	}        	
-        }     
-        if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
-        	$nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
-        }
-        else
-        {
-        	$states = explode(',',$state);
-        	if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
-        		$nativeState = FieldMap::getFieldLabel('state_india',$states[1]);
-
-        		if($nativeCityOpenText != '' && $nativeState != '')
-        			$nativePlace = $nativeCityOpenText.', ';
-
-        		$nativePlace .= $nativeState;        		
-        	}
-        }
-        if($nativePlace != '' && $nativePlace != $label)
-        	$label .= ' & '.$nativePlace;
-        return $label;
-    }
-
-    public static function loginTrack($registrationid, $profileid)
-	{
-
-		if( ! isset($registrationid) || ! isset($profileid) || $profileid == null)
-			return ;
-
-		// APP_LOGINTRACKING
-		$appType = MobileCommon::isApp();
-		$loginTrack = new MIS_APP_LOGINTRACKING();
-		if(!$loginTrack->getRecord($registrationid, $profileid))
-		{
-			$loginTrack->replaceRecord($profileid, $registrationid, $appType);
-			// send mail
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,"Send mail for New login profile : $profileid ",array(LoggingEnums::MODULE_NAME => LoggingEnums::NEW_LOGIN_TRACK, LoggingEnums::DEVICEID => $registrationid, LoggingEnums::DETAILS => 'Device info : '.Devicedetails::deviceInfo() ));
-			CommonFunction::SendEmailNewLogin($profileid);
-		}
-	}
-
-	public static function SendEmailNewLogin($profileid)
-	{
-		if(!isset($profileid))
-			return ;
-
-		try
-		{
-			$channel = "Browser";
-			if(MobileCommon::isAndroidApp())
-			{
-				$channel = "Android App";
-			}
-			else if(MobileCommon::isIOSApp())
-			{
-				$channel = "Ios App";
-			}
-
-			$deviceName = Devicedetails::deviceInfo();
-			$city = $_SERVER["GEOIP_CITY_NAME"];
-			$country = $_SERVER["GEOIP_COUNTRY_NAME"];
-
-			$top8Mailer = new EmailSender(MailerGroup::TOP8, 1849);
-			$tpl = $top8Mailer->setProfileId($profileid);
-			// TODO : change subject
-			$subject = "There was a Login on your account from a new Device/Browser";
-			$tpl->setSubject($subject);
-			$forgotPasswordStr = ResetPasswordAuthentication::getResetLoginStr($profileid);
-			$forgotPasswordUrl = JsConstants::$siteUrl."/common/resetPassword?".$forgotPasswordStr;
-			$tpl->getSmarty()->assign("resetPasswordUrl",$forgotPasswordUrl);
-			// $tpl->getSmarty()->assign("channel", $channel);
-			$tpl->getSmarty()->assign("deviceName", $deviceName);
-			$tpl->getSmarty()->assign("city", $city);
-			$tpl->getSmarty()->assign("country", $country);
-			// send mail
-			$top8Mailer->send();
-		} catch (Exception $e) {
-			throw new jsException($e);
-		}
-	}
-
-    public static function getFlagForIdfy($profileId)
-    {
-    	if($profileId)
-    	{
-    		$loggedInObj = LoggedInProfile::getInstance();
-    		$subscription = $loggedInObj->getSUBSCRIPTION();
-    		if($subscription != "" && ($profileId % 5) == 1)
-    		{    			
-    			return true;
-    		}
-    		return false;
-    		    		
-    	}    	
-    	return false;
-    }
-    
-    public static function showAndBeyondPixel($profileId="") {
-    	return false;
-        if ($profileId && JsConstants::$whichMachine == "prod") {
-            $loggedInObj = LoggedInProfile::getInstance();
-            $subscription = $loggedInObj->getSUBSCRIPTION();
-            $verifyDate = $loggedInObj->getVERIFY_ACTIVATED_DT();
-            $verifyDateFlag = true;
-            if (!isset($verifyDate) || $verifyDate == '' || $verifyDate == '0000-00-00 00:00:00') {
-                $verifyDate = $loggedInObj->getENTRY_DT();
-            }
-            $datetime1 = new DateTime();
-            $datetime2 = new DateTime($verifyDate);
-            $interval = $datetime1->diff($datetime2);
-            if ($interval->days <= 7)
-                $verifyDateFlag = true;
-            if ($subscription == '' && $verifyDateFlag) {
-                $analyticScore = ScoringLib::getAnalyticScore($profileId);
-                if ($analyticScore >= 0 && $analyticScore <= 50)
-                    return true;
-            }
-        }
-        else if(JsConstants::$whichMachine == "prod")
-            return true;
-        return false;
-    }
-
-    //this has been added to common functions since we need a particular output for CI files
-    public static function sendCurlGETRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
-  {
-    if(!$timeout)
-      $timeout = 50000;
-    $ch = curl_init($urlToHit);    
-    if($headerArr)
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-  else
-  {
-  	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-  	curl_setopt($ch, CURLOPT_HEADER, $header);
-  }
-
-  	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
-    if($postParams)
-      curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    if($postParams)
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);  
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-    curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-    curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    $output = curl_exec($ch); 
-    return json_decode($output);
-  }
-
-  public static function sendCurlPostRequest($urlToHit,$postParams="",$timeout='',$headerArr="",$requestType="")
-	{
-    //print_r($urlToHit);
-		if(!$timeout)
-			$timeout = 50000;
-		$ch = curl_init($urlToHit);
-		if($headerArr)
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
-		else
-		{
-			$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-			curl_setopt($ch, CURLOPT_HEADER, $header);
-        }
-        
-        curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
-		if($postParams)
-			curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if($postParams)
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
-		if($requestType == "PUT")
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
-		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
-		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		$output = curl_exec($ch);
-		return $output;
-	}
-    public static function markProfileCompleteAndActivated(){
-        $toSetArr['ACTIVATED'] = 'Y';
-        $toSetArr['INCOMPLETE'] = 'N';
-        $toSetArr['SCREENING'] = 1099511627775;
-        $dateNow = date('Y-m-d H:i:s');
-        $toSetArr['VERIFY_ACTIVATED_DT'] = $dateNow;
-        $loggedInObj = LoggedInProfile::getInstance();
-        $jProfileObj = new JPROFILE();
-        $jProfileObj->edit($toSetArr,$loggedInObj->getPROFILEID());
-        $loggedInObj->setACTIVATED('Y');
-        $loggedInObj->setVERIFY_ACTIVATED_DT($dateNow);
-        $loggedInObj->setSCREENING(1099511627775);
-        $loggedInObj->setINCOMPLETE('N');
     }
 }
 ?>

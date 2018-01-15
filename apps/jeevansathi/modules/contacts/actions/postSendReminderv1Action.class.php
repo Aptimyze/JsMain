@@ -54,7 +54,6 @@ class postSendReminderv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
-			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -100,7 +99,7 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
                                 if($request->getParameter('API_APP_VERSION')>=80)
-					$responseArray['errmsglabel'] = "Reminder sent. Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
 					$responseArray["headerthumbnailurl"] = $thumbNail;;
 		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
                  		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
@@ -156,7 +155,7 @@ class postSendReminderv1Action extends sfAction
 						$responseArray["errmsglabel"]= "You can not send more than two reminders. Buy paid membership to talk to this member directly.";
 						if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 						{
-							$responseArray["footerbutton"]["label"]  = "Upgrade";
+							$responseArray["footerbutton"]["label"]  = "Buy paid membership";
 							$responseArray["footerbutton"]["value"] = "";
 							$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						}
@@ -195,25 +194,6 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
 			}
-
-			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
-			{
-				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
-				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				//$responseArray["redirect"] = true;
-			}
-			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
-			{
-				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
-				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				//$responseArray["headerlabel"] = "Profile is Underscreening";
-				//$responseArray["redirect"] = true;
-				 $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-                                $responseArray["headerthumbnailurl"] = $thumbNail;
-			}
-
 			else
 			{
 				$responseArray["errmsglabel"]= "You cannot perform this action";

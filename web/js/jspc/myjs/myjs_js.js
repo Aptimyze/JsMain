@@ -584,11 +584,6 @@ catch(e){
                             else{
 								$("#email"+count).html("Email id: "+contactDetails.contact4.value);
 							}
-              if(contactDetails.contact9==null)
-                              $("#relationshipManager"+count).html("");
-                            else{
-                $("#relationshipManager"+count).html( contactDetails.contact9.label+": "+contactDetails.contact9.value);
-              }
 
               if(contactDetails.contact6==null)
                               $("#postedBy"+count).html(contactDetails.errmsglabel);
@@ -775,13 +770,13 @@ function generateFaceCard(Object)
       $("#prv-"+Object.list).bind(clickEventType,function(){
         myjsSlider("prv-"+listName);
         if(listName == 'DAILYMATCHES_List')
-          GAMapper("GA_CE_MYJSDAILYMATCHES");
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');           
        else if (listName == 'JUSTJOINED_List')
-          GAMapper("GA_CE_MYJSJUSTJOINED");
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
        else if (listName == 'VERIFIEDMATCHES_List')
-          GAMapper("GA_CE_MYJSVERIFIEDMATCHES");
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
         else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
-          GAMapper("GA_CE_MYJSLASTSEARCH");
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');
                    
       });
       $("#nxt-"+Object.list).click(function(){

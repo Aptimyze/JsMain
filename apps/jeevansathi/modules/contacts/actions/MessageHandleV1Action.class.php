@@ -29,11 +29,7 @@ class MessageHandleV1Action extends sfAction
 			$messageCommunication->insertMessage();
 			if(!$messageCommunication->obsceneMessage())
 			{
-				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
-				if(MobileCommon::isAPP()=="A" && ($appVersion==100 || $appVersion==101))
-					$draft = htmlentities(urldecode($request->getParameter("draft")));
-				else
-					$draft = $request->getParameter("draft");
+				$draft = $request->getParameter("draft");
 				$type  = $request->getParameter('type');
 				$contactId  = $request->getParameter('contactId');
 				$LastSentMessageObj = new LastSentMessage();

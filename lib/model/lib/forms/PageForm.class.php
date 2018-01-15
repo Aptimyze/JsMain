@@ -39,10 +39,6 @@ class PageForm extends sfForm
 	* */
 	public function updateData($profileid='',$values_that_are_not_in_form=array()){
 	  $this->formValues=$this->getValues();
- 	  if(in_array("casteNoBar", array_keys($this->formValues)))
- 	  {
- 	  	unset($this->formValues['casteNoBar']);	  	
- 	  }
 	  $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
 		  if($value!==null){
@@ -225,17 +221,17 @@ class PageForm extends sfForm
 		  $id=$mobRegObj->insert($mobile_reg);
 	}
 	  if(count($religionArr)){
-		  $religionArr[PROFILEID]=$id;
+		  $religionArr[PROFILEID]=$profileid;
 		  include_once(sfConfig::get("sf_web_dir") . "/profile/functions_edit_profile.php");
 		  edit_nonHindu_religion($religionArr,"newjs.".$religion_table,$religion_log_table);
 	  }
 	  if(count($nativePlaceArr)){
-			$nativePlaceArr[PROFILEID]=$loggedInObj->getPROFILEID();
+			$nativePlaceArr[PROFILEID]=$profileid;
 			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
-				$nativePlaceObj->UpdateRecord($loggedInObj->getPROFILEID(),$nativePlaceArr);
+				$nativePlaceObj->UpdateRecord($profileid,$nativePlaceArr);
 			}
 	  }
            if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!='')){

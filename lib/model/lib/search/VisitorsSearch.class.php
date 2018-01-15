@@ -6,8 +6,7 @@
 class VisitorsSearch extends SearchParamters
 {
     
-        //private $filteredParams = array('LAGE','HAGE','MSTATUS','COUNTRY_RES','CITY_RES','RELIGION','MTONGUE','CASTE','INCOME');
-        private $filteredParams = array('MSTATUS','RELIGION');
+        private $filteredParams = array('LAGE','HAGE','MSTATUS','COUNTRY_RES','CITY_RES','RELIGION','MTONGUE','CASTE','INCOME');
         
         /**
 		* @const SHOW_FILTERED_PROFILES we dont show filtered profiles at all.
@@ -72,7 +71,7 @@ class VisitorsSearch extends SearchParamters
                 $this->setGENDER($gender);
             $forwardCriteria = PredefinedSearchFactory::getSetterBy('PartnerProfile',$this->loggedInProfileObj);
             $forwardCriteria->getDppCriteria();
-                $filtersObj = new ProfileFilter();
+                $filtersObj = new NEWJS_FILTER();
                 $filters = $filtersObj->fetchEntry($this->pid);
                 
                 if($filters['CITY_RES']=='Y' && $filters['COUNTRY_RES']!='Y')

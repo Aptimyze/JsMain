@@ -8,7 +8,10 @@ class VIEW_LOG_TRIGGER extends TABLE{
 
     public function __construct($dbname="")
         {
-			$dbname=$dbname?$dbname:"viewLogRep";
+			if(!JsConstants::$communicationRep)
+				$dbname=$dbname?$dbname:"viewLogRep";
+			else
+				$dbname=$dbname?$dbname:"shard2_master";
 			parent::__construct($dbname);
         }
         public function updateViewTrigger($viewer,$viewed)
@@ -16,12 +19,10 @@ class VIEW_LOG_TRIGGER extends TABLE{
 			try 
 			{
 
-				$sqlUpdate="REPLACE INTO VIEW_LOG_TRIGGER  (VIEWER,VIEWED,DATE) VALUES (:VIEWER_ID,:VIEWED_ID,now())";
+				$sqlUpdate="REPLACE INTO VIEW_LOG_TRIGGER  (VIEWER,VIEWED,DATE) VALUES ('$viewer','$viewed',now())";
 				//$sqlUpdate = "UPDATE MIS.FEATURED_PROFILE_VIEW SET COUNT=COUNT+1 WHERE DATE='$date'";
-				$res=$this->db->prepare($sqlUpdate);
-				$res->bindValue(":VIEWER_ID",$viewer,PDO::PARAM_INT);
-				$res->bindValue(":VIEWED_ID",$viewed,PDO::PARAM_INT);
-				$res->execute();
+
+				$this->db->exec($sqlUpdate);
 				
 			}
 			catch(PDOException $e)
@@ -34,13 +35,9 @@ class VIEW_LOG_TRIGGER extends TABLE{
         {
 			try 
 			{
-				$date = date("Y-m-d");
-				$sql="REPLACE INTO VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values (:VIEWER_ID,:VIEWED_ID,:DATE,'Y')";
-				$res=$this->db->prepare($sql);
-				$res->bindValue(":VIEWER_ID",$viewer,PDO::PARAM_INT);
-				$res->bindValue(":VIEWED_ID",$viewed,PDO::PARAM_INT);
-				$res->bindValue(":DATE",$date,PDO::PARAM_STR);				
-				$res->execute();
+
+				$sql="insert ignore into VIEW_LOG(VIEWER,VIEWED,DATE,VIEWED_MMM) values ('$viewer','$viewed',now(),'Y')";
+				$this->db->exec($sql);
 				
 			}
 			catch(PDOException $e)
@@ -114,10 +111,12 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				throw new jsException($e);
 		}
 	}
-		public function getViewedProfiles($start_date,$end_date)
+		public function getViewedProfiles($date)
 		{
 			try
 			{
+				$start_date = $date." 00:00:00";
+				$end_date = $date." 23:59:59";
 				$sql = "Select DISTINCT(VIEWED) from newjs.VIEW_LOG_TRIGGER where DATE between :start_date and :end_date";
 				$prep = $this->db->prepare($sql);
 				$prep->bindValue(":start_date",$start_date,PDO::PARAM_STR);

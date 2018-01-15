@@ -24,7 +24,7 @@ class renewalProcessInDialerTask extends sfBaseTask
 The [renewalProcessInDialer|INFO] task does things.
 Call it with:
 
-  [php symfony csvGeneration:renewalProcessInDialer|INFO]
+  [php symfony renewalProcessInDialer|INFO]
 EOF;
   }
 
@@ -41,14 +41,11 @@ EOF;
        	$largeFileData  =$csvHandler->fetchLargeFileData();
        	$processObj->setLeadIdSuffix($largeFileData['LEAD_ID_SUFFIX']);
 	$profiles =$csvHandler->fetchProfiles($processObj);
-        $csvHandler->removeOldProfiles($processObj);
-        // logging array defined below		
-	$filter = array("notActivatedCnt"=>0,"invalidPhoneCnt"=>0, "maleAgeCnt"=>0, "nriCnt"=>0, "nonOptinProfileCnt"=>0, "noPhoneExistsCnt"=>0,"noPhoneCnt"=>0,"lastLoginCnt"=>0);
+
 	// pre-filter logic
-	if(count($profiles)>0){
-            $csvHandler->storeTemporaryProfiles($processObj,$profiles);
-            $profiles =$csvHandler->preFilter($processObj, $profiles);
-        }
+	if(count($profiles)>0)
+		$profiles =$csvHandler->preFilter($processObj, $profiles);
+
 	if(count($profiles)>0){
 		foreach($profiles as $key=>$data){
 			$profileid =$data['PROFILEID'];
@@ -60,9 +57,5 @@ EOF;
 			}	
 		}
 	}
-        // Used for logging part and sending email alert
-	$totalCnt 		=count($profiles);
-	//$latestProfilesCnt 	=$csvHandler->getTemporaryFPProfilesCount($max_dt,'renewalProcessInDialer');
-	$csvHandler->updateFPLogs($totalCnt, $filter,'renewalProcessInDialer');
   }
 }

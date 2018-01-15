@@ -1,5 +1,4 @@
 var fbPhotosArr={};
-var albumData;
 function displayConfirmationMessage(message,showErrorBox,pictureid)
 {
 	if(showErrorBox==1)
@@ -151,45 +150,8 @@ function afterUpload()
 		handleContinueMessage();
 	}
 }
-function showMessageZeroMorePhoto() {
-    newPhotoCount = successfulUploads - newDeletedCount;
-    totalCount = (parseInt(alreadyPhotoCount) + parseInt(newPhotoCount)- parseInt(oldDeletedCount));
-
-    //added for showing messages when photo count is less than 3
-    if ( totalCount < 3 && totalCount > 0 )
-    {
-        $('#morePhotoUploaded p:first').prop('id',"");
-        $('#morePhotoUploaded button:first').prop('id',"");
-
-        $('#lessPhotoUploaded p:first').prop('id',"continueText");
-        $('#lessPhotoUploaded button:nth-child(2)').prop('id',"continue");
-
-        $("#morePhotoUploadedMessage").hide();
-        $("#lessPhotoUploadedMessage").show();
-        $("#lessPhotoUploaded").show();
-        $("#morePhotoUploaded").hide();
-    }
-    else
-    {
-        $('#lessPhotoUploaded p:first').prop('id',"");
-        $('#lessPhotoUploaded button:nth-child(2)').prop('id',"");
-
-        $('#morePhotoUploaded p:first').prop('id',"continueText");
-        $('#morePhotoUploaded button:first').prop('id',"continue");
-
-        $("#lessPhotoUploadedMessage").hide();
-
-        $("#lessPhotoUploaded").hide();
-        
-        $("#morePhotoUploadedMessage").show();
-        $("#morePhotoUploaded").show();
-    }
-   
-}
-
 function showContinueMessage(message)
 {
-    showMessageZeroMorePhoto();
 	$("#nowUpload").hide();
 	$("#continueText").html(message);
 	$(".continueDiv").show();
@@ -575,119 +537,4 @@ function uploadFb()
 function getMessageWithFileName(filename,message)
 {
 	return "<div class='textTru' style='max-width:140px;display:inline-block;'>"+filename+"</div> <div>"+message+"</div>";
-}
-function loadPhotos(key)
-{
-        $("#js-addImportPhotos").html('');
-        $(".js-ImportLoader2").show();
-        $(".js-addImportPhotos").hide();
-        $("#js-addImportAlbum").addClass("js-disabled");
-        $("#js-addImportAlbum").removeClass("js-disabled");
-        var albumStructure = $("#js-addImportPhotosInd").html();
-
-        $("#js-addImportPhotos").html('');
-        var cnt = 0;
-        $.each(albumData[key]['allPhotos'], function(key1, val1)
-        {
-                
-                var mapObj = {
-                        '{photo_number}':removeNull(key1),
-                        '{saveUrl}': removeNull(albumData[key]['allPhotosToSave'][key1]),
-                };
-                var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
-                $("#js-addImportPhotos").append(albumTuple);
-                var htm = "<img src="+removeNull(val1)+" class='pudim5 brdr-1'/>";
-                if (key1 == 0)
-                {
-                        $(".photonumber").append(htm);
-                }
-                else
-                {
-                        $(".photonumber"+key1).append(htm);
-                }
-                cnt++;
-        });
-        if(fbImportData["'"+key+"'"])
-        {
-                $.each(fbImportData["'"+key+"'"], function(k,v)
-                {
-                        var pos=parseInt(k.replace(/'/g,""))+1;
-                        $("#js-addImportPhotos li:nth-child("+pos+")").children("i").addClass("phsel");
-                });
-        }
-        $(".js-ImportLoader2").hide();
-        $(".js-addImportPhotos").show()
-	$(".js-importAlbum").addClass('cursp');
-	$("#album"+albumData[key]['albumId']).removeClass('cursp');
-}
-function loadAlbums()
-{
-        var albumStructure = $("#js-addImportAlbumInd").html();
-        var albumOffset = 0;
-        if(albumsCount!=0)
-        {
-        $.each(albumData,function(key,val){
-                var mapObj = {
-                        '{importAlbumName}': removeNull(val.albumName),
-                        '{importAlbumCount}': removeNull(val.photosCountInAlbum),
-                        '{importAlbumId}': removeNull(val.albumId),
-                        '{importAlbumOffset}': key
-                };
-                var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
-                $("#js-addImportAlbum").append(albumTuple);
-                var htm = "<img src="+removeNull(val.allPhotos[0])+" class='pudim3 vtop'/>";
-                $("#album"+val.albumId).append(htm);
-                ++albumOffset;
-        });
-                $(".js-ImportLoader").hide();
-                $(".js-ImportLoaderHide").show();
-                $(".js-fbImport").show();
-        }
-        else
-        {
-                $("#albumImportLoader").html('<div>You have no albums in your facebook account. To add photos from another source <a href="/social/addPhotos?uploadType=F">Click here</a></div>');
-        }
-        $(".js-importAlbum").addClass('cursp');
-}
-function createFbPage()
-{
-	hideLayers();
-	$(".js-fbImport").show();
-	if(!albumData.hasOwnProperty("0"))
-	{
-		var msg = '<div>Something went wrong, please try again</div>';
-		$("#albumImportLoader").html(msg);
-		$(".js-importAlbum").addClass('cursp');
-		$(".js-ImportLoaderHide").hide();
-		$(".js-ImportLoader").show();
-		$("#uploadFb").hide();
-	}
-	else if(!albumData['0'].hasOwnProperty("albumId"))
-	{
-		var msg = '<div>No albums present in loggedin facebook profile</div>';
-		$("#albumImportLoader").html(msg);
-		$(".js-importAlbum").addClass('cursp');
-		$(".js-ImportLoaderHide").hide();
-		$(".js-ImportLoader").show();
-		$("#uploadFb").hide();
-	}
-	else
-	{
-        $("#js-addImportAlbum").html('');
-        $("#js-addImportPhotos").html('');
-        $("#selectedAlbumPointer").css('top', '30px');
-        albumsCount = albumData.length;
-        loadImportedPhotosSlider(albumsCount);
-        loadAlbums();
-        setActiveAlbumPointer(0);
-        loadPhotos(0);
-        $("body").on("click",'.js-importAlbum',function(){
-                var offset = $(this).data("id");
-                if($(this).hasClass('cursp'))
-                {
-                        setActiveAlbumPointer(offset);
-                        loadPhotos(offset);
-                }
-        });
-	}
 }

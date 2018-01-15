@@ -225,24 +225,12 @@ class SearchApiDisplay
 			$offsetVal=1;
 			$this->viewedGender = $this->searchResultsData[0]['GENDER']; //check!!!!!
 			$decoratedMappingSearchDisplay = SearchConfig::decoratedMappingSearchDisplay();
-			$dbJprofile= new JPROFILE();
-			$arr=array("PROFILEID"=>$this->profileIdStr);
-			$data=$dbJprofile->getArray($arr,'','',"LAST_LOGIN_DT,PROFILEID");
-			$loginData= array();
-			if(is_array($data)){
-				foreach($data as $key=>$v){
-					$loginData[$v["PROFILEID"]] = $v["LAST_LOGIN_DT"];
-				}
-			}
-			
-			
 			foreach($this->profileids as $key=>$pid)
 			{
 				if(!($key == 0 && $this->searchResultsData[$key]['FEATURED']=='Y'))
 					$this->finalResultsArray[$pid]['OFFSET']=$offsetVal++;
 
 				$this->profileObjArr[$key]=Profile::getInstance("",$pid);
-				$this->searchResultsData[$key]['LAST_LOGIN_DT'] = $loginData[$pid]?$loginData[$pid]:$this->searchResultsData[$key]['LAST_LOGIN_DT'];
 				$this->profileObjArr[$key]->setHAVEPHOTO($this->searchResultsData[$key]['HAVEPHOTO']);
 				$this->profileObjArr[$key]->setGENDER($this->searchResultsData[$key]['GENDER']);
 				$this->profileObjArr[$key]->setPHOTOSCREEN($this->searchResultsData[$key]['PHOTOSCREEN']);
@@ -306,8 +294,8 @@ class SearchApiDisplay
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode($this->getEducationValue($fieldValue,$decoratedFieldName,$this->searchResultsData[$key]['UG_DEGREE'],$this->searchResultsData[$key]['PG_DEGREE'],$this->searchResultsData[$key]['OTHER_UG_DEGREE'],$this->searchResultsData[$key]['OTHER_PG_DEGREE']));
 						}
 						else if($fieldName == 'CITY_RES')
-						{ 
-                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = CommonFunction::getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
+						{
+                                                        $this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = $this->getResLabel($this->searchResultsData[$key]['COUNTRY_RES'],$this->searchResultsData[$key]['STATE'],$fieldValue,$this->searchResultsData[$key]['ANCESTRAL_ORIGIN'],$decoratedFieldName);
 //							if(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue) == '')
 //							{
 //								$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel('country',$this->searchResultsData[$key]['COUNTRY_RES']));
@@ -318,7 +306,6 @@ class SearchApiDisplay
 						}
 						else
 							$this->finalResultsArray[$pid]['DECORATED_'.$fieldName] = html_entity_decode(FieldMap::getFieldLabel($decoratedFieldName,$fieldValue));
-					
 					}
 				}
 
@@ -376,12 +363,6 @@ class SearchApiDisplay
 						$iconsSize += 30;
 				}
 				$this->finalResultsArray[$pid]['userLoginStatus']=$this->getUserLoginStatus($gtalkUsers[$pid],$jsChatUsers[$pid],$this->searchResultsData[$key]['LAST_LOGIN_DT']);
-				
-				$this->finalResultsArray[$pid]['availforchat']= false;
-				$loggedInProfileObj = LoggedInProfile::getInstance("newjs_master",'');
-				if(JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '' && $jsChatUsers[$pid])
-					$this->finalResultsArray[$pid]['availforchat']= true;
-
 //				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::statName($pid,$this->searchResultsData[$key]['USERNAME']);
 				$this->finalResultsArray[$pid]['STATIC_UNAME'] = CommonUtility::CanonicalProfile($this->profileObjArr[$key]);
 				$this->finalResultsArray[$pid]['PROFILECHECKSUM']=JsAuthentication::jsEncryptProfilechecksum($pid);
@@ -456,19 +437,12 @@ class SearchApiDisplay
 				else
 					$this->finalResultsArray[$pid]['BOLDLISTING']='N';
 
-				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']);
-                                $documentsAndAadhaar = $this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL'],$withAadhaar = 1);
-                                
-                                if($documentsAndAadhaar['documents'])
+				$this->finalResultsArray[$pid]['VERIFY_ACTIVATED_DT'] = SearchUtility::convertSolrTimeToMysqlTime($this->searchResultsData[$key]['VERIFY_ACTIVATED_DT']); 
+				$this->finalResultsArray[$pid]['VERIFICATION_SEAL']=$this->getSealInfo($this->searchResultsData[$key]['VERIFICATION_SEAL']);
+                                if($this->finalResultsArray[$pid]['VERIFICATION_SEAL'])
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 1;
                                 else
                                     $this->finalResultsArray[$pid]['VERIFICATION_STATUS'] = 0;
-                                
-                                $this->finalResultsArray[$pid]['VERIFICATION_SEAL'] = $documentsAndAadhaar['documents'];
-                                
-                //aadhar verification part
-                  $this->finalResultsArray[$pid]['COMPLETE_VERIFICATION_STATUS'] = $this->getAadhaarAndVerificationStatus($this->finalResultsArray[$pid]['VERIFICATION_STATUS'],$documentsAndAadhaar);
-
 				/* matchAlerts Sent Date Display */
 				if($this->SearchParamtersObj)
 				{
@@ -514,7 +488,6 @@ class SearchApiDisplay
 							
 			}
 		}
-		
 		
 	}
 
@@ -721,8 +694,6 @@ class SearchApiDisplay
 					{
 						eval('$temp =$photoObj->get'.$this->photoType.'();');
 						$this->finalResultsArray[$profileId]['PHOTO'] = $temp;
-                                                if(MobileCommon::isAndroidApp())
-                                                    $this->finalResultsArray[$profileId]['THUMBNAIL_PIC'] = $photoObj->getThumbailUrl();
 						if(!MobileCommon::isDesktop())
 							$this->finalResultsArray[$profileId]['SIZE']=$this->getpictureSizeToShow($profileId,$pictureSize[$profileId]);
 						unset($temp);
@@ -833,7 +804,6 @@ class SearchApiDisplay
 	**/
 	public function getUserLoginStatus($gtalkStatus,$jsChatStatus,$lastLoginDate)
 	{
-		
                 if($jsChatStatus == 1)
                         return 'Online now';
                 elseif($gtalkStatus == 1)
@@ -851,11 +821,7 @@ class SearchApiDisplay
 	**/
 	function getLastLogin($lastLoginDate)
 	{
-		if(strpos($lastLoginDate,"T"))
-			$lastLogin = explode("T",$lastLoginDate);
-		else
-			$lastLogin = explode(" ",$lastLoginDate);
-		
+		$lastLogin = explode("T",$lastLoginDate);
 		//$lastLoginDate = $lastLogin[0];
                 // input date format is (date T time Z), After exploding strinf at 'T' and removinf 'Z' from the string date time os passed.
 		$timeText = CommonUtility::convertDateToDay($lastLogin[0].' '.rtrim($lastLogin[1],'Z'));
@@ -868,11 +834,10 @@ class SearchApiDisplay
 	* This function is used to get seal info i.e. decode VERIFICATION SEAL
 	* @param - $verificationSeal Verification Seal of user as per API requirement
 	*/
-	public function getSealInfo($verificationSeal='0',$withAadhaar=0)
+	public function getSealInfo($verificationSeal='0')
 	{ 
 			if($verificationSeal == '0')
-				return 0;
-		
+							return 0;
 			$verificationSeal=  explode(",", $verificationSeal);
 			if($verificationSeal[0]=="F"){
 				$sealArr=array_flip(PROFILE_VERIFICATION_DOCUMENTS_ENUM::$VERIFICATION_SEAL_ARRAY);
@@ -896,43 +861,14 @@ class SearchApiDisplay
 											break;
 											
 									}
-                                                                        if($withAadhaar && $value == 'A')
-                                                                           $hasAadhaar = 1;
 							}
 						}
 				}
-                                if($withAadhaar){
-                                    if($hasAadhaar){
-                                        if(is_array($displaySeal))
-                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
-                                        else
-                                            $returnArr['documents'] = 1;
-
-                                        $returnArr['Aadhaar'] = "A";
-                                    }
-                                    else{
-                                        if(is_array($displaySeal))
-                                            $returnArr['documents'] = array_values(array_unique($displaySeal));
-                                        else
-                                            $returnArr['documents'] = 1;
-                                    }
-                                    return $returnArr;
-                                }
-                                
-                                if(!is_array($displaySeal)){
-                                        if($withAadhaar){
-                                            $returnArr['documents'] = 1;
-                                            return $returnArr;
-                                        }
+				if(!is_array($displaySeal))
 					return 1;
-                                }
-                                
+				
 				return array_values(array_unique($displaySeal));
 			}
-                        if($withAadhaar && in_array('A', $verificationSeal)){
-                                    $returnArr['Aadhaar'] = "A";
-                                    return $returnArr;
-                        }
 			return 0;
 							
 		
@@ -946,7 +882,7 @@ class SearchApiDisplay
          * @param type $decoredVal
          * @return string
          */
-	/*protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){                                
+	protected function getResLabel($country,$state,$cityVal,$nativeCityOpenText,$decoredVal){
                 $label = '';
                 $city = explode(',',$cityVal);
                 $citySubstr = substr($city[0], 0,2); // if city living in's state and native state is same do not show state
@@ -958,7 +894,7 @@ class SearchApiDisplay
                         $label = FieldMap::getFieldLabel($decoredVal,$city[0]);
                 }
                 if(isset($city[1]) && $city[1] != '0' && FieldMap::getFieldLabel($decoredVal,$city[1]) != ''){
-                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);
+                     $nativePlace =  FieldMap::getFieldLabel($decoredVal,$city[1]);    
                 }else{
                      $states = explode(',',$state);
                      if($states[1] != '' && ($states[1] != $citySubstr || $nativeCityOpenText != '')){
@@ -974,29 +910,5 @@ class SearchApiDisplay
                         $label .= ' & '.$nativePlace;
                 
                 return $label;
-        }*/
-
-    public function getFinalVerificationStatus($verificationStatus,$pid)
-    {
-        $aadharObj = new aadharVerification();
-        $aadharArr = $aadharObj->getAadharDetails($pid);
-        unset($aadharObj);
-        $aadharStatus = $aadharArr[$pid]["VERIFY_STATUS"];
-        if($verificationStatus == 1 && $aadharStatus == "Y")
-                return 3;   		
-        elseif($aadharStatus == "Y")
-                return 2;
-        else
-                return $verificationStatus;
-    }
-    
-    private function getAadhaarAndVerificationStatus($verificationStatus,$seal){
-        if($verificationStatus && $seal['Aadhaar'] == 'A')
-            return 3;
-        else if(in_array('A', $seal))
-            return 2;
-        else if($verificationStatus)
-            return 1;
-        return 0;
-    }
+        }
 }

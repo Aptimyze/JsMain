@@ -1,6 +1,6 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("9910244159","9873639543","8989931104","9810300513","9868673709");
+$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513","9868673709");
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $status = sendPresenceRequest();
 if($status!='200')
@@ -16,7 +16,7 @@ if($status!='200')
 }
 function sendPresenceRequest()
 {
-        $url = JsConstants::$presenceServiceUrl2."/jspresence/v1/presence?pfids=9061321";
+        $url = JsConstants::$presenceServiceUrl."/communication/v1/presence?pfids=9061321";
         $res = CommonUtility::sendCurlPostRequest($url,'',.1);
         $res = (array) json_decode($res);
         $res = (array) $res["header"];
@@ -30,5 +30,4 @@ function sms($mobile)
         $from           = "JSSRVR";
         $profileid      = "144111";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
-        CommonUtility::logTechAlertSms($message, $mobile);
 }

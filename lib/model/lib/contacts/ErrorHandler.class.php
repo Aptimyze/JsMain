@@ -62,10 +62,6 @@ class ErrorHandler
 	const LIMIT = 'LIMIT';
 	const PAID_FILTERED_INTEREST_NOT_SENT = 'PAID_FILTERED_INTEREST_NOT_SENT';
 	const PAID_FILTERED_INTEREST_SENT = 'PAID_FILTERED_INTEREST_SENT';
-	const FREE_FILTERED_INTEREST_NOT_SENT = 'FREE_FILTERED_INTEREST_NOT_SENT';
-	const FREE_FILTERED_INTEREST_SENT = 'FREE_FILTERED_INTEREST_SENT';
-	const REMINDER_SENT_BEFORE_TIME = 'REMINDER_SENT_BEFORE_TIME';
-	const SECOND_REMINDER_BEFORE_TIME ='SECOND_REMINDER_BEFORE_TIME';
 	/**
 	 * 
 	 * Used to initialize object of ErrorHandler class.
@@ -79,7 +75,7 @@ class ErrorHandler
 		Messages::setViewerChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewer()->getPROFILEID()));
 		Messages::setViewedChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewed()->getPROFILEID()));
 		$this->contactHandlerObj = $contactHandlerObj;
-		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0,ErrorHandler::REMINDER_SENT_BEFORE_TIME=>1,ErrorHandler::SECOND_REMINDER_BEFORE_TIME=>1); 
+		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0); 
 		$this->updateErrorBits();
 		
 	}
@@ -261,13 +257,10 @@ class ErrorHandler
 				
 		//4. Contact limit		
 		$error = $this->checkContactlimit();
-		if($error['MSG'])
+		if($error)
 		{
-			$this->setErrorMessage($error['MSG']);
+			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::EOI_CONTACT_LIMIT,ErrorHandler::ERROR_FOUND);
-			if(array_key_exists('E_COUNT', $error)){
-			$this->logEOIBreach($error['E_COUNT']);
-		}
 			return false;
 		}
 		
@@ -321,11 +314,11 @@ class ErrorHandler
 		{
 				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
 				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-				{				
-
-					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();								
+				{					
 					if($this->checkPaid())
-					{								
+					{	
+							$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
+							
 							if($this->interestNotSent())
 							{
 								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
@@ -344,29 +337,9 @@ class ErrorHandler
 							}
 
 					}
-					else
-					{
-							if($this->interestNotSent())
-							{
-								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
-								$error = Messages::FREE_FILTERED_INTEREST_NOT_SENT;
-								$error = str_replace("{{UNAME}}",$name, $error);
-								$this->setErrorMessage($error);	
-								return false;
-							}
-							else
-							{ 
-								$this->setErrorType(ErrorHandler::FREE_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
-								$error = Messages::FREE_FILTERED_INTEREST_SENT;
-								$error = str_replace("{{UNAME}}",$name, $error);
-								$this->setErrorMessage($error);
-								return false;
-							}
-
-					}
-					/*$error = Messages::FILTERED;
+					$error = Messages::FILTERED;
 					$this->setErrorMessage($error);
-					return false;*/
+					return false;
 				}			
 		}
 		
@@ -403,18 +376,6 @@ class ErrorHandler
 		{
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PHONE_NOT_VERIFIED,ErrorHandler::ERROR_FOUND);
-			return false;
-		}
-
-		//11. Check if the reminder was sent before 24 hours or not.
-		$error = $this->checkReminderSentBeforeDay();
-		if($error)
-		{
-			$this->setErrorMessage($error);
-			if($error['ID'] == 1)
-			$this->setErrorType(ErrorHandler::REMINDER_SENT_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
-			else
-				$this->setErrorType(ErrorHandler::SECOND_REMINDER_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
 
@@ -470,7 +431,6 @@ class ErrorHandler
 	 function checkViewedStatus()
 	 {
 		 $viewedObj=$this->contactHandlerObj->getViewed();
-		 $toBeType=$this->contactHandlerObj->getToBeType();
 		 //Underscreening
 		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED()==Messages::YES)
 		 {
@@ -482,11 +442,8 @@ class ErrorHandler
 			 $error = Messages::getMessage(Messages::OTHER_INCOMPLETE,array(self::USERNAME=>$viewedObj->getUSERNAME()));
 		 }
 		 //hidden
-
-		if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES && 
-			$toBeType!=ContactHandler::CANCEL && $toBeType!=ContactHandler::DECLINE && $toBeType!=ContactHandler::CANCEL_CONTACT)
+		 if($viewedObj->getPROFILE_STATE()->getActivationState()->getHIDDEN()==Messages::YES)
 		 {
-		 	
 			 $heshe="he";
 			 $hisher="his";
 			 if($viewedObj->getGENDER()=="F")
@@ -530,12 +487,7 @@ class ErrorHandler
 	function checkViewedHiddenProfile()
 	{
 		$error = '';
-		$toBeType=$this->contactHandlerObj->getToBeType();
-		if($toBeType==ContactHandler::CANCEL || $toBeType==ContactHandler::DECLINE || $toBeType==ContactHandler::CANCEL_CONTACT)
-		{
-			$error = '';	
-		}
-		elseif($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
 		{
 			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
 			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
@@ -634,232 +586,16 @@ class ErrorHandler
 	{
 		if($this->errorTypeArr[ErrorHandler::FILTERED])
 		{
-			// (print_r($this->checkProfileJunk()));die();
-			if($this->checkProfileJunk()){
-
-				$this->contactHandlerObj->setIsJunk(true);
-				if($this->contactHandlerObj->getAction()=='POST'){
-					$whyFilter=new MIS_WHY_FILTER();
-					$whyFilter->insertEntry(
-						$this->contactHandlerObj->getViewer()->getPROFILEID(),
-						$this->contactHandlerObj->getViewed()->getPROFILEID(),
-						$this->contactHandlerObj->getJunkType(),
-						$this->contactHandlerObj->getJunkData(),
-						'Y');
-					}
-					return true;
+			$whyFlag = 0;
+			if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
+				$whyFlag = 1;
+			
+			$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
+			if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
+			{ 
+				return true;
 			}
-			else{
-					$whyFlag = 0;
-					if($this->contactHandlerObj->getPageSource() == 'search' || $this->contactHandlerObj->getPageSource() == 'cc' || $this->contactHandlerObj->getAction()=='POST' || $this->contactHandlerObj->getPageSource() == 'VSM')
-						$whyFlag = 1;
-					
-					$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
-					if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
-					{ 
-						return true;
-					}
-				}			
 		} 
-		return false;
-	}
-	
-	function getClusture($Religion){
-		$Clusture = array(
-		1 => 7 /*Hindu*/,
-		4 => 7 /*Sikh*/,
-		7 => 7 /*Buddhist*/,
-		9 => 7 /*Jain*/,
-
-		2 => 4 /*Muslim*/,
-		3 => 3 /*Christian*/,
-		5 => 5 /*Parsi*/,
-		6 => 6 /*Jewish*/,
-		10 => 2 /*Bahai*/,
-		8 => 1 /*Other*/);
-		return $Clusture[$Religion];
-	}
-	/**
-	 * Check if the profile is Junk.
-	 * NOTE : Returns `true` when contact is `NOT Junk` else false
-	 * @return bool
-	 * @uses $contactHandlerObj
-	 */
-	function checkProfileJunk(){
-		// units year inches rupees
-		// $Gender = $Sender->getGENDER();
-		
-		$sender = $this->contactHandlerObj->getContactObj()->getSenderObj();
-		$receiver = $this->contactHandlerObj->getContactObj()->getReceiverObj();
-
-		// added during hotfix 
-		/*if($receiver->getPROFILEID()%103>20)
-			return false;*/
-
-		$senderArr = array(
-			"age" => $sender->getAGE(),
-			"height" => $sender->getHEIGHT(),
-			"income" => $sender->getINCOME(),
-			"gender" => $sender->getGENDER(),
-			// "religion" => $Sender->getDecoratedReligion(),
-			"religion" => $sender->getRELIGION(),
-			"clusture" => $this->getClusture($sender->getRELIGION())
-			);
-
-		
-		$dbName = JsDbSharding::getShardNo($receiver->getPROFILEID());
-		$jpartnerObj = new newjs_JPARTNER($dbName);
-		$fields = "LAGE,HAGE,LHEIGHT,HHEIGHT,PARTNER_RELIGION,LINCOME";
-		$paramArr['PROFILEID']=$receiver->getPROFILEID();
-		$receiverArr = $jpartnerObj->get($paramArr,$fields)[0];
-
-
-
-		$dppReligionsRaw = explode(',', $receiverArr["PARTNER_RELIGION"]);
-		$dppReligions = array();
-		if($dppReligionsRaw)
-		foreach ($dppReligionsRaw as $religion) {
-			$dppReligions[] = $this->getClusture(substr($religion, 1, -1));
-		}
-		$receiverArr["clusture"] = $dppReligions;
-
-
-		$receiverArr["age"] = $receiver->getAGE();
-		$receiverArr["height"] = $receiver->getHEIGHT();
-
-        // print_r($senderArr);
-        // print_r($receiverArr);
-        // die();
-
-		// $senderArr["age"]   = 16;
-		// $receiverArr["age"] = 18;
-		// $receiverArr["LAGE"] = 20;
-		// $receiverArr["HAGE"] = 26;
-		// 
-		
-		// $senderArr["height"]   = 16;
-		// $receiverArr["height"] = 15;
-		// $receiverArr["LHEIGHT"] = 19;
-		// $receiverArr["HHEIGHT"] = 26;
-		
-
-		// $senderArr["height"] = 10;
-
-        // var_dump(in_array($senderArr["clusture"], $receiverArr["clusture"]));
-		
-		// $Height = $Sender->getHEIGHT();
-		// $Age = $Sender->getAGE();
-		// echo $Sender->getDecoratedIncomeLevel();
-		/*
-		 * getGENDER
-		 * getHEIGHT getDecoratedHeight
-		 * getINCOME getDecoratedIncomeLevel
-		 * getAGE	
-		 * getDecoratedReligion
-		 */
-		static $Limits = array(
-			"M" => array(
-				"age" => array(
-					"L" => 3, "H" => 3
-					),
-				"height" => array(
-					"L" => 2, "H" => 4
-					),
-				"income" => array(
-					"L" => 2
-					)
-				),
-			"F" => array(
-				"age" => array(
-					"L" => 3, "H" => 3
-					),
-				"height" => array(
-					"L" => 3, "H" => 3
-					),
-				"income" => array(
-					"L" => 2
-					)
-				)
-			);
-
-		// $ageExtraCheck
-		// extra check for age logic as follows : 
-		// (Maleage - Femaleage > 5) OR (Maleage - Femaleage < -1)
-		// eg : 
-		$ageExtraCheck = false;
-		switch ($senderArr['gender']) {
-			case 'M':
-				$v = $senderArr["age"] - $receiverArr["age"];
-				if(!in_array($v, array(-1,0,1,2,3,4,5))) {
-					$ageExtraCheck = true;
-				}
-				break;
-			case 'F':
-				$v = $receiverArr['age'] - $senderArr['age'];
-				if(!in_array($v, array(-1,0,1,2,3,4,5))) {
-					$ageExtraCheck = true;
-				}
-				break;
-		}
-		// $heightExtraCheck
-		// extra check for height, logic as follows :
-		// (Maleht -Femaleht > 7) OR (Maleht - Femaleht) < 2)
-
-		$heightExtraCheck = false;
-		switch ($senderArr['gender']) {
-			case 'M':
-				$v = $senderArr["height"] - $receiverArr["height"];
-				if(!in_array($v, array(2,3,4,5,6,7))) {
-					$heightExtraCheck = true;
-				}
-				break;
-			case 'F':
-				$v = $receiverArr['height'] - $senderArr['height'];
-				if(!in_array($v, array(2,3,4,5,6,7))) {
-					$heightExtraCheck = true;
-				}
-				break;
-		}
-
-		$ageCheck = ($senderArr["age"] < ($receiverArr["LAGE"] - $Limits[$senderArr["gender"]]["age"]["L"]) || $senderArr["age"] > ($receiverArr["HAGE"] + $Limits[$senderArr["gender"]]["age"]["H"])) ? true : false;
-		
-		$heightCheck = ($senderArr["height"] < ($receiverArr["LHEIGHT"] - $Limits[$senderArr["gender"]]["height"]["L"]) || $senderArr["height"] > ($receiverArr["HHEIGHT"] + $Limits[$senderArr["gender"]]["height"]["H"])) ? true : false;
-
-		$incomeCheck = ($senderArr["income"] < ($receiverArr["LINCOME"] - $Limits[$senderArr["gender"]]["income"]["L"])) ? true : false;
-
-		$clustureCheck = in_array($senderArr["clusture"], $receiverArr["clusture"]) ? false : true;
-
-		// print_r(array($ageCheck, $ageExtraCheck, $heightCheck, $heightExtraCheck));
-		// age check
-		if(strlen($senderArr["age"]) != 0 && ( $ageCheck && $ageExtraCheck )) {
-			$this->contactHandlerObj->setJunkType("AGE_JUNK");
-			$this->contactHandlerObj->setJunkData("s:".$senderArr["age"]."|r:".$receiverArr["LAGE"].",".$receiverArr["HAGE"]);
-			// return "age junk";
-			return true;
-		}
-		// height check
-		if(strlen($senderArr["height"]) != 0 && ( $heightCheck && $heightExtraCheck )){
-			$this->contactHandlerObj->setJunkType("HEIGHT_JUNK");
-			$this->contactHandlerObj->setJunkData("s:".$senderArr["height"]."|r:".$receiverArr["LHEIGHT"].",".$receiverArr["HHEIGHT"]);
-			// return "height junk";
-			return true;
-		}
-		// income check
-		if(strlen($senderArr["income"]) != 0 && $incomeCheck) {
-			$this->contactHandlerObj->setJunkType("INCOME_JUNK");
-			$this->contactHandlerObj->setJunkData("s:".$senderArr["income"]."|r:".$receiverArr["LINCOME"]);
-			// return "income junk";
-			return true;
-		}
-		// religion check
-		if($clustureCheck && strlen($receiverArr["PARTNER_RELIGION"]) != 0) {
-			$this->contactHandlerObj->setJunkType("RELIGION_JUNK");
-			$this->contactHandlerObj->setJunkData("s:".$senderArr["PARTNER_RELIGION"]."|r:".$reveiverArr['religion'].",c:".$senderArr['clusture']);
-			// return "religion junk";
-			return true;
-		}
-		// return "not junk";
-		// not junk
 		return false;
 	}
 	
@@ -952,17 +688,16 @@ class ErrorHandler
 	 */	
 	function checkContactlimit()
 	{
-		$error['MSG'] ='';
+		$error ='';
 		
 		//Not to be checked for AP users.
 		if($this->contactHandlerObj->getPageSource()=='AP')
 					return $error;
+					
+		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
 		
     	if($this->errorTypeArr[ErrorHandler::EOI_CONTACT_LIMIT] && $this->contactHandlerObj->getAction()==ContactHandler::POST)
 		{
-
-		$profileMemcacheServiceObj = new ProfileMemcacheService($this->contactHandlerObj->getViewer());
-
 			$limitArr = CommonFunction::getContactLimits($this->contactHandlerObj->getViewer()->getSUBSCRIPTION(),$this->contactHandlerObj->getViewer()->getPROFILEID());
 			
 			$today_initiated = $profileMemcacheServiceObj->get("TODAY_INI_BY_ME");
@@ -973,96 +708,40 @@ class ErrorHandler
 			
 			if(($limitArr['DAY_LIMIT']-$today_initiated) <= 0)
 			{
-				$error['MSG'] = Messages::DAY_LIMIT;
+				$error = Messages::DAY_LIMIT;
 				$this->setErrorType('LIMIT','DAY');
-				$error['E_COUNT'] = $today_initiated;
 			}
 			else if($limitArr['WEEKLY_LIMIT']-$weekly_initiated<=0)
 			{
-				$error['MSG'] = Messages::WEEK_LIMIT;
+				$error = Messages::WEEK_LIMIT;
 				$this->setErrorType('LIMIT','WEEK');
-				$error['E_COUNT'] = $weekly_initiated;
 			}
 			else if($limitArr['MONTH_LIMIT']-$monthly_initiated<=0)
 			{	
-				$error['MSG'] = Messages::MON_LIMIT;
+				$error = Messages::MON_LIMIT;
 				$this->setErrorType('LIMIT','MONTH');
-				$error['E_COUNT'] = $monthly_initiated;
 			}
 			else if($limitArr['OVERALL_LIMIT']-$total_contacts<=0)
 			{ 
-				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID()){
-					$error['MSG'] = Messages::PAID_OVERALL_LIMIT;
-					$error['E_COUNT'] = $total_contacts;
-				}
-			    else{
-					$error['MSG'] = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
-					$error['E_COUNT'] = $total_contacts;
-			    }
+				if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID())
+					$error = Messages::PAID_OVERALL_LIMIT;
+			    else
+					$error = Messages::getFreeOverAllLimitMessage(Messages::FREE_OVERALL_LIMIT);
 				$this->setErrorType('LIMIT','TOTAL');
 			}
-
-			$percentageThreshold = 80;
-			$percentages = array(
-				array(
-					"type" => "DAILY",
-					"text" => "day",
-					"value" => (100*($today_initiated + 1)) / $limitArr["DAY_LIMIT"],
-					"count" => $today_initiated+1,
-					"limit" => $limitArr["DAY_LIMIT"],
-					"expiry" => date('F j,Y')
-					),
-
-				array(
-					"type" => "WEEKLY",
-					"text" => "week",
-					"value" => (100*($monthly_initiated + 1)) / $limitArr["WEEKLY_LIMIT"],
-					"count" => $weekly_initiated+1,
-					"limit" => $limitArr["WEEKLY_LIMIT"],
-					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("WEEK")))
-					),
-				array(
-					"type" => "MONTHLY",
-					"text" => "month",
-					"value" => (100*($weekly_initiated + 1)) / $limitArr["MONTH_LIMIT"],
-					"count" => $monthly_initiated+1,
-					"limit" => $limitArr["MONTH_LIMIT"],
-					"expiry" => date('F j,Y', strtotime(CommonFunction::getLimitEndingDate("MONTH")))
-					),
-				array(
-					"type" => "OVERALL",
-					"text" => "total",
-					"value" =>  (100* ($total_contacts + 1)) / $limitArr["OVERALL_LIMIT"],
-					"count" => $total_contacts+1, "limit" => $limitArr["OVERALL_LIMIT"])
-			);
-
-			$indexes = array();
-			foreach ($percentages as $key => $row)
+			else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
 			{
-				$indexes[$key] = $row['value'];
-			}
-			array_multisort($indexes, SORT_DESC, $percentages);
-			// die(var_dump($percentages));
-			foreach ($percentages as $percentage) {
-				if($percentage['value'] > $percentageThreshold){
-					$this->contactHandlerObj->setContactLimitWarning($percentage);
-					break;
-				}
-			}
-			// die(var_dump($this->contactHandlerObj->getContactLimitWarning($PERCENTAGE)));
-		/*	else if(!(CommonFunction::isContactVerified($this->contactHandlerObj->getViewer())) && $limitArr['NOT_VALIDNUMBER_LIMIT']-$computeAfterDate<=0)
-			{
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, new Exception("Contact Not Verified in Error Handler (checkContactlimit function)"));
+				
 				if($this->contactHandlerObj->getPageSource()=='Search')
 				
-					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
+					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'1',self::SEARCHID=>'',self::ENGINETYPE=>''));
 					
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::EOI)				
-					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
+					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'EOI'));
 				
 				elseif($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-					$error['MSG'] = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
-			}*/
+					$error = Messages::getVerifyPhoneMessage(array(self::FROMSEARCH=>'',self::SEARCHID=>'',self::ENGINETYPE=>'CONTACT'));
+			}
 		}
 		return $error;		
 	}
@@ -1220,9 +899,9 @@ class ErrorHandler
 	{
 		$error ="";
 		$ignoreObj = new IgnoredProfiles();
-		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
+		if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewer()->getPROFILEID(),$this->contactHandlerObj->getViewed()->getPROFILEID()))
 			$error = Messages::getMessage(Messages::I_IGNORE_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewed()->getUSERNAME()));
-		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID(),ignoredProfileCacheConstants::BYME))
+		else if($ignoreObj->ifIgnored($this->contactHandlerObj->getViewed()->getPROFILEID(),$this->contactHandlerObj->getViewer()->getPROFILEID()))
 			$error = Messages::getMessage(Messages::IGNORED_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewer()->getUSERNAME()));
 		return $error;
 	}
@@ -1242,66 +921,6 @@ class ErrorHandler
 	}	
 
 
-	private function checkReminderSentBeforeDay()
-	{  
-		$error = '';
-
-		$contactObj = $this->contactHandlerObj->getContactObj();
-
-		if($this->errorTypeArr[ErrorHandler::REMINDER_SENT_BEFORE_TIME] && $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 1 )
-		{		
- 		
-		$timeOfLastContact = strtotime($contactObj->getTIME());
-		$timeDayAgo = (time() - (3600*24));
-
-		if($timeDayAgo < $timeOfLastContact){
-		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
-		$error['ID'] = 1;
-		}
-		
-		}
-		else if($this->errorTypeArr[ErrorHandler::SECOND_REMINDER_BEFORE_TIME] &&
-$this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
-		{	
-
-		$timeOfLastContact = strtotime($contactObj->getTIME());
-		$timeDayAgo = (time() - (3600*24));
-
-		if($timeDayAgo < $timeOfLastContact){
-		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
-		$error['ID'] =2;
-		}
-		
-		}
-		return $error;
-	}
-
-	private function logEOIBreach($EOIDone)
-	{	
-			$viewerLogObj = $this->contactHandlerObj->getViewer();
-			$viewedLogObj = $this->contactHandlerObj->getViewed();
-			$viewerGender = $viewerLogObj->getGENDER();
-			$viewerPfid = $viewerLogObj->getPROFILEID();
-			$viewedPfid = $viewedLogObj->getPROFILEID();
-			$typeBreached = $this->errorTypeArr['LIMIT'];
-			$subscription = $viewerLogObj->getSUBSCRIPTION();
-
-			$check = CommonFunction::isPaid($subscription);
-			if($check == true)
-			{
-				$typeOfUser = "PAID";
-				if(CommonFunction::isOfflineMember($subscription))
-				{
-					$typeOfUser = "RB";
-				}	
-			}
-			else
-			{
-				$typeOfUser = "FREE";
-			}
-			$loggingObj = new MIS_EOI_DENIED_LOG();
-			$loggingObj->insertLog($viewerPfid,$viewedPfid,$viewerGender,$typeBreached,$typeOfUser,$EOIDone);
-	}
 
 
 }

@@ -255,16 +255,12 @@ class UserFilterCheck
 	{
 		//echo "lib--";
                 $viewProfileOptimization = viewProfileOptimization::getInstance($this->senderObj->getPROFILEID(),$this->receiverObj->getPROFILEID());
-		$ignFilterStatus = $viewProfileOptimization->getIgnoreProfileStatus();
-                if(isset($ignFilterStatus)){
-                    if($ignFilterStatus == 2)
-                        $ignoreFilter = true;
-                    else
-                        $ignoreFilter = false;
-                }
+		$ignFilterStatus = $viewProfileOptimization->getIgnoreFilter();
+                if(isset($ignFilterStatus))
+                    $ignoreFilter = $ignFilterStatus;
                 else{
                     $ignoreObj = new IgnoredProfiles("newjs_master");
-                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID(),ignoredProfileCacheConstants::BYME);
+                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
                 }
 		if($ignoreFilter)
 		{	$data= "Ignored By the Reciever";
@@ -631,7 +627,7 @@ class UserFilterCheck
 	 */
 	public static function getFilterParameters($profileid)
 	{
-		$filtObj=new ProfileFilter();
+		$filtObj=new NEWJS_FILTER();
 		$row=$filtObj->fetchEntry($profileid);
 		if(is_array($row))
 		{

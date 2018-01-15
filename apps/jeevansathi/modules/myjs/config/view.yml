@@ -13,5 +13,5 @@ jspcPerformSuccess:
     title:        My Jeevansathi - Jeevansathi.com
     robots: noindex,nofollow
   stylesheets: [jspc/common/cssRangeSlider,jspc/myjs/myjs,jspc/common/NProgress,jspc/common/3DotLoader]
-  javascripts: [jspc/myjs/myjs_js,jspc/myjs/myjs_pcrevamp,jspc/myjs/engBarJs_js,jspc/common/nano,jspc/common/common_cal@bottom]
+  javascripts: [jspc/myjs/myjs_js,jspc/myjs/myjs_pcrevamp,jspc/myjs/engBarJs_js,jspc/common/nano]
   layout: jspcLayout

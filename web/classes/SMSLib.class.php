@@ -77,7 +77,6 @@ class SMSLib
     {
         $varArr = array(
             "USERNAME"        => array("maxlength" => "8"),
-            "FIELD_LIST"      => array("maxlength" => "30"),
             "PASSWORD"        => array("maxlength" => "16"),
             "MSTATUS"         => array("maxlength" => "13"),
             "MTONGUE"         => array("maxlength" => "12"),
@@ -124,22 +123,6 @@ class SMSLib
         }
 
         switch ($messageToken) {
-        	case "DESCRIPTION_LINK" :
-        		$longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $tokenValue[USERNAME_ID]. "&CMGFRMMMMJS=mobile";
-        			return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
-        			
-        	case "USERNAME_ID": 
-        		$USERNAME_ID= $tokenValue[USERNAME_ID];
-        		return $USERNAME_ID;
-            case "FIELD_LIST":
-                    $FIELD_LIST = $this->getVariables("FIELD_LIST");
-                    $fieldsList = strlen($tokenValue['editedFields']) <= $FIELD_LIST["maxlength"] ? $tokenValue['editedFields'] : substr($tokenValue['editedFields'], 0, $FIELD_LIST["maxlength"] - 2) . "..";
-                    return $fieldsList;
-                        break;
-            case "WAS_WERE":                    
-                    $wasWere = $tokenValue['WAS_WERE']; 
-                    return $wasWere;
-                        break;
             case "PHOTO_REJECTION_REASON":                    
                     $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
                     return $rejectReasonArr[0];
@@ -411,17 +394,13 @@ class SMSLib
             case "URL_OTHER_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&stype=" . SearchTypesEnums::CONTACT_DETAIL_SMS;
                 return $this->getShortURL($longURL, $messageValue["PROFILEID"], '', 'Y');
-    
+
             case "URL_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile";
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
             case "URL_EDIT_HOROSCOPE":
                 $longURL = $this->SITE_URL . "/P/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&ownview=1&EditWhatNew=AstroData";
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
-                
-            case "EDIT_BASIC_PROFILE_URL":
-                $longURL = $this->SITE_URL . "/P/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&ownview=1";
-                return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"],'','#Details');
 
             case "EOI_PROFILE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?username=" . $messageValue["USERNAME"] . "&CMGFRMMMMJS=mobile&responseTracking=" . JSTrackingPageType::SMS;
@@ -552,7 +531,7 @@ class SMSLib
                 return $messageValue["ISD"];
 
             case "PHONE_ISD_COMMA":
-                if (($messageValue["SHOWPHONE_MOB"] != 'N') && ($messageValue["PHONE_MOB"])) {
+                if (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"])) {
                     $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
                     $mob_len = $this->getVariables("PHONE_ISD_COMMA");
                     $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
@@ -636,41 +615,6 @@ class SMSLib
             case "LINK_DEL":
                $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
                 return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
-
-            case "REPORT_INVALID_PHONE_ISD_COMMA":
-
-                $toSendForPrivacy = 0;
-
-                if($messageValue["SHOWPHONE_MOB"] == 'C')
-                { 
-                    include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-                   $contactDetails = Contacts::getContactsTypeCache($messageValue["RECEIVER"]["PROFILEID"],$messageValue["PROFILEID"]);
-                   $contactArr = explode('_',$contactDetails);
-                   $smaller = $messageValue["RECEIVER"]["PROFILEID"] > $messageValue["PROFILEID"] ? $messageValue["PROFILEID"] :
-                   $messageValue["RECEIVER"]["PROFILEID"]; 
-                   $type = $contactArr[0];
-                   $senderReceiver = $contactArr[1];
-
-                   if($type == 'A' || $smaller == $messageValue["PROFILEID"] && $senderReceiver == 'S' && $type == 'I')
-                   {
-                        $toSendForPrivacy = 1;
-                   }
-                   else
-                   {
-                        $toSendForPrivacy = 0;
-                   }
-                }
-                if ($toSendForPrivacy || (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"]))) { 
-                    $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
-                    $mob_len = $this->getVariables("PHONE_ISD_COMMA");
-                    $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
-                    $mob     = '+' . $mob . ' , ';
-                } 
-                else {
-                    $mob = '';
-                }
-                return $mob;
-
             default:
                 return "";
         }
@@ -711,7 +655,7 @@ class SMSLib
     {
         include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
         $cc      = 'palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com,prashant.pal@jeevansathi.com';
-        $to      = 'nitesh.s@jeevansathi.com';
+        $to      = 'tanu.gupta@jeevansathi.com';
         $msg     = '';
         $subject = "Scheduled SMS sendSmsAlert cron error mail";
         if ($commentText) {
@@ -727,7 +671,7 @@ class SMSLib
     {
         include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
         $cc      = 'esha.jain@jeevansathi.com,pankaj.khandelwal@jeevansathi.com';
-        $to      = 'nitesh.s@jeevansathi.com';
+        $to      = 'tanu.gupta@jeevansathi.com';
         $subject = "Match of the day Sms Calculation mail";
         $msg     = "Calculation Number = " . ($num + 1) . "<br/> Total Profile: " . $count . " <br/> Total Sms Generated: " . $countSmsGenerated . "<br/> Total New Best Match Calculated: " . $countBestMatchCalculated . "<br/><br/>Warm Regards";
         send_email($to, $msg, $subject, "", $cc);

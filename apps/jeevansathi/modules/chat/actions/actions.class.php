@@ -72,7 +72,6 @@ class chatActions extends sfActions
 				$headers[] = 'Accept: application/json';
 
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-				curl_setopt($ch, CURLOPT_USERAGENT,"JsInternal");
 
 				$curlResult = curl_exec($ch);
 				curl_close($ch);
@@ -346,23 +345,15 @@ class chatActions extends sfActions
 				$ip = FetchClientIP();
 				$chatid = $request->getParameter('chat_id');
 				$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
-				
-				$chatNotification[$this->loginProfile->getPROFILEID()."_".$profileid]=json_encode(array("msg"=>$request->getParameter('chatMessage'),"ip"=>$ip,"from"=>$this->loginProfile->getPROFILEID(),"id"=>$chatid,"to"=>$profileid));
-
 				$this->Profile->getDetail($profileid, "PROFILEID");
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
 				$privilegeArray = $this->contactHandlerObj->getPrivilegeObj()->getPrivilegeArray();
-				if($request->getParameter('chatMessage') && CONTACTS::isObscene($request->getParameter('chatMessage')))
+				if(!MobileCommon::isApp() && $request->getParameter('chatMessage') && CONTACTS::isObscene($request->getParameter('chatMessage')))
 				{
 					$response["cansend"] = true;
 					$response['sent'] = false;
 					$response["errorMsg"] = "Message not delivered, Please try later";
-					$responseArray["cansend"] = true;
-					$responseArray['sent'] = false;
-					$responseArray["errmsglabel"] = "Message not delivered, Please try later";
-					$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge($responseArray);
-					$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge(array());
 				}
 				else if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
 					if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
@@ -381,51 +372,23 @@ class chatActions extends sfActions
 							$response["cansend"] = false;
 							$response['sent'] = false;
 							$response["errorMsg"] = "You can send more messages if user replies";
-							$responseArray['cansend']=false;
-							$responseArray['sent']=false;
-
-							$responseArray["infomsglabel"] = "You can send more messages if user replies";
-							$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-							$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
 						} else {
 							if ($msgText)
 								$msgText = $msgText . "||" . $chatMessage;
 							else {
 								$msgText = $chatMessage;
 							}
-
 							$_GET["messageid"] = $message[0]["ID"];
 							sfContext::getInstance()->getRequest()->setParameter("messageid", $message[0]["ID"]);
 							$_GET["chatMessage"] = $msgText;
 							$messageCommunication = new MessageCommunication('', $this->loginProfile->getPROFILEID());
 							$messageCommunication->insertMessage();
-							JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
 							$count++;
 							if ($count < 3) {
 								$response["cansend"] = true;
-								$responseArray['cansend']=true;
-								$responseArray['sent']=true;
-								if(sfContext::getInstance()->getRequest()->getParameter("page_source") == "chat" && sfContext::getInstance()->getRequest()->getParameter("channel") == "A") {
-									$androidText = true;
-								}
-								else
-									$androidText = false;
-
-									$buttonResponse = new ButtonResponse($this->loginProfile,$this->Profile,array(),$this->contactHandlerObj);
-									$responseArray["buttons"][] = $buttonResponse->getInitiatedButton($androidText);
-									$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-									$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
-
 							} else {
 								$response["cansend"] = false;
-								$response['sent'] = true;
 								$response["errorMsg"] = "You can send more messages if user replies";
-								$responseArray['cansend']=false;
-								$responseArray['sent']=true;
-
-								$responseArray["infomsglabel"] = "You can send more messages if user replies";
-								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-								$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
 							}
 							$response['sent'] = true;
 							$response["messageid"] = $message[0]["ID"];
@@ -439,20 +402,12 @@ class chatActions extends sfActions
 					$request->setParameter("moduleName","contacts");
 					$request->setParameter('chatMessage',$chatMessage);
 					$request->setParameter("setFirstEoiMsgFlag",true);
-					if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
-					{
-						$data  = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv1');
-					}
-					else {
-						$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
-					}
+					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
 					$output = ob_get_contents();
 					ob_end_clean();
 					$response = json_decode($output, true);
-					$response["buttondetails"]["cansend"] = true;
-					$response["buttondetails"]["sent"] = true;
-					//$response["cansend"] = true;
-					//$response['sent'] = true;
+					$response["cansend"] = true;
+					$response['sent'] = true;
 
 				}
 			}
@@ -474,9 +429,8 @@ class chatActions extends sfActions
 		$loginData = $request->getAttribute("loginData");
 		if ($loginData) {
             $profileid = $loginData['PROFILEID'];
-            $nameOfUserOb=new NameOfUser();
-            $nameOfUserArr = $nameOfUserOb->getNameData($profileid);
-            $nameOfUser = $nameOfUserArr[$profileid]["NAME"];
+            $nameOfUserOb=new incentive_NAME_OF_USER();
+            $nameOfUser=$nameOfUserOb->getName($profileid);
             if(!$nameOfUser){
                 $nameOfUser = $loginData['USERNAME'];
             }

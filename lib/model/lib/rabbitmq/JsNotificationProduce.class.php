@@ -28,7 +28,6 @@ class JsNotificationProduce
 
   public function __construct($useFallbackServer=true)
   { 
-      $this->reqId = str_replace(".","",microtime(true));
     if(JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER")==true || $this->serverConnection('FIRST_SERVER')==false)
     {
       if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
@@ -63,7 +62,6 @@ class JsNotificationProduce
     }
     try
     {
-      $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notification");
       $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notificationLog");
     }
     catch (Exception $exception) 
@@ -87,32 +85,14 @@ class JsNotificationProduce
    */
   private function serverConnection($serverId)
   {
-    try {
-      $startLogTime = microtime(true);
-      $this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST']);
-      $endLogTime = microtime(true);
-        
-    if(MQ::$logConnectionTime == 1){
-        $logText["source"] = "ConnectionTime JsNotificationProduce";
-        RabbitmqHelper::rmqLogging("",$startLogTime,$endLogTime,$this->reqId,MQ::$rmqConnectionTimeout["threshold"],$logText);
-    }  
+    try 
+    {
+      $this->connection = new AMQPConnection(JsConstants::$rabbitmqConfig[$serverId]['HOST'], JsConstants::$rabbitmqConfig[$serverId]['PORT'], JsConstants::$rabbitmqConfig[$serverId]['USER'], JsConstants::$rabbitmqConfig[$serverId]['PASS'], JsConstants::$rabbitmqConfig[$serverId]['VHOST'] );
       $this->setRabbitMQServerConnected(1);
       return true;
-    } catch (Exception $e) {
-      //logging the counter for rabbitmq connection timeout in redis
-      if(MQ::$rmqConnectionTimeout["log"] == 1 && $serverId == "FIRST_SERVER"){
-        $memcacheObj = JsMemcache::getInstance();
-        if($memcacheObj){
-          $cachekey = "rmqtimeout_".date("Y-m-d");
-          $cacheValue = $memcacheObj->get($cachekey,null,0,0);
-          if(empty($cacheValue)==false){
-            $memcacheObj->incrCount($cachekey);
-          }
-          else{
-            $memcacheObj->set($cachekey,1,86400,0,'X');
-          }
-        }
-      }
+    } 
+    catch (Exception $e) 
+    {
       return false;
     }
   }
@@ -172,7 +152,6 @@ class JsNotificationProduce
     {
       if($addLog==true)
         RabbitmqHelper::addRabbitmqMsgLog(BrowserNotificationEnums::$publishedNotificationLog,$msgdata['data']['type']."-".$msgdata['data']['body']['NOTIFICATION_KEY']);
-      $startPublishTime = microtime(true);
       switch($process)
       {
         case "JS_NOTIFICATION1" :
@@ -199,15 +178,6 @@ class JsNotificationProduce
         case "JS_NOTIFICATION_LOG":
                     $this->channel->basic_publish($msg,MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"]);
                     break;
-        case "MA_NOTIFICATION":
-                    $this->channel->basic_publish($msg,MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$MA_NOTIFICATION_QUEUE);
-                    break;
-      }
-      $endPublishTime = microtime(true);
-      if(MQ::$rmqConnectionTimeout["logPublishTime"] == 1){
-          $logPath = JsConstants::$cronDocRoot.'log/rabbitTimePublish'.date('Y-m-d').'.log';
-          $logText["source"] = "PublishTime JsNotificationProduce";
-          RabbitmqHelper::rmqLogging($logPath,$startPublishTime,$endPublishTime,$this->reqId,MQ::$rmqConnectionTimeout["publishThreshold"],$logText);
       }
     }
     catch (Exception $exception) 

@@ -2,6 +2,7 @@
 	function ntimes_insert($jprofile_profileid, $affiliate_id)
 	{
 		//function not in use
+		mail("kunal.test02@gmail.com","ntimes_insert() in USE",print_r($_SERVER,true));
 
 		/*$sql_ntimes_insert = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) SELECT $jprofile_profileid, NTIMES FROM newjs.JPROFILE_AFFILIATE WHERE ID='$affiliate_id'";
 		mysql_query_decide($sql_ntimes_insert) or logError("Due to some temporary problem your request could not be processed. Please try after some time.".mysql_error_js(),$sql_ntimes_insert,"ShowErrTemplate");*/

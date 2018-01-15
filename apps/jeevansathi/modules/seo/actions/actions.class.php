@@ -66,7 +66,7 @@ class seoActions extends sfActions
         
         $this->UpdateHits($queryString);
         sfContext::getInstance()->getResponse()->setCanonical(sfConfig::get("app_site_url") . $this->seoUrl);
-
+        
         /* Google Remarketing Starts */
         $isearch = $_COOKIE["ISEARCH"];
         $this->GR_ISEARCH = $isearch;
@@ -174,12 +174,6 @@ class seoActions extends sfActions
         
         $this->breadCrumbObj = $this->levelObj->createBreadCrumb();
         
-        //parameter added for google dynamic search ads
-        $this->registerSource = $request->getParameter("adnetwork");
-        if(empty($this->registerSource)){
-            $this->registerSource = null;
-        }
-        
         $page_source = $this->levelObj->getPageSource();
         
         if (strtoupper($this->levelObj->getParentType()) == 'CASTE') $this->MORE_WIDTH = '1';
@@ -244,28 +238,12 @@ class seoActions extends sfActions
         $this->rightCnt = count($this->rightArr);
         unset($this->levelObj);
         $this->levelObj = $this->levelOrigObj;
-
-
         if ($this->isMobile = MobileCommon::isMobile("JS_MOBILE")) {
-            if (MobileCommon::isNewMobileSite())
-                $this->setTemplate("seo_mob");
-            else
-                $this->setTemplate("jsmb_seo");
-        }
-        else {
+            if (MobileCommon::isNewMobileSite()) $this->setTemplate("seo_mob");
+            	else $this->setTemplate("jsmb_seo");
+        } else {
         	$this->setTemplate('jspcIndex');
         }
-        //Start: JSC2600: AMP on community pages
-        if (strpos($request->getUri(), 'amp=1')){
-            $v = explode("?",$request->getUri());
-            $request->setAttribute("ampurl", $v[0]);
-        }else{
-            $request->setAttribute("ampurl", $request->getUri() . "?amp=1");
-        }
-        if($request->getParameter('amp')=="1"){
-             $this->setTemplate("seo_mob_amp");
-        }
-        //End: JSC2600: AMP on community pages
         $this->MtongueDropdownForTemplate = CommonFunction::generateMtongueDropdownForTemplate();
 
         // Success Story Data

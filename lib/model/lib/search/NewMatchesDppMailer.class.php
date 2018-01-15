@@ -6,7 +6,7 @@ class NewMatchesDppMailer extends PartnerProfile {
 
         protected $pid;
         protected $loggedInProfileObj;
-        public  $forwardCriteria = array("GENDER","LAGE","HAGE","LHEIGHT","HHEIGHT","INCOME","LINCOME","HINCOME","LINCOME_DOL","HINCOME_DOL","MSTATUS","RELIGION","MTONGUE","CASTE","EDU_LEVEL_NEW","OCCUPATION","CITY_RES");
+        public  $forwardCriteria = array("GENDER","LAGE","HAGE","LHEIGHT","HHEIGHT","INCOME","LINCOME","HINCOME","LINCOME_DOL","HINCOME_DOL","MSTATUS","RELIGION","MTONGUE","CASTE","EDU_LEVEL_NEW","OCCUPATION","CITY_RES","CITY_INDIA");
         public function __construct($loggedInProfileObj) {
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
                         $this->pid = $loggedInProfileObj->getPROFILEID();

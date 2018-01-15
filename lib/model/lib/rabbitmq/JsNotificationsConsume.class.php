@@ -125,19 +125,16 @@ class JsNotificationsConsume
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
-    $codeException = 0;
-    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
       if(BrowserNotificationEnums::$addNotificationLog==true)
         RabbitmqHelper::addRabbitmqMsgLog(BrowserNotificationEnums::$transferredNotificationlog,$type."-".$body["NOTIFICATION_KEY"]);
-
       if(in_array($type, BrowserNotificationEnums::$notificationChannelType))
       { 
         $handlerObj->sendGcmNotification($type,$body);  
       }
-      else if($type == 'APP_NOTIFICATION')
+      if($type == 'APP_NOTIFICATION')
       {
 	$notificationSenderObj = new NotificationSender;	
 	$profileid =$body['PROFILEID'];
@@ -152,14 +149,10 @@ class JsNotificationsConsume
 	/*$notificationSenderObj->sendNotifications($filteredProfileDetails);
 	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
         $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);*/
-      }
-      else if($type == "MA_NOTIFICATION"){
-          $handlerObj->processMatchAlertNotification($type,$body);
-      }
+      }     
     }
     catch (Exception $exception) 
     {
-      $codeException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
       //RabbitmqHelper::sendAlert($str,"browserNotification");
      
@@ -185,12 +178,8 @@ class JsNotificationsConsume
     } 
     catch(Exception $exception) 
     {
-      $deliveryException = 1;
       $str="\nRabbitMQ Error in JsNotificationConsume, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
-    }
-    if($codeException || $deliveryException){
-        die("Killed due to code exception or delivery exception");
     }
   }
 }

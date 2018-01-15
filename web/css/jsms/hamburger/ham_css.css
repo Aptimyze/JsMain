@@ -1,278 +1,194 @@
+.ham_img1 {
+	background:#3e3e3e url(IMG_URL/images/jsms/interstital/bg_ham.jpg) no-repeat center center !important;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+.ham_setting{background-position:-3px -520px;
+width: 34px;
+height: 36px;}
+.ham_msg1{background-position:1px -553px;
+width: 34px;
+height: 36px;}
+.ham_icon2{background-position:1px -591px;
+width: 34px;
+height: 36px;}
+.ham_icon3{background-position: -10px -639px;
+width: 16px;
+height: 14px;}
+.hamlist{overflow:auto}
+.hamlist ul{margin:0; padding:0; list-style-type:none}
+
+
+.hamlist ul li:first-child a{font-size:20px}
+
+.hampad1{padding-left:15px;}
+
+
+.hamlist2 ul li a{font-size:17px}
+.hamlist2 ul li{padding-bottom:30px}
+.hamlist2 ul{margin:0; padding:0; list-style-type:none}
+
+
+.hamlist2 ul li:first-child a{font-size:20px}
+
+
+.ham_bdr1{border-top:1px solid #6f5f62}
+.ham_bdr2{border-right:1px solid #6f5f62}
+.ham_pos1{bottom:20px}
+.ham_pos2{right: 9px;
+top: 2px;}
+
+.ham_pos4{right:0; top:0}
+.ham_opa{opacity: 0.6;	filter: alpha(opacity=60); }
+.ham_droparw{background-position: -190px -259px;
+width: 25px;
+height: 18px;}
+.ham_color1{color:#797777}
+.ham_color2{color:#cbc9c9}
+.ham_count{background-color:white; width:18px; height:18px;border-radius: 25px;}
+.ham_imgbrdr{border-radius: 25px;}
+
+
+.lham{left:1px;transform:translateX(0%)!important;
+-webkit-transform:translateX(0%) !important;
+}
+
+.hamburgerCommon{
+-webkit-transition: -webkit-transform .7s;
+transition: transform .7s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 50% 50%;
+transform:translateX(-100%);
+-webkit-transform:translateX(-100%);
+}
+
+.hamScroll{
+-webkit-transition: -webkit-transform 1s;
+transition: transform 1s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 0% 0%;
+transform:translateY(-100%)!important;
+-webkit-transform:translateY(-100%) !important;
+}
+
+.hamburgerList0{
+-webkit-transition: -webkit-transform 1s;
+transition: transform 1s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 0% 0%;
+transform:translateY(-81%)!important;
+-webkit-transform:translateY(-81%)!important;
+}
+
+.hamburgerList100{
+-webkit-transition: -webkit-transform .8s;
+transition: transform .8s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 50% 50%;
+}
 
 .baricon{background-position: -92px -22px;
 width: 21px;
 height: 20px;}
 
-/*///////////////////////////////////////////////////// neww*/
+ @media (min-width: 280px) {
+	.padHamburger{
+	padding: 5px 0px ;
 
-.hamView {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top:0;
-    opacity: 0;
-    background: black;
-}
-.backShow {
-    opacity: 0.7;
-    transition: all .2s linear;
-}
-.hamShow {
-    transition: all .2s linear;
-    transform: translate(0%, 0%) !important;
-    -webkit-transform: translate(0%, 0%) !important;
-    -moz-transform: translate(0%, 0%) !important;
-    -o-transform: translate(0%, 0%) !important;
-    -ms-transform: translate(0%, 0%) !important;
-}
-#hamburger {
-    background: url(IMG_URL/images/jsms/membership_img/revamp_bg1.jpg);
-    z-index: 105;
-    transform: translate(-100%, 0%);
-    -webkit-transform: translate(-100%, 0%);
-    -moz-transform: translate(-100%, 0%);
-    -o-transform: translate(-100%, 0%);
-    -ms-transform: translate(-100%, 0%);
-
-
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    top:0px;
-}
-
-#hamburger.secondProps{
-    transition: all .2s linear;
-    -webkit-transition: all .2s linear;
-    -moz-transition: all .2s linear;
-    -o-transition:all .2s linear;
-    -ms-transition: all .2s linear;
-
-
-}
-.hamSprite {
-    background: url(IMG_URL/images/jsms/commonImg/hamSprite.png) center no-repeat;
-    transform: scale(0.9,0.9);
-}
-.homeIcon {
-    width: 27px;
-    height: 27px;
-    background-position: -50px -14px;
-}
-.listingHam li {
-    padding: 10px 10px 10px 6px;
-}
-
-@media (min-width: 280px) and (max-width: 320px) {
-    .listingHam li {
-        padding: 10px 6px !important;
-    }
-}
-
-.listingHam li i {
-    margin: 0px 10px;
-    vertical-align: bottom;
-}
-.listingHam li a{
-    margin-left: 10px;
-}
-.minorList li a{
-    margin-left: 10px;
-    display: block;
-}
-.minorList li {
-    list-style: none;
-}
-.searchIcon {
-    width: 27px;
-    height: 27px;
-    background-position: -50px -59px;
-}
-.searchProfileIcon {
-    width: 27px;
-    height: 27px;
-    background-position: -51px -99px;
-}
-.settingsIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -11px -149px;
-}
-.editProfileIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -52px -141px;
-}
-.savedSearchIcon{
-    height: 27px;
-    width: 27px;
-    background-position: -13px -244px;
-}
-.myMatchesIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -54px -191px;
-}
-
- @media (min-width: 280px) and (max-width: 320px) {
-  .fontHam{font-size: 14px;}
-  .plusIcon {
-    height: 27px;
-    width: 22px;
-    background-position: -13px -196px;
-}
-.pad150 {
-    padding: 10px 0px 0px 0px;
-}
-.lhHam{line-height:50px;}
+	}
+	.fb1{font-weight:bold;
+	font-size:15px;
+	}
+	.hamlist ul li a{font-size:15px}
+	.hamlist ul li{padding-bottom:17px}
+	.hamburgerTopl{-webkit-transform: translateZ(-2500px) translateX(125%) rotateY(-70deg) !important;
+	transform: translateZ(-2500px) translateX(125%)  rotateY(-70deg) ;}
+	.ham_pos3{right:15px; bottom:10px}
+	
+	.hampad2{padding-left:40px; padding-top:12%;}
+	
  }
-
+ 
 @media (min-width: 321px) {
-.fontHam{font-size: 16px;}
-.plusIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -13px -196px;
-}
- .pad150 {
-    padding: 15px 0px 0px 0px;
-}
-.lhHam{line-height:50px;}   
-}
-.plusParent .plusIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -54px -268px;
+	.padHamburger{
+	padding: 5px 0px;
+
+	}
+	.fb1{font-weight:bold;
+	}
+	.hamlist ul li a{font-size:17px}
+	.hamlist ul li{padding-bottom:22px}
+	.hamburgerTopl{-webkit-transform: translateZ(-1500px) translateX(105%) rotateY(-60deg) !important;
+	transform: translateZ(-1500px) translateX(105%)  rotateY(-60deg) !important;}
+	.ham_pos3{right:15px; bottom:30px}
+	
+	.hampad2{padding-left:40px; padding-top:23%;}
 }
 
-.myContactIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -54px -234px;
+.perspective {
+	width: 100%;
+	height: 100%;
+	position: relative;
 }
-.shortlistedIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -13px -15px; 
-}
-.phoneIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -13px -59px;
-}
-.profileVisitorIcon {
-    height: 27px;
-    width: 27px;
-    background-position: -13px -100px;
+.pcontainer {
+	background: #fff;
+	min-height: 100%;
+	position: realtive;
+	outline: 1px solid rgba(0,0,0,0);
+	z-index: 10;
+	-webkit-transform: translateZ(0) translateX(0) rotateY(0deg); /* reset transforms (Chrome bug) */
+	transform: translateZ(0) translateX(0) rotateY(0deg);
+	
 }
 
-.z104{z-index: 104}
-.hamImage{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    z-index: 104;
-    transform: translate(-120%, 0%) !important;
-    transition: all .2s linear;
+
+.showpers{perspective:1500px;-webkit-perspective:1500px;position:fixed;background:#2c3137;z-index:1000}
+.hamb{
+position: absolute;
+overflow: hidden;
+width: 100%;
+height: 100%;
+cursor: pointer;
+-webkit-transition: -webkit-transform 0.4s;
+transition: transform 0.4s;
+-webkit-transform-origin: 50% 50%;
+transform-origin: 50% 50%;
 }
-.hamImageShow{
-    transition: all .2s linear;
-    transform: translate(-20%, 0%) !important;
-}
-.irIcon{
-    width: 71px;
-    background-position: -220px -14px;
-    height: 70px;
-}
-.allAcIcon{
-    width: 71px;
-    background-position: -220px -89px;
-    height: 70px;
-}
-.justJnIcon {
-    width: 71px;
-    background-position: -220px -167px;
-    height: 70px;
-}
-.newham_count {
-    width: 22px;
-    height: 22px;
-    border-radius: 10px;
-}
-.newham_pos1 {
-    bottom: 4px;
-    right: 2px;
-}
-.brdrTop {
-    border-top: 1px solid white;  
-}
-.brdrBtm {
-    border-bottom: 1px solid white;  
-}
-.ml0Imp{
-    margin-left: 0px !important;
-}
-.mar0Imp{
-    margin:0px !important;
-}
-.hamBtn {
-    width: 98%;
-    text-align: center;
-    margin: 2px auto !important;
-    display: block;
-    position: relative;
-}
-.minorList {
-    transition: 0.4s;
-    overflow: hidden;
-}
-.pb8 {
-    padding-bottom: 8px;
-}
-.hamBtnLoggedOut {
-    display: block;
-    height: 50px;
-    width: 100%;
-    position: relative;
-    text-align: center;
-    padding-top: 5px;
-}
-.overAutoHidden {
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-.listingHam{
-    list-style-type: none;
-    margin-left: -40px;
-}
-.z99{
-    z-index: 99
-}
-.ml15{
-    margin-left: 15px
-}
-.wid32p{
-    width: 32%
-}
-.ml10 {
-    margin-left: 10px
-}
-.mb15 {
-    margin-bottom: 15px;
+.hamr{
+-webkit-transform: translateZ(-1500px) translateX(-100%) rotateY(45deg);
+transform: translateZ(-1500px) translateX(-100%) rotateY(45deg);
+top:15%;
 }
 
-.mb12 {
-    margin-bottom: 12px;
-}
-.ml25 {
-    margin-left: 25px;
-}
-.minorList li a.newS {
-    margin-left: 30px;
-}
-.mt12{
-        margin-top: 12px;
+.haml{-webkit-transform: translateZ(-1500px) translateX(100%) rotateY(-0deg);
+transform: translateZ(-1500px) translateX(100%) rotateY(0deg);}
 
+
+.wrapper{
+
+opacity: 1;
+	height: 101%;width:100%;
+	-webkit-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+	position:absolute;
+	z-index:100;
+}
+
+.widMiddleHam{width:34%;}
+.widEndHam{width:34%;}
+
+
+.newham_icons1{background-image: url(IMG_URL/images/jsms/commonImg/new-icon1.png);background-repeat: no-repeat;}
+.newham_wid32p{width:32%;}
+.newham_count{width:20px; height:20px; border-radius:10px;}
+.newham_pos1{bottom:4px; right:2px}
+.newham_pad1{padding:10px 0}
+.newham_colr1{color:#838383}
+.int_rec{ background-position:0px -1px; width:56px; height:64px;}
+.acc_mem{ background-position:-57px -1px; width:56px; height:64px;}
+.just_join{ background-position:-116px -1px; width:57px; height:64px;}
+.brdr9_ham {
+	border-top:1px solid #999999
 }

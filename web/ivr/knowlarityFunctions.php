@@ -28,11 +28,8 @@ function createLead($phoneno)
 		global $SITE_URL;
 		$link=$SITE_URL."/sugarcrm/custom/crons/create_sugar_lead.php?last_name=$phoneno&mobile1=$phoneno&source_c=17&js_source_c=ProfilePgK";
 		$handle = curl_init();
-        $header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-        curl_setopt($handle, CURLOPT_HEADER, $header);
-        curl_setopt($handle,CURLOPT_USERAGENT,"JsInternal");
-        
 		curl_setopt($handle,CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($handle, CURLOPT_HEADER, 1);
 		curl_setopt($handle,CURLOPT_MAXREDIRS, 5);
 		curl_setopt($handle,CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($handle,CURLOPT_CONNECTTIMEOUT, 20);

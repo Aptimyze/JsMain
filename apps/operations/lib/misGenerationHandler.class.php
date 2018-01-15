@@ -380,7 +380,7 @@ class misGenerationhandler
                         return true;
                 return false;
         }
-	public function net_off_tax_calculation($amount="",$date='',$ratioOnlyFlag = 0)
+	public function net_off_tax_calculation($amount,$date='')
 	{
 		if($date)
 		{
@@ -396,13 +396,8 @@ class misGenerationhandler
 		$ts_new2 = mktime(0,0,0,'6','1','2015');
                 $ts_new3 = mktime(0,0,0,'11','15','2015');
                 $ts_new4 = mktime(0,0,0,'06','01','2016');
-                $ts_gst = mktime(0,0,0,'07','01','2017');   //GST go live date
-                if($ts_gst<=$ts_dt){    //Added for GST which will start from 1st July 2017
-                    $net_off_tax_rate = billingVariables::NET_OFF_TAX_RATE;
-                }
-                elseif($ts_new4<=$ts_dt){
-                    //$net_off_tax_rate =0.330435;
-		      $net_off_tax_rate =0.130435;	
+                if($ts_new4<=$ts_dt){
+                    $net_off_tax_rate =billingVariables::NET_OFF_TAX_RATE;
                 }
                 elseif($ts_new3<=$ts_dt)
                 {
@@ -424,9 +419,6 @@ class misGenerationhandler
 			$net_off_tax_rate = 0.09;
 			//$percent='9';
 		}
-                if($ratioOnlyFlag == 1){
-                    return $net_off_tax_rate;
-                }
 		$net_off_tax_amount = round($amount - (($net_off_tax_rate) * $amount),1);
 		return round($net_off_tax_amount);
 	}
@@ -764,7 +756,7 @@ class misGenerationhandler
                     $headCountArr['FRANCHISEE_SALES']++;
                 }
             }
-            else if(strpos($priv, 'ExcOB') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
+            else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
                 $processWiseSale[$date]['OUTBOUND_TELE']+= $amount;
                 if($loginWithinRange){
                     $headCountArr['OUTBOUND_TELE']++;

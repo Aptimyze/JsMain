@@ -1,2 +1,0 @@
-use billing;
-create table billing.LIGHTNING_DEAL_DISCOUNT_BACKUP like billing.LIGHTNING_DEAL_DISCOUNT;

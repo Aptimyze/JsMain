@@ -12,9 +12,7 @@ if($profileid)
 	$postParams = "profileChecksum=".$checksum."&callingSource=myjs";
 
 	$ch = curl_init($url);
-	$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-	curl_setopt($ch, CURLOPT_HEADER, $header);
-	curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");
+	curl_setopt($ch, CURLOPT_HEADER, 0);
 	if($postParams)
 		curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

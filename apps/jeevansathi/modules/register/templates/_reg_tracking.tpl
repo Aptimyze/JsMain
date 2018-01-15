@@ -10,10 +10,10 @@
 		var google_conversion_label = "sWVhCInSjwEQzdy87wM";
 		//-->
 		</script>
-		<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+		<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 		</script>
 		<noscript>
-		<img height="1" width="1" border="0" src="https://www.googleadservices.com/pagead/conversion/1039085133/?label=sWVhCInSjwEQzdy87wM&amp;guid=ON&amp;script=0"/>
+		<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1039085133/?label=sWVhCInSjwEQzdy87wM&amp;guid=ON&amp;script=0"/>
 		</noscript>
 	~elseif $groupname eq 'New Google' or $groupname eq "google_custom"`
 		<!-- Google Code for Paid Conversion Page -->
@@ -26,10 +26,10 @@
 		var google_conversion_label = "lead";
 		//-->
 		</script>
-		<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+		<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 		</script>
 		<noscript>
-		<img height="1" width="1" border="0" src="https://www.googleadservices.com/pagead/conversion/1056682264/?label=lead&amp;guid=ON&amp;script=0"/>
+		<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1056682264/?label=lead&amp;guid=ON&amp;script=0"/>
 		</noscript>
 	~elseif $groupname eq 'Google_NRI'`
 		<!-- Google Code for Paid Conversion Page -->
@@ -42,10 +42,10 @@
 		var google_conversion_label = "lead";
 		//-->
 		</script>
-		<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+		<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 		</script>
 		<noscript>
-		<img height="1" width="1" border="0" src="https://www.googleadservices.com/pagead/conversion/1067322789/?label=lead&amp;guid=ON&amp;script=0"/>
+		<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1067322789/?label=lead&amp;guid=ON&amp;script=0"/>
 		</noscript>
 	~elseif $groupname eq 'Google NRI US'`
 		<!-- Google Code for Paid Conversion Page -->
@@ -58,10 +58,10 @@
 		var google_conversion_label = "lead";
 		//-->
 		</script>
-		<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+		<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 		</script>
 		<noscript>
-		<img height="1" width="1" border="0" src="https://www.googleadservices.com/pagead/conversion/1046502896/?label=lead&amp;guid=ON&amp;script=0"/>
+		<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1046502896/?label=lead&amp;guid=ON&amp;script=0"/>
 		</noscript>
 	~else`
 		<!-- Google Code for Lead Conversion Page -->
@@ -72,10 +72,10 @@
 		var google_conversion_color = "ffffff";
 		var google_conversion_label = "lead";
 		</script>
-		<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js">
+		<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
 		</script>
 		<noscript>
-			<img height="1" width="1" border="0" src="https://www.googleadservices.com/pagead/conversion/1056682264/?label=lead&amp;script=0"/>
+			<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1056682264/?label=lead&amp;script=0"/>
 		</noscript>
 	~/if`
 ~/if`
@@ -111,13 +111,13 @@
 </script>
 	~if $reg_comp_frm_ggl`
 <noscript>
-		<img height=1 width=1 border=0 src="https://www.googleadservices.com/pagead/conversion/1072672959/?value=1&label=lead&script=0">
+		<img height=1 width=1 border=0 src="http://www.googleadservices.com/pagead/conversion/1072672959/?value=1&label=lead&script=0">
 </noscript>
 	~elseif $reg_comp_frm_ggl_nri`
 <noscript>
-	<img height=1 width=1 border=0 src="https://www.googleadservices.com/pagead/conversion/1067322789/?value=1&label=lead&script=0">
+	<img height=1 width=1 border=0 src="http://www.googleadservices.com/pagead/conversion/1067322789/?value=1&label=lead&script=0">
 </noscript>
 	~/if`
 ~if $reg_comp_frm_ggl or $reg_comp_frm_ggl_nri`
-	<script language="JavaScript" src="https://www.googleadservices.com/pagead/conversion.js"></script>
+	<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js"></script>
 ~/if`

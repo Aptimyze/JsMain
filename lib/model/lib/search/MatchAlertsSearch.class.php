@@ -9,7 +9,6 @@ class MatchAlertsSearch extends SearchParamters
 	CONST femaleProfile  = 'F';
 	CONST maleProfile = 'M';
 	CONST showAllResults = 'All';
-	CONST lastSeenCacheTime = 7200;
   
   /**
    * This Variable will hold last visted time of match alert listing
@@ -80,19 +79,10 @@ class MatchAlertsSearch extends SearchParamters
     if (null !== $this->lastVistedTime) {
       return ;
     }
-    $lastSeen = date("Y-m-d h:i:s");
-        $producerObj = new Producer();
-        if($producerObj->getRabbitMQServerConnected())
-        {
-                $updateSeenProfileData = array("process"=>"MATCHALERTS_LAST_SEEN",'data'=>array('body'=>array('seen_date'=>$lastSeen,'profileid'=>$this->pid)));
-                $producerObj->sendMessage($updateSeenProfileData);
-        }else{
-                $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
-                $obj->ins($this->pid);
-        }
-        $this->lastVistedTime = $lastSeen;
-    JsMemcache::getInstance()->set($this->pid."_MATCHALERTS_LAST_VISITED",$this->lastVistedTime);
-    JsMemcache::getInstance()->incrCount("INSERT_COUNTER_MATCHALERTS_LAST_VISITED");
+    
+    $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
+    $obj->ins($this->pid);
+    $this->lastVistedTime = date("Y-m-d h:i:s");
     unset($obj);
   }
   
@@ -108,15 +98,8 @@ class MatchAlertsSearch extends SearchParamters
       return $this->lastVistedTime;
     }
     
-    $lastVisited = JsMemcache::getInstance()->get($this->pid."_MATCHALERTS_LAST_VISITED");
-    if(!$lastVisited){
-        JsMemcache::getInstance()->incrCount("SELECT_COUNTER_MATCHALERTS_LAST_VISITED_BYDB");
-        $obj = new seach_MATCH_ALERT_LAST_VISIT;
-        $this->lastVistedTime = $obj->getDt($this->pid);
-    }else{
-        JsMemcache::getInstance()->incrCount("SELECT_COUNTER_MATCHALERTS_LAST_VISITED_BYCACHE");
-        $this->lastVistedTime = $lastVisited;   
-    }
+    $obj = new seach_MATCH_ALERT_LAST_VISIT;
+    $this->lastVistedTime = $obj->getDt($this->pid);
     unset($obj);
     
     //by default return current date

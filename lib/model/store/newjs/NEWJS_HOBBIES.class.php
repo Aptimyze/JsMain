@@ -252,11 +252,10 @@ class NEWJS_HOBBIES extends TABLE{
   
 	private function logFunctionCalling($funName)
   {
-  	return;
-    // $key = __CLASS__.'_'.date('Y-m-d');
-    // JsMemcache::getInstance()->hIncrBy($key, $funName);
+    $key = __CLASS__.'_'.date('Y-m-d');
+    JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-    // JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
   }
 }
 ?>

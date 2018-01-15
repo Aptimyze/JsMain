@@ -34,7 +34,7 @@ class userSpecific
 	 * on detailed page.
 	 */
 	public function showNextPrev()
-	{	
+	{
 		$request=sfContext::getInstance()->getRequest();
 		$this->searchid=$request->getParameter("searchid");
 		$this->show_profile=$request->getParameter("show_profile");
@@ -51,11 +51,10 @@ class userSpecific
 		$this->SHOW_PREV=0;
 		$this->SHOW_NEXT=0;
 		$this->bIsSearchIdExpire = false;
-		$bHitFromMyjsPageAndroid = strlen($request->getParameter("hitFromMyjs"))!=0?true:false;
-		if($this->is_allowed_np() || $bHitFromMyjsPageAndroid)
-		{  
-			if(($this->searchid && $this->show_profile) || $bHitFromMyjsPageAndroid)
-				$this->search_next_prev($bHitFromMyjsPageAndroid);
+		if($this->is_allowed_np())
+		{
+			if($this->searchid && $this->show_profile)
+				$this->search_next_prev();
 		
 			if($this->searchid)
 				$this->set_next_prev();
@@ -82,7 +81,7 @@ class userSpecific
 	 * Update the variables whenever next prev is clicked
 	 */
 	private function set_next_prev()
-	{  
+	{
 		$request=sfContext::getInstance()->getRequest();
 		$other_params="";
 		foreach($request->getGetParameters() as $key=>$val)
@@ -116,7 +115,7 @@ class userSpecific
 	/**
 	 * Search for profile by using search logic..
 	 */
-	private function search_next_prev($hitFromMyjs = false)
+	private function search_next_prev()
 	{
 		if(!$this->j)
 			$this->j=1;
@@ -124,14 +123,9 @@ class userSpecific
 		//$actual_offset=$request->getParameter("actual_offset");	
 		if(!$this->actual_offset)
 			$this->actual_offset=($this->j-1)*SearchCommonFunctions::getProfilesPerPageOnSearch()+$this->offset;
-		if($hitFromMyjs == true)
-		{  
-		  $this->next_prev_prof = profileDisplay::getNextProfileIdForMyjs('dailymatches',$this->actual_offset_real+1);
-		}
-		else
-		{	
+
 		$this->next_prev_prof=$this->next_prev_view_profileid($this->searchid,$this->Sort,$this->actual_offset,$this->show_profile,$this->stype);
-		}
+		
 		$this->profilechecksum=JsCommon::createChecksumForProfile($this->next_prev_prof);
 		
 		//$request->setParameter("profilechecksum",$profilechecksum);

@@ -10,7 +10,6 @@ class RegularMatchalertMailerTask extends sfBaseTask
     private $smarty;
     private $mailerName = "MATCHALERT";
     private $limit = 1000;
-    private $showLowDppText=array();
     const NTDPP_COUNT = 16;
     const TDPP_COUNT = 10;
     const NON_TRENDS_LOGIC=3;
@@ -41,20 +40,6 @@ EOF;
   {
 	if(!sfContext::hasInstance())
 		sfContext::createInstance($this->configuration);
-        
-        $nonPeakTime = 0;
-        $msgSent =0;
-        if(CommonUtility::runFeatureInDaytime(1,8)){
-                $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/matchalertsMailers.txt";
-                $nonPeakTime = 1;
-                $memObject = JsMemcache::getInstance();
-                $tableEmpty = $memObject->get('MATCHALERT_POPULATE_EMPTY');
-                unset($memObject);
-                if($tableEmpty == 1){
-                }else{
-                        successfullDie();
-                }
-        }
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
 	$LockingService = new LockingService;
@@ -62,13 +47,6 @@ EOF;
         $lock = $LockingService->getFileLock($file,1);
         if(!$lock)
         	successfullDie();
-        	
-       
-        $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictTrends;
-        $this->showLowDppText[] = MailerConfigVariables::$logicLevelStrictNonTrends;
-        $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedNonTrends;
-        $this->showLowDppText[] = MailerConfigVariables::$logicLevelRelaxedTrends;
-        
 	$mailerServiceObj = new MailerService();
 	// match alert configurations
         $fields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,USER11,USER12,USER13,USER14,USER15,USER16,LOGIC_USED,FREQUENCY";
@@ -83,19 +61,10 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>false,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true,"sortSubscriptionFlag"=>true);
-
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
-                        if($pid < 18493735 && $nonPeakTime == 1){
-                                if($msgSent == 0){
-                                        SendMail::send_email("lavesh.rawat@gmail.com,bhavana.kadwal@gmail.com", "Match alerts Mailer called at the time of computation", "ALERT:: Match Alert Mailer called at night" . date('y-m-d h:i:s'));
-                                        $this->sendSMS();
-                                        $msgSent = 1;
-                                }
-                                file_put_contents($fileName, "Mailer Called :: ".$pid."\n", FILE_APPEND);
-                        }
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
 
@@ -104,41 +73,35 @@ EOF;
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
 				$data["stypeMatch"] =$stypeMatch."&clicksource=".$clicksource;
-                                $dppLink = $mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic;
-				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid,$dppLink);                           
+				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);                           
                                 $data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
                                 
-                                if(($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC && $data["COUNT"] < self::NTDPP_COUNT) || ($values["LOGIC_USED"] == self::TRENDS_LOGIC && $data["COUNT"] < self::TDPP_COUNT) || (in_array($values["LOGIC_USED"],$this->showLowDppText) && $data["COUNT"] < MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT)){
+                                if(($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC && $data["COUNT"] < self::NTDPP_COUNT) || ($values["LOGIC_USED"] == self::TRENDS_LOGIC && $data["COUNT"] < self::TDPP_COUNT)){
                                         if($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC)
                                             $minIdealRecords = self::NTDPP_COUNT;
                                         elseif($values["LOGIC_USED"] == self::TRENDS_LOGIC)
                                             $minIdealRecords = self::TDPP_COUNT;
-                                        elseif(in_array($values["LOGIC_USED"],$this->showLowDppText))
-                                            $minIdealRecords = MailerConfigVariables::$UNIFIED_LOGIC_MAILER_COUNT;
                                         $foundCount = $data["COUNT"];
                                         $data["bodyNote"]="<b>Note</b>: For your best interest, we try to recommend up to $minIdealRecords members matching your Desired Partner Profile every day, but we could find only $foundCount members matching your partner preference. Please broaden your Desired Partner Profile to get more matches on a daily basis.";
                                         $data["showDpp"]=1;
                                 }
                                 
                                 if(($values["LOGIC_USED"] == self::COMMUNITY_MODEL)){
-                                    $data["body"].="<a href='".$dppLink."'>click here</a>";
+                                    $data["body"].="<a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>click here</a>";
                                 }
                                 
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
-				
-				$data["mailSentDate"] = date("Y-m-d H:i:s");   
+        $data["mailSentDate"] = date("Y-m-d H:i:s");
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-				
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
-                //$this->setMatchAlertNotificationCache($data);
-		$this->setMatchAlertNotificationCacheNew($data);
+				
 			}
 			else
 				$flag = "I"; // Invalid users given in database
-                        
+
 			$mailerServiceObj->updateSentForUsers($sno,$flag);
 			unset($subject);
 			unset($mailSent);
@@ -168,21 +131,6 @@ EOF;
       case 5 : 
         return SearchTypesEnums::MatchAlertMailer5;
         break;
-      case 7 : 
-        return SearchTypesEnums::MatchAlertMailer7;
-        break;
-      case 8 : 
-        return SearchTypesEnums::MatchAlertsStrictTrends;
-        break;
-      case 9 : 
-        return SearchTypesEnums::MatchAlertsStrictNonTrends;
-        break;
-      case 10 : 
-        return SearchTypesEnums::MatchAlertsRelaxedTrends;
-        break;
-      case 11 : 
-        return SearchTypesEnums::MatchAlertsRelaxedNonTrends;
-        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -196,14 +144,10 @@ EOF;
   *@param $profileId : Receiver profile Id
   *@return $subject : subject of the mail
   */
-  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId,$dppLink="")
+  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId)
   {
 	$subject = array();
-	$defaultTimezone=date_default_timezone_get();
-    date_default_timezone_set('Asia/Kolkata');// changing into IST
 	$today = date("d M");
-	date_default_timezone_set($defaultTimezone); // Changing back to default
-
         $matchStr = " Matches";
         $these = ' these';
         if($count==1){
@@ -214,15 +158,9 @@ EOF;
         $subject["showDpp"]= 0;
 	switch($logic)
 	{
-		case "8": //strict unified trends case
-		case "9": //strict unified non trends case
 		case "3": //NT-NT case
 			$subject["subject"]= $count." Desired Partner".$matchStr." for today | $today";
-                        
-                        if($logic == 3)
-                                $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
-                        else
-                                $subject["body"]=$this->getDppContent($count, $profileId, MailerConfigVariables::$UNIFIED_LOGIC_LIST_COUNT,$logic);
+                        $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
                         
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
@@ -233,7 +171,6 @@ EOF;
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
-		case "10"://relaxed unified trends case
 		case "1":// T-T case
                         $subject["subject"]= $count.$matchStr." based on your recent activity | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your recent activity. Your recent activity includes the interests, acceptances and declines sent in the last two months.";
@@ -243,15 +180,9 @@ EOF;
                         $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
 			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. <br>If you wish to only receive matches as per your Desired Partner Profile, ";
                         break;
-                case "11"://relaxed unified non trends case
                 case "5"://relaxed dpp trends case
                         $subject["subject"]= $count.$matchStr." based on your broader Desired Partner Profile";
 			$subject["body"]="Shown below are matches based on your broader Desired Partner Profile. We have broadened some of your preferences as your Desired Partner Profile may be very strict. To get matches as per Desired Partner Profile, please ";
-                        $subject["showDpp"]= 1;
-                        break;
-                case "7"://relaxed dpp trends case
-                        $subject["subject"]= $count.$matchStr." based on your latest search";
-			$subject["body"]="To get more matches strictly based on your Desired Partner Profile, please broaden your <a href='$dppLink'>Desired Partner Profile</a>. Meanwhile, please go through these matches from your latest search, which we have added to your Recommendations.";
                         $subject["showDpp"]= 1;
                         break;
 		default :
@@ -284,132 +215,5 @@ EOF;
         $subject="Shown below are $outOf added to your account today, based on your Desired Partner Profile. You may send interest to them.";
         return $subject;
   }
-
-  public function setMatchAlertNotificationCache($data){
-
-      $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
-      $count = $data["COUNT"];
-      $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
-      $otherProfileid = $data["USERS"][0]->getPROFILEID();
-      $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
-      $otherPicIosUrl = $this->getValidImage($data["USERS"][0]->getProfilePic450Url());
-      $cacheKey = "MA_NOTIFICATION_".$receiver;
-      $seperator = "#";
-      $preSetCache = JsMemcache::getInstance()->get($cacheKey);
-      if($preSetCache){
-          $explodedVal = explode($seperator,$preSetCache);
-          $count = $count+$explodedVal[0];
-          if($this->getValidImage($otherPicUrl) == "D"){
-            $otherPicUrl = $explodedVal[2];
-            $otherProfileid = $explodedVal[1];
-          }
-          if($this->getValidImage($otherPicIosUrl) == "D"){
-              $otherPicIosUrl = $explodedVal[4];
-              $otherProfileid = $explodedVal[1];
-          }
-      }
-      else{
-          $body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
-          $type = "MA_NOTIFICATION";
-          $queueData = array('process' =>'MA_NOTIFICATION',
-                            'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
-                          );
-          $producerObj = new JsNotificationProduce();
-          $producerObj->sendMessage($queueData);
-      }
-      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
-      $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
-      $monitoringKey = "MA_N_".date('Y-m-d');
-      if(!JsMemcache::getInstance()->get($monitoringKey)){
-          JsMemcache::getInstance()->set($monitoringKey,date('Y-m-d H:i:s'),79200);
-      }
-      JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
-  }
-  public function setMatchAlertNotificationCacheNew($data){
-   
-      $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
-      $count = $data["COUNT"];
-      $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
-      $otherProfileid = $data["USERS"][0]->getPROFILEID();
-      $otherPicUrl = $this->getValidImage($data["USERS"][0]->getProfilePic120Url());
-      $otherPicIosUrl = $this->getValidImage($data["USERS"][0]->getProfilePic450Url());
-
-      //$cacheKey = "MA_NOTIFICATION_".$receiver;
-      //$seperator = "#";
-      //$preSetCache = JsMemcache::getInstance()->get($cacheKey);
-
-      $status ='N';
-      $dailyMatchalerNotifObj =new MOBILE_API_DAILY_MATCHALERT_NOTIFICATION();
-      $explodedVal =$dailyMatchalerNotifObj->getRecordForReceiver($receiver,$status);
-      if(is_array($explodedVal)){
-          /*$explodedVal = explode($seperator,$preSetCache);
-          $count = $count+$explodedVal[0];
-          if($this->getValidImage($otherPicUrl) == "D"){
-            $otherPicUrl = $explodedVal[2];
-            $otherProfileid = $explodedVal[1];
-          }
-          if($this->getValidImage($otherPicIosUrl) == "D"){
-              $otherPicIosUrl = $explodedVal[4];
-              $otherProfileid = $explodedVal[1];
-          }*/
-          $count = $count+$explodedVal['COUNT'];
-          if($this->getValidImage($otherPicUrl) == "D"){
-            $otherPicUrl = $explodedVal['OT_PIC_URL'];
-            $otherProfileid = $explodedVal['OT_PROFILEID'];
-          }
-          if($this->getValidImage($otherPicIosUrl) == "D"){
-              $otherPicIosUrl = $explodedVal['OT_PIC_IOS_URL'];
-              $otherProfileid = $explodedVal['OT_PROFILEID'];
-          }
-          $id =$explodedVal['ID'];
-          $dailyMatchalerNotifObj->updateRecord($id,$receiverLastLoginDate,$otherProfileid,$otherPicUrl,$otherPicIosUrl,$count,$status);
-      }
-      else{
-          $dailyMatchalerNotifObj->addRecord($receiver,$otherProfileid,$otherPicUrl,$otherPicIosUrl,$count,$receiverLastLoginDate,$status);
-          /*$body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
-          $type = "MA_NOTIFICATION";
-          $queueData = array('process' =>'MA_NOTIFICATION',
-                            'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
-                          );
-          $producerObj = new JsNotificationProduce();
-          $producerObj->sendMessage($queueData);*/
-      }
-      /*$cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate.$seperator.$otherPicIosUrl;
-      $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
-      */
-      $monitoringKey = "MA_N_".date('Y-m-d');
-      if(!JsMemcache::getInstance()->get($monitoringKey)){
-          JsMemcache::getInstance()->set($monitoringKey,date('Y-m-d H:i:s'),79200);
-      }
-      /*JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);*/
-  }
-  
-  public function getValidImage($url){
-    $photo = "D";
-    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request') || strstr($url, 'photo_coming')) )
-        $photo = $url;
-    return $photo;
-  }
-  private function sendSMS() {
-                $date = date("Y-m-d h");
-                $from = "JSSRVR";
-                $profileid = "144111";
-                $smsMessage = "Mysql Error Count have reached mailer night within 5 minutes";
-                $mobileArr = array("9818424749", "9773889652", "9773889617");
-                foreach ($mobileArr as $mobPhone) {
-                        $xml_head = "%3C?xml%20version=%221.0%22%20encoding=%22ISO-8859-1%22?%3E%3C!DOCTYPE%20MESSAGE%20SYSTEM%20%22http://127.0.0.1/psms/dtd/message.dtd%22%3E%3CMESSAGE%3E%3CUSER%20USERNAME=%22naukari%22%20PASSWORD=%22na21s8api%22/%3E";
-                        $xml_content = "%3CSMS%20UDH=%220%22%20CODING=%221%22%20TEXT=%22" . urlencode($smsMessage) . "%22%20PROPERTY=%220%22%20ID=%22" . $profileid . "%22%3E%3CADDRESS%20FROM=%22" . $from . "%22%20TO=%22" . $mobPhone . "e%22%20SEQ=%22" . $profileid . "%22%20TAG=%22%22/%3E%3C/SMS%3E";
-                        $xml_end = "%3C/MESSAGE%3E";
-                        $xml_code = $xml_head . $xml_content . $xml_end;
-                        $fd = @fopen("http://api.myvaluefirst.com/psms/servlet/psms.Eservice2?data=$xml_code&action=send", "rb");
-                        if ($fd) {
-                                $response = '';
-                                while (!feof($fd)) {
-                                        $response.= fread($fd, 4096);
-                                }
-                                fclose($fd);
-                        }
-                }
-        }
 
 }

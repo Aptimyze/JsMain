@@ -181,7 +181,7 @@ class KUNDLI_ALERT_KUNDLI_MATCHES_MAILER extends TABLE
             $defaultFields ="SNO,RECEIVER,USER1,USER2,USER3,USER4,USER5,USER6,USER7,USER8,USER9,USER10,USER11,USER12,USER13,USER14,USER15,USER16,GUNA_U1,GUNA_U2,GUNA_U3,GUNA_U4,GUNA_U5,GUNA_U6,GUNA_U7,GUNA_U8,GUNA_U9,GUNA_U10,GUNA_U11,GUNA_U12,GUNA_U13,GUNA_U14,GUNA_U15,GUNA_U16";
 
             $selectfields = $fields?$fields:$defaultFields;
-            $sql = "SELECT $selectfields FROM kundli_alert.KUNDLI_MATCHES_MAILER where SENT IN ('U') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
+            $sql = "SELECT $selectfields FROM kundli_alert.KUNDLI_MATCHES_MAILER where SENT IN ('U','F') AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
             if($limit)
                 $sql.= " limit 0,:LIMIT";
             $prep = $this->db->prepare($sql);

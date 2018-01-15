@@ -57,12 +57,9 @@ class NotificationConfigurationFunc
             $channelShowLayer = ($channel == 'M')?"MOBILE_LAYER":"DESKTOP_LAYER";
             $currentDate = strtotime(date('Y-m-d'));
             $dateDiff = ($currentDate - strtotime($layerData[0][$lastLoginChannel]))/(60*60*24);
-            //if($layerData[0][$countChannel] >=5 || ($dateDiff < 7) || ($layerData[0][$channelShowLayer] == 'Y') ){
-	    if(($dateDiff < 2) || ($layerData[0][$channelShowLayer] == 'Y')){	
+            if($layerData[0][$countChannel] >=5 || ($dateDiff < 7) || ($layerData[0][$channelShowLayer] == 'Y') ){
                 $registeredUser = 1;
             }
-	    if($layerData[0][$channelShowLayer] == 'Y')
-		$notificationEnabled =1;	
         }
         elseif($browserCheck){
             $browserNotificationLayerMasterObj = new MOBILE_API_BROWSER_NOTIFICATION_LAYER();
@@ -85,12 +82,13 @@ class NotificationConfigurationFunc
             $browserNotificationLayerMasterObj->insert($paramsArr);
         }
         unset($browserNotificationRegObj);
-        
-        if($browserCheck==true && !$registeredUser){
-        	$showLayer = 1;
-        }
-        return array("showLayer"=>$showLayer,"enabled"=>$notificationEnabled);	
-        //return $showLayer;
+        //if($profileid == '3406012'||$channel=="M")  //comment LATER
+        {
+            if($browserCheck==true && !$registeredUser){
+                $showLayer = 1;
+            }
+       }
+       return $showLayer;
     }
 
     /*check brower is chrome and version is higher than specified

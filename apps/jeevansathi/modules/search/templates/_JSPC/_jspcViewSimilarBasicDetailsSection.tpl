@@ -55,14 +55,13 @@
 	var finalResponse= ~$finalResponse|decodevar`;
 	//var info={"profileChecksum":"~$apiData['page_info']['profilechecksum']`"};
 	var cEObject="";
-  var actions_buttonsVSP=0;
 	$(document).ready(function(){		
 		if(finalResponse!=undefined && finalResponse!=null )
 		{
 			cEObject= new ContactEngineCard("VSP_VDP");
 			var cEHtml=cEObject.buttonDisplay(finalResponse.button_details,finalResponse.page_info);
 			$("#cEButtonsContainer-"+'~$apiData['page_info']['profilechecksum']`-VSP_VDP').html(cEHtml);
-			actions_buttonsVSP=~$actions_buttonsVSP|decodevar`;
+			var actions_buttonsVSP=~$actions_buttonsVSP|decodevar`;
 			if(actions_buttonsVSP!=0)
 			{
 				var buttonObj=new Button($("#cEButtonsContainer-"+'~$apiData['page_info']['profilechecksum']`-VSP_VDP'),1);

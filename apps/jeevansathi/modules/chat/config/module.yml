@@ -9,5 +9,3 @@ all:
     enable_login: on
   pushChat:
     enable_login: off
-  communicationSync:
-    enable_login: on

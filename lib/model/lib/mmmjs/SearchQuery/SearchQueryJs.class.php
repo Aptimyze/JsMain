@@ -107,11 +107,6 @@ class SearchQueryJs
 			if($this->searchQuerySpecs[$key] && in_array(strtolower($key), $valfields) && $value)
 				$valueArray[strtoupper($key)] = $this->searchQuerySpecs[$key];
 		}
-		if(array_key_exists("HAVEPHOTO",$valueArray) && $valueArray['HAVEPHOTO']=="N")
-		{
-			$excludeArray['HAVEPHOTO']="'Y'";
-			unset($valueArray['HAVEPHOTO']);
-		}
 		if($this->searchQuerySpecs['type'] == 'S')
 			$valueArray['SERVICE_MESSAGES'] = 'S';
 		else
@@ -184,7 +179,7 @@ class SearchQueryJs
 			$fields1='returnOnlySql';
 		else
 			$fields1=$fields;
-		$res = $jprofile->getArray($valueArray, $excludeArray, $greaterThanArray="",$fields1,$lessThanArray="",$orderby="",$limit="",$greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like,$nolike,"(ACTIVATED!='D')");
+		$res = $jprofile->getArray($valueArray, $excludeArray="", $greaterThanArray="",$fields1,$lessThanArray="",$orderby="",$limit="",$greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like,$nolike,"(ACTIVATED!='D' OR JSARCHIVED=1)");
 		if($returnOnlySql)
 		{
 			$res = str_replace('returnOnlySql',$fields,$res);

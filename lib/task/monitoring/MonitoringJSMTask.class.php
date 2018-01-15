@@ -7,8 +7,8 @@
 */
 class MonitotingJSMTask extends sfBaseTask
 {
-	CONST minNo  = 15000;
-	CONST maxNo  = 35000;
+	CONST minNo  = 80000;
+	CONST maxNo  = 120000;
 	protected function configure()
         {
                 $this->addOptions(array(
@@ -42,10 +42,8 @@ EOF;
 			$message        = "Mysql Error Count have reached APeoifail $totalRecords within 5 minutes";
 			$from           = "JSSRVR";
 			$profileid      = "144111";
-			foreach($arrMob as $mobile1){
+			foreach($arrMob as $mobile1)
 				$smsState = send_sms($message,$from,$mobile1,$profileid,'','Y');
-                CommonUtility::logTechAlertSms($message, $mobile1);
-            }
 			
 		}
 		else

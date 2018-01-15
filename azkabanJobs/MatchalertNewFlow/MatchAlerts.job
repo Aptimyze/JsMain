@@ -1,5 +1,0 @@
-type=command
-dependencies=MatchAlertCalculation9_0Task,MatchAlertCalculation9_1Task,MatchAlertCalculation9_2Task,MatchAlertCalculation9_3Task,MatchAlertCalculation9_4Task,MatchAlertCalculation9_5Task,MatchAlertCalculation9_6Task,MatchAlertCalculation9_7Task,MatchAlertCalculation9_8Task,
-command=${php5} ${docRoot}/symfony  alert:matchAlertTracking
-retries=3
-retry.backoff=60000

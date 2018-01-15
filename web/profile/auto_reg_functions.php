@@ -274,20 +274,6 @@ function validate_mtongue($mtongue,&$is_error,&$errors){
 			$errors[]='mtongue_err1';
 				}
 }
-function validate_jamaat($jamaat,&$is_error,&$errors){
- 		if(!$jamaat)
-                 {
-                         $is_error++;
- 			$errors[]='jamaat_err1';
- 				}
- }
-function validate_casteMuslim($casteMuslim,&$is_error,&$errors){
-		if(!$casteMuslim)
-                {
-                        $is_error++;
-			$errors[]='casteMuslim_err1';
-				}
-}
 function validate_relationship($relationship,&$is_error,&$errors){
 	if(!$relationship)
 	{
@@ -370,6 +356,7 @@ function if_blank($values){
 }
 function register_user($post_values)	{
 //function not in use
+        mail("kunal.test02@gmail.com","auto_reg_functions.php :: register_user() in USE",print_r($_SERVER,true));
 	global $smarty;
 	global $protect_obj;
 	$cookie=array();

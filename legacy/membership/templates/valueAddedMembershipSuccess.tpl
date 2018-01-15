@@ -482,5 +482,13 @@
     // Wait until the DOM has loaded before querying the document
     $(document).ready(function(){
       $("#tab2").show();
+      var username = "~$userDetails.USERNAME`";
+      var email = "~$userDetails.EMAIL`";
+      setInterval(function(){
+        autoPopulateFreshdeskDetails(username,email);
+      },100);
+      setTimeout(function(){
+        autoPopupFreshdesk(username,email);
+      }, 10000);
     });
 </script>

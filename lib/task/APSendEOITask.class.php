@@ -10,7 +10,7 @@ ini_set('memory_limit','512M');
 class APSendEOITask extends sfBaseTask
 {
 	private $errorMsg;
-        private $minEois = 8;
+        private $minEois = 10;
         private $clusterForMutualMatches = array(0=>'LAST_ACTIVITY');
         private $removeFilteredProfiles = true;
         private $maxEoiReceiver = 5;
@@ -58,20 +58,16 @@ EOF;
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
                 
-                
-                
 		$detailArr="PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT, EDU_LEVEL,EMAIL,IPADD,ENTRY_DT,MOD_DT,RELATION,COUNTRY_BIRTH,SOURCE,INCOMPLETE,PROMO,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME,CITY_BIRTH,BTIME,HANDICAPPED,NTIMES,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,ACTIVATED,ACTIVATE_ON,AGE,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,LAST_LOGIN_DT,SHOWPHONE_RES,SHOWPHONE_MOB, HAVEPHOTO,PHOTO_DISPLAY,PHOTOSCREEN,PREACTIVATED,KEYWORDS,PHOTODATE,PHOTOGRADE,TIMESTAMP,PROMO_MAILS,SERVICE_MESSAGES,PERSONAL_MATCHES,SHOWADDRESS,UDATE,SHOWMESSENGER,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,SHOW_PARENTS_CONTACT,FAMILY_VALUES,SORT_DT,VERIFY_EMAIL,SHOW_HOROSCOPE,GET_SMS,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,ORKUT_USERNAME,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,PHONE_FLAG,CRM_TEAM,activatedKey,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,SUNSIGN";
 		
 		$profileInfoObj = new ASSISTED_PRODUCT_AP_PROFILE_INFO();
                 $tempProfileRecords = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG();
 		$autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
                 $receiverEoiObj = new receiverEoiCount();
-                $sendInterestTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
-                $notInTableObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES_COMPLETE();
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition,$totalScripts,$currentScript);
-		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2017-08-27 00:00:00"));
+		//$profileArr=array(1=>array("PROFILEID"=>1,"LAST_LOGIN_DT"=>"2017-01-27 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -103,7 +99,7 @@ EOF;
 				$totalLimit=100;
 				if($this->isJsDummyMember($senderId))
 				{
-					$limit=25;
+					$limit=100;
 					$totalLimit=200;
 				}
 				$totalSenders++;
@@ -123,47 +119,41 @@ EOF;
                                 //find profiles who have already received eoi's limited for today
                                 $notInProfiles = $receiverEoiObj->getReceiversWithLimit($this->maxEoiReceiver);
                                 
-                                $notInProfiles .= $notInTableObj->getNotInProfilesForSender($senderId);
-                                $notInProfiles = trim($notInProfiles);
-                                
                                 $searchMutualMatches = true;
                                 
-                                /*//get mutual matches first
+                                //get mutual matches first
 				$mutualMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,$this->clusterForMutualMatches,'',$notInProfiles);
                                 
-                                $mutualMatchesCount = $mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][2]+$mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][1];*/
+                                $mutualMatchesCount = $mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][2]+$mutualMatchesArr['ClusterCount']['LAST_ACTIVITY'][1];
                                 
                                 //get subscription details of pack
                                 $membershipHandlerObj = new MembershipHandler();
                                 $activeSubsDetails = $membershipHandlerObj->getActiveSubscriptionDetail($senderId,'T');
                                 
+                                
+                                //get maximum number to be sent
+                                $numberToBeSent = $this->getEoiNumberToBeSent($mutualMatchesCount,$activeSubsDetails,$limit,$this->minEois);
+                                $stringToWrite = "Sender-:  ".$senderId."    mutual matches-:  ".$mutualMatchesCount."     numberSent-:  ".$numberToBeSent;
+                                fwrite($file,$stringToWrite."\n");
                                 //if mutual matches are less than number expected find partner matches
                                 //$mutualMatchesCount < $numberToBeSent) || !$mutualMatchesCount
-                                $searchMutualMatches= false;
-                                //get dpp matches with not in param
-
-                                //profiles registered 7 days before
-                                $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
-                                
-                                $partnerMatchesArr = $partnerObj->getMyDppMatches(SearchSortTypesEnums::SortByPhotoForAP,$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate,'','',$source='AP');
-                                
-                                $resultArr = $partnerMatchesArr;
-                                $dppLoop++;
-                                $partnerMatchesCount = $partnerMatchesArr['CNT'];
-          
-                                //get maximum number to be sent
-                                $numberToBeSent = $this->getEoiNumberToBeSent($partnerMatchesCount,$activeSubsDetails,$limit,$this->minEois);
-                                
-                                $stringToWrite = "Sender-:  ".$senderId."    mutual matches-:  ".$partnerMatchesCount."     numberSent-:  ".$numberToBeSent;
-                                fwrite($file,$stringToWrite."\n");
+                                if(1){
+                                    $searchMutualMatches= false;
+                                    //get dpp matches with not in param
+                                    
+                                    //profiles registered 7 days before
+                                     $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate);
+                                     $resultArr = $partnerMatchesArr;
+                                     $dppLoop++; 
+                                }
+                                else
+                                    $resultArr = $mutualMatchesArr;
                                 
                                 $limit = $numberToBeSent;
                                     
 				$matchArr = $resultArr['PIDS'];
 				$matchCount = $resultArr['CNT'];
-                                
-                                $isNewRBEligible = MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID());
-                                
 				// getting partner matches
 				if(($limit > $limitCounter) && $matchCount)
 				{
@@ -181,14 +171,9 @@ EOF;
 							$this->setExceptionError($ex);
 						}
 						UserFilterCheck::$filterObj=null;
-                                                
-                                                if($isNewRBEligible)
-                                                    $sendInterestTableObj->insertProfiles($profileObj->getPROFILEID(), $receiverObj->getPROFILEID());
-                                                else
-                                                    $contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
-                                                
-						if($isNewRBEligible || $contactEngineObj)
-						if(!$isNewRBEligible && $contactEngineObj->getComponent()->errorMessage != '')
+						$contactEngineObj = $this->sendEOI($profileObj, $receiverObj);
+						if($contactEngineObj)
+						if($contactEngineObj->getComponent()->errorMessage != '')
 						{
 							// if any error occurs send mail
 							$mailMes = "AP error -> ".$contactEngineObj->getComponent()->errorMessage." Sender: $senderId Receiver: $receiverId ";
@@ -203,7 +188,6 @@ EOF;
 							$totalContactsMade++;
 							$limitCounter++;
 							try{
-                                                            if(!$isNewRBEligible)
 								$autoContObj->insertIntoAutoContactsTracking($senderId,$receiverId);
                                                                 // insert entry in receiver limit array
                                                                 $receiverEoiObj->insertOrUpdateEntryForReceiver($receiverId);
@@ -213,7 +197,6 @@ EOF;
 								$this->setExceptionError($ex);
 							}
 						}
-                                                ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
 							break;
@@ -224,7 +207,6 @@ EOF;
 			{
 				$this->setExceptionError($ex);
 			}
-			ProfileMemcache::unsetInstance($senderId);
                         $tempProfileRecords->insert($senderId);
 		
 		}
@@ -235,15 +217,8 @@ EOF;
 			echo $this->errorMsg;
                         SendMail::send_email("ankitshukla125@gmail.com","error ".$this->errorMsg,"Exceptions caught");
                 }
-
-        //reset screening status of exclusive RB clients
-        $exServicingObj = new billing_EXCLUSIVE_SERVICING();
-		$exServicingObj->resetScreenedStatusAll();
-		unset($exServicingObj);
 		
-		$exclusiveFunctionObj =  new ExclusiveFunctions();
-		$exclusiveFunctionObj->deleteRedisKey("handledProfile");
-		unset($exclusiveFunctionObj);
+		
 	}
 	
 	/** logs sfException
@@ -270,6 +245,7 @@ EOF;
 			$contactObj = new Contacts($profileObj, $receiverObj);
 			if($contactObj->getTYPE() == 'N')
 			{
+				
 				$contactHandlerObj = new ContactHandler($profileObj,$receiverObj,"EOI",$contactObj,'I',ContactHandler::POST);
 				$contactHandlerObj->setPageSource("AP");
 /*				 STOPPING THIS MESSAGE AS CHAT REQUIRED FOR RB
@@ -322,12 +298,12 @@ EOF;
 		return false;
 	}
         
-        public function getEoiNumberToBeSent($dppMatchesCount,$subsDetailsArr,$maxEois,$minEois) {
+        public function getEoiNumberToBeSent($mutualMatchesCount,$subsDetailsArr,$maxEois,$minEois) {
             $durationOfPack = $subsDetailsArr['DURATION_MONTHS']*30;
             $today = strtotime(date("Y-m-d"));
             $expiryDate = strtotime($subsDetailsArr['EXPIRY_DT']);
             $daysRemaining = floor(($expiryDate - $today)/(60*60*24))+1;
-            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($dppMatchesCount*0.5)/$daysRemaining)),$minEois),$maxEois);
+            $eoiToBeSent = min(max(floor(2*($durationOfPack/90)*(($mutualMatchesCount*0.5)/$daysRemaining)),$minEois),$maxEois);
             return $eoiToBeSent;
         }
         

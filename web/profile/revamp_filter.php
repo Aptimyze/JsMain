@@ -724,7 +724,7 @@ if(isset($data) || $crmback=='admin')
 			}
 		/* Tracking Contact Center, as per Mantis 4724 Starts here */
 		$end_time=microtime(true)-$start_tm;
-		$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"https://track.99acres.com/images/zero.gif","JSREGPAGE6URL"));
+		$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs($end_time,true,2,"http://track.99acres.com/images/zero.gif","JSREGPAGE6URL"));
 		/* Ends Here */	
 			$smarty->display("revamp_filter_new.htm");
 		}

@@ -1,6 +1,6 @@
 function PopSPEC(thisform,element1,element2)
 {
-		
+ 
         var docF=document.insertForm;
         var len_el=docF.elements.length;
         for(i=0;i<len_el;i++)

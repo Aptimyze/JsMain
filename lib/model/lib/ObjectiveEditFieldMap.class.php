@@ -22,7 +22,6 @@ class ObjectiveEditFieldMap
 				'SHOWMESSENGER'=>'privacy_option',
 				'SHOWADDRESS'=>'privacy_option',
 				'HAVECHILD'=>'children',
-                                'MSTATUS'=>'marital_status',
 				'P_LRS'=>'lincome',
 				'P_HRS'=>'hincome',
 				'P_LDS'=>'lincome_dol',
@@ -66,7 +65,6 @@ class ObjectiveEditFieldMap
         'P_HHEIGHT'=>'height',
         'P_LHEIGHT'=>'height',
         'P_STATE'=>'state_india',
-        'P_OCCUPATION_GROUPING'=>'occupation_grouping',
 			);
 		if($from_whr=="MR")
 			$objectiveFieldMap["RELATIONSHIP"]="relationship_minireg";

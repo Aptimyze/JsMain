@@ -76,33 +76,6 @@ class CropperProcess
 			}
 		if($ops)
 			return $filesGlobArr;
-
-			foreach($profilesUpdate as $k=>$v)
-			{
-				foreach($v as $k1=>$v1)
-				{
-					if($k1 == "ProfilePic450Url")
-					{
-						$googleVisionObj = new GoogleVisionApi();
-						$faceFound = $googleVisionObj->checkFaceCordinates($v1, "jpeg", $k, $profileid);
-						if(!$faceFound)
-						{
-							$googleFlag = true;
-						}
-					}
-				}
-			}
-			
-		if(is_array($profilesUpdate)){
-				if($googleFlag)
-				{
-					$pictureServiceObj->setPicProgressBit("CROPPEDFACE",$profilesUpdate);
-				}
-				else{
-					$pictureServiceObj->setPicProgressBit("FACE",$profilesUpdate);
-				}
-
-		}
 		return $profilesUpdate;
 		}
 		else

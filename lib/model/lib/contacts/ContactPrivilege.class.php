@@ -27,7 +27,6 @@ class ContactPrivilege
 		$privilegeData = ContactEngineMap::getFieldLabel("privilege_data","",1);
 		
 		// variables :
-
 		$loggedInProfileObj=$contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
 		$otherProfileObj=$contactHandlerObj->getViewed()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus();
 		$senderReciever=$contactHandlerObj->getContactInitiator();

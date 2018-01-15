@@ -22,7 +22,8 @@ class AdvanceSearchPopulate
 																		 "handicapped"=>"handicapped_mobile",
 																		 "workAfterMarriage"=>"career_after_marriage",
 																		 "hiv"=>"hiv_edit","haveChildren"=>"children",
-																		 "settleAbroad"=>"going_abroad"
+																		 "settleAbroad"=>"going_abroad",
+																		 "mstatus"=>"mstatus"
 																		
 																	);
 	private $fieldSearchQueryMapping = Array("LAGE"=>"Min_Age","HAGE"=>"Max_Age",
@@ -158,8 +159,8 @@ class AdvanceSearchPopulate
 			
 			$this->dataArray["caste"] = $this->populateCaste();
 			$this->dataArray["location"] = $this->populateCity_State();
-			$this->dataArray["country"] = $this->populateCountry();			
-			$this->dataArray["mstatus"] = $this->populateMstatus();
+			$this->dataArray["country"] = $this->populateCountry();
+			
 			foreach($this->fieldMapLibValues as $key=>$value)
 			{
 					$this->dataArray[$key] = $this->populateFeild($value);
@@ -203,14 +204,12 @@ class AdvanceSearchPopulate
 	
 	public function populateFeild($feild)
 	{
-		$arr =FieldMap::getFieldLabel($feild,"",1);		
+		$arr =FieldMap::getFieldLabel($feild,"",1);
 		$i=0;
 		foreach($arr as $key=>$val)
 		{
-                        if($feild == 'manglik_label' && ($key == 'D' || $key == 'S0')){ // Do not show 'Dont know' in manglik status
-                        }
-                        elseif($key == '0' && $val == "Select"){} // remove select from search
-                        else{
+                        if($feild == 'manglik_label' && $key == 'D'){ // Do not show 'Dont know' in manglik status
+                        }else{
                                 $output[$key]["VALUE"]=$key;
                                 $output[$key]["LABEL"]=$val;
                         }
@@ -433,22 +432,6 @@ class AdvanceSearchPopulate
     return $output; 
 		
 	}
-	
-	public function populateMstatus()
-	{
-		$array = FieldMap::getFieldLabel("mstatus",'',1);
-		$i = 0;
-		foreach($array as $key=>$value)
-		{
-			if ($key == "M")
-			{
-				continue; // JSM-4631
-			}
-			$output[$i++]=array("VALUE"=>$key,"LABEL"=>$value);
-		}
-		return $output;
-	}
-	
 	public function populateEducation()
 	{
 		$array=FieldMap::getFieldLabel("eduDppArray",'',1);
@@ -649,9 +632,7 @@ class AdvanceSearchPopulate
 							$cities = array_diff($cities,$cityList);
 							$cities[]=$state;
 							
-						}else{
-                                                        $cities[]=$state;    
-                                                }
+						}
 	          
 					}
 				}

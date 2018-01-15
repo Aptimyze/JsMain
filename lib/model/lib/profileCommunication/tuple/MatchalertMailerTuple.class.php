@@ -7,7 +7,7 @@
 class MatchalertMailerTuple extends Tuple {
     /* It defines all the fields and icons for a particular tuple */
     static public function init() {
-        self::$fields =Array("PROFILEID", "USERNAME", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "SUBCASTE", "EDUCATION", "INCOME", "CITY","SearchPicUrl","YOURINFO","ACTIVATED","edu_level_new","NAME_OF_USER");
+        self::$fields =Array("PROFILEID", "USERNAME", "GENDER", "AGE", "HEIGHT", "RELIGION", "MTONGUE", "OCCUPATION", "HAVEPHOTO", "PHOTO_DISPLAY", "CASTE", "SUBCASTE", "EDUCATION", "INCOME", "CITY","SearchPicUrl","YOURINFO","ACTIVATED","edu_level_new");
     }
     /* This function returns fields and icons configurations of the tuple*/
     static public function getFields() {

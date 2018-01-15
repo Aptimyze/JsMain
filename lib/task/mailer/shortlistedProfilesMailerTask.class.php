@@ -33,11 +33,11 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		ini_set('memory_limit','-1');
+		ini_set('memory_limit','912M');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_master");
+	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_masterDDL");
 	            $mailerYNObj->EmptyMailer();
 	            echo "Truncated Mailer Table\n\n";
 	            $chunk=$arguments["chunks"];
@@ -53,7 +53,6 @@ EOF;
 						$remainderArray=array('divisor'=>$chunk,'remainder'=>$i);
 						$row=$dbOb->getBookmarkedAllForAPeriod(30,$remainderArray);
 						echo "MEMORY USAGE At the step 0 of loop: ".memory_get_usage() . "\n";
-                                                if(!is_array($row))continue;
 						foreach ($row as $key => $value) {
 			
 								$arranged[$value['BOOKMARKER']][]=$value['BOOKMARKEE'];
@@ -64,25 +63,24 @@ EOF;
 						
 						echo "MEMORY USAGE At the step 1 of loop: ".memory_get_usage() . "\n";
 						$skipConditionArray = SkipArrayCondition::$SkippedAll;
-						$this->skipProfiles($arranged);
+
+						$arranged=$this->skipProfiles($arranged);
+						
 						echo "MEMORY USAGE At the step 2 of loop: ".memory_get_usage() . "\n";
 						echo "Statred entry in Mailer Table for chunk ".$i."\n\n";
 						
 						$this->makeEntryInMailerTable($arranged,$mailerEntryObject);
 						$arranged=null;
-                                                foreach ($arranged as $key => $value) {
-                                                    unset($arranged[$key]);
-                                                }
 						unset($arranged);
 						echo "MEMORY USAGE At the end of loop: ".memory_get_usage() . "\n";
 				}
 	}
 
-public function skipProfiles(&$arranged)
+public function skipProfiles($arranged)
 {
 	foreach ($arranged as $key => $value) 
 	{
-		$skipProfileObj     = new SkipProfile($key);
+		$skipProfileObj     = SkipProfile::getInstance($key);
 		$skipConditionArray = SkipArrayCondition::$SkippedAll;			
                 $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 		if(is_array($skipProfiles))
@@ -90,12 +88,11 @@ public function skipProfiles(&$arranged)
 		else
 			$temp=$value;
 		if(count($temp)>0)
-			$arranged[$key]=$temp;
-                else unset($arranged[$key]);
-                unset($skipProfiles);
-                unset($temp);
-                ProfileMemcache::unsetInstance($key);
+			$result[$key]=$temp;
+		$skipProfileObj::unsetInstance($key);
+		
 	}
+	return $result;
 }
 
 public function makeEntryInMailerTable($arranged,$mailerEntryObject)

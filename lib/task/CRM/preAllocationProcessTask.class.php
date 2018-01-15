@@ -74,7 +74,7 @@ EOF;
 		$processObj->setDiscountStatus($j);
         	for($i=-5;$i<=6;$i++)
 	        {
-			if($i!=1 && $i!=-1 && $i!=-2 && $i!=-3 && $i!=-4)
+			if($i!=1 && $i!=-2 && $i!=-3 && $i!=-4)
 			{	
 				$processObj->setDiscountStatus($j);
 	                	$processObj->setLevel($i);

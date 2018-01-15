@@ -226,11 +226,9 @@ function total_amount_topay(tax_rate)
 	for(var i=0;i<services_array.length;i++)
 	{
 		id = services_array[i] + "_price";
-        if(document.getElementById(id) != null){
-            amount = parseInt(document.getElementById(id).value);
-            if(!isNaN(amount))
-                final_amount += amount;
-        }
+		amount = parseInt(document.getElementById(id).value);
+		if(!isNaN(amount))
+			final_amount += amount;
 	}
 		
 	var net_pay = final_amount - discount_value;

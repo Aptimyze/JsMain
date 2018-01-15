@@ -55,14 +55,7 @@ class MobSearchAction extends sfActions
 			$request->setParameter("infoTypeId",$request->getParameter("searchId"));
 			$request->setParameter("pageNo",$request->getParameter("currentPage"));
             		$request->setParameter("ContactCenterDesktop",1);
-			if(MobileCommon::isMobile())
-			{
-				$redirectUrl = $SITE_URL."/inbox/jsmsPerform?searchId=".$request->getParameter("searchId")."&matchedOrAll=".$this->matchedOrAll;
-				header("Location:".$redirectUrl);die;
-			}
-			else{
-				sfContext::getInstance()->getController()->getPresentationFor('inbox','performV2');
-			}
+			sfContext::getInstance()->getController()->getPresentationFor('inbox','performV2');
 		}
 		else
 		{

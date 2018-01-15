@@ -4,7 +4,9 @@
         <div class="" id="pcontainer">
         </div>
         ~if $webView neq 1`
+        <div id="hamburger" class="hamburgerCommon dn fullwid">	
             ~include_component('static', 'newMobileSiteHamburger')`	
+        </div>
         ~/if`
     </div>
         <!--heading:start-->
@@ -82,6 +84,11 @@
 <script>
 var AndroidPromotion=0;
 $(document).ready(function(){
+    var username = "~$username`";
+    var email = "~$email`";
+    setInterval(function(){
+        autoPopulateFreshdeskDetails(username,email);
+    },100);
     var webView = '~$webView`';
     $("#pageBack").click(function(e){
         window.location.href = "/profile/mainmenu.php";

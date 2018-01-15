@@ -1,312 +1,12 @@
 
-var calTimerTime,calTimer;
 $(document).ready(function() {
-var calIdTemp =$("#CriticalActionlayerId").val(); 
-if(calIdTemp=='18'){
+	
 
-    if(isIphone != '1')
-    {
-        $(window).resize(function()
-        {
-        $("#occMidDiv").css("height",window.innerHeight - 50);
-        $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
-        });	
-    }
-    occuSelected= 0;
-
-    $("#occInputDiv input").on('keydown',function(event){
-        var self = $(this);
-        setTimeout(function(){
-          var regex = /[^a-zA-Z. 0-9]+/g; 
-            
-         var value = self.val();
-         value = value.trim().replace(regex,"");
-         if(value != self.val().trim())
-           self.val(value);
-        },1);
-        
-//        if(!(inputValue >= 65 && inputValue <= 122) && (inputValue != 32 && inputValue != 0) && inputValue != 8 && (inputValue != 32 && inputValue != 0) ) { 
-//            event.preventDefault(); 
-//        }
-    } );
-    $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() { 
-        if(typeof listArray == 'undefined')
-        {      $.ajax({
-                    url: "/static/getFieldData?k=occupation&dataType=json",
-                    type: "GET",
-                    success: function(res) {
-                        listArray = res[0];
-                        appendOccupationData(listArray);
-                    },
-                    error: function(res) {
-                        $("#listDiv").addClass("dn");
-                        ShowTopDownError(["Something went wrong"]);
-                    }
-                });
-            }
-            else appendOccupationData(listArray);
-                $("#listDiv").removeClass("dn");
-        });
-
-     appendOccupationData = function(res) {
-        $("#occList").html('');
-        occuSelected = 0;
-        $.each(res, function(index, elem) {
-            $.each(elem, function(index1, elem1) {
-                if(index1!=43) //  omitting 'others' option
-                    $("#occList").append('<li occCode = "'+index1+'">' + elem1 + '</li>');
-            });
-        });
-        $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
-        $("#occList li").each(function(index, element) {
-            $(this).bind("click", function() {
-
-                $("#occSelect").html($(this).html());
-                $("#occSelect").attr('occCode',$(this).attr('occCode'));
-                $("#listDiv").addClass("dn");
-                $('#searchOcc').val("");
-                $("#occList").html("");
-                if ($(this).attr("id") == "notFound") {
-                    occuSelected = 0;
-                    $("#contText").hide();
-                    $("#inputDiv").removeClass("dn");
-                    $("#occuText").focus();
-                } else {
-                    occuSelected = 1;
-                    $("#inputDiv").addClass("dn");
-                    $("#contText").hide();
-                    $(this)
-                }
-                $("#occupationSubmit").show();
-            });
-        });
-        $("#listLoader").addClass("dn");
-        $("#occList").removeClass("dn");
-        }
-
-        }
-
-    /* CAL 25 */
-    if(calIdTemp=='25'){
-
-    occuSelected= 0;
-
-    if($("#manglikSubmit").length && $("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70 >0)
-        {
-              $("#skipBtn").css("margin-top",$("#manglikSubmit").offset().top-$("#skipBtn").offset().top-70);
-        }
-
-    if(isIphone != '1')
-    {
-        $(window).resize(function()
-        {
-        $("#occMidDiv").css("height",window.innerHeight - 50);
-        // $("#occMidDiv").animate({ scrollTop:$('#occInputDiv').offset().top }, 500);
-        }); 
-    }
-
-
-    $("#occMidDiv").css("height",window.innerHeight - 50);
-    $("#occClickDiv").on("click", function() { 
-        if(typeof listArray == 'undefined' || listArray === null)
-        { 
-                listArray = {
-                // D :"Don't know",
-                M : "Manglik",
-                A : "Angshik (partial manglik)",
-                N : "Non Manglik"};
-            }
-            appendOccupationData(listArray);
-                $("#listDiv").removeClass("dn");
-        });
-
-     appendOccupationData = function(res) {
-        $("#occList").html('');
-        occuSelected = 0;
-        $.each(res, function(index, elem) {
-                    $("#occList").append('<li occCode = "'+index+'">' + elem + '</li>');
-        });
-        // $("#occList").append('<li style="margin-bottom: 20px;padding-bottom:25px" id="notFound">I didn\'t find my occupation</li>');
-        $("#occList li").each(function(index, element) {
-            $(this).bind("click", function() {
-
-                $("#occSelect").html($(this).html());
-                $("#occSelect").attr('occCode',$(this).attr('occCode'));
-                $("#listDiv").addClass("dn");
-                $('#searchOcc').val("");
-                $("#occList").html("");
-                $("#contText").hide();
-                $("#manglikSubmit").show();
-            });
-        });
-        $("#listLoader").addClass("dn");
-        $("#occList").removeClass("dn");
-        }
-
-        } /*end of CAL 25*/
-
-
-
-if(calIdTemp=='20' || calIdTemp==23 ){
-    if(isIphone != '1')
-    {
-        $(window).resize(function()
-        {
-        $("#stateCityMidDiv").css("height",window.innerHeight - 50);
-        }); 
-    }
-
-    $("#stateCityMidDiv").css("height",window.innerHeight - 50);
-    $("#stateClickDiv").on("click", function() { 
-        if(typeof listArray == 'undefined')
-        {      $.ajax({
-                    url: "/static/getFieldData?l=state_res,city_res_jspc,country_res&dataType=json",
-                    type: "GET",
-                    success: function(res) {
-                        listArray = res;
-                        appendStateData(listArray);
-                    },
-                    error: function(res) {
-                        $("#stateListDiv").addClass("dn");
-                        ShowTopDownError(["Something went wrong"]);
-                    }
-                });
-            }
-            else appendStateData(listArray);
-                $("#stateListDiv").removeClass("dn");
-        });
-
-    $("#cityClickDiv").on("click", function() {
-            callCity(listArray);
-            $("#cityListDiv").removeClass("dn");
-    });
-
-     appendStateData = function(allRes) {  
-        $("#stateList").html('');
-        $("#citySelect").html('Select your City');  
-        if(typeof allRes == 'string')
-            allRes = JSON.parse(allRes);
-
-        res = allRes.state_res;
-        if($("#CriticalActionlayerId").val()=='23')
-            $("#stateList").append('<li stateCode = "-1">Outside India</li>');        stateMap = {};
-         var stateIndex=1;
-        $.each(res, function(index, elem) {
-            $.each(elem, function(index1, elem1) {
-                $.each(elem1, function(index2, elem2) {
-                    $("#stateList").append('<li stateCode = "'+index2+'">' + elem2 + '</li>');
-                    stateMap[stateIndex++] = index2;
-                    
-            });
-        });
-      });      
-   
-        $("#stateList li").each(function(index, element) { 
-            $(this).bind("click", function() {
-                citySelected = false;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                $("#stateSelect").html($(this).html());
-                $("#stateSelect").attr('stateCode',$(this).attr('stateCode'));
-                $("#stateListDiv").addClass("dn");
-                $("#stateList").html("");
-                $("#inputDiv").hide();
-                if($(this).attr('stateCode')=='-1')
-                    $("#citySelect").html('Country');  
-                else 
-                {
-                    if(calIdTemp=='23')
-                        $("#citySelect").html('City');
-                }
-                    $("#contText").hide();
-                    $("#cityClickDiv").removeClass("dn");
-                
-                $("#stateCitySubmit").show();
-            });
-
-        });
-        $("#ListLoader").addClass("dn");
-        $("#stateList").removeClass("dn");
-
-        }
-
-        callCity = function(allRes) {
-
-        $("#cityList").html('');
-        var cityIndexFromMap  = $("#stateSelect").attr('stateCode');
-        if(typeof allRes == 'string')
-            allRes = JSON.parse(allRes);
-        cityMap = {};
-        cityIndex = 2;
-        
-        occuSelected = 0;
-        if(cityIndexFromMap!='-1')
-        {
-         $.each(allRes.city_res_jspc, function(index, elem) {
-           if(index == cityIndexFromMap){
-            $.each(elem[0], function(index1, elem1) {  
-              $.each(elem1, function(index2, elem2){  
-                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
-                  
-                
-                });
-        });
-          }                                                                                                                                                                                                                                             
-              });    
-        }
-        else {
-        $.each(allRes.country_res[0], function(index, elem) {
-              $.each(elem, function(index2, elem2){  
-                    if(index2!='-1' && index2!='51')
-                    $("#cityList").append('<li cityCode = "'+index2+'">' + elem2 + '</li>');
-                  
-        });
-          });
-
-        }
-
-        $("#cityList li").each(function(index, element) {
-            $(this).bind("click", function() {  
-                citySelected = true;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                var tempHtml = $(this).html();
-                $("#citySelect").html(tempHtml);
-                if($("#CriticalActionlayerId").val()=='23')
-                {
-                    if(tempHtml == 'Others' && $("#stateSelect").attr('stateCode')!='-1'){
-                        $("#inputDiv").show();
-                        var objDiv = document.getElementById("stateCityMidDiv");
-                        objDiv.scrollTop = objDiv.scrollHeight;
-                    }
-                    else {
-                        $("#cityInputDiv input").val('');
-                        $("#inputDiv").hide();
-                    }
-                }
-                $("#citySelect").attr('cityCode',$(this).attr('cityCode'));
-                $("#cityListDiv").addClass("dn");
-                $("#cityList").html("");
-                    occuSelected = 0;
-                    $("#contText").hide();
-                $("#stateCitySubmit").show();
-            });
-        });
-        $("#cityListLoader").addClass("dn");
-        $("#cityList").removeClass("dn");
-        }
-
-        }
-
-
-
-else if($("#CriticalActionlayerId").val()=='16'){
+          
+        if($("#CriticalActionlayerId").val()=='16'){
         $('body').css('background-color','#fff');
         appendData(suggestions);            
-        }
-else if($("#CriticalActionlayerId").val()=='19')
-{
-    $('body').css('background-color','#09090b');
-showTimerForLightningCal(1800);
-}
-
+        }  
 else {
         $('body').css('background-color','#09090b');
         if($("#submitName").length && $("#submitName").offset().top-$("#skipBtn").offset().top-70 >0)
@@ -317,8 +17,7 @@ else {
     
     
     }
-} 
-)
+} )
     var CALButtonClicked=0;
     
         function validateUserName(name){        
@@ -343,12 +42,10 @@ else {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
-        
-        if(CALButtonClicked===1)return;  
+        if(CALButtonClicked===1)return;
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
-        
         if(layerId==9 && button=='B1')
                     {   
                         var newNameOfUser='',privacyShowName='';
@@ -362,195 +59,9 @@ else {
                         }
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
                     }
-        if(layerId==18)
-                    {   
-
-                        if (occuSelected==1)
-                        {
-                            var occuCode = $("#occSelect").attr('occCode');
-                            dataOcc = {'editFieldArr[OCCUPATION]':occuCode};
-                            $.ajax({
-                            url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },       
-                            type: 'POST',
-                            dataType : 'json',
-                            data: dataOcc,
-                            success: function(response) {
-                                if(button == 'B2'){
-                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
-                                }else if(button == "B1"){
-                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
-                                }
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
-                                CALButtonClicked=0;
-
-                            },
-                            error: function(response) {
-                                }
-                            });
-                        }
-                        else if ($("#occInputDiv input").val().trim()!='')
-                        {
-                            
-                            var occupText = $("#occInputDiv input").val();
-                            if(button == 'B2'){
-                                GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
-                            }else if(button == "B1"){
-                                GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
-                            }
-                            window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+"&occupText="+occupText; 
-                            CALButtonClicked=0;
-                            return;
-                        }
-                        else{
-
-                                showError("Please enter occupation");
-                                CALButtonClicked=0;
-                                return;
-
-
-                        }
-
-                    }
-                    if(layerId == 25 && button == "B1"){
-                        var occuCode = $("#occSelect").attr('occCode');
-                        if(!occuCode){
-                            showError("Please select a Manglik Status");
-                            console.log("Please select a Manglik Status");
-                            CALButtonClicked=0;
-                            return;
-                        }
-                        
-                        if(occuCode){
-                            dataOcc = {'editFieldArr[MANGLIK]':occuCode};
-                            $.ajax({
-                            url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },
-                            type: 'POST',
-                            dataType : 'json',
-                            data: dataOcc,
-                            success: function(response) {
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button;
-                                CALButtonClicked=0;
-                            },
-                            error: function(response) {
-                                }
-                            });
-
-                        }
-                    }
-
-                if(layerId==20 || layerId==23)
-                    {   
-                    var stateCode = $("#stateSelect").attr('stateCode');
-                    var cityCode  = $("#citySelect").attr('cityCode');
-                    if (citySelected || ( stateCode=='-1' && cityCode=='0'))
-                        {
-
-                            if (layerId==23 && stateCode!='-1' && $("#cityInputDiv input").val().trim()=='' && cityCode=='0' )
-                            {
-                                    showError("Please enter city");
-                                    CALButtonClicked=0;
-                                    return;
-                            }
-                            if(layerId==20)
-                                dataStateCity = {'editFieldArr[STATE_RES]':stateCode ,'editFieldArr[CITY_RES]':cityCode,'editFieldArr[COUNTRY_RES]': 51 };
-                            else
-                            {
-                                if(stateCode!='-1')
-                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':stateCode ,'editFieldArr[NATIVE_CITY]':cityCode,'editFieldArr[NATIVE_COUNTRY]': 51,'editFieldArr[ANCESTRAL_ORIGIN]': $("#cityInputDiv input").val() };
-                                else 
-                                    dataStateCity = {'editFieldArr[NATIVE_STATE]':'' ,'editFieldArr[NATIVE_CITY]':'','editFieldArr[NATIVE_COUNTRY]': cityCode };
-                            }
-
-                        }
-                        else{
-                                if(stateCode!='-1')
-                                    showError("Please select City");
-                                else 
-                                    showError("Please select Country");
-                                CALButtonClicked=0;
-                                return;
-
-
-                        }
-                        showLoader();
-                        $.ajax({
-                            url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },       
-                            type: 'POST',
-                            dataType : 'json',
-                            data: dataStateCity,
-                            success: function(response) {
-                                hideLoader();
-                                if(button == 'B2'){
-                                    GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
-                                }else if(button == "B1"){
-                                    GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
-                                }
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
-                                CALButtonClicked=0;
-
-                            },
-                            error: function(response) {
-                                 hideLoader();   
-                                showError('Something went wrong');
-
-                                }
-                            });
-                        return;
-                    }
-
-                    if(layerId==26 && button == "B1")
-                    {   
-                        var dataAboutMe = {'editFieldArr[YOURINFO]':$('#textAboutMe').val().trim() };
-                        if($('#textAboutMe').val().trim().length < 100)
-                        {
-                            showError("Please type min 100 characters.");
-                            CALButtonClicked=0;
-                            return;
-                        }
-
-
-                        showLoader();
-                        $.ajax({
-                            url: '/api/v1/profile/editsubmit',
-                            headers: { 'X-Requested-By': 'jeevansathi' },       
-                            type: 'POST',
-                            dataType : 'json',
-                            data: dataAboutMe,
-                            success: function(response) {
-                                hideLoader();
-                                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
-                                CALButtonClicked=0;
-
-                            },
-                            error: function(response) {
-                                 hideLoader();   
-                                showError('Something went wrong');
-
-                                }
-                            });
-                        return;
-                    }
-                    if(layerId==19){
-                        if(typeof(fromDetailedAction)!='undefined' && fromDetailedAction==1)
-                        {
-                            if(button=='B2')
-                            {
-                                if(typeof(redirectViewProfileUrl)!='undefined' && redirectViewProfileUrl)
-                                   CALParams="&redirecPdUrl="+redirectViewProfileUrl;
-                            }
-
-                        }
-                    }
-        if(button == 'B2'){
-            GAMapper("GA_CAL_CLOSE", {"currentPageName": currentPageName});
-        }else if(button == "B1"){
-            GAMapper("GA_CAL_ACCEPT", {"currentPageName": currentPageName});
-        }
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-        CALButtonClicked=0;        
+        CALButtonClicked=0;
+        
     }
 
 
@@ -559,17 +70,14 @@ else {
             $(id1).css('background-color','#d9475c');
             $(id2).css('background-color','#C6C6C6');
         }
-        var showErrorTimeout;
         function showError(msg)
         {
-            if(showErrorTimeout){
-                clearTimeout(showErrorTimeout);
-            }
-            $( "#validation_error" ).text(msg);
-            $( "#validation_error" ).slideDown( "slow", function() {});//.delay( 3000 );
-            showErrorTimeout = setTimeout(function(){
+                
+              $( "#validation_error" ).text(msg);
+              $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
               $( "#validation_error" ).slideUp( "slow", function() {});
-            }, 3000);
+
+
         }
 
 
@@ -659,10 +167,9 @@ else {
 							}
                         });
                         var url = JSON.stringify(sendObj).split('"').join("%22");
-						 $.myObj.ajax({
+						 $.ajax({
 							url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,
 							type: 'POST',
-                            channel : 'mobile',
 							success: function(response) {
 								criticalLayerButtonsAction('','B1');
 							},
@@ -676,84 +183,3 @@ else {
 
         }
 
-
-       function sendAltVerifyMail()
-       {
-                 $.ajax({
-                    url: '/api/v1/profile/sendEmailVerLink?emailType=2',
-                    headers: { 'X-Requested-By': 'jeevansathi' },       
-                    type: 'POST',
-                    success: function(response) {
-                      if(response.responseStatusCode == 1)
-                      {
-                      showError("Something went wrong");
-                      CALButtonClicked=0;
-                      return;   
-                      }
-                 
-                $("#altEmailAskVerify").hide();
-            msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
-                 $("#altEmailMsg").text(msg);
-                 $("#confirmationSentAltEmail").show();
-                   return; 
-                    }
-                });              
-
-                
-
-
-
-       }
-
-
-function showTimerForLightningCal(lightningCALTime) {
-if(!lightningCALTime) return;
-var expiryTime=new Date(lightningCALTime);
-var timerSeconds=lightningCALTime%60;
-lightningCALTime=Math.floor(lightningCALTime/60);
-var timerMinutes=lightningCALTime%60;
-lightningCALTime=Math.floor(lightningCALTime/60);
-var timerHrs=lightningCALTime;
-calTimerTime=new Date();
-calTimerTime.setHours(timerHrs);
-calTimerTime.setMinutes(timerMinutes);
-calTimerTime.setSeconds(timerSeconds);
-calTimer=setInterval('updateCalTimer()',1000);
-}
-
-
-function updateCalTimer(){
-  var h = calTimerTime.getHours();
-  var s = calTimerTime.getSeconds();
-  var m = calTimerTime.getMinutes();
-  if (!m && !s && !h) {
-     clearInterval(calTimer);
-     }
-  
-    calTimerTime.setSeconds(s-1);
-    
-    
-    m = formatTime(m);
-    s = formatTime(s);
-    h = formatTime(h);
-//  $("#calExpiryHrs").html(h);
-  $("#calExpiryMnts").html(m);
-  $("#calExpirySec").html(s);
-    }
-
-    function formatTime(i) {
-    if (i < 10 && i>=0) {i = "0" + i};  // add zero in front of numbers < 10
-    return i;
-}
-
-function showLoader()
-{
-    setTimeout(function(){$("#ed_slider").addClass("dn");},100);
-    stopTouchEvents(1,1,1);
-}
-
-function hideLoader()
-{
-    setTimeout(function(){$("#ed_slider").removeClass("dn");},100);
-    startTouchEvents(1,1,1);
-}

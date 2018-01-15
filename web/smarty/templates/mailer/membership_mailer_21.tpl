@@ -11,13 +11,13 @@
     <td><table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
         <td width="20"></td>
-          <td width="430" height="52" ><div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/logo.gif"></div></td>
+          <td width="430" height="52" ><div style="width:100%"><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/logo.gif"></div></td>
           <td width="100" valign="middle" ><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
               <tr>
                 <td align="right" valign="middle" height="50" style="vertical-align:middle;">
                 <table width="110" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="20" align="right"><img src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/iconTop.gif" /></td>
+    <td width="20" align="right"><img src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/iconTop.gif" /></td>
     <td align="right" style="font-family:Tahoma, Geneva, sans-serif; font-size:12px; color:#555555">1800 419 6299</td>
   </tr>
 </table>
@@ -39,7 +39,7 @@
   </tr>
   <tr>
     <td></td>
-    <td valign="middle" align="center" ><img src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/contact-banner.jpg" width="100%" alt="CONTACT NOW"  style="font-size:35px; font-family:Tahoma, Geneva, sans-serif"/></td>
+    <td valign="middle" align="center" ><img src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/contact-banner.jpg" width="100%" alt="CONTACT NOW"  style="font-size:35px; font-family:Tahoma, Geneva, sans-serif"/></td>
     <td ></td>
   </tr>
   <tr>
@@ -76,15 +76,15 @@ Hundreds of people easily find and contact their partners everyday on Jeevansath
   <tr>
     <td width="14" style=" border-bottom:1px solid #e3e2e2;"></td>
     <td width="196" height="30" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"></td>
-    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/rishta-logo.jpg" width="55%" /></td>
-    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/value-logo.jpg" width="55%" /></td>
+    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/rishta-logo.jpg" width="55%" /></td>
+    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/value-logo.jpg" width="55%" /></td>
     <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="~$IMG_URL`/images/evalueplus.jpg" width="55%" /></td>
   </tr>
   <tr>
     <td width="14" style=" border-bottom:1px solid #e3e2e2;" bgcolor="#ebeaea"></td>
     <td width="196" height="40" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" bgcolor="#ebeaea"><table width="90%" border="0" cellspacing="0" cellpadding="0" align="center">
   <tr>
-    <td width="15"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/down-icon.jpg" width="9" /></td>
+    <td width="15"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/down-icon.jpg" width="9" /></td>
     <td><strong>What you get?</strong></td>
   </tr>
 </table>
@@ -100,29 +100,29 @@ Hundreds of people easily find and contact their partners everyday on Jeevansath
       <td width="14" align="center" style=" border-bottom:1px solid #e3e2e2;"></td>
     <td width="196" align="left" height="40"  style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;">Let even free members<br /> see your Phone/Email </td>
     <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"></td>
-    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
-    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
   </tr>
     <tr>
       <td width="14" align="center" style=" border-bottom:1px solid #e3e2e2;"></td>
     <td width="196" height="30" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" align="left">See Phone & Email <br />of other members </td>
-    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
-    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
-    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
   </tr>
       <tr>
         <td width="14" align="center" style=" border-bottom:1px solid #e3e2e2;"></td>
     <td width="196" height="30" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" align="left">Message & Chat</td>
-    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
-    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
-    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
   </tr>
       <tr>
         <td width="14"  align="center" style=" border-bottom:1px solid #e3e2e2;"></td>
     <td width="196" height="30" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" align="left">Value Added Services</td>
     <td valign="middle" align="center" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;" width="92"></td>
     <td align="center" valign="middle" width="117" style="border-right:1px solid #e3e2e2; border-bottom:1px solid #e3e2e2;"></td>
-    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="https://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
+    <td width="127" style="border-bottom:1px solid #e3e2e2;" align="center" valign="middle"><img src="http://ieplads.com/mailers/2014/jeevansathi/Morevaluemailer2/images/tick-icon.jpg" /></td>
   </tr>
       
 </table>
@@ -249,17 +249,17 @@ Hundreds of people easily find and contact their partners everyday on Jeevansath
                     </tr>
                     <tr>
                     <td width="20"></td>
-                      <td width="20" valign="top"><img border="0" align="left" width="16" vspace="4" hspace="0" height="17" alt="1" src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull1.gif"></td>
+                      <td width="20" valign="top"><img border="0" align="left" width="16" vspace="4" hspace="0" height="17" alt="1" src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull1.gif"></td>
                       <td height="24">Instantly see Phone/Email of people you like</td>
                     </tr>
                     <tr>
                     <td width="20"></td>
-                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="2" src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull2.gif"></td>
+                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="2" src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull2.gif"></td>
                       <td height="24">Initiate Email, Message, Chat with them</td>
                     </tr>
                     <tr>
                     <td width="20"></td>
-                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="3" src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull3.gif"></td>
+                    	<td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="3" src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/bull3.gif"></td>
                       <td height="24">Get more Interests and faster Responses</td>
                     </tr>
                   </table>
@@ -283,7 +283,7 @@ Hundreds of people easily find and contact their partners everyday on Jeevansath
                       <td></td>
                       <td><table cellspacing="0" cellpadding="0" border="0" align="left" width="198">
                           <tr>
-                            <td width="24" height="29"><img align="right" width="20" vspace="0" hspace="0" height="24" src="https://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/lockIC.gif"></td>
+                            <td width="24" height="29"><img align="right" width="20" vspace="0" hspace="0" height="24" src="http://ieplads.com/mailers/2014/jeevansathi/connect-mailer/images/lockIC.gif"></td>
                             <td><font color="#575656" face="Arial" style="font-size:11px;"><em>Easy and Secure Payment Options</em></font></td>
                           </tr>
                         </table></td>

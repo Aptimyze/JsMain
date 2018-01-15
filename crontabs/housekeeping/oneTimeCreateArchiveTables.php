@@ -6,7 +6,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-$db=connect_db();
+$db=connect_ddl();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 $dbSlave=connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbSlave);
@@ -24,7 +24,7 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
 	
-	$dbNameS=getActiveServerName($activeServerId,"master");
+	$dbNameS=getActiveServerName($activeServerId,"masterDDL");
 	$dbM=$mysqlObj->connect($dbNameS);
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbS);
 	

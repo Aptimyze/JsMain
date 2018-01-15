@@ -21,8 +21,8 @@ EOF;
     {
         sfContext::createInstance($this->configuration);
         ini_set('memory_limit', '-1');
-        $start_time = date("Y-m-d 00:00:00",(time()-86400));
-        $end_time = date("Y-m-d 23:59:59",(time()-86400));
+        $start_time = date("Y-m-d 00:00:00", (time()-86400));
+        $end_time = date("Y-m-d 23:59:59", (time()-86400));
 
         $billPaymentDet = new BILLING_PAYMENT_DETAIL('newjs_slave');
         $billPurDet = new billing_PURCHASE_DETAIL('newjs_slave');
@@ -65,11 +65,11 @@ EOF;
 
         	// Fetching Payment Source(Channels)
 	        $orderDetArr = $billOrdDev->getPaymentSourceFromBillidStr($billidStr);
-	       
-	        foreach($orderDetArr as $k1=>$v1){
-	            $orderIdArr[] = $v1['ID'];
+
+	        foreach($orderDetArr as $key=>$val){
+	            $orderIdArr = $val['ID'];
 	        }
-	      
+	        
 	        $orderIdStr = "'".implode("','", $orderIdArr)."'";
 
 	        // Fetching Payment Gateway
@@ -81,7 +81,7 @@ EOF;
 	                $val['GATEWAY'] = $orderGatewayArr[$val['ID']]['GATEWAY'];
 	            }
 	        }
-	  
+	        
 	        // Setting Sources(Channels) for All Payments
 	        foreach($paidProfilesArr as $key=>&$val){
 	            // Setting proper Channel, if not found i.e. backend billind default Desktop
@@ -91,10 +91,10 @@ EOF;
 	                $val['CHANNEL'] = 'desktop, Backend';
 	            }
 	        }
-	     
+
 	        $purArr = $billPurObj->fetchAllDataForBillidArr($billidArr);
 	        $purDetArr = $billPurDet->getAllDetailsForBillidArr($billidArr);
-	        $serviceIdArr = array();
+
 	        foreach($paidProfilesArr as $k=>&$v){
 	        	foreach($purArr as $key=>&$val){
 	        		if($v['BILLID'] == $val['BILLID']){
@@ -108,15 +108,13 @@ EOF;
 	        		}
         		}
         	}
-       
+
         	$servNameArr = $billServObj->getServiceNameArr($serviceIdArr);
-        	$skipBillId = array();
-        	//print_r($paidProfilesArr);
+
 			foreach($paidProfilesArr as $k=>&$v){
 	        	foreach($purDetArr as $key=>&$val){
-	        		$skipFlag = false;
 	        		if($v['PROFILEID'] == $val['PROFILEID'] && $v['BILLID'] == $val['BILLID'] && !in_array($val['BILLID'], $skipBillId)){
-	        			if(strpos($purArr[$val['BILLID']]['SERVICEID'],'NCP') !== false || strpos($purArr[$val['BILLID']]['SERVICEID'],'X') !== false){
+	        			if(strpos($purArr[$val['BILLID']]['SERVICEID'],'NCP') !== false){
 	        				$skipFlag = true;
 	        				$skipBillId[] = $val['BILLID'];
 	        			}
@@ -134,9 +132,6 @@ EOF;
 
 	        			if($skipFlag){
 	        				$finalArr[$incrementID]['MEMBERSHIP_NAME'] = $servNameArr[@explode(",",$purArr[$val['BILLID']]['SERVICEID'])[0]];
-	        				if($purArr[$val['BILLID']]['MEM_UPGRADE'] == "MAIN" && !empty($finalArr[$incrementID]['MEMBERSHIP_NAME'])){
-	        					$finalArr[$incrementID]['MEMBERSHIP_NAME'] .= " Upgrade";
-	        				}
 	        				if($v['TYPE'] == 'DOL'){
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $v['DOL_CONV_RATE'] * $v['AMOUNT'] , 2);
 		        			} else {
@@ -144,23 +139,15 @@ EOF;
 		        			}
 	        			} else {
 	        				$finalArr[$incrementID]['MEMBERSHIP_NAME'] = $servNameArr[$val['SERVICEID']];
-	        				if($purArr[$val['BILLID']]['MEM_UPGRADE'] == "MAIN" && !empty($finalArr[$incrementID]['MEMBERSHIP_NAME'])){
-	        					$finalArr[$incrementID]['MEMBERSHIP_NAME'] .= " Upgrade";
-	        				}
 		        				if($v['TYPE'] == 'DOL'){
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $v['DOL_CONV_RATE'] * $val['NET_AMOUNT'] , 2);
 		        			} else {
 		        				$finalArr[$incrementID]['NET_AMOUNT'] = round((1-billingVariables::NET_OFF_TAX_RATE) * $val['NET_AMOUNT'] , 2);
 		        			}
 	        			}
-	        		
-	        			if($val['PRICE']!=0){
-	        				$finalArr[$incrementID]['DISCOUNT'] = round(($val['DISCOUNT']/$val['PRICE'])*100,2)."%";
-	        			}
-	        			else{
-	        				$finalArr[$incrementID]['DISCOUNT'] = 0;
-	        			}
 	        			
+	        			$finalArr[$incrementID]['DISCOUNT'] = round(($val['DISCOUNT']/$val['PRICE'])*100,2)."%";
+
 	        			if((($val['PROFILEID'] % 3) + 1) == 1){
 	        				$finalArr[$incrementID]['ACCEPTANCES'] = $newjsContactObj1->getContactAcceptanceCount($val['PROFILEID'],'BOTH');
 	        				$status = $newjsJpartnerObj1->isDppSetByUser($val['PROFILEID']);
@@ -171,20 +158,21 @@ EOF;
 	        				$finalArr[$incrementID]['ACCEPTANCES'] = $newjsContactObj3->getContactAcceptanceCount($val['PROFILEID'],'BOTH');
 	        				$status = $newjsJpartnerObj3->isDppSetByUser($val['PROFILEID']);
 	        			}
-	        			
+
 	        			if($status == "E"){
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "Yes";
 	        			} else {
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "No";
 	        			}
 	        			$finalArr[$incrementID]['Paid earlier'] = $v['Paid earlier'];
+
 	        			unset($status, $incrementID);
 	        		}
 	        	}
 	        }
         }
-       
-        $filepath = JsConstants::$docRoot."/uploads/csv_files/";
+
+        $filepath = "/var/www/html/web/uploads/csv_files/";
 		$filename = $filepath."dailyMailerReport.csv";
 		unlink($filename);
 		$csvData = fopen("$filename", "w") or print_r("Cannot Open");
@@ -199,9 +187,9 @@ EOF;
 		$csvAttachment = file_get_contents($filename);
 		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
-		$cc = "vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,ankita.g@jeevansathi.com,nitish.sharma@jeevansathi.com,rohan.mathur@jeevansathi.com";
+		$cc = "avneet.bindra@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 		$from = "js-sums@jeevansathi.com";
-		$subject = "Daily Report on details of paying users";
+		$subject = "Daily Payments Report";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
 
         SendMail::send_email($to, $msgBody, $subject, $from, $cc, '', $csvAttachment, '', 'dailyMailerReport.csv');

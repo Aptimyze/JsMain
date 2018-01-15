@@ -22,8 +22,8 @@
 				<div class="ccbg2 fullwid">
 					<!--start:div for second level option-->
 					<div class="vone fullwid" id="listingWindow">
-						<!--start:horizontal list-->					
-						~include_partial("inbox/JSPC/inboxListingTabs",[contactCenterTabMapping=>$contactCenterTabMapping,"showIdfy"=>$showIdfy])`
+						<!--start:horizontal list-->
+						~include_partial("inbox/JSPC/inboxListingTabs",[contactCenterTabMapping=>$contactCenterTabMapping])`
 						<!--end:horizontal list-->
 						<!--end:div for second level option--> 
 
@@ -82,7 +82,7 @@
 						<li class="clearfix pos-rel" id="detailMessageTupleDiv" >
 							<a href="/profile/viewprofile.php?profilechecksum={profilechecksum}" onclick="return redirect('/profile/viewprofile.php?checksum={checksum}&profilechecksum={profilechecksum}')" class="js-colorParent">
 								<div class="fl">
-									<img dsrc='{ccTupleImage}' class="ccdim1 vtop"/>
+									<img src="{ccTupleImage}" class="ccdim1 vtop"/>
 								</div>
 								<div class="fl ccwid5 pos-rel">
 									<div class="fl f12 pl30">

@@ -14,7 +14,6 @@ class AppSearch extends SearchParamters
 	const neverMarried = 'N';
 	const male = 'M';
 	const female = 'F';
-        private $skipFields = array("GENDER","AGE","INCOME","HEIGHT","RELIGION","CASTE","CASTE_GROUP","MATCHALERTS_DATE_CLUSTER","HAVEPHOTO","MTONGUE","CITY_RES","COUNTRY_RES","STATE","MSTATUS");
 
 	/**
         * Constructor function.
@@ -40,10 +39,6 @@ class AppSearch extends SearchParamters
 			$searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::App;
 		else
 			$searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::iOS;
-                
-                if(MobileCommon::isApp()=='A' && $request->getParameter('recent_activity') && $request->getParameter('recent_activity') == 1){
-                    $searchParamsSetter['SEARCH_TYPE'] = SearchTypesEnums::  RECENT_ACTIVITY_ANDROID;  
-                }
 		$searchParamsSetter['GENDER'] = $request->getParameter('Gender');
 		$searchParamsSetter['LAGE'] = $request->getParameter('lage');
 		$searchParamsSetter['HAGE'] = $request->getParameter('hage');
@@ -70,27 +65,6 @@ class AppSearch extends SearchParamters
 		$searchParamsSetter['CASTE'] = $request->getParameter('caste');
 		$searchParamsSetter['HAVEPHOTO'] = $request->getParameter('photo');
 		$searchParamsSetter['MTONGUE'] = $request->getParameter('mtongue');
-                
-                $solr_clusters = FieldMap::getFieldLabel("solr_clusters",1,1);
-                $applyClusters = array_diff($solr_clusters,$this->skipFields);
-                foreach($applyClusters as $clusterFields){
-                        if($cluster = $request->getParameter(strtolower($clusterFields))){
-                                if($clusterFields == "KNOWN_COLLEGE"){
-                                        if($cluster == "Any")
-                                                $searchParamsSetter['KNOWN_COLLEGE_IGNORE'] = "000";
-                                        else
-                                                $searchParamsSetter['KNOWN_COLLEGE'] = $cluster;
-                                }else{
-                                        $searchParamsSetter[$clusterFields] = $cluster;
-                                }
-                        }
-                }
-                if($request->getParameter('occupation'))
-                        $searchParamsSetter['OCCUPATION'] = $request->getParameter('occupation');
-                
-                if($request->getParameter('edu_level_new'))
-                        $searchParamsSetter['EDU_LEVEL_NEW'] = $request->getParameter('edu_level_new');
-                
 		$city_country_resArr = $request->getParameter('location');
 		$cities_resArr = $request->getParameter('location_cities');
                 if($city_country_resArr && $cities_resArr){
@@ -125,7 +99,7 @@ class AppSearch extends SearchParamters
 			if($tempCity)
 			{
 				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
-                                //$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
+                                $searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
                                 $tempCountry[] = 51;
 				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}
@@ -167,11 +141,7 @@ class AppSearch extends SearchParamters
 					$mstatus[]=$k;
 			}
 		}
-                if($request->getParameter('mstatus')){
-                        $searchParamsSetter['MSTATUS'] = $request->getParameter('mstatus');
-                }else{
-                        $searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
-                }
+		$searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
                 foreach($searchParamsSetter as $k=>$v)
                         if($v=='DONT_MATTER')
                                 $searchParamsSetter[$k] = '';

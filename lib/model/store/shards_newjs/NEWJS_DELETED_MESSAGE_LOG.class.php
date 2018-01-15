@@ -172,7 +172,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 			}
 	}
 	
-	public function insertMessageLogHousekeeping($arrProfileId,$tablePrefix="",$tableSuffix="")
+	public function insertMessageLogHousekeeping($arrProfileId)
 	{
 		try 
 		{
@@ -183,7 +183,7 @@ class NEWJS_DELETED_MESSAGE_LOG extends TABLE{
 				else
 				{
 					$idStr=implode(",",$arrProfileId);
-					$sql="REPLACE INTO newjs.{$tablePrefix}DELETED_MESSAGE_LOG{$tableSuffix} SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
+					$sql="REPLACE INTO newjs.DELETED_MESSAGE_LOG SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN (".$idStr.")";
 					$prep=$this->db->prepare($sql);
 					$prep->execute();
 					return true;

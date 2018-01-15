@@ -236,7 +236,7 @@ for($j = 0;$j<$totalChunks;$j++)
 }
 
 $cc='esha.jain@jeevansathi.com';
-$to='nitesh.s@jeevansathi.com';
+$to='tanu.gupta@jeevansathi.com';
 $msg='';
 $subject="Scheduled SMS send success mail";
 $msg='Cron to send sms and update details table executed successfully<br/><br/>Warm Regards';

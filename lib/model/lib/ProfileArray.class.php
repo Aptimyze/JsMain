@@ -34,6 +34,8 @@ class ProfileArray{
   {
     if($table == "JPROFILE_EDUCATION") {
       $this->$table = new newjs_JPROFILE_EDUCATION($connection);
+      $msg = print_r($_SERVER,true);
+      mail("kunal.test02@gmail.com","ProfileArray JPROFILE_EDUCATION in Use",$msg);
     }
     elseif($table == "NAME_OF_USER")
       $this->$table = new incentive_NAME_OF_USER($connection);

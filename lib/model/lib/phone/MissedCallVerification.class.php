@@ -18,7 +18,7 @@ public function __construct($phone,$virtualNo)
 
 			$profileId=phoneKnowlarity::getProfileFromPhoneVNo($phone,$virtualNo);
 			if(!$profileId){ 
-				$this->tempText.=("no profileid, For p:{$phone} & v:{$virtualNo} ch : ".MobileCommon::getChannel());
+				$this->tempText.="no profileid";
 			throw new jsException('',"wrong or null : phone or VirtualNo", 1);}
 			$this->profileObject=new Profile('',$profileId);
 			$this->profileObject->getDetail("","","*");

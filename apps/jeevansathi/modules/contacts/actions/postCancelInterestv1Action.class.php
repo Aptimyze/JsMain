@@ -56,7 +56,6 @@ class postCancelInterestv1Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
-			$apiObj->setUserActionState(2);
 			$apiObj->generateResponse();
 		}
 		else
@@ -76,19 +75,9 @@ class postCancelInterestv1Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = array();
-		$request = sfContext::getInstance()->getRequest();
-
-		if($this->contactEngineObj->messageId && $request->getParameter("coming_from") != "search" )
+		if($this->contactEngineObj->messageId)
 		{
 			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
-		}
-		else if ($request->getParameter("coming_from") == "search")
-		{   
-			$page['comingFromPage'] = 'search';
-			$responseButtonArray["buttons"][] = ButtonResponseApi::getInitiateButton($page);
-			$responseButtonArray["buttons"][] = $buttonObj->getShortListButton();
-			$responseButtonArray["buttons"][] = $buttonObj->getIgnoreButton('','','',true,'Ignore');
-			$responseButtonArray["buttons"][] = ButtonResponseApi::getContactDetailsButton();
 		}
 		else
 		{

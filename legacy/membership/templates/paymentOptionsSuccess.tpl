@@ -801,5 +801,13 @@
       $("#tab3New").show();
       $("#lightbox1").hide();
       $("#lightbox2").hide();
+      var username = "~$userDetails.USERNAME`";
+      var email = "~$userDetails.EMAIL`";
+      setInterval(function(){
+        autoPopulateFreshdeskDetails(username,email);
+      },100);
+      setTimeout(function(){
+        autoPopupFreshdesk(username,email);
+      }, 10000);
     });
 </script>

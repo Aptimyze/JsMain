@@ -164,29 +164,4 @@ class AddStory
 			return $imagepath."?".rand();
 		return "";	
 	}
-        
-        
-        /** Get encryted mail id AND ALSO store entry in table. The encrypted mail id should be sent in the mailer.
-         * Takes profile id as input
-         * Returns mailer id if execusion is successful else returns false
-	*@param profileid  The profile id for which the mailer is generated
-        *@return string mailid The encrypted email ID to be sent in the mailer link
-        */
-	public static function getEncryptedMailerId($profileid,$status='Y')
-	{
-            if(!$profileid){
-                return false;
-            }
-            $authenticationJsObj = new JsAuthentication();
-            $emailLog = new incentive_SUCCESS_STORY_EMAIL_LOG();
-            $mailId = $emailLog->insertLogEntry($profileid,$status);
-            $mailIdEncrypt=$authenticationJsObj->js_encrypt($mailId);
-            if($mailIdEncrypt && $mailId){
-                return $mailIdEncrypt;
-            }
-            else{
-                return false;
-            }
-	}
-        
 }

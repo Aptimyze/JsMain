@@ -135,12 +135,11 @@ class photoScreeningActions extends sfActions {
                         $photoData = $photoDataObj->getPicturesToScreen($paramArr);
                         //Show in Template 
                         $this->photoArr = $photoData;
-                       
                         $this->profileData = $profileDetails["profileData"];
                         if (($this->source!=PictureStaticVariablesEnum::$SOURCE["MASTER"] && !$photoData["nonScreened"] && !$photoData["profilePic"]) || ($this->source==PictureStaticVariablesEnum::$SOURCE["MASTER"] && !$photoData["screened"] && !$photoData["nonScreened"] && !$photoData["profilePic"])) { //if no profiles are under screening, show the message that no profiles found
                                 $this->noPhotosFound = 1;
                                 $arrDevelopersEmail = PictureStaticVariablesEnum::$arrPHOTO_SCREEN_DEVELOPERS;
-                                //JsTrackingHelper::sendDeveloperTrackMail($arrDevelopersEmail,"No Photo Found for ".$profileDetails["profileData"]["PROFILEID"]." USERNAME ".$profileDetails["profileData"]["USERNAME"]);
+                                JsTrackingHelper::sendDeveloperTrackMail($arrDevelopersEmail,"No Photo Found for ".$profileDetails["profileData"]["PROFILEID"]." USERNAME ".$profileDetails["profileData"]["USERNAME"]);
                                //$profileAllotedObj->reNewProfileForPreprocess($profileDetails["profileData"]["PROFILEID"]);
                                 $photoDataObj->skipProfile($profileDetails["profileData"]["PROFILEID"],"","Skipped for refresh issue",0,1);
                                 $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source);
@@ -194,8 +193,6 @@ class photoScreeningActions extends sfActions {
 											}
 												$this->setTemplate('showPhotosToScreen');
                 }
-                
-                
                 
                 
         }
@@ -521,7 +518,7 @@ class photoScreeningActions extends sfActions {
                                 $photoScreeningServiceObj->rotationOfImage($picture["rotate"]);
                         if(is_array($picture["watermark"]) && count($picture["watermark"])>0)
                                 $photoScreeningServiceObj->saveWatermarkDecision($picture["watermark"]);
-                      
+                        
                         if (is_array($picture)) {//if Final Array of approval is returned
                                 $paramArr = $photoScreeningServiceObj->prepareParameter("UPDATE", $name, $formArr, $picture); // Data Required for Update,tracking & notification Functions
                                 //Pic Data for tracking 
@@ -546,7 +543,6 @@ class photoScreeningActions extends sfActions {
                                         $nonScreenedObj = new NonScreenedPicture();
                                         $statusArr = $nonScreenedObj->profilePictureStatusArr($this->profileid);
                                         
-                                       
                                         // Moving
                                         $moveArr = array("DELETE" => $statusArr["DELETED"], "APPROVED" => $statusArr["APPROVED"], "ProfilePicId" => $statusArr["ProfilePic"], "TYPE" => "N", "DELETE_REASON" => $paramArr["DELETE_REASON"]);
                                         $photoScreeningServiceObj->moveImageAfterScreened($moveArr);
@@ -585,6 +581,7 @@ class photoScreeningActions extends sfActions {
                                         foreach($picture["screenedPicToDelete"] as $key=>$pictureId){
                                                 $pictureServiceObj->deletePhoto($pictureId,$this->profileid);
                                         }
+                                        //$pictureDelete = $photoUpdateObj->deleteRowsBasedOnPicId();
                                         
                                 }
 	                        //TRACKING
@@ -802,67 +799,5 @@ class photoScreeningActions extends sfActions {
         
         $this->setTemplate('showDeletedPlusOriginalPhotos');                 
     }
-
-	/**
-	 * This function is used to display the profile to be screened by the screening user
-	 * */
-	public function executeBenchmark(sfWebRequest $request) {
-
-		$this->cid = $request->getParameter("cid");
-		$this->name = $request->getAttribute('name');
-		$this->source = $request->getParameter('source');
-		$photoDataObj = new PICTURE_PICTURE_API_RESPONSE();
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$deletedReason = $request->getParameter("deleteReason");
-			$pictureid = $request->getParameter('pid');
-			$edit = $request->getParameter('edit');
-			$photoDataObj->updateBenchmark($pictureid, $edit,$deletedReason);
-		}
-		$photoDataObj->initiate($this->name);
-		$profileDetails = $photoDataObj->get($this->name);
-		if(!is_array($profileDetails))
-		{
-			echo "No data available at this time please try again after some time";
-			die;
-		}
-		$val = $profileDetails["MainPicUrl"];
-		$prefix = substr($val, 0, 2);
-		$imagePath = substr($val, 2);
-		if ($prefix == IMAGE_SERVER_ENUM::$appPicUrl) {
-			$val = JsConstants::$applicationPhotoUrl . $imagePath;
-		} else if ($prefix == IMAGE_SERVER_ENUM::$cloudUrl) {
-			$val = JsConstants::$httpsCloudUrl . $imagePath;
-		}
-		$imagePath = $val;
-		$id = $profileDetails["id"];
-		$faceCount = $profileDetails["FACE_COUNT"];
-		$pictureid = $profileDetails["PICTUREID"];
-		$profileid = $profileDetails["PROFILEID"];
-		$adult = $profileDetails["ADULT"];
-		$spoof = $profileDetails["SPOOF"];
-		$violence = $profileDetails["VIOLENCE"];
-		$mainpic = $profileDetails["MAINPIC"];
-		$faceDetails = null;
-		if($faceCount>0)
-		{
-			$faceDetails = $photoDataObj->getFace($id);
-		}
-		$arrOut = array("Id" => $id,
-						"imgs" => $imagePath,
-						"facecount"=>$faceCount,
-			"adult"=>$adult,
-			"spoof"=>$spoof,
-			"violence"=>$violence,
-			"faces"=>$faceDetails,
-			"pictureid"=>$pictureid,
-			"mainpic"=>$mainpic==1?"Main pic":"Album Pic"
-	);
-		if ($request->getParameter("json_response") == 1) {
-			header("Content-type: application/json");
-			echo json_encode($arrOut);
-			die;
-		}
-		$this->details = $arrOut;
-	}
 }
 ?>

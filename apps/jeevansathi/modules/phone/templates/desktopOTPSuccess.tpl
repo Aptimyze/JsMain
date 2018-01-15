@@ -7,8 +7,6 @@ var tollFree_NRI='~CommonConstants::HELP_NUMBER_NRI`';
 var tollFree_INR='~CommonConstants::HELP_NUMBER_INR`';
 fillLayerDetails('js-OTPverifyLayerId');
 var resendOtpLink=function(){
-    /* GA tracking */
-  GAMapper("GA_VOL_RESEND");
 $("#resendOtpLink").unbind('click');
   $("#resendOtpLink").html('Sending');
   $("#resendOtpGif").show();
@@ -31,7 +29,8 @@ $("#resendOtpGif").hide();
 ajaxConfig.url='/phone/sendOtpSMS';
 jQuery.myObj.ajax(ajaxConfig);
 };
-$("#missedCallOption").bind('click', function(){GAMapper("GA_VOL_MISS_CALL"); showVerifyLayer();});
+
+$("#missedCallOption").bind('click',showVerifyLayer);
 $("#resendOtpLink").bind('click',resendOtpLink);
 </script>
 

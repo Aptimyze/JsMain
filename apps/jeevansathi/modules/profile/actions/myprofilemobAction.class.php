@@ -40,20 +40,13 @@ class myprofilemobAction extends sfAction
 		//Viewer and Viewed profile ids
 		$this->profile=Profile::getInstance();
 		$this->loginProfile=LoggedInProfile::getInstance();
-		if($request->getParameter("fromReg")=='1')
-		{
-			$this->sourcename =  $this->loginProfile->getSOURCE();
-			$sourceObj = new MIS_SOURCE();
-			$groupdata = $sourceObj->getSourceGroup($this->sourcename);
-			$this->groupname = $groupdata['GROUPNAME'];
-		}
 		if($this->loginProfile->getAGE()== "")
 			$this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
 		$pixelcodeObj = new PixelCodeHandler($this->groupname,'',$pageName="JSMS6",$this->loginProfile);
 		$this->pixelcode = $pixelcodeObj->getPixelCode();
 		$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobEditPageUrl);
 		//Jpartner need to set for dpp
-
+		
 		//Action Templates Variables
 		$this->GENDER = $this->loginProfile->getGENDER();
 		$this->USERNAME = $this->loginProfile->getUSERNAME();

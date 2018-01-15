@@ -95,9 +95,7 @@ function check()
 <tr><td colspan="14">&nbsp;</td></tr>
 <tr><td colspan="14" align="center"><b><font color="green"> Press ~if $received eq "Y"` 'Received' ~else` 'Not Received'~/if` to confirm your action</font></b></td></tr>
 <tr><td colspan="14">&nbsp;</td></tr>
-<tr><td colspan="14" align="center">
-<input type="hidden" name="newTab" value="~$newTab`">
-        ~if $received eq "Y"`<input type=submit name="mark_received"
+<tr><td colspan="14" align="center">~if $received eq "Y"`<input type=submit name="mark_received"
 value="Received">~else`<input type=submit name="mark_not_received" value="Not Received">~/if`</td></tr>
 <tr><td colspan="15">&nbsp;</td></tr><tr><td colspan="15">&nbsp;</td></tr>
 </form>

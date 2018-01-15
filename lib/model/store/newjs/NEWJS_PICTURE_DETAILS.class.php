@@ -15,7 +15,7 @@ class NEWJS_PICTURE_DETAILS extends TABLE
 	* profileid int unique id
         **/
         public function ins($picId,$profileid,$imageDetails,$screenedOrUnscreened='U')
-        {return 1;
+        {
                 try
                 {
 			if(!$profileid)
@@ -111,7 +111,7 @@ class NEWJS_PICTURE_DETAILS extends TABLE
 	* @access public
 	*/
         public function upd($oldPicId,$newMappedPicId,$profileid)
-        {return 1;
+        {
                 try
                 {
 			if(!$profileid)

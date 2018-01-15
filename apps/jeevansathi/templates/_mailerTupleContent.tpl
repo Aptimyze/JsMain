@@ -10,7 +10,7 @@
 			<tr>
 			<td>
 		~/if`
-		~include_partial("global/mailerTupleMultiple",[user=>$user,index=>$smarty.foreach.users.index,count=>$count,stypeMatch=>$stypeMatchTemp,logic=>$logic,commonParameters=>$commonParameters,mailerLinks=>$mailerLinks,fromMatchAlertMailer=>$fromMatchAlertMailer])`
+		~include_partial("global/mailerTupleMultiple",[user=>$user,index=>$smarty.foreach.users.index,count=>$count,stypeMatch=>$stypeMatchTemp,logic=>$logic,commonParameters=>$commonParameters,mailerLinks=>$mailerLinks])`
 		~if $smarty.foreach.users.index % 2 == 1` 
 			</td>
 			</tr>
@@ -18,7 +18,7 @@
 	~else`
 		<tr>
 			<td>
-			~include_partial("global/mailerTupleSingle",[user=>$user,logic=>$logic,stypeMatch=>$stypeMatchTemp,commonParameters=>$commonParameters,mailerLinks=>$mailerLinks,fromMatchAlertMailer=>$fromMatchAlertMailer])`
+			~include_partial("global/mailerTupleSingle",[user=>$user,logic=>$logic,stypeMatch=>$stypeMatchTemp,commonParameters=>$commonParameters,mailerLinks=>$mailerLinks])`
 			</td>
 		</tr>
 	~/if`

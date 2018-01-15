@@ -63,7 +63,7 @@ EOF;
 	$temp=new DateTime();
 	$day=$temp->format('d'); 
 	$month=substr($temp->format('F'),0,3); 
-	$mailtrackObj=new MAIL_contactViewers('newjs_master');
+	$mailtrackObj=new MAIL_contactViewers('newjs_masterDDL');
 	$mailtrackObj->EmptyMailerCV();
 	if(is_array($this->receiversData))
 	{	

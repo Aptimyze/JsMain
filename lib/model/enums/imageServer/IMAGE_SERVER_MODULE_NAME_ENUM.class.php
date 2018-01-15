@@ -16,8 +16,6 @@ class IMAGE_SERVER_MODULE_NAME_ENUM
 		self::$moduleNameEnum["FIELD_SALES"]="FIELD_SALES";
 		self::$moduleNameEnum["VERIFICATION_DOCUMENTS"]="VERIFICATION_DOCUMENTS";
 		self::$moduleNameEnum["VERIFICATION_DOCUMENTS_BYUSER"]="VERIFICATION_DOCUMENTS_BYUSER";
-		self::$moduleNameEnum["CRITICAL_INFO_DIVORCED_DOC"]="CRITICAL_INFO_DIVORCED_DOC";
-        self::$moduleNameEnum["ABUSE_ATTACHMENTS"]="ABUSE_ATTACHMENTS";
 
   	}
 	/* This is used to get enum value for corresponding module name*/

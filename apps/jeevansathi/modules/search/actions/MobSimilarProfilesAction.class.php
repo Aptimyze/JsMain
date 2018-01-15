@@ -22,10 +22,9 @@ class MobSimilarProfilesAction extends sfActions
                 //Get profile of whos similar to be found
 		$this->viewedProfilechecksum=$request->getParameter("profilechecksum");
 		$viewedProfileID = JsCommon::getProfileFromChecksum($this->viewedProfilechecksum);
-                if($viewedProfileID != 0){
-                        $viewedProfileObj=new Profile();
-                        $viewedProfileObj->getDetail($viewedProfileID,"PROFILEID");
-                }
+		$viewedProfileObj=new Profile();
+		$viewedProfileObj->getDetail($viewedProfileID,"PROFILEID");
+		
                 //Get refferer to process
 		$referUrl = $_SERVER["HTTP_REFERER"];
 		$query_str = parse_url($referUrl, PHP_URL_QUERY);
@@ -34,11 +33,7 @@ class MobSimilarProfilesAction extends sfActions
                 //Whether and what to show as successfull message
 		if($request->getParameter("fromProfilePage") && $query_params["profilechecksum"]==$this->viewedProfilechecksum){
 			$this->InterestSentMessage=$request->getParameter("fromProfilePage");
-                        if($viewedProfileID != 0 && $viewedProfileObj && $viewedProfileObj->getPROFILEID() != ""){
-                                $this->InterestSentToUsername=$viewedProfileObj->getUSERNAME();
-                        }else{
-                                $this->InterestSentToUsername = "this profile";
-                        }
+			$this->InterestSentToUsername=$viewedProfileObj->getUSERNAME();
 		}
 		else
 			$this->InterestSentMessage=0;
@@ -55,9 +50,6 @@ class MobSimilarProfilesAction extends sfActions
                 
                 $this->firstResponse=$jsonResponse;
 		$ResponseArr = json_decode($jsonResponse,true);
-                /*$dateHourToAppend = date('m-d', time())."__".(date('H')-date('H')%3)."-".(date('H')+3-date('H')%3);
-                $noOfResultsToStore = min($ResponseArr["no_of_results"],25);
-                JsMemcache::getInstance()->hIncrBy("ECP_SIMILAR_PROFILES_COUNT_".MobileCommon::getChannel(),$dateHourToAppend."__".$noOfResultsToStore,1);*/
 		 if($ResponseArr["no_of_results"]==0 && $request->getParameter("fromViewSimilarActionMobile")){
                         $url=JsConstants::$siteUrl.'/myjs/jsmsPerform';
                         header('Location: '.$url);die;
@@ -69,33 +61,32 @@ class MobSimilarProfilesAction extends sfActions
 
 		if($isLogout==1)
 		        $this->forward("static","logoutPage");
-
+                
                 $this->stypeName=$ResponseArr["stype"];
                 $this->heading = $ResponseArr["result_count"];
-
+		
                 //Different options to be shown
 		$this->dontShowSorting=1;
 		$this->dontShowHam=1;
 		$this->showClose=1;
-
+		
 		if(!$ResponseArr["pageTitle"])
 			$ResponseArr["pageTitle"] = "Similar profile - Jeevansathi.com";
 		$this->setTitle($ResponseArr["pageTitle"]);
-
+			
 		$this->noresultmessage = $ResponseArr["noresultmessage"];
 		$this->_SEARCH_RESULTS_PER_PAGE = viewSimilarConfig::$suggAlgoNoOfResults_Mobile;;
 		$this->setTemplate("mobile/MobSimilarProfiles");
 	    $navObj = new Navigator();
 		$this->NAVIGATOR = $navObj->navigation('JVS','profilechecksum__'.$this->viewedProfilechecksum,'','Symfony');
-        $spaArr = JsConstants::$SPA;
-        $this->SPA_CE = $spaArr['flag'] ? 'Y' : 'N';
-        $this->BREADCRUMB = $spaArr['flag'] ? "" : $navObj->BREADCRUMB;//; added by Palash so that it doesn't run and gets blank only for SPA site
+        
+        $this->BREADCRUMB = $navObj->BREADCRUMB;
         $this->BREADCRUMB = str_replace('"','\'',$this->BREADCRUMB);
-
+        
 	}
         /**
 	  * This function is to be called to set title of page
-	  * @param - $title - title of the page to be set
+	  * @param - $title - title of the page to be set 
 	**/
         private function setTitle($title)
         {

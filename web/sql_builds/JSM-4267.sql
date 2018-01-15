@@ -1,2 +1,0 @@
-use newjs;
-DELETE FROM `CASTE` WHERE `ID` = '245' AND VALUE = '243' LIMIT 1

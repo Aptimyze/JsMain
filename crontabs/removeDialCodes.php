@@ -20,6 +20,6 @@
                 $msg="TYPE:".$type;
                 if($db)
                         echo $msg = $msg."\nSQL:".$sql."\nDB:".$db."\nERROR:".mysql_error($db);
-                mail("nitesh.s@jeevansathi.com","Remove dialcodes Cron: $type",$msg);
+                mail("tanu.gupta@jeevansathi.com","Remove dialcodes Cron: $type",$msg);
         }
 ?>

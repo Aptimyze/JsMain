@@ -1900,4 +1900,6 @@ if(window.addEventListener)
 		window.onload = onFrameMessageSearchReceived;
 	}
 
+if (window.location.protocol == "https:")
+	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 

@@ -48,7 +48,7 @@
 }
 
 .headfootsprtie {
-    background-image: url(IMG_URL/images/jspc/commonimg/header-footer3.png);
+    background-image: url(IMG_URL/images/jspc/commonimg/header-footer2.png);
     background-repeat: no-repeat;
 }
 
@@ -437,9 +437,9 @@ ul.topnavlinks li: nth-last-child(1) {
 }
 
 .tdim2 {
-    width: 23px;
-    height: 23px;
-    border-radius: 23px;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
 }
 
 .navp1 {
@@ -882,13 +882,6 @@ ul.foot li, ul.foot li a {
 .newLogoWidthLoggedOut {
     width: 163px;
 }
-.ambitionbox {
-   background-position: -272px 6px;
-   width: 130px;
-   height: 28px;
-   margin-top: 10px;
-}
-
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     .newLogoWidth {

@@ -52,8 +52,7 @@ EOF;
         if($otherUserId)
             $otherUserId = explode(",", $otherUserId);
         $processObj = new BrowserNotificationProcess();
-        // obsolete
-        /*if($notificationType == "INSTANT")
+        if($notificationType == "INSTANT")
         {
             if(in_array($notificationKey, BrowserNotificationEnums::$instantNotifications))
             {
@@ -65,21 +64,35 @@ EOF;
             {
                 die("Invalid instant notification key provided in browserNotificationTask");
             }
-        }*/
-        if($notificationType == "SCHEDULED"){
+        }
+        else if($notificationType == "SCHEDULED"){
             //empty notification log files at start of schedule process 
             exec('echo "" > '.JsConstants::$cronDocRoot.BrowserNotificationEnums::$publishedNotificationLog);
             exec('echo "" > '.JsConstants::$cronDocRoot.BrowserNotificationEnums::$transferredNotificationlog);
             $browserNotificationObj = new BrowserNotification($notificationType,$processObj);
             //Block for scheduled notification
             $processObj->setmethod("SCHEDULED");
+            //Add notification key for any new notification and call
             
-            echo "before MEM_EXPIRE \n";
-            $processObj->setnotificationKey("MEM_EXPIRE");
+            //Added in a new cron browserNotificationJUST_JOINTask
+            /*
+            echo "before JUST_JOIN \n";
+            $processObj->setnotificationKey("JUST_JOIN");
+			$browserNotificationObj->addNotification($processObj);
+            echo "After JUST_JOIN \n";
+            */
+            
+            echo "before PENDING_EOI \n";
+            $processObj->setnotificationKey("PENDING_EOI");
             $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE \n";
+            echo "After PENDING_EOI \n";
             
-            /*echo "before MEM_EXPIRE_A10 \n";
+            echo "before MEM_EXPIRE_A5 \n";
+            $processObj->setnotificationKey("MEM_EXPIRE_A5");
+            $browserNotificationObj->addNotification($processObj);
+            echo "After MEM_EXPIRE_A5 \n";
+            
+            echo "before MEM_EXPIRE_A10 \n";
             $processObj->setnotificationKey("MEM_EXPIRE_A10");
             $browserNotificationObj->addNotification($processObj);
             echo "After MEM_EXPIRE_A10 \n";
@@ -97,7 +110,7 @@ EOF;
             echo "before MEM_EXPIRE_B5 \n";
             $processObj->setnotificationKey("MEM_EXPIRE_B5");
             $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_B5 \n";*/
+            echo "After MEM_EXPIRE_B5 \n";
             /*
             //Notification for Renewal Reminder
             foreach (BrowserNotificationEnums::$renewalReminderNotification as $key => $val)

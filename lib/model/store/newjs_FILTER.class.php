@@ -21,7 +21,6 @@ class NEWJS_FILTER extends TABLE{
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 				$prep->execute();
-        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 				{
 					$res=$result;
@@ -63,7 +62,6 @@ class NEWJS_FILTER extends TABLE{
 				$res->bindValue(":PROFILEID$key", $pid, PDO::PARAM_INT);
 			}
 			$res->execute();
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
 				$result[$row['PROFILEID']] = $row;
@@ -110,7 +108,6 @@ class NEWJS_FILTER extends TABLE{
 				$prep->bindValue(":profileId",$profileId,PDO::PARAM_INT);
 				
 				$prep->execute();
-        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 				{
 					$res=$result;
@@ -147,7 +144,6 @@ class NEWJS_FILTER extends TABLE{
       $prep->bindValue(":COUNT", 1, PDO::PARAM_INT);
       $prep->bindValue(":HARDSOFT", "Y", PDO::PARAM_STR);
       $prep->execute();
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
       return true;
     }
     catch (PDOException $e) {
@@ -205,7 +201,7 @@ class NEWJS_FILTER extends TABLE{
 			++$count;
 			$pdoStatement->bindValue($count,$iProfileID);
       $pdoStatement->execute();
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+      
       if($pdoStatement->rowCount()){
         return true;
       }
@@ -261,13 +257,11 @@ class NEWJS_FILTER extends TABLE{
 				$pdoStatement->bindValue(($count), $value,$paramType);
 			}
 			$pdoStatement->execute();
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return $pdoStatement->rowCount();
 		} catch(PDOException $e) {
 			/*** echo the sql statement and error message ***/
 			throw new jsException($e);
 		}
-        return false;
 	}
   
   /**
@@ -314,7 +308,6 @@ class NEWJS_FILTER extends TABLE{
         }
 
   		$prep->execute();
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
   		if($result = $prep->fetchAll(PDO::FETCH_ASSOC))
   		{
   			return $result;
@@ -348,14 +341,11 @@ class NEWJS_FILTER extends TABLE{
   			$prep->bindValue(":PROFILEID".$key, $pid['PROFILEID'], PDO::PARAM_INT);
   		}
   		$prep->execute();
-                return true;
-      JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
   	}
   	catch(PDOException $e)
   	{
   		throw new jsException($e);
   	}
-        return false;
   }
 
 

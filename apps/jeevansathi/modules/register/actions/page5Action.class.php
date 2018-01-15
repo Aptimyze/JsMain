@@ -123,7 +123,7 @@ class page5Action extends sfAction {
       $arrFilter['HARDSOFT'] = $hardSoft;
       $arrFilter['COUNT'] = $count;
 
-      $dbObj = new ProfileFilter;
+      $dbObj = new NEWJS_FILTER;
       $dbObj->insertRecord(LoggedInProfile::getInstance()->getPROFILEID(), $arrFilter);
     }
     private function UpdateScore($request) {

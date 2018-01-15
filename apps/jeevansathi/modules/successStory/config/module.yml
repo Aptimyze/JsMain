@@ -3,10 +3,7 @@ all:
     enable_login: off
     enable_google_analytics:  on
   layer:
-    enable_login: off
-    enable_google_analytics: on
-  jsmsselectimage:
-    enable_login: off
+    enable_login: on
     enable_google_analytics: on
   story:
     enable_login: off
@@ -29,7 +26,3 @@ all:
   spriteimages:
     enable_login: off
     enable_google_analytics: on
-  jsmsinputstory:
-    enable_login: off
-    enable_google_analytics: on
-

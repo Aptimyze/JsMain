@@ -34,14 +34,8 @@ EOF;
                 $alreadySentCount = $tempProfileRecords->getCount();
                 
                 //profiles to whom eoi's have been sent
-                
-                //profiles to whom eoi's have been sent
                 $autoContObj = new ASSISTED_PRODUCT_AUTOMATED_CONTACTS_TRACKING();
-                $todaysSentContactsOld = $autoContObj->getCountAfterDate(date('Y-m-d'));
-                $apSendProfilesObj = new ASSISTED_PRODUCT_AP_SEND_INTEREST_PROFILES();
-                $todaysSentContactsNew = $apSendProfilesObj->getCountAfterDate(date('Y-m-d'));
-                $todaysSentContacts = $todaysSentContactsNew + $todaysSentContactsOld;
-                
+                $todaysSentContacts = $autoContObj->getCountAfterDate(date('Y-m-d'));
                 
                 //todays entries
 		$HistoryRecord = new ASSISTED_PRODUCT_HISTORY_EOI_SENT();
@@ -52,7 +46,7 @@ EOF;
 		
 		// if script completes successfully send mail
                 SendMail::send_email("ankitshukla125@gmail.com","$todaysSentContacts Auto Contacts sent out for $alreadySentCount users","Auto Contacts cron completed");
-                $ApProfileInfoLogDDL = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG('newjs_master');
+                $ApProfileInfoLogDDL = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG('newjs_masterDDL');
                 $ApProfileInfoLogDDL->delete();
 		echo "EOI's sent for ".$alreadySentCount." Profiles";
         }

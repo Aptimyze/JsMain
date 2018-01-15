@@ -19,8 +19,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 //END
 include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 $db=connect_db();
-mysql_query('set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=10000', $db);
-
 $sql = "SELECT MAX( ENTRY_DT )  AS ENTRY_DT , PROFILEID,TYPE FROM newjs.ASTRO_PULLING_REQUEST WHERE PENDING IN ('Y','U') AND COUNTER < 3 GROUP BY PROFILEID";
 $res = mysql_query($sql,$db) or logError($sql,"ShowErrTemplate");
 $objReplace = ProfileReplaceLib::getInstance();
@@ -46,7 +44,7 @@ while($row = mysql_fetch_array($res))
 	if($row['COUNTER']==0 || ($row['COUNTER']==1 && ($ohb_timestamp > $entry_timestamp)) || ($row['COUNTER']==2 && ($odb_timestamp > $entry_timestamp)))
 	{
 		//pulling data from matchstro's database.
-		$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
+		$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Show_AstroData?JS_UniqueID=".$profileid;
 
 		//reading the data from matchstro's database into a file.
 		$line = trim(file_get_contents($url));
@@ -132,7 +130,7 @@ while($row = mysql_fetch_array($res))
 
 				$date_array = explode("-",$row_is_same['DTOFBIRTH']);
 
-				$url1 = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?Show_AstrologicalInformation?Birth_Year=".$date_array[0]."&Lagna_Degrees_Full=".$astrodata['LAGNA_DEGREES_FULL']."&Sun_Degrees_Full=".$astrodata['SUN_DEGREES_FULL']."&Moon_Degrees_Full=".$astrodata['MOON_DEGREES_FULL']."&Mars_Degrees_Full=".$astrodata['MARS_DEGREES_FULL'];
+				$url1 = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?Show_AstrologicalInformation?Birth_Year=".$date_array[0]."&Lagna_Degrees_Full=".$astrodata['LAGNA_DEGREES_FULL']."&Sun_Degrees_Full=".$astrodata['SUN_DEGREES_FULL']."&Moon_Degrees_Full=".$astrodata['MOON_DEGREES_FULL']."&Mars_Degrees_Full=".$astrodata['MARS_DEGREES_FULL'];
 
 				$fp1 = @trim(file_get_contents($url1)) or logError("Unable to open url","ShowErrTemplate");
 				
@@ -415,7 +413,7 @@ while($row = mysql_fetch_array($res))
 // function to delete the data from matchstro server once the data has been fetched
 function delete_remote_server_astro_details($profileid)
 {
-	$f = @fopen("https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Delete_AstroData?JS_UniqueID=$profileid","r");
+	$f = @fopen("http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_DataEntry_Matchstro.dll?Delete_AstroData?JS_UniqueID=$profileid","r");
 	if($f)
 		fclose($f);
 }

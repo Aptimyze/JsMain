@@ -96,7 +96,7 @@ class PictureModuleInputValidate extends ValidationHandler
 		{
 			$errorString = "picture/validation/PictureModuleInputValidate.class.php(6) : Reason(invalid _FILES)";
 			ValidationHandler::getValidationHandler("",$errorString);
-			$resp = ResponseHandlerConfig::$POST_PARAM_INVALID;			
+			$resp = ResponseHandlerConfig::$POST_PARAM_INVALID;
 		}
 		
 		if($request->getParameter("setProfilePhoto") && $request->getParameter("setProfilePhoto")!="Y")
@@ -113,7 +113,7 @@ class PictureModuleInputValidate extends ValidationHandler
 			//ValidationHandler::getValidationHandler("",$errorString);
 			//$resp = ResponseHandlerConfig::$POST_PARAM_INVALID;
 		}
-		
+
 		if(!$resp)
                         $this->response = ResponseHandlerConfig::$SUCCESS;
                 else

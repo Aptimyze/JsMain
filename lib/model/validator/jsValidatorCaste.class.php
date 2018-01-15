@@ -4,7 +4,6 @@ class jsValidatorCaste extends sfValidatorBase
   protected function configure($options = array(), $messages = array())
   {
     $this->addOption('religion');
-    $this->addOption('jamaat');
   }
   
   protected function doClean($value)
@@ -49,10 +48,10 @@ class jsValidatorCaste extends sfValidatorBase
 		}
 	}
 	if(is_array($clean))
-        $return= $clean[0];
+        return $clean[0];
 	else
-		$return=$clean;
-	return $return;
+		return $clean;
+		
   }
   
   protected function isEmpty($value)

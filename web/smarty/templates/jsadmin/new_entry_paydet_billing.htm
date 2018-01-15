@@ -476,7 +476,7 @@
 				Amount*
 			~/if`
 		</td>
-		<td class="fieldsnew"><input type="text" name="amount" value="~$amount`" onkeyup="validate_amount()" ~if $upgradeCase eq '1'` readonly="readonly" ~/if` /></td>
+		<td class="fieldsnew"><input type="text" name="amount" value="~$amount`" onkeyup="validate_amount()" /></td>
 	</tr>
 	<tr>
                 <td class="label">Bill Type:</td>
@@ -643,7 +643,6 @@
 	</tr>
 </table>
 <input type="hidden" name="username" value="~$username`">
-<input type="hidden" name="profileid" value="~$profileid`">
 <input type="hidden" name="custname" value="~$custname`">
 ~if $gender eq 'M'`
 	<input type="hidden" name="genderval" value="M">

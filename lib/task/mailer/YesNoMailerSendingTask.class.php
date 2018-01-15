@@ -54,15 +54,15 @@ EOF;
 			}
 			$totalScriptVar = $arguments["totalScript"];
 			$currentScriptVar = $arguments["currentScript"];
-//			if($currentScriptVar%$totalScriptVar==1)
-//			{
-//                if($instanceID)
-//				{
-//					/** code for daily count monitoring**/
-//                       passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring YESNO_MAILER");
-//                    /**code ends*/
-//				}
-//            }
+			if($currentScriptVar%$totalScriptVar==1)
+			{
+                if($instanceID)
+				{
+					/** code for daily count monitoring**/
+                       passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring YESNO_MAILER");
+                    /**code ends*/
+				}
+            }
 			
 		}
 		
@@ -109,10 +109,8 @@ EOF;
 		}
 				
        
-        if ($count == 1){
+        if ($count == 1)
             $tpl->getSmarty()->assign("otherProfileId", $viewerProfileArray[0]);
-            $tpl->getSmarty()->assign("otherProfile", $viewerProfileArray[0]);
-        }
         
         $partialObj = new PartialList();
         $partialObj->addPartial("eoi_profile", "eoi_profile_yn", $viewerProfileArray);
@@ -139,7 +137,6 @@ EOF;
 
         $emailSender->send('','',$ccEmail);
         $status = $emailSender->getEmailDeliveryStatus();
-        ProfileCacheLib::getInstance()->__destruct();
         return $status;
     }
 }

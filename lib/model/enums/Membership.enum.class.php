@@ -8,7 +8,6 @@ class memUserType
     const PAID_BEYOND_RENEW = "5";
     const PAID_WITHIN_RENEW = "6";
     const ONLY_VAS = "7";
-    const UPGRADE_ELIGIBLE = "8";
 }
 class userDiscounts
 {
@@ -22,35 +21,12 @@ class userCurrency
 }
 class billingVariables
 {
-    /*Comment Below Block of code for GST on 1st July 2017  
-     */
-    /*
     const TAX_RATE = "15";
     const SWACHH_TAX_RATE = "0.5";
     const KRISHI_KALYAN_TAX_RATE = 0.5;
     const NET_OFF_TAX_RATE = "0.130435";
+    //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
-    const TAX_TEXT = "SERVICE TAX";
-    const TAX_TEXT_SB = " (INCLUDING SWACHH BHARAT CESS)";
-    const TAX_LIVE_DATE = '2017-07-01 00:00:00';
-    */
-    /*Comment Above Block of code for GST on 1st July 2017*/
-    
-    /*Uncomment below code block for GST on 1st July 2017*/
-    const TAX_RATE = "18";
-    const SWACHH_TAX_RATE = "0";
-    const KRISHI_KALYAN_TAX_RATE = 0;
-    const NET_OFF_TAX_RATE = "0.152542";
-    const SERVICE_TAX_CONTENT = "(Inclusive of GST)";
-    const TAX_TEXT = "GST";
-    const TAX_TEXT_SB = " ";
-    const TAX_LIVE_DATE = '2017-07-01 00:00:00';
-     
-    const GST = "18";
-    const SGST = "9";
-    const CGST = "9";
-    const IGST = "18";
-    const BILLING_STATE = "UP";
 }
 
 class memDiscountTypes 
@@ -67,22 +43,12 @@ class memDiscountTypes
         10 => 'Backend Discount Link',
         11 => 'Cash Discount',
         12 => 'No Discount',
-        14 => 'Coupon Code Discount',
-        15 => 'Main Membership Upgrade Discount',
-        16 => 'Lightning Deal Discount'
+        14 => 'Coupon Code Discount'
     );
-    
-    public static $allowVDExtension = array("WELCOME");
 }
 
 class VariableParams
 {
-    public static $jsExclusiveReleaseDate = "2017-08-01"; //YYYY-MM-DD
-
-    public static $iOSVersion = 6.2;
-
-    public static $androidAppVersionForMaterial = 113;
-
 	public static $membershipMailerArr =array(
 		'1785'=> 'REGISTRATION_BASED',
 		'1784'=> 'REGISTRATION_BASED',
@@ -93,25 +59,6 @@ class VariableParams
 		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
 		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
-        
-    //config for membership upgrade
-    public static $memUpgradeConfig = array(
-                                        "deactivationCurlTimeout"=>120000,
-                                        "allowedUpgradeMembershipAllowed"=>array("MAIN"),
-                                        "mainMemUpgradeLimit"=>7,
-                                        "upgradeMainMemAdditionalPercent"=>0.05,
-                                        "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                        "excludeMainMembershipUpgrade"=>array("X","ESP")
-                                        );
-
-    public static $lightningDealOfferConfig = array(
-                                        "lastLoggedInOffset" => 30,
-                                        "lastLightningDiscountViewedOffset" => 15,
-                                        "pool2FilterPercent" => 100,
-                                        "channelsAllowed"=>array("desktop","mobile_website","Android_app","JSAA_mobile_website"),
-                                        "activeOfferFlag" => true
-                                        );
-    
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
         "P",
@@ -211,10 +158,8 @@ class VariableParams
         'I',
         'A',
         'B',
-        'M',
-        'J'
+        'M'
     );
-
     public static $serviceFeatues = array(
         "Send/Receive Interests",
         "Instantly see Phone/Email",
@@ -260,7 +205,7 @@ class VariableParams
         ) ,
         "A" => array(
             "name" => "Astro <br>Compatibility",
-            "description" => "Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
+            "description" => "Horoscope match a must? Get detailed kundli matching reports with profiles you like.",
             "visibility" => 0,
             "vas_id" => 2
         ) ,
@@ -298,7 +243,7 @@ class VariableParams
         ) ,
         "A" => array(
             "name" => "Astro Compatibility",
-            "description" => "Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
+            "description" => "Get detailed Kundli matching reports with profiles you like",
             "visibility" => 0,
             "vas_id" => 2
         ) ,
@@ -325,12 +270,6 @@ class VariableParams
             "description" => "Get our experts to create comprehensive & well-written profile for you",
             "visibility" => 0,
             "vas_id" => 6
-        ),
-        "J" => array(
-            "name" => "Profile Boost",
-            "description" => "Get more response through Profile Boost. 1.Get featured on top of search results. 2.Be shown in profile of the day section. 3.Your profile will be sent daily in app notifs. 4.Appear on top of Daily Recommendations",
-            "visibility" => 0,
-            "vas_id" => 7
         )
     );
     public static $vasPerService = array(
@@ -395,7 +334,7 @@ class VariableParams
         array(
             "icon_id" => "5",
             "icon_name" => "Astro <br>Compatibility",
-            "description" => "Horoscope match a must? Get UNLIMITED detailed kundli matching reports with profiles you like focusing on aspects like mutual respect, compatibility of values & likeability, likelihood of future obstacles/misfortunes and attempts to give scores on each parameter as per Vedic astrology.",
+            "description" => "Horoscope match a must? Get detailed kundli matching reports with profiles you like.",
             "visibility" => 0
         ) ,
         array(
@@ -544,7 +483,6 @@ class VariableParams
         "View contacts of members you like",
         "Priority Customer service",
         "Make your contacts visible to others",
-        "Profile Boost",
         "Response Booster",
         "Featured Profile",
         "Astro Compatibility",
@@ -559,7 +497,6 @@ class VariableParams
             0,
             0,
             0,
-            0,
             0
         ) ,
         "C" => array(
@@ -570,11 +507,9 @@ class VariableParams
             0,
             0,
             0,
-            0,
             0
         ) ,
         "ESP" => array(
-            1,
             1,
             1,
             1,
@@ -590,13 +525,11 @@ class VariableParams
             1,
             1,
             1,
-            0,
-            0,
+            1,
             0,
             0
         ) ,
         "D" => array(
-            1,
             1,
             1,
             1,
@@ -611,7 +544,6 @@ class VariableParams
             1,
             0,
             1,
-            1,
             0,
             0,
             0,
@@ -619,22 +551,15 @@ class VariableParams
         )
 
     );
-
-    public static $newApiPageOneBenefitsBoost = array("Get featured on top of search results.",
-                                                    "Be shown in profile of the day section.",
-                                                    "Your profile will be sent daily in app notifs.",
-                                                    "Appear on top of Daily Recommendations");
-
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",
-        "Utilizes their expertise and sends interests to shortlisted matches",
-        "Contacts profiles you like on your behalf",
-        "Introduces you to chosen matches and arranges meetings",
-        "Priority Customer service",
-        "Also get the benefits of JS Boost on your profile and make your number visible to free members"
+        "Then utilizes his expertise to shortlist potential matches for you",
+        "Connects with you to find the most suitable matches for you",
+        "Introduces you to the chosen matches & arranges meetings",
+        "Priority Customer service"
     );
-    public static $DOL_CONV_RATE = 66;
+    public static $DOL_CONV_RATE = 60;
     
     public static $apiPageFiveHelpText = array(
         "text1" => "Got any Questions about Paying Online?",
@@ -687,32 +612,17 @@ class VariableParams
     );
 
     //remove specified vas services from vas content based on main membership 
-    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T','J'));
+    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T'));
 
     //skip vas page for below main memberships
     public static $skipVasPageMembershipBased = array('X','ESP');
-    
-    public static $jsExclusiveComboAddon = array('J');
-    
-    public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
-    
-    public static $lightningDealDuration = '30'; //in minutes;
-    
-    const COMMUNITY_WELCOME_DISCOUNT_CACHE_TIME = 86400;
-    
-    const COMMUNITY_WELCOME_DISCOUNT_KEY = "CommunityWelcomeDiscount";
-    
-    const COMMUNITY_WELCOME_DISCOUNT_DURATION = "2"; //in days
 }
 class discountType
 {
-    const UPGRADE_DISCOUNT = "UPGRADE";
     const RENEWAL_DISCOUNT = "RENEWAL";
     const SPECIAL_DISCOUNT = "SPECIAL";
     const FESTIVE_DISCOUNT = "FESTIVE";
     const OFFER_DISCOUNT = "OFFER";
-    const LIGHTNING_DEAL_DISCOUNT = "LIGHTNING_DEAL";
-    const WELCOME_DISCOUNT = "WELCOME";
 }
 class mainMem
 {
@@ -735,7 +645,7 @@ class paymentOption
         "CR" => "Credit Card",
         "DR" => "Debit Card",
         "NB" => "Net Banking",
-        "CSH" => "Paytm / MobiKwik"
+        "CSH" => "Wallet"
     );
     public static $ccCardType = array(
         "card1" => array(
@@ -896,8 +806,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "vAt8pr";
-    public static $PayUTestRsSalt = "OhbWVfB0";
+    public static $PayUTestRsMerchantId = "gtKFFx";
+    public static $PayUTestRsSalt = "eCwWELxi";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';
@@ -957,10 +867,4 @@ class franchiseeCommission
 class SelectGatewayRedirect{
     public static $gatewayOptions = array('default','payu','ccavenue');
 }
-
-class FreshChat{
-    public static $token = "5b25d6d5-10ea-49e6-8aab-a80c749f5b39";
-    public static $widgetUrl = "https://wchat.freshchat.com/js/widget.js";
-}
-
 ?>

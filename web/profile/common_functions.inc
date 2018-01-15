@@ -1286,7 +1286,7 @@ function assignHamburgerSmartyVariables($profileid="")
 		$contactsLeft = $jmemObj->getRemainingContactsForUser($profileid);
 		if($userType == '2' || $userType == '3' || $userType == '7')
 			$memStat = 'F';
-		else if($userType == '4' || (($userType == '6' || $userType == '5' || $userType == '8') && $contactsLeft == 0))
+		else if($userType == '4' || (($userType == '6' || $userType == '5') && $contactsLeft == 0))
 			$memStat = 'R';
 		else
 			$memStat = 'P';

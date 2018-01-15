@@ -29,26 +29,25 @@ EOF;
         $lastLoginDate = date('Y-m-d', strtotime(VisitorAlertEnums::LAST_LOGIN_DATE));
 
 
-        $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
+        $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_masterDDL');
 
         $result = $visitoralertMailerVisitors->countTotalSent();
 
         $result['TOTAL'] == NULL ? $total = 0:$total = $result['TOTAL'];
         $result['COUNT'] == NULL ? $count = 0:$count = $result['COUNT'];
 
-        $visitorAlertRecord = new visitorAlert_RECORD('shard1_master');
+        $visitorAlertRecord = new visitorAlert_RECORD('shard1_masterDDL');
 
 
         $visitorAlertRecord->updateVisitorAlertRecord($total,$count);        
 
         $visitoralertMailerVisitors->truncateMailerVisitorsData();
 
-        $date = date("Y-m-d H:i:s",time()-VisitorAlertEnums::ONE_DAY_LIMIT);
-        $dateNow = date("Y-m-d H:i:s",time());
+        $date = date("Y-m-d",time()-VisitorAlertEnums::ONE_DAY_LIMIT);
 
         $viewLogTrigger=new VIEW_LOG_TRIGGER('shard2_slave');
 
-        $receiverData = $viewLogTrigger->getViewedProfiles($date,$dateNow);
+        $receiverData = $viewLogTrigger->getViewedProfiles($date);
 
         if(is_array($receiverData))
         {

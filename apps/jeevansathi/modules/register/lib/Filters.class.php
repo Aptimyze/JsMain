@@ -267,7 +267,7 @@ Class Filters
 	
 	function currentFilters()
 	{
-		$dbFilters= new ProfileFilter();
+		$dbFilters= new NEWJS_FILTER();
 		$this->setFilterArr($dbFilters->fetchEntry($this->profileId));
 	}
 	/**
@@ -347,7 +347,7 @@ Class Filters
 				$NOT_UPDATE_HARDSOFT=$actionParamsArr["NOT_UPDATE_HARDSOFT"];
 				unset($actionParamsArr["NOT_UPDATE_HARDSOFT"]);
 				
-				$dbFilters= new ProfileFilter();
+				$dbFilters= new NEWJS_FILTER();
 				
 				foreach($actionParamsArr as $key=>$val)
 				{

@@ -32,7 +32,7 @@ EOF;
         $php5 = JsConstants::$php5path;
 
         passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER");
-		(new MAIL_EMAIL_VER_MAILER('newjs_master'))->EmptyMailer();
+		(new MAIL_EMAIL_VER_MAILER('newjs_masterDDL'))->EmptyMailer();
 
 		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EMAIL_VER_MAILER#INSERT");	
 		$countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();

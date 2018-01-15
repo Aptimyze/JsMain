@@ -749,7 +749,7 @@ ul.feature li {
     color: #fff
 }
 
-.benefits ul, ul.addOnAstro {
+.benefits ul {
     list-style-type: none;
 }
 
@@ -1806,33 +1806,3 @@ ul.memul li:nth-last-child(1) {
 .wid65 {
     width:65%;
 }
-
-.addOnBrd1{border-top:1px solid #A6AFB8;}
-.addOnp1{padding: 15px 10px 15px 25px}
-.customMem-checkbox {
-    width: 15px;
-    height: 14px;
-    display: inline-block;
-    position: relative;
-    z-index: 1;
-    top: 2px;
-    background:url(IMG_URL/images/membership-img/chk-Nsp.png) no-repeat 1px 1px;
-}
-.customMem-checkbox input[type="checkbox"] {
-    margin: 0;
-    position: absolute;
-    z-index: 2;
-    cursor: pointer;
-    outline: none;
-    opacity: 0;
-    _noFocusLine: expression(this.hideFocus=true);
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-    -khtml-opacity: 0;
-    -moz-opacity: 0;
-}
-.customMem-checkbox.selected {background-position:1px -12px;}
-ul.time{list-style-type:none;}
-ul.time li{display:inline-block;font-size:20px}
-ul.time li span{font-size:15px}
-.inscol:after{ content:":"; padding-left:10px}

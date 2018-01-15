@@ -1,7 +1,7 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
-include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
+
 
 $path=$_SERVER['DOCUMENT_ROOT']."/profile";
 
@@ -17,7 +17,6 @@ if($tot_cnt > 100)
 	$from 		= "Jeevan";
 	$profileid 	= "111";
 	$smsState = send_sms_1($message,$from,$mobile,$profileid,'Y');
-    CommonUtility::logTechAlertSms($message, $mobile);
 	if($smsState)
 		log_file($file);	
 }

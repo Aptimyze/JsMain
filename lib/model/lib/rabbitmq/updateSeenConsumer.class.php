@@ -44,7 +44,7 @@ class updateSeenConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Connection to rabbitmq broker with host-> ".JsConstants::$rabbitmqConfig[$serverid]['HOST']. " failed: ".$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"updateSeen");
+      RabbitmqHelper::sendAlert($str,"default");
     }
     try
     {
@@ -54,7 +54,7 @@ class updateSeenConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Channel not formed : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"updateSeen");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }
   }
@@ -75,7 +75,7 @@ class updateSeenConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to declare queues : " . $exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"updateSeen");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }  
     try
@@ -85,7 +85,7 @@ class updateSeenConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to consume message from queues : " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"updateSeen");
+      RabbitmqHelper::sendAlert($str,"default");
       return;
     }  
     if($this->serverid=='FIRST_SERVER')
@@ -123,8 +123,6 @@ class updateSeenConsumer
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
-    $codeException = 0;
-    $deliveryException = 0;
     try
     {
       $handlerObj=new ProcessHandler();
@@ -137,9 +135,8 @@ class updateSeenConsumer
     }
     catch (Exception $exception) 
     {
-      $codeException = 1;
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"updateSeen");
+      RabbitmqHelper::sendAlert($str,"default");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.
@@ -163,12 +160,8 @@ class updateSeenConsumer
     } 
     catch(Exception $exception) 
     {
-      $deliveryException = 1;
       $str="\nRabbitMQ Error in consumer, Unable to send +ve acknowledgement: " .$exception->getMessage()."\tLine:".__LINE__;
       RabbitmqHelper::sendAlert($str);
-    }
-    if($codeException || $deliveryException){
-        die("Killed due to code exception or delivery exception");
     }
   }
 }

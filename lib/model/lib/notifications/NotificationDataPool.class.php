@@ -11,8 +11,7 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-	    $fields='PROFILEID,USERNAME,SUBSCRIPTION,GENDER,AGE,CASTE,CITY_RES,COUNTRY_RES';	
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields);
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
         }
         if(is_array($profiledetails))
         {
@@ -69,35 +68,25 @@ class NotificationDataPool
 		return $dataAccumulated;
     }
 
-  public function getJustJoinData($applicableProfiles,$logProfiles='',$currentScript=0)
+  public function getJustJoinData($applicableProfiles)
   {
-    //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
-	$tempObj =new NOTIFICATION_NEW_JUST_JOIN_TEMP();
-	echo "START: Solar Hit ";
         foreach($applicableProfiles as $profileid=>$profiledetails)
         {
-		if(is_array($logProfiles)){
-			if(in_array("$profileid", $logProfiles))
-				continue;
-		}
-                $loggedInProfileObj = Profile::getInstance('crm_slave',$profileid);
+            //if($applicableProfilesData[$profileid])
+            {
+                $loggedInProfileObj = Profile::getInstance('newjs_master',$profileid);
                 $loggedInProfileObj->setDetail($profiledetails);
-                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj,"CountOnly","havePhoto");
-                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT']; // new count to be used here as well (This will now be the new Count as per the JIRA JSM-3062)
+                $dppMatchDetails[$profileid] = SearchCommonFunctions::getJustJoinedMatches($loggedInProfileObj);
+                $matchCount[$profileid] = $dppMatchDetails[$profileid]['CNT'];
                 if($matchCount[$profileid]>0)
                     $matchedProfiles[$profileid] = $dppMatchDetails[$profileid]['PIDS'];
-
-		// Add logging for re-try logic
-		$tempObj->addProfile($profileid,$currentScript);
-
+            }
         }
-	echo "DONE: Solar Hit ";
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
-        
         if(is_array($matchedProfiles))
         {
             foreach($matchedProfiles as $k1=>$v1)
@@ -109,10 +98,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-		echo "START: newjs_SMS_TEMP_TABLE Hit ";
-		$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_local111"); 	
-           	//$getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
-		echo "DONE: newjs_SMS_TEMP_TABLE Hit ";
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
         }
         unset($otherProfiles);
         $counter = 0;
@@ -147,7 +133,6 @@ class NotificationDataPool
         unset($matchedProfiles);
         unset($matchCount);
     }
-
     return $dataAccumulated;
   }
   
@@ -162,7 +147,7 @@ class NotificationDataPool
             $condition['WHERE']['IN']["RECEIVER"] = $profileid;
             $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED; 
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
-            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = array('Y','J');
+            $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
 	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
@@ -171,7 +156,7 @@ class NotificationDataPool
                 $cp=0;
                 foreach($cntArr as $ck=>$cv)
                 {
-                    if($cv['FILTERED']!='Y' && $cv['FILTERED']!='J' && $cv["TIME1"] == 0)
+                    if($cv['FILTERED']!='Y'&& $cv["TIME1"] == 0)
                         $cp = $cp+$cv['COUNT'];
                 }
                 $eoiCount[$profileid] = $cp;
@@ -193,7 +178,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
                         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
                         }
         unset($otherProfiles);
         $counter = 0;
@@ -253,10 +238,10 @@ class NotificationDataPool
   }
 
     /*function to get notification data pool for instant JSPC/JSMS notifications
-    @inputs: $notificationKey,$profilesArr,$details,$message,$count
+    @inputs: $notificationKey,$profilesArr,$details,$message
     @output : $dataAccumulated
     */
-    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="",$count="")
+    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
     {
         foreach($profilesArr as $k=>$v)
         {
@@ -265,24 +250,12 @@ class NotificationDataPool
             else
                 $dataAccumulated[0][$k] = $details[$v]; 
         }
-        if($count == "" || $count == 1){
-            $dataAccumulated[0]['COUNT'] = "SINGLE";  
-        }
-        else if($count > 1){
-            $dataAccumulated[0]['COUNT'] = "MUL";
-        }
+        $dataAccumulated[0]['COUNT'] = "SINGLE";           
+        
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
-        
-        if($notificationKey == "MATCHALERT" && $count != "" && $count >1){
-            $dataAccumulated[0]['MATCHALERT_COUNT'] = $count;
-        }
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
-        if($notificationKey == 'CHAT_MSG' || $notificationKey == "CHAT_EOI_MSG" || $notificationKey == "MESSAGE_RECEIVED"){
-            $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
-            $dataAccumulated[0]['OTHER_USERNAME']=$details[$profilesArr["OTHER"]]["USERNAME"];
-        }
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -328,7 +301,7 @@ class NotificationDataPool
         return $dataAccumulated;
   }
   
-  public function getMembershipProfilesForNotification($profiles, $channelArr=array())
+  public function getMembershipProfilesForNotification($profiles, $notificationKey, $channelArr)
   {
     unset($applicableProfiles);
     unset($profilesArr);
@@ -341,16 +314,16 @@ class NotificationDataPool
     {
         $tempSmsObj            = new newjs_TEMP_SMS_DETAIL();
         $valueArr['PROFILEID'] = @implode(",",$profiles);
-	$valueArr['SMS_KEY']   = "MEM_EXPIRE_A5,MEM_EXPIRE_A10,MEM_EXPIRE_A15,MEM_EXPIRE_B1,MEM_EXPIRE_B5";
+        $valueArr['SMS_KEY']   = $notificationKey;
         $profilesSmsArr        = $tempSmsObj->getArray($valueArr,'','','PROFILEID,MESSAGE');
         if(count($profilesSmsArr)>0)
         {
             foreach($profilesSmsArr as $key=>$val)
             {
-		$pid =$val['PROFILEID'];
+				$pid =$val['PROFILEID'];
                 $profilesNewArr[] =$pid;
-		$profileMsgArr[$pid] =$val['MESSAGE'];
-	    }
+				$profileMsgArr[$pid] =$val['MESSAGE'];
+			}
         }
     }
     if(!(in_array("M", $channelArr))){
@@ -378,7 +351,7 @@ class NotificationDataPool
             unset($dataArr);
         }
         //update sms send status
-        $tempSmsObj->updateSentForNotification($profilesStr, "'MEM_EXPIRE_A5','MEM_EXPIRE_A10','MEM_EXPIRE_A15','MEM_EXPIRE_B1','MEM_EXPIRE_B5'");
+        $tempSmsObj->updateSentForNotification($profilesStr, $notificationKey);
     }
     // return eligible profiles
     if($applicableProfiles)
@@ -387,9 +360,7 @@ class NotificationDataPool
   }
   
   
-    public function getNotificationImage($icon, $iconProfileid,$notificationChannel=""){
-        
-        $iosIcon = $icon;
+    public function getNotificationImage($icon, $iconProfileid){
         if($icon == 'P' && $iconProfileid){
             $profile=new Profile();
             $profile->getDetail($iconProfileid,"PROFILEID");
@@ -401,41 +372,23 @@ class NotificationDataPool
                 $profilePicObj = $pictureServiceObj->getProfilePic();
                 if($profilePicObj){
                     $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$this->gender,true);
-                    if($notificationChannel == "APP_NOTIFICATION"){
-                        $iosPhotoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic450Url(),'ProfilePic450Url','',$this->gender,true);
-                    }
-                    else{
-                        $iosPhotoArray = null;
-                    }
                     if($photoArray[label] != '' || $photoArray["url"] == null)
                        $icon = 'D';
                     else
                        $icon = $photoArray['url'];
-                    if(!is_array($iosPhotoArray) || $iosPhotoArray[label] != '' || $iosPhotoArray["url"] == null)
-                       $iosIcon = 'D';
-                    else
-                       $iosIcon = $iosPhotoArray['url'];
                 }
                 else{
                     $icon = 'D';
-                    $iosIcon = 'D';
                 }
             }
             else{
                 $icon = 'D';
-                $iosIcon = 'D';
             }
         }
         else{
             $icon = 'D';
-            $iosIcon = 'D';
         }
-        if($notificationChannel == "APP_NOTIFICATION"){
-            return array("AND"=>$icon,"IOS"=>$iosIcon);
-        }
-        else{
-            return $icon;
-        }
+        return $icon;
     }
     
     public function getInterestReceivedForDuration($profileid, $stDate, $endDate){
@@ -443,10 +396,8 @@ class NotificationDataPool
 		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
         $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
         //Remove blocked profiles. Those that have been blocked by the sender
-        //$ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
-		//$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
-        $ignoreProfileObj = new IgnoredProfiles("newjs_slave");
-        $ignoredProfiles = $ignoreProfileObj->ifProfilesIgnored($data["IGNORED_STRING"],$data['SELF']);
+        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
         if($ignoredProfiles){
             foreach($ignoredProfiles as $key => $val){
                 unset($data['SENDER'][$val]);
@@ -563,24 +514,13 @@ class NotificationDataPool
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
-                    JsMemcache::getInstance()->set("cachedMM24$k1","");
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$k1);
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$k1);
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
             unset($matchOfDayMasterObj);
             unset($matchedProfiles);
-            return $dataAccumulated;
-        }
-    }
-
-    function getLoggedoutNotificationData($applicableProfiles){
-        if(is_array($applicableProfiles)){
-            $counter =0;
-            foreach($applicableProfiles as $key=>$regId){
-                $dataAccumulated[$counter++]['SELF']=array('REG_ID'=>$regId,'PROFILEID'=>0);
-            }
-            $dataAccumulated[0]['COUNT'] = "SINGLE";
-            unset($applicableProfiles);
             return $dataAccumulated;
         }
     }
@@ -593,91 +533,6 @@ class NotificationDataPool
                 print_r($key);
                 print_r($val);
                 print_r("\n");
-            }
-        }
-    }
-    
-    public function getNotificationServiceData(){
-        $notificationServiceUrl = JsConstants::$chatNotificationService."/communication/v1/notification";
-        $headerArr[] = "JB-Internal: true";
-        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
-        $modifiedData = json_decode($response,true);
-        return $modifiedData;
-    }
-    
-    public function sendChatNotification($notificationData){
-        if(!empty($notificationData) && is_array($notificationData)){
-            $chatMsgInstantNotObj = new InstantAppNotification("MESSAGE_RECEIVED");
-            foreach($notificationData as $key => $valOld){
-                    $val = json_decode($valOld, true);
-                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
-            }
-            unset($chatMsgInstantNotObj);
-        }
-    }
-    
-    public function getMembershipUpgradeNotificationData($profileid,$details){
-        if($profileid){
-            $upgradeData = $this->getUpgradedMembershipDetails($profileid);
-            if($upgradeData && is_array($upgradeData)){
-                $dataAccumulated[0]['MEM_NAME'] = $upgradeData["upgradeMainMemName"];
-                if($upgradeData["upgradeMainMemName"] == "eValue"){
-                    $message = "Let even free members see your contact details. Upgrade to eValue for just Rs.".$upgradeData["upgradeExtraPay"];
-                }
-                else if($upgradeData["upgradeMainMemName"] == "eAdvantage"){
-                    $message = "Get highlighted in Searches, Match of day section, Daily recommendations and in notifications. Upgrade to eAdvantage for just Rs.".$upgradeData["upgradeExtraPay"];
-                }
-                else if($upgradeData["upgradeMainMemName"] == "JS Exclusive"){
-                    $message = "Let a dedicated Relationship Manager help you find a match. Upgrade to JS Exclusive for just Rs. ".$upgradeData["upgradeExtraPay"];
-                }
-                $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
-                $dataAccumulated[0]['SELF'] = $details[$profileid];
-                return $dataAccumulated;
-            }
-        }
-    }
-    
-    public function getUpgradedMembershipDetails($profileid,$currency="RS",$source=""){
-        if($profileid){
-            if($source != "backend"){
-                include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
-            }
-            $this->memHandlerObj = new MembershipHandler();
-            $this->currency = $currency;
-            $this->userObj = new memUser($profileid);
-            $this->userObj->setMemStatus();
-            if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-                $this->userObj->setCurrency($this->currency);
-                $purchasesObj = new BILLING_PURCHASES();
-                $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
-                if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
-                    $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
-                    $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
-                    //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
-                }
-                else{
-                    $this->memID = @strtoupper($purchaseDetails);
-                    $this->lastPurchaseDiscount = 0;
-                    //$this->lastPurchaseBillid = null;
-                }
-
-                $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
-                $apiObj->subStatus = $this->subStatus;
-                $purchasesObj = new BILLING_PURCHASES();
-                $purchaseDetails = $purchasesObj->getCurrentlyActiveService($profileid,"PU.DISCOUNT_PERCENT");
-                $apiObj->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
-                $this->upgradeMem = "MAIN";
-                
-                list($this->discountType, $this->discountActive, $this->discount_expiry, $this->discountPercent, $this->specialActive, $this->variable_discount_expiry, $this->discountSpecial, $this->fest, $this->festEndDt, $this->festDurBanner, $this->renewalPercent, $this->renewalActive, $this->expiry_date, $this->discPerc, $this->code, $this->upgradePercentArr, $this->upgradeActive, $this->lightningDealActive, $this->lightning_deal_discount_expiry, $this->lightningDealDiscountPercent) = $this->memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L",3,$apiObj,"MAIN"); //3 is for default value
-                $this->displayPage = 1;$this->device = "desktop";$ignoreShowOnlineCheck = false;
-
-                list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
-                
-                $apiResponseHandlerObj = new MembershipAPIResponseHandler();
-                $response = $apiResponseHandlerObj->generateUpgradeMemResponse("", "cron",$this);
-                $response["memPurchasedDate"] = $this->subStatus[0]["ACTIVATED_ON"];
-                $response["discount"] = $this->upgradePercentArr[$response["upgradeMainMem"].$response["upgradeMainMemDur"]]["actualUpsellMRP"] - $this->upgradePercentArr[$response["upgradeMainMem"].$response["upgradeMainMemDur"]]["discountedUpsellMRP"];
-                return $response;
             }
         }
     }

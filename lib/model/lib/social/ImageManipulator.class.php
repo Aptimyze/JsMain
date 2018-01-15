@@ -42,22 +42,15 @@ class ImageManipulator
      */
     public function setImageString($file)
     {
-		PictureFunctions::setHeaders();
         if (is_resource($this->image)) {
             imagedestroy($this->image);
         }
         list ($this->width, $this->height) = getimagesize($file);
         $pictureFunobj = new PictureFunctions();        
         $this->image = $pictureFunobj->createImage($file);
-
         unset($pictureFunobj);
         if(!$this->image)
         {
-/*		$trace = debug_backtrace();
-		$szType = getimagesize($file);
-		file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/img.txt","file:".$file."formattype:".var_export($szType,true)."trace:".var_export($trace,true)."\n\n\n",FILE_APPEND);
-*/
-
             throw new RuntimeException('Cannot create image from data in ImageManipulator');
         }
         return $this;
@@ -74,7 +67,6 @@ class ImageManipulator
      */
     public function resample($width, $height, $replaceImageFlag = true, $constrainProportions = true)
     {
-		PictureFunctions::setHeaders();
         if (!is_resource($this->image)) {
             throw new RuntimeException('No image set in ImageManipulator');
         }
@@ -107,7 +99,6 @@ class ImageManipulator
      */
     public function crop($originalFile,$x1, $y1, $w, $h,$pathProvided=true)
     {
-		PictureFunctions::setHeaders();
         if($pathProvided==true)
             $this->setImageString($originalFile);
         else
@@ -130,7 +121,6 @@ class ImageManipulator
      */
     public function resize($originalFile,$newDimensionArr,$pathProvided=true)
     {
-		PictureFunctions::setHeaders();
         if($pathProvided==true)
             $this->setImageString($originalFile);
         else
@@ -152,7 +142,6 @@ class ImageManipulator
      */
     public function _replace($res)
     {
-		PictureFunctions::setHeaders();
         if (!is_resource($res)) {
             throw new UnexpectedValueException('Invalid resource in ImageManipulator');
         }
@@ -177,7 +166,6 @@ class ImageManipulator
         try
         {
             $pictureFunobj = new PictureFunctions();
-            PictureFunctions::setHeaders();
             $pictureFunobj->storeResizedImage($file,$saveUrl,$type);
             unset($pictureFunobj);
             chmod($saveUrl,0777);

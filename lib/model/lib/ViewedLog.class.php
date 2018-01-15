@@ -10,7 +10,7 @@ class  ViewedLog
 	public function findViewedProfiles($pid,$key='')
 	{
 		$VIEW_LOGobj = new VIEW_LOG();
-		$onlineUsers = $VIEW_LOGobj->get($pid,'',$key,SearchConfig::$viewedMaxLimit);
+		$onlineUsers = $VIEW_LOGobj->get($pid,'',$key);
 		return $onlineUsers;
 	}
 }

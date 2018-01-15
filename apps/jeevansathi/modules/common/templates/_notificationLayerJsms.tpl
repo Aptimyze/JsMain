@@ -1,13 +1,3 @@
-<script type="text/javascript">
-    var ssl_siteUrl = "~JsConstants::$ssl_siteUrl`";
-    var browserNotificationRegistered = "~$browserNotificationRegistered`";
-    var browserNotificationCookie = "~$browserNotificationCookie`";
-</script>
-<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.3.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.3.1/firebase-messaging.js"></script>
-<script src="~JsConstants::$ssl_siteUrl`/js/main_sw_register.js"></script>
-
 ~if $showLayer eq 1`
 <script type="text/javascript">
     function notificationLayerAction(buttonClick){

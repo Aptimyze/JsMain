@@ -55,7 +55,7 @@ class page1v1Action extends sfAction {
 			RegistrationMisc::updateAlertData($id,$alertArr,'A');
 			
 			$jpartnerFields=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","CITY_RES","AGE","RELIGION","OCCUPATION","HEIGHT","INCOME","EDU_LEVEL_NEW");
-			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields,$reg_params[casteNoBar]);
+			RegistrationMisc::setJpartnerAfterRegistration($this->loginProfile,$jpartnerFields);
 			RegistrationMisc::contactArchiveUpdate($this->loginProfile,$this->ip);
 			RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
 			$partnerField = new PartnerField();

@@ -62,22 +62,5 @@ class incentive_SALES_CSV_DATA_RCB extends TABLE
                 }
                 return $data;
         }
-
-    public function searchProfileInCSV($profileID){
-        try{
-            $sql = "SELECT PROFILEID FROM incentive.SALES_CSV_DATA_RCB WHERE PROFILEID = :PROFILEID AND DIAL_STATUS = :DIAL_STATUS";
-            $prep=$this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
-            $prep->bindValue(":DIAL_STATUS",1,PDO::PARAM_INT);
-            $prep->execute();
-            if($res=$prep->fetch(PDO::FETCH_ASSOC)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception $e){
-            throw new jsException($e);
-        }
-    }
 }
 ?>

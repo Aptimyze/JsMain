@@ -57,9 +57,6 @@ class desktopRegister3 extends registrationBaseClass {
 	$values_that_are_not_in_form = array('INCOMPLETE' => 'N','ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
   $this->form->updateData($this->loginProfile->getPROFILEID(),$values_that_are_not_in_form);
   $this->redisQueueJunkIncompleteProfile($this->loginProfile->getPROFILEID());
-    //Added Community wise Welcome discount
-    $memHandlerObj = new MembershipHandler();
-    $memHandlerObj->addCommunityWelcomeDiscount($this->loginProfile->getPROFILEID(),$this->loginProfile->getMTONGUE());
   }
 
   public function postSubmit() {

@@ -1,7 +1,6 @@
 <?php
 chdir(dirname(__FILE__));
 include_once "../jsadmin/connect.inc";
-include_once "../jsadmin/ap_common.php";
 $tt      = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
 $curdate = date("Y-m-d", $tt);
 include_once JsConstants::$docRoot . "/classes/JProfileUpdateLib.php";
@@ -12,7 +11,6 @@ mysql_query("set session wait_timeout=600", $db);
 
 $sql = "SELECT s.BILLID, s.PROFILEID, s.ID FROM billing.SERVICE_STATUS as s, billing.PURCHASES as p WHERE p.BILLID=s.BILLID and s.ACTIVATE_ON = '$curdate' AND p.STATUS='DONE' AND s.ACTIVE='Y'";
 $res = mysql_query_decide($sql, $db) or logError("Error2:", $sql);
-
 while ($row = mysql_fetch_array($res)) {
     $id                = $row['ID'];
     $pid               = $row['PROFILEID'];
@@ -21,7 +19,6 @@ while ($row = mysql_fetch_array($res)) {
     $sql1 = "UPDATE billing.SERVICE_STATUS SET ACTIVATED='Y', ACTIVATED_ON='$curdate', ACTIVATE_ON='0000-00-00' WHERE ID=$id";
     $res1 = mysql_query_decide($sql1, $db) or die($sql1 . mysql_error_js());
 }
-
 $profileids_arr_n = array_unique($profileids_arr1);
 $profileids_arr   = array_values($profileids_arr_n);
 
@@ -63,11 +60,6 @@ if ($profileids_arr) {
             $paramArr = array("SUBSCRIPTION" => $servefor_str);
             $jprofileObj->editJPROFILE($paramArr, $profile, 'PROFILEID');
 
-        }
-        
-        if(strpos($servefor_str, "X")!==false){
-            startAutoApply($profile, "");
-            addAutoApplyLog($profile,'MEMBERSHIP',"X");
         }
 
         // CLEAR MEMCACHE FOR CURRENT USER

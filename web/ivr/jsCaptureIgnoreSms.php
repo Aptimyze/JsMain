@@ -11,7 +11,7 @@ Date: 30-nov-2011
 die;
 include "../profile/connect.inc";
 $cc='esha.jain@jeevansathi.com';
-$to='nitesh.s@jeevansathi.com';
+$to='tanu.gupta@jeevansathi.com';
 $subject="jsCaptureIgnoreSms.php track mail";
 $msg='The api mentioned is being called. The message : '.$_GET["messagetext"].' is received from the number '.$mobile.'.<br/><br/>Warm Regards';
 send_email($to,$msg,$subject,"",$cc);

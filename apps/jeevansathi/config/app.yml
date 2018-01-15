@@ -26,16 +26,16 @@ all:
   PROFILE_IGNORED_BY_OTHER: "You cannot view this profile as the profile has blocked you"
   PROFILE_IGNORED_BY_ME: "You cannot view <USERNAME>'s profile as you have blocked <USERNAME>. To view <USERNAME>'s profile, unblock <USERNAME> from blocked members list"
   PROFILE_NOT_FOUND: "Sorry, the profile you requested was not found"
-  PROFILE_SCREENED: "This profile is under screening.Kindly check after 24 hours."
+  PROFILE_SCREENED: "This profile is currently being Screened. Kindly view this profile after 24 hours"
   PROFILE_HIDDEN:  "This profile is currently hidden. Please check after a couple of weeks"
   PROFILE_NO_CONTACT: "Sorry, you cannot view this user's profile as the user has chosen to show profile only to contacted members"
   PROFILE_FILTERED: "Sorry, you cannot view this profile as you have been FILTERED"
   PROFILE_PHOTO_PRIVACY: "Sorry, you cannot view this user's photos as the user has chosen to show photos only to contacted members"
   PROFILE_PHOTO_ABSENT: "Photo not uploaded. <a class='thickbox' href='SITE_URL/social/photoRequest?showtemp=Y&other_username=USERNAME&checksum=&profilechecksum=PROFILECHECKSUM'>Click here</a> to Request photo"
   PROFILE_PHOTO_SCREEN: "Photo is currently under screening. Please check later"    
-  max_photo_size: 10
+  max_photo_size: 6
   max_no_of_photos: 20
-  photo_formats: 'Jpeg, Gif, Jpg, Png'
+  photo_formats: 'Jpeg, Gif, Jpg'
   photo_email: 'photos@jeevansathi.com'
   SCREENED_PHOTO_URL: "<?php echo JsConstants::$screenedPhotosUrl?>"
   screened_dir_path: "<?php echo JsConstants::$screenedPhotoDir?>"

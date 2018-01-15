@@ -25,7 +25,7 @@ if($data && $checksum)
 	$free_profileidArr 	=array(); 
 	$contacts_Cnt		=0;
 
-	$contactResult_recdsum = getResultSet("SENDER","","","$profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","","","","","","$table_name");
+	$contactResult_recdsum = getResultSet("SENDER","","","$profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND NOW()","","","","","","","$table_name");
         for($i=0;$i<count($contactResult_recdsum);$i++)
         	$contacts_init_arr[] = $contactResult_recdsum[$i]["SENDER"];
 	$contacts_Cnt =count($contacts_init_arr);	
@@ -33,7 +33,7 @@ if($data && $checksum)
 	if($contacts_Cnt<=$profileCnt)
 	{	
 		// New Filtered EOI Received
-		$contactResult_recdsum=getResultSet("SENDER","","",$profileid,"","'I'",'',"TIME BETWEEN DATE_SUB(NOW(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","","","","","","$table_name","","","'Y'","");
+        	$contactResult_recdsum=getResultSet("SENDER","","",$profileid,"","'I'",'',"TIME BETWEEN DATE_SUB(NOW(), INTERVAL 90 DAY) AND NOW()","","","","","","","$table_name","","","'Y'","");
         	for($i=0;$i<count($contactResult_recdsum);$i++)
         		$contacts_filtered_arr[] = $contactResult_recdsum[$i]["SENDER"];
 		$contacts_filtered_arr_Cnt =count($contacts_filtered_arr);	

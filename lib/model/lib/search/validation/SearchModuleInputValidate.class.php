@@ -6,7 +6,7 @@
 class SearchModuleInputValidate extends ValidationHandler
 {
 	private $response;
-        public static $allowSomeValuesArr = array('All'=>1,'ALL'=>1,'O'=>1,'METRO'=>1,'DONT_MATTER'=>1,"NCR"=>1,SearchConfig::_nullValueAttributeLabel=>1,'41'=>1,'Any'=>1);
+        public static $allowSomeValuesArr = array('All'=>1,'ALL'=>1,'O'=>1,'METRO'=>1,'DONT_MATTER'=>1,"NCR"=>1,SearchConfig::_nullValueAttributeLabel=>1);
 
 	public function getResponse()
 	{

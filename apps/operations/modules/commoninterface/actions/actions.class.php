@@ -69,7 +69,6 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			$this->profileid = $this->profile->getPROFILEID();
 			//global $protect;
 			//JsCommon::oldIncludes();
 			//$protect = new protect();
@@ -230,19 +229,7 @@ class commoninterfaceActions extends sfActions
 		else
 			$cityName = "";
 		$membershipObj = new Membership;
-		
-		//auto bill RB for dummy profile with Js Exclusive and Js Boost
-		$servicesObj = new billing_SERVICES("newjs_slave");
-		$RBServiceID = "T".$mainServiceDuration;
-		$RBDetails = $servicesObj->fetchServiceDetails(array($RBServiceID));
-		if(is_array($RBDetails) && is_array($RBDetails[$RBServiceID]) && $RBDetails[$RBServiceID]['ACTIVE'] == 'Y'){
-			$autoActivateServices = $activeServiceDetails["SERVICEID"].",".$RBServiceID;
-		}
-		else{
-			$autoActivateServices = $activeServiceDetails["SERVICEID"];
-		}
-		
-		$membership_details["serviceid"] = $autoActivateServices;
+		$membership_details["serviceid"] = $activeServiceDetails["SERVICEID"];
 		$membership_details["profileid"] = $dummyProfileID;
         $membership_details["custname"] = $dummyUsername;
 		$membership_details["username"] = $dummyUsername;
@@ -257,15 +244,9 @@ class commoninterfaceActions extends sfActions
 		$membership_details["curtype"] = "RS";
 		$membership_details["deposit_date"] = date('Y-m-d');
 		$serviceObj = new billing_SERVICES("newjs_slave");
-		$priceRsDetails= $serviceObj->fetchServiceDetailForRupeesTrxn(explode(",",$membership_details["serviceid"]), 'desktop');
-		
-		$totalActualAmount = 0;
-		foreach ($priceRsDetails as $k1 => $v1) {
-			$totalActualAmount += $v1['PRICE'];
-		}
+		$priceRes= $serviceObj->fetchServiceDetailForRupeesTrxn($membership_details["serviceid"], 'desktop');
 		$membership_details["deposit_branch"] = "NOIDA";
-		$membership_details["discount"] = $totalActualAmount;
-		$membership_details["amount"] = 0;
+		$membership_details["discount"] = $priceRes["PRICE"];
 		$membership_details["discount_type"] = "2";
 		$membership_details["discount_reason"] = "100% disount for dummy profile";
 		$membership_details["entry_from"] = "N";
@@ -286,14 +267,14 @@ class commoninterfaceActions extends sfActions
     else
     	return false;
   }
-  /*Transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
+  /*transfer VD entries from test.VD_UPLOAD_TEMP to billing.VARIABLE_DISCOUNT_TEMP table
   * @param: $params
-  * MINI-VD Function
+  * MINI-VD 
   */
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_master');
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
@@ -316,7 +297,7 @@ class commoninterfaceActions extends sfActions
 
   /* function executeUploadVD
   * @param: request Object
- * MINI-VD STEP-0 
+  * MINI-VD STEP-1 
   */
   public function executeUploadVD(sfWebRequest $request)
   {
@@ -345,7 +326,7 @@ class commoninterfaceActions extends sfActions
   /* function executeUpdateVDRecords
   * uploads data from table to VD tables
   * @param: request Object
-  * MINI-VD STEP-1
+  * MINI-VD STEP-2
   */
   public function executeUpdateVDRecords(sfWebRequest $request)
   {
@@ -354,8 +335,7 @@ class commoninterfaceActions extends sfActions
 	if(in_array("IA",$privilage))
 	{
 		//Start -transfer records from client table to temp table
-		//$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
-		$params["limit"] =1000000;
+		$params["limit"] = uploadVD::$RECORDS_SELECTED_PER_TRANSFER; //no of records picked at a time
 		$this->transferVDRecords($params);
 		//End -transfer records        
 
@@ -420,58 +400,6 @@ class commoninterfaceActions extends sfActions
         JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;
         $this->message = "Gateway changed to ".$this->newGateway;
-    }
-  }
-  public function executeGetChangeInfo(sfWebRequest $request) 
-  {
-    $formArr = $request->getParameterHolder()->getAll();
-    $this->cid = $formArr['cid'];
-    $this->errorMsg = "";
-    $this->isSubmit =0;
-    if ($formArr['submit']) {
-            if($formArr["user_username"] == ""){
-                    $this->errorMsg = "Please enter Username";
-            }else{
-                        $this->profile = Operator::getInstance();
-			$this->username=$formArr["user_username"];
-			$this->profile->getDetail($formArr["user_username"],'USERNAME','PROFILEID');
-                        if($this->profile->getPROFILEID()==NULL || $this->profile->getPROFILEID()=='') //if invalid username
-                        {
-                                $this->errorMsg = "Wrong Username entered!";
-                        }else{
-                                $this->isSubmit =1;
-                                $this->fieldsToGet = array("GENDER"=>"0", "RELIGION"=>"religion", "CASTE"=>"caste","PHONE_MOB"=>"0","EMAIL"=>"0","COUNTRY_RES"=>"country","CITY_RES"=>"city_india","MTONGUE"=>"community_small","INCOME"=>"income_level","EDU_LEVEL_NEW"=>"edu_level_new","OCCUPATION"=>"occupation","MANGLIK"=>"manglik","MSTATUS"=>"mstatus","DTOFBIRTH"=>"0","PRIVACY"=>"0","PHOTO_DISPLAY"=>"photo_privacy","SHOWPHONE_MOB"=>"privacy_option");
-                                $this->fieldsToGetLabel = array("GENDER"=>"Gender","RELIGION"=>"Religion", "CASTE"=>"Caste","PHONE_MOB"=>"Phone Mobile","EMAIL"=>"Email","COUNTRY_RES"=>"country","CITY_RES"=>"City","MTONGUE"=>"Mtongue","INCOME"=>"Income","EDU_LEVEL_NEW"=>"Education","OCCUPATION"=>"Occupation","MANGLIK"=>"Manglik","MSTATUS"=>"Mstatus","DTOFBIRTH"=>"Date of Birth","PRIVACY"=>"Privacy","PHOTO_DISPLAY"=>"Photo Privacy","SHOWPHONE_MOB"=>"Show Mobile");
-                                $editLogObj = new NEWJS_EDIT_LOG("crm_slave");
-                                $changeData = $editLogObj->getDetails($this->profile->getPROFILEID(),implode(",",array_keys($this->fieldsToGet)));
-                                $changedArray = array();
-                                foreach($changeData as $k=>$data){
-                                        $a = array_filter($data);
-                                        if(empty($a) || (count($a) == 2 && $a["DTOFBIRTH"] == "0000-00-00")){
-                                        }else{
-                                                foreach($this->fieldsToGet as $ky=>$lbl){
-                                                        if($lbl != "0" && $data[$ky] !="0" && $data[$ky] !=""){
-                                                                if($lbl == "city_india"){
-                                                                        if(substr($data[$ky], 2) == "OT"){
-                                                                                $data[$ky] = FieldMap::getFieldLabel("state_india",substr($data[$ky],0,2))." Others";
-                                                                        }else{
-                                                                                $data[$ky] = FieldMap::getFieldLabel($lbl,$data[$ky]);
-                                                                        }
-                                                                }else{
-                                                                        $data[$ky] = FieldMap::getFieldLabel($lbl,$data[$ky]);
-                                                                }
-                                                        }elseif($data[$ky] == "0"){
-                                                                $data[$ky] = "";
-                                                        }elseif($data[$ky] == "0000-00-00"){
-                                                                $data[$ky] = "";
-                                                        }
-                                                }
-                                                $changedArray[$k] = $data;
-                                        }
-                                }
-                                $this->changedArray = $changedArray;
-                        }
-            }            
     }
   }
 }

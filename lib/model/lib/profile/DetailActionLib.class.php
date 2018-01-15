@@ -97,7 +97,6 @@ class DetailActionLib
 	 */
 	public static function LogThisAction($actionObject)
 	{
-		return;
 		//Insert a entry in View Log///////////////////////////////////////////////////////////////
 		if($actionObject->loginProfile->getPROFILEID())
 		{	
@@ -209,7 +208,6 @@ class DetailActionLib
 		$actionObject->stopAlbumView=$return[2];
 		$actionObject->IsMainPic = $return[3];
 		$actionObject->THUMB_URL = $return['THUMB_URL'];
-		$actionObject->PIC120_URL = $return['PIC120_URL'];
 		$actionObject->PIC_MSG = ($bOwnProfile)?null:$actionObject->PHOTO['label'];
 		$actionObject->PIC_URL = $actionObject->PHOTO['url'];
 		$actionObject->PIC_ACTION = ($bOwnProfile)?null:$actionObject->PHOTO['action'];
@@ -293,11 +291,11 @@ class DetailActionLib
 			else
 			{
 				$ignore=new IgnoredProfiles();
-				if($ignore->ifIgnored($sender,$receiver,ignoredProfileCacheConstants::BYME))
+				if($ignore->ifIgnored($sender,$receiver))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender,ignoredProfileCacheConstants::BYME))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }
@@ -405,40 +403,6 @@ class DetailActionLib
 	 */
 	public static function alterSeenTable($actionObject)
 	{
-
-                if($actionObject->loginProfile->getPROFILEID())
-                {
-
-                        $privacy=$actionObject->loginProfile->getPRIVACY();
-                        $producerObj = new Producer();
-                        //Privacy is not C for login user 
-                        if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
-                        {
-                                if($producerObj->getRabbitMQServerConnected())
-                                    $triggerOrNot = "inTrigger";
-                                else
-				{
-				    $vlt=new VIEW_LOG_TRIGGER();
-                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
-				}
-                        }
-                        elseif($producerObj->getRabbitMQServerConnected())
-                            $triggerOrNot="notInTrigger";
-
-                        if($producerObj->getRabbitMQServerConnected()){
-				$viewLogData['triggerOrNot'] = $triggerOrNot;
-				$viewLogData['VIEWER'] = $actionObject->loginProfile->getPROFILEID();
-				$viewLogData['VIEWED'] = $actionObject->profile->getPROFILEID();
-//                            $producerObj->sendMessage($queueData);
-                        }
-                        else
-			{
-			    if(!$vlt)
-				$vlt=new VIEW_LOG_TRIGGER();
-			    $vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
-			}
-
-
 		//This will help in assingning global variables in alter_Seen_table.
 		$fromSym=1;
 		$request=$actionObject->getRequest();
@@ -490,47 +454,8 @@ class DetailActionLib
 		if($actionObject->loginProfile->getPROFILEID() && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
-			$randomNumber = rand(0,100);
-			if($randomNumber>=100)
-			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
-			}
-			else
-			{
-				if($producerObj->getRabbitMQServerConnected())
-				{
-					$updateSeenProfileData['fromSym'] = $fromSym;
-					$updateSeenProfileData['type'] = $type;
-					$updateSeenProfileData['mypid'] = $mypid;
-					$updateSeenProfileData['updatecontact'] = $updatecontact;
-					$updateSeenProfileData['profileid'] = $profileid;
-					
-			//		$producerObj->sendMessage($updateSeenProfileData);
-				}
-				else
-				{
-//					$this->sendMail();
-				}
-			}
 		}
-		if($producerObj->getRabbitMQServerConnected())
-		{
-			if(is_array($viewLogData))
-			{
-				$body['VIEW_LOG']=$viewLogData;
-			}
-			if(is_array($updateSeenProfileData))
-			{
-				$body['UPDATE_SEEN']=$updateSeenProfileData;
-			}
-			if(is_array($body))
-			{
-			$finalQueueData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>$body));
-			$producerObj->sendMessage($finalQueueData);
-			}
-		}
-                }
-		
 	}
 	
 	/**

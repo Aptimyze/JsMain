@@ -1,6 +1,0 @@
-all:
-  chatPromoJSPC:
-    enable_login: on
-
-  chatPromoJSMS:
-    enable_login: on    

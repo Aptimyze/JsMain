@@ -20,7 +20,7 @@ class SearchInputValidation
 
 		if(strstr(SearchConfig::$possibleSearchParamters,$label) && $value && !in_array($value,$keyword_allowed_array))
 		{
-			if($label == "GENDER" || $label == "MSTATUS" || $label == "HAVEPHOTO" || $label == "MANGLIK" || $label == "HAVECHILD" || $label == "DIET" || $label == "SMOKE" || $label == "DRINK" || $label == "HIV" || $label == "HIJAB_MARRIAGE" || $label == "SPEAK_URDU" || $label == "ZARATHUSHTRI" || $label == "HOROSCOPE" || $label == "AMRITDHARI" || $label == "CUT_HAIR" || $label == "WEAR_TURBAN" || $label == "LIVE_PARENTS" || $label == "MARRIED_WORKING" || $label == "GOING_ABROAD" || $label == "VIEWED" || $label == "SORT_LOGIC" || $label == "NEWSEARCH_CLUSTERING" || $label == "ONLINE" || $label == "WIFE_WORKING" || $label == "MSTATUS_IGNORE" || $label == "HIV_IGNORE" || $label == "MANGLIK_IGNORE" || $label == "KNOWN_COLLEGE_IGNORE")
+			if($label == "GENDER" || $label == "MSTATUS" || $label == "HAVEPHOTO" || $label == "MANGLIK" || $label == "HAVECHILD" || $label == "DIET" || $label == "SMOKE" || $label == "DRINK" || $label == "HIV" || $label == "HIJAB_MARRIAGE" || $label == "SPEAK_URDU" || $label == "ZARATHUSHTRI" || $label == "HOROSCOPE" || $label == "AMRITDHARI" || $label == "CUT_HAIR" || $label == "WEAR_TURBAN" || $label == "LIVE_PARENTS" || $label == "MARRIED_WORKING" || $label == "GOING_ABROAD" || $label == "VIEWED" || $label == "SORT_LOGIC" || $label == "NEWSEARCH_CLUSTERING" || $label == "ONLINE" || $label == "WIFE_WORKING" || $label == "MSTATUS_IGNORE" || $label == "HIV_IGNORE" || $label == "MANGLIK_IGNORE")
 			{
 				if(!preg_match($pattern1,$value))
                                         $flag = 0;
@@ -48,7 +48,7 @@ class SearchInputValidation
                                 else
                                         $flag = 1;
 			}
-			elseif($label == "HANDICAPPED" || $label == "STATE" || $label == "NATIVE_STATE" || $label == "CITY_INDIA" || $label == "SEARCH_TYPE" || $label == "CITY_RES" || $label == "HANDICAPPED_IGNORE" || $label == "KNOWN_COLLEGE")
+			elseif($label == "HANDICAPPED" || $label == "STATE" || $label == "NATIVE_STATE" || $label == "CITY_INDIA" || $label == "SEARCH_TYPE" || $label == "CITY_RES" || $label == "HANDICAPPED_IGNORE")
 			{
 				if(!preg_match($pattern5,$value))
                                         $flag = 0;

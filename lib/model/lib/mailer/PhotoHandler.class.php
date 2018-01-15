@@ -68,12 +68,7 @@ class PhotoHandler implements VariableHandler {
 		$viewer=$this->_lru->get($this->_var_object->getParam('receiver_id',true));
 		$viewing=$this->_lru->get($this->_token_profile_id);
 		$this->_photo_class = new PictureArray(array($viewing));
-		$skipContacts = '';
-		if($this->_photo_type == 'mailer')
-		{
-			$skipContacts = 'Y';
-		}
-		$photo_obj_arr = $this->_photo_class->getProfilePhoto('S', '','',$viewer,$skipContacts);
+		$photo_obj_arr = $this->_photo_class->getProfilePhoto('S', '','',$viewer);
 		$photo_obj=$photo_obj_arr[$this->_token_profile_id];
 		switch($this->_photo_type){
 		case 'profile':
@@ -84,11 +79,6 @@ class PhotoHandler implements VariableHandler {
 			break;
 		case 'search':
 			$photo=$photo_obj ? $photo_obj->getSearchPicUrl():PictureService::getRequestOrNoPhotoUrl('requestPhoto', 'SearchPicUrl', $viewing->getGENDER());
-			break;
-		case 'mailer':
-			$photo=$photo_obj ? $photo_obj->getSearchPicUrl() : PictureService::getRequestOrNoPhotoUrl('requestPhoto', 'SearchPicUrl', $viewing->getGENDER());
-		case 'contactMailer':
-			$photo=$photo_obj ? $photo_obj->getProfilePic450Url() : PictureService::getRequestOrNoPhotoUrl('requestPhoto', 'ProfilePic450Url', $viewing->getGENDER());
 			break;
 		}
 	}

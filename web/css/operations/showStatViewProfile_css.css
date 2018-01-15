@@ -231,7 +231,7 @@ background-image:url(/profile/imagesnew/greenbuttbg.gif)}
 
 .psts{ float:left;line-height:20px; width:65%}
 .baro{width:200px; border:1px solid #C5C5C5; line-height:20px}
-.barin{ background-color:#99CC00; background-image:url("/profile/images/bar_complete.gif")}
+.barin{ background-color:#99CC00; background-image:url(SITE_URL/profile/images/bar_complete.gif)}
 .space15 {line-height:15px}
 .greyele{font:normal 11px verdana,Arial; color:#666666}                                                                                                                                                                                                                                                         
 .wordbreakwrap{

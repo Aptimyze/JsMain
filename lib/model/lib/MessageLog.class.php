@@ -104,10 +104,8 @@ class MessageLog
 				$RBmessage['TYPE'] = $value['TYPE'];
  				$RBmessage['DATE'] = $value['TIME'];
                                 $profileObj = new Profile('',$value['SENDER']);
-                                $profileObj->getDetail();
                                 $receiverObj = new Profile('',$value['RECEIVER']);
-                                $receiverObj->getDetail();
-				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$value['COUNT']);
+				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);
 				unset($profileObj);
 				unset($receiverObj);
 				$RBmessage['MESSAGE'] = $messageForRB;
@@ -157,12 +155,9 @@ class MessageLog
 		}
 
 
-               
+                
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
-                if(InboxEnums::$messageLogInQuery)
-					$profileChatArray = $chatLogObj->getMessageListing($condition,'',$inArray);
-				else
-					$profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
+                $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)
@@ -209,14 +204,12 @@ class MessageLog
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
 		foreach ($messageArray as $key => $value) {
-			$rbData=$this->EOIFromRB($value['SENDER'],$value['RECEIVER']);
-			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $rbData)
+
+			if( $key=='0' && $value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
 			{ 
                           $receiverObj = new Profile('',$value['RECEIVER']);
-                          $receiverObj->getDetail();
                           $profileObj = new Profile('',$value['SENDER']);
-                          $profileObj->getDetail();
-			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj,$rbData['COUNT']);	
+			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
 		}
@@ -350,32 +343,27 @@ if($limit == 1000000)
 
            $dbName = JsDbSharding::getShardNo($sender,'');
 	   $dbObj = new newjs_CONTACTS($dbName);
-	   $rbData = $dbObj->isRBContact($sender,$receiver);
-	   if(isset($rbData) && $rbData['MSG_DEL'] == 'Y')
+	   $isRB = $dbObj->isRBContact($sender,$receiver);
+
+	   if($isRB == 1)
 	   {  
-	   		return $rbData;
+	   		return 1;
 	   }
-	   return "";
+	   return 0;
 	}
 
-	public function getRBMessage($sender,$receiverObj,$profileObj,$count=1)
+	public function getRBMessage($sender,$receiverObj,$profileObj)
 	{
 
-		if($this->isJsDummyMember($sender) || MembershipHandler::isEligibleForRBHandling($profileObj->getPROFILEID()))
+		if($this->isJsDummyMember($sender))
 				{
-					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()==""){
-						if($count<=1)
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
-						else
-							$message=Messages::getMessage(Messages::JSExReminderNoPhoMes);
-						}
 					else
 					{
-					    /* $draftsObj = new ProfileDrafts($profileObj);
-					     $message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
-					     unset($draftsObj); */
-					    
-					    $message= Messages::getMessage(Messages::AP_MESSAGE_RM,array('USERNAME'=>$profileObj->getUSERNAME(), 'RMNUMBER'=>$this->getRMNumber($profileObj)));
+							$draftsObj = new ProfileDrafts($profileObj);
+							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+							unset($draftsObj);
 					}
 				}
 				else{
@@ -383,19 +371,6 @@ if($limit == 1000000)
 				}
 
 		return $message;		
-	}
-	
-	private function getRMNumber($profileObj){
-	    if($profileObj == null)
-	        return null;
-	        
-	        $exclusiveFunctionsObj=new ExclusiveFunctions();
-	        $execDetails=$exclusiveFunctionsObj->getRMDetails($profileObj->getPROFILEID());
-	        $rmPhone = $execDetails["PHONE"];
-	        if($rmPhone){
-	            return "+91-".$rmPhone;
-	        }
-	        return null;
 	}
 
 	public function toUpdateRB($messageArr,$sender,$receiver)

@@ -17,18 +17,6 @@
         		$('#date1_dateLists_day_list option:selected').prop('selected', false);
         	}
         });
-        $('[name="select_condition"]').on('click', function(){
-                var selectCondition = $(this).val();
-                $("[name='source_countries[]'] option:selected").removeAttr("selected");
-                $("[name='source_cities[]'] option:selected").removeAttr("selected");
-                if(selectCondition == "city"){
-                        $(".city_row").show();
-                        $(".country_row").hide();
-                }else{
-                        $(".city_row").hide();
-                        $(".country_row").show();
-                }
-        });
     });    
 </script>
 </head>
@@ -126,34 +114,17 @@
         </select>
 			</td>
 		</tr>
-                <tr></tr>
-                <tr align="center">
-			<td class="label"><font size=2>Selection by City/Country</font></td>
-			<td class="fieldsnew">
-                                <input type ="radio" name="select_condition" value="country"><label>Select Country/Countries</label>
-                                <input type ="radio" name="select_condition" value="city" checked = "checked"><label>Select City/Cities</label>
-			</td>
-		</tr>
-                <tr align="center" class="country_row" style="display: none;">
-			<td class="label"><font size=2>Select Country/Countries</font></td>
-			<td class="fieldsnew">
-                                <select multiple name ='source_countries[]' id="source_countries" size=15 style='min-width: 255px'>
-                                  ~foreach from=$source_countries key=k item=src_countries`
-                                    <option value="~$k`">~$src_countries`</option>
-                                  ~/foreach`
-                                </select>
-			</td>
-		</tr>
-		<tr align="center" class="city_row">
+		<tr></tr>
+		<tr align="center">
 			<td class="label"><font size=2>
 			       Select Cities
 			</font></td>
 			<td class="fieldsnew">
-                                <select multiple name ='source_cities[]' size=15 style='min-width: 255px'>
-                                  ~foreach from=$source_cities key=k item=src_city`
-                                    <option value="~$k`">~$src_city`</option>
-                                  ~/foreach`
-                                </select>
+        <select multiple name ='source_cities[]' size=15 style='min-width: 255px'>
+          ~foreach from=$source_cities key=k item=src_city`
+            <option value="~$k`">~$src_city`</option>
+          ~/foreach`
+        </select>
 			</td>
 		</tr>
 		<tr></tr>

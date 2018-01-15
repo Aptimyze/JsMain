@@ -229,7 +229,20 @@ class protect
 			$temp['ID']=substr($temp['ID'],0,strpos($temp[ID],$this->encryptSeprator));
             $tempPr=$this->js_encrypt(md5($temp['PR'])."i".$temp['PR']);
             $tempPr=substr($tempPr,0,strpos($tempPr,$this->encryptSeprator));
-			
+			if ($inactiveSec/60>$this->inactiveMin)
+			{
+				//$this->errorMsg=$this->errorDelay;
+				//$this->makeErrorHtml();
+				if ( $this->enblRemember && !isset($_COOKIE[$this->cookieRemName]) && !isset($_COOKIE[$this->cookieRemPass]) || (!$this->enblRemember)  )
+					return NULL;
+				else
+				{
+					$insertIntoLoginHistory=1;
+					$loginTracking=LoginTracking::getInstance($temp['PR']);
+					$loginTracking->setChannel("R");
+					$loginTracking->loginTracking($_SERVER['REQUEST_URI']);
+				}
+			}
 			//print_r($temp);
 			//die('cya');
 			/*echo 'checkusm is '.$checksum;
@@ -252,21 +265,6 @@ class protect
 				//die('3');
 				return NULL;}
 			
-			if ($inactiveSec/60>$this->inactiveMin)
-			{
-				//$this->errorMsg=$this->errorDelay;
-				//$this->makeErrorHtml();
-				if ( $this->enblRemember && !isset($_COOKIE[$this->cookieRemName]) && !isset($_COOKIE[$this->cookieRemPass]) || (!$this->enblRemember)  )
-					return NULL;
-				else
-				{
-					$insertIntoLoginHistory=1;
-					$loginTracking=LoginTracking::getInstance($temp['PR']);
-					$loginTracking->setChannel("R");
-					$loginTracking->loginTracking($_SERVER['REQUEST_URI']);
-				}
-			}
-
 			@setcookie($this->HMT,$nowtime,0,"/",$this->domain);
 
 			///Getting memcache value, that was set when profile is screened, if value is 2  than get all the values for db and reset the auth cookie.
@@ -319,12 +317,8 @@ class protect
                         {
                                 return NULL;
 			}
-			if( !$temp['ID'] || !$temp['PR'])
-			{	//print_r($temp);
-				//die('1');
-				return NULL;}
 
-			$id=$temp['PR'];
+			$id=$temp[PR];
 		
 			$mysql= new Mysql;
 			$db=$mysql->connect();	
@@ -424,7 +418,7 @@ class protect
 		//print_r(">>>>>>".isset($_COOKIE['cool_chat']));
 		if(isset($_POST))
 			$cnt_post=count($_POST);
-	if($data["PROFILEID"])
+	
 		$this->LogUserEntry($data[PROFILEID]);
 		if($_GET['ajax_error']>0)
 			$cnt_post=1;

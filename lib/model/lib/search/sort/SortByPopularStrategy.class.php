@@ -58,9 +58,9 @@ class SortByPopularStrategy extends SearchSort implements SortStrategyInterface
 		$counter++;
 
 		/* SORT_DT completeness and freshness*/
-		//$sortString[$counter] = "TOTAL_POINTS";
-		//$sortAscOrDesc[$counter] = $this->sortByDesc;
-		//$counter++;
+		$sortString[$counter] = "TOTAL_POINTS";
+		$sortAscOrDesc[$counter] = $this->sortByDesc;
+		$counter++;
 
 		$this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
 		$this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);

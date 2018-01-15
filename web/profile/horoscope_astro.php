@@ -14,12 +14,6 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	$db=connect_db();
 
 	$data=authenticated($checksum);
-	$ownProfileChecksum = createChecksumForSearch($data['PROFILEID']);
-	$smarty->assign("selfProfilechecksum",$ownProfileChecksum);
-	$smarty->assign("showDownload",$showDownload);
-	$smarty->assign("viewedUsername",$view_username);
-	$smarty->assign("otherProfileChecksum",$profilechecksum);
-	$smarty->assign("gender",$data["GENDER"]);
 	if($SHOW_WHAT=='payment')
 	{
 		$smarty->display("astro_payment.htm");
@@ -97,7 +91,7 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	{
 		list($chksum,$profileid) = explode("i",$profilechecksum);
 	}
-	
+
 	$sql = "SELECT USERNAME , PROFILEID , DTOFBIRTH , BTIME , NAKSHATRA  FROM newjs.JPROFILE WHERE  activatedKey=1 and PROFILEID='$profileid'";
 	$result=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	$row = mysql_fetch_array($result);

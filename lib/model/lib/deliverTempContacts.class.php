@@ -141,7 +141,7 @@
 					unset($receiverProfile);
 				}
 			}
-			// $this->cleanUpSentContacts($contactTempObj);
+			$this->cleanUpSentContacts($contactTempObj);
 		}
 	}
 

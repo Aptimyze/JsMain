@@ -174,107 +174,97 @@ offerConsent=1;
 }
 function ajaxHide(hideDelete)
 {
-  if(action)
-  {
-    // to hide the user
-    var dataObject = JSON.stringify({'hideDays' : hideDays, 'actionHide' : action});
-  }
-  else
-  {
-    // to UnHide the user
-    var dataObject = JSON.stringify({'actionHide' : action});
-  }
+  $.ajax(
+                {    
 
-  $.myObj.ajax({
-    beforeSend : function(){
-      $("#hidePartID").addClass("settings-blur");
-    },
-    url : '/api/v1/settings/hideUnhideProfile',
-    dataType: 'json',
-    data: 'data='+dataObject,
-    //timeout: 5000,
-    success: function(response) 
-    {
-      $("#hidePartID").removeClass("settings-blur");
-      if(response.success == 1)
-      {
-        if(action)
-        {
-           $("#headingID").html("Show your Profile");
-           $("#hideDaysID").addClass("disp-none");
-           $("#hideTextID").addClass("disp-none");
+                        beforeSend : function(){
+                      $("#hidePartID").addClass("settings-blur");
+                       },              
+                        url: '/settings/jspcSettings?hideDelete=1',
+                        data: "hideDays="+hideDays+"&option="+hideDelete+"&submit=1",
+                        //timeout: 5000,
+                        success: function(response) 
+                        {
+                          $("#hidePartID").removeClass("settings-blur");
+                          if(response=="HIDE SUCCESS")
+                          {
+                             $("#headingID").html("Show your Profile");
+                             $("#hideDaysID").addClass("disp-none");
+                             $("#hideTextID").addClass("disp-none");
 
-           $("#HideID").html("Show my Profile");
-           $("#HideID").addClass("fontlig");
-           $("#HideID").addClass("f15");
-           $("#showParaID").html("You have chosen to hide your profile for "+hideDays+" days, after which it will be visible to other users again. Use this feature to unhide your profile now.");
-           $("#hideParaID").html("You have chosen to hide your profile for "+hideDays+" days, after which it will be visible to other users again. Use this feature to unhide your profile now.");
-        }
-        else
-        {
-           $("#headingID").html("Hide your Profile");
-           $("#hideDaysID").removeClass("disp-none");
-           $("#hideTextID").removeClass("disp-none");
-           $("#HideID").html("Hide my Profile");
-           $("#HideID").addClass("fontlig");
-           $("#HideID").addClass("f15");
-           $("#hideParaID").html("Use this feature when you have decided to stop looking temporarily since you are busy, moving, in the middle of some big lifestyle changes and cannot spare the time to look seriously.");
-           $("#showParaID").html("Use this feature when you have decided to stop looking temporarily since you are busy, moving, in the middle of some big lifestyle changes and cannot spare the time to look seriously.");
-        }
-      }
-      else
-      {
-        // response not successfull!
-      }
-    }
-  });
+                             $("#HideID").html("Show my Profile");
+                             $("#HideID").addClass("fontlig");
+                             $("#HideID").addClass("f15");
+                             $("#showParaID").html("You have chosen to hide your profile for "+hideDays+" days, after which it will be visible to other users again. Use this feature to unhide your profile now.");
+                             $("#hideParaID").html("You have chosen to hide your profile for "+hideDays+" days, after which it will be visible to other users again. Use this feature to unhide your profile now.");
+                          }
+                          else
+                          {
+                             $("#headingID").html("Hide your Profile");
+                             $("#hideDaysID").removeClass("disp-none");
+                             $("#hideTextID").removeClass("disp-none");
+                             $("#HideID").html("Hide my Profile");
+                             $("#HideID").addClass("fontlig");
+                             $("#HideID").addClass("f15");
+                             $("#hideParaID").html("Use this feature when you have decided to stop looking temporarily since you are busy, moving, in the middle of some big lifestyle changes and cannot spare the time to look seriously.");
+                             $("#showParaID").html("Use this feature when you have decided to stop looking temporarily since you are busy, moving, in the middle of some big lifestyle changes and cannot spare the time to look seriously.");
+                          }
+                        }
+                      });
 }
 
 
 function ajaxPassword(checksum,pswrd,hideAction)
 {
-  $.ajax({                 
-    url: '/api/v1/common/checkPassword',
-    data: "data=" + JSON.stringify({'pswrd' : escape(pswrd)}),
-    success: function(response) 
-    {
-      if(response.success == 1)
-      {
-        if(hideAction==1)
-        {
-          if(hideUnhide==1)
-          {
-            hideUnhide=0;
-            action = 0;
-            ajaxHide(action);
-          }
-          else
-          {
-            hideUnhide=1;
-            action = 1;
-            ajaxHide(action);
-          }
-        }
-        else
-        {
-         showLayerCommon('deleteConfirmation-layer');
-        }
-      }
-      else
-      {
-        if(hideAction==1)
-        {
-          $("#passID1").removeClass("vishid");
-          $("#passBorderID1").addClass("errbrd");
-        }
-        else
-        {
-          $("#passID").removeClass("vishid");
-          $("#passBorderID").addClass("errbrd");
-        }
-      }
-    }
-  });
+  
+  $.ajax(
+                {                 
+                        url: '/profile/password_check.php?',
+                        data: "hideDelete=1&checksum="+checksum+"&pswrd="+escape(pswrd),
+                        //timeout: 5000,
+                        success: function(response) 
+                        {
+
+                          if(response=="true")
+                          {
+                            if(hideAction==1)
+                             {
+                            if(hideUnhide==1)
+                            {
+                              hideUnhide=0;
+                            ajaxHide('Show');
+                            
+                           }
+                            else
+                            {
+                                hideUnhide=1;
+                              ajaxHide('Hide');
+                              
+                            }
+                        }
+                        else
+                            {
+							showLayerCommon('deleteConfirmation-layer');
+                              
+                            }
+                          }
+                          else
+                          {
+                            if(hideAction==1)
+                            {
+                             $("#passID1").removeClass("vishid");
+                             $("#passBorderID1").addClass("errbrd");
+                            }
+                           else
+                           {
+                             $("#passID").removeClass("vishid");
+                             $("#passBorderID").addClass("errbrd");
+                           }
+                          }
+
+                        }
+
+                    });
 }
 
 
@@ -297,11 +287,9 @@ function ajaxDelete(optionVal,specifyReason)
                         {
 
                           if(response=="success redirect")
-                            window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
-                          else if(optionVal=="I found my match from other website" || optionVal=="I found my match elsewhere" ||optionVal=='I found my match on Jeevansathi.com')
-                            window.location.href= "/static/PostWeddingServices";
-                          else
-                            window.location.href= "/static/logoutPage";
+                          window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
+                        else
+                          window.location.href= "/static/logoutPage";
                         }
                         
                       });

@@ -1,7 +1,5 @@
 <?php 
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
-$url=JsConstants::$siteUrl."/static/oldMobileSite?redirectFromOldSite=1";
-		header("Location: " . $url);die;
 $db=connect_db();
 $data=authenticated();
 if($data){

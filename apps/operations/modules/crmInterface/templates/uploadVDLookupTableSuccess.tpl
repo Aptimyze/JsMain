@@ -71,9 +71,6 @@
                     <b>Service</b>
                 </td>
                 <td class="label" width=5% height="20">
-                    <b>1_DISCOUNT</b>
-                </td>
-                <td class="label" width=5% height="20">
                     <b>2_DISCOUNT</b>
                 </td>
                 <td class="label" width=5% height="20">
@@ -108,9 +105,6 @@
                     </td>
                     <td class="label" width=5% height="20">
                         ~$row.SERVICE`
-                    </td>
-                    <td class="label" width=5% height="20">
-                        ~$row.1_DISCOUNT`
                     </td>
                     <td class="label" width=5% height="20">
                         ~$row.2_DISCOUNT`

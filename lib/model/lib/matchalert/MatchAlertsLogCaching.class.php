@@ -22,12 +22,11 @@ class MatchAlertsLogCaching
                 if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && ($keys[0] == "0" || $keys[0] != "")) ){
                         $profileArray= array();
                         if($keys){
-                                $lastpartitionedOn = JsMemcache::getInstance()->get("MATCHALERTS_PARTITIONED_DT");
                                 foreach($keys as $key){
                                         $profileIdDate = explode("_",$key);
                                         if($profileIdDate[0] != "0"){
-                                                if((($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == "") && ($profileIdDate[1] >= $lastpartitionedOn)){
-                                                        $profileArray[$profileIdDate[0]]   = round($profileIdDate[1],0);
+                                                if(($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == ""){
+                                                        $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
                                                 }
                                         }
                                 }
@@ -37,7 +36,6 @@ class MatchAlertsLogCaching
                         $keyArr = array();
                         if($profileArray){
                                 foreach($profileArray as $mProfileId=>$intDate){
-                                        $intDate = round($intDate,0);
                                         $keyArr[] = $mProfileId."_".$intDate;
                                 }
                         }else{

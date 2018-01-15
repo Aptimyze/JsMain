@@ -93,7 +93,7 @@ if($sendmail)
      	}	   
 	$file_name=$filename;
         $path = "usr/local/matri_profiles/".$filename.".doc";
-        $bcc="nitesh.s@jeevansathi.com";
+        $bcc="tanu.gupta@jeevansathi.com";
         send_doc_email("Matri Profile",$path,$to,$msg,$file_name,$cc1,$cc2,$bcc,$id);
 	$ts=time();
 	$today=date('Y-m-d G:i:s',$ts);	

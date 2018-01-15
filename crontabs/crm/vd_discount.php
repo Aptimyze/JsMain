@@ -11,37 +11,24 @@ include_once(JsConstants::$docRoot."/classes/VariableDiscountHandler.class.php")
 ini_set('max_execution_time',0);
 ini_set('memory_limit',-1);
 
-$myDb 	=connect_db();		// master connection
+$myDb 	=connect_ddl();		// master connection
 $slaveDb=connect_737();		// slave connection
 $variableDiscountObj =new VariableDiscountHandler($myDb,$slaveDb);
 
-$status =$variableDiscountObj->checkDiscountEligibleStatus();
-if(!$status)
-	successfullDie('die');
-$emailId ='manoj.rana@naukri.com';
-
-// step1
-mail($emailId,"Step-1 VD (Poll creation)", date("Y-m-d H:i:s"));
+// step1,step3
 $variableDiscountObj->addProfileInVddPool();
-$variableDiscountObj->logVdProcess('1');
+$variableDiscountObj->logVdProcess('1_3');
 
-// step2
-mail($emailId,"Step-2 VD (Filter process)", date("Y-m-d H:i:s"));
+// step2,step4
 $variableDiscountObj->filterVdPoolProfiles();
-$variableDiscountObj->logVdProcess('2');
+$variableDiscountObj->logVdProcess('2_4');
 
-// step3
-mail($emailId,"Step-3 VD (Discount calculation)", date("Y-m-d H:i:s"));
+// step5
 $variableDiscountObj->calculateVdDiscount();
-$variableDiscountObj->logVdProcess('3');
+$variableDiscountObj->logVdProcess('5');
 
-// step4
-mail($emailId,"Step-4 VD (Final pool)", date("Y-m-d H:i:s"));
+// step6
 $variableDiscountObj->addVariableDiscount();
-$variableDiscountObj->logVdProcess('4','N');
-
-// stepe5
-mail($emailId,"Step-5 VD (Done)", date("Y-m-d H:i:s"));
+$variableDiscountObj->logVdProcess('6');
 
 ?>
-

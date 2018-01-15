@@ -2,7 +2,7 @@
 <div class="posfix z112 dispnone"  id="reportInvalidContainer">
                     <div class="fullwid fontlig" >
                         <data></data><div class="photoheader">
-                            <div class="pad16 brdr_new_2" style="height:85px;">
+                            <div class="pad16 brdr_new" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
                                     <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Invalid</div>
@@ -21,41 +21,33 @@
                             <ul class="f16 fontthin white">
                                 <li class="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid </li>
 
-                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="6">
-                                    <div class="fullwid posrel">
-                                    The number does not exist <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-
                                 <li id = "reasonCodeOption" class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
                                 	<div class="fullwid posrel">
                                 		Switched off / Not reachable
-                                		 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                		<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="2">
                                 	<div class="fullwid posrel">
                                 	Not an account holder's phone
-                                	 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
+                                	<div class="fullwid posrel">
+                                	 Already married / engaged<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
 
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
-                                    <div class="fullwid posrel">
-                                    Not picking up <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-
-
-                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
                                 	<div class="fullwid posrel">
-                                	 Already married / engaged <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	Not picking up<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
 
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" id="js-otherInvalidReasons">
                                 	<div class="fullwid posrel">
-                                	Other reasons (please specify) <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	Other reasons (please specify)<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
                             </ul>
@@ -73,10 +65,10 @@
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
                         <div class="photoheader">
-                            <div class="pad16 brdr_new_2" style="height:85px;">
+                            <div class="pad16 brdr_new" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportAbuse" class="srp_box3 abs_c" src="">
-                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report as Fake/Spam</div>
+                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Abuse</div>
                                     <div id="savedSearchIcon" class="posabs " style="top:18px;right: 0;" onclick="hideReportAbuse()">
                                         <div class="posrel"> <i class="mainsp com_cross"></i>
                                         </div>
@@ -90,101 +82,38 @@
                         <div class="selectOptions reportAbuseScreen fl" id="js-reportAbuseMainScreen" style="height:100%;">
                             <i class="mainsp arow_new dispibl"></i>
                             <ul class="f16 fontthin white">
-                                <li class="white fullwid dispibl dashedBorder pad18">Let Jeevansathi know what is wrong with this profile. This message will NOT be sent to the reported profile.</li>
+                                <li class="white fullwid dispibl dashedBorder pad18">Please tell us why you are reporting this profile </li>
 
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt1">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
                                 	<div class="fullwid posrel">
-                                		One or more of Profile Details are incorrect
-                                		 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                		Looks like fake profile
+                                		<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt2">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
                                 	<div class="fullwid posrel">
-                                	Photo on profile doesn't belong to the person
-                                	 <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	Inappropriate content
+                                	<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
-                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt3">
+                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid">
                                 	<div class="fullwid posrel">
-                                	User is using abusive/indecent language <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	Spam<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
-                                </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt4">
-                                    <div class="fullwid posrel">
-                                        User is stalking me with messages/calls
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt5">
-                                    <div class="fullwid posrel">
-                                        User is asking for money
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt6">
-                                    <div class="fullwid posrel">
-                                        User has no intent to marry
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt7">
-                                    <div class="fullwid posrel">
-                                        User is already married / engaged
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "notOpen">
-                                    <div class="fullwid posrel">
-                                        User is not picking up phone calls
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                 </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt9">
-                                    <div class="fullwid posrel">
-                                        Person on Phone denied owning this profile
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                 </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "notOpen">
-                                    <div class="fullwid posrel">
-                                        User's phone is switched off/not reachable
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
-                                    </div>
-                                </li>
-                                 </li>
-                                                                <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id = "opt11">
-                                    <div class="fullwid posrel">
-                                        User's phone is invalid
-                                         <i class="RAcorrectImg dispnone vpro_sprite vpro_correct" ></i>
-                                    </div>
                                 </li>
                                 <li class="reportAbuseOption dispibl dashedBorder pad3015 fullwid" id="js-otherReasons">
                                 	<div class="fullwid posrel">
-                                	Other reasons (please specify) <i class="RAcorrectImg dispnone vpro_sprite vpro_correct"></i>
+                                	Other reasons (please specify)<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
                             </ul>
                         </div>
                         <div class="reportAbuseScreen">
-                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Please elaborate further in your own words about the issue. Please be as detailed as possible...."></textarea>
-
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
                         </div>
-                          <div id="attachDiv" style="overflow: auto; right:0px" class="brdr23 white posabs btmo fullwid pad3 dn">
-                            <div id="attachTitle">
-                                <i class="reportIcon atachIcon"></i>
-                                <span>Attach Screenshot</span>
-                            </div>
-                            
-                            <div id="photoDiv" >
-                            </div>
-                            
-                        </div>  
                         </div>
-                        
                         <div class="posfix fullwid scrollhid pos1_c1">
-                            <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report as Fake/Spam</div>
+                            <div id="reportAbuseSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Abuse</div>
                         </div>
                         </div>
                 </div>
@@ -268,7 +197,7 @@
 				<div class="fl white">
 					<div class=" f14 lh30 opa50">Mobile no </div>
 					<div class="f16 forHide" id="mobileVal" style="display:none"> </div> 
-					<div class="pb20 forHide" id="mobileValBlur" style="display:none;"><div class="fontreg" style="text-shadow: 0 0 12px white;color:transparent;font-size:26px;">+91 987654321</div> </div>
+					<div class="pb20 forHide" id="mobileValBlur" style="display:none;"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
 				<div id="mobileIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i  class="mainsp srp_phnicon" ></i></a></div>
@@ -293,7 +222,7 @@
 				<div class="fl white">
 					<div class=" f14 lh30 opa50" >Landline no</div>
 					<div class="f16 forHide" id="landlineVal" style="display:none"> </div>
-					<div class="pb20" id="landlineValBlur" style="display:none"><div class="fontreg" style="text-shadow: 0 0 12px white;color:transparent;font-size:26px;">+91 987654321</div> </div>
+					<div class="pb20" id="landlineValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
 				<div id ="landlineIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i class="mainsp srp_phnicon"></i></a></div>
@@ -305,28 +234,18 @@
 				<div class="fl white">
 					<div class=" f14 lh30 opa50">Alternate no</div>
 					<div class="f16 forHide" id="alternateVal" style="display:none"></div>
-					<div class="pb20 forHide" id="alternateValBlur" style="display:none"><div class="fontreg" style="text-shadow: 0 0 12px white;color:transparent;font-size:26px;">+91 987654321</div> </div>
+					<div class="pb20 forHide" id="alternateValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
 				<div id ="alterIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i class="mainsp srp_phnicon"></i></a></div><div class="clr"></div>
 			</div>
 			<!--end:Alternate no.-->
-			<!--start:mobile no.-->
-                        <div class="pt15 forHide" id="relationshipManager" style="display:none">
-                                <div class="fl white">
-                                        <div class=" f14 lh30 opa50">Relationship manager's phone no</div>
-                                        <div class="f16 forHide" id="relationshipManagerVal" style="display:none"></div>
-                                        <div></div>
-                                </div>
-                                <div id ="relationshipManagerIcon" class="fr pt15 forHide" style="display:none;"><a href=""><i class="mainsp srp_phnicon"></i></a></div><div class="clr"></div>
-                        </div>
-                        <!--end:Alternate no.-->
 			<!--start:Email-->
 			<div class="pt15 forHide" id="email" style="display:none">
 				<div class="fl white">
 					<div class=" f14 lh30 opa50">Email</div>
 					<div class="f16 forHide" id="emailVal" style="display:none"></div>
-					<div class="pb20 forHide" id="emailValBlur" style="display:none"><div class="fontreg" style="text-shadow: 0 0 12px white;color:transparent;font-size:26px;">+91 987654321</div> </div>
+					<div class="pb20 forHide" id="emailValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
 				<div class="fr pt15 forHide" id="msgIcon" style="display:none;"><a href=""><i  class="mainsp srp_msg1" ></i></a></div>
@@ -352,43 +271,7 @@
 		<!--Footer section ends here-->
 
 	</div>
-<img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
-</div>
-<div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
-    <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
-    <div class="fullheight fullwid layerOpa posrel" style="overflow:auto;">
-        <div class="memOverlay app_clrw" style="padding-bottom:50px">
-            <div class="txtc">
-                <div id="photoIDDiv" class="photoDiv">
-
-                </div>
-                <div class="pad2 f16 fontlig" id="newErrMsg"></div>
-                <div class="pad20 f16 fontlig mt15" id="membershipheading"></div>
-                <ul class=" memList f13 fontlig">
-                    <li class="tick pad21" id="subheading1"></li>
-                    <li class="tick pad21" id="subheading2"></li>
-                    <li class="tick pad21" id="subheading3"></li>
-                </ul>
-                <div id="MembershipOfferExists" style="display: none">
-                    <div class="pad45_0 f16 fontlig" id="membershipOfferMsg1"></div>
-                    <div class="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
-                </div>
-
-            <div class="f16 fontlig" id="LowestOffer" style="display: none">Lowest Membership starts @<del id="oldPrice" style="display: none"></del>&nbsp;<span id="currency"></span>&nbsp;<span id="newPrice"></span></div>
-            </div>
- 
-        </div>
-        
-    </div>
-    <div id="footerDiv" class="posfix fullwid btmo" style="background:black">
-            <a href="#" id="skipLayer" class="f16 fontmed app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
-            <div class="bg7">
-
-            <a href="#" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white"></a>
-            </div>
-    </div> 
-
-
+	<img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
 </div>
 
 <!-- start :Write Message Overlay -->

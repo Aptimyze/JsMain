@@ -8,11 +8,11 @@
 <div id="callOvrOne" style="display:none;">
 	<div class="tapoverlay posfix"></div>
 	<div id="callOvrOneInnerDiv" class="posrel txtc fontlig bg4 fullwid ~if $pageType neq 'membership'`js-rcbOverlay~/if`" style="z-index:110;">
-		<div id="topHelpPhoneNumber" class="f22 ~if $data.device eq 'Android_app' && $appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` pt30"><a style="cursor:pointer; color:~if $data.device eq 'Android_app' && $appVersion le VariableParams::$androidAppVersionForMaterial`#8d1316~else`#d9475c~/if` !important;"href="tel:~$data.topHelp.value`">~$data.topHelp.phone_number`</a></div>
+		<div id="topHelpPhoneNumber" class="f22 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` pt30"><a style="cursor:pointer; color:~if $data.device eq 'Android_app'`#8d1316~else`#d9475c~/if` !important;"href="tel:~$data.topHelp.value`">~$data.topHelp.phone_number`</a></div>
 		<div id="topHelpCallText" class="f14 color13 pt15">~$data.topHelp.call_text`</div>
 		~if $profileid`
 		<div id="topHelpOrText" class="f13 color1 pad2">~$data.topHelp.or_text`</div>
-		<div id="reqCallBack" style="cursor:pointer;"class="f18 ~if $data.device eq 'Android_app' && $appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` pb20">~$data.topHelp.request_callback`</div>
+		<div id="reqCallBack" style="cursor:pointer;"class="f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` pb20">~$data.topHelp.request_callback`</div>
 		~else`
 		<div class="pb20"></div>
 		~/if`
@@ -27,7 +27,7 @@
 			<div class="f14 color13"><i class="mainsp mem_coma"></i>
 				<span id="reqCallBackMessage"></span>				
 			</div>
-      <div id="closeOvr2" class="f14 txtr pt10 ~if $data.device eq 'Android_app' && $appVersion le VariableParams::$androidAppVersionForMaterial`~$data.device`_color2~else`color2~/if` cursp" >Close</div>
+      <div id="closeOvr2" class="f14 txtr pt10 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` cursp" >Close</div>
 		</div>
 	</div>
 </div>
@@ -59,7 +59,7 @@
     ~if sfContext::getInstance()->getRequest()->getParameter('showRCBForCAL') eq '1'`
         rcbForCAL = 'RCB_CAL';
     ~/if`
-		url ="/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
+		url ="~sfConfig::get('app_site_url')`/api/v3/membership/membershipDetails?" + paramStr + rcbForCAL;
     var rcbResponse = $('#reqCallBack').attr('data-rcbResponse');
     if(typeof rcbResponse != "undefined"){
       url += '&rcbResponse='+ rcbResponse;

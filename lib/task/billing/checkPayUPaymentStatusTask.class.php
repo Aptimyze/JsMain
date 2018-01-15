@@ -51,9 +51,8 @@ EOF;
         //$billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
 
         $timeCheck = date('Y-m-d H:i:s', time() - 12*2600);
-        $timeMax = date('Y-m-d H:i:s',time()-60*10);
-        //JSC-3055: While fetching from orders table, dont fetch last 5-10 min entries as they might still pe on PG and if the cron picks them they will be marked success twice.
-        $ordersArray = $billingOrdersObj->getFailedPayUOrders($timeCheck,$timeMax);
+
+        $ordersArray = $billingOrdersObj->getFailedPayUOrders($timeCheck);
 
         if (is_array($ordersArray) && !empty($ordersArray) && count($ordersArray) > 0) {
             

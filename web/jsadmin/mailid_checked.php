@@ -6,8 +6,7 @@ if(authenticated($cid))
 {
 	if($clearlist="YES")
 	{
-		//$ddl=connect_ddl();
-		$ddl=connect_db();
+		$ddl=connect_ddl();
 		$sql = "TRUNCATE CHECK_MAILID";
     $result = mysql_query_decide($sql,$ddl) or die();
     mysql_close($ddl); 

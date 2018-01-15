@@ -19,6 +19,6 @@ class LastSentMessage{
 	{
 		$lastSentMessageObj = new NEWJS_LASTSENTMESSAGE();
 		$lastSentMessage = $lastSentMessageObj->getLastSentMessage($profileid,$type);
-		return html_entity_decode($lastSentMessage);
+		return $lastSentMessage;
 	}
 }

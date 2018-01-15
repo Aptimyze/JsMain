@@ -20,11 +20,11 @@
             <div class="fontlig pb15" id="vpro_native_place">~$arrData.native_place`</div>
         ~/if`
         ~if isset($arrData.father_occ)`
-            <div class="f12 color1">Father's Occupation</div>
+            <div class="f12 color1">Father is</div>
             <div class="fontlig pb15" id="vpro_father_occ">~$arrData.father_occ`</div>
         ~/if`
         ~if isset($arrData.mother_occ)`
-            <div class="f12 color1">Mother's Occupation</div>
+            <div class="f12 color1">Mother is</div>
             <div class="fontlig pb15" id="vpro_mother_occ">~$arrData.mother_occ`</div>
         ~/if`
         ~if isset($arrData.sibling_info)`

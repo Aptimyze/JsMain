@@ -35,22 +35,12 @@ class JeevansathiGatewayManager
         $memHandlerObj = new MembershipHandler();
         $memObj->setProfileid($apiParams->profileid);
         $apiParams->track_memberships = trim($apiParams->track_memberships, ",");
-        $payment                      = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
-        
+        $payment                      = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode);
         $total                        = $payment['total'];
         $service_main                 = $payment['service_str'];
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
-
-        if($apiParams->currency == "DOL" && $apiParams->usdTOinr == 1){
-            $usdTOinr = 'Y';
-        }else{
-            $usdTOinr = 'N';
-        }
-
-        $membershipUpgrade = $apiParams->upgradeMem;
-        $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade,$usdTOinr);
-
+        $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYU, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
@@ -158,20 +148,12 @@ class JeevansathiGatewayManager
         $memObj        = new Membership;
         $memHandlerObj = new MembershipHandler();
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiObj->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiObj->paymode, $apiParams->device, $apiParams->couponCode);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-
-        if($apiParams->currency == "DOL" && $apiParams->usdTOinr == 1){
-            $usdTOinr = 'Y';
-        }else{
-            $usdTOinr = 'N';
-        }
-
-        $membershipUpgrade = $apiParams->upgradeMem;
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade,$usdTOinr);
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : CCAVENUE, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
@@ -196,7 +178,7 @@ class JeevansathiGatewayManager
         } else {
             $apiObj->firstname = "";
         }
-        if ($apiParams->currency == "DOL" || $apiParams->usdTOinr) {
+        if ($apiParams->currency == "DOL") {
             $apiObj->address       = "";
             $apiObj->city_country  = "";
             $apiObj->city_order    = "";
@@ -254,14 +236,12 @@ class JeevansathiGatewayManager
 
         $memObj = new Membership;
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-       
-        $membershipUpgrade = $apiParams->upgradeMem;
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYTM, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
@@ -320,14 +300,12 @@ class JeevansathiGatewayManager
 
         $memObj = new Membership;
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-       
-        $membershipUpgrade = $apiParams->upgradeMem;
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYPAL, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");

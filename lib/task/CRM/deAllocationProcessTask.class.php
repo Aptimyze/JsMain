@@ -27,8 +27,6 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-        ini_set('max_execution_time',0);
-        ini_set('memory_limit',-1);
 	sfContext::createInstance($this->configuration);
 	$processObj=new PROCESS();
         $processObj->setProcessName("DeAllocation");
@@ -85,6 +83,5 @@ EOF;
 	
 		echo $msg;
         }
-        $agentBucketHandlerObj->deleteFromLoggingClientInfo();
   }
 }

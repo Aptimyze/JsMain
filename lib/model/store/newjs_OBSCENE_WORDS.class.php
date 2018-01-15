@@ -14,23 +14,19 @@ class NEWJS_OBSCENE_WORDS extends TABLE{
         }
 		
 		
-		public function getObsceneWord($order = "")
+		public function getObsceneWord()
         {
 			try 
 			{
-				$sql = "SELECT SQL_CACHE WORD FROM OBSCENE_WORDS";
-				if ($order == "ASC")
-					$sql = $sql." ORDER BY WORD ASC";
-				else if ($order == "DESC")
-					$sql = $sql." ORDER BY WORD DESC";
-				$prep=$this->db->prepare($sql);
-				$prep->execute();
-				while($res = $prep->fetch(PDO::FETCH_ASSOC))
-				{
-					$result[]= $res['WORD'];
-				}
-				
-				return $result; 
+					$sql="SELECT SQL_CACHE WORD FROM OBSCENE_WORDS";
+					$prep=$this->db->prepare($sql);
+					$prep->execute();
+					while($res = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$result[]= $res['WORD'];
+					}
+					
+					return $result; 
 			}	
 			catch(PDOException $e)
 			{
@@ -39,76 +35,6 @@ class NEWJS_OBSCENE_WORDS extends TABLE{
 			}
 		}
 		
-		public function isPresentObsceneWord($word)
-		{
-			try
-			{
-				//$trimmedWord = strtolower(addslashes(stripslashes($word)));
-				$trimmedWord = strtolower(stripslashes($word));
-
-				$sql = "SELECT COUNT(*) AS COUNT FROM newjs.OBSCENE_WORDS WHERE WORD = (:WORD) OR WORD = (:TRIMMED_WORD)";
-				$prep=$this->db->prepare($sql);
-				$prep->bindValue(":WORD",$word,PDO::PARAM_STR);
-				$prep->bindValue(":TRIMMED_WORD",$trimmedWord,PDO::PARAM_STR);
-				$prep->execute();
-				$res = $prep->fetch(PDO::FETCH_ASSOC);
-				if($res['COUNT'] > 0)
-					return true;
-				return false;
-			}
-			catch(PDOException $e)
-			{
-				/*** echo the sql statement and error message ***/
-				throw new jsException($e);
-			}
-		}
-		
-		public function addObsceneWord($word)
-		{
-			try
-			{
-				//$word = strtolower(addslashes(stripslashes($word)));
-				$word = strtolower(stripslashes($word));
-
-				$sql="INSERT INTO newjs.OBSCENE_WORDS (WORD) VALUES (:WORD)";
-				$prep=$this->db->prepare($sql);
-				$prep->bindValue(":WORD",$word,PDO::PARAM_STR);
-				$prep->execute();
-				return $this->db->lastInsertId();
-			}
-			catch(PDOException $e)
-			{
-				/*** echo the sql statement and error message ***/
-				throw new jsException($e);
-			}
-		}
-		
-		public function deleteObsceneWord($word)
-		{
-			/*
-			 * Input - a\\a/a\'a\\\'a
-			 * DB - a\\\\a/a\\\'a\\\\\\\'a
-			 * DELETE FROM OBSCENE_WORDS WHERE 
-			 * WORD = ('a\\\\\\\\\\\\\\\\a/a\\\\\\\\\\\\\\\'a\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'a') 
-			 * OR WORD = ('a\\\\\\\\\\\\\\\\a/a\\\\\\\\\\\\\\\'a\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'a')
-			 */
-			try
-			{
-				//$trimmedWord = strtolower(addslashes(stripslashes($word)));
-				$trimmedWord = strtolower(stripslashes($word));
-				
-				$sql="DELETE FROM newjs.OBSCENE_WORDS WHERE WORD = (:WORD) OR WORD = (:TRIMMED_WORD) ";
-				$prep=$this->db->prepare($sql);
-				$prep->bindValue(":WORD",$word,PDO::PARAM_STR);
-				$prep->bindValue(":TRIMMED_WORD",$trimmedWord,PDO::PARAM_STR);
-				$prep->execute();
-			}
-			catch(PDOException $e)
-			{
-				/*** echo the sql statement and error message ***/
-				throw new jsException($e);
-			}
-		}
 		
 		
 		

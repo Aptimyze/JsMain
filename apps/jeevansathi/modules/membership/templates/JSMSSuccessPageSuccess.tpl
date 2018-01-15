@@ -88,12 +88,16 @@
     var winHeight = $(window).height();
     var continueHeight = $("#continueBtn").height();
     $('.rv2_bg1').css('height',(winHeight-continueHeight));
-    eraseCookie('backendLink');
     eraseCookie('backState');
     eraseCookie('mainMem');
     eraseCookie('mainMemDur');
     eraseCookie('selectedVas');
     eraseCookie('couponID');
   });
+  var username = "~$data.userDetails.USERNAME`";
+  var email = "~$data.userDetails.EMAIL`";
+  setTimeout(function(){
+    autoPopupFreshdesk(username,email);
+  }, 90000);
 </script>
 ~/if`

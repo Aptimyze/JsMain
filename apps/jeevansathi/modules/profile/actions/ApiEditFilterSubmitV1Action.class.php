@@ -39,7 +39,7 @@ class ApiEditFilterSubmitV1Action extends sfActions
 			{
         $apiResponseStatus = ResponseHandlerConfig::$FAILURE;
         try {
-          $dbFilter=new ProfileFilter();
+          $dbFilter=new NEWJS_FILTER();
           $bResult = $dbFilterArr=$dbFilter->updateRecord($this->loginProfile->getPROFILEID(),$filterArr);
           if(false === $bResult)
           {

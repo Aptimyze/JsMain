@@ -348,20 +348,11 @@ class crmUtility
 		$actualUrl  =JsConstants::$siteUrl;	
 	       
 	       	$tuCurl = curl_init();
+		//$uname=urlencode($username);
+        	//curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
 		curl_setopt($tuCurl, CURLOPT_URL,"$SITE_URL/operations.php/commoninterface/ShowProfileStats?cid=$cid&profileid=$profileid&curlReq=1&actualUrl=$actualUrl");
         	curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
-
-		// add header in curl Request
-		$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-		curl_setopt($tuCurl, CURLOPT_HEADER, $header);
-		curl_setopt($tuCurl, CURLOPT_USERAGENT,"JsInternal");
-
         	$tuData = curl_exec($tuCurl);
-
-                // remove header from curl Response 
-                $header_size = curl_getinfo($tuCurl, CURLINFO_HEADER_SIZE);
-                $tuData = substr($tuData, $header_size);
-
         	curl_close($tuCurl);
         	return $tuData;
 	}

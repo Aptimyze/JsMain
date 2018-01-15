@@ -186,12 +186,12 @@ function populate_service_type()
             array('name' => 'e-Ristha', 'value' => 'P'),
             array('name' => 'e-Value Pack', 'value' => 'C'),
             array('name' => 'e-Advantage Pack', 'value' => 'NCP'),
-            //array('name' => 'Matri Profile', 'value' => 'M'),
-            //array('name' => 'Super Saver with e-Rishta', 'value' => 'SC'),
-            //array('name' => '101 Membership', 'value' => 'HDO'),
-            //array('name' => 'e-Sathi Confidential', 'value' => 'ES'),
-            //array('name' => 'e-Sathi Classified', 'value' => 'ESP'),
-            //array('name' => 'JS Assisted', 'value' => 'ESJA'),
+            array('name' => 'Matri Profile', 'value' => 'M'),
+            array('name' => 'Super Saver with e-Rishta', 'value' => 'SC'),
+            array('name' => '101 Membership', 'value' => 'HDO'),
+            array('name' => 'e-Sathi Confidential', 'value' => 'ES'),
+            array('name' => 'e-Sathi Classified', 'value' => 'ESP'),
+            array('name' => 'JS Assisted', 'value' => 'ESJA'),
         );
     }
 

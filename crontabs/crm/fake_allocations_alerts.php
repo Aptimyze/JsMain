@@ -70,7 +70,7 @@
         else
                  $message_min="No fake allocations found on ".$yesterday.".";
 
-	$to = "anamika.singh@jeevansathi.com, bharat.vaswani@jeevansathi.com,rajeev.joshi@jeevansathi.com,rohan.mathur@jeevansathi.com,jstraining@Infoedge.com,sapna.sharma@jeevansathi.com,heena.arora@jeevansathi.com,mohammad.aalam@jeevansathi.com,amit.parashar@jeevansathi.com,ravi.kapur@jeevansathi.com";
+	$to = "anamika.singh@jeevansathi.com, bharat.vaswani@jeevansathi.com,rajeev.joshi@jeevansathi.com,rohan.mathur@jeevansathi.com,nishant.pandey@naukri.com,jstraining@Infoedge.com,sapna.sharma@jeevansathi.com,heena.arora@jeevansathi.com,mohammad.aalam@jeevansathi.com,amit.parashar@jeevansathi.com,ravi.kapur@jeevansathi.com";
         $from="From:vibhor.garg@jeevansathi.com";
 	$subject_day = "30 or more allocations taken by branch agent within a day";
 	$subject_min = "10 or more allocations taken by branch agent within 30 minutes";

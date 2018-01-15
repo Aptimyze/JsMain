@@ -280,9 +280,7 @@ class Scheduler extends SugarBean {
 //			}
 			curl_setopt($ch, CURLOPT_URL, JsConstants::$localHostIp.'/headdev/cronJob.php?id=82a9421a-9c60-111b-7212-4412394279e4'); // set url
 			curl_setopt($ch, CURLOPT_URL, JsConstants::$localHostIp.'/headdev/cronJob.php?id=82a9421a-9c60-111b-7212-4412394279e4');
-			$header[0] = "Accept: text/html,application/xhtml+xml,text/plain,application/xml,text/xml;q=0.9,image/webp,*/*;q=0.8";
-			curl_setopt($ch, CURLOPT_HEADER, $header);
-			curl_setopt($ch,CURLOPT_USERAGENT,"JsInternal");	
+
 			$result = curl_exec($ch);
 			$cInfo = curl_getinfo($ch);/* url,content_type,header_size,request_size,filetime,http_code,ssl_verify_result,total_time,namelookup_time,connect_time,pretransfer_time,size_upload,size_download,speed_download,speed_upload,download_content_length,upload_content_length,starttransfer_time,redirect_time */
 			curl_close($ch);

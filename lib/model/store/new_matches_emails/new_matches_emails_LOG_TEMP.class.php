@@ -47,15 +47,12 @@ class new_matches_emails_LOG_TEMP extends TABLE
 
         }
         
-        public function truncateTable($dailyCron=0)
+        public function truncateTable()
         {
                 try
                 {
-                        if($dailyCron == 1){
-                                $sql="TRUNCATE TABLE new_matches_emails.LOG_TEMP_DAILY";
-                        }else{
-                                $sql="TRUNCATE TABLE new_matches_emails.LOG_TEMP";
-                        }
+                      
+                        $sql="TRUNCATE TABLE new_matches_emails.LOG_TEMP";
                         $res = $this->db->prepare($sql);
                         $res->execute();
 		        return $result;
@@ -68,13 +65,10 @@ class new_matches_emails_LOG_TEMP extends TABLE
 
         }
         
-        public function insertLogRecords($receiverId, $userIds, $LogicLevel,$dailyCron=0){
+        public function insertLogRecords($receiverId, $userIds, $LogicLevel){
           $date=MailerConfigVariables::getNoOfDays();
-          if($dailyCron == 1){
-                $sql_log="INSERT INTO new_matches_emails.LOG_TEMP_DAILY (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
-          }else{
-                $sql_log="INSERT INTO new_matches_emails.LOG_TEMP (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
-          }
+          
+          $sql_log="INSERT INTO new_matches_emails.LOG_TEMP (RECEIVER,USER,DATE,LOGICLEVEL) VALUES ";
           $userCounter = 1;
           foreach($userIds as $userId){
             $sql_log .= "(:RECEIVER_ID,:USER_ID".$userCounter.",:DATE_VALUE,:LOGIC_LEVEL),";

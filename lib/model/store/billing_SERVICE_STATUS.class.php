@@ -25,27 +25,6 @@ class BILLING_SERVICE_STATUS extends TABLE {
 
     } 
 
-    public function getMaxExpiryExclusive($profileid,$billid=0){
-        try{
-            $sql="SELECT EXPIRY_DT AS EXP_DT,BILLID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND PROFILEID=:PROFILEID AND ACTIVE IN('E','Y') ";
-            if($billid != 0)
-                $sql.= " AND BILLID=:BILLID";
-            $sql.=" ORDER BY EXPIRY_DT DESC limit 1";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-            if($billid != 0)
-                $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-            $prep->execute();
-            if($result=$prep->fetch(PDO::FETCH_ASSOC))
-            {
-                return $result;
-            }
-            return ;
-        }catch(Exception $e){
-            throw new jsException($e);
-        }
-    }
-   
     public function getUpsellEligibleProfiles()
     {
         try
@@ -114,24 +93,6 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
-    
-    public function getExclusiveProfileForDates($expDate1){
-        try{
-            $sql="SELECT MAX(EXPIRY_DT) as EDATE,PROFILEID FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%X%' AND ACTIVE IN('Y') AND EXPIRY_DT>=:EXPDATE1 GROUP BY PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":EXPDATE1",$expDate1,PDO::PARAM_STR);
-            //$prep->bindValue(":EXPDATE2",$expDate2,PDO::PARAM_STR);
-            $prep->execute();
-            while($result=$prep->fetch(PDO::FETCH_ASSOC))
-            {
-                $profiles[$result['PROFILEID']]=$result['EDATE'];
-            }
-            return $profiles;
-        }catch(Exception $e){
-            throw new jsException($e);
-        }
-    }
-    
     public function getMaxExpiryProfilesForDates($expDate1,$expDate2)
     {
         try
@@ -458,7 +419,7 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-            $sql="SELECT EXPIRY_DT,SERVEFOR,SERVICEID,DATEDIFF(EXPIRY_DT,CURDATE()) AS DIFF,DATEDIFF(ACTIVATED_ON,CURDATE()) AS ACTIVE_DIFF,ACTIVATED_ON FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE<> 'N' ORDER BY EXPIRY_DT DESC LIMIT 1";
+            $sql="SELECT EXPIRY_DT,SERVEFOR,SERVICEID,DATEDIFF(EXPIRY_DT,CURDATE()) AS DIFF,ACTIVATED_ON FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE<> 'N' ORDER BY EXPIRY_DT DESC LIMIT 1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->execute();
@@ -744,18 +705,12 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-            
-            $serviceId =$serviceId."%";
-            $expiryDate =date("Y-m-d");
-            $expiryDate= date("Y-m-d", strtotime("$expiryDate - 15 days"));
-            $activatedDate=date("Y-m-d");
-            $activatedDate = date("Y-m-d", strtotime("$activatedDate- 15 days"));
-            //$sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
-            $sql = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS where (SERVICEID LIKE :SERVICEID AND ( (ACTIVATED_ON <:ACTIVATED_ON AND ACTIVE='Y')OR(EXPIRY_DT>:EXPIRY_DT AND ACTIVE='E')))" ;
+	    $serviceId =$serviceId."%";
+	    $expiryDate =date("Y-m-d");  	
+            $sql="SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE EXPIRY_DT>=:EXPIRY_DT AND SERVICEID LIKE :SERVICEID AND ACTIVE='Y'";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":EXPIRY_DT",$expiryDate,PDO::PARAM_STR);
-           $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);
-            $prep->bindValue(":ACTIVATED_ON",$activatedDate,PDO::PARAM_STR);
+	    $prep->bindValue(":SERVICEID",$serviceId,PDO::PARAM_STR);	
             $prep->execute();
             while($res = $prep->fetch(PDO::FETCH_ASSOC))
                 $profiles[] = $res['PROFILEID'];
@@ -781,25 +736,6 @@ class BILLING_SERVICE_STATUS extends TABLE {
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC)){
                 $result = $row;
-            }
-            return $result;
-        } catch (Exception $ex) {
-            throw new jsException($ex);
-        }
-    }
-
-    public function getCurrentlyPaidProfiles($profileidArr){
-        try{
-            if(is_array($profileidArr)){
-                $profileIdStr = implode(",", $profileidArr);
-                $sql = "SELECT DISTINCT PROFILEID from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileIdStr) AND ACTIVE = :ACTIVE AND ACTIVATED = :ACTIVATED AND SERVEFOR LIKE '%F%'";
-                $prep = $this->db->prepare($sql);
-                $prep->bindValue(":ACTIVATED", 'Y', PDO::PARAM_STR);
-                $prep->bindValue(":ACTIVE", 'Y', PDO::PARAM_STR);
-                $prep->execute();
-                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                    $result[] = $row['PROFILEID'];
-                }
             }
             return $result;
         } catch (Exception $ex) {
@@ -1019,92 +955,4 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
-
-    public function getEligibleProfileForRBHandling($profileid,$serviceid,$startDate) {
-         try{
-             $sql = "SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID = :profileid AND ACTIVATED_ON >= :startDate AND ACTIVATED = :status AND ACTIVE = :status AND SERVICEID LIKE :serviceid ;" ;
- 
-             $serviceid = "%".$serviceid."%";
-             $status = "Y";
- 
-             $prep = $this->db->prepare($sql);
-             $prep->bindValue(':profileid',$profileid,PDO::PARAM_INT);
-             $prep->bindValue(':startDate',$startDate,PDO::PARAM_STR);
-             $prep->bindValue(':status',$status,PDO::PARAM_STR);
-             $prep->bindValue(':serviceid',$serviceid,PDO::PARAM_STR);
-             $prep->execute();
-             $prep->setFetchMode(PDO::FETCH_ASSOC);
-             
-             while($row = $prep->fetch()){
-                 $result[] = $row;
-             }
-             return $result;
-         } catch (Exception $ex){
-             throw new jsException($ex);
-         }
-     }
-    public function getMaxExpirydForBillid($billid)
-    {
-        try
-        {
-            $sql  = "SELECT EXPIRY_DT FROM billing.SERVICE_STATUS WHERE BILLID=:BILLID AND SERVEFOR LIKE '%F%' LIMIT 1";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
-            $prep->execute();
-            if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $output = $row['EXPIRY_DT'];
-            }
-            return $output;
-        } catch (PDOException $e) {
-            throw new jsException($e);
-        }
-    }
-
-    public function fetchProfilesWithUnlimitedMembership($profileID){
-        try{
-            $sql ="SELECT ID, BILLID, PROFILEID, SERVICEID FROM billing.SERVICE_STATUS WHERE PROFILEID = :PROFILEID AND SERVICEID LIKE :SERVICEID AND SERVEFOR LIKE :SERVEFOR ORDER BY ID LIMIT 1";
-            $serviceID = "%L%";
-            $serveFor = "%F%";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
-            $prep->bindValue(":SERVICEID",$serviceID,PDO::PARAM_STR);
-            $prep->bindValue(":SERVEFOR",$serveFor,PDO::PARAM_STR);
-            $prep->execute();
-            $prep->setFetchMode(PDO::FETCH_ASSOC);
-            while($row = $prep->fetch()){
-                $result[] = $row;
-            }
-            return $result;
-        }catch(Exception $e){
-            throw new jsException($e);
-        }
-    }
-
-    public function changeUnlimitedMembershipStatus($id,$status){
-        try{
-            $sql = "UPDATE billing.SERVICE_STATUS SET ACTIVE = :STATUS, ACTIVATED = :STATUS WHERE ID = :ID LIMIT 1 ";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":STATUS",$status,PDO::PARAM_STR);
-            $prep->bindValue(":ID",$id,PDO::PARAM_INT);
-            $prep->execute();
-        }catch(Exception $e){
-            throw new jsException($e);
-        }
-    }
-    
-    public function getExpireCount($profileid){
-        try{
-            $sql = "SELECT COUNT(*) as count from billing.SERVICE_STATUS where PROFILEID = :PROFILEID and ACTIVE IN ('Y','E') AND SERVEFOR LIKE '%F%'";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-            $prep->execute();
-            if($row = $prep->fetch(PDO::FETCH_ASSOC))
-                return $row["count"];
-                else
-                    return 0;
-        }catch(Exception $e){
-            throw new jsException($e);
-        }
-    }
 }
-

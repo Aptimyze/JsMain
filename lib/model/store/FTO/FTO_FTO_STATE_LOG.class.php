@@ -1,4 +1,4 @@
-<?php
+<?
 class FTO_FTO_STATE_LOG extends TABLE
 {
         /**
@@ -348,9 +348,9 @@ class FTO_FTO_STATE_LOG extends TABLE
 				$output[] = $row;
 			}
 			unset($res);
-						$objSt = parent::__construct('newjs_master');
+						$ddl_obj = parent::__construct('newjs_masterDDL');
                         $sql2 = "DROP TABLE test.TEMP_MIS3";
-                        $res = $objSt->db->prepare($sql2);
+                        $res = $ddl_obj->db->prepare($sql2);
                         $res->execute();
 		}
 		catch(PDOException $e)

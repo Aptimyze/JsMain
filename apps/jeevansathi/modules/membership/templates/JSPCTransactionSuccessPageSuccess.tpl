@@ -153,7 +153,6 @@
     $(window).load(function() {
         var cardType = readCookie('paymentMode');
         $("#cardTypeValue").text(setCardTypeField(cardType));
-        eraseCookie('backendLink');
         eraseCookie('selectedVas');
         eraseCookie('mainMemDur');
         eraseCookie('mainMem');
