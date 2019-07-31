@@ -1,0 +1,33 @@
+{
+    "LoginPage":
+    {
+        "title": "Matrimony, Marriage, Matrimonial Sites, Match Making",
+        "description": "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com"
+    },
+    "MyjsPage":
+    {
+        "title" : "My Jeevansathi - Jeevansathi.com"
+    },
+    "ProfilePage":
+    {
+        "title" : "My Jeevansathi - Jeevansathi.com"
+    },
+    "ProfileNotFound":
+    {
+        "title" : "Profile Not Found"
+    },
+    "topSearchBand":
+    {   
+        "canonical": "https://www.jeevansathi.com/search/topSearchBand?isMobile=Y",
+        "title": "Brides & Grooms Matrimony Profiles Search - Jeevansathi.com",
+        "description": "Matrimony Profiles Search on leading Indian matrimony site, Jeevansathi.com. Search brides and grooms by caste and community & Register FREE!"
+    },
+    "MobilePhotoAlbum":
+    {
+        "canoncial": "https://www.jeevansathi.com/social/MobilePhotoAlbum",
+        "title": "Brides / Grooms Photo Album – Jeevansathi.com",
+        "description": "Brides / Grooms Photo Album on most trusted Indian matrimony site Jeevansathi.com. 3-level profile check, Search by caste and community, Privacy control & Register FREE! ‘Be Found’ Now"
+    }
+
+
+}

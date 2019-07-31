@@ -1,0 +1,22 @@
+.sta_hgt1{height: 45px}
+.sta_p1{padding: 7px 16px 0}
+.sta_pt1{top:70px;position: relative;}
+.sta_mt5{margin-top: 5px}
+.rightIcon {
+    background-position: -323px -260px;
+    width: 28px;
+    height: 35px;
+}
+.mailIcon {
+    background-position: -325px -296px;
+    width: 28px;
+    height: 35px;
+}
+.faceIcon {
+    background-position: -328px -183px;
+    width: 52px;
+    height: 38px;
+}
+.sta_c1{position:relative; top:45px; line-height: 30px; padding: 5px;}
+.sta_lh1{line-height: 30px;padding:5px}
+.sta_vt{vertical-align: top}

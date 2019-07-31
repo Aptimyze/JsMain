@@ -1,0 +1,148 @@
+.savsrc-icon1 {
+    background-position: -130px -185px;
+    width: 23px;
+    height: 21px;
+}
+
+.savsrc-sp {
+    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.roundIcon {
+	position: relative;
+    margin-top: -40px;
+    margin-left: 20px;
+	width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 5px;
+    right: 8px;
+}
+.defaultTab {
+	width: 50%;
+	display: inline-block;	 
+	padding: 5px 0;
+	font-size: 13px;
+	line-height: 30px;
+	color: #d9475c;
+}
+.selectedTab {
+	color: #fff;
+	background: #d9475c;
+}
+.showMoreDiv {
+    height: 0px;
+    transition:.3s ease;
+    webkit-transition:.3s ease;
+}
+.openShowMoreDiv {
+    height: 255px;
+}
+.savsrc-icon2 {
+    background-position: -130px -206px;
+    width: 23px;
+    height: 20px;
+}
+.savsrc-sp {
+    background-image: url(https://static.jeevansathi.com/images/jsms/profile/viewProfile/viewpro_sprite_new.png);
+    background-repeat: no-repeat;
+}
+.savsrc-colr1 {
+    color: #999;
+}
+.ce_top1 {
+    top: 0;
+}
+.ce_z101 {
+    z-index: 101;
+}
+.bgColorBlack
+{
+    background-color: #000;
+}
+.sacsrc-brdr1 {
+    border-bottom: 1px solid #181a1d;
+}
+.savsrc-pos4 {
+    top: 0;
+    right: 0;
+}
+.savsrc-icon3 {
+    background-position: -162px -227px;
+    width: 20px;
+    height: 23px;
+}
+.savsrc-vtop {
+    vertical-align: top;
+}
+.savsrc-icon4 {
+    width: 39px;
+    height: 42px;
+    background-position: -50px -245px;
+}
+.okBtn
+{
+    position: absolute;
+    overflow: hidden;
+    bottom: 0px;
+    height: 52px;
+    width: 100%;
+}
+.zindex110
+{
+    z-index:110;
+}
+.border0 {
+    border: 0px;
+}
+.btmo {
+    bottom: 0px;
+}
+.undo{opacity: 0.4;filter: alpha(opacity=40);}
+.namesav{text-decoration:line-through;}
+.overflowAuto{overflow-y: auto;width:100%;height: 100%}
+.doublearw {
+    background-position: -173px -82px;
+    width: 23px;
+    height: 23px;
+}
+.srp_srtrelinact{background-position: -237px -238px;
+width: 31px;
+height: 28px;}
+.srp_srtdateact{background-position: -243px -179px;
+width: 29px;
+height: 28px;}
+.srp_overlay {
+    background: rgb(0,0,0);
+    opacity: .94;
+    filter: alpha(opacity=90);
+    -moz-opacity: .9;
+    z-index: 101;
+    overflow-x:none;
+    overflow-y:auto;
+    width:100%;
+    height:100%
+}
+.srp_srtdateinact{background-position: -243px -206px;
+width: 29px;
+height: 28px;}
+.srp_srtrelact{background-position: -237px -268px;
+width: 31px;
+height: 28px;}
+.savsrc-pos1{top:18px; right:0}
+.ce_z106 {
+    z-index: 106;
+}
+@media (min-width: 321px) {
+    .widrsp1{width:33%;}
+    .widrsp2{ width:65%;}
+}
+.sclick_colr1
+{
+    color:#666;
+}
+.comH_pos2
+{
+    bottom: 20px;
+}
