@@ -1,0 +1,69 @@
+#relationShip {
+  .arow2 {
+    background-position: -213px -180px;
+  }
+
+  .logoPos {
+    width: 160px;
+    height: 55px;
+  }
+
+  .regis_logo {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/regjs_logo.svg);
+    background-repeat: no-repeat;
+  }
+
+  .regis_cover {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/reg_cover.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 303px;
+  }
+
+  .ptreg90 {
+    padding-top: 90px;
+  }
+
+  .ltSpacing {
+    letter-spacing: 1px;
+  }
+
+  .edges {
+    height: 1px;
+    width: 10px;
+    margin-bottom: 4px;
+
+    &-left {
+      margin-left: 6px;
+    }
+
+    &-right {
+      margin-right: 6px;
+    }
+  }
+
+  .bg4 {
+    background-color: #fff;
+  }
+
+  .color2 {
+    color: #d9475c;
+  }
+
+  .colrReg {
+    color: #55616D;
+  }
+
+  .bgRegCover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .colorGDark {
+    color: #14202B;
+  }
+
+  .iconContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

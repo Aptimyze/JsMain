@@ -1,0 +1,69 @@
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0);
+    }
+    50% {
+        box-shadow: 0 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
+    }
+}
+
+.md-radio {
+    margin: 8px 0;
+    width: 40%;
+}
+
+.md-radio.md-radio-inline {
+    display: inline-block;
+}
+
+.md-radio input[type="radio"] {
+    display: none;
+}
+
+.md-radio input[type="radio"]:checked + label:before {
+    border-color: #d9475c;
+    animation: ripple 0.2s linear forwards;
+}
+
+.md-radio input[type="radio"]:checked + label:after {
+    transform: scale(1);
+}
+
+.md-radio label {
+    display: inline-block;
+    height: 20px;
+    position: relative;
+    padding: 3px 36px;
+    margin-bottom: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    margin-top: 0;
+}
+
+.md-radio label:before, .md-radio label:after {
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    transition: all .3s ease;
+    transition-property: transform, border-color;
+}
+
+.md-radio label:before {
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 0, 0, 0.54);
+}
+
+.md-radio label:after {
+    top: 6px;
+    left: 6px;
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    background: #d9475c;
+}

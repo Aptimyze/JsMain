@@ -1,0 +1,175 @@
+#whiteoverlay .slick-slider button.slick-prev {
+    left: 10%;
+    z-index: 10;
+    top: 60%
+}
+
+#whiteoverlay .slick-slider button.slick-next {
+    right: 10%;
+    z-index: 10;
+    top: 60%
+}
+
+#whiteoverlay .slick-slider ul.slick-dots {
+    bottom: 6%;
+    width: 100%;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+}
+
+#whiteoverlay .slick-slider ul.slick-dots li.slick-active button:before {
+    bottom: 6%;
+    width: 100%;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+    background-color: #fff;
+    height: 9px;
+    width: 9px;
+}
+
+#whiteoverlay .slick-slider ul.slick-dots button:before {
+    height: 8px;
+    width: 8px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #bbb;
+}
+
+
+.top55 {
+    top: 55px;
+}
+
+.width85p {
+    width: 85%;
+}
+
+.vc_icons1 {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/about_me.svg);
+}
+
+.vc_icons2 {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/Hobbies.svg);
+}
+
+.vc_icons3 {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/Career_achievements.svg);
+}
+
+.vc_icons4 {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/Parter_You_are_looking_for.svg);
+}
+
+.imgWidHeight {
+    width: 220px;
+    height: 166px;
+}
+
+.fourSh {
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .65);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, .65);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .65);
+}
+
+.vc_hgt1 {
+    min-height: 340px;
+}
+
+.wrapIni {
+    white-space: initial;
+}
+
+.vc_gap2 {
+    padding: 50px 0 40px 0;
+}
+
+.color7 {
+    color: #34495e;
+}
+
+.vc_close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 22px;
+    height: 22px;
+    z-index: 100;
+}
+
+.vc_close:before {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+
+.vc_close:before, .vc_close:after {
+    position: absolute;
+    left: 10px;
+    content: ' ';
+    height: 22px;
+    width: 2px;
+    background-color: #34495E;
+}
+
+.vc_close:after {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+
+.height440 {
+    height: 460px;
+}
+
+.vc_gap3 {
+    padding: 30px 0 20px 0;
+}
+
+.vc_lh1 {
+    line-height: 21px;
+}
+
+.padlr28 {
+    padding: 0px 28px;
+}
+
+#txtAbtMe::placeholder {
+    color: #a8a7a7;
+}
+
+.abtloader {
+    position: fixed;
+    width: 100vw;
+    height: 0%;
+}
+
+.abtloader.simple {
+    width: 100vw;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    /* left: 0; */
+}
+
+.abtloader.simple.dark {
+    opacity: .4;
+    background: black
+}
+
+.abtloader.simple.dark.loaderimage {
+    background-image: url(https://static.jeevansathi.com/images/jsms/commonImg/loader.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#txtAbtFamily {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+#aboutMeContainer {
+    outline: none !important;
+}

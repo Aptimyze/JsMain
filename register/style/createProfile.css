@@ -1,0 +1,79 @@
+#relationShip .arow2 {
+    background-position: -213px -180px;
+}
+
+#relationShip .logoPos {
+    width: 160px;
+    height: 55px;
+}
+
+#relationShip .regis_logo {
+    background-image: url(https://static.jeevansathi.com/images/jsms/registerImg/regjs_logo.svg);
+    background-repeat: no-repeat;
+}
+
+#relationShip .regis_cover {
+    background-image: url(../../img/reg_cover_1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 303px;
+}
+
+#relationShip .ptreg90 {
+    padding-top: 90px;
+}
+
+#relationShip .ltSpacing {
+    letter-spacing: 1px;
+}
+
+#relationShip .edges {
+    height: 1px;
+    width: 10px;
+    margin-bottom: 4px;
+}
+
+#relationShip .edges-left {
+    margin-left: 6px;
+}
+
+#relationShip .edges-right {
+    margin-right: 6px;
+}
+
+#relationShip .bg4 {
+    background-color: #fff;
+}
+
+#relationShip .color2 {
+    color: #d9475c;
+}
+
+#relationShip .colrReg {
+    color: #55616D;
+}
+
+#relationShip .bgRegCover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#relationShip .colorGDark {
+    color: #14202B;
+}
+
+#relationShip .iconContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#relationShip .ici1 {
+    max-height: 85vh;
+    overflow: auto;
+}
+
+#relationShip .cClass {
+    width: 40%;
+    height: 120px;
+    margin: 10px auto;
+
+}
